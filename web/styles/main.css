@@ -1,0 +1,54 @@
+body {
+    padding: 0; 
+    margin: 0; 
+    font-size: 8pt; 
+    background: white; 
+    color: #000000; 
+    font-family: arial, sans-serif;
+}
+div{
+    float: left;
+}
+#maindiv{
+    position: static;
+    float: none;
+    width: 950px;
+    margin-left: auto; 
+    margin-right: auto;
+    background-color: #FFF;
+}
+.topmenu{
+    position: static;
+    background-image: url("../images/patroon_a.gif");
+    background-repeat: repeat;
+    width: 950px;
+    height: 20px;
+    padding-top: 5px;
+}
+.brabantLogo{
+    position: static;
+    background-image: url("../images/brabant.GIF");
+    width: 950px;
+    height: 25px;
+}
+a.menulink, a.menulink:visited, a.menulink:active {
+    color: white;
+    font-weight: bold;
+    margin-left: 20px;
+    text-decoration: none; 
+}
+a.menulink:hover{
+    text-decoration: underline;
+}
+.menuWhite{
+    color: white;
+    font-weight: bold;
+}
+
+/*koppen */
+h1{
+    font-weight: bold; 
+    font-size: 11pt; 
+    margin: 0px; 
+    color: #FF0000
+}

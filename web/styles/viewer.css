@@ -1,0 +1,29 @@
+#map{
+    position: static;
+    width: 500px;
+    height: 400px;
+    margin-left: 0px;
+    margin-top: 0px;
+    float: left;
+}
+#minimap{
+    position: static;
+    width: 200px;
+    height: 200px;
+    margin-left: 5px;
+    margin-top: 10px;
+    float: left;
+}
+#admindatamaindiv{
+    position: static;
+    margin-top: 5px;
+    border: 1px solid black;
+    width: 950px;
+    height: 165px;
+}
+#layermaindiv{
+    position: static;
+    width: 230px;
+    height: 400px;
+    padding: 5px;
+}

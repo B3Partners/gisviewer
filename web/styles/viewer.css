@@ -10,20 +10,18 @@
     position: static;
     width: 200px;
     height: 200px;
-    margin-left: 5px;
-    margin-top: 10px;
     float: left;
 }
 #admindatamaindiv{
     position: static;
-    margin-top: 5px;
-    border: 1px solid black;
-    width: 950px;
+    float: left;
+    width: 951px;
     height: 165px;
 }
 #layermaindiv{
     position: static;
-    width: 230px;
-    height: 400px;
+    background-color: #F0F0F0;
+    width: 240px;
+    height: 390px;
     padding: 5px;
 }

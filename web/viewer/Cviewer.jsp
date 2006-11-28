@@ -76,14 +76,20 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
         GEvent.addListener(minimap, 'moveend', MMove);        
       }      
     }
+    function handleUnLoad() { 
+        if (GBrowserIsCompatible()) { 
+            GUnload(); 
+        } 
+    } 
+
     //voeg load en unload to aan body element
     if (window.addEventListener) {
       window.addEventListener("load", load, false);
-      window.addEventListener("unload", GUnload(),false);
+      //window.addEventListener("unload", handleUnLoad(),false);
     }
     else if (window.attachEvent) {
       window.attachEvent("onload", load);
-      window.attachEvent("onunload",GUnload());
+      //window.attachEvent("onunload",handleUnLoad());
     }
     else {
       window.onload = load;
@@ -93,7 +99,9 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
     //]]>
     </script>
       <div id="map"></div>
-      <div id="layermaindiv"><h1>Layers:</h1></div>
+      <div id="layermaindiv">
+          <h1>Layers</h1>
+      </div>
       <div id="minimap"></div>
       <div id="admindatamaindiv"><a href="javascript: window.resizeTo(1024,786)">Resize</a><br>Hier komt administratieve data</div>
   </body>

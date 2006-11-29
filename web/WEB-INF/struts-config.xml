@@ -23,6 +23,7 @@
         </action>
         <action path="/index" forward="/index.jsp"/>
         <action path="/etl" forward="/etl/etlBase.jsp"/>
+        <action path="/etltransform" forward="/etl/etlTransformBase.jsp"/>
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

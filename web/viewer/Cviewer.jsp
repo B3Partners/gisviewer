@@ -1,12 +1,12 @@
+<%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8"%>
 <%@ page language="java" %>
-<%--
-The taglib directive below imports the JSTL library. If you uncomment it,
-you must also add the JSTL library to the project. The Add Library... action
-on Libraries node in Projects view can be used to add the JSTL 1.1 library.
---%>
-<%--
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
---%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
+<%@ page isELIgnored="false"%>
 <html>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w"
       type="text/javascript"></script>
@@ -100,7 +100,35 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
     </script>
       <div id="map"></div>
       <div id="layermaindiv">
-          <h1>Layers</h1>
+          <c:if test="${not empty layers}">
+              <h1>Layers</h1>
+              <c:forEach var="nThema" items="${layers}" varStatus="themastatus">
+                  <c:choose>
+                      <c:when test="${not empty nThema.childs}">
+                          <c:set var="themaclass" value="closedthema"/>
+                          <c:if test="${nThema.checked}">
+                              <c:set var="themaclass" value="openthema"/>
+                          </c:if>
+                          <div class="${themaclass}" id="thema_${themastatus.index}" onclick="javascript: clickThema(this)"><c:out value="${nThema.name}"/></div>
+                          <div class="openthemalayers" id="themalayers_${themastatus.index}">
+                              <c:forEach var="nLayer" items="${nThema.childs}" varStatus="layerstatus">
+                                  <div class="layerdiv ">
+                                      <input type="checkbox"><c:out value="${nLayer.name}"/></input>
+                                  </div>
+                              </c:forEach>
+                          </div>                          
+                      </c:when>
+                      <c:otherwise>
+                          
+                      </c:otherwise>
+                  </c:choose>
+                  
+              </c:forEach>
+              
+              
+              
+              
+          </c:if>
       </div>
       <div id="minimap"></div>
       <div id="admindatamaindiv"><a href="javascript: window.resizeTo(1024,786)">Resize</a><br>Hier komt administratieve data</div>

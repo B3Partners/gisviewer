@@ -18,8 +18,10 @@
     </global-forwards>
 
     <action-mappings>
+        <action path="/viewer" type="nl.b3p.nbr.wis.ViewerAction">
+            <forward name="success" path="/viewer/viewerBase.jsp"/>
+        </action>
         <action path="/index" forward="/index.jsp"/>
-        <action path="/viewer" forward="/viewer/viewerBase.jsp"/>
         <action path="/etl" forward="/etl/etlBase.jsp"/>
     </action-mappings>
     

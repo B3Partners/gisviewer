@@ -25,3 +25,22 @@
     height: 390px;
     padding: 5px;
 }
+.closedthema{
+    padding-left: 25px;
+    background-image: url("../images/closedNode.GIF");  
+    background-repeat: no-repeat;
+    clear: left;
+}
+.openthema{
+    padding-left: 25px;
+    background-image: url("../images/openNode.GIF");
+    background-repeat: no-repeat;
+    clear: left;
+}
+.openthemalayers{
+    padding: 5px;
+    clear: left;
+}
+.layerdiv{
+    clear:left;
+}

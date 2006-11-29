@@ -20,6 +20,7 @@
     <action-mappings>
         <action path="/index" forward="/index.jsp"/>
         <action path="/viewer" forward="/viewer/viewerBase.jsp"/>
+        <action path="/etl" forward="/etl/etlBase.jsp"/>
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

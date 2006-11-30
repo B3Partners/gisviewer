@@ -13,6 +13,7 @@
     <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
     <script type="text/javascript">
     //<![CDATA[
+    /*Google maps code*/
     var map;
     var map_moving = 0;
     var minimap_moving = 0;
@@ -95,6 +96,9 @@
       window.onload = load;
       window.onunload= GUnload;
     }
+    /*Einde google maps code*/
+    
+    
     function clickThema(thema){
         var id=thema.id.split("_");
         var number=id[1];

@@ -7,7 +7,71 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w" type="text/javascript"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+    /*google maps code*/
+    var map;
+    var bounds;
+    var southWest;
+    var northEast;
+    var lngSpan;
+    var latSpan;
+    var objects= [];
+    // the load done after the body is loaded
+    function load(){
+      if (GBrowserIsCompatible()) {
+        map = new GMap2(document.getElementById("kaartvak"));
+        //set center
+        map.setCenter(new GLatLng(51.6991361, 5.3198311), 13);
+        //add some controles
+        map.addControl(new GLargeMapControl());
+        map.addControl(new GMapTypeControl());
+        bounds = map.getBounds();
+        southWest = bounds.getSouthWest();
+        northEast = bounds.getNorthEast();
+        lngSpan = northEast.lng() - southWest.lng();
+        latSpan = northEast.lat() - southWest.lat();
+      }      
+    }
+    function handleUnLoad() { 
+        if (GBrowserIsCompatible()) { 
+            GUnload(); 
+        } 
+    } 
 
+    //voeg load en unload to aan body element
+    if (window.addEventListener) {
+      window.addEventListener("load", load, false);
+      //window.addEventListener("unload", handleUnLoad(),false);
+    }
+    else if (window.attachEvent) {
+      window.attachEvent("onload", load);
+      //window.attachEvent("onunload",handleUnLoad());
+    }
+    else {
+      window.onload = load;
+      window.onunload= GUnload;
+    }
+    /*Einde google maps code*/
+    
+    /*Schoon de map op*/   
+    function clearMap(){
+        if (map){
+            map.clearOverlays();
+        }
+    }
+    function drawObject(){
+        clearMap();
+        //map.addOverlay(objects[index]); 
+        //map.addOverlay(new GPolyline(createRandomPoints(4)));
+        var point = new GLatLng(southWest.lat() + latSpan * Math.random(),
+                          southWest.lng() + lngSpan * Math.random());
+        map.addOverlay(new GMarker(point));
+    }
+    
+    //]]>  
+    </script>
 <div style="width: 600px; margin-top: 20px;">
     <div class="hoofdvak">
         <strong>Kaart met algemene achtergrond</strong>
@@ -27,7 +91,7 @@
         <div id="geoafwijking">
             <form name="geoafwijking">
                 <c:if test="${not empty geoafwijking}">
-                    <select size="2" name="geoa" id="geoa" onchange="selecteerGekoppelde(this)">
+                    <select size="2" name="geoa" id="geoa" onchange="selecteerGekoppelde(this);if(drawObject()){}">
                         <c:forEach var="geoa" items="${geoafwijking}">
                             <option id="<c:out value="${geoa.id}" />" class="<c:out value="${geoa.afwijking}"  />" value="<c:out value="${geoa.id}" />" ><c:out value="${geoa.naam}" /></option>
                         </c:forEach>

@@ -1,14 +1,6 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
-<%--
-The taglib directive below imports the JSTL library. If you uncomment it,
-you must also add the JSTL library to the project. The Add Library... action
-on Libraries node in Projects view can be used to add the JSTL 1.1 library.
---%>
-<%--
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
---%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -20,6 +12,8 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/etl.css" rel="stylesheet" type="text/css">
+        <link href="styles/etltransform.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="scripts/etltransform.js"></script>
     </head>
     <body>
         <div id="maindiv">

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dwr>
+    <allow>
+        <create creator="new" javascript="JAdminData">
+            <param name="class" value="nl.b3p.nbr.wis.GetAdminData"/>
+        </create>
+    </allow>
+</dwr>

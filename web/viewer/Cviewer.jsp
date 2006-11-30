@@ -8,6 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
 <html>
+    <!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRRgOA7BOC0lK-MBYIwOJn5aQEzC1hS8NHo_hRAJNp2RbPdwhSHW7kfKCA -->
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w"
       type="text/javascript"></script>
       <script language="JavaScript" type="text/JavaScript" src="scripts/rectangle.js"></script>

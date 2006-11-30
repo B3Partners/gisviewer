@@ -7,8 +7,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
+
+<script src='dwr/interface/JAdminData.js'></script>
+<script src='dwr/engine.js'></script>
+<!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRRgOA7BOC0lK-MBYIwOJn5aQEzC1hS8NHo_hRAJNp2RbPdwhSHW7kfKCA -->
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w" type="text/javascript"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
     //<![CDATA[
     /*google maps code*/
     var map;
@@ -71,8 +75,8 @@
     }
     
     //]]>  
-    </script>
-<div style="width: 600px; margin-top: 20px;">
+</script>
+<div style="width: 1000px; margin-top: 20px;">
     <div class="hoofdvak">
         <strong>Kaart met algemene achtergrond</strong>
         <div id="kaartvak">
@@ -89,15 +93,16 @@
     <div class="hoofdvak">
         <strong>Geo-afwijking</strong>
         <div id="geoafwijking">
-            <form name="geoafwijking">
-                <c:if test="${not empty geoafwijking}">
+            <c:if test="${not empty geoafwijking}">
+                <form name="geoafwijking">
                     <select size="2" name="geoa" id="geoa" onchange="selecteerGekoppelde(this);if(drawObject()){}">
                         <c:forEach var="geoa" items="${geoafwijking}">
                             <option id="<c:out value="${geoa.id}" />" class="<c:out value="${geoa.afwijking}"  />" value="<c:out value="${geoa.id}" />" ><c:out value="${geoa.naam}" /></option>
                         </c:forEach>
                     </select>
-                </c:if>
-            </form>
+                    
+                </form>
+            </c:if>
         </div>
     </div>
     <div class="hoofdvak" style="width: 100px; text-align: center;">
@@ -110,15 +115,15 @@
     <div class="hoofdvak">
         <strong>Administratieve-afwijking</strong>
         <div id="adminafwijking">
-            <form name="adminafwijking">
-                <c:if test="${not empty adminafwijking}">
-                    <select size="2" name="admina" id="admina" onchange="selecteerGekoppelde(this)">
+            <c:if test="${not empty adminafwijking}">
+                <form name="adminafwijking">
+                    <select size="2" name="admina" id="admina" onchange="selecteerGekoppelde(this); doAjaxRequest(this);">
                         <c:forEach var="admina" items="${adminafwijking}" varStatus="status">
                             <option id="<c:out value="${admina.id}" />" value="<c:out value="${admina.id}" />" class="<c:out value="${admina.afwijking}" />"><c:out value="${admina.naam}" /></option>
                         </c:forEach>
                     </select>
-                </c:if>
-            </form>
+                </form>
+            </c:if>
         </div>
     </div>
     
@@ -134,3 +139,15 @@
         </nobr>
     </div>
 </div>
+
+<script type="text/javascript">
+    function handleGetData(str) {
+      document.getElementById('adminvak').innerHTML = str;
+    }
+    
+    function doAjaxRequest(obj) {
+        var selObj = obj[obj.selectedIndex];
+        var id = selObj.value;
+        JAdminData.getData(id, handleGetData);
+    }
+</script>

@@ -20,9 +20,6 @@ function koppel() {
     geoaf.style.backgroundColor = '#33CCFF';
     adminaf.style.backgroundColor = '#33CCFF';
 
-    document.getElementById('geoa').blur()
-    document.getElementById('admina').blur()
-
     koppels[koppels.length] = new Array(geoaf, adminaf);
 }
 
@@ -39,9 +36,6 @@ function ontkoppel() {
 
     geoaf.style.backgroundColor = getColor(geoaf.className);
     adminaf.style.backgroundColor = getColor(adminaf.className);
-
-    document.getElementById('geoa').blur()
-    document.getElementById('admina').blur()
 
     koppels[k1] = "-1";
     repairArray();
@@ -63,8 +57,11 @@ function selecteerGekoppelde(obj) {
     var anderObj;
     if(i != "-1") {
         var tmpArray = koppels[i];
-        if(tmpArray[0] == obj) anderObj = tmpArray[1];
-        else anderObj = tmpArray[0];
+        if(tmpArray[0] == selObj) {
+            anderObj = tmpArray[1];
+        } else {
+            anderObj = tmpArray[0];
+        }
         anderObj.selected = true;
     }
 }

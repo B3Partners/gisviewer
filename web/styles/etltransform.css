@@ -1,23 +1,24 @@
 #kaartvak {
-    width: 300px;
+    width: 500px;
     height: 300px;
     border: 1px solid Black;
 }
 
 #adminvak {
-    width: 220px;
+    width: 415px;
     height: 300px;
     border: 1px solid Black;
+    padding: 5px;
 }
 
 #geoafwijking {
-    width: 200px;
+    width: 405px;
     height: 300px;
     border: 1px solid Black;
 }
 
 #adminafwijking {
-    width: 200px;
+    width: 405px;
     height: 300px;
     border: 1px solid Black;
 }
@@ -29,7 +30,7 @@
 }
 
 select {
-    width: 200px;
+    width: 400px;
     height: 300px;
     margin: 0px;
     overflow: auto;

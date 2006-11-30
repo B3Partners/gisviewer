@@ -18,8 +18,13 @@ import java.util.ArrayList;
 public class LayerItem {
     
     private String name;
+    /*Als een LayerItem de waarde 'true' mee krijgt wordt hij uitgeklapt getoond bij het laden van het scherm.
+     *Bij false dicht. Als het een layer is wordt hij aangevinkt/uitgevinkt getoond.
+     */
     private boolean checked=false;
     private ArrayList childs=null;
+    private ArrayList adminData=null;
+    private ArrayList labelData=null;
     
     /** Creates a new instance of LayerItem */
     public LayerItem(){}
@@ -29,8 +34,7 @@ public class LayerItem {
     }
     public LayerItem(String n){
         name=n;
-    }
-    
+    }    
 
     public String getName() {
         return name;
@@ -60,6 +64,38 @@ public class LayerItem {
             childs=new ArrayList();
         }
         childs.add(li);
+    }
+    public void addAdmindata(String[] s){
+        if (adminData==null){
+            adminData=new ArrayList();
+        }
+        for (int i=0; i < s.length; i++){
+            adminData.add(s[i]);
+        }
+    }
+
+    public ArrayList getAdminData() {
+        return adminData;
+    }
+
+    public void setAdminData(ArrayList adminData) {
+        this.adminData = adminData;
+    }
+
+    public ArrayList getLabelData() {
+        return labelData;
+    }
+
+    public void setLabelData(ArrayList labelData) {
+        this.labelData = labelData;
+    }
+    public void addLabelData(String s[]){
+        if (labelData==null){
+            labelData=new ArrayList();
+        }
+        for (int i=0; i < s.length; i++){
+            labelData.add(s[i]);
+        }
     }
     
     

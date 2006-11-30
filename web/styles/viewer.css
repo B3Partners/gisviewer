@@ -25,16 +25,23 @@
     height: 390px;
     padding: 5px;
 }
+/*For the layers*/
 .closedthema{
     padding-left: 25px;
+    cursor: pointer;
     background-image: url("../images/closedNode.GIF");  
     background-repeat: no-repeat;
     clear: left;
 }
 .openthema{
     padding-left: 25px;
+    cursor: pointer;
     background-image: url("../images/openNode.GIF");
     background-repeat: no-repeat;
+    clear: left;
+}
+.emptythema{
+    padding-left: 25px;
     clear: left;
 }
 .openthemalayers{
@@ -42,5 +49,46 @@
     clear: left;
 }
 .layerdiv{
-    clear:left;
+    clear: left;
+    width: 100%;
 }
+a.layerlink, a.layerlink:visited, a.layerlink:active {
+    color: #ff0000;
+    font-weight: bold;
+    text-decoration: none;
+    float: rigth;
+}
+a.layerlink:hover{
+    text-decoration: underline;
+}
+/*For admindata*/
+.topRow{
+    clear: both;
+    background-image: url("../images/patroon_a.gif");
+    background-repeat: repeat; 
+    color: white;
+    font-weight: bold;
+    width: 930px;
+    padding-left: 5px;
+}
+.row{
+    clear: both;
+    font-weight: bold;
+    width: 930px;
+    padding-left: 5px;
+}
+.row:hover {
+    background-color: #CCCCCC;
+}
+.cell{
+    float: left;
+    width: 100px;
+}
+.scrolldiv{
+    width: 935px;
+    height: 150px;
+    border: 1px solid black;
+    margin-top: 10px;
+}
+
+

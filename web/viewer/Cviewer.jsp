@@ -10,6 +10,7 @@
 <html>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w"
       type="text/javascript"></script>
+      <script language="JavaScript" type="text/JavaScript" src="scripts/rectangle.js"></script>
     <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
     <script type="text/javascript">
     //<![CDATA[
@@ -26,8 +27,9 @@
         minimap_moving = true;
         if (map_moving == false) {
             minimap.setCenter(map.getCenter());
-            xhair.setPoint(map.getCenter());
-            xhair.redraw(true);
+            minimap.clearOverlays();
+            xhair= new Rectangle(map.getBounds(),2,"#0000ff");
+            minimap.addOverlay(xhair);
         }
         minimap_moving = false;
     }
@@ -38,8 +40,9 @@
         map_moving = true;
         if (minimap_moving == false) {
             map.setCenter(minimap.getCenter());
-            xhair.setPoint(minimap.getCenter());
-            xhair.redraw(true);
+            minimap.clearOverlays();
+            xhair= new Rectangle(map.getBounds(),2,"#0000ff");
+            minimap.addOverlay(xhair);
         }
         map_moving = false;
     }
@@ -69,7 +72,7 @@
         minimap.setCenter(new GLatLng(51.6991361, 5.3198311),8);
 
         // Add the crosshair marker at the centre of teh minimap and keep a reference to it
-        xhair = new GMarker(minimap.getCenter(), Icon);            
+        xhair = new Rectangle(map.getBounds(),2,"#0000ff");        
         minimap.addOverlay(xhair);
         
         //set listeners

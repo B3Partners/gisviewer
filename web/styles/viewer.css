@@ -24,6 +24,7 @@
     width: 240px;
     height: 390px;
     padding: 5px;
+    overflow: auto;
 }
 /*For the layers*/
 .closedthema{
@@ -82,7 +83,7 @@ a.layerlink:hover{
 }
 .cell{
     float: left;
-    width: 100px;
+    width: 150px;
 }
 .scrolldiv{
     width: 935px;

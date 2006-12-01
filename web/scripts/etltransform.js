@@ -3,6 +3,8 @@ var koppels = new Array();
 function koppel() {
     var geoaf = document.getElementById('geoa')[document.getElementById('geoa').selectedIndex];
     var adminaf = document.getElementById('admina')[document.getElementById('admina').selectedIndex];
+    
+    if(geoaf == undefined || adminaf == undefined) return false;
 
     var g1 = zoekKoppel(geoaf);
     var a1 = zoekKoppel(adminaf);
@@ -17,15 +19,17 @@ function koppel() {
         return false;
     }
 
-    geoaf.style.backgroundColor = '#33CCFF';
-    adminaf.style.backgroundColor = '#33CCFF';
+    var optGeo = moveSelectedOptions(document.getElementById('geoa'),document.getElementById('Ggeoa'),false);
+    var optAdm = moveSelectedOptions(document.getElementById('admina'),document.getElementById('Gadmina'),false);
 
-    koppels[koppels.length] = new Array(geoaf, adminaf);
+    koppels[koppels.length] = new Array(optGeo, optAdm);
 }
 
 function ontkoppel() {
-    var geoaf = document.getElementById('geoa')[document.getElementById('geoa').selectedIndex];
-    var adminaf = document.getElementById('admina')[document.getElementById('admina').selectedIndex];
+    var geoaf = document.getElementById('Ggeoa')[document.getElementById('Ggeoa').selectedIndex];
+    var adminaf = document.getElementById('Gadmina')[document.getElementById('Gadmina').selectedIndex];
+
+    if(geoaf == undefined || adminaf == undefined) return false;
 
     var k1 = isKoppel(geoaf, adminaf);
 
@@ -34,15 +38,14 @@ function ontkoppel() {
         return false;
     }
 
-    geoaf.style.backgroundColor = getColor(geoaf.className);
-    adminaf.style.backgroundColor = getColor(adminaf.className);
-
     koppels[k1] = "-1";
     repairArray();
+
+    moveSelectedOptions(document.getElementById('Ggeoa'),document.getElementById('geoa'),false);
+    moveSelectedOptions(document.getElementById('Gadmina'),document.getElementById('admina'),false);
 }
 
 function getColor(className) {
-    
     if(className == 'oud') return 'Brown';
     if(className == 'nieuw') return 'Green';
     if(className == 'ontkoppeld') return 'Red';
@@ -63,6 +66,8 @@ function selecteerGekoppelde(obj) {
             anderObj = tmpArray[0];
         }
         anderObj.selected = true;
+        if(obj.name == 'Ggeoa') dAR(anderObj);
+        else if(drawObject()){};
     }
 }
 
@@ -92,4 +97,50 @@ function repairArray() {
         }
     }
     koppels = tmpArray;
+}
+
+function handleGetData(str) {
+  document.getElementById('adminvak').innerHTML = str;
+}
+
+function dAR(obj) {
+    JAdminData.getData(obj.value, handleGetData);
+}
+
+function doAjaxRequest(obj) {
+    var selObj = obj[obj.selectedIndex];
+    var id = selObj.value;
+    JAdminData.getData(id, handleGetData);
+}
+
+// Functies voor het verplaatsen van de options
+
+function hasOptions(obj) {
+    if(obj!=null && obj.options!=null) {
+        return true;
+    }
+    return false;
+}
+
+function moveSelectedOptions(from,to){
+    if(!hasOptions(from)) return;
+    for(var i=0;i<from.options.length;i++) {
+        var o = from.options[i];
+        if(o.selected) {
+            if(!hasOptions(to)){ var index = 0; }
+            else{ var index=to.options.length; }
+            var newOpt = new Option( o.text, o.value, false, false);
+            newOpt.className = o.className;
+            to.options[index] = newOpt;
+        }
+    }
+    for(var i=(from.options.length-1);i>=0;i--) {
+        var o = from.options[i];
+        if(o.selected) {
+            from.options[i] = null;
+        }
+    }
+    from.selectedIndex = -1;
+    to.selectedIndex = -1;
+    return newOpt;
 }

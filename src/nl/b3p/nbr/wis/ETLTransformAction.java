@@ -39,15 +39,15 @@ public class ETLTransformAction extends Action {
             throws Exception {
         
         ArrayList geoafwijking = new ArrayList();
-        geoafwijking.add(new AfwijkingsItem("GeoAfwijking #1", "g1", "oud"));
-        geoafwijking.add(new AfwijkingsItem("GeoAfwijking #2", "g2", "nieuw"));
-        geoafwijking.add(new AfwijkingsItem("GeoAfwijking #3", "g3", "ontkoppeld"));
+        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "g1", "oud"));
+        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 129", "g2", "nieuw"));
+        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 394", "g3", "ontkoppeld"));
         
         ArrayList adminafwijking = new ArrayList();
-        adminafwijking.add(new AfwijkingsItem("AdminAfwijking #1", "a1", "oud"));
-        adminafwijking.add(new AfwijkingsItem("AdminAfwijking #2", "a2", "ontkoppeld"));
-        adminafwijking.add(new AfwijkingsItem("AdminAfwijking #3", "a3", "parkeren"));
-        adminafwijking.add(new AfwijkingsItem("AdminAfwijking #4", "a4", "definitief_ontkoppeld"));
+        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "a1", "oud"));
+        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "a2", "nieuw"));
+        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 45", "a3", "parkeren"));
+        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 573", "a4", "definitief_ontkoppeld"));
         
         request.setAttribute("geoafwijking", geoafwijking);
         request.setAttribute("adminafwijking", adminafwijking);

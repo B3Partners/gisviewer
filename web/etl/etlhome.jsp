@@ -13,19 +13,19 @@
     <div class="listItem">
         <div class="listItemDatum">Iedere 4e dag van de maand</div>
         <div class="listItemTijd">02:00</div>
-        <div class="listItemProces">Geo-data laden</div>
+        <div class="listItemProces">Geo Data - Weg</div>
         <div class="listItemStart"><button>Start Proces</button></div>
     </div>
     <div class="listItem">
         <div class="listItemDatum">Iedere 2e dag van de week</div>
         <div class="listItemTijd">12:00</div>
-        <div class="listItemProces">Extract van administratief</div>
+        <div class="listItemProces">ViaView - Verharding</div>
         <div class="listItemStart"><button>Start Proces</button></div>
     </div>
-    <div class="listItem">
+    <div class="listItem" style="border-bottom: 1px solid Black;">
         <div class="listItemDatum">Iedere 16e dag van de maand</div>
         <div class="listItemTijd">19:00</div>
-        <div class="listItemProces">Laad nieuwe geo-objecten</div>
+        <div class="listItemProces">GB PLANtsoen - Sloot</div>
         <div class="listItemStart"><button>Start Proces</button></div>
     </div>
     
@@ -39,21 +39,21 @@
     </div>
     <div class="listLogItem">
         <div class="listLogItemDatum">04-11-2006</div>
-        <div class="listLogItemProces">Geo-data ophalen</div>
+        <div class="listLogItemProces">Geo Data - Weg</div>
         <div class="listLogItemGekoppeld">254</div>
         <div class="listLogItemOud">19</div>
         <div class="listLogItemNieuw">23</div>
     </div>
     <div class="listLogItem">
-        <div class="listLogItemDatum">27-11-2006</div>
-        <div class="listLogItemProces">ViaView</div>
+        <div class="listLogItemDatum">28-11-2006</div>
+        <div class="listLogItemProces">VieView - Verharding</div>
         <div class="listLogItemGekoppeld">24</div>
         <div class="listLogItemOud">2</div>
         <div class="listLogItemNieuw">1</div>
     </div>
     <div class="listLogItem">
-        <div class="listLogItemDatum">24-11-2006</div>
-        <div class="listLogItemProces">GB PLANtsoen</div>
+        <div class="listLogItemDatum">16-11-2006</div>
+        <div class="listLogItemProces">GB PLANtsoen - Sloot</div>
         <div class="listLogItemGekoppeld">568</div>
         <div class="listLogItemOud">55</div>
         <div class="listLogItemNieuw">26</div>
@@ -74,7 +74,7 @@
     </div>
     <div class="listLogItem">
         <div class="listLogItemDatum">29-11-2006</div>
-        <div class="listLogItemProces" style="width: 250px;">Geo-data ophalen</div>
+        <div class="listLogItemProces" style="width: 250px;">GB PLANtsoen - Sloot</div>
         <div class="listLogItemGekoppeld">254</div>
         <div class="listLogItemOud">19</div>
         <div class="listLogItemNieuw">23</div>
@@ -82,9 +82,9 @@
         <div class="listLogItemNieuw" style="width: 100px;">8</div>
         <div class="listItemStart"><button onclick="javascript:location.href='etltransform.do';">Start Proces</button></div>
     </div>
-    <div class="listLogItemGray">
+    <div class="listLogItemGray" style="border-bottom: 1px solid Black;">
         <div class="listLogItemDatum">27-11-2006</div>
-        <div class="listLogItemProces" style="width: 250px;">ViaView</div>
+        <div class="listLogItemProces" style="width: 250px;">VieView - Verharding</div>
         <div class="listLogItemGekoppeld">24</div>
         <div class="listLogItemOud">2</div>
         <div class="listLogItemNieuw">1</div>
@@ -100,12 +100,12 @@
         <div class="listItemNaam"><strong>Aantal openstaande items</strong></div>
     </div>
     <div class="listItem">
-        <div class="listItemNaam">Beheerder #1</div>
-        <div class="listLogItemProces">Transformeren van GB PLANtsoen</div>
-        <div class="listItemNaam">245</div>
+        <div class="listItemNaam">Beheerder Geo Data &amp; GB PLANtsoen</div>
+        <div class="listLogItemProces">Transformeren van Geo Data - Weg</div>
+        <div class="listItemNaam">0</div>
     </div>
     <div class="listItem">
-        <div class="listItemNaam">Beheerder #2</div>
+        <div class="listItemNaam">Beheerder ViaView</div>
         <div class="listLogItemProces">Niets</div>
         <div class="listItemNaam">855</div>
     </div>
@@ -119,10 +119,10 @@
         <div class="listItemProces"><strong>Proces</strong></div>
         <div class="listItemStart"><strong>Start handmatig</strong></div>
     </div>
-    <div class="listItem">
+    <div class="listItem" style="border-bottom: 1px solid Black;">
         <div class="listItemDatum">Iedere 19e dag van de maand</div>
         <div class="listItemTijd">02:00</div>
-        <div class="listItemProces">GB PLANtsoen</div>
+        <div class="listItemProces">Geo Data - Weg</div>
         <div class="listItemStart"><button>Start Proces</button></div>
     </div>
     
@@ -135,8 +135,8 @@
         <div class="listLogItemNieuw"><strong>Nieuw</strong></div>
     </div>
     <div class="listLogItem">
-        <div class="listLogItemDatum">28-11-2006</div>
-        <div class="listLogItemProces">Admindata ophalen</div>
+        <div class="listLogItemDatum">13-09-2006</div>
+        <div class="listLogItemProces">Geo Data - weg</div>
         <div class="listLogItemGekoppeld">422</div>
         <div class="listLogItemOud">48</div>
         <div class="listLogItemNieuw">59</div>

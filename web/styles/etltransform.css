@@ -6,20 +6,20 @@
 
 #adminvak {
     width: 415px;
-    height: 300px;
+    height: 290px;
     border: 1px solid Black;
     padding: 5px;
 }
 
 #geoafwijking {
     width: 405px;
-    height: 300px;
+    height: 120px;
     border: 1px solid Black;
 }
 
 #adminafwijking {
     width: 405px;
-    height: 300px;
+    height: 120px;
     border: 1px solid Black;
 }
 
@@ -31,7 +31,7 @@
 
 select {
     width: 400px;
-    height: 300px;
+    height: 120px;
     margin: 0px;
     overflow: auto;
     border: 0px none White;
@@ -45,21 +45,21 @@ option {
 }
 
 .oud {
-    background-color: Brown;
+    background-color: #dfd875;
 }
 
 .nieuw {
-    background-color: Green;
+    background-color: #ffa8ae;
 }
 
 .ontkoppeld {
-    background-color: Red;
+    background-color: #75df79;
 }
 
 .parkeren {
-    background-color: Orange;
+    background-color: #7587df;
 }
 
 .definitief_ontkoppeld {
-    background-color: Gray;
+    background-color: #dfba75;
 }

@@ -129,7 +129,7 @@
       <div id="map"></div>
       <div id="layermaindiv">
           <c:if test="${not empty layers}">
-              <h1>Layers</h1>
+              <h1>Thema's</h1>
               <c:forEach var="nThema" items="${layers}" varStatus="themastatus">
                   <c:choose>
                       <c:when test="${not empty nThema.childs}">

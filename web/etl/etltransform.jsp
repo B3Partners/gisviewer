@@ -77,6 +77,11 @@
     //]]>  
 </script>
 <div style="width: 1000px; margin-top: 20px;">
+    <div id="kop" style="clear: both; width: 800px; margin-bottom: 20px;">
+        <strong style="color: Red; font-size: 16px;">GB PLANtsoen - Sloot</strong><br />
+        Datum: 29-11-2006
+    </div>
+    
     <div class="hoofdvak">
         <strong>Kaart met algemene achtergrond</strong>
         <div id="kaartvak">
@@ -86,7 +91,8 @@
     <div class="hoofdvak">
         <strong>Preview administratieve data</strong>
         <div id="adminvak">
-            
+            Hier kunt u een deel van de geselecteerde administratieve data bekijken.<br />
+            Klik hieronder op &eacute;&eacute;n van de afwijkende administratieve data om de data te bekijken.
         </div>
     </div>
     
@@ -100,18 +106,17 @@
                             <option id="<c:out value="${geoa.id}" />" class="<c:out value="${geoa.afwijking}"  />" value="<c:out value="${geoa.id}" />" ><c:out value="${geoa.naam}" /></option>
                         </c:forEach>
                     </select>
-                    
                 </form>
             </c:if>
         </div>
     </div>
-    <div class="hoofdvak" style="width: 100px; text-align: center;">
-        <div style="height: 130px;">&nbsp;</div>
+    <div class="hoofdvak" style="width: 95px; text-align: center;">
+        <div style="height: 50px;">&nbsp;</div>
         <div style="clear: left;">        
-            <button onclick="koppel()">Koppelen</button><br /><br />
-            <button onclick="ontkoppel()">Ontkoppelen</button>
+            <button onclick="koppel()">Koppelen</button>
         </div>
     </div>
+    
     <div class="hoofdvak">
         <strong>Administratieve-afwijking</strong>
         <div id="adminafwijking">
@@ -127,27 +132,40 @@
         </div>
     </div>
     
+    <div class="hoofdvak">
+        <strong>Gekoppelde Geo-afwijkingingen</strong>
+        <div id="geoafwijking">
+            <form name="Ggeoafwijking">
+                <select size="2" name="Ggeoa" id="Ggeoa" onchange="selecteerGekoppelde(this);if(drawObject()){}"></select>
+            </form>
+        </div>
+    </div>
+    <div class="hoofdvak" style="width: 95px; text-align: center;">
+        <div style="height: 50px;">&nbsp;</div>
+        <div style="clear: left;">        
+            <button onclick="ontkoppel()">Ontkoppelen</button>
+        </div>
+    </div>
+    
+    <div class="hoofdvak">
+        <strong>Gekoppelde Administratieve-afwijkingingen</strong>
+        <div id="adminafwijking">
+            <form name="Gadminafwijking">
+                <select size="2" name="Gadmina" id="Gadmina" onchange="selecteerGekoppelde(this); doAjaxRequest(this);"></select>
+            </form>
+        </div>
+    </div>
+    
     <div style="clear: both;" class="hoofdvak">
-        <strong>Leganda</strong><br />
-        <nobr>
-            <span class="oud">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Oud &nbsp;
-            <span class="nieuw">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Nieuw &nbsp;
-            <span class="ontkoppeld">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Ontkoppeld &nbsp;
-            <span class="parkeren">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Parkeren &nbsp;
-            <span class="definitief_ontkoppeld">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Definitief ontkoppeld &nbsp;
-            <span style="background-color: #33CCFF;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Gekoppeld &nbsp;
-        </nobr>
+        <div style="margin-bottom: 5px;"><strong>Leganda</strong></div>
+        <div style="clear: left;">
+            <nobr>
+                <span class="oud">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Oud &nbsp;
+                <span class="nieuw">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Nieuw &nbsp;
+                <span class="ontkoppeld">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Ontkoppeld &nbsp;
+                <span class="parkeren">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Parkeren &nbsp;
+                <span class="definitief_ontkoppeld">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Definitief ontkoppeld &nbsp;
+            </nobr>
+        </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    function handleGetData(str) {
-      document.getElementById('adminvak').innerHTML = str;
-    }
-    
-    function doAjaxRequest(obj) {
-        var selObj = obj[obj.selectedIndex];
-        var id = selObj.value;
-        JAdminData.getData(id, handleGetData);
-    }
-</script>

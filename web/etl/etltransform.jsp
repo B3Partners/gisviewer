@@ -10,8 +10,8 @@
 
 <script src='dwr/interface/JAdminData.js'></script>
 <script src='dwr/engine.js'></script>
-<!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRRgOA7BOC0lK-MBYIwOJn5aQEzC1hS8NHo_hRAJNp2RbPdwhSHW7kfKCA -->
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w" type="text/javascript"></script>
+<!-- ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w -->
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRTMwU6-O5X12qXxYGpswjkv4joMBhStOEnKbOPDNjQkDSu7-_GUnoxJ9g" type="text/javascript"></script>
 <script type="text/javascript">
     //<![CDATA[
     /*google maps code*/
@@ -78,7 +78,7 @@
 </script>
 <div style="width: 1000px; margin-top: 20px;">
     <div id="kop" style="clear: both; width: 800px; margin-bottom: 20px;">
-        <strong style="color: Red; font-size: 16px;">GB PLANtsoen - Sloot</strong><br />
+        <strong style="color: Red; font-size: 16px;">ETL-verwerking van GB PLANtsoen - Sloot</strong><br />
         Datum: 29-11-2006
     </div>
     
@@ -132,6 +132,14 @@
         </div>
     </div>
     
+    <div id="kop" style="clear: left; width: 540px; margin-bottom: 20px;">
+        <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'nieuw';">Nieuw</button> &nbsp; <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'oud';">Oud</button> &nbsp; <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'parkeren';">Parkeren</button> &nbsp; <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'definitief_ontkoppeld';">Definitief ontkoppelen</button>
+    </div>
+    
+    <div id="kop" style="float: left; width: 400px; margin-bottom: 20px;">
+        <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'nieuw';">Nieuw</button> &nbsp; <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'oud';">Oud</button> &nbsp; <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'parkeren';">Parkeren</button> &nbsp; <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'definitief_ontkoppeld';">Definitief ontkoppelen</button>
+    </div>
+    
     <div class="hoofdvak">
         <strong>Gekoppelde Geo-afwijkingingen</strong>
         <div id="geoafwijking">
@@ -156,16 +164,20 @@
         </div>
     </div>
     
-    <div style="clear: both;" class="hoofdvak">
+    <div style="clear: left; width: 750px;" class="hoofdvak">
         <div style="margin-bottom: 5px;"><strong>Leganda</strong></div>
         <div style="clear: left;">
             <nobr>
                 <span class="oud">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Oud &nbsp;
                 <span class="nieuw">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Nieuw &nbsp;
-                <span class="ontkoppeld">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Ontkoppeld &nbsp;
                 <span class="parkeren">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Parkeren &nbsp;
                 <span class="definitief_ontkoppeld">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Definitief ontkoppeld &nbsp;
             </nobr>
         </div>
+    </div>
+    
+    <div style="float: left;" class="hoofdvak">
+        <br />
+        <button onclick="window.location = 'etl.do';" style="width: 150px;">Klaar met verwerken</button>
     </div>
 </div>

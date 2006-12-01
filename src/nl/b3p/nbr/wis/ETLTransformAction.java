@@ -41,7 +41,8 @@ public class ETLTransformAction extends Action {
         ArrayList geoafwijking = new ArrayList();
         geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "g1", "oud"));
         geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 129", "g2", "nieuw"));
-        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 394", "g3", "ontkoppeld"));
+        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 394", "g3", "nieuw"));
+        geoafwijking.add(new AfwijkingsItem("Gedempte sloot", "g4", "nieuw"));
         
         ArrayList adminafwijking = new ArrayList();
         adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "a1", "oud"));

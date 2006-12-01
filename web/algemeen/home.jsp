@@ -9,7 +9,7 @@
                 <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" />
             </td>
             <td valign="bottom">
-                <h1>Welkom binnen de WIS Demo voor de provincie Noord Brabant</h1>
+                <h1>WIS Demo voor de provincie Noord Brabant</h1>
             </td>
         </tr>
     </table>

@@ -38,7 +38,7 @@ public class GetAdminData {
                 "Profiel: profiel<br />" +
                 "Beheersgrens: beheersgrens<br />" +
                 "Locatie: locatie<br />" +
-                "Oppervlakt: 90m2<br />" +
+                "Oppervlakt: 20.000.000.000m2<br />" +
                 "Gemeente: Den Bosch<br />" +
                 "Wegnummer: 235<br />" +
                 "Type: Nat<br />" +

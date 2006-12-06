@@ -12,6 +12,15 @@
     height: 200px;
     float: left;
 }
+#infovak{
+    margin: 0px;
+    padding: 2px;
+    padding-left: 4px;
+    width: 192px;
+    height: 194px;
+    float: right;
+    border: 1px solid Black;
+}
 #admindatamaindiv{
     position: static;
     float: left;

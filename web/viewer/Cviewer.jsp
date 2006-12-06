@@ -9,7 +9,7 @@
 <%@ page isELIgnored="false"%>
 <html>
     <!-- ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w -->
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRTMwU6-O5X12qXxYGpswjkv4joMBhStOEnKbOPDNjQkDSu7-_GUnoxJ9g"
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRQscSysVS1XSjcAv6lVG_Fcz1dG_hTUtfUaDWssiqZBu5tkG9-_hOOq3w"
       type="text/javascript"></script>
       <script language="JavaScript" type="text/JavaScript" src="scripts/rectangle.js"></script>
     <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
@@ -159,6 +159,12 @@
           </c:if>
       </div>
       <div id="minimap"></div>
+      <div id="infovak">
+          RD Co&ouml;rdinaten: <br />
+          Hectometerpaal aanduiding: <br />
+          Gemeente: <br />
+          Anders: <br />
+      </div>
       <div id="admindatamaindiv">
       <c:forEach var="nThema" items="${layers}" varStatus="themastatus">
           <c:forEach var="nLayer" items="${nThema.childs}" varStatus="layerstatus">

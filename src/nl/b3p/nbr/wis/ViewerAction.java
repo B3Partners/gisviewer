@@ -57,10 +57,14 @@ public class ViewerAction extends Action {
         LayerItem li2= new LayerItem("VERKEER");
         LayerItem li20 = new LayerItem("Verharding");
         li2.addChild(li20);
+        LayerItem li21 = new LayerItem("Metingen");
+        li2.addChild(li21);
         li2.addChild(new LayerItem("Markering"));
         li2.addChild(new LayerItem("Bebording"));
         li2.addChild(new LayerItem("DVM"));
         li2.addChild(new LayerItem("Verlichting"));
+        li2.addChild(new LayerItem("Ongevallen"));
+        li2.addChild(new LayerItem("Tellingen"));
         
         String [] s = new String [5];
         s[0]="Materiaal";
@@ -90,6 +94,35 @@ public class ViewerAction extends Action {
         s[3]="Wordt niet uitgevoerd (tijdelijke weg)";
         s[4]="Beton op zand/kleilaag";
         li20.addAdmindata(s);
+        
+        s = new String[5];
+        s[0]="Aran";
+        s[1]="Rambol";
+        s[2]="Deflectie";
+        s[3]="Stroefheid";
+        s[4]="Inspectie";
+        li21.addLabelData(s);
+        s = new String [5];
+        s[0]="22";
+        s[1]="95";
+        s[2]="37";
+        s[3]="Hoog";
+        s[4]="Laatste: 12-09-2006";
+        li21.addAdmindata(s);
+        s= new String [5];
+        s[0]="48";
+        s[1]="86";
+        s[2]="15";
+        s[3]="Laag";
+        s[4]="Laatste: 22-02-2005";
+        li21.addAdmindata(s);
+        s = new String [5];
+        s[0]="547";
+        s[1]="4";
+        s[2]="256";
+        s[3]="Gemiddeld";
+        s[4]="Nog niet uitgevoerd";
+        li21.addAdmindata(s);
         
         LayerItem li3= new LayerItem("GROEN");
         LayerItem li30=new LayerItem("Sloot");

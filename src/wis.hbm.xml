@@ -34,13 +34,13 @@
 		</id>
 		<property name="naam"/>
 		<property name="omschrijving"/>
-		<many-to-one name="parent" column="parent_id"/>
+		<many-to-one name="parent" column="parent"/>
 		<set name="children" inverse="true" cascade="all-delete-orphan">
-			<key column="parent_id"/>
+			<key column="parent"/>
 			<one-to-many class="nl.b3p.nbr.wis.db.Clusters"/>
 		</set>
 		<set name="themas" cascade="all-delete-orphan">
-			<key column="cluster_id"/>
+			<key column="cluster"/>
 			<one-to-many class="nl.b3p.nbr.wis.db.Themas"/>
 		</set>
 	</class>
@@ -253,13 +253,13 @@
 		<property name="kenmerk"/>
 		<property name="omschrijving"/>
 		<many-to-one name="thema"/>
-		<property name="type" not-null="true"/>
-		<property name="lrood" not-null="true"/>
-		<property name="lgroen" not-null="true"/>
-		<property name="lblauw" not-null="true"/>
-		<property name="vrood" not-null="true"/>
-		<property name="vgroen" not-null="true"/>
-		<property name="vblauw" not-null="true"/>
+		<property name="type"/>
+		<property name="lrood"/>
+		<property name="lgroen"/>
+		<property name="lblauw"/>
+		<property name="vrood"/>
+		<property name="vgroen"/>
+		<property name="vblauw"/>
 	</class>
 	<class name="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden">
 		<id name="id">
@@ -270,6 +270,7 @@
 		</id>
 		<many-to-one name="thema"/>
 		<many-to-one name="medewerker"/>
+		<many-to-one name="onderdeel"/>
 		<many-to-one name="rol"/>
 		<property name="huidige_situatie" not-null="true"/>
 		<property name="gewenste_situatie" not-null="true"/>
@@ -284,10 +285,10 @@
 		<property name="code"/>
 		<property name="naam"/>
 		<many-to-one name="moscow"/>
-		<many-to-one name="cluster">
-			<column name="cluster_id" not-null="true"/>
-		</many-to-one>
 		<property name="belangnr" not-null="true"/>
+		<many-to-one name="cluster">
+			<column name="cluster" not-null="true"/>
+		</many-to-one>
 		<property name="opmerkingen"/>
 		<property name="analyse_thema" not-null="true"/>
 		<property name="locatie_thema" not-null="true"/>

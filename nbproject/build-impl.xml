@@ -46,29 +46,6 @@
         <property name="build.web.dir.real" value="${build.ear.web.dir}"/>
     </target>
     <target name="-do-init" depends="-pre-init,-init-private,-init-user,-init-project,-init-macrodef-property, -do-ear-init">
-        <webproject1:property name="platform.home" value="platforms.${platform.active}.home"/>
-        <webproject1:property name="platform.bootcp" value="platforms.${platform.active}.bootclasspath"/>
-        <webproject1:property name="platform.compiler" value="platforms.${platform.active}.compile"/>
-        <webproject1:property name="platform.javac.tmp" value="platforms.${platform.active}.javac"/>
-        <condition property="platform.javac" value="${platform.home}/bin/javac">
-            <equals arg1="${platform.javac.tmp}" arg2="$${platforms.${platform.active}.javac}"/>
-        </condition>
-        <property name="platform.javac" value="${platform.javac.tmp}"/>
-        <webproject1:property name="platform.java.tmp" value="platforms.${platform.active}.java"/>
-        <condition property="platform.java" value="${platform.home}/bin/java">
-            <equals arg1="${platform.java.tmp}" arg2="$${platforms.${platform.active}.java}"/>
-        </condition>
-        <property name="platform.java" value="${platform.java.tmp}"/>
-        <webproject1:property name="platform.javadoc.tmp" value="platforms.${platform.active}.javadoc"/>
-        <condition property="platform.javadoc" value="${platform.home}/bin/javadoc">
-            <equals arg1="${platform.javadoc.tmp}" arg2="$${platforms.${platform.active}.javadoc}"/>
-        </condition>
-        <property name="platform.javadoc" value="${platform.javadoc.tmp}"/>
-        <fail unless="platform.home">Must set platform.home</fail>
-        <fail unless="platform.bootcp">Must set platform.bootcp</fail>
-        <fail unless="platform.java">Must set platform.java</fail>
-        <fail unless="platform.javac">Must set platform.javac</fail>
-        <fail if="platform.invalid">Platform is not correctly set up</fail>
         <condition property="have.tests">
             <or>
                 <available file="${test.src.dir}"/>
@@ -169,7 +146,7 @@
             <attribute name="debug" default="${javac.debug}"/>
             <element name="customize" optional="true"/>
             <sequential>
-                <javac srcdir="@{srcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" fork="yes" executable="${platform.javac}" tempdir="${java.io.tmpdir}" includeantruntime="false">
+                <javac srcdir="@{srcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
                     <classpath>
                         <path path="@{classpath}"/>
                     </classpath>
@@ -183,7 +160,7 @@
         <macrodef name="junit" uri="http://www.netbeans.org/ns/web-project/2">
             <attribute name="includes" default="**/*Test.java"/>
             <sequential>
-                <junit showoutput="true" fork="true" dir="${basedir}" failureproperty="tests.failed" errorproperty="tests.failed" jvm="${platform.java}">
+                <junit showoutput="true" fork="true" dir="${basedir}" failureproperty="tests.failed" errorproperty="tests.failed">
                     <batchtest todir="${build.test.results.dir}">
                         <fileset dir="${test.src.dir}" includes="@{includes}"/>
                     </batchtest>
@@ -205,7 +182,7 @@
             <attribute name="classname" default="${main.class}"/>
             <element name="customize" optional="true"/>
             <sequential>
-                <java fork="true" classname="@{classname}" jvm="${platform.java}">
+                <java fork="true" classname="@{classname}">
                     <jvmarg line="${runmain.jvmargs}"/>
                     <classpath>
                         <path path="${build.classes.dir.real}:${javac.classpath}:${j2ee.platform.classpath}"/>
@@ -228,9 +205,6 @@
                     <classpath>
                         <path path="@{classpath}"/>
                     </classpath>
-                    <bootclasspath>
-                        <path path="${platform.bootcp}"/>
-                    </bootclasspath>
                 </nbjpdastart>
             </sequential>
         </macrodef>
@@ -249,7 +223,7 @@
             <attribute name="classpath" default="${debug.classpath}"/>
             <attribute name="args" default="${application.args.param}"/>
             <sequential>
-                <java fork="true" classname="@{classname}" jvm="${platform.java}">
+                <java fork="true" classname="@{classname}">
                     <jvmarg value="-Xdebug"/>
                     <jvmarg value="-Xnoagent"/>
                     <jvmarg value="-Djava.compiler=none"/>
@@ -420,16 +394,12 @@
     </target>
     <target name="do-dist" depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest"/>
     <target name="library-inclusion-in-manifest" depends="init" if="dist.ear.dir">
-        <basename property="included.lib.libs.struts.classpath.8" file="${libs.struts.classpath.libfile.8}"/>
-        <basename property="included.lib.libs.struts.classpath.7" file="${libs.struts.classpath.libfile.7}"/>
         <basename property="included.lib.libs.struts.classpath.6" file="${libs.struts.classpath.libfile.6}"/>
         <basename property="included.lib.libs.struts.classpath.5" file="${libs.struts.classpath.libfile.5}"/>
         <basename property="included.lib.libs.struts.classpath.4" file="${libs.struts.classpath.libfile.4}"/>
         <basename property="included.lib.libs.struts.classpath.3" file="${libs.struts.classpath.libfile.3}"/>
         <basename property="included.lib.libs.struts.classpath.2" file="${libs.struts.classpath.libfile.2}"/>
         <basename property="included.lib.libs.struts.classpath.1" file="${libs.struts.classpath.libfile.1}"/>
-        <copy-ear-war file="${libs.struts.classpath.libfile.8}" propname="included.lib.libs.struts.classpath.8.X"/>
-        <copy-ear-war file="${libs.struts.classpath.libfile.7}" propname="included.lib.libs.struts.classpath.7.X"/>
         <copy-ear-war file="${libs.struts.classpath.libfile.6}" propname="included.lib.libs.struts.classpath.6.X"/>
         <copy-ear-war file="${libs.struts.classpath.libfile.5}" propname="included.lib.libs.struts.classpath.5.X"/>
         <copy-ear-war file="${libs.struts.classpath.libfile.4}" propname="included.lib.libs.struts.classpath.4.X"/>
@@ -438,13 +408,11 @@
         <copy-ear-war file="${libs.struts.classpath.libfile.1}" propname="included.lib.libs.struts.classpath.1.X"/>
         <mkdir dir="${build.web.dir.real}/META-INF"/>
         <manifest file="${build.web.dir.real}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.libs.struts.classpath.1.X} ${included.lib.libs.struts.classpath.2.X} ${included.lib.libs.struts.classpath.3.X} ${included.lib.libs.struts.classpath.4.X} ${included.lib.libs.struts.classpath.5.X} ${included.lib.libs.struts.classpath.6.X} ${included.lib.libs.struts.classpath.7.X} ${included.lib.libs.struts.classpath.8.X} "/>
+            <attribute name="Class-Path" value="${included.lib.libs.struts.classpath.1.X} ${included.lib.libs.struts.classpath.2.X} ${included.lib.libs.struts.classpath.3.X} ${included.lib.libs.struts.classpath.4.X} ${included.lib.libs.struts.classpath.5.X} ${included.lib.libs.struts.classpath.6.X} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
     <target name="library-inclusion-in-archive" depends="init" unless="dist.ear.dir">
-        <copy file="${libs.struts.classpath.libfile.8}" todir="${build.web.dir.real}/WEB-INF/lib"/>
-        <copy file="${libs.struts.classpath.libfile.7}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${libs.struts.classpath.libfile.6}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${libs.struts.classpath.libfile.5}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${libs.struts.classpath.libfile.4}" todir="${build.web.dir.real}/WEB-INF/lib"/>
@@ -586,9 +554,6 @@
             <sourcepath>
                 <path path="${web.docbase.dir}:${ws.web.docbase.dirs}"/>
             </sourcepath>
-            <bootclasspath>
-                <path path="${platform.bootcp}"/>
-            </bootclasspath>
         </nbjpdaconnect>
     </target>
     <target name="debug-display-browser" if="do.display.browser">
@@ -616,7 +581,7 @@
             -->
     <target name="javadoc-build" depends="init">
         <mkdir dir="${dist.javadoc.dir}"/>
-        <javadoc destdir="${dist.javadoc.dir}" source="${javac.source}" notree="${javadoc.notree}" use="${javadoc.use}" nonavbar="${javadoc.nonavbar}" noindex="${javadoc.noindex}" splitindex="${javadoc.splitindex}" author="${javadoc.author}" version="${javadoc.version}" windowtitle="${javadoc.windowtitle}" private="${javadoc.private}" additionalparam="${javadoc.additionalparam}" failonerror="true" useexternalfile="true" executable="${platform.javadoc}">
+        <javadoc destdir="${dist.javadoc.dir}" source="${javac.source}" notree="${javadoc.notree}" use="${javadoc.use}" nonavbar="${javadoc.nonavbar}" noindex="${javadoc.noindex}" splitindex="${javadoc.splitindex}" author="${javadoc.author}" version="${javadoc.version}" windowtitle="${javadoc.windowtitle}" private="${javadoc.private}" additionalparam="${javadoc.additionalparam}" failonerror="true" useexternalfile="true">
             <classpath>
                 <path path="${javac.classpath}:${j2ee.platform.classpath}"/>
             </classpath>

@@ -7,36 +7,85 @@
 package nl.b3p.nbr.wis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.Action;
+import nl.b3p.commons.struts.ExtendedMethodProperties;
+import nl.b3p.nbr.wis.db.Clusters;
+import nl.b3p.nbr.wis.services.HibernateUtil;
+import nl.b3p.nbr.wis.struts.BaseHibernateAction;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
+import org.apache.struts.validator.DynaValidatorForm;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 /**
  *
  * @author Roy
  * @version
  */
 
-public class ViewerAction extends Action {
+public class ViewerAction extends BaseHibernateAction {
     
-    /* forward name="success" path="" */
-    private final static String SUCCESS = "success";
+    private static final Log log = LogFactory.getLog(ViewerAction.class);
+    
+    protected static final String KNOP = "knop";
+    
+    
+    protected Map getActionMethodPropertiesMap() {
+        Map map = new HashMap();
+        
+        ExtendedMethodProperties hibProp = null;
+        
+        hibProp = new ExtendedMethodProperties(KNOP);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setDefaultMessageKey("warning.knop.done");
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.knop.failed");
+        map.put(KNOP, hibProp);
+        
+        return map;
+    }
     
     /**
-     * This is the action called from the Struts framework.
-     * @param mapping The ActionMapping used to select this instance.
-     * @param form The optional ActionForm bean for this request.
-     * @param request The HTTP Request we are processing.
-     * @param response The HTTP Response we are processing.
-     * @throws java.lang.Exception
-     * @return
+     * Dit is een voorbeeld knop zoals deze in de jsp zou kunnen staan.
+     * De property van die knop is dan 'knop'.
+     * @param mapping 
+     * @param dynaForm 
+     * @param request 
+     * @param response 
+     * @throws java.lang.Exception 
+     * @return 
      */
-    public ActionForward execute(ActionMapping mapping, ActionForm  form,
-            HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    public ActionForward knop(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
+        ActionErrors errors = dynaForm.validate(mapping, request);
+        if(!errors.isEmpty()) {
+            addMessages(request, errors);
+            addAlternateMessage(mapping, request, VALIDATION_ERROR_KEY);
+            return getAlternateForward(mapping, request);
+        }
+        
+        createLists(dynaForm, request);
+        
+        addDefaultMessage(mapping, request);
+        return getDefaultForward(mapping, request);
+    }
+    
+    public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        createLists(dynaForm, request);
+        return mapping.findForward(SUCCESS);
+    }
+    
+    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         
         ArrayList layers= new ArrayList();
         
@@ -161,11 +210,24 @@ public class ViewerAction extends Action {
         layers.add(li1);
         layers.add(li2);
         layers.add(li3);
-               
+        
         
         request.setAttribute("layers",layers);
         
-        return mapping.findForward(SUCCESS);
         
+        // hibernate test
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        List ctl = null;
+        String hquery = "from Clusters";
+        Query q = sess.createQuery(hquery);
+        ctl = q.list();
+        if (ctl!=null) {
+            Iterator it = ctl.iterator();
+            while (it.hasNext()) {
+                Clusters cluster = (Clusters)it.next();
+                log.info("Cluster: " + cluster.getNaam());
+            }
+        }
     }
+    
 }

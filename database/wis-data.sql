@@ -1,29 +1,5 @@
 #SET FOREIGN_KEY_CHECKS = 0;
 
-#
-# Table structure for table 'applicaties'
-#
-
-DROP TABLE IF EXISTS `applicaties`;
-create table applicaties (
-	id serial not null auto_increment, 
-	pakket varchar(255), 
-	module varchar(255), 
-	beschrijving varchar(255), 
-	extern bit not null, 
-	acceptabel bit not null, 
-	administratief bit not null, 
-	geodata bit not null, 
-	taal varchar(255), 
-	spatial_koppeling varchar(255), 
-	db_koppeling varchar(255), 
-	webbased bit not null, 
-	gps bit not null, 
-	crow bit not null, 
-	opmerking varchar(255), 
-	leverancier integer, 
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'applicaties'
@@ -58,19 +34,6 @@ INSERT INTO `applicaties` VALUES(25, 'Geen', "", "", 0, 0, 0, 0, "", "", "", 0, 
 UNLOCK TABLES;
 
 #
-# Table structure for table 'clusters'
-#
-
-DROP TABLE IF EXISTS `clusters`;
-create table clusters (
-	id serial not null auto_increment,
-	naam varchar(255),
-	omschrijving varchar(255),
-	parent integer,
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'clusters'
 #
 
@@ -86,36 +49,12 @@ INSERT INTO `clusters` VALUES(13, 'Onbekend', "", NULL);
 UNLOCK TABLES;
 
 #
-# Table structure for table 'data_regels'
-#
-
-DROP TABLE IF EXISTS `data_regels`;
-create table data_regels (
-id serial not null auto_increment,
-	thema integer,
-	etlbatch integer,
-	timestamp date,
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'data_regels'
 #
 
 LOCK TABLES `data_regels` WRITE;
 UNLOCK TABLES;
 
-#
-# Table structure for table 'etlbatch'
-#
-
-DROP TABLE IF EXISTS `etlbatch`;
-create table etlbatch (
-id serial not null auto_increment,
-	omschrijving varchar(255),
-	timestamp date,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'etlbatch'
@@ -124,22 +63,6 @@ id serial not null auto_increment,
 LOCK TABLES `etlbatch` WRITE;
 UNLOCK TABLES;
 
-#
-# Table structure for table 'functie_items'
-#
-
-DROP TABLE IF EXISTS `functie_items`;
-create table functie_items (
-	id serial not null auto_increment,
-	label varchar(255),
-	omschrijving varchar(255),
-	eenheid varchar(255),
-	voorbeelden varchar(255),
-	invoer bit not null,
-	uitvoer bit not null,
-	functie integer,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'functie_items'
@@ -237,25 +160,6 @@ INSERT INTO `functie_items` VALUES(88, "", "", "", "", 0, 1, 46);
 UNLOCK TABLES;
 
 #
-# Table structure for table 'leveranciers'
-#
-
-DROP TABLE IF EXISTS `leveranciers`;
-create table leveranciers (
-	id serial not null auto_increment,
-	naam varchar(255),
-	pakket varchar(255),
-	telefoon1 varchar(255),
-	contact varchar(255),
-	telefoon2 varchar(255),
-	telefoon3 varchar(255),
-	email varchar(255),
-	info bit not null,
-	opmerkingen varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'leveranciers'
 #
 
@@ -285,18 +189,6 @@ INSERT INTO `leveranciers` VALUES(30, 'Provincie Noord-Brabant', 'zelfbouw/maatw
 UNLOCK TABLES;
 
 #
-# Table structure for table 'locatie_aanduidingen'
-#
-
-DROP TABLE IF EXISTS `locatie_aanduidingen`;
-create table locatie_aanduidingen (
-	id serial not null auto_increment,
-	naam varchar(255),
-	omschrijving varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'locatie_aanduidingen'
 #
 
@@ -306,22 +198,6 @@ INSERT INTO `locatie_aanduidingen` VALUES(2, 'WOL/HM', 'indien klikpunt binnen 1
 INSERT INTO `locatie_aanduidingen` VALUES(3, 'Adres', 'Straat, nr, postcode, plaats, gemeente van klikpunt');
 INSERT INTO `locatie_aanduidingen` VALUES(4, 'Regio', 'aanduiding in welke regio klikpunt ligt');
 UNLOCK TABLES;
-
-#
-# Table structure for table 'medewerkers'
-#
-
-DROP TABLE IF EXISTS `medewerkers`;
-create table medewerkers (
-	id serial not null auto_increment,
-	achternaam varchar(255),
-	voornaam varchar(255),
-	telefoon varchar(255),
-	functie varchar(255),
-	locatie varchar(255),
-	email varchar(255),
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'medewerkers'
@@ -386,19 +262,6 @@ INSERT INTO `medewerkers` VALUES(55, 'Oerle, van A.', 'Toon', "", "", "", "");
 UNLOCK TABLES;
 
 #
-# Table structure for table 'moscow'
-#
-
-DROP TABLE IF EXISTS `moscow`;
-create table moscow (
-	id serial not null auto_increment,
-	code varchar(255),
-	naam varchar(255),
-	omschrijving varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'moscow'
 #
 
@@ -411,16 +274,6 @@ INSERT INTO `moscow` VALUES(5, 'O', 'Onbekend', "");
 UNLOCK TABLES;
 
 #
-# Table structure for table 'object_typen'
-#
-DROP TABLE IF EXISTS `object_typen`;
-create table object_typen (
-	id serial not null auto_increment,
-	naam varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'object_typen'
 #
 
@@ -430,20 +283,6 @@ INSERT INTO `object_typen` VALUES(2, 'punt');
 INSERT INTO `object_typen` VALUES(3, 'lijn');
 INSERT INTO `object_typen` VALUES(4, 'vlak');
 UNLOCK TABLES;
-
-#
-# Table structure for table 'onderdeel'
-#
-
-DROP TABLE IF EXISTS `onderdeel`;
-create table onderdeel (
-	id serial not null auto_increment,
-	naam varchar(255),
-	omschrijving varchar(255),
-	locatie varchar(255),
-	regio bit not null,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'onderdeel'
@@ -466,19 +305,6 @@ INSERT INTO `onderdeel` VALUES(20, 'EenM//MRX', 'alle regios', "", 1);
 INSERT INTO `onderdeel` VALUES(21, 'Ontwerper', 'leverancier, bouwer', "", 0);
 INSERT INTO `onderdeel` VALUES(22, 'ECL', 'ecologie', "", 0);
 UNLOCK TABLES;
-
-#
-# Table structure for table 'onderdeel_medewerkers'
-#
-
-DROP TABLE IF EXISTS `onderdeel_medewerkers`;
-create table onderdeel_medewerkers (
-	id serial not null auto_increment,
-	medewerker integer,
-	onderdeel integer,
-	vertegenwoordiger bit not null,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'onderdeel_medewerkers'
@@ -542,34 +368,11 @@ INSERT INTO `onderdeel_medewerkers` VALUES(122, 49, 19, 0);
 UNLOCK TABLES;
 
 #
-# Table structure for table 'regel_attributen'
-#
-
-DROP TABLE IF EXISTS `regel_attributen`;
-create table regel_attributen (
-	id serial not null auto_increment,
-	tia integer,
-	regel integer,
-	waarde varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'regel_attributen'
 #
 
 LOCK TABLES `regel_attributen` WRITE;
 UNLOCK TABLES;
-
-#
-# Table structure for table 'rollen'
-#
-DROP TABLE IF EXISTS `rollen`;
-create table rollen (
-	id serial not null auto_increment,
-	naam varchar(255),
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'rollen'
@@ -583,43 +386,11 @@ INSERT INTO `rollen` VALUES(4, 'onbekend');
 UNLOCK TABLES;
 
 #
-# Table structure for table 'spatial_objects'
-#
-
-DROP TABLE IF EXISTS `spatial_objects`;
-create table spatial_objects (
-	id serial not null auto_increment,
-	tis integer,
-	regel integer,
-	geometry varchar(255),
-	timestamp date,
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'spatial_objects'
 #
 
 LOCK TABLES `spatial_objects` WRITE;
 UNLOCK TABLES;
-
-#
-# Table structure for table 'thema_applicaties'
-#
-
-DROP TABLE IF EXISTS `thema_applicaties`;
-create table thema_applicaties (
-	id serial not null auto_increment,
-	thema integer,
-	applicatie integer,
-	ingebruik bit not null,
-	geodata bit not null,
-	administratief bit not null,
-	voorkeur bit not null,
-	definitief bit not null,
-	standaard bit not null,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'thema_applicaties'
@@ -874,21 +645,6 @@ INSERT INTO `thema_applicaties` VALUES(309, 42, 24, 0, 1, 1, 0, 0, 0);
 UNLOCK TABLES;
 
 #
-# Table structure for table 'ThemaFuncties'
-#
-
-DROP TABLE IF EXISTS `thema_functies`;
-create table thema_functies (
-	id serial not null auto_increment,
-	naam varchar(255),
-	omschrijving varchar(255),
-	thema integer,
-	applicatie integer,
-	protocol varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'thema_functies'
 #
 
@@ -940,102 +696,62 @@ INSERT INTO `thema_functies` VALUES(46, "", "", 57, 25, "");
 UNLOCK TABLES;
 
 #
-# Table structure for table 'thema_items_admin'
-#
-
-DROP TABLE IF EXISTS `thema_items_admin`;
-create table thema_items_admin (
-	id serial not null auto_increment,
-	label varchar(255),
-	eenheid varchar(255),
-	omschrijving varchar(255),
-	basisregel bit not null,
-	voorbeelden varchar(255),
-	kenmerk bit not null,
-	kolombreedte integer not null,
-	thema integer,
-	moscow integer,
-	waarde_type integer,
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'thema_items_admin'
 #
 
 LOCK TABLES `thema_items_admin` WRITE;
-INSERT INTO `thema_items_admin` VALUES(2, 'Wegnr', "", "", 1, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(3, 'ViaView label', "", "", 1, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(4, 'Hectometrering', "", "", 1, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(5, 'Baantype', "", "", 1, 1, 'asfalt, verhard', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(6, 'Strooktype', "", "", 1, 1, 'asfalt, beton', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(7, 'Documentlocatie', "", "", 14, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(8, 'Overige regelingen', "", "", 14, 1, 'Fiets/Auto-regeling, Stoplichten', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(9, 'Verkeersbesluiten', "", "", 14, 1, 'Besluiten worden genomen bij vergadering 22-12-2006', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(10, 'Vergunningen', "", "", 14, 1, 'Bouwvergunning afgegeven, 05-09-2006', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(11, 'Vergunning', 'Ja/Nee', "", 7, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(12, 'Contractperiode', "", "", 7, 1, 'Verlopen op 15-09-2006', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(13, 'Tekeninglocatie', "", "", 14, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(14, 'Materiaal', "", "", 13, 1, 'asfalt', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(15, 'Leeftijd', 'jaar', "", 13, 1, '2,5 jaar', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(16, 'Spoorvorming', "", "", 13, 1, 'Lichte spoorvorming', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(17, 'Stroefheidsmeting', "", "", 13, 1, 'Uitgevoerd: 23-05-2006. Resultaat: Goed', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(18, 'Opbouw/doorsnede', "", "", 13, 1, 'Beton op zand/kleilaag', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(19, 'Aran', "", "", 49, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(20, 'Rambol', "", "", 49, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(21, 'Deflectie', "", "", 49, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(22, 'Inspectie', "", "", 49, 1, 'Laatste: 12-09-2006', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(23, 'Planning', "", "", 12, 1, 'Gepland voor 15-01-2007, Niet op de planning', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(24, 'Soort', "", "", 12, 1, 'Wegmarkering, Parkeerplaats', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(25, 'Maatvoering', "", "", 12, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(26, 'Lengte', 'km', "", 12, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(27, 'Materiaalsoort', "", "", 12, 1, 'Verf, Nog niet vastgesteld', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(28, 'Type', "", "", 26, 1, 'Verkeersbord, MAX 80km/u, Wegwijzering', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(29, 'Weglengte van geldigheid', 'km', "", 26, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(30, 'Afmeting', 'cm2', "", 26, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(31, 'Nummer', "", "", 26, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(32, 'Eigenaar', "", "", 26, 1, 'Anders, Provincie, ANWB', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(33, 'Oppervlak', 'm2', "", 6, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(34, 'Gemeente', "", "", 6, 1, 'Den Bosch', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(35, 'Type', "", "", 6, 1, 'Nat, droog, zaksloot', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(36, 'Orientatie tov wegas', "", "", 6, 1, 'links, rechts', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(37, 'Opmerkingen', "", "", 6, 1, 'Moet worden gebaggerd, Drooggevallen sloot, heeft controle nodig', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(38, 'Oppervlak', 'm2', "", 5, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(39, 'Hoogte tov weg', 'cm', "", 5, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(40, 'Type', "", "", 5, 1, 'Middenberm, buitenberm', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(41, 'Begroeiing', "", "", 5, 1, 'Semiverhard, gras', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(42, 'Rand', "", "", 5, 1, 'hard, zacht', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(43, 'Bomen', 'aantal', "", 18, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(44, 'Groentype', "", "", 18, 1, 'grasveld, houtwal', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(45, 'Type onderzoek', "", "", 27, 1, 'kruispunttelling', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(46, 'Naam locatie', "", "", 27, 1, 'N384', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(47, 'Naam meting', "", "", 27, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(48, 'Details', "", "", 27, 1, 'Voor details zie rapport 15-11-2006', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(49, 'Wegnr', "", "", 25, 1, "", 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(50, 'Tijdstip', "", "", 25, 1, '15:06, 22-11-2006', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(51, 'Type ongeval', "", "", 25, 1, 'Aanrijding tussen 2 auto\'s, Aanrijding fiets-auto', 0, NULL, NULL, 0);
-INSERT INTO `thema_items_admin` VALUES(52, 'Type manoeuvre', "", "", 25, 1, 'Inhalen (auto) van fietser', 0, NULL, NULL, 0);
+INSERT INTO `thema_items_admin` VALUES(2, 'Wegnr', "", "", 1, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(3, 'ViaView label', "", "", 1, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(4, 'Hectometrering', "", "", 1, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(5, 'Baantype', "", "", 1, 1, 'asfalt, verhard', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(6, 'Strooktype', "", "", 1, 1, 'asfalt, beton', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(7, 'Documentlocatie', "", "", 14, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(8, 'Overige regelingen', "", "", 14, 1, 'Fiets/Auto-regeling, Stoplichten', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(9, 'Verkeersbesluiten', "", "", 14, 1, 'Besluiten worden genomen bij vergadering 22-12-2006', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(10, 'Vergunningen', "", "", 14, 1, 'Bouwvergunning afgegeven, 05-09-2006', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(11, 'Vergunning', 'Ja/Nee', "", 7, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(12, 'Contractperiode', "", "", 7, 1, 'Verlopen op 15-09-2006', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(13, 'Tekeninglocatie', "", "", 14, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(14, 'Materiaal', "", "", 13, 1, 'asfalt', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(15, 'Leeftijd', 'jaar', "", 13, 1, '2,5 jaar', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(16, 'Spoorvorming', "", "", 13, 1, 'Lichte spoorvorming', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(17, 'Stroefheidsmeting', "", "", 13, 1, 'Uitgevoerd: 23-05-2006. Resultaat: Goed', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(18, 'Opbouw/doorsnede', "", "", 13, 1, 'Beton op zand/kleilaag', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(19, 'Aran', "", "", 49, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(20, 'Rambol', "", "", 49, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(21, 'Deflectie', "", "", 49, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(22, 'Inspectie', "", "", 49, 1, 'Laatste: 12-09-2006', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(23, 'Planning', "", "", 12, 1, 'Gepland voor 15-01-2007, Niet op de planning', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(24, 'Soort', "", "", 12, 1, 'Wegmarkering, Parkeerplaats', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(25, 'Maatvoering', "", "", 12, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(26, 'Lengte', 'km', "", 12, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(27, 'Materiaalsoort', "", "", 12, 1, 'Verf, Nog niet vastgesteld', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(28, 'Type', "", "", 26, 1, 'Verkeersbord, MAX 80km/u, Wegwijzering', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(29, 'Weglengte van geldigheid', 'km', "", 26, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(30, 'Afmeting', 'cm2', "", 26, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(31, 'Nummer', "", "", 26, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(32, 'Eigenaar', "", "", 26, 1, 'Anders, Provincie, ANWB', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(33, 'Oppervlak', 'm2', "", 6, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(34, 'Gemeente', "", "", 6, 1, 'Den Bosch', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(35, 'Type', "", "", 6, 1, 'Nat, droog, zaksloot', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(36, 'Orientatie tov wegas', "", "", 6, 1, 'links, rechts', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(37, 'Opmerkingen', "", "", 6, 1, 'Moet worden gebaggerd, Drooggevallen sloot, heeft controle nodig', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(38, 'Oppervlak', 'm2', "", 5, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(39, 'Hoogte tov weg', 'cm', "", 5, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(40, 'Type', "", "", 5, 1, 'Middenberm, buitenberm', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(41, 'Begroeiing', "", "", 5, 1, 'Semiverhard, gras', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(42, 'Rand', "", "", 5, 1, 'hard, zacht', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(43, 'Bomen', 'aantal', "", 18, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(44, 'Groentype', "", "", 18, 1, 'grasveld, houtwal', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(45, 'Type onderzoek', "", "", 27, 1, 'kruispunttelling', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(46, 'Naam locatie', "", "", 27, 1, 'N384', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(47, 'Naam meting', "", "", 27, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(48, 'Details', "", "", 27, 1, 'Voor details zie rapport 15-11-2006', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(49, 'Wegnr', "", "", 25, 1, "", 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(50, 'Tijdstip', "", "", 25, 1, '15:06, 22-11-2006', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(51, 'Type ongeval', "", "", 25, 1, 'Aanrijding tussen 2 auto\'s, Aanrijding fiets-auto', 0, NULL, NULL, 1);
+INSERT INTO `thema_items_admin` VALUES(52, 'Type manoeuvre', "", "", 25, 1, 'Inhalen (auto) van fietser', 0, NULL, NULL, 1);
 UNLOCK TABLES;
-
-#
-# Table structure for table 'thema_items_spatial'
-#
-
-DROP TABLE IF EXISTS `thema_items_spatial`;
-create table thema_items_spatial (
-	id serial not null auto_increment,
-	kenmerk varchar(255),
-	omschrijving varchar(255),
-	thema integer,
-	type integer not null,
-	lrood tinyint,
-	lgroen tinyint,
-	lblauw tinyint,
-	vrood tinyint,
-	vgroen tinyint,
-	vblauw tinyint,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'thema_items_spatial'
@@ -1092,24 +808,6 @@ INSERT INTO `thema_items_spatial` VALUES(51, "", "", 42, 0, NULL, NULL, NULL, NU
 UNLOCK TABLES;
 
 #
-# Table structure for table 'themas'
-#
-
-DROP TABLE IF EXISTS `themas`;
-create table themas (
-	id serial not null auto_increment,
-	code varchar(255),
-	naam varchar(255),
-	moscow integer,
-	belangnr integer not null,
-	cluster integer not null,
-	opmerkingen varchar(255),
-	analyse_thema bit not null,
-	locatie_thema bit not null,
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'themas'
 #
 
@@ -1130,7 +828,7 @@ INSERT INTO `themas` VALUES(15, '1', 'Eigendom/Perceel', 1, 1130, 1, "", 0, 0);
 INSERT INTO `themas` VALUES(16, '1', 'Kunstwerk', 1, 1140, 8, 'nog in gebruik?', 0, 0);
 INSERT INTO `themas` VALUES(17, '1', 'Pomp Installatie', 1, 1150, 8, '8 stuks,1x maand visuele inspectie', 0, 0);
 INSERT INTO `themas` VALUES(18, '1', 'Groen, Bomen, enz./Begroeing', 1, 1160, 3, "", 0, 0);
-INSERT INTO `themas` VALUES(19, '1', 'Ontsnipperingsmaatregelen', 0, 9010, 0, 'geen thema, doel om oppervlakte te verkleinen', 0, 0);
+INSERT INTO `themas` VALUES(19, '1', 'Ontsnipperingsmaatregelen', 5, 9010, 13, 'geen thema, doel om oppervlakte te verkleinen', 0, 0);
 INSERT INTO `themas` VALUES(21, '1', 'DVM Object (Dynamisch Verk Management)', 2, 2010, 6, 'tellussen beheerd door Henk vd Broek', 0, 0);
 INSERT INTO `themas` VALUES(22, '1', 'VRI Installatie', 2, 2020, 6, "", 0, 0);
 INSERT INTO `themas` VALUES(23, '1', 'Verlichting', 2, 2030, 2, 'Excel Provhuis->Access->CDROM->Regios', 0, 0);
@@ -1138,7 +836,7 @@ INSERT INTO `themas` VALUES(24, '1', 'Bushalten', 2, 2040, 2, "", 0, 0);
 INSERT INTO `themas` VALUES(25, '1', 'Ongevallen', 2, 2050, 2, 'black spots evt als onderdeel hiervan', 0, 0);
 INSERT INTO `themas` VALUES(26, '1', 'Verkeersbord/bebording', 2, 2060, 2, "", 0, 0);
 INSERT INTO `themas` VALUES(27, '1', 'Telling telpunt', 2, 2070, 2, "", 0, 0);
-INSERT INTO `themas` VALUES(28, '1', 'Gebieden', 0, 9080, 0, 'opgesplitst in specifieke gebieden', 0, 0);
+INSERT INTO `themas` VALUES(28, '1', 'Gebieden', 5, 9080, 13, 'opgesplitst in specifieke gebieden', 0, 0);
 INSERT INTO `themas` VALUES(29, '1', 'Geluid/Stilte/Zones', 2, 2090, 5, "", 0, 0);
 INSERT INTO `themas` VALUES(30, '1', 'Transportschema (RDW)', 2, 2100, 2, '1 persoon inlog', 0, 0);
 INSERT INTO `themas` VALUES(31, '1', 'Tankstation', 3, 3010, 2, "", 0, 0);
@@ -1148,19 +846,19 @@ INSERT INTO `themas` VALUES(34, '1', 'Contracten', 3, 3040, 4, "", 0, 0);
 INSERT INTO `themas` VALUES(35, '1', 'Besluit Verkeer WVW 45', 3, 3050, 4, "", 0, 0);
 INSERT INTO `themas` VALUES(36, '1', 'Vergunning Ontheffing', 3, 3060, 4, "", 0, 0);
 INSERT INTO `themas` VALUES(37, '1', 'Wegwijzer/Mast/Vlag', 3, 3070, 2, "", 0, 0);
-INSERT INTO `themas` VALUES(38, '1', 'Parallelweg (eigen)Geluidswering', 3, 3080, 0, "", 0, 0);
+INSERT INTO `themas` VALUES(38, '1', 'Parallelweg (eigen)Geluidswering', 3, 3080, 13, "", 0, 0);
 INSERT INTO `themas` VALUES(39, '1', 'Geleiderail', 3, 3090, 1, "", 0, 0);
 INSERT INTO `themas` VALUES(40, '1', 'Spoorwegovergang', 3, 3100, 1, "", 0, 0);
 INSERT INTO `themas` VALUES(41, '1', 'Wegdeel', 3, 3110, 1, "", 0, 0);
 INSERT INTO `themas` VALUES(42, '1', 'Route Gladheidsbestrijding', 3, 3120, 2, "", 0, 0);
 INSERT INTO `themas` VALUES(43, '1', 'Wegmeubilair overig', 4, 4010, 2, "", 0, 0);
-INSERT INTO `themas` VALUES(44, '1', 'Riolering eigen& vergund', 4, 4020, 0, "", 0, 0);
-INSERT INTO `themas` VALUES(45, '1', 'Belemmeringen jur WKPD)', 4, 4030, 0, "", 0, 0);
-INSERT INTO `themas` VALUES(46, '1', 'Kabels & Leidingen eigen', 4, 4040, 0, "", 0, 0);
-INSERT INTO `themas` VALUES(47, '1', 'Lopende & geplande projecten', 4, 4050, 0, "", 0, 0);
-INSERT INTO `themas` VALUES(48, '2', 'Extern', 0, 9020, 0, 'Niet helemaal duidelijk, externe bronnen', 0, 0);
-INSERT INTO `themas` VALUES(49, '2', 'Metingen Verharding (Rambol ed)', 0, 9030, 2, "", 0, 0);
-INSERT INTO `themas` VALUES(50, '2', 'Doorsnede', 0, 9040, 3, 'functie niet meer duidelijk: eruit', 0, 0);
+INSERT INTO `themas` VALUES(44, '1', 'Riolering eigen& vergund', 4, 4020, 13, "", 0, 0);
+INSERT INTO `themas` VALUES(45, '1', 'Belemmeringen jur WKPD)', 4, 4030, 13, "", 0, 0);
+INSERT INTO `themas` VALUES(46, '1', 'Kabels & Leidingen eigen', 4, 4040, 13, "", 0, 0);
+INSERT INTO `themas` VALUES(47, '1', 'Lopende & geplande projecten', 4, 4050, 13, "", 0, 0);
+INSERT INTO `themas` VALUES(48, '2', 'Extern', 5, 9020, 13, 'Niet helemaal duidelijk, externe bronnen', 0, 0);
+INSERT INTO `themas` VALUES(49, '2', 'Metingen Verharding (Rambol ed)', 5, 9030, 2, "", 0, 0);
+INSERT INTO `themas` VALUES(50, '2', 'Doorsnede', 5, 9040, 3, 'functie niet meer duidelijk: eruit', 0, 0);
 INSERT INTO `themas` VALUES(51, '2', 'Beheersgrens', 2, 2081, 5, "", 0, 0);
 INSERT INTO `themas` VALUES(52, '2', 'Gemeentegrens', 2, 2082, 5, "", 0, 0);
 INSERT INTO `themas` VALUES(53, '2', 'Bebouwde kom', 2, 2083, 5, "", 0, 0);
@@ -1168,26 +866,11 @@ INSERT INTO `themas` VALUES(54, '2', 'GGA-gebieden', 2, 2084, 5, "", 0, 0);
 INSERT INTO `themas` VALUES(55, '2', 'Waterschap', 2, 2085, 5, "", 0, 0);
 INSERT INTO `themas` VALUES(56, '2', 'Ecologische gebieden', 2, 2086, 5, "", 0, 0);
 INSERT INTO `themas` VALUES(57, '2', 'Bestemmingsplan', 2, 2087, 5, "", 0, 0);
-INSERT INTO `themas` VALUES(58, '2', 'Onderhoudsvak Groen', 0, 9050, 3, "", 0, 0);
-INSERT INTO `themas` VALUES(59, '2', 'Onderhoudsvak Verkeer', 0, 9060, 2, "", 0, 0);
-INSERT INTO `themas` VALUES(60, '2', 'Black spots ongevallen', 0, 9070, 2, "", 0, 0);
+INSERT INTO `themas` VALUES(58, '2', 'Onderhoudsvak Groen', 5, 9050, 3, "", 0, 0);
+INSERT INTO `themas` VALUES(59, '2', 'Onderhoudsvak Verkeer', 5, 9060, 2, "", 0, 0);
+INSERT INTO `themas` VALUES(60, '2', 'Black spots ongevallen', 5, 9070, 2, "", 0, 0);
 UNLOCK TABLES;
 
-#
-# Table structure for table 'thema_verantwoordelijkheden'
-#
-
-DROP TABLE IF EXISTS `thema_verantwoordelijkheden`;
-create table thema_verantwoordelijkheden (
-	id serial not null auto_increment,
-	thema integer,
-	medewerker integer,
-	onderdeel integer,
-	rol integer,
-	huidige_situatie bit not null,
-	gewenste_situatie bit not null,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'thema_verantwoordelijkheden'
@@ -1365,16 +1048,6 @@ UNLOCK TABLES;
 
 
 #
-# Table structure for table 'waarde_typen'
-#
-DROP TABLE IF EXISTS `waarde_typen`;
-create table waarde_typen (
-	id serial not null auto_increment,
-	naam varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'waarde_typen'
 #
 
@@ -1384,19 +1057,6 @@ INSERT INTO `waarde_typen` VALUES(2, 'integer');
 INSERT INTO `waarde_typen` VALUES(3, 'double');
 INSERT INTO `waarde_typen` VALUES(4, 'date');
 UNLOCK TABLES;
-
-#
-# Table structure for table 'workshop_medewerkers'
-#
-
-DROP TABLE IF EXISTS `workshop_medewerkers`;
-create table workshop_medewerkers (
-	id serial not null auto_increment,
-	workshop integer,
-	medewerker integer,
-	aanwezig bit not null,
-	primary key (id)
-) type=InnoDB;
 
 #
 # Dumping data for table 'workshop_medewerkers'
@@ -1473,18 +1133,6 @@ INSERT INTO `workshop_medewerkers` VALUES(67, 1, 1, 1);
 UNLOCK TABLES;
 
 #
-# Table structure for table 'workshops'
-#
-
-DROP TABLE IF EXISTS `workshops`;
-create table workshops (
-	id serial not null auto_increment,
-	volgnr integer not null,
-	naam varchar(255),
-	primary key (id)
-) type=InnoDB;
-
-#
 # Dumping data for table 'workshops'
 #
 
@@ -1504,59 +1152,3 @@ UNLOCK TABLES;
 
 #SET FOREIGN_KEY_CHECKS = 1;
 
-#alter table applicaties add index FK5CA4041F5E6911E7 (leverancier),
-#	add constraint FK5CA4041F5E6911E7 foreign key (leverancier) references leveranciers (id);
-#alter table clusters add index FK4B672DB94CB900BD (parent),
-#	add constraint FK4B672DB94CB900BD foreign key (parent) references clusters (id);
-#alter table data_regels add index FKAE3611CD169835AE (etlbatch),
-#	add constraint FKAE3611CD169835AE foreign key (etlbatch) references etlbatch (id);
-#alter table data_regels add index FKAE3611CD3D64D847 (thema),
-#	add constraint FKAE3611CD3D64D847 foreign key (thema) references themas (id);
-#alter table functie_items add index FK505E190D2D374D24 (functie),
-#	add constraint FK505E190D2D374D24 foreign key (functie) references thema_functies (id);
-#alter table onderdeel_medewerkers add index FKEBA08541FA69FB5F (medewerker),
-#	add constraint FKEBA08541FA69FB5F foreign key (medewerker) references medewerkers (id);
-#alter table onderdeel_medewerkers add index FKEBA08541C9D017C0 (onderdeel),
-#	add constraint FKEBA08541C9D017C0 foreign key (onderdeel) references onderdeel (id);
-#alter table regel_attributen add index FK78712BD673BE1EEC (tia),
-#	add constraint FK78712BD673BE1EEC foreign key (tia) references thema_items_admin (id);
-#alter table regel_attributen add index FK78712BD67B16151 (regel),
-#	add constraint FK78712BD67B16151 foreign key (regel) references data_regels (id);
-#alter table spatial_objects add index FK62E0C4D942263873 (tis),
-#	add constraint FK62E0C4D942263873 foreign key (tis) references thema_items_spatial (id);
-#alter table spatial_objects add index FK62E0C4D97B16151 (regel),
-#	add constraint FK62E0C4D97B16151 foreign key (regel) references data_regels (id);
-#alter table thema_applicaties add index FK667058A53D64D847 (thema),
-#	add constraint FK667058A53D64D847 foreign key (thema) references themas (id);
-#alter table thema_applicaties add index FK667058A5849C1C3F (applicatie),
-#	add constraint FK667058A5849C1C3F foreign key (applicatie) references applicaties (id);
-#alter table thema_functies add index FK93B8DBE13D64D847 (thema),
-#	add constraint FK93B8DBE13D64D847 foreign key (thema) references themas (id);
-#alter table thema_functies add index FK93B8DBE1849C1C3F (applicatie),
-#	add constraint FK93B8DBE1849C1C3F foreign key (applicatie) references applicaties (id);
-#alter table thema_items_admin add index FKF1CFD296614A2841 (waarde_type),
-#	add constraint FKF1CFD296614A2841 foreign key (waarde_type) references waarde_typen (id);
-#alter table thema_items_admin add index FKF1CFD2963D64D847 (thema),
-#	add constraint FKF1CFD2963D64D847 foreign key (thema) references themas (id);
-#alter table thema_items_admin add index FKF1CFD296EB9A88E8 (moscow),
-#	add constraint FKF1CFD296EB9A88E8 foreign key (moscow) references moscow (id);
-#alter table thema_items_spatial add index FK892BB68B3D64D847 (thema),
-#	add constraint FK892BB68B3D64D847 foreign key (thema) references themas (id);
-#alter table thema_verantwoordelijkheden add index FK3931C958FA69FB5F (medewerker),
-#	add constraint FK3931C958FA69FB5F foreign key (medewerker) references medewerkers (id);
-#	
-#alter table thema_verantwoordelijkheden add index FK3931C958FA69FB6F (onderdeel),
-#	add constraint FK3931C958FA69FB6F foreign key (onderdeel) references onderdeel (id);
-#
-#alter table thema_verantwoordelijkheden add index FK3931C95833CF3AE9 (rol),
-#	add constraint FK3931C95833CF3AE9 foreign key (rol) references rollen (id);
-#alter table thema_verantwoordelijkheden add index FK3931C9583D64D847 (thema),
-#	add constraint FK3931C9583D64D847 foreign key (thema) references themas (id);
-#alter table themas add index FKCBDB434EDFA4B56D (cluster),
-#	add constraint FKCBDB434EDFA4B56D foreign key (cluster) references clusters (id);
-#alter table themas add index FKCBDB434EEB9A88E8 (moscow),
-#	add constraint FKCBDB434EEB9A88E8 foreign key (moscow) references moscow (id);
-#alter table workshop_medewerkers add index FK8E8718E7BAF559F (workshop),
-#	add constraint FK8E8718E7BAF559F foreign key (workshop) references workshops (id);
-#alter table workshop_medewerkers add index FK8E8718EFA69FB5F (medewerker),
-#	add constraint FK8E8718EFA69FB5F foreign key (medewerker) references medewerkers (id);

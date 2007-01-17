@@ -1,326 +1,278 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-	<class name="nl.b3p.nbr.wis.db.Applicaties">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">app_id_seq</param>
-			</generator>
-		</id>
-		<property name="pakket"/>
-		<property name="module"/>
-		<property name="beschrijving"/>
-		<property name="extern" not-null="true"/>
-		<property name="acceptabel" not-null="true"/>
-		<property name="administratief" not-null="true"/>
-		<property name="spatial" not-null="true"/>
-		<property name="taal"/>
-		<property name="spatialKoppeling"/>
-		<property name="dbKoppeling"/>
-		<property name="webbased" not-null="true"/>
-		<property name="gps" not-null="true"/>
-		<property name="crow" not-null="true"/>
-		<property name="opmerking"/>
-		<many-to-one name="leverancier"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Clusters">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">clus_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-		<property name="omschrijving"/>
-		<many-to-one name="parent" column="parent"/>
-		<set name="children" inverse="true" cascade="all-delete-orphan">
-			<key column="parent"/>
-			<one-to-many class="nl.b3p.nbr.wis.db.Clusters"/>
-		</set>
-		<set name="themas" cascade="all-delete-orphan">
-			<key column="cluster"/>
-			<one-to-many class="nl.b3p.nbr.wis.db.Themas"/>
-		</set>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.DataRegels">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">dar_id_seq</param>
-			</generator>
-		</id>
-		<many-to-one name="thema"/>
-		<many-to-one name="etlbatch"/>
-		<property name="timestamp" type="date"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.ETLbatch">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">etlb_id_seq</param>
-			</generator>
-		</id>
-		<property name="omschrijving"/>
-		<property name="timestamp" type="date"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.FunctieItems">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">fitem_id_seq</param>
-			</generator>
-		</id>
-		<property name="label"/>
-		<property name="omschrijving"/>
-		<property name="eenheid"/>
-		<property name="voorbeelden"/>
-		<property name="invoer" not-null="true"/>
-		<property name="uitvoer" not-null="true"/>
-		<many-to-one name="functie"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Leveranciers">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">lev_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-		<property name="pakket"/>
-		<property name="telefoon1"/>
-		<property name="contact"/>
-		<property name="telefoon2"/>
-		<property name="telefoon3"/>
-		<property name="email"/>
-		<property name="info" not-null="true"/>
-		<property name="opmerkingen"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.LocatieAanduidingen">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">loca_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-		<property name="omschrijving"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Medewerkers">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">med_id_seq</param>
-			</generator>
-		</id>
-		<property name="Achternaam"/>
-		<property name="Voornaam"/>
-		<property name="telefoon"/>
-		<property name="Functie"/>
-		<property name="Locatie"/>
-		<property name="email"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Moscow">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">mscw_id_seq</param>
-			</generator>
-		</id>
-		<property name="code"/>
-		<property name="naam"/>
-		<property name="omschrijving"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.ObjectTypen">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">objt_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Onderdeel">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">ondd_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-		<property name="omschrijving"/>
-		<property name="locatie"/>
-		<property name="regio" not-null="true"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.OnderdeelMedewerkers">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">omed_id_seq</param>
-			</generator>
-		</id>
-		<many-to-one name="medewerker"/>
-		<many-to-one name="onderdeel"/>
-		<property name="vertegenwoordiger" not-null="true"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.RegelAttributen">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">rega_id_seq</param>
-			</generator>
-		</id>
-		<many-to-one name="tia"/>
-		<many-to-one name="regel"/>
-		<property name="waarde"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Rollen">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">rol_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.SpatialObjects">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">spob_id_seq</param>
-			</generator>
-		</id>
-		<many-to-one name="tis"/>
-		<many-to-one name="regel"/>
-		<property name="geometry"/>
-		<property name="timestamp" type="date"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.ThemaApplicaties">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">thapp_id_seq</param>
-			</generator>
-		</id>
-		<many-to-one name="thema"/>
-		<many-to-one name="applicatie"/>
-		<property name="ingebruik" not-null="true"/>
-		<property name="spatial" not-null="true"/>
-		<property name="administratief" not-null="true"/>
-		<property name="voorkeur" not-null="true"/>
-		<property name="definitief" not-null="true"/>
-		<property name="standaard" not-null="true"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.ThemaFuncties">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">thfun_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-		<property name="omschrijving"/>
-		<many-to-one name="thema"/>
-		<many-to-one name="applicatie"/>
-		<property name="protocol"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.ThemaItemsAdmin">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">thiad_id_seq</param>
-			</generator>
-		</id>
-		<property name="label"/>
-		<property name="eenheid"/>
-		<property name="omschrijving"/>
-		<property name="basisregel" not-null="true"/>
-		<property name="voorbeelden"/>
-		<property name="kenmerk" not-null="true"/>
-		<property name="kolombreedte" not-null="true"/>
-		<many-to-one name="thema"/>
-		<many-to-one name="moscow"/>
-		<many-to-one name="waardeType"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.ThemaItemsSpatial">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">thisp_id_seq</param>
-			</generator>
-		</id>
-		<property name="kenmerk"/>
-		<property name="omschrijving"/>
-		<many-to-one name="thema"/>
-		<property name="type"/>
-		<property name="lrood"/>
-		<property name="lgroen"/>
-		<property name="lblauw"/>
-		<property name="vrood"/>
-		<property name="vgroen"/>
-		<property name="vblauw"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">thver_id_seq</param>
-			</generator>
-		</id>
-		<many-to-one name="thema"/>
-		<many-to-one name="medewerker"/>
-		<many-to-one name="onderdeel"/>
-		<many-to-one name="rol"/>
-		<property name="huidige_situatie" not-null="true"/>
-		<property name="gewenste_situatie" not-null="true"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Themas">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">thema_id_seq</param>
-			</generator>
-		</id>
-		<property name="code"/>
-		<property name="naam"/>
-		<many-to-one name="moscow"/>
-		<property name="belangnr" not-null="true"/>
-		<many-to-one name="cluster">
-			<column name="cluster" not-null="true"/>
-		</many-to-one>
-		<property name="opmerkingen"/>
-		<property name="analyse_thema" not-null="true"/>
-		<property name="locatie_thema" not-null="true"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.WaardeTypen">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">wrdt_id_seq</param>
-			</generator>
-		</id>
-		<property name="naam"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.WorkshopMedewerkers">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">wsmed_id_seq</param>
-			</generator>
-		</id>
-		<many-to-one name="workshop"/>
-		<many-to-one name="medewerker"/>
-		<property name="aanwezig" not-null="true"/>
-	</class>
-	<class name="nl.b3p.nbr.wis.db.Workshops">
-		<id name="id">
-			<column name="id" sql-type="serial"/>
-			<generator class="native">
-				<param name="sequence">wsh_id_seq</param>
-			</generator>
-		</id>
-		<property name="volgnr" not-null="true"/>
-		<property name="naam"/>
-	</class>
+    <class name="nl.b3p.nbr.wis.db.Applicaties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="pakket"/>
+        <property name="module"/>
+        <property name="beschrijving"/>
+        <property name="extern" not-null="true"/>
+        <property name="acceptabel" not-null="true"/>
+        <property name="administratief" not-null="true"/>
+        <property name="geodata" not-null="true"/>
+        <property name="taal"/>
+        <property name="spatialKoppeling"/>
+        <property name="dbKoppeling"/>
+        <property name="webbased" not-null="true"/>
+        <property name="gps" not-null="true"/>
+        <property name="crow" not-null="true"/>
+        <property name="opmerking"/>
+        <many-to-one name="leverancier"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Clusters">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+        <many-to-one name="parent" column="parent"/>
+        <set name="children" inverse="true" cascade="all-delete-orphan">
+            <key column="parent"/>
+            <one-to-many class="nl.b3p.nbr.wis.db.Clusters"/>
+        </set>
+        <set name="themas" cascade="all-delete-orphan">
+            <key column="cluster"/>
+            <one-to-many class="nl.b3p.nbr.wis.db.Themas"/>
+        </set>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.DataRegels">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="thema"/>
+        <many-to-one name="etlbatch"/>
+        <property name="timestamp" type="date"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.ETLbatch">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="omschrijving"/>
+        <property name="timestamp" type="date"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.FunctieItems">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="label"/>
+        <property name="omschrijving"/>
+        <property name="eenheid"/>
+        <property name="voorbeelden"/>
+        <property name="invoer" not-null="true"/>
+        <property name="uitvoer" not-null="true"/>
+        <many-to-one name="functie"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Leveranciers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+        <property name="pakket"/>
+        <property name="telefoon1"/>
+        <property name="contact"/>
+        <property name="telefoon2"/>
+        <property name="telefoon3"/>
+        <property name="email"/>
+        <property name="info" not-null="true"/>
+        <property name="opmerkingen"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.LocatieAanduidingen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Medewerkers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="Achternaam"/>
+        <property name="Voornaam"/>
+        <property name="telefoon"/>
+        <property name="Functie"/>
+        <property name="Locatie"/>
+        <property name="email"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Moscow">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="code"/>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.ObjectTypen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Onderdeel">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+        <property name="locatie"/>
+        <property name="regio" not-null="true"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.OnderdeelMedewerkers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="medewerker"/>
+        <many-to-one name="onderdeel"/>
+        <property name="vertegenwoordiger" not-null="true"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.RegelAttributen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="tia"/>
+        <many-to-one name="regel"/>
+        <property name="waarde"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Rollen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.SpatialObjects">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="tis"/>
+        <many-to-one name="regel"/>
+        <property name="geometry"/>
+        <property name="timestamp" type="date"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.ThemaApplicaties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="thema"/>
+        <many-to-one name="applicatie"/>
+        <property name="ingebruik" not-null="true"/>
+        <property name="geodata" not-null="true"/>
+        <property name="administratief" not-null="true"/>
+        <property name="voorkeur" not-null="true"/>
+        <property name="definitief" not-null="true"/>
+        <property name="standaard" not-null="true"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.ThemaFuncties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+        <many-to-one name="thema"/>
+        <many-to-one name="applicatie"/>
+        <property name="protocol"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.ThemaItemsAdmin">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="label"/>
+        <property name="eenheid"/>
+        <property name="omschrijving"/>
+        <property name="basisregel" not-null="true"/>
+        <property name="voorbeelden"/>
+        <property name="kenmerk" not-null="true"/>
+        <property name="kolombreedte" not-null="true"/>
+        <many-to-one name="thema"/>
+        <many-to-one name="moscow"/>
+        <many-to-one name="waardeType"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.ThemaItemsSpatial">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="kenmerk"/>
+        <property name="omschrijving"/>
+        <many-to-one name="thema"/>
+        <property name="type"/>
+        <property name="lrood"/>
+        <property name="lgroen"/>
+        <property name="lblauw"/>
+        <property name="vrood"/>
+        <property name="vgroen"/>
+        <property name="vblauw"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="thema"/>
+        <many-to-one name="medewerker"/>
+        <many-to-one name="onderdeel"/>
+        <many-to-one name="rol"/>
+        <property name="huidige_situatie" not-null="true"/>
+        <property name="gewenste_situatie" not-null="true"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Themas">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="code"/>
+        <property name="naam"/>
+        <many-to-one name="moscow"/>
+        <property name="belangnr" not-null="true"/>
+        <many-to-one name="cluster">
+            <column name="cluster" not-null="true"/>
+        </many-to-one>
+        <property name="opmerkingen"/>
+        <property name="analyse_thema" not-null="true"/>
+        <property name="locatie_thema" not-null="true"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.WaardeTypen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.WorkshopMedewerkers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="workshop"/>
+        <many-to-one name="medewerker"/>
+        <property name="aanwezig" not-null="true"/>
+    </class>
+    <class name="nl.b3p.nbr.wis.db.Workshops">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="volgnr" not-null="true"/>
+        <property name="naam"/>
+    </class>
 </hibernate-mapping>

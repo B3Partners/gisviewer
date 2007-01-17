@@ -22,7 +22,7 @@ public class Applicaties {
     private boolean extern;
     private boolean acceptabel;
     private boolean administratief;
-    private boolean spatial;
+    private boolean geodata;
     private String taal;
     private String spatialKoppeling;
     private String dbKoppeling;
@@ -93,14 +93,6 @@ public class Applicaties {
         this.administratief = administratief;
     }
 
-    public boolean isSpatial() {
-        return spatial;
-    }
-
-    public void setSpatial(boolean spatial) {
-        this.spatial = spatial;
-    }
-
     public String getTaal() {
         return taal;
     }
@@ -163,6 +155,14 @@ public class Applicaties {
 
     public void setLeverancier(Leveranciers leverancier) {
         this.leverancier = leverancier;
+    }
+
+    public boolean isGeodata() {
+        return geodata;
+    }
+
+    public void setGeodata(boolean geodata) {
+        this.geodata = geodata;
     }
 
 }

@@ -17,6 +17,7 @@ public class ThemaVerantwoordelijkheden {
     private int id;
     private Themas thema;
     private Medewerkers medewerker;
+    private Onderdeel onderdeel;
     private Rollen rol;
     private boolean huidige_situatie;
     private boolean gewenste_situatie;
@@ -71,6 +72,14 @@ public class ThemaVerantwoordelijkheden {
 
     public void setRol(Rollen rol) {
         this.rol = rol;
+    }
+
+    public Onderdeel getOnderdeel() {
+        return onderdeel;
+    }
+
+    public void setOnderdeel(Onderdeel onderdeel) {
+        this.onderdeel = onderdeel;
     }
     
 }

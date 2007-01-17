@@ -19,7 +19,7 @@ public class ThemaApplicaties {
     private Themas thema;
     private Applicaties applicatie;
     private boolean ingebruik;
-    private boolean spatial;
+    private boolean geodata;
     private boolean administratief;
     private boolean voorkeur;
     private boolean definitief;
@@ -43,14 +43,6 @@ public class ThemaApplicaties {
 
     public void setIngebruik(boolean ingebruik) {
         this.ingebruik = ingebruik;
-    }
-
-    public boolean isSpatial() {
-        return spatial;
-    }
-
-    public void setSpatial(boolean spatial) {
-        this.spatial = spatial;
     }
 
     public boolean isAdministratief() {
@@ -99,6 +91,14 @@ public class ThemaApplicaties {
 
     public void setApplicatie(Applicaties applicatie) {
         this.applicatie = applicatie;
+    }
+
+    public boolean isGeodata() {
+        return geodata;
+    }
+
+    public void setGeodata(boolean geodata) {
+        this.geodata = geodata;
     }
     
 }

@@ -67,5 +67,13 @@ public class Clusters {
     public void setThemas(Set themas) {
         this.themas = themas;
     }
+
+    public Clusters getParent() {
+        return parent;
+    }
+
+    public void setParent(Clusters parent) {
+        this.parent = parent;
+    }
     
 }

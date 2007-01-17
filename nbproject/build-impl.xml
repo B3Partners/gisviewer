@@ -276,8 +276,14 @@
     <!--
                 COMPILATION SECTION
             -->
-    <target name="deps-module-jar" depends="init" if="no.dist.ear.dir" unless="no.deps"/>
-    <target name="deps-ear-jar" depends="init" if="dist.ear.dir" unless="no.deps"/>
+    <target name="deps-module-jar" depends="init" if="no.dist.ear.dir" unless="no.deps">
+        <ant target="jar" inheritall="false" antfile="${project.b3p-commons-core}/build.xml"/>
+        <ant target="jar" inheritall="false" antfile="${project.b3p-commons-hibernate}/build.xml"/>
+    </target>
+    <target name="deps-ear-jar" depends="init" if="dist.ear.dir" unless="no.deps">
+        <ant target="jar" inheritall="false" antfile="${project.b3p-commons-core}/build.xml"/>
+        <ant target="jar" inheritall="false" antfile="${project.b3p-commons-hibernate}/build.xml"/>
+    </target>
     <target name="deps-jar" depends="init, deps-module-jar, deps-ear-jar" unless="no.deps"/>
     <target name="-pre-pre-compile" depends="init,deps-jar">
         <mkdir dir="${build.classes.dir.real}"/>
@@ -406,9 +412,77 @@
         <copy-ear-war file="${libs.struts.classpath.libfile.3}" propname="included.lib.libs.struts.classpath.3.X"/>
         <copy-ear-war file="${libs.struts.classpath.libfile.2}" propname="included.lib.libs.struts.classpath.2.X"/>
         <copy-ear-war file="${libs.struts.classpath.libfile.1}" propname="included.lib.libs.struts.classpath.1.X"/>
+        <basename property="included.lib.file.reference.mysql-connector-java-3.0.11-stable-bin.jar" file="${file.reference.mysql-connector-java-3.0.11-stable-bin.jar}"/>
+        <copy-ear-war file="${file.reference.mysql-connector-java-3.0.11-stable-bin.jar}" propname="included.lib.file.reference.mysql-connector-java-3.0.11-stable-bin.jar.X"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.17" file="${libs.B3pCommonsLib.classpath.libfile.17}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.16" file="${libs.B3pCommonsLib.classpath.libfile.16}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.15" file="${libs.B3pCommonsLib.classpath.libfile.15}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.14" file="${libs.B3pCommonsLib.classpath.libfile.14}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.13" file="${libs.B3pCommonsLib.classpath.libfile.13}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.12" file="${libs.B3pCommonsLib.classpath.libfile.12}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.11" file="${libs.B3pCommonsLib.classpath.libfile.11}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.10" file="${libs.B3pCommonsLib.classpath.libfile.10}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.9" file="${libs.B3pCommonsLib.classpath.libfile.9}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.8" file="${libs.B3pCommonsLib.classpath.libfile.8}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.7" file="${libs.B3pCommonsLib.classpath.libfile.7}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.6" file="${libs.B3pCommonsLib.classpath.libfile.6}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.5" file="${libs.B3pCommonsLib.classpath.libfile.5}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.4" file="${libs.B3pCommonsLib.classpath.libfile.4}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.3" file="${libs.B3pCommonsLib.classpath.libfile.3}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.2" file="${libs.B3pCommonsLib.classpath.libfile.2}"/>
+        <basename property="included.lib.libs.B3pCommonsLib.classpath.1" file="${libs.B3pCommonsLib.classpath.libfile.1}"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.17}" propname="included.lib.libs.B3pCommonsLib.classpath.17.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.16}" propname="included.lib.libs.B3pCommonsLib.classpath.16.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.15}" propname="included.lib.libs.B3pCommonsLib.classpath.15.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.14}" propname="included.lib.libs.B3pCommonsLib.classpath.14.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.13}" propname="included.lib.libs.B3pCommonsLib.classpath.13.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.12}" propname="included.lib.libs.B3pCommonsLib.classpath.12.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.11}" propname="included.lib.libs.B3pCommonsLib.classpath.11.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.10}" propname="included.lib.libs.B3pCommonsLib.classpath.10.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.9}" propname="included.lib.libs.B3pCommonsLib.classpath.9.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.8}" propname="included.lib.libs.B3pCommonsLib.classpath.8.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.7}" propname="included.lib.libs.B3pCommonsLib.classpath.7.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.6}" propname="included.lib.libs.B3pCommonsLib.classpath.6.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.5}" propname="included.lib.libs.B3pCommonsLib.classpath.5.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.4}" propname="included.lib.libs.B3pCommonsLib.classpath.4.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.3}" propname="included.lib.libs.B3pCommonsLib.classpath.3.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.2}" propname="included.lib.libs.B3pCommonsLib.classpath.2.X"/>
+        <copy-ear-war file="${libs.B3pCommonsLib.classpath.libfile.1}" propname="included.lib.libs.B3pCommonsLib.classpath.1.X"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.11" file="${libs.B3pHibernateLib.classpath.libfile.11}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.10" file="${libs.B3pHibernateLib.classpath.libfile.10}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.9" file="${libs.B3pHibernateLib.classpath.libfile.9}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.8" file="${libs.B3pHibernateLib.classpath.libfile.8}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.7" file="${libs.B3pHibernateLib.classpath.libfile.7}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.6" file="${libs.B3pHibernateLib.classpath.libfile.6}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.5" file="${libs.B3pHibernateLib.classpath.libfile.5}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.4" file="${libs.B3pHibernateLib.classpath.libfile.4}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.3" file="${libs.B3pHibernateLib.classpath.libfile.3}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.2" file="${libs.B3pHibernateLib.classpath.libfile.2}"/>
+        <basename property="included.lib.libs.B3pHibernateLib.classpath.1" file="${libs.B3pHibernateLib.classpath.libfile.1}"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.11}" propname="included.lib.libs.B3pHibernateLib.classpath.11.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.10}" propname="included.lib.libs.B3pHibernateLib.classpath.10.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.9}" propname="included.lib.libs.B3pHibernateLib.classpath.9.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.8}" propname="included.lib.libs.B3pHibernateLib.classpath.8.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.7}" propname="included.lib.libs.B3pHibernateLib.classpath.7.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.6}" propname="included.lib.libs.B3pHibernateLib.classpath.6.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.5}" propname="included.lib.libs.B3pHibernateLib.classpath.5.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.4}" propname="included.lib.libs.B3pHibernateLib.classpath.4.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.3}" propname="included.lib.libs.B3pHibernateLib.classpath.3.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.2}" propname="included.lib.libs.B3pHibernateLib.classpath.2.X"/>
+        <copy-ear-war file="${libs.B3pHibernateLib.classpath.libfile.1}" propname="included.lib.libs.B3pHibernateLib.classpath.1.X"/>
+        <basename property="included.lib.libs.jstl11.classpath.2" file="${libs.jstl11.classpath.libfile.2}"/>
+        <basename property="included.lib.libs.jstl11.classpath.1" file="${libs.jstl11.classpath.libfile.1}"/>
+        <copy-ear-war file="${libs.jstl11.classpath.libfile.2}" propname="included.lib.libs.jstl11.classpath.2.X"/>
+        <copy-ear-war file="${libs.jstl11.classpath.libfile.1}" propname="included.lib.libs.jstl11.classpath.1.X"/>
+        <basename property="included.lib.reference.b3p-commons-core.jar" file="${reference.b3p-commons-core.jar}"/>
+        <copy-ear-war file="${reference.b3p-commons-core.jar}" propname="included.lib.reference.b3p-commons-core.jar.X"/>
+        <basename property="included.lib.reference.b3p-commons-hibernate.jar" file="${reference.b3p-commons-hibernate.jar}"/>
+        <copy-ear-war file="${reference.b3p-commons-hibernate.jar}" propname="included.lib.reference.b3p-commons-hibernate.jar.X"/>
+        <basename property="included.lib.libs.B3pDwrLib.classpath" file="${libs.B3pDwrLib.classpath}"/>
+        <copy-ear-war file="${libs.B3pDwrLib.classpath}" propname="included.lib.libs.B3pDwrLib.classpath.X"/>
         <mkdir dir="${build.web.dir.real}/META-INF"/>
         <manifest file="${build.web.dir.real}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.libs.struts.classpath.1.X} ${included.lib.libs.struts.classpath.2.X} ${included.lib.libs.struts.classpath.3.X} ${included.lib.libs.struts.classpath.4.X} ${included.lib.libs.struts.classpath.5.X} ${included.lib.libs.struts.classpath.6.X} "/>
+            <attribute name="Class-Path" value="${included.lib.libs.struts.classpath.1.X} ${included.lib.libs.struts.classpath.2.X} ${included.lib.libs.struts.classpath.3.X} ${included.lib.libs.struts.classpath.4.X} ${included.lib.libs.struts.classpath.5.X} ${included.lib.libs.struts.classpath.6.X} ${included.lib.file.reference.mysql-connector-java-3.0.11-stable-bin.jar} ${included.lib.libs.B3pCommonsLib.classpath.1.X} ${included.lib.libs.B3pCommonsLib.classpath.2.X} ${included.lib.libs.B3pCommonsLib.classpath.3.X} ${included.lib.libs.B3pCommonsLib.classpath.4.X} ${included.lib.libs.B3pCommonsLib.classpath.5.X} ${included.lib.libs.B3pCommonsLib.classpath.6.X} ${included.lib.libs.B3pCommonsLib.classpath.7.X} ${included.lib.libs.B3pCommonsLib.classpath.8.X} ${included.lib.libs.B3pCommonsLib.classpath.9.X} ${included.lib.libs.B3pCommonsLib.classpath.10.X} ${included.lib.libs.B3pCommonsLib.classpath.11.X} ${included.lib.libs.B3pCommonsLib.classpath.12.X} ${included.lib.libs.B3pCommonsLib.classpath.13.X} ${included.lib.libs.B3pCommonsLib.classpath.14.X} ${included.lib.libs.B3pCommonsLib.classpath.15.X} ${included.lib.libs.B3pCommonsLib.classpath.16.X} ${included.lib.libs.B3pCommonsLib.classpath.17.X} ${included.lib.libs.B3pHibernateLib.classpath.1.X} ${included.lib.libs.B3pHibernateLib.classpath.2.X} ${included.lib.libs.B3pHibernateLib.classpath.3.X} ${included.lib.libs.B3pHibernateLib.classpath.4.X} ${included.lib.libs.B3pHibernateLib.classpath.5.X} ${included.lib.libs.B3pHibernateLib.classpath.6.X} ${included.lib.libs.B3pHibernateLib.classpath.7.X} ${included.lib.libs.B3pHibernateLib.classpath.8.X} ${included.lib.libs.B3pHibernateLib.classpath.9.X} ${included.lib.libs.B3pHibernateLib.classpath.10.X} ${included.lib.libs.B3pHibernateLib.classpath.11.X} ${included.lib.libs.jstl11.classpath.1.X} ${included.lib.libs.jstl11.classpath.2.X} ${included.lib.reference.b3p-commons-core.jar} ${included.lib.reference.b3p-commons-hibernate.jar} ${included.lib.libs.B3pDwrLib.classpath} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
@@ -419,6 +493,40 @@
         <copy file="${libs.struts.classpath.libfile.3}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${libs.struts.classpath.libfile.2}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${libs.struts.classpath.libfile.1}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${file.reference.mysql-connector-java-3.0.11-stable-bin.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.17}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.16}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.15}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.14}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.13}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.12}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.11}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.10}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.9}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.8}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.7}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.6}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.5}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.4}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.3}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.2}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pCommonsLib.classpath.libfile.1}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.11}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.10}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.9}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.8}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.7}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.6}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.5}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.4}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.3}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.2}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pHibernateLib.classpath.libfile.1}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.jstl11.classpath.libfile.2}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.jstl11.classpath.libfile.1}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${reference.b3p-commons-core.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${reference.b3p-commons-hibernate.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${libs.B3pDwrLib.classpath}" todir="${build.web.dir.real}/WEB-INF/lib"/>
     </target>
     <target name="do-ear-dist" depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest">
         <dirname property="dist.jar.dir" file="${dist.ear.war}"/>
@@ -685,7 +793,10 @@
                 
                 CLEANUP SECTION
             -->
-    <target name="deps-clean" depends="init" if="no.dist.ear.dir" unless="no.deps"/>
+    <target name="deps-clean" depends="init" if="no.dist.ear.dir" unless="no.deps">
+        <ant target="clean" inheritall="false" antfile="${project.b3p-commons-core}/build.xml"/>
+        <ant target="clean" inheritall="false" antfile="${project.b3p-commons-hibernate}/build.xml"/>
+    </target>
     <target name="do-clean" depends="init">
         <condition value="${build.web.dir.real}" property="build.dir.to.clean">
             <isset property="dist.ear.dir"/>

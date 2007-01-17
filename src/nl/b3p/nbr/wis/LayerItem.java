@@ -22,6 +22,8 @@ public class LayerItem {
      *Bij false dicht. Als het een layer is wordt hij aangevinkt/uitgevinkt getoond.
      */
     private boolean checked=false;
+    private boolean clickAction=false;
+    private boolean cluster=false;
     private ArrayList childs=null;
     private ArrayList adminData=null;
     private ArrayList labelData=null;
@@ -30,7 +32,7 @@ public class LayerItem {
     public LayerItem(){}
     public LayerItem(String n,boolean c) {
         name=n;
-        checked=c;
+        cluster=c;
     }
     public LayerItem(String n){
         name=n;
@@ -50,6 +52,22 @@ public class LayerItem {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+    
+    public boolean isClickAction() {
+        return clickAction;
+    }
+    
+    public void setClickAction(boolean clickAction) {
+        this.clickAction = clickAction;
+    }
+    
+    public boolean isCluster() {
+        return cluster;
+    }
+    
+    public void setCluster(boolean cluster) {
+        this.cluster = cluster;
     }
 
     public ArrayList getChilds() {

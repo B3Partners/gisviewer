@@ -24,11 +24,19 @@
     float: right;
     border: 1px solid Black;
 }
+#dataframe {
+    border: 0px none White;
+    float: left;
+    width: 951px;
+    height: 165px;
+    margin-top: 5px;
+}
 #admindatamaindiv{
     position: static;
     float: left;
     width: 951px;
     height: 165px;
+    margin-top: 5px;
 }
 #layermaindiv{
     position: static;
@@ -40,42 +48,13 @@
 background-color: White;
 }
 /*For the layers*/
-.closedthema{
-    padding-left: 25px;
-    cursor: pointer;
-    background-image: url("../images/closedNode.GIF");  
-    background-repeat: no-repeat;
-    clear: left;
-}
-.openthema{
-    padding-left: 25px;
-    cursor: pointer;
-    background-image: url("../images/openNode.GIF");
-    background-repeat: no-repeat;
-    clear: left;
-}
-.emptythema{
-    padding-left: 25px;
-    clear: left;
-    cursor: pointer;
-    background-image: url("../images/closedNode.GIF");  
-    background-repeat: no-repeat;
-}
-.openthemalayers{
-    padding: 5px;
-    clear: left;
-}
-.layerdiv{
-    clear: left;
-    width: 100%;
-}
-a.layerlink, a.layerlink:visited, a.layerlink:active {
+a, a:visited, a:active {
     color: #ff0000;
     font-weight: bold;
     text-decoration: none;
     float: rigth;
 }
-a.layerlink:hover{
+a:hover{
     text-decoration: underline;
 }
 /*For admindata*/
@@ -85,7 +64,6 @@ a.layerlink:hover{
     background-repeat: repeat; 
     color: white;
     font-weight: bold;
-    width: 930px;
     padding-left: 5px;
 }
 .row{

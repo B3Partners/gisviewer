@@ -9,6 +9,7 @@
 <%@ page isELIgnored="false"%>
 <html>
     <script src='dwr/interface/JMapData.js'></script>
+    <script src='dwr/interface/JViewerAdminData.js'></script>
     <script src='dwr/engine.js'></script>
     <!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRQscSysVS1XSjcAv6lVG_Fcz1dG_hTUtfUaDWssiqZBu5tkG9-_hOOq3w -->
     <!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRRrxo-vqJF2j9YSroPtu9HNqgCyPBT3RKeL6MZXKFcLtQOV9A_keMkhYw -->
@@ -89,6 +90,8 @@
         map.clearOverlays()
         map.addOverlay(new GMarker(point));
         doAjaxRequest(point.x, point.y);
+        
+        handleGetAdminData();
     }
     
     function doAjaxRequest(point_x, point_y) {
@@ -97,6 +100,39 @@
     
     function handleGetData(str) {
         document.getElementById('infovak').innerHTML = str;
+    }
+    
+    function handleGetAdminData() {
+        var childs = document.getElementsByName('selkaartlaag');        
+        var selkaart = null;
+        for(i = 0; i < childs.length; i++) {
+            if(childs[i].checked) {
+                selkaart = childs[i];
+            }
+        }        
+        if(selkaart == null) {
+            alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
+            return;
+        }
+        
+        document.forms[0].metadata.value = '';
+        document.forms[0].admindata.value = 't';
+        document.forms[0].laagid.value = selkaart.value;
+        document.forms[0].submit();
+    }
+    
+    function getMetaData(id) {
+        document.forms[0].metadata.value = 't';
+        document.forms[0].admindata.value = '';
+        document.forms[0].laagid.value = id;
+        document.forms[0].submit();
+    }
+    
+    function getAdminData(id) {
+        document.forms[0].metadata.value = 't';
+        document.forms[0].admindata.value = '';
+        document.forms[0].laagid.value = id;
+        document.forms[0].submit();
     }
     
     function handleUnLoad() { 
@@ -120,42 +156,6 @@
     }
     /*Einde google maps code*/
     
-    
-    function clickThema(thema){
-        var id=thema.id.split("_");
-        var number=id[1];
-        var layers=document.getElementById("themalayers_"+number);        
-        if (thema.className=="closedthema"){
-            thema.className="openthema";
-            layers.style.display="block";
-        }
-        else{
-            thema.className="closedthema";            
-            layers.style.display="none";
-        }
-    }
-    function clickSubThema(thema){
-        var id=thema.id.split("_");
-        var number=id[1];
-        var layers=document.getElementById("themalayerss_"+number);        
-        if (thema.className=="closedthema"){
-            thema.className="openthema";
-            layers.style.display="block";
-        }
-        else{
-            thema.className="closedthema";            
-            layers.style.display="none";
-        }
-    }
-    var shownTable;
-    function clickLayer(s){
-        if (shownTable){
-            shownTable.style.display="none";
-        }
-        shownTable=document.getElementById("table_"+s);
-        shownTable.style.display="block";
-    }
-    
     function changeLayers(obj) {
         if(obj.checked == true) {
             map.setMapType(G_HYBRID_MAP);
@@ -169,11 +169,17 @@
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));
         else {
             var el = document.createElement('input');
-            el.type = 'checkbox';
+            el.type = 'radio';
+            el.name = 'selkaartlaag';
+            el.value = item.id;
+            var el2 = document.createElement('input');
+            el2.type = 'checkbox';
             var lnk = document.createElement('a');
-            lnk.innerHTML = item.title;
+            lnk.innerHTML = item.title ? item.title : item.id;
             lnk.href = '#';
+            lnk.onclick = function(){ getMetaData(item.id) };
             container.appendChild(el);
+            container.appendChild(el2);
             container.appendChild(lnk);
         }
     }
@@ -185,35 +191,15 @@
     <div id="infovak">
         Klik op de kaart voor informatie over het desbetreffende punt
     </div>
-    <div id="admindatamaindiv">
-        <c:forEach var="nThema" items="${layers}" varStatus="themastatus">
-        <c:forEach var="nLayer" items="${nThema.childs}" varStatus="layerstatus">
-            <c:if test="${not empty nLayer.labelData}">
-                <c:set var="rowLength" value="${fn:length(nLayer.labelData)}"/>
-                
-                <div class="scrolldiv" style="display: none;" id="table_${themastatus.index}_${layerstatus.index}">
-                <div class="topRow">
-                    <c:forEach var="nLabel" items="${nLayer.labelData}" varStatus="labelstatus">
-                        <div class="cell">${nLabel}</div>
-                    </c:forEach>
-                </div>
-                <div class="row">
-                    <c:set var="teller" value="0"/>
-                    <c:forEach var="nCell" items="${nLayer.adminData}" varStatus="cellstatus">
-                    <c:if test="${teller == rowLength}">
-                    <c:set var="teller" value="0"/>
-                </div>
-                <div class="row">
-            </c:if>
-            <c:set var="teller" value="${teller+1}"/>
-            <div class="cell">${nCell}</div>                
-        </c:forEach>
-    </div>
-    </div>
-    </c:if>
-    </c:forEach>
-    </c:forEach>
-    </div>
+    
+    <form target="dataframe" method="post" action="viewerdata.do">
+        <input type="hidden" name="admindata" />
+        <input type="hidden" name="metadata" />
+        <input type="hidden" name="laagid" />
+    </form>
+    
+    <iframe id="dataframe" name="dataframe"></iframe>
+    
     <script type="text/javascript">
         treeview_create({
             "id": "layermaindiv",

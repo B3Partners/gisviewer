@@ -324,6 +324,7 @@ create table thema_verantwoordelijkheden (
 	rol integer,
 	huidige_situatie bit not null,
 	gewenste_situatie bit not null,
+  	opmerkingen varchar(255),
 	primary key (id)
 ) type=InnoDB;
 

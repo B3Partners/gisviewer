@@ -234,6 +234,7 @@
         <many-to-one name="rol"/>
         <property name="huidige_situatie" not-null="true"/>
         <property name="gewenste_situatie" not-null="true"/>
+        <property name="opmerkingen"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.Themas">
         <id name="id" type="int">

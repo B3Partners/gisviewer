@@ -21,6 +21,7 @@ public class ThemaVerantwoordelijkheden {
     private Rollen rol;
     private boolean huidige_situatie;
     private boolean gewenste_situatie;
+    private String opmerkingen;
     
     /** Creates a new instance of ThemaVerantwoordelijkheden */
     public ThemaVerantwoordelijkheden() {
@@ -80,6 +81,14 @@ public class ThemaVerantwoordelijkheden {
 
     public void setOnderdeel(Onderdeel onderdeel) {
         this.onderdeel = onderdeel;
+    }
+
+    public String getOpmerkingen() {
+        return opmerkingen;
+    }
+
+    public void setOpmerkingen(String opmerkingen) {
+        this.opmerkingen = opmerkingen;
     }
     
 }

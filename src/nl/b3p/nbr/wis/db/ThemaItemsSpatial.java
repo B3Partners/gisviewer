@@ -20,12 +20,12 @@ public class ThemaItemsSpatial {
     private String omschrijving;
     private Themas thema;
     private int type;
-    private byte lrood;
-    private byte lgroen;
-    private byte lblauw;
-    private byte vrood;
-    private byte vgroen;
-    private byte vblauw;
+    private Byte lrood;
+    private Byte lgroen;
+    private Byte lblauw;
+    private Byte vrood;
+    private Byte vgroen;
+    private Byte vblauw;
     
     /** Creates a new instance of ThemaItemsSpatial */
     public ThemaItemsSpatial() {
@@ -63,51 +63,51 @@ public class ThemaItemsSpatial {
         this.type = type;
     }
 
-    public byte getLrood() {
+    public Byte getLrood() {
         return lrood;
     }
 
-    public void setLrood(byte lrood) {
+    public void setLrood(Byte lrood) {
         this.lrood = lrood;
     }
 
-    public byte getLgroen() {
+    public Byte getLgroen() {
         return lgroen;
     }
 
-    public void setLgroen(byte lgroen) {
+    public void setLgroen(Byte lgroen) {
         this.lgroen = lgroen;
     }
 
-    public byte getLblauw() {
+    public Byte getLblauw() {
         return lblauw;
     }
 
-    public void setLblauw(byte lblauw) {
+    public void setLblauw(Byte lblauw) {
         this.lblauw = lblauw;
     }
 
-    public byte getVrood() {
+    public Byte getVrood() {
         return vrood;
     }
 
-    public void setVrood(byte vrood) {
+    public void setVrood(Byte vrood) {
         this.vrood = vrood;
     }
 
-    public byte getVgroen() {
+    public Byte getVgroen() {
         return vgroen;
     }
 
-    public void setVgroen(byte vgroen) {
+    public void setVgroen(Byte vgroen) {
         this.vgroen = vgroen;
     }
 
-    public byte getVblauw() {
+    public Byte getVblauw() {
         return vblauw;
     }
 
-    public void setVblauw(byte vblauw) {
+    public void setVblauw(Byte vblauw) {
         this.vblauw = vblauw;
     }
 

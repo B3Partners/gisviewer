@@ -179,7 +179,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
-        String hquery = "FROM Themas WHERE locatie_thema IS TRUE";
+        String hquery = "FROM Themas WHERE locatie_thema = true";
         if(!lagen.equals("ALL")) {
             hquery += " AND (";
             String[] alleLagen = lagen.split(",");
@@ -210,16 +210,16 @@ public class GetViewerDataAction extends BaseHibernateAction {
                     Iterator it2 = ctl2.iterator();
                     while(it2.hasNext()) {
                         DataRegels dr = (DataRegels) it2.next();
-                        hquery = "SELECT so.geometry, tis.kenmerk WHERE so.tis = tis.id AND so.regel = " + dr.getId();
+                        hquery = "FROM SpatialObjects WHERE regel = " + dr.getId();
                         List ctl3 = null;
+                        q = sess.createQuery(hquery);
                         ctl3 = q.list();
                         if(ctl3 != null) {
                             Iterator it3 = ctl3.iterator();
                             ArrayList waardes = new ArrayList();
                             while(it3.hasNext()) {
-                                Object[] rij = (Object[]) it3.next();
-                                SpatialObjects so = (SpatialObjects) rij[0];
-                                ThemaItemsSpatial tis = (ThemaItemsSpatial) rij[1];
+                                SpatialObjects so = (SpatialObjects) it3.next();
+                                ThemaItemsSpatial tis = so.getTis();
                                 ArrayList rij_waarde = new ArrayList();
                                 if(tis != null) {
                                     rij_waarde.add(tis.getKenmerk());
@@ -229,6 +229,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                 if(so != null) {
                                     rij_waarde.add(so.getGeometry());
                                 }
+                                waardes.add(rij_waarde);
                             }
                             thema.add(waardes);
                         }
@@ -237,7 +238,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 objectdata.add(thema);
             }
         }
-        request.setAttribute("objectdata", objectdata);
+        request.setAttribute("object_data", objectdata);
         return mapping.findForward("objectdata");
     }
     

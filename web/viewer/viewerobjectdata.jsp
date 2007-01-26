@@ -20,11 +20,11 @@
 </head>
 <body>
     <c:choose>
-        <c:when test="${not empty objectdata}">
-            <c:forEach var="thema_object_data" items="${objectdata}">
+        <c:when test="${not empty object_data}">
+            <c:forEach var="thema_object_data" items="${object_data}">
                 <strong>
                     ${thema_object_data[0]}
-                </strong><br /><br />
+                </strong>
                 <table>
                     <c:forEach var="rij" items="${thema_object_data[1]}">
                         <tr>

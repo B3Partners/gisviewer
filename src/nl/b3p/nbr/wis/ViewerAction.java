@@ -119,8 +119,8 @@ public class ViewerAction extends BaseHibernateAction {
                     JSONArray childrenCluster = new JSONArray();
                     jsonCluster.put("children", childrenCluster);
                     
-                    getSubClusters(childrenCluster, cluster, ctl);
                     getChildren(childrenCluster, cluster);
+                    getSubClusters(childrenCluster, cluster, ctl);
                 }
             }
         }
@@ -146,8 +146,8 @@ public class ViewerAction extends BaseHibernateAction {
                 JSONArray childrenCluster = new JSONArray();
                 jsonCluster.put("children", childrenCluster);
                 
-                getSubClusters(childrenCluster, cl, list);
                 getChildren(childrenCluster, cl);
+                getSubClusters(childrenCluster, cl, list);
             }
         }
     }

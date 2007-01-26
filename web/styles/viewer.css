@@ -7,22 +7,51 @@
     float: left;
     border: 1px solid Black;
 }
-#minimap{
-    position: static;
-    width: 198px;
-    height: 200px;
+#rightdiv {
+    float: right;
+    width: 192px;
+    height: 400px;
+}
+#tabjes {
+    width: 192px;
+    height: 14px;
     float: left;
+}
+#tabjes div {
+    display: block;
     border: 1px solid Black;
+    width: 88px;
+    float: left;
+    padding-left: 5px;
     border-bottom: 0px none White;
+    cursor: pointer;
+}
+#tab1 {
+    border-right: 0px none White;
 }
 #infovak{
     margin: 0px;
     padding: 2px;
     padding-left: 4px;
     width: 192px;
-    height: 194px;
-    float: right;
+    height: 380px;
+    float: left;
     border: 1px solid Black;
+}
+#objectvak{
+    margin: 0px;
+    padding: 2px;
+    padding-left: 4px;
+    width: 192px;
+    height: 380px;
+    float: left;
+    border: 1px solid Black;
+}
+#objectframe {
+    margin: 0px;
+    border: 0px;
+    width: 192px;
+    height: 380px;    
 }
 #dataframe {
     border: 0px none White;

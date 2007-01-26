@@ -18,11 +18,12 @@ public class GetMapData {
     
     public String getData(String x_input, String y_input) {
         Random generator = new Random();
-        double x = forward_x_simple(Double.parseDouble(x_input));
-        double y = forward_y_simple(Double.parseDouble(y_input));
-        int xi = (int)x;
-        int yi = (int)y;
-        String rd = "X: " + xi + "<br />Y: " + yi;
+        double x = Double.parseDouble(x_input);
+        double y = Double.parseDouble(y_input);
+        String rdX = "" + Math.round(x);
+        String rdY = "" + Math.round(y);
+        String rd = "X: " + rdX + "<br />" +
+                    "Y: " + rdY + "<br />";
         String[] wegen = new String[]{"N322", "N324", "N321", "N65", "N261", "N277", "N282", "N12", "N269", "N270"};
         int wegnr = generator.nextInt(10);
         int paalnummer = generator.nextInt(175) + 50;
@@ -31,8 +32,8 @@ public class GetMapData {
         int aanduidingnr = generator.nextInt(3);
         
         String ret = "<b>RD Co&ouml;rdinaten</b><br />" + rd + "<br />" +
-                "<b>Hectometerpaal aanduiding</b><br />" + paalnummer + "," + kommagetal + " " + aanduiding[aanduidingnr] + "<br />" +
-                "<b>Wegnaam</b><br />" + wegen[wegnr] + "<br />" +
+                "<b>Hectometerpaal aanduiding</b><br />" + paalnummer + "," + kommagetal + " " + aanduiding[aanduidingnr] + "<br /><br />" +
+                "<b>Wegnaam</b><br />" + wegen[wegnr] + "<br /><br />" +
                 "<b>Gemeente</b><br />Niet bekend";
         return ret;
     }

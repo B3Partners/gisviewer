@@ -16,7 +16,48 @@
     <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
     <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
     <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
-    <script>   
+    <script>
+       
+    function doAjaxRequest(point_x, point_y) {
+        JMapData.getData(point_x, point_y, handleGetData);
+    }
+    
+    function handleGetData(str) {
+        document.getElementById('infovak').innerHTML = str;
+    }
+    
+    function handleGetAdminData() {
+        var childs = document.getElementsByName('selkaartlaag');        
+        var selkaart = null;
+        for(i = 0; i < childs.length; i++) {
+            if(childs[i].checked) {
+                selkaart = childs[i];
+            }
+        }        
+        if(selkaart == null) {
+            alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
+            return;
+        }
+        
+        document.forms[0].metadata.value = '';
+        document.forms[0].admindata.value = 't';
+        document.forms[0].laagid.value = selkaart.value;
+        document.forms[0].submit();
+    }
+    
+    function getMetaData(id) {
+        document.forms[0].metadata.value = 't';
+        document.forms[0].admindata.value = '';
+        document.forms[0].laagid.value = id;
+        document.forms[0].submit();
+    }
+    
+    function getAdminData(id) {
+        document.forms[0].metadata.value = 't';
+        document.forms[0].admindata.value = '';
+        document.forms[0].laagid.value = id;
+        document.forms[0].submit();
+    }
     function changeLayers(obj) {
         if(obj.checked == true) {
             map.setMapType(G_HYBRID_MAP);
@@ -84,5 +125,40 @@
             "expandAll": false
         });
     </script>
+    
+    <script>
+    var flamingo;
+    var lastextent;
+
+    function init() {
+       if (document.getElementById) {
+          flamingo = document.getElementById("flamingo");
+       }
+    }
+      
+    window.onload = init;
+    function flamingo_onInit() {
+       //at this moment the flamingo.swf is up and running, so initialize the global flamingo var.
+       //alert("set flamingo");
+       flamingo =getMovie("flamingo");
+    }
+
+    function flamingo_onError(error) {
+        alert("ERROR:"+error);
+    }
+
+    function flamingo_onLoadConfig() {
+       //alert("config loaded ");
+    }
+
+    function EHSkaart_onInit(componentid) {
+      //alert("onInit "+componentid);
+      flamingo.call("EHSkaart", "moveToExtent", lastextent ,0 ,0)
+    }
+    function map1_onIdentify(layer, extent){
+        doAjaxRequest(extent.minx, extent.miny);
+        handleGetAdminData();        
+    }
+</script>
     </body>
 </html>

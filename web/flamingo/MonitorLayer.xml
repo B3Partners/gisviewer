@@ -1,0 +1,6 @@
+<flamingo>
+<string id="loading"  en="loading layer '[layerid]'..." nl="kaartlaag '[layerid]' laden..."/>
+<string id="waiting"  en="making layer '[layerid]'..." nl="kaartlaag '[layerid]' maken..."/>
+<style id=".text" font-family="verdana" font-size="12px" color="#666666" display="block" font-weight="normal"/>
+<style id=".error" font-family="verdana" font-size="12px" color="#ff0000" display="block" font-weight="normal"/>
+</flamingo>

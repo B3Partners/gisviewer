@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : config.xml
+    Created on : 24 januari 2007, 11:16
+    Author     : Roy
+    Description:
+        Configuration of the flamingo viewer.
+-->
+
+<FLAMINGO xmlns:fmc="flamingo" lang="en" languages="en,nl" tooltipdelay="300" commtojava="true" preloadtitle="Prototypemap">
+    <style id=".tooltip" font-family="Verdana" font-size="11" color="#880000" display="block"/>
+    <yguide id="my" y="50%"/>
+    <xguide id="mx" x="50%"/>
+    <fmc:MonitorLayer id="monitor" left="165" top="100" listento="map1"/><!--fmc:Debugger listento="OG1,OG2,Gelderland,Limburg" left="50%" top="0" height="50%" right="right" /-->
+    <fmc:Window  title="Tools" canresize="true" width="148" height="65" left="0" top="0">
+        <fmc:ToolGroup tool="zoom" listento="map1" width="148" height="65" left="0" top="0">
+            <fmc:ToolZoomin id="zoom"/>
+            <fmc:ToolZoomout left="30"/>
+            <fmc:ToolPan left="60"/>
+            <fmc:ToolMeasure left="90"/>
+        </fmc:ToolGroup>
+    </fmc:Window>
+    <fmc:BorderNavigation listento="map1"/>
+    <fmc:Map id="map1" left="0" top="0" height="100%" width="100%" bottom="bottom" visible="true" extent="114809,429868,183096,376497" fullextent="1,1,1000000,1000000">
+        <fmc:LayerIdentifyIcon  id="identifyicon"  />
+        <!--fmc:LayerOGWMS id="Gelderland" visible="false" url="http://geodata2.prvgld.nl/wmsconnector/com.esri.wms.Esrimap?SERVICE=WMS&ServiceName=wms_ehs&SRS=EPSG:4326&VERSION=1.1.1"  QUERY_LAYERS="GEO.NaOw_SPU_Kernkwaliteiten_EHS" LAYERS="GEO.NaOw_SPU_Kernkwaliteiten_EHS"/>
+    <fmc:LayerOGWMS id="Limburg" visible="false"  url="http://vlin016.prvlimburg.nl/cgi-bin/mapserv?map=/opt/geo/mapfiles/provinciale_plannen/ehs2005.map&SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:4326" QUERY_LAYERS="EHS_SEF_beek_2005_L" LAYERS="EHS_Beheersgebied_2005_V,EHS_Besch_st_nat_mon_2005_V,EHS_Bos_natuurgebied_2005_V,EHS_Eco_verb_zone_2005_V,EHS_Ecologisch_water_2005_V,EHS_Hamster_leefgeb_2005_V,EHS_Nieuwe_natuurgeb_2005_V,EHS_Ontgrondingen_2005_V,EHS_Over_functies_EHS_2005_V,EHS_POG_2005_V,EHS_SEF_beek_2005_L,EHS_Spec_bes_zone_VHR_2005_V,EHS_Zoekgeb_rob_verb_2005_V" />
+    <fmc:LayerOGWMS id="OG1" url="http://www2.demis.nl/wms/wms.asp?WMS=WorldMap&amp;VERSION=1.1.1&amp;SRS=EPSG:4326&amp;EXCEPTIONS=INIMAGE&amp;WRAPDATELINE=true&BGCOLOR=0xF0F0F0" QUERY_LAYERS="Cities,Settlements,Airports" LAYERS="Builtup areas,Coastlines,Waterbodies,Inundated,Rivers,Streams,Railroads,Highways,Roads,Trails,Borders,Cities,Settlements,Spot elevations,Airports,Ocean features"/>
+    <fmc:LayerOGWMS id="OG2" url="http://www2.demis.nl/wms/wms.asp?WMS=WorldMap&amp;VERSION=1.1.1&amp;SRS=EPSG:4326&amp;EXCEPTIONS=INIMAGE&amp;WRAPDATELINE=true&BGCOLOR=0xF0F0F0" LAYERS="Bathymetry,Countries,Topography,Hillshading"/-->
+        <fmc:LayerOGWMS id="OG2" url="http://x3.b3p.nl/cgi-bin/mapserv?map=/home/mapserver/gstreet-demo.map&amp;SERVICE=WMS&amp;VERSION=1.1.1&amp;SRS=EPSG:28992&amp;EXCEPTIONS=INIMAGE&amp;WRAPDATELINE=true&amp;BGCOLOR=0xF0F0F0" LAYERS="gstreet6,gstreet5,gstreet4,gstreet3,gstreet2,gstreet1"/>
+        
+    </fmc:Map>
+</FLAMINGO>
+<!--fmc:LayerOGWMS id="map1" url="http://www2.demis.nl/wms/wms.asp?WMS=WorldMap&amp;VERSION=1.1.0&amp;SRS=EPSG:4326&amp;EXCEPTIONS=INIMAGE&amp;WRAPDATELINE=false" QUERY_LAYERS="Cities,Settlements,Airports" LAYERS="Builtup areas,Coastlines,Waterbodies,Inundated,Rivers,Streams,Railroads,Highways,Roads,Trails,Borders,Cities,Settlements,Spot elevations,Airports,Ocean features"/>
+<fmc:LayerOGWMS id="map2" url="http://www2.demis.nl/wms/wms.asp?WMS=WorldMap&amp;VERSION=1.1.0&amp;SRS=EPSG:4326&amp;EXCEPTIONS=INIMAGE&amp;WRAPDATELINE=false" QUERY_LAYERS="Countries" LAYERS="Countries"/-->

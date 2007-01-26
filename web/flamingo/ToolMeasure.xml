@@ -1,0 +1,4 @@
+<flamingo>
+	<string id="tooltip" nl="afstand meten" en="measure"/>
+	<cursor id="cursor" url="fmc/cursor/CursorMeasure.swf"/> 
+</flamingo>

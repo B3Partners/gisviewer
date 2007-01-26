@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<flamingodoc>
+<title>Flamingo Component Reference</title>
+<generated>Thu Dec 28 12:58:25 GMT+0100 2006</generated>
+<component>
+<name>Map</name>
+<see>LayerArcIMS</see>
+<see>LayerOGWMS</see>
+<see>LayerImage</see>
+<see>LayerGrid</see>
+<see>LayerOverview</see>
+<file>Map.as  (sourcefile)</file>
+<file>Map.fla (sourcefile)</file>
+<file>Map.swf (compiled Map, needed for publication on internet)</file>
+<file>Map.xml (configurationfile for Map, needed for publication on internet)</file>
+<description>The Map is a container for layers.</description>
+<configtags>
+<configtag name="&lt;fmc:Map&gt;">
+<name>&lt;fmc:Map&gt;</name>
+<attribute name="holdonupdate">
+<name>holdonupdate</name>
+<description>(defaultvalue &quot;false&quot;) true = the Map cannot update until the previous update is completed.</description>
+</attribute>
+<attribute name="holdonidentify">
+<name>holdonidentify</name>
+<description>(defaultvalue &quot;false&quot;) true = the Map cannot perform an identify until the previous identify is completed.</description>
+</attribute>
+<attribute name="fadesteps">
+<name>fadesteps</name>
+<description>(defaultvalue &quot;0&quot;)  Number of steps of the fade-effect, which layers use to appear.</description>
+</attribute>
+<attribute name="extent">
+<name>extent</name>
+<description>Comma seperated list of minx,miny,maxx,maxy, defining the current view of the map.</description>
+</attribute>
+<attribute name="fullextent">
+<name>fullextent</name>
+<description>Comma seperated list of minx,miny,maxx,maxy. When defined, a map cannot zoom further out than this extent.</description>
+</attribute>
+<attribute name="minscale">
+<name>minscale</name>
+<description>A map cannot zoom further in than this scale (defined in mapunits per pixel).</description>
+</attribute>
+<attribute name="maxscale">
+<name>maxscale</name>
+<description>A map cannot zoom further out than this scale (defined in mapunits per pixel).</description>
+</attribute>
+<attribute name="movetime">
+<name>movetime</name>
+<description>(defaultvalue &quot;200&quot;) The time in miliseconds (1000 = 1 second) the map needs for moving to a new extent.</description>
+</attribute>
+<attribute name="movesteps">
+<name>movesteps</name>
+<description>(defaultvalue &quot;5&quot;) The number of steps (resolution) of a move from the one extent to the other. More steps = smoother animation = more computer stress.</description>
+</attribute>
+<attribute name="fadesteps">
+<name>fadesteps</name>
+<description>(defaultvalue &quot;3&quot;) The number of steps in which a layer will appear smoothly (fadein).</description>
+</attribute>
+<attribute name="nrprevextents">
+<name>nrprevextents</name>
+<description>(defaultvalue &quot;0&quot;) Number of extents that are remembered.</description>
+</attribute>
+<hierarchy>childnode of &lt;flamingo&gt; or &lt;fmc:Window&gt;</hierarchy>
+<description>A Map can contain different layer tags</description>
+</configtag>
+</configtags>
+
+<methods>
+<method name="addLayer">
+<name>addLayer</name>
+<return>Movieclip of the layer.</return>
+<parameter name="xml">
+<name>xml</name>
+<type>XML</type>
+<description>xml with layer definition</description>
+</parameter>
+<description>Adds a layer to the map If a layer is added the onAddLayer event will dispatch.</description>
+<returntype>MovieClip </returntype>
+<arguments>(xml:Object, mLayerMovie:MovieClip):MovieClip </arguments>
+<usage>public function addLayer(xml:Object, mLayerMovie:MovieClip):MovieClip </usage>
+</method>
+<method name="cancelUpdate">
+<name>cancelUpdate</name>
+<description>Cancels an update.</description>
+<returntype>Void </returntype>
+<arguments>():Void </arguments>
+<usage>public function cancelUpdate():Void </usage>
+</method>
+<method name="coordinate2Point">
+<name>coordinate2Point</name>
+<return>point, an object with x and y.</return>
+<parameter name="coordinate">
+<name>coordinate</name>
+<type>Object</type>
+<description>the coordinate which has to be calculated to a point.</description>
+</parameter>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>[optional] Reference extent. By default the calculations will use the currentextent.</description>
+</parameter>
+<description>Calculates a coordinate(=map dimensions) to a point(=screen dimensions) .</description>
+<returntype>Object </returntype>
+<arguments>(coordinate:Object, extent:Object):Object </arguments>
+<usage>public function coordinate2Point(coordinate:Object, extent:Object):Object </usage>
+</method>
+<method name="extent2Rect">
+<name>extent2Rect</name>
+<return>rect, an object with x,y, width and height</return>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>the extent which has to be calculated to a rect.</description>
+</parameter>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>[optional] Reference extent. By default the calculations will use the currentextent.</description>
+</parameter>
+<description>Calculates an extent(=map dimensions) to a rect(=screen dimensions).</description>
+<returntype>Object </returntype>
+<arguments>(extent:Object, extent2:Object):Object </arguments>
+<usage>public function extent2Rect(extent:Object, extent2:Object):Object </usage>
+</method>
+<method name="extent2String">
+<name>extent2String</name>
+<return>String representation of an extent.</return>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>the extent which has to be converted</description>
+</parameter>
+<description>converts an extent to a comma seperated string.</description>
+<returntype>String </returntype>
+<arguments>(extent:Object):String </arguments>
+<usage>public function extent2String(extent:Object):String </usage>
+</method>
+<method name="getCurrentExtent">
+<name>getCurrentExtent</name>
+<see>getMapExtent</see>
+<return>currentextent</return>
+<description>Returns the currentextent.</description>
+<returntype>Object </returntype>
+<arguments>():Object </arguments>
+<usage>public function getCurrentExtent():Object </usage>
+</method>
+<method name="getCurrentScale">
+<name>getCurrentScale</name>
+<see>getMapExtent</see>
+<return> current scale of the map</return>
+<description>Returns the mapscale based on the currentextent</description>
+<returntype>Number </returntype>
+<arguments>():Number </arguments>
+<usage>public function getCurrentScale():Number </usage>
+</method>
+<method name="getCursorId">
+<name>getCursorId</name>
+<return>custom cursorid</return>
+<description>Gets the custom cursorid.</description>
+<returntype>String </returntype>
+<arguments>():String </arguments>
+<usage>public function getCursorId():String </usage>
+</method>
+<method name="getDistance">
+<name>getDistance</name>
+<return>distance</return>
+<parameter name="coord1">
+<name>coord1</name>
+<type>Object</type>
+<description>first coordinate.</description>
+</parameter>
+<parameter name="coord2">
+<name>coord2</name>
+<type>Object</type>
+<description>second coordinate.</description>
+</parameter>
+<description>Calculates the distance between two coordinates.</description>
+<returntype>Number </returntype>
+<arguments>(coord1:Object, coord2:Object):Number </arguments>
+<usage>public function getDistance(coord1:Object, coord2:Object):Number </usage>
+</method>
+<method name="getExtent">
+<name>getExtent</name>
+<see>getMapExtent</see>
+<return>extent</return>
+<description>Return the extent</description>
+<returntype>Object </returntype>
+<arguments>():Object </arguments>
+<usage>public function getExtent():Object </usage>
+</method>
+<method name="getFadeSteps">
+<name>getFadeSteps</name>
+<return>number of fadesteps</return>
+<description>Gets the number of steps by which layers will fadein.</description>
+<returntype>Number </returntype>
+<arguments>():Number </arguments>
+<usage>public function getFadeSteps():Number </usage>
+</method>
+<method name="getFullExtent">
+<name>getFullExtent</name>
+<see>getMapExtent</see>
+<return>fullextent</return>
+<description>Returns the fullextent</description>
+<returntype>Object </returntype>
+<arguments>():Object </arguments>
+<usage>public function getFullExtent():Object </usage>
+</method>
+<method name="getFullScale">
+<name>getFullScale</name>
+<see>getMapExtent</see>
+<return> scale when map is zoomed to fullextent</return>
+<description>Returns the mapscale based on the fullextent and the current aspectratio.</description>
+<returntype>Number </returntype>
+<arguments>():Number </arguments>
+<usage>public function getFullScale():Number </usage>
+</method>
+<method name="getHoldOnIdentify">
+<name>getHoldOnIdentify</name>
+<return>true or false</return>
+<description>Gets the holdonidentify.</description>
+<returntype>Boolean </returntype>
+<arguments>():Boolean </arguments>
+<usage>public function getHoldOnIdentify():Boolean </usage>
+</method>
+<method name="getHoldOnUpdate">
+<name>getHoldOnUpdate</name>
+<return>true or false</return>
+<description>Gets the holdonupdate.</description>
+<returntype>Boolean </returntype>
+<arguments>():Boolean </arguments>
+<usage>public function getHoldOnUpdate():Boolean </usage>
+</method>
+<method name="getMapExtent">
+<name>getMapExtent</name>
+<return>mapextent</return>
+<description>Returns the mapextent. extent = the uncorrected extent of a map set by 'moveToExtent'. mapextent = the corrected extent of a map. fullextent = the maximum extent of a map, you can not further zoom out. currentextent = the actually corrected extent during animation. When animation is finished then mapextent = currentextent.</description>
+<returntype>Object </returntype>
+<arguments>():Object </arguments>
+<usage>public function getMapExtent():Object </usage>
+</method>
+<method name="getMapScale">
+<name>getMapScale</name>
+<see>getMapExtent</see>
+<return> scale of the mapextent</return>
+<description>Returns the mapscale based on the mapextent</description>
+<returntype>Number </returntype>
+<arguments>():Number </arguments>
+<usage>public function getMapScale():Number </usage>
+</method>
+<method name="getMinScale">
+<name>getMinScale</name>
+<return>minscale</return>
+<description>Gets the minimum scale.</description>
+<returntype>Number </returntype>
+<arguments>():Number </arguments>
+<usage>public function getMinScale():Number </usage>
+</method>
+<method name="getMoveSteps">
+<name>getMoveSteps</name>
+<return>custom movesteps</return>
+<description>Gets the number of movesteps.</description>
+<returntype>Number </returntype>
+<arguments>():Number </arguments>
+<usage>public function getMoveSteps():Number </usage>
+</method>
+<method name="getMoveTime">
+<name>getMoveTime</name>
+<return>movetime</return>
+<description>Gets the movetime</description>
+<returntype>Number </returntype>
+<arguments>():Number </arguments>
+<usage>public function getMoveTime():Number </usage>
+</method>
+<method name="hide">
+<name>hide</name>
+<description>Hides the map. This will raise the onHide event.</description>
+<returntype>Void </returntype>
+<arguments>():Void </arguments>
+<usage>public function hide():Void </usage>
+</method>
+<method name="hideLayer">
+<name>hideLayer</name>
+<parameter name="id">
+<name>id</name>
+<type>String</type>
+<description>layerid</description>
+</parameter>
+<description>Sets the visibility of a layer to false. This will raise the onHideLayer event.</description>
+<returntype>Void </returntype>
+<arguments>(id:String):Void </arguments>
+<usage>public function hideLayer(id:String):Void </usage>
+</method>
+<method name="identify">
+<name>identify</name>
+<parameter name="identifyextent">
+<name>identifyextent</name>
+<type>Object</type>
+<description>extent defining identify area</description>
+</parameter>
+<description>Performs an identify on a map. This will raise the onIdentify event.</description>
+<returntype>Void </returntype>
+<arguments>(identifyextent:Object):Void </arguments>
+<usage>public function identify(identifyextent:Object):Void </usage>
+</method>
+<method name="isEqualExtent">
+<name>isEqualExtent</name>
+<return>true or false</return>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>extent 1</description>
+</parameter>
+<parameter name="extent2">
+<name>extent2</name>
+<type>Object</type>
+<description>extent 2</description>
+</parameter>
+<description>Checks if two extents are the same.</description>
+<returntype>Boolean </returntype>
+<arguments>(extent:Object, extent2:Object):Boolean </arguments>
+<usage>public function isEqualExtent(extent:Object, extent2:Object):Boolean </usage>
+</method>
+<method name="isHit">
+<name>isHit</name>
+<return>true or false</return>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>extent 1</description>
+</parameter>
+<parameter name="extent2">
+<name>extent2</name>
+<type>Object</type>
+<description>[optional] By default hit is calculated with mapextent</description>
+</parameter>
+<description>Checks if an extent is hit by another extent.</description>
+<returntype>Boolean </returntype>
+<arguments>(extent:Object, extent2:Object):Boolean </arguments>
+<usage>public function isHit(extent:Object, extent2:Object):Boolean </usage>
+</method>
+<method name="isIdentifying">
+<name>isIdentifying</name>
+<return>true or false</return>
+<description>Determines if a map is busy executing an identify.</description>
+<returntype>Boolean </returntype>
+<arguments>():Boolean </arguments>
+<usage>public function isIdentifying():Boolean </usage>
+</method>
+<method name="isUpdating">
+<name>isUpdating</name>
+<return>true or false</return>
+<description>Determines if a map is busy executing an update.</description>
+<returntype>Boolean </returntype>
+<arguments>():Boolean </arguments>
+<usage>public function isUpdating():Boolean </usage>
+</method>
+<method name="isValidExtent">
+<name>isValidExtent</name>
+<return>true or false</return>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>extent</description>
+</parameter>
+<description>Checks if an extent has consist of numbers and is not empty.</description>
+<returntype>Boolean </returntype>
+<arguments>(extent:Object):Boolean </arguments>
+<usage>public function isValidExtent(extent:Object):Boolean </usage>
+</method>
+<method name="moveToCoordinate">
+<name>moveToCoordinate</name>
+<parameter name="coord">
+<name>coord</name>
+<type>Object</type>
+<description>[optional] Coordinate, an object with x and y. If undefined the map will zoom in the center of the current mapextent.</description>
+</parameter>
+<parameter name="scale">
+<name>scale</name>
+<type>Number</type>
+<description>[optional] Mapscale (mapunits per pixel) If scale and percentage are both undefined, the map will not zoom.</description>
+</parameter>
+<parameter name="percentage">
+<name>percentage</name>
+<type>Number</type>
+<description>[optional]  Percentage, 100 means 100% of the current mapextent, Number smaller than 100 means zooming out. Number greater than 100 means zooming in.</description>
+</parameter>
+<parameter name="updatedelay">
+<name>updatedelay</name>
+<type>Numbe</type>
+<description>r [optional]  Delay in milliseconds. If updatedelay is undefined or -1 there will be no onUpdate event.</description>
+</parameter>
+<parameter name="movetime">
+<name>movetime</name>
+<type>Numbe</type>
+<description>r [optional]  Total time of move-animation. If movetime is 0, there wil be no animation. The Extent is set immediately. If movetime is undefined, the default movetime of the map will be used.</description>
+</parameter>
+<description>Moves or zooms the map to a given coordinate. With or without animation. The user can zoom by using a scale or a percentage.</description>
+<returntype>Void </returntype>
+<arguments>(coord:Object, scale:Number, percentage:Number, updatedelay:Number, movetime:Number):Void </arguments>
+<usage>public function moveToCoordinate(coord:Object, scale:Number, percentage:Number, updatedelay:Number, movetime:Number):Void </usage>
+</method>
+<method name="moveToExtent">
+<name>moveToExtent</name>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>Extent, an extent is an object with minx, miny, maxx, maxy</description>
+</parameter>
+<parameter name="updatedelay">
+<name>updatedelay</name>
+<type>Number</type>
+<description>[optional] Delay in milliseconds. If updatedelay is undefined or -1 there will be no onUpdate event.</description>
+</parameter>
+<parameter name="movetime">
+<name>movetime</name>
+<type>Number</type>
+<description>[optional]  Total time of move-animation. If movetime is 0, there wil be no animation. The Extent is set immediately. If movetime is undefined, the default movetime of the map will be used.</description>
+</parameter>
+<description>Sets the extent of the map with or without move-animation.</description>
+<returntype>Void </returntype>
+<arguments>(extent:Object, updatedelay:Number, movetime:Number):Void </arguments>
+<usage>public function moveToExtent(extent:Object, updatedelay:Number, movetime:Number):Void </usage>
+</method>
+<method name="moveToNextExtent">
+<name>moveToNextExtent</name>
+<parameter name="movetime">
+<name>movetime</name>
+<type>Numbe</type>
+<description>r [optional]  Total time of move-animation. If movetime is 0, there wil be no animation. The Extent is set immediately. If movetime is undefined, the default movetime of the map will be used.</description>
+</parameter>
+<description>Moves the map to the next extent. The array with next extents is filled by 'moveToPrevExtent'</description>
+<returntype>Void </returntype>
+<arguments>(movetime:Number):Void </arguments>
+<usage>public function moveToNextExtent(movetime:Number):Void </usage>
+</method>
+<method name="moveToPrevExtent">
+<name>moveToPrevExtent</name>
+<parameter name="movetime">
+<name>movetime</name>
+<type>Numbe</type>
+<description>r [optional]  Total time of move-animation. If movetime is 0, there wil be no animation. The Extent is set immediately. If movetime is undefined, the default movetime of the map will be used.</description>
+</parameter>
+<description>Moves the map to the previous extent.</description>
+<returntype>Void </returntype>
+<arguments>(movetime:Number):Void </arguments>
+<usage>public function moveToPrevExtent(movetime:Number):Void </usage>
+</method>
+<method name="point2Coordinate">
+<name>point2Coordinate</name>
+<return>coordinate, an object with x and y.</return>
+<parameter name="point">
+<name>point</name>
+<type>Object</type>
+<description>the point which has to be calculated to a coordinate.</description>
+</parameter>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>[optional] Reference extent. By default the calculations will use the currentextent.</description>
+</parameter>
+<description>Calculates a point(=screen dimensions) to a coordinate(=map dimensions)</description>
+<returntype>Object </returntype>
+<arguments>(point:Object, extent:Object):Object </arguments>
+<usage>public function point2Coordinate(point:Object, extent:Object):Object </usage>
+</method>
+<method name="rect2Extent">
+<name>rect2Extent</name>
+<return>extent, an object with minx, miny, maxx and maxy</return>
+<parameter name="rect">
+<name>rect</name>
+<type>Object</type>
+<description>the rect which has to be calculated to an extent.</description>
+</parameter>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>[optional] Reference extent. By default the calculations will use the currentextent.</description>
+</parameter>
+<description>Calculates a rect(=screen dimensions) to an extent(=map dimensions).</description>
+<returntype>Object </returntype>
+<arguments>(rect:Object, extent:Object):Object </arguments>
+<usage>public function rect2Extent(rect:Object, extent:Object):Object </usage>
+</method>
+<method name="removeLayer">
+<name>removeLayer</name>
+<description>Removes a layer from the map. This will raise the onRemoveLayer event.</description>
+<returntype>Void </returntype>
+<arguments>(id:String):Void </arguments>
+<usage>public function removeLayer(id:String):Void </usage>
+</method>
+<method name="resize">
+<name>resize</name>
+<description>Forces a resize of the map This will raise the onResize event.</description>
+<returntype>Void </returntype>
+<arguments>():Void </arguments>
+<usage>public function resize():Void </usage>
+</method>
+<method name="setCursorId">
+<name>setCursorId</name>
+<example><![CDATA[map.setCursorId(flamingo.getCursorId("myPan", "grab"))]]></example>
+<parameter name="value">
+<name>value</name>
+<type>String</type>
+<description>cursorid</description>
+</parameter>
+<description>Sets a custom cursor.</description>
+<returntype>Void </returntype>
+<arguments>(value:String):Void </arguments>
+<usage>public function setCursorId(value:String):Void </usage>
+</method>
+<method name="setFadeSteps">
+<name>setFadeSteps</name>
+<parameter name="value">
+<name>value</name>
+<type>Number</type>
+<description>number of fadesteps</description>
+</parameter>
+<description>Sets the number of steps by which layers will fadein.</description>
+<arguments>(value:Number) </arguments>
+<usage>public function setFadeSteps(value:Number) </usage>
+</method>
+<method name="setFullExtent">
+<name>setFullExtent</name>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>An extent is an object with minx, miny, maxx, maxy</description>
+</parameter>
+<description>Sets the full extent.</description>
+<returntype>Void </returntype>
+<arguments>(extent:Object):Void </arguments>
+<usage>public function setFullExtent(extent:Object):Void </usage>
+</method>
+<method name="setHoldOnIdentify">
+<name>setHoldOnIdentify</name>
+<parameter name="value">
+<name>value</name>
+<type>Boolean</type>
+<description>true or false</description>
+</parameter>
+<description>If set to true a map can only identify when the previous identify is completed.</description>
+<arguments>(value:Boolean) </arguments>
+<usage>public function setHoldOnIdentify(value:Boolean) </usage>
+</method>
+<method name="setHoldOnUpdate">
+<name>setHoldOnUpdate</name>
+<parameter name="value">
+<name>value</name>
+<type>Boolean</type>
+<description>true or false</description>
+</parameter>
+<description>If set to true a map can only update when the previous update is completed.</description>
+<arguments>(value:Boolean) </arguments>
+<usage>public function setHoldOnUpdate(value:Boolean) </usage>
+</method>
+<method name="setMaxScale">
+<name>setMaxScale</name>
+<parameter name="value">
+<name>value</name>
+<type>Number</type>
+<description>maxscale, a number of mapunits by pixels</description>
+</parameter>
+<description>Sets the maximum scale of a map. The map cannot zoom further out.</description>
+<arguments>(value:Number) </arguments>
+<usage>public function setMaxScale(value:Number) </usage>
+</method>
+<method name="setMinScale">
+<name>setMinScale</name>
+<parameter name="value">
+<name>value</name>
+<type>Number</type>
+<description>minscale, a number of mapunits by pixels</description>
+</parameter>
+<description>Sets the minimum scale of a map. The map cannot zoom further in.</description>
+<arguments>(value:Number) </arguments>
+<usage>public function setMinScale(value:Number) </usage>
+</method>
+<method name="setMoveSteps">
+<name>setMoveSteps</name>
+<parameter name="value">
+<name>value</name>
+<type>Number</type>
+</parameter>
+<description>Sets the number of steps of the moving animation. More steps means a smoother animation.</description>
+<arguments>(value:Number) </arguments>
+<usage>public function setMoveSteps(value:Number) </usage>
+</method>
+<method name="setNrPrevExtents">
+<name>setNrPrevExtents</name>
+<parameter name="value">
+<name>value</name>
+<type>Number</type>
+</parameter>
+<description>Sets the total number of previous extents.</description>
+<arguments>(value:Number) </arguments>
+<usage>public function setNrPrevExtents(value:Number) </usage>
+</method>
+<method name="show">
+<name>show</name>
+<description>Sets the visibility of the map to true. This will raise the onShow event.</description>
+<returntype>Void </returntype>
+<arguments>():Void </arguments>
+<usage>public function show():Void </usage>
+</method>
+<method name="showLayer">
+<name>showLayer</name>
+<parameter name="id">
+<name>id</name>
+<type>String</type>
+<description>layerid</description>
+</parameter>
+<description>Sets the visibility of a layer to true. This will raise the onShowLayer event.</description>
+<returntype>Void </returntype>
+<arguments>(id:String):Void </arguments>
+<usage>public function showLayer(id:String):Void </usage>
+</method>
+<method name="string2Extent">
+<name>string2Extent</name>
+<return>extent</return>
+<parameter name="str">
+<name>str</name>
+<type>String</type>
+<description>the string which has to be converted</description>
+</parameter>
+<description>converts comma seperated string to an extent object. The string has the format:minx,miny,maxx,maxy</description>
+<returntype>Object </returntype>
+<arguments>(str:String):Object </arguments>
+<usage>public function string2Extent(str:String):Object </usage>
+</method>
+<method name="swapLayer">
+<name>swapLayer</name>
+<parameter name="id">
+<name>id</name>
+<type>String</type>
+<description>layerid</description>
+</parameter>
+<parameter name="index">
+<name>index</name>
+<type>Number</type>
+<description>new layer position</description>
+</parameter>
+<description>Change layer order. This will raise the onSwapLayer event.</description>
+<returntype>Void </returntype>
+<arguments>(id:String, index:Number):Void </arguments>
+<usage>public function swapLayer(id:String, index:Number):Void </usage>
+</method>
+<method name="update">
+<name>update</name>
+<parameter name="delay">
+<name>delay</name>
+<type>Number</type>
+<description>[optional] if omitted the onUpdate event will raise immediatelly, otherwhise after the delay time (milliseconds)</description>
+</parameter>
+<description>Updates the map. This will fire the onUpdate event.</description>
+<returntype>Void </returntype>
+<arguments>(delay:Number, forceupdate:Boolean):Void </arguments>
+<usage>public function update(delay:Number, forceupdate:Boolean):Void </usage>
+</method>
+</methods>
+<events>
+<event name="onAddLayer">
+<name>onAddLayer</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layer">
+<name>layer</name>
+<type>MovieClip</type>
+<description>a reference to the layer.</description>
+</parameter>
+<description>Dispatched when a layer is added.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layer:MovieClip):Void </arguments>
+<usage>public function onAddLayer(map:MovieClip, layer:MovieClip):Void </usage>
+</event>
+<event name="onChangeExtent">
+<name>onChangeExtent</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when the extent of the map changes.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onChangeExtent(map:MovieClip):Void </usage>
+</event>
+<event name="onDragOut">
+<name>onDragOut</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when the mouse is moved of the map, when the left mousebutton is pushed. Fired only once.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onDragOut(map:MovieClip):Void </usage>
+</event>
+<event name="onDragOver">
+<name>onDragOver</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when the mouse is moved over the map, when the left mousebutton is pushed. Fired only once.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onDragOver(map:MovieClip):Void </usage>
+</event>
+<event name="onHide">
+<name>onHide</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when the map is hidden.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onHide(map:MovieClip):Void </usage>
+</event>
+<event name="onHideLayer">
+<name>onHideLayer</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layer">
+<name>layer</name>
+<type>MovieClip</type>
+<description>a reference to the layer.</description>
+</parameter>
+<description>Dispatched when a layer is hidden.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layer:MovieClip):Void </arguments>
+<usage>public function onHideLayer(map:MovieClip, layer:MovieClip):Void </usage>
+</event>
+<event name="onIdentify">
+<name>onIdentify</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="extent">
+<name>extent</name>
+<type>Object</type>
+<description>the area of the identify.</description>
+</parameter>
+<description>Dispatched when the map performs an identify.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, extent:Object):Void </arguments>
+<usage>public function onIdentify(map:MovieClip, extent:Object):Void </usage>
+</event>
+<event name="onIdentifyComplete">
+<name>onIdentifyComplete</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when  an identify sequence is completed.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onIdentifyComplete(map:MovieClip):Void </usage>
+</event>
+<event name="onIdentifyData">
+<name>onIdentifyData</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layer">
+<name>layer</name>
+<type>MovieClip</type>
+<description>a reference to the identified layer</description>
+</parameter>
+<parameter name="data">
+<name>data</name>
+<type>Object</type>
+<description>data object with the information</description>
+</parameter>
+<parameter name="identifyextent">
+<name>identifyextent</name>
+<type>Object</type>
+<description>the  extent that is identified</description>
+</parameter>
+<description>Dispatched when a layer has come up with information. When a layer has to identify more layerid's this event will fire each time a layerid has identified.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layer:MovieClip, data:Object, identifyextent:Object):Void </arguments>
+<usage>public function onIdentifyData(map:MovieClip, layer:MovieClip, data:Object, identifyextent:Object):Void </usage>
+</event>
+<event name="onIdentifyError">
+<name>onIdentifyError</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layer">
+<name>layer</name>
+<type>MovieClip</type>
+<description>a reference to the layer.</description>
+</parameter>
+<parameter name="error">
+<name>error</name>
+<type>String</type>
+<description>an error message.</description>
+</parameter>
+<description>Dispatched when a layer encounters an error during identify</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layer:MovieClip, error:String):Void </arguments>
+<usage>public function onIdentifyError(map:MovieClip, layer:MovieClip, error:String):Void </usage>
+</event>
+<event name="onIdentifyProgress">
+<name>onIdentifyProgress</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layersindentified">
+<name>layersindentified</name>
+<type>Numbe</type>
+<description>r number of layers already identified.</description>
+</parameter>
+<parameter name="identifytotal">
+<name>identifytotal</name>
+<type>Numbe</type>
+<description>r total number of layers that have to be identified.</description>
+</parameter>
+<description>Dispatched when a layer has completed its identify.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layersindentified:Number, identifytotal:Number):Void </arguments>
+<usage>public function onIdentifyProgress(map:MovieClip, layersindentified:Number, identifytotal:Number):Void </usage>
+</event>
+<event name="onInit">
+<name>onInit</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when a map is up and ready to run.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onInit(map:MovieClip):Void </usage>
+</event>
+<event name="onMouseDown">
+<name>onMouseDown</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="xmouse">
+<name>xmouse</name>
+<type>Number</type>
+<description>x-pixel position of the mouse</description>
+</parameter>
+<parameter name="ymouse">
+<name>ymouse</name>
+<type>Number</type>
+<description>y-pixel position of the mouse</description>
+</parameter>
+<parameter name="coord">
+<name>coord</name>
+<type>Object</type>
+<description>coordinate of the mouse. Object with x and y</description>
+</parameter>
+<description>Dispatched when the mouse is on the map and the user pushes the mousebutton.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, xmouse:Number, ymouse:Number, coord:Object):Void </arguments>
+<usage>public function onMouseDown(map:MovieClip, xmouse:Number, ymouse:Number, coord:Object):Void </usage>
+</event>
+<event name="onMouseMove">
+<name>onMouseMove</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="xmouse">
+<name>xmouse</name>
+<type>Number</type>
+<description>x-pixel position of the mouse</description>
+</parameter>
+<parameter name="ymouse">
+<name>ymouse</name>
+<type>Number</type>
+<description>y-pixel position of the mouse</description>
+</parameter>
+<parameter name="coord">
+<name>coord</name>
+<type>Object</type>
+<description>coordinate of the mouse. Object with x and y</description>
+</parameter>
+<description>Dispatched when the mouse is moved over the map. This event fires repeatly when the mouse moves.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, xmouse:Number, ymouse:Number, coord:Object):Void </arguments>
+<usage>public function onMouseMove(map:MovieClip, xmouse:Number, ymouse:Number, coord:Object):Void </usage>
+</event>
+<event name="onMouseUp">
+<name>onMouseUp</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="xmouse">
+<name>xmouse</name>
+<type>Number</type>
+<description>x-pixel position of the mouse</description>
+</parameter>
+<parameter name="ymouse">
+<name>ymouse</name>
+<type>Number</type>
+<description>y-pixel position of the mouse</description>
+</parameter>
+<parameter name="coord">
+<name>coord</name>
+<type>Object</type>
+<description>coordinate of the mouse. Object with x and y</description>
+</parameter>
+<description>Dispatched when the mouse is on the map and the user pushes the mousebutton.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, xmouse:Number, ymouse:Number, coord:Object):Void </arguments>
+<usage>public function onMouseUp(map:MovieClip, xmouse:Number, ymouse:Number, coord:Object):Void </usage>
+</event>
+<event name="onMouseWheel">
+<name>onMouseWheel</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="delta">
+<name>delta</name>
+<type>Number</type>
+<description>number of steps moved.</description>
+</parameter>
+<description>Dispatched when the mouse is on the map and the user turns the mousewheel.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, delta:Number):Void </arguments>
+<usage>public function onMouseWheel(map:MovieClip, delta:Number):Void </usage>
+</event>
+<event name="onRemoveLayer">
+<name>onRemoveLayer</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when a layer is removed.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onRemoveLayer(map:MovieClip):Void </usage>
+</event>
+<event name="onResize">
+<name>onResize</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when a map resizes.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onResize(map:MovieClip):Void </usage>
+</event>
+<event name="onRollOut">
+<name>onRollOut</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when the mouse is moved of the map. Fired only once.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onRollOut(map:MovieClip):Void </usage>
+</event>
+<event name="onRollOver">
+<name>onRollOver</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when the mouse is moved over the map. Fired only once.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onRollOver(map:MovieClip):Void </usage>
+</event>
+<event name="onShow">
+<name>onShow</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when the map is shown.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onShow(map:MovieClip):Void </usage>
+</event>
+<event name="onShowLayer">
+<name>onShowLayer</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layer">
+<name>layer</name>
+<type>MovieClip</type>
+<description>a reference to the layer.</description>
+</parameter>
+<description>Dispatched when a layer is shown.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layer:MovieClip):Void </arguments>
+<usage>public function onShowLayer(map:MovieClip, layer:MovieClip):Void </usage>
+</event>
+<event name="onSwapLayer">
+<name>onSwapLayer</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when a layer is swapped.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onSwapLayer(map:MovieClip):Void </usage>
+</event>
+<event name="onUpdate">
+<name>onUpdate</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when a map updates.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onUpdate(map:MovieClip):Void </usage>
+</event>
+<event name="onUpdateComplete">
+<name>onUpdateComplete</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<description>Dispatched when an update sequence is completed.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip):Void </arguments>
+<usage>public function onUpdateComplete(map:MovieClip):Void </usage>
+</event>
+<event name="onUpdateError">
+<name>onUpdateError</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layer">
+<name>layer</name>
+<type>MovieClip</type>
+<description>a reference to the layer.</description>
+</parameter>
+<parameter name="error">
+<name>error</name>
+<type>String</type>
+<description>an error message.</description>
+</parameter>
+<description>Dispatched when a layer encounters  an error during an update sequence.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layer:MovieClip, error:String):Void </arguments>
+<usage>public function onUpdateError(map:MovieClip, layer:MovieClip, error:String):Void </usage>
+</event>
+<event name="onUpdateProgress">
+<name>onUpdateProgress</name>
+<parameter name="map">
+<name>map</name>
+<type>MovieClip</type>
+<description>a reference to the map.</description>
+</parameter>
+<parameter name="layersupdated">
+<name>layersupdated</name>
+<type>Number</type>
+<description>number of layers already updated.</description>
+</parameter>
+<parameter name="updatetotal">
+<name>updatetotal</name>
+<type>Number</type>
+<description>total number of layers that have to be updated</description>
+</parameter>
+<description>Dispatched when one or more maplayers are ready with their update sequence.</description>
+<returntype>Void </returntype>
+<arguments>(map:MovieClip, layersupdated:Number, updatetotal:Number):Void </arguments>
+<usage>public function onUpdateProgress(map:MovieClip, layersupdated:Number, updatetotal:Number):Void </usage>
+</event>
+</events>
+</component>
+</flamingodoc>

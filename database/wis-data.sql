@@ -1,18 +1,8 @@
-# File name: C:\dev\nb5-projects\nbr-proto\database\wis-data2.sql
-# Creation date: 01/25/2007
-# Created by Access to MySQL 3.3 
-# --------------------------------------------------
-# More conversion tools at http://www.convert-in.com
 
 SET FOREIGN_KEY_CHECKS = 0;
-
-#
-# Dumping data for table 'applicaties'
-#
-
 LOCK TABLES `applicaties` WRITE;
-INSERT INTO `applicaties` VALUES(1, 'Accres', 'ViaView', "", 0, -1, -1, -1, "", 'o.a. MicroStation en AutoCAD', 'ODBC db\'s (bv Oracle en Access)', 0, 0, -1, "", 8);
-INSERT INTO `applicaties` VALUES(2, 'Groenestijn', "", "", 0, -1, -1, -1, 'Xbase++', 'MicroStation, AutoCAD, IGOS, InfoCAD, ArcView, NedView', 'ODBC db\'s (bv Oracle en Access)', 0, -1, -1, "", 6);
+INSERT INTO `applicaties` VALUES(1, 'Accres', 'ViaView', "", 0, -1, -1, -1, "", 'o.a. MicroStation en AutoCAD', 'ODBC db''s (bv Oracle en Access)', 0, 0, -1, "", 8);
+INSERT INTO `applicaties` VALUES(2, 'Groenestijn', "", "", 0, -1, -1, -1, 'Xbase++', 'MicroStation, AutoCAD, IGOS, InfoCAD, ArcView, NedView', 'ODBC db''s (bv Oracle en Access)', 0, -1, -1, "", 6);
 INSERT INTO `applicaties` VALUES(3, 'Veras', "", "", 0, -1, 0, 0, "", "", "", 0, 0, 0, "", 5);
 INSERT INTO `applicaties` VALUES(4, 'SPOK', "", "", 0, -1, 0, 0, "", "", "", 0, 0, 0, "", 28);
 INSERT INTO `applicaties` VALUES(5, 'Mobiliteitsbeleid', "", "", 0, -1, 0, 0, "", "", "", 0, 0, 0, "", 30);
@@ -28,12 +18,12 @@ INSERT INTO `applicaties` VALUES(14, 'Onbekend', "", "", 0, 0, 0, 0, "", "", "",
 INSERT INTO `applicaties` VALUES(15, 'Basisregistratie Geo', "", "", 0, -1, 0, -1, "", "", "", 0, 0, 0, "", 30);
 INSERT INTO `applicaties` VALUES(16, 'Rittenadmin Strooiwagens', "", "", 0, -1, -1, -1, "", "", "", 0, 0, 0, "", 28);
 INSERT INTO `applicaties` VALUES(17, 'Collector', "", "", 0, -1, 0, 0, "", "", "", 0, 0, 0, "", 4);
-INSERT INTO `applicaties` VALUES(18, 'mi2', "", "", 0, -1, 0, 0, 'Delphi/Foxpro/Uniface. Medio 2007 ook andere lijn met Java en .NET', 'MicroStation en AutoCAD', 'ODBC db\'s (bv Oracle en Access). Vanaf medio 2007 Oracle Spatial', 0, 0, 0, 'vanaf medio 2007 webbased', 2);
-INSERT INTO `applicaties` VALUES(19, 'DHV Beheerpakketten', "", "", 0, -1, 0, 0, 'Visual Basic', 'MicroStation, AutoCAD, IGOS, InfoCAD, ArcView, NedView', 'ODBC db\'s (bv Oracle en Access)', -1, -1, -1, "", 4);
+INSERT INTO `applicaties` VALUES(18, 'mi2', "", "", 0, -1, 0, 0, 'Delphi/Foxpro/Uniface. Medio 2007 ook andere lijn met Java en .NET', 'MicroStation en AutoCAD', 'ODBC db''s (bv Oracle en Access). Vanaf medio 2007 Oracle Spatial', 0, 0, 0, 'vanaf medio 2007 webbased', 2);
+INSERT INTO `applicaties` VALUES(19, 'DHV Beheerpakketten', "", "", 0, -1, 0, 0, 'Visual Basic', 'MicroStation, AutoCAD, IGOS, InfoCAD, ArcView, NedView', 'ODBC db''s (bv Oracle en Access)', -1, -1, -1, "", 4);
 INSERT INTO `applicaties` VALUES(20, 'DG Dialog', "", "", 0, -1, 0, 0, 'C++/Uniface', 'o.a. MicroStation, AutoCAD, ArcView, NedView', 'Oracle Spatial', -1, -1, -1, "", 5);
 INSERT INTO `applicaties` VALUES(21, 'BS8*Beheer', "", "", 0, -1, 0, 0, 'Delphi/C++', 'o.a. MicroStation, ISI-Omega', 'Oracle', 0, -1, -1, "", 7);
 INSERT INTO `applicaties` VALUES(22, 'GBI', "", "", 0, -1, 0, 0, 'Oracle/OpenRoad en .NET voor webinterface', 'MicroStation, AutoCAD, IGOS, InfoCAD, ArcView, NedView', 'Oracle', -1, -1, -1, "", 10);
-INSERT INTO `applicaties` VALUES(23, 'Infra', "", "", 0, -1, 0, 0, 'MDL', 'MicroStation', 'ODBC db\'s (bv Oracle en Access)', 0, -1, -1, "", 11);
+INSERT INTO `applicaties` VALUES(23, 'Infra', "", "", 0, -1, 0, 0, 'MDL', 'MicroStation', 'ODBC db''s (bv Oracle en Access)', 0, -1, -1, "", 11);
 INSERT INTO `applicaties` VALUES(24, 'Zelfbouw/Maatwerk', "", "", 0, -1, -1, -1, "", "", "", 0, 0, 0, 'deze applicatie wordt later opgesplitst in concrete zelfbouw applicaties', 30);
 INSERT INTO `applicaties` VALUES(25, 'Groenestein', 'Verkeersvoorzieningen', 'bebording, verlichting, bermobjecten (bushalten, geleiderail, overig webmeubilair), op de wegmarkeringen (opunt, lengte)', 0, -1, -1, -1, "", "", "", 0, 0, 0, "", 6);
 INSERT INTO `applicaties` VALUES(26, 'Groenestein', 'Plantsoen', "", 0, -1, -1, -1, "", "", "", 0, 0, 0, "", 6);
@@ -42,41 +32,77 @@ INSERT INTO `applicaties` VALUES(28, 'Accress', 'Vizsy', 'markeringen, bebording
 INSERT INTO `applicaties` VALUES(29, 'Accress', 'Rioolbeheer', "", 0, 0, -1, -1, "", "", "", 0, 0, 0, "", 8);
 INSERT INTO `applicaties` VALUES(30, 'Geen', "", "", 0, 0, 0, 0, "", "", "", 0, 0, 0, "", 28);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'clusters'
-#
-
 LOCK TABLES `clusters` WRITE;
-INSERT INTO `clusters` VALUES(1, 'Basis', "", 9);
-INSERT INTO `clusters` VALUES(2, 'Verkeer', "", 9);
-INSERT INTO `clusters` VALUES(3, 'Groen', "", 9);
-INSERT INTO `clusters` VALUES(4, 'Juridisch', "", 9);
+INSERT INTO `clusters` VALUES(1, 'Basis', "", NULL);
+INSERT INTO `clusters` VALUES(2, 'Verkeer', "", NULL);
+INSERT INTO `clusters` VALUES(3, 'Groen', "", NULL);
+INSERT INTO `clusters` VALUES(4, 'Juridisch', "", NULL);
 INSERT INTO `clusters` VALUES(5, 'Gebieden', "", 1);
 INSERT INTO `clusters` VALUES(6, 'Verkeersmanagement', "", 2);
 INSERT INTO `clusters` VALUES(7, 'Overig Meubilair', "", 2);
 INSERT INTO `clusters` VALUES(8, 'Kunstwerken', "", 1);
-INSERT INTO `clusters` VALUES(9, 'root', "", 9);
+INSERT INTO `clusters` VALUES(9, 'root', "", NULL);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'data_regels'
-#
-
 LOCK TABLES `data_regels` WRITE;
+INSERT INTO `data_regels` VALUES(1, 9, 1, '2007-01-28 17:01:58');
+INSERT INTO `data_regels` VALUES(2, 51, 1, '2007-01-28 17:02:03');
+INSERT INTO `data_regels` VALUES(3, 52, 1, '2007-01-28 17:02:20');
+INSERT INTO `data_regels` VALUES(4, 53, 1, '2007-01-28 17:02:26');
+INSERT INTO `data_regels` VALUES(5, 54, 1, '2007-01-28 17:02:31');
+INSERT INTO `data_regels` VALUES(6, 55, 1, '2007-01-28 17:02:39');
+INSERT INTO `data_regels` VALUES(7, 56, 1, '2007-01-28 17:02:44');
+INSERT INTO `data_regels` VALUES(8, 57, 1, '2007-01-28 17:02:50');
+INSERT INTO `data_regels` VALUES(9, 1, 1, '2007-01-28 17:31:29');
+INSERT INTO `data_regels` VALUES(10, 3, 1, '2007-01-28 17:32:59');
+INSERT INTO `data_regels` VALUES(11, 4, 1, '2007-01-28 17:33:05');
+INSERT INTO `data_regels` VALUES(12, 5, 1, '2007-01-28 17:33:18');
+INSERT INTO `data_regels` VALUES(13, 6, 1, '2007-01-28 17:33:27');
+INSERT INTO `data_regels` VALUES(14, 7, 1, '2007-01-28 17:33:33');
+INSERT INTO `data_regels` VALUES(15, 8, 1, '2007-01-28 17:33:39');
+INSERT INTO `data_regels` VALUES(16, 9, 1, '2007-01-28 17:33:46');
+INSERT INTO `data_regels` VALUES(17, 11, 1, '2007-01-28 17:33:52');
+INSERT INTO `data_regels` VALUES(18, 12, 1, '2007-01-28 17:34:04');
+INSERT INTO `data_regels` VALUES(19, 13, 1, '2007-01-28 17:34:11');
+INSERT INTO `data_regels` VALUES(20, 14, 1, '2007-01-28 17:34:14');
+INSERT INTO `data_regels` VALUES(21, 15, 1, '2007-01-28 17:34:18');
+INSERT INTO `data_regels` VALUES(22, 16, 1, '2007-01-28 17:34:20');
+INSERT INTO `data_regels` VALUES(23, 17, 1, '2007-01-28 17:34:23');
+INSERT INTO `data_regels` VALUES(24, 18, 1, '2007-01-28 17:34:28');
+INSERT INTO `data_regels` VALUES(25, 21, 1, '2007-01-28 17:34:32');
+INSERT INTO `data_regels` VALUES(26, 22, 1, '2007-01-28 17:34:42');
+INSERT INTO `data_regels` VALUES(27, 23, 1, '2007-01-28 17:34:47');
+INSERT INTO `data_regels` VALUES(28, 24, 1, '2007-01-28 17:34:49');
+INSERT INTO `data_regels` VALUES(29, 25, 1, '2007-01-28 17:34:53');
+INSERT INTO `data_regels` VALUES(30, 26, 1, '2007-01-28 17:34:55');
+INSERT INTO `data_regels` VALUES(31, 27, 1, '2007-01-28 17:35:00');
+INSERT INTO `data_regels` VALUES(32, 29, 1, '2007-01-28 17:35:06');
+INSERT INTO `data_regels` VALUES(33, 30, 1, '2007-01-28 17:35:12');
+INSERT INTO `data_regels` VALUES(34, 31, 1, '2007-01-28 17:35:21');
+INSERT INTO `data_regels` VALUES(35, 32, 1, '2007-01-28 17:35:26');
+INSERT INTO `data_regels` VALUES(36, 33, 1, '2007-01-28 17:35:28');
+INSERT INTO `data_regels` VALUES(37, 34, 1, '2007-01-28 17:35:32');
+INSERT INTO `data_regels` VALUES(38, 35, 1, '2007-01-28 17:35:35');
+INSERT INTO `data_regels` VALUES(39, 36, 1, '2007-01-28 17:35:43');
+INSERT INTO `data_regels` VALUES(40, 37, 1, '2007-01-28 17:35:47');
+INSERT INTO `data_regels` VALUES(41, 38, 1, '2007-01-28 17:35:53');
+INSERT INTO `data_regels` VALUES(42, 39, 1, '2007-01-28 17:36:00');
+INSERT INTO `data_regels` VALUES(43, 40, 1, '2007-01-28 17:36:07');
+INSERT INTO `data_regels` VALUES(44, 41, 1, '2007-01-28 17:36:10');
+INSERT INTO `data_regels` VALUES(45, 42, 1, '2007-01-28 17:36:24');
+INSERT INTO `data_regels` VALUES(46, 49, 1, '2007-01-28 17:36:28');
+INSERT INTO `data_regels` VALUES(47, 51, 1, '2007-01-28 17:36:34');
+INSERT INTO `data_regels` VALUES(48, 52, 1, '2007-01-28 17:36:37');
+INSERT INTO `data_regels` VALUES(49, 53, 1, '2007-01-28 17:36:44');
+INSERT INTO `data_regels` VALUES(50, 54, 1, '2007-01-28 17:36:46');
+INSERT INTO `data_regels` VALUES(51, 55, 1, '2007-01-28 17:36:51');
+INSERT INTO `data_regels` VALUES(52, 56, 1, '2007-01-28 17:36:54');
+INSERT INTO `data_regels` VALUES(53, 57, 1, '2007-01-28 17:36:59');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'etlbatch'
-#
-
+ALTER TABLE `data_regels` CHANGE `timestamp` `timestamp` DATETIME;
 LOCK TABLES `etlbatch` WRITE;
+INSERT INTO `etlbatch` VALUES(1, 'demo load', '2007-01-28 17:01:39');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'functie_items'
-#
-
+ALTER TABLE `etlbatch` CHANGE `timestamp` `timestamp` DATETIME;
 LOCK TABLES `functie_items` WRITE;
 INSERT INTO `functie_items` VALUES(1, "", "", "", "", -1, 0, 3);
 INSERT INTO `functie_items` VALUES(2, "", "", "", "", -1, 0, 4);
@@ -167,15 +193,10 @@ INSERT INTO `functie_items` VALUES(86, "", "", "", "", 0, -1, 44);
 INSERT INTO `functie_items` VALUES(87, "", "", "", "", 0, -1, 45);
 INSERT INTO `functie_items` VALUES(88, "", "", "", "", 0, -1, 46);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'leveranciers'
-#
-
 LOCK TABLES `leveranciers` WRITE;
 INSERT INTO `leveranciers` VALUES(2, 'Arcadis', 'mi2', '033 4771661', 'Peter van Boekel', '055 5815926', '06 27062154', 'p.a.m.boekel@arcadis.nl', -1, 'heeft Winsign-pakket van Uniforn overgenomen. Heet nu "mi2"');
 INSERT INTO `leveranciers` VALUES(4, 'DHV', 'DHV Beheerpakketten', '033 4682000', 'Max de Veer', '033 4683340', '06 29098262', 'max.deveer@dhv.nl', -1, "");
-INSERT INTO `leveranciers` VALUES(5, 'Grontmij', 'DG Dialog', "", 'Henri Veldhuis', '0165 575763', '06 20013109', 'henri.veldhuis@grontmij.nl', -1, 'Zegt alles te kunnen leveren omdat elk niet bestaand object kan worden aangemaakt in de module Overige Objecten; Het plannen en bewaken van de voortgang van projecten is geen standaardfunctionaliteit van dg DIALOG. Het is in de verschillende modules van dg DIALOG wel mogelijk om vastgesteld onderhoud op te nemen in een toekomstige planning; Momenteel wordt door Grontmij in opdracht van de provincie Zuid Holland een module ontwikkelt voor het beheer van VRI\'s. Oplevering van deze module is gepland voor maart 2007.');
+INSERT INTO `leveranciers` VALUES(5, 'Grontmij', 'DG Dialog', "", 'Henri Veldhuis', '0165 575763', '06 20013109', 'henri.veldhuis@grontmij.nl', -1, 'Zegt alles te kunnen leveren omdat elk niet bestaand object kan worden aangemaakt in de module Overige Objecten; Het plannen en bewaken van de voortgang van projecten is geen standaardfunctionaliteit van dg DIALOG. Het is in de verschillende modules van dg DIALOG wel mogelijk om vastgesteld onderhoud op te nemen in een toekomstige planning; Momenteel wordt door Grontmij in opdracht van de provincie Zuid Holland een module ontwikkelt voor het beheer van VRI''s. Oplevering van deze module is gepland voor maart 2007.');
 INSERT INTO `leveranciers` VALUES(6, 'Groenestijn Beheersoftware', 'GB GIS', '0317 417647', 'Jan Groenestijn', "", "", 'info@gbor.nl', -1, 'Jan Groenestijn (eigenaar) "kan niets" met lijst van gegevensgebieden; Alleen module voor oevers (niet sloten); Fotolink (geen cyclorama); Kapvergunning (geen algemene verg.)');
 INSERT INTO `leveranciers` VALUES(7, 'Beheer Visie', 'BS8*Beheer', '0348 499337', 'Peter Hermsen', "", '06 53638679', 'peter.hermsen@beheervisie.nl', -1, "");
 INSERT INTO `leveranciers` VALUES(8, 'KOAC NPC', 'ViaView/Accres', '030 2876950', 'Thijs Adolfs', '030 2876981', "", 'adolfs@koac-npc.nl', -1, 'Fotolink (geen cyclorama);');
@@ -196,22 +217,12 @@ INSERT INTO `leveranciers` VALUES(28, 'Onbekend', "", "", "", "", "", "", 0, "")
 INSERT INTO `leveranciers` VALUES(29, 'Dufec', 'BASEC', '013 460 9983', "", "", "", "", 0, "");
 INSERT INTO `leveranciers` VALUES(30, 'Provincie Noord-Brabant', 'zelfbouw/maatwerk', "", "", "", "", "", 0, "");
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'locatie_aanduidingen'
-#
-
 LOCK TABLES `locatie_aanduidingen` WRITE;
 INSERT INTO `locatie_aanduidingen` VALUES(1, 'RD coordinaten', 'x en y coordinaten van klikpunt');
 INSERT INTO `locatie_aanduidingen` VALUES(2, 'WOL/HM', 'indien klikpunt binnen 100 m van hmpaal dan wegnr en hm aanduiding');
 INSERT INTO `locatie_aanduidingen` VALUES(3, 'Adres', 'Straat, nr, postcode, plaats, gemeente van klikpunt');
 INSERT INTO `locatie_aanduidingen` VALUES(4, 'Regio', 'aanduiding in welke regio klikpunt ligt');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'medewerkers'
-#
-
 LOCK TABLES `medewerkers` WRITE;
 INSERT INTO `medewerkers` VALUES(1, 'Boer, van den C.C.M.', 'Cees', '(073-681) 2237/06-18303177', 'Bureauhoofd', '18/15', 'Cvdboer@brabant.nl');
 INSERT INTO `medewerkers` VALUES(2, 'Boome, te C.M.J.', 'Karen', '(0413-29) 6740', 'Bureauhoofd', 'Heeswijk/Dinther', 'CtBoome@brabant.nl');
@@ -278,11 +289,6 @@ INSERT INTO `medewerkers` VALUES(64, 'Schoenmaker, M.', 'Mike', "", "", "", "");
 INSERT INTO `medewerkers` VALUES(65, 'Poelmans, W.J.C.', "", '073 680 8427', 'inhoudelijk deskundige', "", "");
 INSERT INTO `medewerkers` VALUES(66, 'Grunsven, van G.F.C.', "", '073-680 8015', "", "", "");
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'moscow'
-#
-
 LOCK TABLES `moscow` WRITE;
 INSERT INTO `moscow` VALUES(1, 'M', 'Must Have', "");
 INSERT INTO `moscow` VALUES(2, 'S', 'Should Have', "");
@@ -290,22 +296,12 @@ INSERT INTO `moscow` VALUES(3, 'C', 'Could Have', "");
 INSERT INTO `moscow` VALUES(4, 'W', 'Will Not Have', "");
 INSERT INTO `moscow` VALUES(5, 'O', 'Onbekend', "");
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'object_typen'
-#
-
 LOCK TABLES `object_typen` WRITE;
 INSERT INTO `object_typen` VALUES(1, 'Generiek');
 INSERT INTO `object_typen` VALUES(2, 'punt');
 INSERT INTO `object_typen` VALUES(3, 'lijn');
 INSERT INTO `object_typen` VALUES(4, 'vlak');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'onderdeel'
-#
-
 LOCK TABLES `onderdeel` WRITE;
 INSERT INTO `onderdeel` VALUES(1, 'Onbekend', "", "", 0);
 INSERT INTO `onderdeel` VALUES(7, 'Projectleider', 'tijdelijke verantwoordelijke gedurende project', "", 0);
@@ -327,11 +323,6 @@ INSERT INTO `onderdeel` VALUES(24, 'ROH//MM', "", "", 0);
 INSERT INTO `onderdeel` VALUES(25, 'ROH//OenR', "", "", 0);
 INSERT INTO `onderdeel` VALUES(26, 'ROH/BZ', "", "", 0);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'onderdeel_medewerkers'
-#
-
 LOCK TABLES `onderdeel_medewerkers` WRITE;
 INSERT INTO `onderdeel_medewerkers` VALUES(69, 15, 9, 0);
 INSERT INTO `onderdeel_medewerkers` VALUES(70, 7, 10, -1);
@@ -398,18 +389,59 @@ INSERT INTO `onderdeel_medewerkers` VALUES(132, 64, 16, 0);
 INSERT INTO `onderdeel_medewerkers` VALUES(133, 65, 22, 0);
 INSERT INTO `onderdeel_medewerkers` VALUES(134, 66, 24, 0);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'regel_attributen'
-#
-
 LOCK TABLES `regel_attributen` WRITE;
+INSERT INTO `regel_attributen` VALUES(1, 2, 9, '-');
+INSERT INTO `regel_attributen` VALUES(2, 3, 9, '-');
+INSERT INTO `regel_attributen` VALUES(3, 4, 9, '-');
+INSERT INTO `regel_attributen` VALUES(4, 5, 9, 'verhard');
+INSERT INTO `regel_attributen` VALUES(5, 6, 9, 'beton');
+INSERT INTO `regel_attributen` VALUES(6, 7, 20, '-');
+INSERT INTO `regel_attributen` VALUES(7, 8, 20, 'Fiets/Auto-regeling');
+INSERT INTO `regel_attributen` VALUES(8, 9, 20, 'Besluiten worden genomen bij vergadering 22-12-2006');
+INSERT INTO `regel_attributen` VALUES(9, 10, 20, 'Bouwvergunning afgegeven, 05-09-2006');
+INSERT INTO `regel_attributen` VALUES(10, 11, 14, '-');
+INSERT INTO `regel_attributen` VALUES(11, 12, 14, 'Verlopen op 15-09-2006');
+INSERT INTO `regel_attributen` VALUES(12, 13, 20, '-');
+INSERT INTO `regel_attributen` VALUES(13, 14, 19, 'asfalt');
+INSERT INTO `regel_attributen` VALUES(14, 15, 19, '2,5 jaar');
+INSERT INTO `regel_attributen` VALUES(15, 16, 19, '-');
+INSERT INTO `regel_attributen` VALUES(16, 17, 19, 'Uitgevoerd: 23-05-2006. Resultaat: Goed');
+INSERT INTO `regel_attributen` VALUES(17, 18, 19, 'Beton op zand/kleilaag');
+INSERT INTO `regel_attributen` VALUES(18, 19, 46, '-');
+INSERT INTO `regel_attributen` VALUES(19, 20, 46, '-');
+INSERT INTO `regel_attributen` VALUES(20, 21, 46, '-');
+INSERT INTO `regel_attributen` VALUES(21, 22, 46, 'Laatste: 12-09-2006');
+INSERT INTO `regel_attributen` VALUES(22, 23, 18, 'Gepland voor 15-01-2007');
+INSERT INTO `regel_attributen` VALUES(23, 24, 18, 'Wegmarkering');
+INSERT INTO `regel_attributen` VALUES(24, 25, 18, '-');
+INSERT INTO `regel_attributen` VALUES(25, 26, 18, '-');
+INSERT INTO `regel_attributen` VALUES(26, 27, 18, '-');
+INSERT INTO `regel_attributen` VALUES(27, 28, 30, 'MAX 80km/u');
+INSERT INTO `regel_attributen` VALUES(28, 29, 30, '-');
+INSERT INTO `regel_attributen` VALUES(29, 30, 30, '-');
+INSERT INTO `regel_attributen` VALUES(30, 31, 30, '-');
+INSERT INTO `regel_attributen` VALUES(31, 32, 30, 'ANWB');
+INSERT INTO `regel_attributen` VALUES(32, 33, 13, '-');
+INSERT INTO `regel_attributen` VALUES(33, 34, 13, 'Den Bosch');
+INSERT INTO `regel_attributen` VALUES(34, 35, 13, 'zaksloot');
+INSERT INTO `regel_attributen` VALUES(35, 36, 13, 'links');
+INSERT INTO `regel_attributen` VALUES(36, 37, 13, 'Moet worden gebaggerd');
+INSERT INTO `regel_attributen` VALUES(37, 38, 12, '-');
+INSERT INTO `regel_attributen` VALUES(38, 39, 12, '-');
+INSERT INTO `regel_attributen` VALUES(39, 40, 12, 'Middenberm');
+INSERT INTO `regel_attributen` VALUES(40, 41, 12, 'Semiverhard');
+INSERT INTO `regel_attributen` VALUES(41, 42, 12, 'hard');
+INSERT INTO `regel_attributen` VALUES(42, 43, 24, '-');
+INSERT INTO `regel_attributen` VALUES(43, 44, 24, 'grasveld');
+INSERT INTO `regel_attributen` VALUES(44, 45, 31, 'kruispunttelling');
+INSERT INTO `regel_attributen` VALUES(45, 46, 31, 'N384');
+INSERT INTO `regel_attributen` VALUES(46, 47, 31, '-');
+INSERT INTO `regel_attributen` VALUES(47, 48, 31, 'Voor details zie rapport 15-11-2006');
+INSERT INTO `regel_attributen` VALUES(48, 49, 29, 'a2');
+INSERT INTO `regel_attributen` VALUES(49, 50, 29, '15:06, 22-11-2006');
+INSERT INTO `regel_attributen` VALUES(50, 51, 29, 'Aanrijding tussen 2 auto''s');
+INSERT INTO `regel_attributen` VALUES(51, 52, 29, 'Inhalen (auto) van fietser');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'rollen'
-#
-
 LOCK TABLES `rollen` WRITE;
 INSERT INTO `rollen` VALUES(1, 'eigenaar');
 INSERT INTO `rollen` VALUES(2, 'beheerder');
@@ -417,18 +449,17 @@ INSERT INTO `rollen` VALUES(3, 'uitvoerder');
 INSERT INTO `rollen` VALUES(4, 'onbekend');
 INSERT INTO `rollen` VALUES(5, 'informatie');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'spatial_objects'
-#
-
 LOCK TABLES `spatial_objects` WRITE;
+INSERT INTO `spatial_objects` VALUES(1, 9, 1, 'object 9 - 1', '2007-01-28 17:03:11');
+INSERT INTO `spatial_objects` VALUES(2, 28, 1, 'object 28 - 1', '2007-01-28 17:03:18');
+INSERT INTO `spatial_objects` VALUES(3, 29, 1, 'object 29 - 1', '2007-01-28 17:04:31');
+INSERT INTO `spatial_objects` VALUES(4, 30, 1, 'object 30 - 1', '2007-01-28 17:04:49');
+INSERT INTO `spatial_objects` VALUES(5, 31, 1, 'object 31 - 1', '2007-01-28 17:04:54');
+INSERT INTO `spatial_objects` VALUES(6, 32, 1, 'object 32 - 1', '2007-01-28 17:05:03');
+INSERT INTO `spatial_objects` VALUES(7, 33, 1, 'object 33 - 1', '2007-01-28 17:05:08');
+INSERT INTO `spatial_objects` VALUES(8, 34, 1, 'object 34 - 1', '2007-01-28 17:05:13');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'thema_applicaties'
-#
-
+ALTER TABLE `spatial_objects` CHANGE `timestamp` `timestamp` DATETIME;
 LOCK TABLES `thema_applicaties` WRITE;
 INSERT INTO `thema_applicaties` VALUES(1, 1, 1, -1, -1, -1, -1, -1, -1);
 INSERT INTO `thema_applicaties` VALUES(3, 4, 1, -1, -1, -1, -1, -1, -1);
@@ -684,11 +715,6 @@ INSERT INTO `thema_applicaties` VALUES(320, 17, 1, 0, -1, -1, 0, 0, 0);
 INSERT INTO `thema_applicaties` VALUES(321, 17, 1, 0, -1, -1, 0, 0, 0);
 INSERT INTO `thema_applicaties` VALUES(322, 7, 1, -1, -1, -1, -1, 0, -1);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'thema_functies'
-#
-
 LOCK TABLES `thema_functies` WRITE;
 INSERT INTO `thema_functies` VALUES(3, "", "", 1, 30, "");
 INSERT INTO `thema_functies` VALUES(4, "", "", 3, 30, "");
@@ -735,112 +761,102 @@ INSERT INTO `thema_functies` VALUES(44, "", "", 55, 30, "");
 INSERT INTO `thema_functies` VALUES(45, "", "", 56, 30, "");
 INSERT INTO `thema_functies` VALUES(46, "", "", 57, 30, "");
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'thema_items_admin'
-#
-
 LOCK TABLES `thema_items_admin` WRITE;
-INSERT INTO `thema_items_admin` VALUES(2, 'Wegnr', "", "", -1, "", 0, 0, 1, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(3, 'ViaView label', "", "", -1, "", 0, 0, 1, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(4, 'Hectometrering', "", "", -1, "", 0, 0, 1, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(5, 'Baantype', "", "", -1, 'asfalt, verhard', 0, 0, 1, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(6, 'Strooktype', "", "", -1, 'asfalt, beton', 0, 0, 1, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(7, 'Documentlocatie', "", "", -1, "", 0, 0, 14, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(8, 'Overige regelingen', "", "", -1, 'Fiets/Auto-regeling, Stoplichten', 0, 0, 14, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(9, 'Verkeersbesluiten', "", "", -1, 'Besluiten worden genomen bij vergadering 22-12-2006', 0, 0, 14, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(10, 'Vergunningen', "", "", -1, 'Bouwvergunning afgegeven, 05-09-2006', 0, 0, 14, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(11, 'Vergunning', 'Ja/Nee', "", -1, "", 0, 0, 7, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(12, 'Contractperiode', "", "", -1, 'Verlopen op 15-09-2006', 0, 0, 7, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(13, 'Tekeninglocatie', "", "", -1, "", 0, 0, 14, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(14, 'Materiaal', "", "", -1, 'asfalt', 0, 0, 13, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(15, 'Leeftijd', 'jaar', "", -1, '2,5 jaar', 0, 0, 13, NULL, NULL);
+INSERT INTO `thema_items_admin` VALUES(2, 'Wegnr', "", "", -1, "", 0, 0, 1, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(3, 'ViaView label', "", "", -1, "", 0, 0, 1, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(4, 'Hectometrering', "", "", -1, "", 0, 0, 1, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(5, 'Baantype', "", "", 0, 'asfalt, verhard', 0, 0, 1, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(6, 'Strooktype', "", "", -1, 'asfalt, beton', 0, 0, 1, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(7, 'Documentlocatie', "", "", -1, "", 0, 0, 14, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(8, 'Overige regelingen', "", "", -1, 'Fiets/Auto-regeling, Stoplichten', 0, 0, 14, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(9, 'Verkeersbesluiten', "", "", -1, 'Besluiten worden genomen bij vergadering 22-12-2006', 0, 0, 14, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(10, 'Vergunningen', "", "", -1, 'Bouwvergunning afgegeven, 05-09-2006', 0, 0, 14, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(11, 'Vergunning', 'Ja/Nee', "", -1, "", 0, 0, 7, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(12, 'Contractperiode', "", "", -1, 'Verlopen op 15-09-2006', 0, 0, 7, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(13, 'Tekeninglocatie', "", "", -1, "", 0, 0, 14, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(14, 'Materiaal', "", "", -1, 'asfalt', 0, 0, 13, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(15, 'Leeftijd', 'jaar', "", -1, '2,5 jaar', 0, 0, 13, 5, 1);
 INSERT INTO `thema_items_admin` VALUES(16, 'Spoorvorming', "", "", -1, '
-Lichte spoorvorming', 0, 0, 13, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(17, 'Stroefheidsmeting', "", "", -1, 'Uitgevoerd: 23-05-2006. Resultaat: Goed', 0, 0, 13, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(18, 'Opbouw/doorsnede', "", "", -1, 'Beton op zand/kleilaag', 0, 0, 13, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(19, 'Aran', "", "", -1, "", 0, 0, 49, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(20, 'Rambol', "", "", -1, "", 0, 0, 49, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(21, 'Deflectie', "", "", -1, "", 0, 0, 49, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(22, 'Inspectie', "", "", -1, 'Laatste: 12-09-2006', 0, 0, 49, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(23, 'Planning', "", "", -1, 'Gepland voor 15-01-2007, Niet op de planning', 0, 0, 12, NULL, NULL);
+Lichte spoorvorming', 0, 0, 13, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(17, 'Stroefheidsmeting', "", "", -1, 'Uitgevoerd: 23-05-2006. Resultaat: Goed', 0, 0, 13, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(18, 'Opbouw/doorsnede', "", "", -1, 'Beton op zand/kleilaag', 0, 0, 13, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(19, 'Aran', "", "", -1, "", 0, 0, 49, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(20, 'Rambol', "", "", -1, "", 0, 0, 49, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(21, 'Deflectie', "", "", -1, "", 0, 0, 49, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(22, 'Inspectie', "", "", -1, 'Laatste: 12-09-2006', 0, 0, 49, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(23, 'Planning', "", "", -1, 'Gepland voor 15-01-2007, Niet op de planning', 0, 0, 12, 5, 1);
 INSERT INTO `thema_items_admin` VALUES(24, 'Soort', "", "", -1, 'Wegmarkering, 
-Parkeerplaats', 0, 0, 12, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(25, 'Maatvoering', "", "", -1, "", 0, 0, 12, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(26, 'Lengte', 'km', "", -1, "", 0, 0, 12, NULL, NULL);
+Parkeerplaats', 0, 0, 12, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(25, 'Maatvoering', "", "", -1, "", 0, 0, 12, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(26, 'Lengte', 'km', "", -1, "", 0, 0, 12, 5, 1);
 INSERT INTO `thema_items_admin` VALUES(27, 'Materiaalsoort', "", "", -1, '
 Verf, 
-Nog niet vastgesteld', 0, 0, 12, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(28, 'Type', "", "", -1, 'Verkeersbord, MAX 80km/u, Wegwijzering', 0, 0, 26, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(29, 'Weglengte van geldigheid', 'km', "", -1, "", 0, 0, 26, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(30, 'Afmeting', 'cm2', "", -1, "", 0, 0, 26, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(31, 'Nummer', "", "", -1, "", 0, 0, 26, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(32, 'Eigenaar', "", "", -1, 'Anders, Provincie, ANWB', 0, 0, 26, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(33, 'Oppervlak', 'm2', "", -1, "", 0, 0, 6, NULL, NULL);
+Nog niet vastgesteld', 0, 0, 12, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(28, 'Type', "", "", -1, 'Verkeersbord, MAX 80km/u, Wegwijzering', 0, 0, 26, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(29, 'Weglengte van geldigheid', 'km', "", -1, "", 0, 0, 26, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(30, 'Afmeting', 'cm2', "", -1, "", 0, 0, 26, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(31, 'Nummer', "", "", -1, "", 0, 0, 26, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(32, 'Eigenaar', "", "", -1, 'Anders, Provincie, ANWB', 0, 0, 26, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(33, 'Oppervlak', 'm2', "", -1, "", 0, 0, 6, 5, 1);
 INSERT INTO `thema_items_admin` VALUES(34, 'Gemeente', "", "", -1, 'Den Bosch
 Den Bosch
 Den Bosch
 Den Bosch
-Den Bosch', 0, 0, 6, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(35, 'Type', "", "", -1, 'Nat, droog, zaksloot', 0, 0, 6, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(36, 'Orientatie tov wegas', "", "", -1, 'links, rechts', 0, 0, 6, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(37, 'Opmerkingen', "", "", -1, 'Moet worden gebaggerd, Drooggevallen sloot, heeft controle nodig', 0, 0, 6, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(38, 'Oppervlak', 'm2', "", -1, "", 0, 0, 5, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(39, 'Hoogte tov weg', 'cm', "", -1, "", 0, 0, 5, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(40, 'Type', "", "", -1, 'Middenberm, buitenberm', 0, 0, 5, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(41, 'Begroeiing', "", "", -1, 'Semiverhard, gras', 0, 0, 5, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(42, 'Rand', "", "", -1, 'hard, zacht', 0, 0, 5, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(43, 'Bomen', 'aantal', "", -1, "", 0, 0, 18, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(44, 'Groentype', "", "", -1, 'grasveld, houtwal', 0, 0, 18, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(45, 'Type onderzoek', "", "", -1, 'kruispunttelling', 0, 0, 27, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(46, 'Naam locatie', "", "", -1, 'N384', 0, 0, 27, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(47, 'Naam meting', "", "", -1, "", 0, 0, 27, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(48, 'Details', "", "", -1, 'Voor details zie rapport 15-11-2006', 0, 0, 27, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(49, 'Wegnr', "", "", -1, "", 0, 0, 25, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(50, 'Tijdstip', "", "", -1, '15:06, 22-11-2006', 0, 0, 25, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(51, 'Type ongeval', "", "", -1, 'Aanrijding tussen 2 auto\'s, Aanrijding fiets-auto', 0, 0, 25, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(52, 'Type manoeuvre', "", "", -1, 'Inhalen (auto) van fietser', 0, 0, 25, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(54, "", "", "", -1, "", 0, 0, 3, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(55, "", "", "", -1, "", 0, 0, 4, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(56, "", "", "", -1, "", 0, 0, 6, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(57, "", "", "", -1, "", 0, 0, 8, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(58, "", "", "", -1, "", 0, 0, 9, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(59, "", "", "", -1, "", 0, 0, 11, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(60, "", "", "", -1, "", 0, 0, 15, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(61, "", "", "", -1, "", 0, 0, 16, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(62, "", "", "", -1, "", 0, 0, 17, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(63, "", "", "", -1, "", 0, 0, 21, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(64, "", "", "", -1, "", 0, 0, 22, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(65, "", "", "", -1, "", 0, 0, 23, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(66, "", "", "", -1, "", 0, 0, 24, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(67, "", "", "", -1, "", 0, 0, 26, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(68, "", "", "", -1, "", 0, 0, 29, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(69, "", "", "", -1, "", 0, 0, 30, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(70, "", "", "", -1, "", 0, 0, 31, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(71, "", "", "", -1, "", 0, 0, 32, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(72, "", "", "", -1, "", 0, 0, 33, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(73, "", "", "", -1, "", 0, 0, 34, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(74, "", "", "", -1, "", 0, 0, 35, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(75, "", "", "", -1, "", 0, 0, 36, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(76, "", "", "", -1, "", 0, 0, 37, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(77, "", "", "", -1, "", 0, 0, 38, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(78, "", "", "", -1, "", 0, 0, 39, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(79, "", "", "", -1, "", 0, 0, 40, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(80, "", "", "", -1, "", 0, 0, 41, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(81, "", "", "", -1, "", 0, 0, 42, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(82, "", "", "", -1, "", 0, 0, 51, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(83, "", "", "", -1, "", 0, 0, 52, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(84, "", "", "", -1, "", 0, 0, 53, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(85, "", "", "", -1, "", 0, 0, 54, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(86, "", "", "", -1, "", 0, 0, 55, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(87, "", "", "", -1, "", 0, 0, 56, NULL, NULL);
-INSERT INTO `thema_items_admin` VALUES(88, "", "", "", -1, "", 0, 0, 57, NULL, NULL);
+Den Bosch', 0, 0, 6, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(35, 'Type', "", "", -1, 'Nat, droog, zaksloot', 0, 0, 6, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(36, 'Orientatie tov wegas', "", "", -1, 'links, rechts', 0, 0, 6, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(37, 'Opmerkingen', "", "", -1, 'Moet worden gebaggerd, Drooggevallen sloot, heeft controle nodig', 0, 0, 6, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(38, 'Oppervlak', 'm2', "", -1, "", 0, 0, 5, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(39, 'Hoogte tov weg', 'cm', "", -1, "", 0, 0, 5, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(40, 'Type', "", "", -1, 'Middenberm, buitenberm', 0, 0, 5, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(41, 'Begroeiing', "", "", -1, 'Semiverhard, gras', 0, 0, 5, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(42, 'Rand', "", "", -1, 'hard, zacht', 0, 0, 5, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(43, 'Bomen', 'aantal', "", -1, "", 0, 0, 18, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(44, 'Groentype', "", "", -1, 'grasveld, houtwal', 0, 0, 18, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(45, 'Type onderzoek', "", "", -1, 'kruispunttelling', 0, 0, 27, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(46, 'Naam locatie', "", "", -1, 'N384', 0, 0, 27, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(47, 'Naam meting', "", "", -1, "", 0, 0, 27, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(48, 'Details', "", "", -1, 'Voor details zie rapport 15-11-2006', 0, 0, 27, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(49, 'Wegnr', "", "", -1, "", 0, 0, 25, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(50, 'Tijdstip', "", "", -1, '15:06, 22-11-2006', 0, 0, 25, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(51, 'Type ongeval', "", "", -1, 'Aanrijding tussen 2 auto''s, Aanrijding fiets-auto', 0, 0, 25, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(52, 'Type manoeuvre', "", "", -1, 'Inhalen (auto) van fietser', 0, 0, 25, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(54, "", "", "", -1, "", 0, 0, 3, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(55, "", "", "", -1, "", 0, 0, 4, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(56, "", "", "", -1, "", 0, 0, 6, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(57, "", "", "", -1, "", 0, 0, 8, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(58, "", "", "", -1, "", 0, 0, 9, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(59, "", "", "", -1, "", 0, 0, 11, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(60, "", "", "", -1, "", 0, 0, 15, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(61, "", "", "", -1, "", 0, 0, 16, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(62, "", "", "", -1, "", 0, 0, 17, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(63, "", "", "", -1, "", 0, 0, 21, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(64, "", "", "", -1, "", 0, 0, 22, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(65, "", "", "", -1, "", 0, 0, 23, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(66, "", "", "", -1, "", 0, 0, 24, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(67, "", "", "", -1, "", 0, 0, 26, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(68, "", "", "", -1, "", 0, 0, 29, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(69, "", "", "", -1, "", 0, 0, 30, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(70, "", "", "", -1, "", 0, 0, 31, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(71, "", "", "", -1, "", 0, 0, 32, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(72, "", "", "", -1, "", 0, 0, 33, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(73, "", "", "", -1, "", 0, 0, 34, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(74, "", "", "", -1, "", 0, 0, 35, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(75, "", "", "", -1, "", 0, 0, 36, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(76, "", "", "", -1, "", 0, 0, 37, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(77, "", "", "", -1, "", 0, 0, 38, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(78, "", "", "", -1, "", 0, 0, 39, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(79, "", "", "", -1, "", 0, 0, 40, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(80, "", "", "", -1, "", 0, 0, 41, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(81, "", "", "", -1, "", 0, 0, 42, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(82, "", "", "", -1, "", 0, 0, 51, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(83, "", "", "", -1, "", 0, 0, 52, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(84, "", "", "", -1, "", 0, 0, 53, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(85, "", "", "", -1, "", 0, 0, 54, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(86, "", "", "", -1, "", 0, 0, 55, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(87, "", "", "", -1, "", 0, 0, 56, 5, 1);
+INSERT INTO `thema_items_admin` VALUES(88, "", "", "", -1, "", 0, 0, 57, 5, 1);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'thema_items_spatial'
-#
-
 LOCK TABLES `thema_items_spatial` WRITE;
 INSERT INTO `thema_items_spatial` VALUES(1, "", "", 1, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(2, "", "", 14, "", NULL, NULL, NULL, NULL, NULL, NULL);
@@ -850,7 +866,7 @@ INSERT INTO `thema_items_spatial` VALUES(5, "", "", 4, "", NULL, NULL, NULL, NUL
 INSERT INTO `thema_items_spatial` VALUES(6, "", "", 5, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(7, "", "", 6, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(8, "", "", 8, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(9, "", "", 9, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(9, 'identificatie', "", 9, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(10, "", "", 11, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(11, "", "", 12, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(12, "", "", 13, "", NULL, NULL, NULL, NULL, NULL, NULL);
@@ -867,13 +883,13 @@ INSERT INTO `thema_items_spatial` VALUES(23, "", "", 26, "", NULL, NULL, NULL, N
 INSERT INTO `thema_items_spatial` VALUES(24, "", "", 27, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(26, "", "", 29, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(27, "", "", 30, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(28, "", "", 51, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(29, "", "", 52, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(30, "", "", 53, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(31, "", "", 54, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(32, "", "", 55, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(33, "", "", 56, "", NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `thema_items_spatial` VALUES(34, "", "", 57, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(28, 'identificatie', "", 51, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(29, 'identificatie', "", 52, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(30, 'identificatie', "", 53, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(31, 'identificatie', "", 54, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(32, 'identificatie', "", 55, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(33, 'identificatie', "", 56, "", NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `thema_items_spatial` VALUES(34, 'identificatie', "", 57, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(35, "", "", 58, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(36, "", "", 59, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(37, "", "", 60, "", NULL, NULL, NULL, NULL, NULL, NULL);
@@ -890,11 +906,6 @@ INSERT INTO `thema_items_spatial` VALUES(49, "", "", 40, "", NULL, NULL, NULL, N
 INSERT INTO `thema_items_spatial` VALUES(50, "", "", 41, "", NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `thema_items_spatial` VALUES(51, "", "", 42, "", NULL, NULL, NULL, NULL, NULL, NULL);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'thema_verantwoordelijkheden'
-#
-
 LOCK TABLES `thema_verantwoordelijkheden` WRITE;
 INSERT INTO `thema_verantwoordelijkheden` VALUES(9, 1, NULL, 18, 2, -1, 0, "");
 INSERT INTO `thema_verantwoordelijkheden` VALUES(10, 9, NULL, 18, 2, -1, 0, "");
@@ -1118,11 +1129,6 @@ INSERT INTO `thema_verantwoordelijkheden` VALUES(249, 40, 28, NULL, 5, -1, 0, ""
 INSERT INTO `thema_verantwoordelijkheden` VALUES(250, 41, 28, NULL, 5, -1, 0, "");
 INSERT INTO `thema_verantwoordelijkheden` VALUES(251, 42, 25, NULL, 5, -1, 0, "");
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'themas'
-#
-
 LOCK TABLES `themas` WRITE;
 INSERT INTO `themas` VALUES(1, '1', 'Weg Inclusief functie', 1, 1010, 1, "", 0, 0);
 INSERT INTO `themas` VALUES(3, '1', 'Junctie; kruispunt', 1, 1020, 1, 'kruispunt is net als rotonde en uitrit een bijzonder soort strook in viaview', 0, 0);
@@ -1131,7 +1137,7 @@ INSERT INTO `themas` VALUES(5, '1', 'Berm', 1, 1040, 3, "", 0, 0);
 INSERT INTO `themas` VALUES(6, '1', 'Sloot', 1, 1050, 3, "", 0, 0);
 INSERT INTO `themas` VALUES(7, '1', 'Uitrit', 1, 1060, 1, "", 0, 0);
 INSERT INTO `themas` VALUES(8, '1', 'Fiets/Voetpad (scheiden)', 1, 1070, 1, "", 0, 0);
-INSERT INTO `themas` VALUES(9, '1', 'Weg Oriëntatie Lijn / HM Bord/objecten', 1, 1080, 1, "", 0, 0);
+INSERT INTO `themas` VALUES(9, '1', 'Weg Oriëntatie Lijn / HM Bord/objecten', 1, 1080, 1, "", 0, -1);
 INSERT INTO `themas` VALUES(11, '1', 'Cyclorama', 1, 1090, 1, "", 0, 0);
 INSERT INTO `themas` VALUES(12, '1', 'Markering', 1, 1100, 2, "", 0, 0);
 INSERT INTO `themas` VALUES(13, '1', 'Verharding', 1, 1110, 2, "", 0, 0);
@@ -1171,33 +1177,23 @@ INSERT INTO `themas` VALUES(47, '1', 'Lopende & geplande projecten', 4, 4050, 9,
 INSERT INTO `themas` VALUES(48, '2', 'Extern', 5, 9020, 9, 'Niet helemaal duidelijk, externe bronnen', 0, 0);
 INSERT INTO `themas` VALUES(49, '2', 'Metingen Verharding (Rambol ed)', 5, 9030, 2, "", 0, 0);
 INSERT INTO `themas` VALUES(50, '2', 'Doorsnede', 5, 9040, 3, 'functie niet meer duidelijk: eruit', 0, 0);
-INSERT INTO `themas` VALUES(51, '2', 'Beheersgrens', 2, 2081, 5, "", 0, 0);
-INSERT INTO `themas` VALUES(52, '2', 'Gemeentegrens', 2, 2082, 5, "", 0, 0);
-INSERT INTO `themas` VALUES(53, '2', 'Bebouwde kom', 2, 2083, 5, "", 0, 0);
-INSERT INTO `themas` VALUES(54, '2', 'GGA-gebieden', 2, 2084, 5, "", 0, 0);
-INSERT INTO `themas` VALUES(55, '2', 'Waterschap', 2, 2085, 5, "", 0, 0);
-INSERT INTO `themas` VALUES(56, '2', 'Ecologische gebieden', 2, 2086, 5, "", 0, 0);
-INSERT INTO `themas` VALUES(57, '2', 'Bestemmingsplan', 2, 2087, 5, "", 0, 0);
+INSERT INTO `themas` VALUES(51, '2', 'Beheersgrens', 2, 2081, 5, "", 0, -1);
+INSERT INTO `themas` VALUES(52, '2', 'Gemeentegrens', 2, 2082, 5, "", 0, -1);
+INSERT INTO `themas` VALUES(53, '2', 'Bebouwde kom', 2, 2083, 5, "", 0, -1);
+INSERT INTO `themas` VALUES(54, '2', 'GGA-gebieden', 2, 2084, 5, "", 0, -1);
+INSERT INTO `themas` VALUES(55, '2', 'Waterschap', 2, 2085, 5, "", 0, -1);
+INSERT INTO `themas` VALUES(56, '2', 'Ecologische gebieden', 2, 2086, 5, "", 0, -1);
+INSERT INTO `themas` VALUES(57, '2', 'Bestemmingsplan', 2, 2087, 5, "", 0, -1);
 INSERT INTO `themas` VALUES(58, '2', 'Onderhoudsvak Groen', 5, 9050, 3, "", 0, 0);
 INSERT INTO `themas` VALUES(59, '2', 'Onderhoudsvak Verkeer', 5, 9060, 2, "", 0, 0);
 INSERT INTO `themas` VALUES(60, '2', 'Black spots ongevallen', 5, 9070, 2, "", 0, 0);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'waarde_typen'
-#
-
 LOCK TABLES `waarde_typen` WRITE;
 INSERT INTO `waarde_typen` VALUES(1, 'string');
 INSERT INTO `waarde_typen` VALUES(2, 'integer');
 INSERT INTO `waarde_typen` VALUES(3, 'double');
 INSERT INTO `waarde_typen` VALUES(4, 'date');
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'workshop_medewerkers'
-#
-
 LOCK TABLES `workshop_medewerkers` WRITE;
 INSERT INTO `workshop_medewerkers` VALUES(1, 3, 1, -1);
 INSERT INTO `workshop_medewerkers` VALUES(2, 3, 2, -1);
@@ -1267,17 +1263,12 @@ INSERT INTO `workshop_medewerkers` VALUES(65, 9, 3, -1);
 INSERT INTO `workshop_medewerkers` VALUES(66, 1, 2, -1);
 INSERT INTO `workshop_medewerkers` VALUES(67, 1, 1, -1);
 UNLOCK TABLES;
-
-#
-# Dumping data for table 'workshops'
-#
-
 LOCK TABLES `workshops` WRITE;
 INSERT INTO `workshops` VALUES(1, 10, 'Afstemming organisatiegrenzen en beheer (basis)gegevens ');
 INSERT INTO `workshops` VALUES(2, 5, 'Groen ');
 INSERT INTO `workshops` VALUES(3, 1, 'Inriching processen op hoofdniveau');
 INSERT INTO `workshops` VALUES(4, 7, 'Kunstwerken/Tankstations ');
-INSERT INTO `workshops` VALUES(5, 6, 'Pompen/Verlichting/DSI\'s/VRI\'s/DVM/Kabels&Leidingen ');
+INSERT INTO `workshops` VALUES(5, 6, 'Pompen/Verlichting/DSI''s/VRI''s/DVM/Kabels&Leidingen ');
 INSERT INTO `workshops` VALUES(6, 8, 'Regelingen ');
 INSERT INTO `workshops` VALUES(7, 9, 'Systeemarchitectuur ');
 INSERT INTO `workshops` VALUES(8, 2, 'Verkeersmanagement, ongevallen, intensiteiten ');

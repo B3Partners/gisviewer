@@ -12,6 +12,7 @@ import nl.b3p.nbr.wis.db.Applicaties;
 import nl.b3p.nbr.wis.db.DataRegels;
 import nl.b3p.nbr.wis.db.Medewerkers;
 import nl.b3p.nbr.wis.db.Onderdeel;
+import nl.b3p.nbr.wis.db.RegelAttributen;
 import nl.b3p.nbr.wis.db.Rollen;
 import nl.b3p.nbr.wis.db.SpatialObjects;
 import nl.b3p.nbr.wis.db.ThemaApplicaties;
@@ -80,6 +81,32 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 returnValues.add(tia);
             }
             request.setAttribute("thema_items", returnValues);
+        }
+        
+        ctl = null;
+        hquery = "FROM DataRegels WHERE thema = '" + id + "'";
+        q = sess.createQuery(hquery);
+        ctl = q.list();
+        if(ctl != null) {
+            Iterator it = ctl.iterator();
+            ArrayList regels = new ArrayList();
+            while(it.hasNext()) {
+                DataRegels dr = (DataRegels) it.next();
+                List ctl2 = null;
+                String hquery2 = "FROM RegelAttributen WHERE regel = " + dr.getId();
+                Query q2 = sess.createQuery(hquery2);
+                ctl2 = q2.list();
+                if(ctl2 != null) {
+                    Iterator it2 = ctl2.iterator();
+                    ArrayList regel = new ArrayList();
+                    while(it2.hasNext()) {
+                        RegelAttributen ra = (RegelAttributen) it2.next();
+                        regel.add(ra.getWaarde());
+                    }
+                    regels.add(regel);
+                }
+            }
+            request.setAttribute("regels", regels);
         }
         return mapping.findForward("admindata");
     }

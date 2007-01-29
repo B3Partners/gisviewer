@@ -15,7 +15,7 @@
     </head>
     <body>
         <c:choose>
-            <c:when test="${not empty thema_items}">
+            <c:when test="${not empty thema_items and not empty regels}">
                 <div class="topRow">
                     <c:forEach var="ThemaItem" items="${thema_items}">
                         <c:choose>
@@ -31,6 +31,27 @@
                         </div>
                     </c:forEach>
                 </div>
+                
+                <div class="row">
+                    <c:forEach var="Regel" items="${regels}">
+                        <c:forEach var="waarde" items="${Regel}" varStatus="kolom">
+                            <c:if test="${thema_items[kolom.count - 1] != null}">
+                                <c:choose>
+                                    <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
+                                        <c:set var="breedte" value="${thema_items[kolom.count - 1].kolombreedte}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="breedte" value="150" />
+                                    </c:otherwise>            
+                                </c:choose>
+                                <div style="width: ${breedte}; float: left;">
+                                    ${waarde}
+                                </div>
+                            </c:if>
+                        </c:forEach>
+                    </c:forEach>
+                </div>
+                
             </c:when>
             <c:otherwise>
                 Er is geen admin data gevonden!

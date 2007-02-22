@@ -116,6 +116,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
         String id = laagid.substring(1);
         ArrayList meta_data = new ArrayList();
         boolean isDefinitief = false;
+        ArrayList rij = new ArrayList();
+        ArrayList waarde = new ArrayList();
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String hquery = "FROM Themas WHERE id = '" + id + "'";
@@ -148,17 +150,24 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 }
             }
             
-            ArrayList rij = new ArrayList();
+            rij = new ArrayList();
             rij.add("Applicatie: ");
             rij.add(producten);
             
             meta_data.add(rij);
         }
         
-        ArrayList rij = new ArrayList();
+        rij = new ArrayList();
         rij.add("Moscow");
-        ArrayList waarde = new ArrayList();
+        waarde = new ArrayList();
         waarde.add(th.getMoscow().getNaam());
+        rij.add(waarde);
+        meta_data.add(rij);
+        
+        rij = new ArrayList();
+        rij.add("Belangnummer");
+        waarde = new ArrayList();
+        waarde.add("" + th.getBelangnr());
         rij.add(waarde);
         meta_data.add(rij);
         

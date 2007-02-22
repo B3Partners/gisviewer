@@ -17,7 +17,6 @@
     <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
     <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
     <script>
-       
     function doAjaxRequest(point_x, point_y) {
         JMapData.getData(point_x, point_y, handleGetData);
     }
@@ -66,27 +65,43 @@
         }
     }
     
+    var cookieArray = readCookie('checkedLayers');
+    function isInCookieArray(id) {
+        if(cookieArray == null) return false;
+        var arr = cookieArray.split(',');
+        for(i = 0; i < arr.length; i++) {
+            if(arr[i] == id) return true;
+        }
+        return false;
+    }
+    
+    var activeLayerFromCookie = readCookie('activelayer');
     function createLabel(container, item) {
         if(item.cluster)
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));
         else {
             if (navigator.appName=="Microsoft Internet Explorer") {
-                var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '">');
+                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\');">');
+                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\');">');
             }
             else {
                 var el = document.createElement('input');
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7');}
+                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
             if (navigator.appName=="Microsoft Internet Explorer") {
-                var el2 = document.createElement('<input type="checkbox" value="' + item.id + '" onclick="loadObjectInfo(this)">');
+                if(isInCookieArray(item.id)) var el2 = document.createElement('<input type="checkbox" checked="checked" value="' + item.id + '" onclick="loadObjectInfo(this)">');
+                else var el2 = document.createElement('<input type="checkbox" value="' + item.id + '" onclick="loadObjectInfo(this)">');
             }
             else {
                 var el2 = document.createElement('input');
                 el2.type = 'checkbox';
                 el2.value = item.id;
                 el2.onclick = function(){loadObjectInfo(this);}
+                if(isInCookieArray(item.id)) el2.checked = true;
             }
             
             var lnk = document.createElement('a');
@@ -95,6 +110,7 @@
             lnk.onclick = function(){ getMetaData(item.id) };
             container.appendChild(el);
             container.appendChild(el2);
+            container.appendChild(document.createTextNode('  '));
             container.appendChild(lnk);
         }
     }
@@ -123,20 +139,38 @@
             document.getElementById('tab1').onclick = function(){switchTab(this);}
         }
     }
+
+    var checkboxArray = new Array();  
+    function readCookieArrayIntoCheckboxArray() {
+        if(cookieArray != null) {
+            var tempArr = cookieArray.split(',');
+            for(i = 0; i < tempArr.length; i++) {
+                checkboxArray[i] = tempArr[i];
+            }
+            if(checkboxArray.length > 0) {
+                var arrayString = getArrayAsString();
+                document.forms[1].lagen.value = arrayString;
+            } else {
+                document.forms[1].lagen.value = 'ALL';
+            }
+        }
+    }
     
-    var checkboxArray = new Array();
     function loadObjectInfo(obj) {
         if(obj == null) {
             // Laad alle data
             document.forms[1].lagen.value = 'ALL';
         } else {
             if(obj.checked) {
-                checkboxArray[checkboxArray.length] = obj;
+                checkboxArray[checkboxArray.length] = obj.value;
             } else {
                 deleteFromArray(obj);
             }
             if(checkboxArray.length > 0) {
-                document.forms[1].lagen.value = getArrayAsString();
+                var arrayString = getArrayAsString();
+                document.forms[1].lagen.value = arrayString;
+                eraseCookie('checkedLayers');
+                createCookie('checkedLayers', arrayString, '7');
             } else {
                 document.forms[1].lagen.value = 'ALL';
             }
@@ -149,10 +183,10 @@
         var firstTime = true;
         for(var i = 0; i < checkboxArray.length; i++) {
             if(firstTime) {
-                ret += checkboxArray[i].value;
+                ret += checkboxArray[i];
                 firstTime = false;
             } else {
-                ret += "," + checkboxArray[i].value;
+                ret += "," + checkboxArray[i];
             }
         }
         return ret;
@@ -163,12 +197,38 @@
         var tempArray = new Array();
         var j = 0;
         for(i = 0; i < checkboxArray.length; i++) {
-            if(checkboxArray[i] != obj) {
+            if(checkboxArray[i] != obj.value) {
                 tempArray[j] = checkboxArray[i];
                 j++;
             }
         }
         checkboxArray = tempArray;
+    }
+    
+    function createCookie(name,value,days) {
+            if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime()+(days*24*60*60*1000));
+                    var expires = "; expires="+date.toGMTString();
+            }
+            else var expires = "";
+            document.cookie = name+"="+value+expires+"; path=/";
+    }
+
+    function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+            
+    }
+    
+    function eraseCookie(name) {
+            createCookie(name,"",-1);
     }
     </script>
     
@@ -176,8 +236,8 @@
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
         <script type="text/javascript">
-   var so = new SWFObject("flamingo/flamingo.swf?config=flamingo/config.xml", "flamingo", "498", "400", "8", "#FFFFFF");
-   so.write("flashcontent");
+            var so = new SWFObject("flamingo/flamingo.swf?config=flamingo/config.xml", "flamingo", "400", "300", "8", "#FFFFFF");
+            so.write("flashcontent");
         </script>
     </div>
     <div id="layermaindiv"></div>
@@ -204,7 +264,7 @@
         <input type="hidden" name="laagid" />
     </form>
     
-    <form target="objectframe" method="post" action="viewerdata.do">
+    <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">
         <input type="hidden" name="objectdata" value="t" />
         <input type="hidden" name="lagen" />
     </form>
@@ -264,6 +324,9 @@
         doAjaxRequest(extent.minx, extent.miny);
         handleGetAdminData();        
     }
+    
+    readCookieArrayIntoCheckboxArray();
+    document.forms[1].submit();
     </script>
     </body>
 </html>

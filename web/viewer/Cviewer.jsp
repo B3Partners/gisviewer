@@ -70,26 +70,39 @@
         if(cookieArray == null) return false;
         var arr = cookieArray.split(',');
         for(i = 0; i < arr.length; i++) {
-            if(arr[i] == id) return true;
+            if(arr[i] == id) {
+                return true;
+            }
         }
         return false;
     }
     
+    var activeLaagId = '';
+    function setActiveLaag(val) {
+        activeLaagId = val;
+    }
+    
+    function setAnalyseValue() {
+        document.forms[2].laagid.value = activeLaagId;
+        document.forms[2].submit();
+    }
+    
     var activeLayerFromCookie = readCookie('activelayer');
+    setActiveLaag(activeLayerFromCookie);
     function createLabel(container, item) {
         if(item.cluster)
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));
         else {
             if (navigator.appName=="Microsoft Internet Explorer") {
-                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\');">');
-                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\');">');
+                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveLaag(\'' + item.id + '\');">');
+                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveLaag(\'' + item.id + '\');">');
             }
             else {
                 var el = document.createElement('input');
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
-                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7');}
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7'); setActiveLaag(item.id)}
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
             if (navigator.appName=="Microsoft Internet Explorer") {
@@ -124,19 +137,45 @@
         if(obj.id == "tab1") {
             document.getElementById('infovak').style.display = 'block';
             document.getElementById('objectvak').style.display = 'none';
+            document.getElementById('analysevak').style.display = 'none';
             document.getElementById('tab2').style.backgroundColor = 'White';
             document.getElementById('tab2').style.color = 'Black';
             document.getElementById('tab2').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
             document.getElementById('tab2').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
             document.getElementById('tab2').onclick = function(){switchTab(this);}
+            document.getElementById('tab3').style.backgroundColor = 'White';
+            document.getElementById('tab3').style.color = 'Black';
+            document.getElementById('tab3').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab3').onclick = function(){switchTab(this);}
         } else if(obj.id == "tab2") {
             document.getElementById('infovak').style.display = 'none';
             document.getElementById('objectvak').style.display = 'block';
+            document.getElementById('analysevak').style.display = 'none';
             document.getElementById('tab1').style.backgroundColor = 'White';
             document.getElementById('tab1').style.color = 'Black';
             document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
             document.getElementById('tab1').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
             document.getElementById('tab1').onclick = function(){switchTab(this);}
+            document.getElementById('tab3').style.backgroundColor = 'White';
+            document.getElementById('tab3').style.color = 'Black';
+            document.getElementById('tab3').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab3').onclick = function(){switchTab(this);}
+        } else if(obj.id == "tab3") {
+            document.getElementById('infovak').style.display = 'none';
+            document.getElementById('objectvak').style.display = 'none';
+            document.getElementById('analysevak').style.display = 'block';
+            document.getElementById('tab1').style.backgroundColor = 'White';
+            document.getElementById('tab1').style.color = 'Black';
+            document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab1').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab1').onclick = function(){switchTab(this);}
+            document.getElementById('tab2').style.backgroundColor = 'White';
+            document.getElementById('tab2').style.color = 'Black';
+            document.getElementById('tab2').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab2').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab2').onclick = function(){switchTab(this);}
         }
     }
 
@@ -150,8 +189,10 @@
             if(checkboxArray.length > 0) {
                 var arrayString = getArrayAsString();
                 document.forms[1].lagen.value = arrayString;
+                document.forms[2].lagen.value = arrayString;
             } else {
                 document.forms[1].lagen.value = 'ALL';
+                document.forms[2].lagen.value = 'ALL';
             }
         }
     }
@@ -160,6 +201,7 @@
         if(obj == null) {
             // Laad alle data
             document.forms[1].lagen.value = 'ALL';
+            document.forms[2].lagen.value = 'ALL';
         } else {
             if(obj.checked) {
                 checkboxArray[checkboxArray.length] = obj.value;
@@ -169,13 +211,16 @@
             if(checkboxArray.length > 0) {
                 var arrayString = getArrayAsString();
                 document.forms[1].lagen.value = arrayString;
+                document.forms[2].lagen.value = 'ALL';
                 eraseCookie('checkedLayers');
                 createCookie('checkedLayers', arrayString, '7');
             } else {
                 document.forms[1].lagen.value = 'ALL';
+                document.forms[2].lagen.value = 'ALL';
             }
         }
         document.forms[1].submit();
+        setAnalyseValue();
     }
     
     function getArrayAsString() {
@@ -243,11 +288,14 @@
     <div id="layermaindiv"></div>
     <div id="rightdiv">
         <div id="tabjes">
-            <div id="tab1" onmouseover=""  onmouseout="" onclick="switchTab(this);">
+            <div id="tab1">
                 Lokatie-Informatie
             </div>
             <div id="tab2">
                 Object-Informatie
+            </div>
+            <div id="tab3">
+                Analyse
             </div>
         </div>
         <div id="infovak" style="display: none;">
@@ -255,6 +303,9 @@
         </div>
         <div id="objectvak" style="display: none;">
             <iframe id="objectframe" name="objectframe" frameborder="0"></iframe>
+        </div>
+        <div id="analysevak" style="display: none;">
+            <iframe id="analyseframe" name="analyseframe" frameborder="0"></iframe>
         </div>
     </div>
     
@@ -266,6 +317,12 @@
     
     <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">
         <input type="hidden" name="objectdata" value="t" />
+        <input type="hidden" name="lagen" />
+    </form>
+    
+    <form id="analysedataForm" name="analysedataForm" target="analyseframe" method="post" action="viewerdata.do">
+        <input type="hidden" name="analysedata" value="t" />
+        <input type="hidden" name="laagid" />
         <input type="hidden" name="lagen" />
     </form>
     
@@ -290,7 +347,6 @@
     
     <script type="text/javascript">
     switchTab(document.getElementById('tab1'));
-    loadObjectInfo(null);
         
     var flamingo;
     var lastextent;
@@ -327,6 +383,7 @@
     
     readCookieArrayIntoCheckboxArray();
     document.forms[1].submit();
+    setAnalyseValue();
     </script>
     </body>
 </html>

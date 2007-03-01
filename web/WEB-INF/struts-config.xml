@@ -27,6 +27,8 @@
             <forward name="admindata" path="/viewer/vieweradmindata.jsp"/>
             <forward name="metadata" path="/viewer/viewermetadata.jsp"/>
             <forward name="objectdata" path="/viewer/viewerobjectdata.jsp"/>
+            <forward name="analysedata" path="/viewer/vieweranalysedata.jsp"/>
+            <forward name="aanvullendinfo" path="/viewer/vieweraanvullendeinfo.jsp"/>
         </action>
         <action path="/index" forward="/index.jsp"/>
         <action path="/etl" forward="/etl/etlBase.jsp"/>

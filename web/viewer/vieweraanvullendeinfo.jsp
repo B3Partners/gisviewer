@@ -12,26 +12,13 @@
         <title>Viewer Data</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript">
-            function popUp(URL, naam) {
-                eval("page" + naam + " = window.open(URL, '" + naam + "', 'toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=800,height=400');");
-            }
-        </script>
     </head>
     <body>
         <c:choose>
-            <c:when test="${not empty thema_items and not empty regels and not empty themaid}">
+            <c:when test="${not empty thema_items and not empty regels}">
                 <div class="topRow">
-                    <div style="width: 50px; float: left;">
-                        Volgnr
-                    </div>
-                    <div style="width: 25px; float: left;">
-                        &nbsp;
-                    </div>
-                    <div style="width: 25px; float: left;">
-                        &nbsp;
-                    </div>
                     <c:forEach var="ThemaItem" items="${thema_items}">
+                        <c:set var="themaid" value="${ThemaItem.thema}" />
                         <c:choose>
                             <c:when test="${ThemaItem.kolombreedte != 0}">
                                 <c:set var="breedte" value="${ThemaItem.kolombreedte}" />
@@ -45,17 +32,9 @@
                         </div>
                     </c:forEach>
                 </div>
+                
                 <div class="row">
                     <c:forEach var="Regel" items="${regels}" varStatus="counter">
-                        <div style="width: 50px; float: left;">
-                            ${counter.count}
-                        </div>
-                        <div style="width: 25px; float: left;">
-                            <html:image src="./images/icons/information.png" onclick="popUp('viewerdata.do?aanvullendeinfo=t&regel=${Regel[0]}&themaid=${themaid}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
-                        </div>
-                        <div style="width: 25px; float: left;">
-                            <html:image src="./images/icons/world_link.png" onclick="popUp('', 'externe_link_scherm');" style="cursor: pointer; cursor: hand;" />
-                        </div>
                         <c:forEach var="waarde" items="${Regel[1]}" varStatus="kolom">
                             <c:if test="${thema_items[kolom.count - 1] != null}">
                                 <c:choose>
@@ -73,9 +52,9 @@
                         </c:forEach>
                     </c:forEach>
                 </div>
-                
             </c:when>
             <c:otherwise>
+                ${thema_items}
                 Er is geen admin data gevonden!
             </c:otherwise>
         </c:choose>

@@ -35,6 +35,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
     private static final Log log = LogFactory.getLog(GetViewerDataAction.class);
     
     protected static final String ADMINDATA = "admindata";
+    protected static final String ANALYSEDATA = "analysedata";
+    protected static final String AANVULLENDEINFO = "aanvullendeinfo";
     protected static final String METADATA = "metadata";
     protected static final String OBJECTDATA = "objectdata";
     private List themalist = null;
@@ -50,6 +52,12 @@ public class GetViewerDataAction extends BaseHibernateAction {
         hibProp.setAlternateMessageKey("error.admindata.failed");
         map.put(ADMINDATA, hibProp);
         
+        hibProp = new ExtendedMethodProperties(ANALYSEDATA);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.analysedata.failed");
+        map.put(ANALYSEDATA, hibProp);
+        
         hibProp = new ExtendedMethodProperties(METADATA);
         hibProp.setDefaultForwardName(SUCCESS);
         hibProp.setAlternateForwardName(FAILURE);
@@ -62,25 +70,151 @@ public class GetViewerDataAction extends BaseHibernateAction {
         hibProp.setAlternateMessageKey("error.objectdata.failed");
         map.put(OBJECTDATA, hibProp);
         
+        hibProp = new ExtendedMethodProperties(AANVULLENDEINFO);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.aanvullende.failed");
+        map.put(AANVULLENDEINFO, hibProp);
+        
         return map;
     }
     
-    public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String laagid = request.getParameter("laagid");
-        String id = laagid.substring(1);
+    public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lagen = request.getParameter("lagen");
+        ArrayList objectdata = new ArrayList();
+        
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
-        String hquery = "FROM ThemaItemsAdmin WHERE thema = '" + id + "' AND label != ''";
+        String hquery = "FROM Themas WHERE locatie_thema = true";
+        if(!lagen.equals("ALL")) {
+            hquery += " AND (";
+            String[] alleLagen = lagen.split(",");
+            boolean firstTime = true;
+            for(int i = 0; i < alleLagen.length; i++) {
+                if(firstTime) {
+                    hquery += "id = " + alleLagen[i].substring(1);
+                    firstTime = false;
+                } else {
+                    hquery += " OR id = " + alleLagen[i].substring(1);
+                }
+            }
+            hquery += ")";
+        }
         Query q = sess.createQuery(hquery);
+        ctl = q.list();
+        if(ctl != null) {
+            Iterator it = ctl.iterator();
+            while(it.hasNext()) {
+                ArrayList thema = new ArrayList();
+                Themas t = (Themas) it.next();
+                thema.add(t.getNaam());
+                hquery = "FROM DataRegels WHERE thema = " + t.getId();
+                q = sess.createQuery(hquery);
+                List ctl2 = null;
+                ctl2 = q.list();
+                if(ctl2 != null) {
+                    Iterator it2 = ctl2.iterator();
+                    while(it2.hasNext()) {
+                        DataRegels dr = (DataRegels) it2.next();
+                        hquery = "FROM SpatialObjects WHERE regel = " + dr.getId();
+                        List ctl3 = null;
+                        q = sess.createQuery(hquery);
+                        ctl3 = q.list();
+                        if(ctl3 != null) {
+                            Iterator it3 = ctl3.iterator();
+                            ArrayList waardes = new ArrayList();
+                            while(it3.hasNext()) {
+                                SpatialObjects so = (SpatialObjects) it3.next();
+                                ThemaItemsSpatial tis = so.getTis();
+                                ArrayList rij_waarde = new ArrayList();
+                                if(tis != null) {
+                                    rij_waarde.add(tis.getId());
+                                    rij_waarde.add(tis.getKenmerk());
+                                } else if(so != null) {
+                                    rij_waarde.add("-1");
+                                    rij_waarde.add("<onbekend>");
+                                }
+                                if(so != null) {
+                                    rij_waarde.add(so.getGeometry());
+                                }
+                                waardes.add(rij_waarde);
+                            }
+                            thema.add(waardes);
+                        }
+                    }
+                }
+                objectdata.add(thema);
+            }
+        }
+        request.setAttribute("analyse_data", objectdata);
+        
+        String log = "";
+        
+        String laagid = request.getParameter("laagid");
+        String id = laagid.substring(1);
+        ctl = null;
+        hquery = "FROM ThemaItemsAdmin WHERE thema = " + id + " AND label != ''";
+        q = sess.createQuery(hquery);
         ctl = q.list();
         if(ctl != null) {
             ArrayList returnValues = new ArrayList();
             Iterator it = ctl.iterator();
             while(it.hasNext()) {
+                ArrayList list = new ArrayList();
                 ThemaItemsAdmin tia = (ThemaItemsAdmin) it.next();
-                returnValues.add(tia);
+                list.add(tia.getId());
+                list.add(tia.getLabel());
+                
+                List ctl2 = null;
+                String hquery2 = "FROM DataRegels WHERE thema = " + id;
+                Query q2 = sess.createQuery(hquery2);
+                ctl2 = q2.list();
+                if(ctl2 != null) {
+                    Iterator it2 = ctl2.iterator();
+                    ArrayList regels = new ArrayList();
+                    while(it2.hasNext()) {
+                        DataRegels dr = (DataRegels) it2.next();
+                        List ctl3 = null;
+                        String hquery3 = "FROM RegelAttributen WHERE regel = " + dr.getId() + " AND tia = " + tia.getId();
+                        Query q3 = sess.createQuery(hquery3);
+                        ctl3 = q3.list();
+                        if(ctl3 != null) {
+                            Iterator it3 = ctl3.iterator();
+                            while(it3.hasNext()) {
+                                RegelAttributen ra = (RegelAttributen) it3.next();
+                                regels.add(ra.getWaarde());
+                            }
+                        }
+                    }
+                    list.add(regels);
+                }
+                returnValues.add(list);
             }
             request.setAttribute("thema_items", returnValues);
+        }
+        return mapping.findForward("analysedata");
+    }
+    
+    public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String laagid = request.getParameter("laagid");
+        String id = laagid.substring(1);
+        
+        ArrayList thema_items = new ArrayList();
+        ArrayList regels = new ArrayList();
+        ArrayList mogelijkeThemas = new ArrayList();
+        
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        List ctl = null;
+        String hquery = "FROM ThemaItemsAdmin WHERE thema = " + id + " AND label != '' AND basisregel = -1";
+        Query q = sess.createQuery(hquery);
+        ctl = q.list();
+        if(ctl != null) {
+            Iterator it = ctl.iterator();
+            while(it.hasNext()) {
+                ThemaItemsAdmin tia = (ThemaItemsAdmin) it.next();
+                thema_items.add(tia);
+                mogelijkeThemas.add("" + tia.getId());
+            }
         }
         
         ctl = null;
@@ -89,11 +223,22 @@ public class GetViewerDataAction extends BaseHibernateAction {
         ctl = q.list();
         if(ctl != null) {
             Iterator it = ctl.iterator();
-            ArrayList regels = new ArrayList();
             while(it.hasNext()) {
                 DataRegels dr = (DataRegels) it.next();
                 List ctl2 = null;
-                String hquery2 = "FROM RegelAttributen WHERE regel = " + dr.getId();
+                String hquery2 = "FROM RegelAttributen WHERE regel = " + dr.getId() + " AND (tia = ";
+                Iterator it3 = mogelijkeThemas.iterator();
+                boolean firstTime = true;
+                while(it3.hasNext()) {
+                    String tiaId = (String) it3.next();
+                    if(firstTime) {
+                        hquery2 += tiaId;
+                        firstTime = false;
+                    } else {
+                        hquery2 += " OR tia = " + tiaId;
+                    }
+                }
+                hquery2 += ")";
                 Query q2 = sess.createQuery(hquery2);
                 ctl2 = q2.list();
                 if(ctl2 != null) {
@@ -103,11 +248,55 @@ public class GetViewerDataAction extends BaseHibernateAction {
                         RegelAttributen ra = (RegelAttributen) it2.next();
                         regel.add(ra.getWaarde());
                     }
-                    regels.add(regel);
+                    ArrayList regel_waarde = new ArrayList();
+                    regel_waarde.add(dr.getId());
+                    regel_waarde.add(regel);
+                    regels.add(regel_waarde);
                 }
             }
-            request.setAttribute("regels", regels);
         }
+        request.setAttribute("themaid", id);
+        request.setAttribute("thema_items", thema_items);
+        request.setAttribute("regels", regels);
+        
+        return mapping.findForward("admindata");
+    }
+    
+    public ActionForward aanvullendeinfo(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String regel = request.getParameter("regel");
+        String themaid = request.getParameter("themaid");
+        
+        ArrayList regels = new ArrayList();
+        ArrayList thema_items = new ArrayList();
+        
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        List ctl = null;
+        String hquery = "FROM ThemaItemsAdmin WHERE thema = " + themaid + " AND label != ''";
+        log.debug("SQL: " + hquery);
+        Query q = sess.createQuery(hquery);
+        ctl = q.list();
+        if(ctl != null) {
+            Iterator it = ctl.iterator();
+            while(it.hasNext()) {
+                ThemaItemsAdmin tia = (ThemaItemsAdmin) it.next();
+                thema_items.add(tia);
+            }
+        }
+        
+        ctl = null;
+        hquery = "FROM RegelAttributen WHERE regel = " + regel;
+        q = sess.createQuery(hquery);
+        ctl = q.list();
+        if(ctl != null) {
+            Iterator it = ctl.iterator();
+            while(it.hasNext()) {
+                RegelAttributen ra = (RegelAttributen) it.next();
+                regels.add(ra.getWaarde());
+            }
+        }
+        request.setAttribute("regels", regels);
+        request.setAttribute("thema_items", regels);
+        
         return mapping.findForward("admindata");
     }
     

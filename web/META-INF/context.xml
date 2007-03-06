@@ -2,6 +2,17 @@
 <!-- Context voor nbr-proto-->
 <Context crossContext="true" debug="5" docBase="nbr-proto" path="/nbr-proto" reloadable="true">
     <Logger className="org.apache.catalina.logger.FileLogger" prefix="nbr-proto." suffix=".log" timestamp="true"/>
-    <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" logAbandoned="true" maxActive="100" maxIdle="30" maxWait="10000" name="jdbc/wis" password="***REMOVED***" removeAbandoned="true" removeAbandonedTimeout="60" type="javax.sql.DataSource" url="jdbc:mysql://b3p-stage2:3306/wis?autoReconnect=true" username="root"/>
+    <Resource
+        name="jdbc/wis"
+        type="javax.sql.DataSource"
+        driverClassName="org.postgresql.Driver"
+        password="***REMOVED***"
+        maxIdle="30"
+        maxWait="5000"
+        validationQuery="select now();"
+        username="postgres"
+        url="jdbc:postgresql://w1.b3p.nl:5432/pnb_wis"
+        maxActive="100"
+    />
 </Context>
 <!-- Einde Context voor b3partners-->

@@ -1,5 +1,5 @@
 /*
- * ThemaItemsAdmin.java
+ * ThemaData.java
  *
  * Created on 16 januari 2007, 15:05
  *
@@ -13,7 +13,7 @@ package nl.b3p.nbr.wis.db;
  *
  * @author Chris
  */
-public class ThemaItemsAdmin {
+public class ThemaData {
     
     private int id;
     private String label;
@@ -22,13 +22,16 @@ public class ThemaItemsAdmin {
     private Themas thema;
     private boolean basisregel;
     private String voorbeelden;
-    private boolean kenmerk;
     private int kolombreedte;
     private Moscow moscow;
     private WaardeTypen waardeType;
+    private String url;
+    private String kolomnaam;
     
-    /** Creates a new instance of ThemaItemsAdmin */
-    public ThemaItemsAdmin() {
+    /**
+     * Creates a new instance of ThemaData
+     */
+    public ThemaData() {
     }
 
     public int getId() {
@@ -79,14 +82,6 @@ public class ThemaItemsAdmin {
         this.voorbeelden = voorbeelden;
     }
 
-    public boolean isKenmerk() {
-        return kenmerk;
-    }
-
-    public void setKenmerk(boolean kenmerk) {
-        this.kenmerk = kenmerk;
-    }
-
     public int getKolombreedte() {
         return kolombreedte;
     }
@@ -117,6 +112,22 @@ public class ThemaItemsAdmin {
 
     public void setWaardeType(WaardeTypen waardeType) {
         this.waardeType = waardeType;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getKolomnaam() {
+        return kolomnaam;
+    }
+
+    public void setKolomnaam(String kolomnaam) {
+        this.kolomnaam = kolomnaam;
     }
 
 }

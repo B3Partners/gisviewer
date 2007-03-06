@@ -9,15 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.nbr.wis.db.Applicaties;
-import nl.b3p.nbr.wis.db.DataRegels;
 import nl.b3p.nbr.wis.db.Medewerkers;
 import nl.b3p.nbr.wis.db.Onderdeel;
-import nl.b3p.nbr.wis.db.RegelAttributen;
 import nl.b3p.nbr.wis.db.Rollen;
-import nl.b3p.nbr.wis.db.SpatialObjects;
 import nl.b3p.nbr.wis.db.ThemaApplicaties;
-import nl.b3p.nbr.wis.db.ThemaItemsAdmin;
-import nl.b3p.nbr.wis.db.ThemaItemsSpatial;
+import nl.b3p.nbr.wis.db.ThemaData;
 import nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden;
 import nl.b3p.nbr.wis.db.Themas;
 import nl.b3p.nbr.wis.services.HibernateUtil;
@@ -100,6 +96,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             }
             hquery += ")";
         }
+        /*
         Query q = sess.createQuery(hquery);
         ctl = q.list();
         if(ctl != null) {
@@ -161,7 +158,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             Iterator it = ctl.iterator();
             while(it.hasNext()) {
                 ArrayList list = new ArrayList();
-                ThemaItemsAdmin tia = (ThemaItemsAdmin) it.next();
+                ThemaData tia = (ThemaData) it.next();
                 list.add(tia.getId());
                 list.add(tia.getLabel());
                 
@@ -192,6 +189,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             }
             request.setAttribute("thema_items", returnValues);
         }
+        */
         return mapping.findForward("analysedata");
     }
     
@@ -205,18 +203,19 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
-        String hquery = "FROM ThemaItemsAdmin WHERE thema = " + id + " AND label != '' AND basisregel = -1";
+        String hquery = "FROM ThemaData WHERE thema = " + id + " AND label != '' AND basisregel = true";
         Query q = sess.createQuery(hquery);
         ctl = q.list();
         if(ctl != null) {
             Iterator it = ctl.iterator();
             while(it.hasNext()) {
-                ThemaItemsAdmin tia = (ThemaItemsAdmin) it.next();
+                ThemaData tia = (ThemaData) it.next();
                 thema_items.add(tia);
                 mogelijkeThemas.add("" + tia.getId());
             }
         }
         
+        /*
         ctl = null;
         hquery = "FROM DataRegels WHERE thema = '" + id + "'";
         q = sess.createQuery(hquery);
@@ -258,7 +257,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         request.setAttribute("themaid", id);
         request.setAttribute("thema_items", thema_items);
         request.setAttribute("regels", regels);
-        
+        */
         return mapping.findForward("admindata");
     }
     
@@ -278,11 +277,11 @@ public class GetViewerDataAction extends BaseHibernateAction {
         if(ctl != null) {
             Iterator it = ctl.iterator();
             while(it.hasNext()) {
-                ThemaItemsAdmin tia = (ThemaItemsAdmin) it.next();
+                ThemaData tia = (ThemaData) it.next();
                 thema_items.add(tia);
             }
         }
-        
+        /*
         ctl = null;
         hquery = "FROM RegelAttributen WHERE regel = " + regel;
         q = sess.createQuery(hquery);
@@ -296,7 +295,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         }
         request.setAttribute("regels", regels);
         request.setAttribute("thema_items", regels);
-        
+        */
         return mapping.findForward("admindata");
     }
     
@@ -419,6 +418,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             }
             hquery += ")";
         }
+        /*
         Query q = sess.createQuery(hquery);
         ctl = q.list();
         if(ctl != null) {
@@ -464,6 +464,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             }
         }
         request.setAttribute("object_data", objectdata);
+        */
         return mapping.findForward("objectdata");
     }
     

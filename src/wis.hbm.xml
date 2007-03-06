@@ -40,23 +40,6 @@
             <one-to-many class="nl.b3p.nbr.wis.db.Themas"/>
         </set>
     </class>
-    <class name="nl.b3p.nbr.wis.db.DataRegels">
-        <id name="id" type="int">
-            <column name="id" not-null="true"/>
-            <generator class="identity"/>
-        </id>
-        <many-to-one name="thema"/>
-        <many-to-one name="etlbatch"/>
-        <property name="timestamp" type="date"/>
-    </class>
-    <class name="nl.b3p.nbr.wis.db.ETLbatch">
-        <id name="id" type="int">
-            <column name="id" not-null="true"/>
-            <generator class="identity"/>
-        </id>
-        <property name="omschrijving"/>
-        <property name="timestamp" type="date"/>
-    </class>
     <class name="nl.b3p.nbr.wis.db.FunctieItems">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
@@ -114,13 +97,6 @@
         <property name="naam"/>
         <property name="omschrijving"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.ObjectTypen">
-        <id name="id" type="int">
-            <column name="id" not-null="true"/>
-            <generator class="identity"/>
-        </id>
-        <property name="naam"/>
-    </class>
     <class name="nl.b3p.nbr.wis.db.Onderdeel">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
@@ -140,31 +116,12 @@
         <many-to-one name="onderdeel"/>
         <property name="vertegenwoordiger" not-null="true"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.RegelAttributen">
-        <id name="id" type="int">
-            <column name="id" not-null="true"/>
-            <generator class="identity"/>
-        </id>
-        <many-to-one name="tia"/>
-        <many-to-one name="regel"/>
-        <property name="waarde"/>
-    </class>
     <class name="nl.b3p.nbr.wis.db.Rollen">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
         </id>
         <property name="naam"/>
-    </class>
-    <class name="nl.b3p.nbr.wis.db.SpatialObjects">
-        <id name="id" type="int">
-            <column name="id" not-null="true"/>
-            <generator class="identity"/>
-        </id>
-        <many-to-one name="tis"/>
-        <many-to-one name="regel"/>
-        <property name="geometry"/>
-        <property name="timestamp" type="date"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.ThemaApplicaties">
         <id name="id" type="int">
@@ -191,7 +148,7 @@
         <many-to-one name="applicatie"/>
         <property name="protocol"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.ThemaItemsAdmin">
+    <class name="nl.b3p.nbr.wis.db.ThemaData">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -201,27 +158,12 @@
         <property name="omschrijving"/>
         <property name="basisregel" not-null="true"/>
         <property name="voorbeelden"/>
-        <property name="kenmerk" not-null="true"/>
         <property name="kolombreedte" not-null="true"/>
         <many-to-one name="thema"/>
         <many-to-one name="moscow"/>
         <many-to-one name="waardeType"/>
-    </class>
-    <class name="nl.b3p.nbr.wis.db.ThemaItemsSpatial">
-        <id name="id" type="int">
-            <column name="id" not-null="true"/>
-            <generator class="identity"/>
-        </id>
-        <property name="kenmerk"/>
-        <property name="omschrijving"/>
-        <many-to-one name="thema"/>
-        <property name="type"/>
-        <property name="lrood"/>
-        <property name="lgroen"/>
-        <property name="lblauw"/>
-        <property name="vrood"/>
-        <property name="vgroen"/>
-        <property name="vblauw"/>
+        <property name="url"/>
+        <property name="kolomnaam"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden">
         <id name="id" type="int">
@@ -251,6 +193,17 @@
         <property name="opmerkingen"/>
         <property name="analyse_thema" not-null="true"/>
         <property name="locatie_thema" not-null="true"/>
+        <property name="admin_tabel_opmerkingen"/>
+        <property name="admin_tabel"/>
+        <property name="admin_pk"/>
+        <property name="admin_pk_complex" not-null="true"/>
+        <property name="admin_spatial_ref"/>
+        <property name="admin_query"/>
+        <property name="spatial_tabel_opmerkingen"/>
+        <property name="spatial_tabel"/>
+        <property name="spatial_pk"/>
+        <property name="spatial_pk_complex" not-null="true"/>
+        <property name="spatial_admin_ref"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.WaardeTypen">
         <id name="id" type="int">

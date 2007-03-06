@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import nl.b3p.nbr.wis.db.ThemaItemsAdmin;
+import nl.b3p.nbr.wis.db.ThemaData;
 import nl.b3p.nbr.wis.services.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,7 +59,7 @@ public class GetViewerAdminData {
             ArrayList returnValues = new ArrayList();
             Iterator it = ctl.iterator();
             while(it.hasNext()) {
-                ThemaItemsAdmin tia = (ThemaItemsAdmin) it.next();
+                ThemaData tia = (ThemaData) it.next();
                 returnValues.add(tia);
             }
             return returnValues;

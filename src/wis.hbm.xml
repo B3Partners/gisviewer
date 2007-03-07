@@ -40,6 +40,13 @@
             <one-to-many class="nl.b3p.nbr.wis.db.Themas"/>
         </set>
     </class>
+    <class name="nl.b3p.nbr.wis.db.DataTypen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+    </class>
     <class name="nl.b3p.nbr.wis.db.FunctieItems">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
@@ -162,7 +169,8 @@
         <many-to-one name="thema"/>
         <many-to-one name="moscow"/>
         <many-to-one name="waardeType"/>
-        <property name="url"/>
+        <many-to-one name="dataType"/>
+        <property name="commando"/>
         <property name="kolomnaam"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden">

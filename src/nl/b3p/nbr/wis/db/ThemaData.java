@@ -25,7 +25,8 @@ public class ThemaData {
     private int kolombreedte;
     private Moscow moscow;
     private WaardeTypen waardeType;
-    private String url;
+    private DataTypen dataType;
+    private String commando;
     private String kolomnaam;
     
     /**
@@ -114,20 +115,28 @@ public class ThemaData {
         this.waardeType = waardeType;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getKolomnaam() {
         return kolomnaam;
     }
 
     public void setKolomnaam(String kolomnaam) {
         this.kolomnaam = kolomnaam;
+    }
+
+    public DataTypen getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(DataTypen dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getCommando() {
+        return commando;
+    }
+
+    public void setCommando(String commando) {
+        this.commando = commando;
     }
 
 }

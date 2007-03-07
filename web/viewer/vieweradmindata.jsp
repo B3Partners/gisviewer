@@ -20,16 +20,10 @@
     </head>
     <body>
         <c:choose>
-            <c:when test="${not empty thema_items and not empty regels and not empty themaid}">
+            <c:when test="${not empty thema_items and not empty regels}">
                 <div class="topRow">
                     <div style="width: 50px; float: left;">
                         Volgnr
-                    </div>
-                    <div style="width: 25px; float: left;">
-                        &nbsp;
-                    </div>
-                    <div style="width: 25px; float: left;">
-                        &nbsp;
                     </div>
                     <c:forEach var="ThemaItem" items="${thema_items}">
                         <c:choose>
@@ -46,17 +40,11 @@
                     </c:forEach>
                 </div>
                 <div class="row">
-                    <c:forEach var="Regel" items="${regels}" varStatus="counter">
+                    <c:forEach var="regel" items="${regels}" varStatus="counter">
                         <div style="width: 50px; float: left;">
                             ${counter.count}
                         </div>
-                        <div style="width: 25px; float: left;">
-                            <html:image src="./images/icons/information.png" onclick="popUp('viewerdata.do?aanvullendeinfo=t&regel=${Regel[0]}&themaid=${themaid}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
-                        </div>
-                        <div style="width: 25px; float: left;">
-                            <html:image src="./images/icons/world_link.png" onclick="popUp('', 'externe_link_scherm');" style="cursor: pointer; cursor: hand;" />
-                        </div>
-                        <c:forEach var="waarde" items="${Regel[1]}" varStatus="kolom">
+                        <c:forEach var="waarde" items="${regel}" varStatus="kolom">
                             <c:if test="${thema_items[kolom.count - 1] != null}">
                                 <c:choose>
                                     <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
@@ -66,14 +54,22 @@
                                         <c:set var="breedte" value="150" />
                                     </c:otherwise>            
                                 </c:choose>
-                                <div style="width: ${breedte}; float: left;">
-                                    ${waarde}
-                                </div>
+                                <c:choose>
+                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
+                                       <div style="width: ${breedte}; float: left;">
+                                             <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div style="width: ${breedte}; float: left;">
+                                            ${waarde}
+                                        </div>
+                                    </c:otherwise>            
+                                </c:choose>
                             </c:if>
                         </c:forEach>
                     </c:forEach>
                 </div>
-                
             </c:when>
             <c:otherwise>
                 Er is geen admin data gevonden!

@@ -39,8 +39,8 @@
                         </div>
                     </c:forEach>
                 </div>
-                <div class="row">
-                    <c:forEach var="regel" items="${regels}" varStatus="counter">
+                <c:forEach var="regel" items="${regels}" varStatus="counter">
+                    <div class="row">
                         <div style="width: 50px; float: left;">
                             ${counter.count}
                         </div>
@@ -56,8 +56,13 @@
                                 </c:choose>
                                 <c:choose>
                                     <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                       <div style="width: ${breedte}; float: left;">
-                                             <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
+                                        <div style="width: ${breedte}; float: left;">
+                                            <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
+                                        <div style="width: ${breedte}; float: left;">
+                                            <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                                         </div>
                                     </c:when>
                                     <c:otherwise>
@@ -68,8 +73,8 @@
                                 </c:choose>
                             </c:if>
                         </c:forEach>
-                    </c:forEach>
-                </div>
+                    </div>
+                </c:forEach>
             </c:when>
             <c:otherwise>
                 Er is geen admin data gevonden!

@@ -18,7 +18,6 @@
     <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
     <script>
     function doAjaxRequest(point_x, point_y) {
-        alert("doajaxrequest");
         JMapData.getData(point_x, point_y, handleGetData);
     }
     
@@ -26,7 +25,7 @@
         document.getElementById('infovak').innerHTML = str;
     }
     
-    function handleGetAdminData() {
+    function handleGetAdminData(x,y) {
         var childs = document.getElementsByName('selkaartlaag');        
         var selkaart = null;
         for(i = 0; i < childs.length; i++) {
@@ -38,7 +37,8 @@
             alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
             return;
         }
-        
+        document.forms[0].xcoord.value=x;
+        document.forms[0].ycoord.value=y;
         document.forms[0].metadata.value = '';
         document.forms[0].admindata.value = 't';
         document.forms[0].laagid.value = selkaart.value;
@@ -367,8 +367,8 @@
     //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
     function map1_onIdentify(movie,extend){
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
-        document.forms[0].xcoord.value=extend.maxx;
-        document.forms[0].ycoord.value=extend.maxy;
+        handleGetAdminData(extend.maxx,extend.maxy);
+        doAjaxRequest(extend.maxx,extend.maxy);
     }
     
     readCookieArrayIntoCheckboxArray();

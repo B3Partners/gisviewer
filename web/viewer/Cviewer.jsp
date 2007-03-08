@@ -308,12 +308,16 @@
     <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">
         <input type="hidden" name="objectdata" value="t" />
         <input type="hidden" name="lagen" />
+        <input type="hidden" name="xcoord" />
+        <input type="hidden" name="ycoord" />        
     </form>
     
     <form id="analysedataForm" name="analysedataForm" target="analyseframe" method="post" action="viewerdata.do">
         <input type="hidden" name="analysedata" value="t" />
         <input type="hidden" name="themaid" />
         <input type="hidden" name="lagen" />
+        <input type="hidden" name="xcoord" />
+        <input type="hidden" name="ycoord" />        
     </form>
     
     <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>

@@ -52,13 +52,6 @@
         document.forms[0].submit();
     }
     
-    function getAdminData(id) {
-        document.forms[0].metadata.value = 't';
-        document.forms[0].admindata.value = '';
-        document.forms[0].themaid.value = id;
-        document.forms[0].submit();
-    }
-    
     var cookieArray = readCookie('checkedLayers');
     function isInCookieArray(id) {
         if(cookieArray == null) return false;
@@ -76,7 +69,9 @@
         activeThemaId = val;
     }
     
-    function setAnalyseValue() {
+    function setAnalyseValue(x,y) {
+        document.forms[2].xcoord.value=x;
+        document.forms[2].ycoord.value=y;
         document.forms[2].themaid.value = activeThemaId;
         document.forms[2].submit();
     }
@@ -100,14 +95,14 @@
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
             if (navigator.appName=="Microsoft Internet Explorer") {
-                if(isInCookieArray(item.id)) var el2 = document.createElement('<input type="checkbox" checked="checked" value="' + item.id + '" onclick="loadObjectInfo(this)">');
-                else var el2 = document.createElement('<input type="checkbox" value="' + item.id + '" onclick="loadObjectInfo(this)">');
+                if(isInCookieArray(item.id)) var el2 = document.createElement('<input type="checkbox" checked="checked" value="' + item.id + '" onclick="checkboxClick(this)">');
+                else var el2 = document.createElement('<input type="checkbox" value="' + item.id + '" onclick="checkboxClick(this)">');
             }
             else {
                 var el2 = document.createElement('input');
                 el2.type = 'checkbox';
                 el2.value = item.id;
-                el2.onclick = function(){loadObjectInfo(this);}
+                el2.onclick = function(){checkboxClick(this);}
                 if(isInCookieArray(item.id)) el2.checked = true;
             }
             
@@ -191,30 +186,29 @@
         }
     }
     
-    function loadObjectInfo(obj) {
-        if(obj == null) {
-            // Laad alle data
+    function checkboxClick(obj) {
+        if(obj.checked) {
+            checkboxArray[checkboxArray.length] = obj.value;
+        } else {
+            deleteFromArray(obj);
+        }
+    }
+    
+    function loadObjectInfo(x,y) {
+        if(checkboxArray.length > 0) {
+            var arrayString = getArrayAsString();
+            document.forms[1].lagen.value = arrayString;
+            document.forms[2].lagen.value = 'ALL';
+            eraseCookie('checkedLayers');
+            createCookie('checkedLayers', arrayString, '7');
+        } else {
             document.forms[1].lagen.value = 'ALL';
             document.forms[2].lagen.value = 'ALL';
-        } else {
-            if(obj.checked) {
-                checkboxArray[checkboxArray.length] = obj.value;
-            } else {
-                deleteFromArray(obj);
-            }
-            if(checkboxArray.length > 0) {
-                var arrayString = getArrayAsString();
-                document.forms[1].lagen.value = arrayString;
-                document.forms[2].lagen.value = 'ALL';
-                eraseCookie('checkedLayers');
-                createCookie('checkedLayers', arrayString, '7');
-            } else {
-                document.forms[1].lagen.value = 'ALL';
-                document.forms[2].lagen.value = 'ALL';
-            }
         }
+        document.forms[1].xcoord.value=x;
+        document.forms[1].ycoord.value=y;
         document.forms[1].submit();
-        setAnalyseValue();
+        setAnalyseValue(x,y);
     }
     
     function getArrayAsString() {
@@ -362,11 +356,10 @@
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
         handleGetAdminData(extend.maxx,extend.maxy);
         doAjaxRequest(extend.maxx,extend.maxy);
+        loadObjectInfo(extend.maxx,extend.maxy);
     }
     
     readCookieArrayIntoCheckboxArray();
-    document.forms[1].submit();
-    setAnalyseValue();
     </script>
     </body>
 </html>

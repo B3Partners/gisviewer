@@ -16,45 +16,38 @@
     <body>
         <c:choose>
             <c:when test="${not empty thema_items and not empty regels}">
-                <div class="topRow">
-                    <c:forEach var="ThemaItem" items="${thema_items}">
-                        <c:set var="themaid" value="${ThemaItem.thema}" />
+                <table id="aanvullende_info_table">
+                    <tr>
+                        <th colspan="2" class="aanvullende_info_td" style="text-align: center; padding-bottom: 10px;">
+                            Aanvullende informatie
+                        </th>
+                    </tr>
+                    <c:forEach var="ThemaItem" items="${thema_items}" varStatus="counter">
                         <c:choose>
-                            <c:when test="${ThemaItem.kolombreedte != 0}">
-                                <c:set var="breedte" value="${ThemaItem.kolombreedte}" />
+                            <c:when test="${counter.count % 2 == 0}">
+                                <tr onmouseover="this.style.backgroundColor = '#CCCCCC;'" onmouseout="this.style.backgroundColor = '#FFFFFF;'">
                             </c:when>
                             <c:otherwise>
-                                <c:set var="breedte" value="150" />
-                            </c:otherwise>            
+                                <tr style="background-color: #DDDDDD;" onmouseover="this.style.backgroundColor = '#CCCCCC;'" onmouseout="this.style.backgroundColor = '#DDDDDD;'">
+                            </c:otherwise>
                         </c:choose>
-                        <div style="width: ${breedte}; float: left;">
-                            ${ThemaItem.label}
-                        </div>
-                    </c:forEach>
-                </div>
-                
-                <div class="row">
-                    <c:forEach var="Regel" items="${regels}" varStatus="counter">
-                        <c:forEach var="waarde" items="${Regel}" varStatus="kolom">
-                            <c:if test="${thema_items[kolom.count - 1] != null}">
+                        
+                            <th class="aanvullende_info_th">${ThemaItem.label}</th>
+                            <td class="aanvullende_info_td">
                                 <c:choose>
-                                    <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
-                                        <c:set var="breedte" value="${thema_items[kolom.count - 1].kolombreedte}" />
+                                    <c:when test="${regels[0][counter.count - 1] eq ''}">
+                                        -
                                     </c:when>
                                     <c:otherwise>
-                                        <c:set var="breedte" value="150" />
-                                    </c:otherwise>            
+                                        ${regels[0][counter.count - 1]}
+                                    </c:otherwise>
                                 </c:choose>
-                                <div style="width: ${breedte}; float: left;">
-                                    ${waarde}
-                                </div>
-                            </c:if>
-                        </c:forEach>
+                            </td>
+                        </tr>
                     </c:forEach>
-                </div>
+                </table>
             </c:when>
             <c:otherwise>
-                ${thema_items}
                 Er is geen admin data gevonden!
             </c:otherwise>
         </c:choose>

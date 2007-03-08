@@ -139,3 +139,26 @@ button {
     color: #000000; 
     font-family: arial, sans-serif;
 }
+
+#aanvullende_info_table {
+    border: 0px none White;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#aanvullende_info_table tr:hover {
+    background-color: #CCCCCC;
+}
+
+.aanvullende_info_th {
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+    font-size: 11px;
+}
+
+.aanvullende_info_td {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 11px;
+}

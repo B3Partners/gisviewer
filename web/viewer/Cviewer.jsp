@@ -41,29 +41,22 @@
         document.forms[0].ycoord.value=y;
         document.forms[0].metadata.value = '';
         document.forms[0].admindata.value = 't';
-        document.forms[0].laagid.value = selkaart.value;
+        document.forms[0].themaid.value = selkaart.value;
         document.forms[0].submit();
     }
     
     function getMetaData(id) {
         document.forms[0].metadata.value = 't';
         document.forms[0].admindata.value = '';
-        document.forms[0].laagid.value = id;
+        document.forms[0].themaid.value = id;
         document.forms[0].submit();
     }
     
     function getAdminData(id) {
         document.forms[0].metadata.value = 't';
         document.forms[0].admindata.value = '';
-        document.forms[0].laagid.value = id;
+        document.forms[0].themaid.value = id;
         document.forms[0].submit();
-    }
-    function changeLayers(obj) {
-        if(obj.checked == true) {
-            map.setMapType(G_HYBRID_MAP);
-        } else { 
-            map.setMapType(G_NORMAL_MAP);
-        }
     }
     
     var cookieArray = readCookie('checkedLayers');
@@ -78,18 +71,18 @@
         return false;
     }
     
-    var activeLaagId = '';
-    function setActiveLaag(val) {
-        activeLaagId = val;
+    var activeThemaId = '';
+    function setActiveThema(val) {
+        activeThemaId = val;
     }
     
     function setAnalyseValue() {
-        document.forms[2].laagid.value = activeLaagId;
+        document.forms[2].themaid.value = activeThemaId;
         document.forms[2].submit();
     }
     
     var activeLayerFromCookie = readCookie('activelayer');
-    setActiveLaag(activeLayerFromCookie);
+    setActiveThema(activeLayerFromCookie);
     function createLabel(container, item) {
         if(item.cluster)
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));
@@ -313,7 +306,7 @@
     <form target="dataframe" method="post" action="viewerdata.do">
         <input type="hidden" name="admindata" />
         <input type="hidden" name="metadata" />
-        <input type="hidden" name="laagid" />
+        <input type="hidden" name="themaid" />
         <input type="hidden" name="xcoord" />
         <input type="hidden" name="ycoord" />
     </form>
@@ -325,7 +318,7 @@
     
     <form id="analysedataForm" name="analysedataForm" target="analyseframe" method="post" action="viewerdata.do">
         <input type="hidden" name="analysedata" value="t" />
-        <input type="hidden" name="laagid" />
+        <input type="hidden" name="themaid" />
         <input type="hidden" name="lagen" />
     </form>
     

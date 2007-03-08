@@ -168,7 +168,7 @@ public class ViewerAction extends BaseHibernateAction {
             it = childs.iterator();
             while(it.hasNext()) {
                 Themas th = (Themas) it.next();
-                JSONObject jsonCluster = new JSONObject().put("id", "t" + th.getId()).put("type", "child").put("title", th.getNaam()).put("cluster", false);
+                JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", th.getNaam()).put("cluster", false);
                 root.put(jsonCluster);
             }
         }

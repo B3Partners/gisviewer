@@ -94,10 +94,10 @@ public class GetViewerDataAction extends BaseHibernateAction {
             boolean firstTime = true;
             for(int i = 0; i < alleLagen.length; i++) {
                 if(firstTime) {
-                    hquery += "id = " + alleLagen[i].substring(1);
+                    hquery += "id = " + alleLagen[i];
                     firstTime = false;
                 } else {
-                    hquery += " OR id = " + alleLagen[i].substring(1);
+                    hquery += " OR id = " + alleLagen[i];
                 }
             }
             hquery += ")";
@@ -154,7 +154,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         String log = "";
          
         String laagid = request.getParameter("laagid");
-        String id = laagid.substring(1);
+        String id = laagid;
         ctl = null;
         hquery = "FROM ThemaItemsAdmin WHERE thema = " + id + " AND label != ''";
         q = sess.createQuery(hquery);
@@ -204,7 +204,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         String objectTestId = "639YCHA";
         
         String laagid = request.getParameter("laagid");
-        Integer id = new Integer(laagid.substring(1));
+        Integer id = new Integer(laagid);
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         
@@ -318,7 +318,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
     
     public ActionForward metadata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String laagid = request.getParameter("laagid");
-        String id = laagid.substring(1);
+        String id = laagid;
         ArrayList meta_data = new ArrayList();
         boolean isDefinitief = false;
         ArrayList rij = new ArrayList();
@@ -427,10 +427,10 @@ public class GetViewerDataAction extends BaseHibernateAction {
             boolean firstTime = true;
             for(int i = 0; i < alleLagen.length; i++) {
                 if(firstTime) {
-                    hquery += "id = " + alleLagen[i].substring(1);
+                    hquery += "id = " + alleLagen[i];
                     firstTime = false;
                 } else {
-                    hquery += " OR id = " + alleLagen[i].substring(1);
+                    hquery += " OR id = " + alleLagen[i];
                 }
             }
             hquery += ")";

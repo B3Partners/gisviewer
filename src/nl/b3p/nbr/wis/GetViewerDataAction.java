@@ -25,6 +25,7 @@ import nl.b3p.nbr.wis.db.ThemaData;
 import nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden;
 import nl.b3p.nbr.wis.db.Themas;
 import nl.b3p.nbr.wis.services.HibernateUtil;
+import nl.b3p.nbr.wis.services.SpatialUtil;
 import nl.b3p.nbr.wis.struts.BaseHibernateAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -201,31 +202,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
         return mapping.findForward("analysedata");
     }
     
-    protected int getPkDataType(Themas t, Connection conn) throws SQLException {
-        DatabaseMetaData dbmd = conn.getMetaData();
-        String dbtn = t.getAdmin_tabel();
-        String adminPk = t.getAdmin_pk();
-        int dt = java.sql.Types.VARCHAR;
-        ResultSet rs = dbmd.getColumns(null, null, dbtn, adminPk);
-        if (rs.next()) {
-            dt = rs.getInt("DATA_TYPE");
-        }
-        return dt;
-    }
-    
-    protected String createClickGeom(double x, double y, int srid) {
-        StringBuffer sq = new StringBuffer();
-        sq.append(" GeometryFromText ( ");
-        sq.append("'POINT(");
-        sq.append(x);
-        sq.append(" ");
-        sq.append(y);
-        sq.append(")'");
-        sq.append(", ");
-        sq.append(srid);
-        sq.append(") ");
-        return sq.toString();
-    }
     
     protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         String xcoord = request.getParameter("xcoord");
@@ -239,25 +215,18 @@ public class GetViewerDataAction extends BaseHibernateAction {
         ArrayList pks = new ArrayList();
         
         String saf = t.getSpatial_admin_ref();
+        if (saf==null || saf.length()==0)
+            return null;
         String sptn = t.getSpatial_tabel();
-        StringBuffer sq = new StringBuffer();
-        sq.append("select ");
-        sq.append(saf);
-        sq.append(" from ");
-        sq.append(sptn);
-        sq.append(" sptn where ");
-        sq.append(" distance( ");
-        sq.append(" sptn.the_geom, ");
-        sq.append(createClickGeom(x, y, srid));
-        sq.append(") < ");
-        sq.append(distance);
+        if (sptn==null || sptn.length()==0)
+            return null;
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         
         try {
-            String taq = t.getAdmin_query();
-            PreparedStatement statement = connection.prepareStatement(sq.toString());
+            String q = SpatialUtil.maxDistanceQuery(saf, sptn, x, y, distance, srid);
+            PreparedStatement statement = connection.prepareStatement(q);
             try {
                 ResultSet rs = statement.executeQuery();
                 while(rs.next()) {
@@ -275,7 +244,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
     public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
         
-        List thema_items = getThemaData(t, true);
+        List thema_items = SpatialUtil.getThemaData(t, true);
         request.setAttribute("thema_items", thema_items);
         
         List pks = null;
@@ -293,7 +262,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         Themas t = getThema(mapping, dynaForm, request);
         
-        List thema_items = getThemaData(t, false);
+        List thema_items = SpatialUtil.getThemaData(t, false);
         request.setAttribute("thema_items", thema_items);
         
         List pks = getPks(t, dynaForm, request);
@@ -309,16 +278,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Themas t = (Themas)sess.get(Themas.class, id);
         return t;
-    }
-    
-    protected List getThemaData(Themas t, boolean basisregel) {
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        
-        Query q = sess.createQuery("from ThemaData td where td.thema.id = :tid "
-                + "and td.basisregel = :br");
-        q.setInteger("tid", t.getId());
-        q.setBoolean("br", basisregel);
-        return q.list();
     }
     
     protected List getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
@@ -370,7 +329,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         
-        int dt = getPkDataType( t, connection);
+        int dt = SpatialUtil.getPkDataType( t, connection);
         
         try {
             String taq = t.getAdmin_query();
@@ -380,6 +339,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 switch (dt) {
                     case java.sql.Types.INTEGER:
                         statement.setInt(1, ((Integer)pks.get(i-1)).intValue());
+                        break;
                     case java.sql.Types.VARCHAR:
                     default:
                         statement.setString(1, (String)pks.get(i-1));
@@ -405,11 +365,12 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         
-        int dt = getPkDataType( t, connection);
+        int dt = SpatialUtil.getPkDataType( t, connection);
         String adminPk = t.getAdmin_pk();
         switch (dt) {
             case java.sql.Types.INTEGER:
                 pks.add(new Integer(request.getParameter(adminPk)));
+                break;
             case java.sql.Types.VARCHAR:
             default:
                 pks.add(request.getParameter(adminPk));
@@ -546,11 +507,13 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 Themas t = (Themas) it.next();
                 thema.add(t.getNaam());
                 
-                List thema_items = getThemaData(t, true);
+                List thema_items = SpatialUtil.getThemaData(t, true);
                 
                 List pks = findPks(t, mapping, dynaForm, request);
                 List ao = getThemaObjects(t, pks, thema_items);
-                thema.addAll(ao);
+                if (ao==null)
+                    ao = new ArrayList();
+                thema.add(ao);
                 objectdata.add(thema);
             }
         }

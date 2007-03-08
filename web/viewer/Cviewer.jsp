@@ -18,6 +18,7 @@
     <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
     <script>
     function doAjaxRequest(point_x, point_y) {
+        alert("doajaxrequest");
         JMapData.getData(point_x, point_y, handleGetData);
     }
     
@@ -313,6 +314,8 @@
         <input type="hidden" name="admindata" />
         <input type="hidden" name="metadata" />
         <input type="hidden" name="laagid" />
+        <input type="hidden" name="xcoord" />
+        <input type="hidden" name="ycoord" />
     </form>
     
     <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">
@@ -348,37 +351,24 @@
     <script type="text/javascript">
     switchTab(document.getElementById('tab1'));
         
+     //always call this script after the SWF object script has called the flamingo viewer.
     var flamingo;
-    var lastextent;
-
     function init() {
        if (document.getElementById) {
           flamingo = document.getElementById("flamingo");
        }
     }
-      
     window.onload = init;
     function flamingo_onInit() {
        //at this moment the flamingo.swf is up and running, so initialize the global flamingo var.
-       //alert("set flamingo");
        flamingo =getMovie("flamingo");
-    }
 
-    function flamingo_onError(error) {
-        alert("ERROR:"+error);
     }
-
-    function flamingo_onLoadConfig() {
-       //alert("config loaded ");
-    }
-
-    function EHSkaart_onInit(componentid) {
-      //alert("onInit "+componentid);
-      flamingo.call("EHSkaart", "moveToExtent", lastextent ,0 ,0)
-    }
-    function map1_onIdentify(layer, extent){
-        doAjaxRequest(extent.minx, extent.miny);
-        handleGetAdminData();        
+    //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
+    function map1_onIdentify(movie,extend){
+        //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
+        document.forms[0].xcoord.value=extend.maxx;
+        document.forms[0].ycoord.value=extend.maxy;
     }
     
     readCookieArrayIntoCheckboxArray();

@@ -88,15 +88,15 @@
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));
         else {
             if (navigator.appName=="Microsoft Internet Explorer") {
-                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveLaag(\'' + item.id + '\');">');
-                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveLaag(\'' + item.id + '\');">');
+                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveThema(\'' + item.id + '\');">');
+                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveThema(\'' + item.id + '\');">');
             }
             else {
                 var el = document.createElement('input');
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
-                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7'); setActiveLaag(item.id)}
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7'); setActiveThema(item.id)}
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
             if (navigator.appName=="Microsoft Internet Explorer") {

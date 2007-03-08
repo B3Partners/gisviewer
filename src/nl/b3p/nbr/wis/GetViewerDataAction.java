@@ -5,6 +5,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -94,10 +95,10 @@ public class GetViewerDataAction extends BaseHibernateAction {
             boolean firstTime = true;
             for(int i = 0; i < alleLagen.length; i++) {
                 if(firstTime) {
-                    hquery += "id = " + alleLagen[i];
+                    hquery += "id = " + alleLagen[i].substring(1);
                     firstTime = false;
                 } else {
-                    hquery += " OR id = " + alleLagen[i];
+                    hquery += " OR id = " + alleLagen[i].substring(1);
                 }
             }
             hquery += ")";
@@ -154,7 +155,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         String log = "";
          
         String laagid = request.getParameter("laagid");
-        String id = laagid;
+        String id = laagid.substring(1);
         ctl = null;
         hquery = "FROM ThemaItemsAdmin WHERE thema = " + id + " AND label != ''";
         q = sess.createQuery(hquery);
@@ -199,126 +200,198 @@ public class GetViewerDataAction extends BaseHibernateAction {
         return mapping.findForward("analysedata");
     }
     
-    public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO spatial query met x,y om objecten te vinden
-        String objectTestId = "639YCHA";
+    protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
+        String x = request.getParameter("xcoord");
+        String y = request.getParameter("ycoord");
         
-        String laagid = request.getParameter("laagid");
-        Integer id = new Integer(laagid);
+        ArrayList pks = new ArrayList();
+        
+        String saf = t.getSpatial_admin_ref();
+        String spk = t.getSpatial_pk();
+        String sptn = t.getSpatial_tabel();
+        StringBuffer sq = new StringBuffer();
+        sq.append("select ");
+        sq.append(spk);
+        sq.append(", ");
+        sq.append(saf);
+        sq.append(" from ");
+        sq.append(sptn);
+        sq.append(" sptn where ");
+        // TODO werkt alleen bij punten in polygonen
+        sq.append(" contains( ");
+        sq.append(" sptn.the_geom, ");
+        sq.append(" POINT(");
+        sq.append(x);
+        sq.append(" ");
+        sq.append(y);
+        sq.append(") ");
+        sq.append(") = true");
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Connection connection = sess.connection();
         
-        Query q = sess.createQuery("from ThemaData td where td.thema.id = :tid "
-                + "and td.basisregel = true");
-        q.setInteger("tid", id.intValue());
-        List thema_items = q.list();
-        request.setAttribute("thema_items", thema_items);
-        
-        if (thema_items!=null && !thema_items.isEmpty()) {
-            ArrayList regels = new ArrayList();
-            
-            Themas t = (Themas)sess.get(Themas.class, new Integer(id));
+        try {
             String taq = t.getAdmin_query();
-            Connection connection = sess.connection();
+            PreparedStatement statement = connection.prepareStatement(sq.toString());
             try {
-                PreparedStatement statement = connection.prepareStatement(taq);
-                try {
-// DatabaseMetaData dbmd = connection.getMetaData();
-// TODO set type gebruiken afhankelijk van type kolom
-                    statement.setString(1, objectTestId);
-                    ResultSet rs = statement.executeQuery();
-                    boolean first = true;
-                    if(rs.next()) {
-                        
-                        ArrayList regel = new ArrayList();
-                        regels.add(regel);
-                        
-                        ResultSetMetaData rsmd = rs.getMetaData();
-                        Iterator it = thema_items.iterator();
-                        while(it.hasNext()) {
-                            ThemaData td = (ThemaData) it.next();
-                            if (td.getDataType().getId()==DataTypen.DATA && td.getKolomnaam()!=null) {
-                                String kn = td.getKolomnaam();
-                                Object retval = null;
-                                retval = rs.getObject(kn);
-                                regel.add(retval);
-                            } else if (td.getDataType().getId()==DataTypen.URL) {
-                                StringBuffer url = new StringBuffer(td.getCommando());
-                                boolean pkComplex = t.isAdmin_pk_complex();
-                                String adminPk = t.getAdmin_pk();
-                                if (pkComplex) {
-                                    // TODO uiteenhalen csv pk kolomnamen
-                                } else {
-                                    String pkNaam = adminPk;
-                                    url.append("themaid");
-                                    url.append("=");
-                                    url.append(t.getId());
-                                    url.append("&");
-                                    url.append(pkNaam);
-                                    url.append("=");
-                                    url.append(rs.getObject(pkNaam));
-                                }
-                                regel.add(url.toString());
-                            } else if (td.getDataType().getId()==DataTypen.QUERY) {
-                                // TODO query uitvoeren om waarde op te halen
-                                regel.add("");
-                            } else
-                                regel.add("");
-                        }
-                    }
-                } finally {
-                    statement.close();
+                ResultSet rs = statement.executeQuery();
+                // TODO hoe te handelen bij meer hits
+                if(rs.next()) {
+                    pks.add(rs.getObject(saf));
                 }
             } finally {
-                connection.close();
+                statement.close();
             }
-            request.setAttribute("regels", regels);
+        } finally {
+            connection.close();
         }
+        return pks;
+    }
+    
+    public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Themas t = getThema(mapping, dynaForm, request);
+        
+        List thema_items = getThemaData(t, true);
+        request.setAttribute("thema_items", thema_items);
+        
+        List pks = null;
+//        pks = findPks(t, mapping, dynaForm, request);
+//      pks = getPks(t, dynaForm, request);
+        pks = new ArrayList();
+        pks.add("639YCHA");
+        
+        request.setAttribute("regels", getThemaObject(t, pks, thema_items));
         
         return mapping.findForward("admindata");
     }
     
     public ActionForward aanvullendeinfo(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String regel = request.getParameter("regel");
-        String themaid = request.getParameter("themaid");
+        
+        Themas t = getThema(mapping, dynaForm, request);
+        
+        List thema_items = getThemaData(t, false);
+        request.setAttribute("thema_items", thema_items);
+        
+        List pks = getPks(t, dynaForm, request);
+        
+        request.setAttribute("regels", getThemaObject(t, pks, thema_items));
+        
+        return mapping.findForward("aanvullendeinfo");
+    }
+    
+    protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
+        String themaid = request.getParameter(Themas.THEMAID);
+        Integer id = new Integer(themaid);
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Themas t = (Themas)sess.get(Themas.class, id);
+        return t;
+    }
+    
+    protected List getThemaData(Themas t, boolean basisregel) {
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        
+        Query q = sess.createQuery("from ThemaData td where td.thema.id = :tid "
+                + "and td.basisregel = :br");
+        q.setInteger("tid", t.getId());
+        q.setBoolean("br", basisregel);
+        return q.list();
+    }
+    
+    protected List getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException {
+        ArrayList regel = new ArrayList();
+        
+        Iterator it = thema_items.iterator();
+        while(it.hasNext()) {
+            ThemaData td = (ThemaData) it.next();
+            if (td.getDataType().getId()==DataTypen.DATA && td.getKolomnaam()!=null) {
+                String kn = td.getKolomnaam();
+                Object retval = null;
+                retval = rs.getObject(kn);
+                regel.add(retval);
+            } else if (td.getDataType().getId()==DataTypen.URL) {
+                StringBuffer url = new StringBuffer(td.getCommando());
+                url.append(Themas.THEMAID);
+                url.append("=");
+                url.append(t.getId());
+                
+                String adminPk = t.getAdmin_pk();
+                String[] pkNames = adminPk.split(",");
+                for (int i=0; i<pkNames.length; i++) {
+                    url.append("&");
+                    url.append(pkNames[i]);
+                    url.append("=");
+                    url.append(rs.getObject(pkNames[i]));
+                }
+                
+                regel.add(url.toString());
+            } else if (td.getDataType().getId()==DataTypen.QUERY) {
+                // TODO query uitvoeren om waarde op te halen
+                regel.add("");
+            } else
+                regel.add("");
+        }
+        return regel;
+    }
+    
+    protected List getThemaObject(Themas t, List pks, List thema_items) throws SQLException {
+        if (t==null)
+            return null;
+        if (pks==null || pks.isEmpty())
+            return null;
+        if (thema_items==null || thema_items.isEmpty())
+            return null;
         
         ArrayList regels = new ArrayList();
-        ArrayList thema_items = new ArrayList();
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        List ctl = null;
-        String hquery = "FROM ThemaItemsAdmin WHERE thema = " + themaid + " AND label != ''";
-        log.debug("SQL: " + hquery);
-        Query q = sess.createQuery(hquery);
-        ctl = q.list();
-        if(ctl != null) {
-            Iterator it = ctl.iterator();
-            while(it.hasNext()) {
-                ThemaData tia = (ThemaData) it.next();
-                thema_items.add(tia);
+        Connection connection = sess.connection();
+        
+        try {
+            String taq = t.getAdmin_query();
+            PreparedStatement statement = connection.prepareStatement(taq);
+            try {
+                Iterator it = pks.iterator();
+                for (int i=1; i<=pks.size(); i++) {
+                    statement.setObject(i, pks.get(i-1));
+                }
+                ResultSet rs = statement.executeQuery();
+                if(rs.next()) {
+                    regels.add(getRegel(rs, t, thema_items));
+                }
+            } finally {
+                statement.close();
             }
+        } finally {
+            connection.close();
         }
-        /*
-        ctl = null;
-        hquery = "FROM RegelAttributen WHERE regel = " + regel;
-        q = sess.createQuery(hquery);
-        ctl = q.list();
-        if(ctl != null) {
-            Iterator it = ctl.iterator();
-            while(it.hasNext()) {
-                RegelAttributen ra = (RegelAttributen) it.next();
-                regels.add(ra.getWaarde());
+        return regels;
+    }
+    
+    protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) throws SQLException {
+        ArrayList pks = new ArrayList();
+        
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Connection connection = sess.connection();
+        DatabaseMetaData dbmd = connection.getMetaData();
+      
+        String dbtn = t.getAdmin_tabel();
+        String adminPk = t.getAdmin_pk();
+        String[] pkNames = adminPk.split(",");
+        for (int i=0; i<pkNames.length; i++) {
+            int dt = java.sql.Types.VARCHAR;
+            ResultSet rs = dbmd.getColumns(null, null, dbtn, pkNames[i]);
+            if (rs.next()) {
+                dt = rs.getInt("DATA_TYPE");
             }
+// TODO cast naar juiste type
+            pks.add(request.getParameter(pkNames[i]));
         }
-        request.setAttribute("regels", regels);
-        request.setAttribute("thema_items", regels);
-         */
-        return mapping.findForward("aanvullendeinfo");
+        return pks;
     }
     
     public ActionForward metadata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String laagid = request.getParameter("laagid");
-        String id = laagid;
+        String id = laagid.substring(1);
         ArrayList meta_data = new ArrayList();
         boolean isDefinitief = false;
         ArrayList rij = new ArrayList();
@@ -427,10 +500,10 @@ public class GetViewerDataAction extends BaseHibernateAction {
             boolean firstTime = true;
             for(int i = 0; i < alleLagen.length; i++) {
                 if(firstTime) {
-                    hquery += "id = " + alleLagen[i];
+                    hquery += "id = " + alleLagen[i].substring(1);
                     firstTime = false;
                 } else {
-                    hquery += " OR id = " + alleLagen[i];
+                    hquery += " OR id = " + alleLagen[i].substring(1);
                 }
             }
             hquery += ")";

@@ -15,6 +15,8 @@ package nl.b3p.nbr.wis.db;
  */
 public class Themas {
     
+    public static final String THEMAID = "themaid";
+    
     private int id;
     private String code;
     private String naam;

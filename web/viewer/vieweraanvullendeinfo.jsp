@@ -35,7 +35,7 @@
                 
                 <div class="row">
                     <c:forEach var="Regel" items="${regels}" varStatus="counter">
-                        <c:forEach var="waarde" items="${Regel[1]}" varStatus="kolom">
+                        <c:forEach var="waarde" items="${Regel}" varStatus="kolom">
                             <c:if test="${thema_items[kolom.count - 1] != null}">
                                 <c:choose>
                                     <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">

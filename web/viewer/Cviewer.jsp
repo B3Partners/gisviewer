@@ -105,6 +105,7 @@
                 el2.onclick = function(){checkboxClick(this);}
                 if(isInCookieArray(item.id)) el2.checked = true;
             }
+            el2.theItem=item;
             
             var lnk = document.createElement('a');
             lnk.innerHTML = item.title ? item.title : item.id;
@@ -188,9 +189,26 @@
     
     function checkboxClick(obj) {
         if(obj.checked) {
+            var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&EXCEPTIONS=INIMAGE&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
+            //alert("Layer aan");
             checkboxArray[checkboxArray.length] = obj.value;
+            if (obj.theItem.wmsurl){
+                if (obj.theItem.wmsurl.indexOf("?")>0){
+                    standardParam="&"+standardParam;
+                }else{
+                    standardParam="?"+standardParam;
+                }
+            
+                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' ID='"+obj.value+"' URL='"+obj.theItem.wmsurl+standardParam+"' LAYERS='"+obj.theItem.wmslayers+"' QUERY_LAYERS='"+obj.theItem.wmsquerylayers+"'/>";
+                //alert(newLayer);
+                flamingo.call("map1","addLayer",newLayer);
+            }            
         } else {
+            //alert("layer uit");
             deleteFromArray(obj);
+            if (obj.theItem.wmsurl){
+                flamingo.call("map1","removeLayer",obj.value);
+            }
         }
     }
     
@@ -364,6 +382,7 @@
     }
     
     readCookieArrayIntoCheckboxArray();
+    
     </script>
     </body>
 </html>

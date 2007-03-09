@@ -212,6 +212,10 @@
         <property name="spatial_pk"/>
         <property name="spatial_pk_complex" not-null="true"/>
         <property name="spatial_admin_ref"/>
+        <property name="wms_url"/>
+        <property name="wms_layers"/>
+        <property name="wms_querylayers"/>
+        
     </class>
     <class name="nl.b3p.nbr.wis.db.WaardeTypen">
         <id name="id" type="int">

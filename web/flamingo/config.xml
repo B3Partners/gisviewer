@@ -14,13 +14,13 @@
     <xguide id="mx" x="50%"/>
     <fmc:MonitorLayer id="monitor" left="165" top="100" listento="map1"/><!--fmc:Debugger listento="OG1,OG2,Gelderland,Limburg" left="50%" top="0" height="50%" right="right" /-->
     
-        <fmc:ToolGroup tool="zoom" listento="map1" width="148" height="65" left="0" top="0">
-            <fmc:ToolZoomin id="zoom"/>
-            <fmc:ToolZoomout left="30"/>
-            <fmc:ToolPan left="60"/>
-            <fmc:ToolMeasure left="90"/>
-            <fmc:ToolIdentify left="120"/>
-        </fmc:ToolGroup>
+	<fmc:ToolGroup tool="zoom" listento="map1" width="148" height="65" left="0" top="0">
+	    <fmc:ToolZoomin id="zoom"/>
+	    <fmc:ToolZoomout left="30"/>
+	    <fmc:ToolPan left="60"/>
+	    <fmc:ToolMeasure left="90"/>
+	    <fmc:ToolIdentify left="120"/>
+	</fmc:ToolGroup>
     
     <fmc:BorderNavigation listento="map1"/>
     <fmc:Map id="map1" left="0" top="0" height="100%" width="100%" bottom="bottom" visible="true" extent="114809,429868,183096,376497" fullextent="1,1,1000000,1000000">

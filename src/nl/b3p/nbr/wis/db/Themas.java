@@ -37,6 +37,11 @@ public class Themas {
     private String spatial_pk;
     private boolean spatial_pk_complex;
     private String spatial_admin_ref;
+    private String wms_url;
+    //komma separated layers
+    private String wms_layers;
+    //komma separated layers
+    private String wms_querylayers;
      
     /** Creates a new instance of Themas */
     public Themas() {
@@ -200,6 +205,30 @@ public class Themas {
 
     public void setSpatial_admin_ref(String spatial_admin_ref) {
         this.spatial_admin_ref = spatial_admin_ref;
+    }
+
+    public String getWms_url() {
+        return wms_url;
+    }
+
+    public void setWms_url(String wms_url) {
+        this.wms_url = wms_url;
+    }
+
+    public String getWms_layers() {
+        return wms_layers;
+    }
+
+    public void setWms_layers(String wms_layers) {
+        this.wms_layers = wms_layers;
+    }
+
+    public String getWms_querylayers() {
+        return wms_querylayers;
+    }
+
+    public void setWms_querylayers(String wms_querylayers) {
+        this.wms_querylayers = wms_querylayers;
     }
     
 }

@@ -169,6 +169,8 @@ public class ViewerAction extends BaseHibernateAction {
             while(it.hasNext()) {
                 Themas th = (Themas) it.next();
                 JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", th.getNaam()).put("cluster", false);
+                //put wms data
+                jsonCluster.put("wmsurl",th.getWms_url()).put("wmslayers",th.getWms_layers()).put("wmsquerylayers",th.getWms_querylayers());
                 root.put(jsonCluster);
             }
         }

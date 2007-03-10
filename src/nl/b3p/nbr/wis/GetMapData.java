@@ -1,9 +1,24 @@
 package nl.b3p.nbr.wis;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Random;
+import nl.b3p.nbr.wis.db.Themas;
+import nl.b3p.nbr.wis.services.HibernateUtil;
+import nl.b3p.nbr.wis.services.SpatialUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 public class GetMapData {
+    
+    private static final Log log = LogFactory.getLog(GetMapData.class);
     
     public GetMapData() {}
     
@@ -11,30 +26,106 @@ public class GetMapData {
         
         double x = Double.parseDouble(x_input);
         double y = Double.parseDouble(y_input);
-        double distance = 1000.0;
         int srid = 28992; // RD-new
         
         // bepaal dichstbijzijnde hm paal
+        double distance = 5000.0;
+        String hm = "onbekend";
+        String n_nr = "onbekend";
+        double dist = 0.0;
         
+         ArrayList cols = new ArrayList();
+        String sptn = "verv_nwb_hmn_p";
+        cols.add("hm");
+        cols.add("n_nr");
+        
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session sess = sf.openSession();
+        Connection connection = sess.connection();
+        
+        try {
+            String q = SpatialUtil.closestSelectQuery(cols, sptn, x, y, distance, srid);
+            PreparedStatement statement = connection.prepareStatement(q);
+            try {
+                ResultSet rs = statement.executeQuery();
+                if(rs.next()) {
+                    hm = rs.getString("hm");
+                    n_nr = rs.getString("n_nr");
+                    dist = rs.getDouble("dist");
+                }
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
         
         // bepaal gemeente
-
-        Random generator = new Random();
+        distance = 500.0;
+        String postcode = "onbekend";
+        String huisnr = "onbekend";
+        String toev = "onbekend";
+        String plaats = "onbekend";
+        
+        cols = new ArrayList();
+        sptn = "algm_pstk_acn_p";
+        cols.add("postcode");
+        cols.add("huisnr");
+        cols.add("toevoeg");
+        cols.add("nenwpl");
+        
+        sess = sf.openSession();
+        connection = sess.connection();
+        
+        try {
+            String q = SpatialUtil.closestSelectQuery(cols, sptn, x, y, distance, srid);
+            PreparedStatement statement = connection.prepareStatement(q);
+            try {
+                ResultSet rs = statement.executeQuery();
+                if(rs.next()) {
+                    postcode = rs.getString("postcode");
+                    huisnr = rs.getString("huisnr");
+                    String toevoeg = rs.getString("toevoeg");
+                    toev = toevoeg==null?"":toevoeg;
+                    plaats = rs.getString("nenwpl");
+                }
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
+        
+        
+        
         String rdX = "" + Math.round(x);
         String rdY = "" + Math.round(y);
         String rd = "X: " + rdX + "<br />" +
-                    "Y: " + rdY + "<br />";
-        String[] wegen = new String[]{"N322", "N324", "N321", "N65", "N261", "N277", "N282", "N12", "N269", "N270"};
-        int wegnr = generator.nextInt(10);
-        int paalnummer = generator.nextInt(175) + 50;
-        int kommagetal = generator.nextInt(10);
-        String[] aanduiding = new String[]{"Re", "Li", "b"};
-        int aanduidingnr = generator.nextInt(3);
+                "Y: " + rdY + "<br />";
+        
         
         String ret = "<b>RD Co&ouml;rdinaten</b><br />" + rd + "<br />" +
-                "<b>Hectometerpaal aanduiding</b><br />" + paalnummer + "," + kommagetal + " " + aanduiding[aanduidingnr] + "<br /><br />" +
-                "<b>Wegnaam</b><br />" + wegen[wegnr] + "<br /><br />" +
-                "<b>Gemeente</b><br />Niet bekend";
+                "<b>Hectometer aanduiding</b><br />" + hm + " (afstand: " +
+                Math.round(dist) +
+                " m.)<br /><br />" +
+                "<b>Wegnaam</b><br />" + n_nr + "<br /><br />" +
+                "<b>Adres</b><br />" + postcode +
+                " " + huisnr + 
+                " " + toev +
+                " - " + plaats +
+                "";
         return ret;
     }
     

@@ -1,13 +1,16 @@
 package nl.b3p.nbr.wis;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -209,7 +212,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         double x = Double.parseDouble(xcoord);
         double y = Double.parseDouble(ycoord);
-        double distance = 1000.0;
+        double distance = 10.0;
         int srid = 28992; // RD-new
         
         ArrayList pks = new ArrayList();
@@ -225,7 +228,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Connection connection = sess.connection();
         
         try {
-            String q = SpatialUtil.maxDistanceQuery(saf, sptn, x, y, distance, srid);
+            String q = SpatialUtil.InfoSelectQuery(saf, sptn, x, y, distance, srid);
+             
             PreparedStatement statement = connection.prepareStatement(q);
             try {
                 ResultSet rs = statement.executeQuery();
@@ -329,20 +333,59 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         
-        int dt = SpatialUtil.getPkDataType( t, connection);
-        
         try {
+            
+            int dt = SpatialUtil.getPkDataType( t, connection);
+            
             String taq = t.getAdmin_query();
             Iterator it = pks.iterator();
             for (int i=1; i<=pks.size(); i++) {
                 PreparedStatement statement = connection.prepareStatement(taq);
                 switch (dt) {
+                    case java.sql.Types.SMALLINT:
+                        statement.setShort(1, ((Short)pks.get(i-1)).shortValue());
+                        break;
                     case java.sql.Types.INTEGER:
                         statement.setInt(1, ((Integer)pks.get(i-1)).intValue());
                         break;
+                    case java.sql.Types.BIGINT:
+                        statement.setLong(1, ((Long)pks.get(i-1)).longValue());
+                        break;
+                    case java.sql.Types.BIT:
+                        statement.setBoolean(1, ((Boolean)pks.get(i-1)).booleanValue());
+                        break;
+                    case java.sql.Types.DATE:
+                        statement.setDate(1, (Date)pks.get(i-1));
+                        break;
+                    case java.sql.Types.DECIMAL:
+                    case java.sql.Types.NUMERIC:
+                        statement.setBigDecimal(1, (BigDecimal)pks.get(i-1));
+                        break;
+                    case java.sql.Types.REAL:
+                        statement.setFloat(1, ((Float)pks.get(i-1)).floatValue());
+                        break;
+                    case java.sql.Types.FLOAT:
+                    case java.sql.Types.DOUBLE:
+                        statement.setDouble(1, ((Double)pks.get(i-1)).doubleValue());
+                        break;
+                    case java.sql.Types.TIME:
+                        statement.setTime(1, (Time)pks.get(i-1));
+                        break;
+                    case java.sql.Types.TIMESTAMP:
+                        statement.setTimestamp(1, (Timestamp)pks.get(i-1));
+                        break;
+                    case java.sql.Types.TINYINT:
+                        statement.setByte(1, ((Byte)pks.get(i-1)).byteValue());
+                        break;
+                    case java.sql.Types.CHAR:
+                    case java.sql.Types.LONGVARCHAR:
                     case java.sql.Types.VARCHAR:
-                    default:
                         statement.setString(1, (String)pks.get(i-1));
+                        break;
+                    case java.sql.Types.NULL:
+                    default:
+//                        SpatialUtil.testMetaData(connection);
+                        return null;
                 }
                 try {
                     ResultSet rs = statement.executeQuery();
@@ -368,12 +411,49 @@ public class GetViewerDataAction extends BaseHibernateAction {
         int dt = SpatialUtil.getPkDataType( t, connection);
         String adminPk = t.getAdmin_pk();
         switch (dt) {
+            case java.sql.Types.SMALLINT:
+                pks.add(new Short(request.getParameter(adminPk)));
+                break;
             case java.sql.Types.INTEGER:
                 pks.add(new Integer(request.getParameter(adminPk)));
                 break;
+            case java.sql.Types.BIGINT:
+                pks.add(new Long(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.BIT:
+                pks.add(new Boolean(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.DATE:
+//                pks.add(new Date(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.DECIMAL:
+            case java.sql.Types.NUMERIC:
+                pks.add(new BigDecimal(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.REAL:
+                pks.add(new Float(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.FLOAT:
+            case java.sql.Types.DOUBLE:
+                pks.add(new Double(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.TIME:
+//                pks.add(new Time(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.TIMESTAMP:
+//                pks.add(new Timestamp(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.TINYINT:
+                pks.add(new Byte(request.getParameter(adminPk)));
+                break;
+            case java.sql.Types.CHAR:
+            case java.sql.Types.LONGVARCHAR:
             case java.sql.Types.VARCHAR:
-            default:
                 pks.add(request.getParameter(adminPk));
+                break;
+            case java.sql.Types.NULL:
+            default:
+                return null;
         }
         return pks;
     }
@@ -483,20 +563,20 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
         String hquery = "FROM Themas WHERE locatie_thema = true";
-//        if(!lagen.equals("ALL")) {
-//            hquery += " AND (";
-//            String[] alleLagen = lagen.split(",");
-//            boolean firstTime = true;
-//            for(int i = 0; i < alleLagen.length; i++) {
-//                if(firstTime) {
-//                    hquery += "id = " + alleLagen[i];
-//                    firstTime = false;
-//                } else {
-//                    hquery += " OR id = " + alleLagen[i];
-//                }
-//            }
-//            hquery += ")";
-//        }
+        if(!lagen.equals("ALL")) {
+            hquery += " AND (";
+            String[] alleLagen = lagen.split(",");
+            boolean firstTime = true;
+            for(int i = 0; i < alleLagen.length; i++) {
+                if(firstTime) {
+                    hquery += "id = " + alleLagen[i];
+                    firstTime = false;
+                } else {
+                    hquery += " OR id = " + alleLagen[i];
+                }
+            }
+            hquery += ")";
+        }
         
         Query q = sess.createQuery(hquery);
         ctl = q.list();

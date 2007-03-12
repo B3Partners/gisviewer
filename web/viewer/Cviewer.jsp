@@ -75,10 +75,12 @@
         document.forms[2].themaid.value = activeThemaId;
         document.forms[2].submit();
     }
-    
+    var layersAan= new Array();
+    var doLayerClick= new Boolean(false);
     var activeLayerFromCookie = readCookie('activelayer');
     setActiveThema(activeLayerFromCookie);
     function createLabel(container, item) {
+        doLayerClick=false;
         if(item.cluster)
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));
         else {
@@ -94,8 +96,12 @@
                 el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7'); setActiveThema(item.id)}
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
+            
             if (navigator.appName=="Microsoft Internet Explorer") {
-                if(isInCookieArray(item.id)) var el2 = document.createElement('<input type="checkbox" checked="checked" value="' + item.id + '" onclick="checkboxClick(this)">');
+                if(isInCookieArray(item.id)){
+                    var el2 = document.createElement('<input type="checkbox" checked="checked" value="' + item.id + '" onclick="checkboxClick(this)">');
+                    doLayerClick=true;
+                }
                 else var el2 = document.createElement('<input type="checkbox" value="' + item.id + '" onclick="checkboxClick(this)">');
             }
             else {
@@ -103,10 +109,15 @@
                 el2.type = 'checkbox';
                 el2.value = item.id;
                 el2.onclick = function(){checkboxClick(this);}
-                if(isInCookieArray(item.id)) el2.checked = true;
+                if(isInCookieArray(item.id)){
+                    el2.checked = true;
+                    doLayerClick=true;
+                }
             }
             el2.theItem=item;
-            
+            if (doLayerClick){
+                layersAan[layersAan.length]=el2;
+            }
             var lnk = document.createElement('a');
             lnk.innerHTML = item.title ? item.title : item.id;
             lnk.href = '#';
@@ -115,6 +126,8 @@
             container.appendChild(el2);
             container.appendChild(document.createTextNode('  '));
             container.appendChild(lnk);
+            
+            
         }
     }
     
@@ -190,7 +203,6 @@
     function checkboxClick(obj) {
         if(obj.checked) {
             var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&EXCEPTIONS=INIMAGE&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
-            //alert("Layer aan");
             checkboxArray[checkboxArray.length] = obj.value;
             if (obj.theItem.wmsurl){
                 if (obj.theItem.wmsurl.indexOf("?")>0){
@@ -198,16 +210,17 @@
                 }else{
                     standardParam="?"+standardParam;
                 }
-            
-                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' ID='"+obj.value+"' URL='"+obj.theItem.wmsurl+standardParam+"' LAYERS='"+obj.theItem.wmslayers+"' QUERY_LAYERS='"+obj.theItem.wmsquerylayers+"'/>";
-                //alert(newLayer);
-                flamingo.call("map1","addLayer",newLayer);
+                
+                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' ID='fmcLayer"+obj.value+"' URL='"+obj.theItem.wmsurl+standardParam+"' LAYERS='"+obj.theItem.wmslayers+"' QUERY_LAYERS='"+obj.theItem.wmsquerylayers+"'/>";
+                if (flamingo){
+                    flamingo.call("map1","addLayer",newLayer);
+                }
             }            
         } else {
             //alert("layer uit");
             deleteFromArray(obj);
             if (obj.theItem.wmsurl){
-                flamingo.call("map1","removeLayer",obj.value);
+                flamingo.call("map1","removeLayer","fmcLayer"+obj.value);
             }
         }
     }
@@ -361,18 +374,7 @@
     switchTab(document.getElementById('tab1'));
         
      //always call this script after the SWF object script has called the flamingo viewer.
-    var flamingo;
-    function init() {
-       if (document.getElementById) {
-          flamingo = document.getElementById("flamingo");
-       }
-    }
-    window.onload = init;
-    function flamingo_onInit() {
-       //at this moment the flamingo.swf is up and running, so initialize the global flamingo var.
-       flamingo =getMovie("flamingo");
 
-    }
     //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
     function map1_onIdentify(movie,extend){
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
@@ -382,7 +384,17 @@
     }
     
     readCookieArrayIntoCheckboxArray();
-    
+    var doOnInit= new Boolean("true");
+    function OG2_onUpdateResponse(){
+        if(doOnInit){
+            doOnInit=false;
+            for (var i=0; i < layersAan.length; i++){
+                checkboxClick(layersAan[i]);
+            }
+        }
+    }
     </script>
     </body>
+    <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
+    <script language="JavaScript" type="text/javascript" src="<html:rewrite page='/js/enableJsFlamingo.js' module='' />">
 </html>

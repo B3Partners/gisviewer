@@ -44,6 +44,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
     
     protected static final String ADMINDATA = "admindata";
     protected static final String ANALYSEDATA = "analysedata";
+    protected static final String DOANALYSE = "doanalyse";
     protected static final String AANVULLENDEINFO = "aanvullendeinfo";
     protected static final String METADATA = "metadata";
     protected static final String OBJECTDATA = "objectdata";
@@ -66,6 +67,12 @@ public class GetViewerDataAction extends BaseHibernateAction {
         hibProp.setAlternateMessageKey("error.analysedata.failed");
         map.put(ANALYSEDATA, hibProp);
         
+        hibProp = new ExtendedMethodProperties(DOANALYSE);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.doanalyse.failed");
+        map.put(DOANALYSE, hibProp);
+        
         hibProp = new ExtendedMethodProperties(METADATA);
         hibProp.setDefaultForwardName(SUCCESS);
         hibProp.setAlternateForwardName(FAILURE);
@@ -87,9 +94,17 @@ public class GetViewerDataAction extends BaseHibernateAction {
         return map;
     }
     
+    public ActionForward doanalyse(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return mapping.findForward("doanalyse");
+    }
+    
     public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Themas t = getThema(mapping, dynaForm, request);
+        
+        List thema_items = SpatialUtil.getThemaData(t, true);
+        request.setAttribute("thema_items", thema_items);
+        
         String lagen = request.getParameter("lagen");
-        ArrayList objectdata = new ArrayList();
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
@@ -100,108 +115,37 @@ public class GetViewerDataAction extends BaseHibernateAction {
             boolean firstTime = true;
             for(int i = 0; i < alleLagen.length; i++) {
                 if(firstTime) {
-                    hquery += "id = " + alleLagen[i].substring(1);
+                    hquery += "id = " + alleLagen[i];
                     firstTime = false;
                 } else {
-                    hquery += " OR id = " + alleLagen[i].substring(1);
+                    hquery += " OR id = " + alleLagen[i];
                 }
             }
             hquery += ")";
         }
-        /*
+        
+        ArrayList analysedata = new ArrayList();
         Query q = sess.createQuery(hquery);
         ctl = q.list();
         if(ctl != null) {
             Iterator it = ctl.iterator();
             while(it.hasNext()) {
                 ArrayList thema = new ArrayList();
-                Themas t = (Themas) it.next();
-                thema.add(t.getNaam());
-                hquery = "FROM DataRegels WHERE thema = " + t.getId();
-                q = sess.createQuery(hquery);
-                List ctl2 = null;
-                ctl2 = q.list();
-                if(ctl2 != null) {
-                    Iterator it2 = ctl2.iterator();
-                    while(it2.hasNext()) {
-                        DataRegels dr = (DataRegels) it2.next();
-                        hquery = "FROM SpatialObjects WHERE regel = " + dr.getId();
-                        List ctl3 = null;
-                        q = sess.createQuery(hquery);
-                        ctl3 = q.list();
-                        if(ctl3 != null) {
-                            Iterator it3 = ctl3.iterator();
-                            ArrayList waardes = new ArrayList();
-                            while(it3.hasNext()) {
-                                SpatialObjects so = (SpatialObjects) it3.next();
-                                ThemaItemsSpatial tis = so.getTis();
-                                ArrayList rij_waarde = new ArrayList();
-                                if(tis != null) {
-                                    rij_waarde.add(tis.getId());
-                                    rij_waarde.add(tis.getKenmerk());
-                                } else if(so != null) {
-                                    rij_waarde.add("-1");
-                                    rij_waarde.add("<onbekend>");
-                                }
-                                if(so != null) {
-                                    rij_waarde.add(so.getGeometry());
-                                }
-                                waardes.add(rij_waarde);
-                            }
-                            thema.add(waardes);
-                        }
-                    }
-                }
-                objectdata.add(thema);
+                Themas tt = (Themas) it.next();
+                thema.add(tt.getNaam());
+                
+                List tthema_items = SpatialUtil.getThemaData(tt, true);
+                
+                List pks = findPks(tt, mapping, dynaForm, request);
+                List ao = getThemaObjects(tt, pks, tthema_items);
+                if (ao==null)
+                    ao = new ArrayList();
+                thema.add(ao);
+                analysedata.add(thema);
             }
         }
-        request.setAttribute("analyse_data", objectdata);
-         
-        String log = "";
-         
-        String laagid = request.getParameter("laagid");
-        String id = laagid.substring(1);
-        ctl = null;
-        hquery = "FROM ThemaItemsAdmin WHERE thema = " + id + " AND label != ''";
-        q = sess.createQuery(hquery);
-        ctl = q.list();
-        if(ctl != null) {
-            ArrayList returnValues = new ArrayList();
-            Iterator it = ctl.iterator();
-            while(it.hasNext()) {
-                ArrayList list = new ArrayList();
-                ThemaData tia = (ThemaData) it.next();
-                list.add(tia.getId());
-                list.add(tia.getLabel());
-         
-                List ctl2 = null;
-                String hquery2 = "FROM DataRegels WHERE thema = " + id;
-                Query q2 = sess.createQuery(hquery2);
-                ctl2 = q2.list();
-                if(ctl2 != null) {
-                    Iterator it2 = ctl2.iterator();
-                    ArrayList regels = new ArrayList();
-                    while(it2.hasNext()) {
-                        DataRegels dr = (DataRegels) it2.next();
-                        List ctl3 = null;
-                        String hquery3 = "FROM RegelAttributen WHERE regel = " + dr.getId() + " AND tia = " + tia.getId();
-                        Query q3 = sess.createQuery(hquery3);
-                        ctl3 = q3.list();
-                        if(ctl3 != null) {
-                            Iterator it3 = ctl3.iterator();
-                            while(it3.hasNext()) {
-                                RegelAttributen ra = (RegelAttributen) it3.next();
-                                regels.add(ra.getWaarde());
-                            }
-                        }
-                    }
-                    list.add(regels);
-                }
-                returnValues.add(list);
-            }
-            request.setAttribute("thema_items", returnValues);
-        }
-         */
+        request.setAttribute("analyse_data", analysedata);
+        
         return mapping.findForward("analysedata");
     }
     
@@ -229,7 +173,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         try {
             String q = SpatialUtil.InfoSelectQuery(saf, sptn, x, y, distance, srid);
-             
+            
             PreparedStatement statement = connection.prepareStatement(q);
             try {
                 ResultSet rs = statement.executeQuery();

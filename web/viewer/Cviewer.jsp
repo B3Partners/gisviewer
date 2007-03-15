@@ -11,11 +11,8 @@
     <script src='dwr/interface/JMapData.js'></script>
     <script src='dwr/interface/JViewerAdminData.js'></script>
     <script src='dwr/engine.js'></script>
-    <!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRQscSysVS1XSjcAv6lVG_Fcz1dG_hTUtfUaDWssiqZBu5tkG9-_hOOq3w -->
-    <!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRRrxo-vqJF2j9YSroPtu9HNqgCyPBT3RKeL6MZXKFcLtQOV9A_keMkhYw -->
     <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
     <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
-    <%--script language="JavaScript" type="text/JavaScript" src="googlemap.js"></script--%>
     <script>
     function doAjaxRequest(point_x, point_y) {
         JMapData.getData(point_x, point_y, handleGetData);
@@ -200,10 +197,29 @@
         }
     }
     
+    function isInCheckboxArray(id) {
+        if(checkboxArray == null) return false;
+        for(i = 0; i < checkboxArray.length; i++) {
+            if(checkboxArray[i] == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     function checkboxClick(obj) {
         if(obj.checked) {
             var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&EXCEPTIONS=INIMAGE&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
-            checkboxArray[checkboxArray.length] = obj.value;
+            if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
+            
+            if(checkboxArray.length > 0) {
+                var arrayString = getArrayAsString();
+                eraseCookie('checkedLayers');
+                createCookie('checkedLayers', arrayString, '7');
+            } else {
+                eraseCookie('checkedLayers');
+            }
+            
             if (obj.theItem.wmsurl){
                 if (obj.theItem.wmsurl.indexOf("?")>0){
                     standardParam="&"+standardParam;
@@ -229,10 +245,11 @@
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
             document.forms[1].lagen.value = arrayString;
-            document.forms[2].lagen.value = 'ALL';
+            document.forms[2].lagen.value = arrayString;
             eraseCookie('checkedLayers');
             createCookie('checkedLayers', arrayString, '7');
         } else {
+            eraseCookie('checkedLayers');
             document.forms[1].lagen.value = 'ALL';
             document.forms[2].lagen.value = 'ALL';
         }
@@ -353,6 +370,7 @@
     
     <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
 
+    <br /><br /><br />
     <script type="text/javascript">
         treeview_create({
             "id": "layermaindiv",

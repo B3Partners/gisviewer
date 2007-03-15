@@ -11,10 +11,17 @@
 <html:html>
     <head>
         <title>Viewer Data</title>
+        <link href="styles/main.css" rel="stylesheet" type="text/css">
+        <link href="styles/viewer.css" rel="stylesheet" type="text/css">
+        <style>
+            td {
+                font-size: 8pt;
+            }
+        </style>
     </head>
     <body>
-        <html:messages id="error" message="true">
-            <div class="messages" style="padding-top: 5px">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
-        </html:messages>
+        <c:if test="${not empty object}">
+            <c:out value="${object}" escapeXml="false" />
+        </c:if>
     </body>
 </html:html>

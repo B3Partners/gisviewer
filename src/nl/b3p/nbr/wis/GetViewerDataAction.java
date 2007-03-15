@@ -44,10 +44,11 @@ public class GetViewerDataAction extends BaseHibernateAction {
     
     protected static final String ADMINDATA = "admindata";
     protected static final String ANALYSEDATA = "analysedata";
-    protected static final String DOANALYSE = "doanalyse";
     protected static final String AANVULLENDEINFO = "aanvullendeinfo";
     protected static final String METADATA = "metadata";
     protected static final String OBJECTDATA = "objectdata";
+    protected static final String ANALYSEWAARDE = "analysewaarde";
+    protected static final String ANALYSEOBJECT = "analyseobject";
     private List themalist = null;
     
     
@@ -67,11 +68,17 @@ public class GetViewerDataAction extends BaseHibernateAction {
         hibProp.setAlternateMessageKey("error.analysedata.failed");
         map.put(ANALYSEDATA, hibProp);
         
-        hibProp = new ExtendedMethodProperties(DOANALYSE);
+        hibProp = new ExtendedMethodProperties(ANALYSEOBJECT);
         hibProp.setDefaultForwardName(SUCCESS);
         hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.doanalyse.failed");
-        map.put(DOANALYSE, hibProp);
+        hibProp.setAlternateMessageKey("error.analyseobject.failed");
+        map.put(ANALYSEOBJECT, hibProp);
+        
+        hibProp = new ExtendedMethodProperties(ANALYSEWAARDE);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.analysewaarde.failed");
+        map.put(ANALYSEWAARDE, hibProp);
         
         hibProp = new ExtendedMethodProperties(METADATA);
         hibProp.setDefaultForwardName(SUCCESS);
@@ -94,8 +101,20 @@ public class GetViewerDataAction extends BaseHibernateAction {
         return map;
     }
     
-    public ActionForward doanalyse(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return mapping.findForward("doanalyse");
+    public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // Hier moet het formulier worden opgehaald (dynamisch formulier, kan meerdere velden hebben)
+        // en moet de waarde worden berekend.
+        
+        request.setAttribute("waarde", "1234567890");
+        return analysedata(mapping, dynaForm, request, response);
+    }
+    
+    public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // Hier moet het formulier worden opgehaald (dynamisch formulier, kan meerdere velden hebben)
+        // en moet de waarde worden berekend.
+        
+        request.setAttribute("object", "Een object");
+        return mapping.findForward("analyseobject");
     }
     
     public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -105,6 +124,10 @@ public class GetViewerDataAction extends BaseHibernateAction {
         request.setAttribute("thema_items", thema_items);
         
         String lagen = request.getParameter("lagen");
+        request.setAttribute(Themas.THEMAID, t.getId());
+        request.setAttribute("lagen", lagen);
+        request.setAttribute("xcoord", request.getParameter("xcoord"));
+        request.setAttribute("ycoord", request.getParameter("ycoord"));
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;

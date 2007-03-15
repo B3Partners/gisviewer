@@ -22,14 +22,14 @@
             <forward name="success" path="/viewer/viewerBase.jsp"/>
         </action>
         <action path="/viewerdata" type="nl.b3p.nbr.wis.GetViewerDataAction">
-            <forward name="success" path="/viewer/viewerdata.jsp"/>
+            <!-- <forward name="success" path="/viewer/viewerdata.jsp"/> -->
             <forward name="failure" path="/viewer/viewerdata.jsp"/>
             <forward name="admindata" path="/viewer/vieweradmindata.jsp"/>
             <forward name="doanalyse" path="/viewer/vieweradmindata.jsp"/>
             <forward name="metadata" path="/viewer/viewermetadata.jsp"/>
             <forward name="objectdata" path="/viewer/viewerobjectdata.jsp"/>
             <forward name="analysedata" path="/viewer/vieweranalysedata.jsp"/>
-            <forward name="doanalyse" path="/viewer/viewerdoanalyse.jsp"/>
+            <forward name="analyseobject" path="/viewer/vieweranalyseobject.jsp"/>
             <forward name="aanvullendeinfo" path="/viewer/vieweraanvullendeinfo.jsp"/>
         </action>
         <action path="/index" forward="/index.jsp"/>
@@ -41,7 +41,7 @@
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
     
-    <message-resources parameter="com/myapp/struts/ApplicationResource"/>    
+    <message-resources  parameter="WisResources" null="true" />
     
     <!-- ========================= Tiles plugin ===============================-->
     <!--

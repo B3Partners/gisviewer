@@ -69,11 +69,10 @@ public abstract class BaseHibernateAction extends ExtendedMethodAction {
             } else {
                 msg = e.toString();
             }
-            
+            addAlternateMessage(mapping, request, null, msg);
+            return getAlternateForward(mapping, request);
         }
         
-        addAlternateMessage(mapping, request, null, msg);
-        return getAlternateForward(mapping, request);
     }
     
     protected Session getHibernateSession() {

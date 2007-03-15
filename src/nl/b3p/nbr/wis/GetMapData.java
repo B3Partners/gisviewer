@@ -22,7 +22,7 @@ public class GetMapData {
     
     public GetMapData() {}
     
-    public String getData(String x_input, String y_input) {
+    public String[] getData(String x_input, String y_input) {
         
         double x = Double.parseDouble(x_input);
         double y = Double.parseDouble(y_input);
@@ -34,7 +34,7 @@ public class GetMapData {
         String n_nr = "onbekend";
         double dist = 0.0;
         
-         ArrayList cols = new ArrayList();
+        ArrayList cols = new ArrayList();
         String sptn = "verv_nwb_hmn_p";
         cols.add("hm");
         cols.add("n_nr");
@@ -65,23 +65,48 @@ public class GetMapData {
                 log.error("", ex);
             }
         }
+
+        
+        
+        
+        String rdX = "" + Math.round(x);
+        String rdY = "" + Math.round(y);
+        String rd = "X: " + rdX + "<br />" +
+                "Y: " + rdY + "<br />";
+        
+        
+        /* String ret = "<b>RD Co&ouml;rdinaten</b><br />" + rd + "<br />" +
+                "<b>Hectometer aanduiding</b><br />" + hm + " (afstand: " +
+                Math.round(dist) +
+                " m.)<br /><br />" +
+                "<b>Wegnaam</b><br />" + n_nr + "<br /><br />"; */
+        return new String[]{rdX, rdY, hm, "" + Math.round(dist), n_nr};
+    }
+    
+    public String getKadastraleData(String x_input, String y_input) { 
+        ArrayList cols = new ArrayList();
         
         // bepaal gemeente
-        distance = 500.0;
+        double distance = 500.0;
         String postcode = "onbekend";
         String huisnr = "onbekend";
         String toev = "onbekend";
         String plaats = "onbekend";
         
         cols = new ArrayList();
-        sptn = "algm_pstk_acn_p";
+        String sptn = "algm_pstk_acn_p";
         cols.add("postcode");
         cols.add("huisnr");
         cols.add("toevoeg");
         cols.add("nenwpl");
         
-        sess = sf.openSession();
-        connection = sess.connection();
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session sess = sf.openSession();
+        Connection connection = sess.connection();
+        
+        double x = Double.parseDouble(x_input);
+        double y = Double.parseDouble(y_input);
+        int srid = 28992; // RD-new
         
         try {
             String q = SpatialUtil.closestSelectQuery(cols, sptn, x, y, distance, srid);
@@ -108,25 +133,6 @@ public class GetMapData {
             }
         }
         
-        
-        
-        String rdX = "" + Math.round(x);
-        String rdY = "" + Math.round(y);
-        String rd = "X: " + rdX + "<br />" +
-                "Y: " + rdY + "<br />";
-        
-        
-        String ret = "<b>RD Co&ouml;rdinaten</b><br />" + rd + "<br />" +
-                "<b>Hectometer aanduiding</b><br />" + hm + " (afstand: " +
-                Math.round(dist) +
-                " m.)<br /><br />" +
-                "<b>Wegnaam</b><br />" + n_nr + "<br /><br />" +
-                "<b>Adres</b><br />" + postcode +
-                " " + huisnr + 
-                " " + toev +
-                " - " + plaats +
-                "";
-        return ret;
+        return "" + postcode + " " + huisnr + " " + toev + " - " + plaats;
     }
-    
 }

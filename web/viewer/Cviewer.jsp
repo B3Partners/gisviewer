@@ -16,10 +16,19 @@
     <script>
     function doAjaxRequest(point_x, point_y) {
         JMapData.getData(point_x, point_y, handleGetData);
+        JMapData.getKadastraleData(point_x, point_y, handleGetKadastraleData);
     }
     
     function handleGetData(str) {
-        document.getElementById('infovak').innerHTML = str;
+        var rd = "X: " + str[0] + "<br />" + "Y: " + str[1];
+        document.getElementById('rdcoords').innerHTML = rd;
+        document.getElementById('hm_aanduiding').innerHTML = str[2] + " (afstand: " + str[3] + " m.)";
+        document.getElementById('wegnaam').innerHTML = str[4];
+        document.getElementById('rdcoords').innerHTML = rd;
+    }
+    
+    function handleGetKadastraleData(str) {
+        document.getElementById('kadastraledata').innerHTML = str;
     }
     
     function handleGetAdminData(x,y) {
@@ -335,7 +344,20 @@
             </div>
         </div>
         <div id="infovak" style="display: none;">
-            Klik op de kaart voor lokatie-informatie over het desbetreffende punt
+            <div id="start_message">
+                Klik op een punt op de kaart voor aanvullende informatie.
+            </div>
+            
+            <div id="algdatavak" style="margin: 0px; padding: 0px; display: none;">
+                <b>RD Co&ouml;rdinaten</b><br />
+                <span id="rdcoords"></span><br /><br />
+                <b>Hectometer aanduiding</b><br />
+                <span id="hm_aanduiding"></span><br /><br />
+                <b>Wegnaam</b><br />
+                <span id="wegnaam"></span><br /><br />
+                <b>Adres</b><br />
+                <span id="kadastraledata"></span>
+            </div>
         </div>
         <div id="objectvak" style="display: none;">
             <iframe id="objectframe" name="objectframe" frameborder="0"></iframe>
@@ -396,6 +418,15 @@
     //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
     function map1_onIdentify(movie,extend){
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
+        document.getElementById('start_message').style.display = 'none';
+        document.getElementById('algdatavak').style.display = 'block';
+        
+        var loadingStr = "Bezig met laden...";
+        // document.getElementById('rdcoords').innerHTML = loadingStr;
+        // document.getElementById('hm_aanduiding').innerHTML = loadingStr;
+        // document.getElementById('wegnaam').innerHTML = loadingStr;
+        document.getElementById('kadastraledata').innerHTML = loadingStr;
+        
         handleGetAdminData(extend.maxx,extend.maxy);
         doAjaxRequest(extend.maxx,extend.maxy);
         loadObjectInfo(extend.maxx,extend.maxy);

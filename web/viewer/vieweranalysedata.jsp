@@ -55,13 +55,29 @@
             if(id == 'object_opties') document.getElementById('waarde_opties').style.display = 'none';
             if(id == 'waarde_opties') document.getElementById('object_opties').style.display = 'none';
         }
+        
+        function submitdata() {
+            if(document.getElementById('objectoptie').checked) {
+                // Geef object -- Laad nieuwe pagina in frame
+                document.forms[0].analyseobject.value = "t";
+                document.forms[0].analysewaarde.value = "";
+                document.forms[0].target = 'dataframe';
+                document.forms[0].submit();
+            }
+            if(document.getElementById('waardeoptie').checked) {
+                // Geef waarde
+                document.forms[0].analysewaarde.value = "t";
+                document.forms[0].analyseobject.value = "";
+                document.forms[0].target = '';
+                document.forms[0].submit();
+            }
+        }
         </script>
     </head>
     <body>
         <c:choose>
             <c:when test="${not empty analyse_data}">
-                <form>
-                <form id="doanalysedataForm" target="_blank" method="post" action="viewerdata.do">
+                <form id="doanalysedataForm" method="post" action="viewerdata.do">
                     <label for="geselecteerd_object">Selecteer object waarover analyse moet worden uitgevoerd</label><br />
                     <select name="geselecteerd_object" id="geselecteerd_object" onchange="if(this.value!='-1') document.getElementById('submitknop').disabled = false; else document.getElementById('submitknop').disabled = true;">
                         <option value="-1">-- Selecteerd een object --</option>
@@ -102,25 +118,39 @@
                         </c:choose>
                     </div>
                     
-                    <div class="optie"><input type="radio" value="1" name="zoekopties" onclick="showDiv('object_opties')" /> Geef object</div>
+                    <div class="optie"><input type="radio" value="1" name="zoekopties" id="objectoptie" onclick="showDiv('object_opties')" /> Geef object</div>
                     <div id="object_opties" style="display: none;">
                         <input type="radio" value="1" name="zoekopties_object" /> Zonder overlap, niet in gebied<br />
                         <input type="radio" value="2" name="zoekopties_object" /> Geheel in gebied<br />
                         <input type="radio" value="3" name="zoekopties_object" /> Met overlap, geheel of gedeeltelijk in gebied
                     </div>
-                    <div class="optie"><input type="radio" value="2" name="zoekopties" onclick="showDiv('waarde_opties')" /> Geef waarde</div>
+                    <div class="optie"><input type="radio" value="2" name="zoekopties" id="waardeoptie" onclick="showDiv('waarde_opties')" /> Geef waarde</div>
                     <div id="waarde_opties" style="display: none;">
                         <input type="radio" value="1" name="zoekopties_waarde" /> Maximale waarde<br />
                         <input type="radio" value="2" name="zoekopties_waarde" /> Minimale waarde<br />
                         <input type="radio" value="3" name="zoekopties_waarde" /> Gemiddelde waarde<br />
                         <input type="radio" value="4" name="zoekopties_waarde" /> Totale waarde<br />
                     </div>
-                    <div class="optie"><input type="submit" value="Zoek" class="zoek_knop" name="analysedata" /></div>
+                    <input type="hidden" name="analyseobject" />
+                    <input type="hidden" name="analysewaarde" />
+                    <input type="hidden" name="themaid" value="${themaid}" />
+                    <input type="hidden" name="lagen" value="${lagen}" />
+                    <input type="hidden" name="xcoord" value="${xcoord}" />
+                    <input type="hidden" name="ycoord" value="${ycoord}" />
+                    <div class="optie"><input type="button" value="Bereken" class="zoek_knop" name="analysedata" onclick="submitdata();" /></div>
+                    <div class="optie" style="height: 10px;">&nbsp;</div>
                 </form>
             </c:when>
             <c:otherwise>
                 Geen data ter anaylse gevonden
             </c:otherwise>
         </c:choose>
+        <c:if test="${not empty waarde}">
+            <div class="optie" style="margin-left: 10px;"><strong>Waarde</strong><br /><c:out value="${waarde}" escapeXml="false" /></div>
+        </c:if>
+        
+        <c:if test="${not empty object}">
+            <div class="optie" style="margin-left: 10px;"><strong>Object</strong><br /><c:out value="${object}" escapeXml="false" /></div>
+        </c:if>
     </body>
 </html>

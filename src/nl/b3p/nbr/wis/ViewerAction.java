@@ -99,7 +99,7 @@ public class ViewerAction extends BaseHibernateAction {
         Query q = sess.createQuery(hquery);
         ctl = q.list();
         
-        hquery = "FROM Themas WHERE cluster != 9 AND (moscow = 1 OR moscow = 2 OR moscow = 3)";
+        hquery = "FROM Themas WHERE cluster != 9 AND (moscow = 1 OR moscow = 2 OR moscow = 3) and code < 3";
         q = sess.createQuery(hquery);
         themalist = q.list();
         
@@ -168,7 +168,10 @@ public class ViewerAction extends BaseHibernateAction {
             it = childs.iterator();
             while(it.hasNext()) {
                 Themas th = (Themas) it.next();
-                JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", th.getNaam()).put("cluster", false);
+                String ttitel = th.getNaam();
+                if (th.getSpatial_tabel()!=null)
+                    ttitel += " (*)";
+                JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
                 //put wms data
                 jsonCluster.put("wmsurl",th.getWms_url()).put("wmslayers",th.getWms_layers()).put("wmsquerylayers",th.getWms_querylayers());
                 root.put(jsonCluster);

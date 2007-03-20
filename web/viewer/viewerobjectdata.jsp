@@ -28,7 +28,7 @@
                     <table>
                         <c:forEach var="regel" items="${thema_object_data[1]}">
                             <tr>
-                                <c:forEach var="item" items="${regel}" end="2">
+                                <c:forEach var="item" items="${regel}" end="1">
                                     <td>
                                         ${item}
                                     </td>

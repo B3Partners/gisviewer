@@ -78,24 +78,7 @@
         <c:choose>
             <c:when test="${not empty analyse_data}">
                 <form id="doanalysedataForm" method="post" action="viewerdata.do">
-                    <label for="geselecteerd_object">Selecteer object waarover analyse moet worden uitgevoerd</label><br />
-                    <select name="geselecteerd_object" id="geselecteerd_object" onchange="if(this.value!='-1') document.getElementById('submitknop').disabled = false; else document.getElementById('submitknop').disabled = true;">
-                        <option value="-1">-- Selecteerd een object --</option>
-                        <c:forEach var="thema_analyse_data" items="${analyse_data}">
-                            <optgroup label="${thema_analyse_data[0]}">
-                                <c:forEach var="regel" items="${thema_analyse_data[1]}">
-                                    <option class="thema_object" value="${regel[0]}">
-                                        <c:forEach var="item" items="${regel}" end="2">
-                                            ${item}
-                                        </c:forEach>
-                                    </option>        
-                                </c:forEach>
-                            </optgroup>
-                        </c:forEach>
-                    </select>
-                    
-                    <div class="optie" style="border: 1px solid Gray; margin-left: 10px; margin-bottom: 10px; margin-top: 10px; padding-top: 3px; padding-left: 3px; padding-right: 40px;">
-                        <strong> Optionele selectie </strong><br />
+                    <strong> Extra criteria voor actieve thema</strong> 
                         <c:choose>
                             <c:when test="${not empty thema_items}">
                                 <table>
@@ -106,9 +89,7 @@
                                                     ${ThemaItem.label}
                                                 </td>
                                                 <td>
-                                                    <select name="selectie_${ThemaItem.label}">
-                                                        <option value="-1"> --- </option>
-                                                    </select>
+                                                    <input type="text" size="15" name="ThemaItem_${ThemaItem.thema.id}_${ThemaItem.id}"/>
                                                 </td>
                                             </tr>
                                         </c:if>
@@ -116,7 +97,22 @@
                                 </table>
                             </c:when>
                         </c:choose>
-                    </div>
+                    <strong> Analysegebied</strong><br/>
+                    <select name="geselecteerd_object" id="geselecteerd_object">
+                        <option value="-1">-- Selecteerd een gebied --</option>
+                        <c:forEach var="thema_analyse_data" items="${analyse_data}">
+                            <optgroup label="${thema_analyse_data[0]}">
+                                <c:forEach var="regel" items="${thema_analyse_data[2]}">
+                                    <option class="thema_object" value="ThemaObject_${thema_analyse_data[1]}_${regel[0]}">
+                                        <c:forEach var="item" items="${regel}" end="1">
+                                            ${item}
+                                        </c:forEach>
+                                    </option>        
+                                </c:forEach>
+                            </optgroup>
+                        </c:forEach>
+                    </select>
+                    
                     
                     <div class="optie"><input type="radio" value="1" name="zoekopties" id="objectoptie" onclick="showDiv('object_opties')" /> Geef object</div>
                     <div id="object_opties" style="display: none;">
@@ -124,7 +120,7 @@
                         <input type="radio" value="2" name="zoekopties_object" /> Geheel in gebied<br />
                         <input type="radio" value="3" name="zoekopties_object" /> Met overlap, geheel of gedeeltelijk in gebied
                     </div>
-                    <div class="optie"><input type="radio" value="2" name="zoekopties" id="waardeoptie" onclick="showDiv('waarde_opties')" /> Geef waarde</div>
+                    <div class="optie"><input type="radio" value="2" name="zoekopties" id="waardeoptie" onclick="showDiv('waarde_opties')" /> Geef waarde (*)</div>
                     <div id="waarde_opties" style="display: none;">
                         <input type="radio" value="1" name="zoekopties_waarde" /> Maximale waarde<br />
                         <input type="radio" value="2" name="zoekopties_waarde" /> Minimale waarde<br />
@@ -137,12 +133,12 @@
                     <input type="hidden" name="lagen" value="${lagen}" />
                     <input type="hidden" name="xcoord" value="${xcoord}" />
                     <input type="hidden" name="ycoord" value="${ycoord}" />
-                    <div class="optie"><input type="button" value="Bereken" class="zoek_knop" name="analysedata" onclick="submitdata();" /></div>
+                    <div class="optie"><input type="button" value="Bereken" class="zoek_knop" id="analysedata" name="analysedata" onclick="submitdata();" /></div>
                     <div class="optie" style="height: 10px;">&nbsp;</div>
                 </form>
             </c:when>
             <c:otherwise>
-                Geen data ter anaylse gevonden
+                Geen data ter analyse gevonden
             </c:otherwise>
         </c:choose>
         <c:if test="${not empty waarde}">

@@ -102,10 +102,40 @@ public class GetViewerDataAction extends BaseHibernateAction {
     }
     
     public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // Hier moet het formulier worden opgehaald (dynamisch formulier, kan meerdere velden hebben)
-        // en moet de waarde worden berekend.
+        Themas t = getThema(mapping, dynaForm, request);
         
-        request.setAttribute("waarde", "1234567890");
+        StringBuffer result = new StringBuffer("onbekend!");
+        Map params = request.getParameterMap();
+        if (params.isEmpty()) {
+            Iterator it = params.keySet().iterator();
+            while (it.hasNext()) {
+                String pn = (String) it.next();
+                if (pn.startsWith("ThemaItem")) {
+                    // later criteria toevoegen
+                    
+                }
+                if (pn.equalsIgnoreCase("geselecteerd_object")) {
+                    Object pv = params.get(pn);
+                    String ps = null;
+                    if (pv instanceof String)
+                        ps = (String)pv;
+                    if (pv instanceof String[])
+                        ps = ((String[])pv)[0];
+                    if (ps!=null) {
+                        String[] sa = ps.split("_");
+                        if (sa.length==3) {
+                            result.append("thema id: ");
+                            result.append(sa[1]);
+                            result.append(", object id: ");
+                            result.append(sa[2]);
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        request.setAttribute("waarde", result.toString());
         return analysedata(mapping, dynaForm, request, response);
     }
     
@@ -131,21 +161,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
-        String hquery = "FROM Themas WHERE locatie_thema = true";
-        if(!lagen.equals("ALL")) {
-            hquery += " AND (";
-            String[] alleLagen = lagen.split(",");
-            boolean firstTime = true;
-            for(int i = 0; i < alleLagen.length; i++) {
-                if(firstTime) {
-                    hquery += "id = " + alleLagen[i];
-                    firstTime = false;
-                } else {
-                    hquery += " OR id = " + alleLagen[i];
-                }
-            }
-            hquery += ")";
-        }
+        String hquery = "FROM Themas WHERE locatie_thema = true AND (moscow = 1 OR moscow = 2 OR moscow = 3) AND code < 3";
+//        if(!lagen.equals("ALL")) {
+//            hquery += " AND (";
+//            String[] alleLagen = lagen.split(",");
+//            boolean firstTime = true;
+//            for(int i = 0; i < alleLagen.length; i++) {
+//                if(firstTime) {
+//                    hquery += "id = " + alleLagen[i];
+//                    firstTime = false;
+//                } else {
+//                    hquery += " OR id = " + alleLagen[i];
+//                }
+//            }
+//            hquery += ")";
+//        }
         
         ArrayList analysedata = new ArrayList();
         Query q = sess.createQuery(hquery);
@@ -156,6 +186,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 ArrayList thema = new ArrayList();
                 Themas tt = (Themas) it.next();
                 thema.add(tt.getNaam());
+                thema.add(tt.getId());
                 
                 List tthema_items = SpatialUtil.getThemaData(tt, true);
                 
@@ -456,12 +487,12 @@ public class GetViewerDataAction extends BaseHibernateAction {
                     producten.add(a.getPakket() + " " + a.getModule());
                     isDefinitief = true;
                 }
-                if(!isDefinitief) {
-                    String pakket = new String();
-                    if(ta.isVoorkeur()) pakket = a.getPakket() + " " + a.getModule() + " (heeft voorkeur)";
-                    else pakket = a.getPakket() + " " + a.getModule();
-                    producten.add(pakket);
-                }
+//                if(!isDefinitief) {
+//                    String pakket = new String();
+//                    if(ta.isVoorkeur()) pakket = a.getPakket() + " " + a.getModule() + " (heeft voorkeur)";
+//                    else pakket = a.getPakket() + " " + a.getModule();
+//                    producten.add(pakket);
+//                }
             }
             
             rij = new ArrayList();
@@ -529,21 +560,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
-        String hquery = "FROM Themas WHERE locatie_thema = true";
-        if(!lagen.equals("ALL")) {
-            hquery += " AND (";
-            String[] alleLagen = lagen.split(",");
-            boolean firstTime = true;
-            for(int i = 0; i < alleLagen.length; i++) {
-                if(firstTime) {
-                    hquery += "id = " + alleLagen[i];
-                    firstTime = false;
-                } else {
-                    hquery += " OR id = " + alleLagen[i];
-                }
-            }
-            hquery += ")";
-        }
+        String hquery = "FROM Themas WHERE locatie_thema = true AND (moscow = 1 OR moscow = 2 OR moscow = 3) AND code < 3";
+//        if(!lagen.equals("ALL")) {
+//            hquery += " AND (";
+//            String[] alleLagen = lagen.split(",");
+//            boolean firstTime = true;
+//            for(int i = 0; i < alleLagen.length; i++) {
+//                if(firstTime) {
+//                    hquery += "id = " + alleLagen[i];
+//                    firstTime = false;
+//                } else {
+//                    hquery += " OR id = " + alleLagen[i];
+//                }
+//            }
+//            hquery += ")";
+//        }
         
         Query q = sess.createQuery(hquery);
         ctl = q.list();

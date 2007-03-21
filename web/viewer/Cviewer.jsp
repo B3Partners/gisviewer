@@ -102,7 +102,6 @@
                 el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7'); setActiveThema(item.id)}
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
-            
             if (navigator.appName=="Microsoft Internet Explorer") {
                 if(isInCookieArray(item.id)){
                     var el2 = document.createElement('<input type="checkbox" checked="checked" value="' + item.id + '" onclick="checkboxClick(this)">');
@@ -129,7 +128,9 @@
             lnk.href = '#';
             lnk.onclick = function(){ getMetaData(item.id) };
             container.appendChild(el);
-            container.appendChild(el2);
+            if(item.wmsurl){
+                container.appendChild(el2);
+            }
             container.appendChild(document.createTextNode('  '));
             container.appendChild(lnk);
             
@@ -236,7 +237,7 @@
                     standardParam="?"+standardParam;
                 }
                 
-                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' ID='fmcLayer"+obj.value+"' URL='"+obj.theItem.wmsurl+standardParam+"' LAYERS='"+obj.theItem.wmslayers+"' QUERY_LAYERS='"+obj.theItem.wmsquerylayers+"'/>";
+                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' FORMAT='image/png' TRANSPARENT='true' ID='fmcLayer"+obj.value+"' URL='"+obj.theItem.wmsurl+standardParam+"' LAYERS='"+obj.theItem.wmslayers+"' QUERY_LAYERS='"+obj.theItem.wmsquerylayers+"'/>";
                 if (flamingo){
                     flamingo.call("map1","addLayer",newLayer);
                 }

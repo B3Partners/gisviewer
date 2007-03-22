@@ -172,6 +172,7 @@
         <many-to-one name="dataType"/>
         <property name="commando"/>
         <property name="kolomnaam"/>
+        <property name="dataorder"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden">
         <id name="id" type="int">

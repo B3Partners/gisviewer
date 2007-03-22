@@ -1,5 +1,6 @@
 package nl.b3p.nbr.wis;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.nbr.wis.db.Applicaties;
 import nl.b3p.nbr.wis.db.DataTypen;
+import nl.b3p.nbr.wis.db.GeometryColumns;
 import nl.b3p.nbr.wis.db.Medewerkers;
 import nl.b3p.nbr.wis.db.Onderdeel;
 import nl.b3p.nbr.wis.db.Rollen;
@@ -104,15 +106,154 @@ public class GetViewerDataAction extends BaseHibernateAction {
     public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
         
-        StringBuffer result = new StringBuffer("onbekend!");
+        StringBuffer result = new StringBuffer("");
         Map params = request.getParameterMap();
-        if (params.isEmpty()) {
+        if (!params.isEmpty()) {
             Iterator it = params.keySet().iterator();
+            Boolean done=false;
             while (it.hasNext()) {
                 String pn = (String) it.next();
-                if (pn.startsWith("ThemaItem")) {
-                    // later criteria toevoegen
-                    
+                if (pn.startsWith("ThemaItem")&&!done) {
+                    done=true;
+                    String tsTokens[]= pn.split("_");
+                    String themaId=tsTokens[1];
+                    Themas thema=getThema(themaId);
+                    if (params.get("zoekopties_waarde")!=null&&thema!=null){
+                        String zoekopties_waarde = getStringFromParam(params,"zoekopties_waarde");
+                        String zoekopties=getStringFromParam(params,"zoekopties");
+                        if (zoekopties_waarde!=null && zoekopties!=null) {
+                            String geselecteerd_object=getStringFromParam(params,"geselecteerd_object");
+                            if (geselecteerd_object!=null){
+                                //Bereken/haal de gegevens op die nodig zijn voor een spatial query                            
+                                String[] tokens = geselecteerd_object.split("_");
+                                Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+                                Themas objectThema=null;
+                                try {
+                                    Integer id= Integer.parseInt(tokens[1]);
+                                    objectThema=(Themas)sess.get(Themas.class, id);
+                                }catch(NumberFormatException nfe){
+                                    String id=tokens[1];
+                                    objectThema=(Themas)sess.get(Themas.class, id);
+                                }
+                                if (objectThema==null){
+                                    log.error("Kan het thema niet vinden");
+                                    return null;
+                                }
+                                //De gegevens van het analyse object die nodig zijn om een query uit te voeren.
+                                String analyseGeomTabel=objectThema.getSpatial_tabel();
+                                String analyseGeomIdColumn=objectThema.getSpatial_admin_ref();
+                                String analyseGeomId=tokens[2];
+                                
+                                String themaGeomTabel=thema.getSpatial_tabel();
+                                String themaGeomIdColumn=thema.getSpatial_admin_ref();
+                                
+                                //zoek het type object op.
+                                String themaGeomType=null;
+                                Connection connection = sess.connection();
+                                try {
+                                    PreparedStatement statement = connection.prepareStatement("select * from geometry_columns gc where gc.f_table_name = '"+themaGeomTabel+"'");
+                                    try {
+                                        ResultSet rs = statement.executeQuery();
+                                        if (rs.next()){
+                                            themaGeomType=rs.getString("type");
+                                        }
+                                    } finally {
+                                        statement.close();
+                                    }
+                                } catch (SQLException ex) {
+                                    log.error("", ex);
+                                } finally {
+                                    try {
+                                        connection.close();
+                                    } catch (SQLException ex) {
+                                        log.error("", ex);
+                                    }
+                                }
+                                if (themaGeomType==null){
+                                    log.error("Kan het type geoobject niet vinden");
+                                    return null;
+                                }
+
+                                
+                                //hier alle 'geef waarde' functies
+                                if (zoekopties.equalsIgnoreCase("2")){
+                                    //geef maximale
+                                    if (zoekopties_waarde.equalsIgnoreCase("1")){
+                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
+                                            result.append("<b>Niet mogelijk met dit thema-geometry-type</b>");
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                                            String query=SpatialUtil.maxIntersectionLength(themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Langste thema object(km): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                                            
+                                        }                                        
+                                    }
+                                    //geef minimale waarde
+                                    else if (zoekopties_waarde.equalsIgnoreCase("2")){
+                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
+                                            result.append("<b>Niet mogelijk met dit thema-geometry-type</b>");
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                                            String query=SpatialUtil.maxIntersectionLength(themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Langste thema object(km): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                                            
+                                        }  
+                                    }
+                                    //geef gemiddelde
+                                    else if (zoekopties_waarde.equalsIgnoreCase("3")){
+                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
+                                            result.append("<b>Niet mogelijk met dit thema-geometry-type</b>");
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                                            
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                                            
+                                        }  
+                                    }
+                                    //geef totale 
+                                    else if (zoekopties_waarde.equalsIgnoreCase("4")){
+                                                                 
+                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
+                                            String query= SpatialUtil.containsQuery("count(*)",analyseGeomTabel,themaGeomTabel,analyseGeomIdColumn,analyseGeomId);
+                                            log.info(query);
+                                            result.append("<b>Aantal: ");
+                                            executeQuery(query,sess,result, new String[]{"count"});
+                                            result.append("</b>");
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                                            //create query and get in KM
+                                            String query=SpatialUtil.totalIntersectionLength(themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Totale lengte(km): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
+                                        }
+                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                                            String query=SpatialUtil.totalIntersectionArea(themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Totale oppervlakte(km): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
+                                        }
+                                                                               
+                                        
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
                 }
                 if (pn.equalsIgnoreCase("geselecteerd_object")) {
                     Object pv = params.get(pn);
@@ -131,12 +272,49 @@ public class GetViewerDataAction extends BaseHibernateAction {
                         }
                     }
                 }
+                
             }
             
         }
         
         request.setAttribute("waarde", result.toString());
         return analysedata(mapping, dynaForm, request, response);
+    }
+    private void executeQuery(String query,Session sess, StringBuffer result, String[] columns){
+        Connection connection = sess.connection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = statement.executeQuery();
+                while (rs.next()){
+                    for (int i=0; i < columns.length; i++){
+                        result.append(rs.getObject(columns[i]));
+                    }
+                    result.append("<br/>");
+                }
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
+    }
+    
+    private String getStringFromParam(Map params,String key){
+        Object ob= params.get(key);
+        String zoekopties_waarde = null;
+        String string=null;
+        if (ob instanceof String)
+            string = (String)ob;
+        if (ob instanceof String[])
+            string = ((String[])ob)[0]; 
+        return string;
     }
     
     public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -276,6 +454,11 @@ public class GetViewerDataAction extends BaseHibernateAction {
     
     protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
         String themaid = request.getParameter(Themas.THEMAID);
+        return getThema(themaid);
+    }
+    protected Themas getThema(String themaid){
+        if (themaid==null)
+            return null;
         Integer id = new Integer(themaid);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Themas t = (Themas)sess.get(Themas.class, id);
@@ -293,6 +476,11 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 Object retval = null;
                 retval = rs.getObject(kn);
                 regel.add(retval);
+                //hierbenik
+                /*String kn="id";
+                Object retval = null;
+                retval = rs.getObject(kn);
+                regel.add(retval);*/
             } else if (td.getDataType().getId()==DataTypen.URL) {
                 StringBuffer url = new StringBuffer(td.getCommando());
                 url.append(Themas.THEMAID);

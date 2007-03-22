@@ -28,6 +28,7 @@ public class ThemaData {
     private DataTypen dataType;
     private String commando;
     private String kolomnaam;
+    private String dataorder;
     
     /**
      * Creates a new instance of ThemaData
@@ -137,6 +138,14 @@ public class ThemaData {
 
     public void setCommando(String commando) {
         this.commando = commando;
+    }
+
+    public String getDataorder() {
+        return dataorder;
+    }
+
+    public void setDataorder(String dataorder) {
+        this.dataorder = dataorder;
     }
 
 }

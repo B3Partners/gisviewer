@@ -31,6 +31,10 @@ public class SpatialUtil {
     
     private static final Log log = LogFactory.getLog(SpatialUtil.class);
     
+    public static final String MULTIPOINT="multipoint";
+    public static final String MULTILINESTRING="multilinestring";
+    public static final String MULTIPOLYGON="multipolygon";
+    
     static public int getPkDataType(Themas t, Connection conn) throws SQLException {
         
         DatabaseMetaData dbmd = conn.getMetaData();
@@ -67,7 +71,7 @@ public class SpatialUtil {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         
         Query q = sess.createQuery("from ThemaData td where td.thema.id = :tid "
-                + "and td.basisregel = :br");
+                + "and td.basisregel = :br order by td.dataorder");
         q.setInteger("tid", t.getId());
         q.setBoolean("br", basisregel);
         return q.list();
@@ -156,6 +160,87 @@ public class SpatialUtil {
         return sq.toString();
     }
     
+    public static String maxIntersectionLength(String tb1, String tb2, int divide) {
+        return maxIntersectionLength(tb1,"the_geom",tb2, "the_geom", divide);
+    }
+    public static String maxIntersectionLength(String tb1, String geomColumn1,String tb2, String geomColumn2, int divide) {
+        StringBuffer sq = new StringBuffer();
+        sq.append("select max(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
+        sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
+        /*Voor optimalizatie van de query een where statement toevoegen
+         *bij testen verkleinde de tijd een 4 voud
+         */
+        sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        return sq.toString();
+    }
+    public static String totalIntersectionArea(String tb1, String tb2,int divide) {
+        return totalIntersectionArea(tb1,"the_geom",tb2,"the_geom",divide);
+    }
+    static public String totalIntersectionArea(String tb1,String geomColumn1,String tb2, String geomColumn2,int divide){
+        StringBuffer sq = new StringBuffer();
+        sq.append("select sum(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
+        sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
+        /*Voor optimalizatie van de query een where statement toevoegen
+         *bij testen verkleinde de tijd een 4 voud
+         */
+        sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        return sq.toString();
+    }  
+    static public String totalIntersectionLength(String tb1,String tb2, int divide){
+        return totalIntersectionLength(tb1,"the_geom",tb2,"the_geom",divide);
+    }
+    static public String totalIntersectionLength(String tb1,String geomColumn1,String tb2, String geomColumn2,int divide){
+        StringBuffer sq = new StringBuffer();
+        sq.append("select sum(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
+        sq.append("from "+tb1+" tb1, "+tb2+" tb2");
+        /*Voor optimalizatie van de query een where statement toevoegen
+         *bij testen verkleinde de tijd een 4 voud
+         */
+        sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        return sq.toString();
+    }
+    /*De overige methodes kunnen weg: De vier hieronder moeten blijven*/
+    public static String IntersectionArea(String operator,String tb1, String tb2,int divide) {
+        return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom",divide);
+    }
+    static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,int divide){
+        StringBuffer sq = new StringBuffer();
+        sq.append("select "+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
+        sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
+        /*Voor optimalizatie van de query een where statement toevoegen
+         *bij testen verkleinde de tijd een 4 voud
+         */
+        sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        return sq.toString();
+    }  
+    static public String intersectionLength(String operator,String tb1,String tb2,int divide){
+        return intersectionLength(operator,tb1,"the_geom",tb2,"the_geom",divide);
+    }
+    /**/
+    static public String intersectionLength(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,int divide){
+        StringBuffer sq = new StringBuffer();
+        sq.append("select "+operator+"(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
+        sq.append("from "+tb1+" tb1, "+tb2+" tb2");
+        /*Voor optimalizatie van de query een where statement toevoegen
+         *bij testen verkleinde de tijd een 4 voud
+         */
+        sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        return sq.toString();
+    }
+    static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1){
+        return containsQuery(select,table1,"the_geom",table2,"the_geom",tableIdColumn1,tableId1);
+    }
+    
+    static public String containsQuery(String select,String table1,String geomColumn1, String table2, String geomColumn2,String tableIdColumn1,String tableId1){
+        StringBuffer sq = new StringBuffer();
+        sq.append("select ");
+        sq.append(select+" ");
+        sq.append("from ");
+        sq.append(table1+ " tb1, "+table2+" tb2 where ");
+        sq.append ("tb1."+tableIdColumn1+" = "+tableId1+" ");
+        sq.append("and Contains(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        return sq.toString();       
+    }
     static public void testMetaData(Connection conn) throws SQLException {
         
         Hashtable allTables = new Hashtable();

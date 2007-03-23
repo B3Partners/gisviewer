@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Context voor nbr-proto-->
-<Context crossContext="true" debug="5" docBase="nbr-proto" path="/nbr-proto" reloadable="true">
-    <Logger className="org.apache.catalina.logger.FileLogger" prefix="nbr-proto." suffix=".log" timestamp="true"/>
+<!-- Context voor nbr_prototype-->
+<Context crossContext="true" debug="5" docBase="nbr_prototype" path="/nbr_prototype" reloadable="true">
+    <Logger className="org.apache.catalina.logger.FileLogger" prefix="nbr_prototype." suffix=".log" timestamp="true"/>
     <Resource
         name="jdbc/wis"
         type="javax.sql.DataSource"

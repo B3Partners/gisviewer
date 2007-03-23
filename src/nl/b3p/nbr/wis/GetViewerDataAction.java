@@ -183,14 +183,18 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                             result.append("<b>Niet mogelijk met dit thema-geometry-type</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
-                                            String query=SpatialUtil.maxIntersectionLength(themaGeomTabel,analyseGeomTabel,1000);
+                                            String query=SpatialUtil.intersectionLength("max",themaGeomTabel,analyseGeomTabel,1000);
                                             log.info(query);
-                                            result.append("<b>Langste thema object(km): ");
+                                            result.append("<b>Grootste thema lengte(km): ");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            
+                                            String query=SpatialUtil.intersectionArea("sum",themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Grootste thema oppervlakte(km2): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
                                         }                                        
                                     }
                                     //geef minimale waarde
@@ -199,14 +203,18 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                             result.append("<b>Niet mogelijk met dit thema-geometry-type</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
-                                            String query=SpatialUtil.maxIntersectionLength(themaGeomTabel,analyseGeomTabel,1000);
+                                            String query=SpatialUtil.intersectionLength("max",themaGeomTabel,analyseGeomTabel,1000);
                                             log.info(query);
-                                            result.append("<b>Langste thema object(km): ");
+                                            result.append("<b>Kleinste thema lengte(km): ");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            
+                                            String query=SpatialUtil.intersectionArea("avg",themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Kleinste thema oppervlakte(km2): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
                                         }  
                                     }
                                     //geef gemiddelde
@@ -215,10 +223,18 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                             result.append("<b>Niet mogelijk met dit thema-geometry-type</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
-                                            
+                                            String query=SpatialUtil.intersectionLength("avg",themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Gemiddelde thema lengte(km): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            
+                                            String query=SpatialUtil.intersectionArea("avg",themaGeomTabel,analyseGeomTabel,1000);
+                                            log.info(query);
+                                            result.append("<b>Gemiddelde thema oppervlakte(km2): ");
+                                            executeQuery(query,sess,result, new String[]{"result"});                                            
+                                            result.append("</b>");
                                         }  
                                     }
                                     //geef totale 
@@ -233,24 +249,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
                                             //create query and get in KM
-                                            String query=SpatialUtil.totalIntersectionLength(themaGeomTabel,analyseGeomTabel,1000);
+                                            String query=SpatialUtil.intersectionLength("sum",themaGeomTabel,analyseGeomTabel,1000);
                                             log.info(query);
                                             result.append("<b>Totale lengte(km): ");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            String query=SpatialUtil.totalIntersectionArea(themaGeomTabel,analyseGeomTabel,1000);
+                                            String query=SpatialUtil.intersectionArea("sum",themaGeomTabel,analyseGeomTabel,1000);
                                             log.info(query);
-                                            result.append("<b>Totale oppervlakte(km): ");
+                                            result.append("<b>Totale oppervlakte(km2): ");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
-                                                                               
-                                        
                                     }
                                 }
-                                
                             }
                         }
                     }
@@ -272,11 +285,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
                         }
                     }
                 }
-                
             }
-            
         }
-        
         request.setAttribute("waarde", result.toString());
         return analysedata(mapping, dynaForm, request, response);
     }

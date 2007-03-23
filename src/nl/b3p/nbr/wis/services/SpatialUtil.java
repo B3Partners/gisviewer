@@ -160,16 +160,14 @@ public class SpatialUtil {
         return sq.toString();
     }
     
-    public static String maxIntersectionLength(String tb1, String tb2, int divide) {
+ /*   public static String maxIntersectionLength(String tb1, String tb2, int divide) {
         return maxIntersectionLength(tb1,"the_geom",tb2, "the_geom", divide);
     }
     public static String maxIntersectionLength(String tb1, String geomColumn1,String tb2, String geomColumn2, int divide) {
         StringBuffer sq = new StringBuffer();
         sq.append("select max(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
-        /*Voor optimalizatie van de query een where statement toevoegen
-         *bij testen verkleinde de tijd een 4 voud
-         */
+
         sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
         return sq.toString();
     }
@@ -180,9 +178,7 @@ public class SpatialUtil {
         StringBuffer sq = new StringBuffer();
         sq.append("select sum(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
-        /*Voor optimalizatie van de query een where statement toevoegen
-         *bij testen verkleinde de tijd een 4 voud
-         */
+
         sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
         return sq.toString();
     }  
@@ -193,19 +189,17 @@ public class SpatialUtil {
         StringBuffer sq = new StringBuffer();
         sq.append("select sum(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2");
-        /*Voor optimalizatie van de query een where statement toevoegen
-         *bij testen verkleinde de tijd een 4 voud
-         */
+
         sq.append("where intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
         return sq.toString();
-    }
+    }*/
     /*De overige methodes kunnen weg: De vier hieronder moeten blijven*/
-    public static String IntersectionArea(String operator,String tb1, String tb2,int divide) {
+    public static String intersectionArea(String operator,String tb1, String tb2,int divide) {
         return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom",divide);
     }
     static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,int divide){
         StringBuffer sq = new StringBuffer();
-        sq.append("select "+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
+        sq.append("select ("+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+"))))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
@@ -220,7 +214,7 @@ public class SpatialUtil {
     static public String intersectionLength(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,int divide){
         StringBuffer sq = new StringBuffer();
         sq.append("select "+operator+"(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
-        sq.append("from "+tb1+" tb1, "+tb2+" tb2");
+        sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */

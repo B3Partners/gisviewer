@@ -8,7 +8,13 @@ function init() {
 window.onload = init;
 function flamingo_onInit() {
    //at this moment the flamingo.swf is up and running, so initialize the global flamingo var.
-    flamingo =getMovie("flamingo");
-   
+   flamingo =getMovie("flamingo");
+   alert("flamingo");
 }
-
+function getMovie(movieName) {
+   if (navigator.appName.indexOf("Microsoft") != -1) {
+            return window[movieName];
+   }else {
+      return document[movieName];
+   }
+}

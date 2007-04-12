@@ -7,7 +7,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
-<html>
     <script src='dwr/interface/JMapData.js'></script>
     <script src='dwr/interface/JViewerAdminData.js'></script>
     <script src='dwr/engine.js'></script>
@@ -381,6 +380,7 @@
             so.write("flashcontent");
             </script>
         </div>
+    
     <div id="rightdiv">
         <div id="tabjes">
             <div id="tab0">
@@ -501,7 +501,6 @@
         }
     }
     </script>
-    </body>
     <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
     <script language="JavaScript" type="text/javascript" src="<html:rewrite page='/js/enableJsFlamingo.js' module='' />">
-</html>
+

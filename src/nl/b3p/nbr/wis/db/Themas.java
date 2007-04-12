@@ -9,6 +9,8 @@
 
 package nl.b3p.nbr.wis.db;
 
+import java.util.Set;
+
 /**
  *
  * @author Chris
@@ -42,6 +44,9 @@ public class Themas {
     private String wms_layers;
     //komma separated layers
     private String wms_querylayers;
+    private Set themaData;
+    private Set themaVerantwoordelijkheden;
+    private Set themaApplicaties;
      
     /** Creates a new instance of Themas */
     public Themas() {
@@ -229,6 +234,30 @@ public class Themas {
 
     public void setWms_querylayers(String wms_querylayers) {
         this.wms_querylayers = wms_querylayers;
+    }
+
+    public Set getThemaData() {
+        return themaData;
+    }
+
+    public void setThemaData(Set themaData) {
+        this.themaData = themaData;
+    }
+
+    public Set getThemaVerantwoordelijkheden() {
+        return themaVerantwoordelijkheden;
+    }
+
+    public void setThemaVerantwoordelijkheden(Set themaVerantwoordelijkheden) {
+        this.themaVerantwoordelijkheden = themaVerantwoordelijkheden;
+    }
+
+    public Set getThemaApplicaties() {
+        return themaApplicaties;
+    }
+
+    public void setThemaApplicaties(Set themaApplicaties) {
+        this.themaApplicaties = themaApplicaties;
     }
     
 }

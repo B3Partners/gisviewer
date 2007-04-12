@@ -6,6 +6,12 @@ body {
     color: #000000; 
     font-family: arial, sans-serif;
 }
+th {
+    font-size: 8pt; 
+    font-weight: bold;
+    text-align: left;
+    vertical-align: top;
+}
 div{
     float: left;
 }

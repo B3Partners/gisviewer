@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
@@ -649,99 +650,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
     
     public ActionForward metadata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
-        
-        ArrayList meta_data = new ArrayList();
-        boolean isDefinitief = false;
-        ArrayList rij = new ArrayList();
-        ArrayList waarde = new ArrayList();
-        
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        String hquery = "FROM Themas WHERE id = '" + t.getId() + "'";
-        Query q = sess.createQuery(hquery);
-        Themas th = (Themas) q.uniqueResult();
-        
-        request.setAttribute("thema", th.getNaam());
-        
-        List ctl = null;
-        hquery = "FROM ThemaApplicaties WHERE thema = '" + t.getId() + "' ORDER BY voorkeur";
-        q = sess.createQuery(hquery);
-        ctl = q.list();
-        if(ctl != null) {
-            Iterator it = ctl.iterator();
-            
-            ArrayList producten = new ArrayList();
-            while(it.hasNext()) {
-                ThemaApplicaties ta = (ThemaApplicaties) it.next();
-                Applicaties a = ta.getApplicatie();
-                if(ta.isDefinitief()) {
-                    producten = new ArrayList();
-                    producten.add(a.getPakket() + " " + a.getModule());
-                    isDefinitief = true;
-                }
-//                if(!isDefinitief) {
-//                    String pakket = new String();
-//                    if(ta.isVoorkeur()) pakket = a.getPakket() + " " + a.getModule() + " (heeft voorkeur)";
-//                    else pakket = a.getPakket() + " " + a.getModule();
-//                    producten.add(pakket);
-//                }
-            }
-            
-            rij = new ArrayList();
-            rij.add("Applicatie: ");
-            rij.add(producten);
-            
-            meta_data.add(rij);
-        }
-        
-        rij = new ArrayList();
-        rij.add("Moscow");
-        waarde = new ArrayList();
-        waarde.add(th.getMoscow().getNaam());
-        rij.add(waarde);
-        meta_data.add(rij);
-        
-        rij = new ArrayList();
-        rij.add("Belangnummer");
-        waarde = new ArrayList();
-        waarde.add("" + th.getBelangnr());
-        rij.add(waarde);
-        meta_data.add(rij);
-        
-        hquery = "FROM ThemaVerantwoordelijkheden WHERE thema = '" + t.getId() + "' ORDER BY rol DESC";
-        q = sess.createQuery(hquery);
-        ctl = q.list();
-        if(ctl != null) {
-            Iterator it = ctl.iterator();
-            ArrayList waarden = new ArrayList();
-            while(it.hasNext()) {
-                ThemaVerantwoordelijkheden tv = (ThemaVerantwoordelijkheden) it.next();
-                Rollen rol = tv.getRol();
-                Medewerkers medewerker = tv.getMedewerker();
-                Onderdeel afdeling = tv.getOnderdeel();
-                String s = new String();
-                if(rol != null) {
-                    s += rol.getNaam();
-                }
-                if(medewerker != null) {
-                    s += " - " + medewerker.getVoornaam() + " " + medewerker.getAchternaam();
-                }
-                if(afdeling != null) {
-                    s += " - " + afdeling.getNaam();
-                }
-                if(tv.isGewenste_situatie()) {
-                    s += " (Gewenste situatie)";
-                } else if(tv.isHuidige_situatie()) {
-                    s += " (Huidige situatie)";
-                }
-                waarden.add(s);
-            }
-            rij = new ArrayList();
-            rij.add("VERANTWOORDELIJKHEID");
-            rij.add(waarden);
-            meta_data.add(rij);
-            
-        }
-        request.setAttribute("meta_data", meta_data);
+        request.setAttribute("themas", t);
         return mapping.findForward("metadata");
     }
     

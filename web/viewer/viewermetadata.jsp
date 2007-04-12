@@ -8,80 +8,364 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
 <html>
-<head>
-    <title>Viewer Data</title>
-    <link href="styles/main.css" rel="stylesheet" type="text/css">
-    <link href="styles/viewer.css" rel="stylesheet" type="text/css">
-    <style>
-        td ol {
+    <head>
+        <title>Viewer Data</title>
+        <link href="styles/main.css" rel="stylesheet" type="text/css">
+        <link href="styles/viewer.css" rel="stylesheet" type="text/css">
+        <style>
+            td ol {
             list-style-position:inside;
             margin: 0px;
             padding: 0px;
-        }
-        td {
+            }
+            td {
             font-size: 8pt;
-        }
-    </style>
-</head>
-<body>
-    <c:choose>
-        <c:when test="${not empty meta_data}">
-            <h1>Metadata van ${thema}</h1>
-            <table>
-                <tr>
-                    <td width="450" valign="top">
-                        <table>
-                            <c:forEach var="rij" items="${meta_data}">
-                                <c:if test="${rij[0] != 'VERANTWOORDELIJKHEID'}">
-                                    <tr>
-                                    <td valign="top" width="100">
-                                        ${rij[0]}
-                                    </td>
+            }
+        </style>
+    </head>
+    <body>
+        <c:choose>
+            <c:when test="${not empty themas}">
+                <h1>A. Algemene informatie over ${themas.naam}</h1>
+                <table>
+                    <tr>
+                        <th>
+                            <c:out value="Moscow"/>
+                        </th>
+                        <td>
+                            <c:out value="${themas.moscow.naam}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <c:out value="Belangnr"/>
+                        </th>
+                        <td>
+                            <c:out value="${themas.belangnr}"/>
+                        </td>
+                    </tr>
+                    <c:if test="${not empty themas.opmerkingen}">
+                        <tr>
+                            <th>
+                                <c:out value="Opmerkingen"/>
+                            </th>
+                            <td>
+                                <c:out value="${themas.opmerkingen}"/>
+                            </td>
+                        </tr>
+                    </c:if>
+                </table>
+                <c:if test="${not empty themas.themaApplicaties}">
+                    <c:set var="finalFound" value="false"/>
+                    <c:forEach var="item" items="${themas.themaApplicaties}">
+                        <c:if test="${item.definitief}">
+                            <c:set var="finalFound" value="true"/>
+                        </c:if>
+                    </c:forEach>
+                    <c:set var="voorkeurFound" value="false"/>
+                    <c:forEach var="item" items="${themas.themaApplicaties}">
+                        <c:if test="${item.voorkeur and not finalFound}">
+                            <c:set var="voorkeurFound" value="true"/>
+                        </c:if>
+                    </c:forEach>
+                    <p>
+                    <h1>B. Bronapplicaties voor ${themas.naam}</h1>
+                    <table>
+                        <tr>
+                            <th>
+                                <c:out value="Applicatie"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="In Gebruik"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="Spatial"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="Adminstratief"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="Voorkeur"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="Definitief"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="Standaard"/>
+                            </th>
+                        </tr>
+                        <c:forEach var="item" items="${themas.themaApplicaties}">
+                            <c:if test="${(item.definitief and finalFound) or (voorkeurFound and item.voorkeur) or (not voorkeurFound and not finalFound)}">
+                                <tr>
                                     <td>
-                                    <c:set var="aantalElementen" value="${fn:length(rij[1])}" />
-                                    <c:if test="${aantalElementen > 1}">
-                                        <ol>
-                                    </c:if>
-                                    <c:forEach var="opsomming" items="${rij[1]}">
-                                        <c:if test="${aantalElementen > 1}">
-                                            <li>
-                                        </c:if>
-                                        ${opsomming}
-                                        <c:if test="${aantalElementen > 1}">
-                                            </li>
-                                        </c:if>
-                                    </c:forEach>
-                                    <c:if test="${aantalElementen > 1}">
-                                        </ol>
-                                    </c:if>
+                                        <c:choose>
+                                            <c:when test="${not empty item.applicatie}">
+                                                <c:out value="${item.applicatie.pakket}"/>
+                                                <c:out value="${item.applicatie.module}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="-"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
-                                    </tr>
-                                </c:if>
-                            </c:forEach>
-                        </table>
-                    </td>
-                    <td width="450" valign="top">
-                        <table>
-                            <c:forEach var="rij" items="${meta_data}">
-                                <c:if test="${rij[0] == 'VERANTWOORDELIJKHEID'}">
-                                    <tr>
-                                        <td>
-                                            Verantwoordelijkheden<br /><br />
-                                            <c:forEach var="opsomming" items="${rij[1]}">
-                                                ${opsomming}<br />
-                                            </c:forEach>
-                                        </td>
-                                    </tr>
-                                </c:if>
-                            </c:forEach>
-                        <table>
-                    </td>
-                </tr>
-            </table>
-        </c:when>
-        <c:otherwise>
-            Er is geen meta data gevonden!
-        </c:otherwise>
-    </c:choose>
-</body>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.ingebruik}">
+                                                <c:out value="Ja"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="Nee"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.geodata}">
+                                                <c:out value="Ja"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="Nee"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.administratief}">
+                                                <c:out value="Ja"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="Nee"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.voorkeur}">
+                                                <c:out value="Ja"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="Nee"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.definitief}">
+                                                <c:out value="Ja"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="Nee"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.standaard}">
+                                                <c:out value="Ja"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="Nee"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                            </c:if>
+                        </c:forEach>
+                    </table>
+                </c:if>
+                <c:if test="${not empty themas.themaData}">
+                <p>
+                    <h1>C. Administratieve gegevens van ${themas.naam}</h1>
+                    <table>
+                        <tr>
+                            <th>
+                                <c:out value="Label"/>
+                            </th>
+                            <th>
+                                <c:out value="Eenheid"/>
+                            </th>
+                            <th>
+                                <c:out value="Breedte"/>
+                            </th>
+                            <th>
+                                <c:out value="Moscow"/>
+                            </th>
+                            <th>
+                                <c:out value="Kolomnaam"/>
+                            </th>
+                            <th>
+                                <c:out value="Datatype"/>
+                            </th>
+                            <th>
+                                <c:out value="Basisregel"/>
+                            </th>
+                            <th>
+                                <c:out value="Volgorde"/>
+                            </th>
+                        </tr>
+                        <c:forEach var="item" items="${themas.themaData}">
+                            <tr>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty item.omschrijving}">
+                                            <a href="#" title="${item.omschrijving}">
+                                                <c:out value="${item.label}"/>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="${item.label}"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:out value="${item.eenheid}"/>
+                                </td>
+                                <td>
+                                    <c:out value="${item.kolombreedte}"/>
+                                </td>
+                                <td>
+                                    <c:out value="${item.moscow.naam}"/>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty item.waardeType.naam}">
+                                            <a href="#" title="${item.waardeType.naam}">
+                                                <c:out value="${item.kolomnaam}"/>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="${item.kolomnaam}"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty item.commando}">
+                                            <a href="#" title="${item.commando}">
+                                                <c:out value="${item.dataType.naam}"/>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="${item.dataType.naam}"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${item.basisregel}">
+                                            <c:out value="Ja"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="Nee"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:out value="${item.dataorder}"/>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:if>
+                
+                <c:if test="${not empty themas.themaVerantwoordelijkheden}">
+                <p>
+                    <h1>D. Verantwoordelijken voor ${themas.naam}</h1>
+                    <table>
+                        <tr>
+                            <th>
+                                <c:out value="Medewerker"/>
+                            </th>
+                            <th>
+                                <c:out value="Onderdeel"/>
+                            </th>
+                            <th>
+                                <c:out value="Rol"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="Opmerkingen"/>
+                            </th>
+                            <th>
+                                <c:out value="Huidig"/>
+                            </th>
+                            
+                            <th>
+                                <c:out value="Gewenst"/>
+                            </th>
+                            
+                        </tr>
+                        <c:forEach var="item" items="${themas.themaVerantwoordelijkheden}">
+                            <tr>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty item.medewerker}">
+                                            <c:out value="${item.medewerker.achternaam}"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="-"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty item.onderdeel}">
+                                            <c:out value="${item.onderdeel.naam}"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="-"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:out value="${item.rol.naam}"/>
+                                </td>
+                                
+                                <td>
+                                    <c:out value="${item.opmerkingen}"/>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${item.huidige_situatie}">
+                                            <c:out value="Ja"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="Nee"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${item.gewenste_situatie}">
+                                            <c:out value="Ja"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="Nee"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </c:if>
+            </c:when>
+            <c:otherwise>
+                Er is geen informatie gevonden!
+            </c:otherwise>
+        </c:choose>
+    </body>
 </html>

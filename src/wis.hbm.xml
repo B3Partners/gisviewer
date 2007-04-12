@@ -21,7 +21,7 @@
         <property name="gps" not-null="true"/>
         <property name="crow" not-null="true"/>
         <property name="opmerking"/>
-        <many-to-one name="leverancier"/>
+        <many-to-one lazy="false" name="leverancier"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.Clusters">
         <id name="id" type="int">
@@ -136,7 +136,7 @@
             <generator class="identity"/>
         </id>
         <many-to-one name="thema"/>
-        <many-to-one name="applicatie"/>
+        <many-to-one lazy="false" name="applicatie"/>
         <property name="ingebruik" not-null="true"/>
         <property name="geodata" not-null="true"/>
         <property name="administratief" not-null="true"/>
@@ -166,10 +166,10 @@
         <property name="basisregel" not-null="true"/>
         <property name="voorbeelden"/>
         <property name="kolombreedte" not-null="true"/>
-        <many-to-one name="thema"/>
-        <many-to-one name="moscow"/>
-        <many-to-one name="waardeType"/>
-        <many-to-one name="dataType"/>
+        <many-to-one name="thema" lazy="false" />
+        <many-to-one name="moscow" lazy="false" />
+        <many-to-one name="waardeType" lazy="false" />
+        <many-to-one name="dataType" lazy="false" />
         <property name="commando"/>
         <property name="kolomnaam"/>
         <property name="dataorder"/>
@@ -216,7 +216,18 @@
         <property name="wms_url"/>
         <property name="wms_layers"/>
         <property name="wms_querylayers"/>
-        
+        <set name="themaData" lazy="false" cascade="all-delete-orphan" order-by="dataorder, basisregel desc, label">
+            <key column="thema"/>
+            <one-to-many class="nl.b3p.nbr.wis.db.ThemaData"/>
+        </set>
+        <set name="themaVerantwoordelijkheden" lazy="false" cascade="all-delete-orphan" order-by="rol, huidige_situatie desc">
+            <key column="thema"/>
+            <one-to-many class="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden"/>
+        </set>
+        <set name="themaApplicaties" lazy="false" cascade="all-delete-orphan" order-by="definitief desc, voorkeur desc">
+            <key column="thema"/>
+            <one-to-many class="nl.b3p.nbr.wis.db.ThemaApplicaties"/>
+        </set>
     </class>
     <class name="nl.b3p.nbr.wis.db.WaardeTypen">
         <id name="id" type="int">

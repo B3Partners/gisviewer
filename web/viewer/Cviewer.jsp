@@ -390,7 +390,7 @@
                 Lokatie
             </div>
             <div id="tab2">
-                Object
+                Gebieden
             </div>
             <div id="tab3">
                 Analyse

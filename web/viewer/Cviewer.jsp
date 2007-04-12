@@ -379,9 +379,8 @@
             <![endif]-->
             <script type="text/javascript">
             so.write("flashcontent");
-        </script>
-    </div>
-    
+            </script>
+        </div>
     <div id="rightdiv">
         <div id="tabjes">
             <div id="tab0">

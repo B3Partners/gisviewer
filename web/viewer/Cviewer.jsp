@@ -144,10 +144,39 @@
         obj.onmouseover = function(){}
         obj.onmouseout = function(){}
         obj.onclick = function(){}
+        if(obj.id == "tab0") {
+            document.getElementById('treevak').style.display = 'block';
+            document.getElementById('layermaindiv').style.display = 'block';
+            document.getElementById('infovak').style.display = 'none';
+            document.getElementById('objectvak').style.display = 'none';
+            document.getElementById('analysevak').style.display = 'none';
+            document.getElementById('tab1').style.backgroundColor = 'White';
+            document.getElementById('tab1').style.color = 'Black';
+            document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab1').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab1').onclick = function(){switchTab(this);}
+            document.getElementById('tab2').style.backgroundColor = 'White';
+            document.getElementById('tab2').style.color = 'Black';
+            document.getElementById('tab2').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab2').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab2').onclick = function(){switchTab(this);}
+            document.getElementById('tab3').style.backgroundColor = 'White';
+            document.getElementById('tab3').style.color = 'Black';
+            document.getElementById('tab3').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab3').onclick = function(){switchTab(this);}
+        }
         if(obj.id == "tab1") {
+            document.getElementById('treevak').style.display = 'none';
+            document.getElementById('layermaindiv').style.display = 'none';
             document.getElementById('infovak').style.display = 'block';
             document.getElementById('objectvak').style.display = 'none';
             document.getElementById('analysevak').style.display = 'none';
+            document.getElementById('tab0').style.backgroundColor = 'White';
+            document.getElementById('tab0').style.color = 'Black';
+            document.getElementById('tab0').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab0').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab0').onclick = function(){switchTab(this);}
             document.getElementById('tab2').style.backgroundColor = 'White';
             document.getElementById('tab2').style.color = 'Black';
             document.getElementById('tab2').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
@@ -159,9 +188,16 @@
             document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
             document.getElementById('tab3').onclick = function(){switchTab(this);}
         } else if(obj.id == "tab2") {
+            document.getElementById('treevak').style.display = 'none';
+            document.getElementById('layermaindiv').style.display = 'none';
             document.getElementById('infovak').style.display = 'none';
             document.getElementById('objectvak').style.display = 'block';
             document.getElementById('analysevak').style.display = 'none';
+            document.getElementById('tab0').style.backgroundColor = 'White';
+            document.getElementById('tab0').style.color = 'Black';
+            document.getElementById('tab0').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab0').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab0').onclick = function(){switchTab(this);}
             document.getElementById('tab1').style.backgroundColor = 'White';
             document.getElementById('tab1').style.color = 'Black';
             document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
@@ -173,9 +209,16 @@
             document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
             document.getElementById('tab3').onclick = function(){switchTab(this);}
         } else if(obj.id == "tab3") {
+            document.getElementById('treevak').style.display = 'none';
+            document.getElementById('layermaindiv').style.display = 'none';
             document.getElementById('infovak').style.display = 'none';
             document.getElementById('objectvak').style.display = 'none';
             document.getElementById('analysevak').style.display = 'block';
+            document.getElementById('tab0').style.backgroundColor = 'White';
+            document.getElementById('tab0').style.color = 'Black';
+            document.getElementById('tab0').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
+            document.getElementById('tab0').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
+            document.getElementById('tab0').onclick = function(){switchTab(this);}            
             document.getElementById('tab1').style.backgroundColor = 'White';
             document.getElementById('tab1').style.color = 'Black';
             document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
@@ -326,45 +369,60 @@
     <div id="map"><div id="flashcontent">
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
-        <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=flamingo/config.xml", "flamingo", "400", "300", "8", "#FFFFFF");
+            <script type="text/javascript">
+            var so = new SWFObject("flamingo/flamingo.swf?config=flamingo/config.xml", "flamingo", "659", "493", "8", "#FFFFFF");
+            </script>
+            <!--[if lte IE 6]>
+            <script type="text/javascript">
+            var so = new SWFObject("flamingo/flamingo.swf?config=flamingo/config.xml", "flamingo", "651", "488", "8", "#FFFFFF");
+            </script>
+            <![endif]-->
+            <script type="text/javascript">
             so.write("flashcontent");
         </script>
     </div>
-    <div id="layermaindiv"></div>
+    
     <div id="rightdiv">
         <div id="tabjes">
+            <div id="tab0">
+                Thema&lsquo;s
+            </div>
             <div id="tab1">
-                Lokatie-Informatie
+                Lokatie
             </div>
             <div id="tab2">
-                Object-Informatie
+                Object
             </div>
             <div id="tab3">
                 Analyse
             </div>
         </div>
-        <div id="infovak" style="display: none;">
-            <div id="start_message">
-                Klik op een punt op de kaart voor aanvullende informatie.
+        <div id="tab_container">
+            <div id="treevak" style="display: none;">
+                <div id="layermaindiv" style="display: none;"></div>
             </div>
-            
-            <div id="algdatavak" style="margin: 0px; padding: 0px; display: none;">
-                <b>RD Co&ouml;rdinaten</b><br />
-                <span id="rdcoords"></span><br /><br />
-                <b>Hectometer aanduiding</b><br />
-                <span id="hm_aanduiding"></span><br /><br />
-                <b>Wegnaam</b><br />
-                <span id="wegnaam"></span><br /><br />
-                <b>Adres</b><br />
-                <span id="kadastraledata"></span>
+            <div id="infovak" style="display: none;">
+                <div id="start_message">
+                    Klik op een punt op de kaart voor aanvullende informatie.
+                </div>
+                
+                <div id="algdatavak" style="margin: 0px; padding: 0px; display: none;">
+                    <b>RD Co&ouml;rdinaten</b><br />
+                    <span id="rdcoords"></span><br /><br />
+                    <b>Hectometer aanduiding</b><br />
+                    <span id="hm_aanduiding"></span><br /><br />
+                    <b>Wegnaam</b><br />
+                    <span id="wegnaam"></span><br /><br />
+                    <b>Adres</b><br />
+                    <span id="kadastraledata"></span>
+                </div>
             </div>
-        </div>
-        <div id="objectvak" style="display: none;">
-            <iframe id="objectframe" name="objectframe" frameborder="0"></iframe>
-        </div>
-        <div id="analysevak" style="display: none;">
-            <iframe id="analyseframe" name="analyseframe" frameborder="0"></iframe>
+            <div id="objectvak" style="display: none;">
+                <iframe id="objectframe" name="objectframe" frameborder="0"></iframe>
+            </div>
+            <div id="analysevak" style="display: none;">
+                <iframe id="analyseframe" name="analyseframe" frameborder="0"></iframe>
+            </div>
         </div>
     </div>
     
@@ -412,7 +470,7 @@
     </script>
     
     <script type="text/javascript">
-    switchTab(document.getElementById('tab1'));
+    switchTab(document.getElementById('tab0'));
         
      //always call this script after the SWF object script has called the flamingo viewer.
 

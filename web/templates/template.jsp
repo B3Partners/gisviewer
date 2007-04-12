@@ -13,7 +13,9 @@
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/etl.css" rel="stylesheet" type="text/css">
         <link href="styles/etltransform.css" rel="stylesheet" type="text/css">
-        
+        <!--[if lte IE 6]>
+            <link href="styles/viewer-ie6.css" rel="stylesheet" type="text/css">
+        <![endif]-->        
         <script type="text/javascript" src="scripts/etltransform.js"></script>
     </head>
     <body>

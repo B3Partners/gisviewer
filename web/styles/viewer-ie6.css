@@ -1,0 +1,31 @@
+#map{
+    width: 651px;
+    height: 488px;
+}
+#rightdiv {
+    height: 459px;
+}
+#treevak{
+    height: 469px;
+}
+#infovak{
+    height: 469px;
+}
+#objectvak{
+    height: 469px;
+}
+#objectframe {
+    height: 469px;
+}
+#analysevak{
+    height: 469px;
+}
+#analyseframe {
+   height: 469px;    
+}
+#tab_container {
+    height: 469px; 
+}
+#layermaindiv{
+    height: 457px;
+}

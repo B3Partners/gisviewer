@@ -219,7 +219,7 @@ class ArcIMSConnector {
 					layer.fclasstype = xnSI[i].firstChild.attributes.type;
 				}
 				layer.visible = false;
-				layer.showlegend = false;
+				layer.legend = false;
 				if (xnSI[i].attributes.visible == "true") {
 					layer.visible = true;
 					layer.legend = true;

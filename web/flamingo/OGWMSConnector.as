@@ -1,6 +1,6 @@
 ﻿class OGWMSConnector {
 	//meta
-	var version:String = "2.0";
+	var version:String = "F2 Release Candidate 1";
 	//-----------------------
 	private var busy:Boolean = false;
 	private var events:Object;
@@ -51,44 +51,48 @@
 			var req_url = this._changeArgs(req_url, arg, args[arg]);
 		}
 		this.events.broadcastMessage("onRequest", {requestid:reqid, url:req_url, requesttype:args.REQUEST}, reqid);
-		if (args.REQUEST.toUpperCase() == "GETMAP") {
-			this.busy = false;
-			this.events.broadcastMessage("onGetMap", req_url, obj, reqid);
-			this.events.broadcastMessage("onResponse", {requestid:reqid, url:req_url, requesttype:args.REQUEST}, reqid);
-		} else {
-			var xrequest:XML = new XML();
-			xrequest.ignoreWhite = true;
-			var thisObj:Object = this;
-			xrequest.onLoad = function(success:Boolean) {
-				var time = (new Date()-starttime)/1000;
-				if (success) {
-					if (this.firstChild.nodeName == "ServiceExceptionReport") {
-						error = this.firstChild.toString();
-						thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), error:error, responsetime:time}, reqid);
-						thisObj.events.broadcastMessage("onError", this.firstChild.toString(), obj, reqid);
-					} else {
-						thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), responsetime:time}, reqid);
-						switch (args.REQUEST.toUpperCase()) {
-						case "GETCAPABILITIES" :
-							thisObj._processCapabilities(this, obj, reqid);
-							break;
-						case "GETFEATUREINFO" :
-							thisObj._processFeatureInfo(this, obj, reqid);
-							break;
-						}
-					}
-				} else {
-					error = "connection failed...";
+		//if (args.REQUEST.toUpperCase() == "GETMAP") {
+		//this.busy = false;
+		//this.events.broadcastMessage("onGetMap", req_url, obj, reqid);
+		//this.events.broadcastMessage("onResponse", {requestid:reqid, url:req_url, requesttype:args.REQUEST}, reqid);
+		//} else {
+		var xrequest:XML = new XML();
+		xrequest.ignoreWhite = true;
+		var thisObj:Object = this;
+		xrequest.onLoad = function(success:Boolean) {
+			var time = (new Date()-starttime)/1000;
+			if (success) {
+				if (this.firstChild.nodeName.toLowerCase() == "serviceexceptionreport") {
+					error = this.firstChild.toString();
 					thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), error:error, responsetime:time}, reqid);
-					thisObj.events.broadcastMessage("onError", "connection failed...", obj, reqid);
+					thisObj.events.broadcastMessage("onError", error, obj, reqid);
+				} else {
+					thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), responsetime:time}, reqid);
+					switch (args.REQUEST.toUpperCase()) {
+					case "GETCAPABILITIES" :
+						thisObj._processCapabilities(this, obj, reqid);
+						break;
+					case "GETFEATUREINFO" :
+						thisObj._processFeatureInfo(this, obj, reqid);
+						break;
+					case "GETMAP" :
+						thisObj.events.broadcastMessage("onGetMap", req_url, obj, reqid);
+						thisObj.events.broadcastMessage("onResponse", {requestid:reqid, url:req_url, requesttype:args.REQUEST}, reqid);
+						break;
+					}
 				}
-				thisObj.busy = false;
-				// do some cleaning
-				delete this;
-			};
-			var starttime:Date = new Date();
-			xrequest.load(req_url);
-		}
+			} else {
+				error = "connection failed...";
+				thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), error:error, responsetime:time}, reqid);
+				thisObj.events.broadcastMessage("onError", "connection failed...", obj, reqid);
+			}
+			thisObj.busy = false;
+			// do some cleaning
+			delete this;
+		};
+		var starttime:Date = new Date();
+		xrequest.load(req_url);
+		//}
 		return (reqid);
 	}
 	private function _processFeatureInfo(xml:XML, obj, reqid) {
@@ -333,22 +337,40 @@
 				layer.minscale = this._asNumber(xml.childNodes[j].attributes.min);
 				layer.maxscale = this._asNumber(xml.childNodes[j].attributes.max);
 				break;
+			case "minscaledenominator" :
+				layer.minscaledenominator = xml.childNodes[j].firstChild.nodeValue;
+				break;
+			case "maxscaledenominator" :
+				layer.maxscaledenominator = xml.childNodes[j].firstChild.nodeValue;
+				break;
 			case "style" :
+				if (layer.styles == undefined) {
+					layer.styles = new Object();
+				}
+				var style = new Object();
 				var xstyle = xml.childNodes[j];
 				for (var k:Number = 0; k<xstyle.childNodes.length; k++) {
 					switch (xstyle.childNodes[k].nodeName.toLowerCase()) {
+					case "name" :
+						style.name = xstyle.childNodes[k].firstChild.nodeValue;
+						if (layer.style == undefined) {
+							layer.style = style.name;
+						}
+					case "title" :
+						style.title = xstyle.childNodes[k].firstChild.nodeValue;
 					case "legendurl" :
 						var xlegendurl = xstyle.childNodes[k];
 						for (var l:Number = 0; l<xlegendurl.childNodes.length; l++) {
 							switch (xlegendurl.childNodes[l].nodeName.toLowerCase()) {
 							case "onlineresource" :
-								layer.legendurl = xlegendurl.childNodes[l].attributes["xlink:href"];
+								style.legendurl = xlegendurl.childNodes[l].attributes["xlink:href"];
 								break;
 							}
 						}
 						break;
 					}
 				}
+				layer.styles[style.name] = style;
 				break;
 			case "layer" :
 				layer.layers = this._getLayers(xml.childNodes[j], layer.layers);
@@ -359,6 +381,9 @@
 		return (layers);
 	}
 	private function _changeArgs(url:String, arg:String, val:String):String {
+		if (url.indexOf("?") == -1) {
+			return url+"?"+arg+"="+val;
+		}
 		var p1:Number = url.toLowerCase().indexOf("&"+arg.toLowerCase()+"=", 0);
 		if (p1 == -1) {
 			var p1:Number = url.toLowerCase().indexOf("?"+arg.toLowerCase()+"=", 0);

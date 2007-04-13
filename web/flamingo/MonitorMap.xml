@@ -1,5 +1,5 @@
 <flamingo>
-<string id="loading"  en="loading [mapid] ([percentage]%)..." nl="[mapid] laden ([percentage]%)..."/>
-<string id="waiting"  en="making map..." nl="kaart maken..."/>
+<string id="loading"  en="loading [percentage]%" nl="laden [percentage]%"/>
+<string id="waiting"  en="making [map]..." nl="[map] in de maak..."/>
 <style id=".text" font-family="verdana" font-size="12px" color="#666666" display="block" font-weight="normal"/>
 </flamingo>

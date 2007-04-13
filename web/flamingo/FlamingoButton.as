@@ -157,21 +157,25 @@ class FlamingoButton extends MovieClip {
 	}
 	function setEnabled(b:Boolean) {
 		if (not b) {
-			var w = this.mc._width;
-			var h = this.mc._height;
-			var d = this.mc.createEmptyMovieClip("disable", 4);
-			with (d) {
-				beginFill(0xffffff, 70);
-				moveTo(0, 0);
-				lineTo(w, 0);
-				lineTo(w, h);
-				lineTo(0, h);
-				lineTo(0, 0);
-				endFill();
-			}
-			this.mc.attachMovie(this.uplink, "skin", 1);
+			//var w = this.mc._width;
+			//var h = this.mc._height;
+			//var d = this.mc.createEmptyMovieClip("disable", 4);
+			//with (d) {
+				//beginFill(0xffffff, 70);
+				//moveTo(0, 0);
+				//lineTo(w, 0);
+				//lineTo(w, h);
+				//lineTo(0, h);
+				//lineTo(0, 0);
+				//endFill();
+			//}
+			//this.mc.attachMovie(this.uplink, "skin", 1);
+			
+			var c = new Color(this.mc.skin);
+			c.setRGB(0xcccccc);
 		} else {
-			this.mc.disable.removeMovieClip();
+			this.mc.attachMovie(this.uplink, "skin", 1)
+			//this.mc.disable.removeMovieClip();
 		}
 		this.enabled = b;
 	}

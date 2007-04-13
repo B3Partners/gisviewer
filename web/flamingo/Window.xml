@@ -1,11 +1,12 @@
 <flamingo>
-<string id="title1"  en="title" nl="titel"/>
-<string id="title2"  en="title" nl="titel"/>
-<style id=".windowtitle" font-family="verdana" font-size="13px" color="#666666" display="block" font-weight="normal"/>
-<style id=".windowtitlefocus" font-family="verdana" font-size="13px" color="#666666" display="block" font-weight="bold"/>
+<!--
+<string id="title"  en="title" nl="titel"/>
+-->
+<string id="tooltip_close"  en="close" nl="sluiten"/>
+<style id=".title" font-family="verdana" font-size="13px" color="#666666" display="block" font-weight="normal"/>
+<style id=".titlefocus" font-family="verdana" font-size="13px" color="#666666" display="block" font-weight="bold"/>
 <cursor id="sizens" url="fmc/cursor/CursorSizens.swf"/>
 <cursor id="sizewe" url="fmc/cursor/CursorSizewe.swf"/>
 <cursor id="sizenesw" url="fmc/cursor/CursorSizenesw.swf"/>
 <cursor id="sizenwse" url="fmc/cursor/CursorSizenwse.swf"/>
-<cursor id="sizenwsexx" url="fmc/cursor/CursorSizenwse.swf"/>
 </flamingo>

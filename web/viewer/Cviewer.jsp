@@ -8,7 +8,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
     <script src='dwr/interface/JMapData.js'></script>
-    <script src='dwr/interface/JViewerAdminData.js'></script>
     <script src='dwr/engine.js'></script>
     <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
     <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>

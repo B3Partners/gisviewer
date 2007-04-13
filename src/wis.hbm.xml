@@ -152,7 +152,7 @@
         <property name="naam"/>
         <property name="omschrijving"/>
         <many-to-one name="thema"/>
-        <many-to-one name="applicatie"/>
+        <many-to-one name="applicatie" lazy="false"/>
         <property name="protocol"/>
     </class>
     <class name="nl.b3p.nbr.wis.db.ThemaData">
@@ -180,9 +180,9 @@
             <generator class="identity"/>
         </id>
         <many-to-one name="thema"/>
-        <many-to-one name="medewerker"/>
-        <many-to-one name="onderdeel"/>
-        <many-to-one name="rol"/>
+        <many-to-one name="medewerker" lazy="false"/>
+        <many-to-one name="onderdeel" lazy="false"/>
+        <many-to-one name="rol" lazy="false"/>
         <property name="huidige_situatie" not-null="true"/>
         <property name="gewenste_situatie" not-null="true"/>
         <property name="opmerkingen"/>
@@ -194,9 +194,9 @@
         </id>
         <property name="code"/>
         <property name="naam"/>
-        <many-to-one name="moscow"/>
+        <many-to-one name="moscow" lazy="false"/>
         <property name="belangnr" not-null="true"/>
-        <many-to-one name="cluster">
+        <many-to-one name="cluster" lazy="false">
             <column name="cluster" not-null="true"/>
         </many-to-one>
         <property name="opmerkingen"/>

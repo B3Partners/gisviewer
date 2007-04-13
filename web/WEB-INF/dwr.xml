@@ -3,15 +3,8 @@
     "http://www.getahead.ltd.uk/dwr/dwr10.dtd">
 <dwr>
     <allow>
-        <create creator="new" javascript="JAdminData">
-            <param name="class" value="nl.b3p.nbr.wis.GetAdminData"/>
-        </create>
         <create creator="new" javascript="JMapData">
             <param name="class" value="nl.b3p.nbr.wis.GetMapData"/>
         </create>
-        <create creator="new" javascript="JViewerAdminData">
-            <param name="class" value="nl.b3p.nbr.wis.GetViewerAdminData"/>
-        </create>
-        <convert converter="bean" match="nl.b3p.nbr.wis.db.ThemaItemsAdmin"/>
     </allow>
 </dwr>

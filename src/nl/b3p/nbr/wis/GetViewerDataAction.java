@@ -145,7 +145,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                 
                                 String themaGeomTabel=thema.getSpatial_tabel();
                                 String themaGeomIdColumn=thema.getSpatial_admin_ref();
-                                
                                 //zoek het type object op.
                                 String themaGeomType=null;
                                 Connection connection = sess.connection();
@@ -327,11 +326,93 @@ public class GetViewerDataAction extends BaseHibernateAction {
     }
     
     public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // Hier moet het formulier worden opgehaald (dynamisch formulier, kan meerdere velden hebben)
-        // en moet de waarde worden berekend.
-        
-        request.setAttribute("object", "Een object");
-        return mapping.findForward("analyseobject");
+        ArrayList pks = new ArrayList();
+        Themas t = getThema(mapping, dynaForm, request);
+        StringBuffer result = new StringBuffer("");
+        Map params = request.getParameterMap();
+        if (!params.isEmpty()) {
+            Iterator it = params.keySet().iterator();
+            Boolean done=false;
+            while (it.hasNext()) {
+                String pn = (String) it.next();
+                if (pn.startsWith("ThemaItem")&&!done) {
+                    done=true;
+                    String tsTokens[]= pn.split("_");
+                    String themaId=tsTokens[1];
+                    Themas thema=getThema(themaId);
+                    if (params.get("zoekopties_object")!=null&&thema!=null){
+                        String zoekopties_object = getStringFromParam(params,"zoekopties_object");
+                        String zoekopties=getStringFromParam(params,"zoekopties");
+                        if (zoekopties_object!=null && zoekopties!=null) {
+                            String geselecteerd_object=getStringFromParam(params,"geselecteerd_object");
+                            if (geselecteerd_object!=null&&geselecteerd_object.contains("_")){
+                                //Bereken/haal de gegevens op die nodig zijn voor een spatial query                            
+                                String[] tokens = geselecteerd_object.split("_");
+                                Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+                                Themas objectThema=null;
+                                try {
+                                    Integer id= Integer.parseInt(tokens[1]);
+                                    objectThema=(Themas)sess.get(Themas.class, id);
+                                }catch(NumberFormatException nfe){
+                                    String id=tokens[1];
+                                    objectThema=(Themas)sess.get(Themas.class, id);
+                                }
+                                if (objectThema==null){
+                                    log.error("Kan het thema niet vinden");
+                                    return null;
+                                }
+                                //De gegevens van het analyse object die nodig zijn om een query uit te voeren.
+                                String analyseGeomTabel=objectThema.getSpatial_tabel();
+                                String analyseGeomIdColumn=objectThema.getSpatial_admin_ref();
+                                String analyseGeomId=tokens[2];
+                                
+                                String themaGeomTabel=thema.getSpatial_tabel();
+                                String themaGeomIdColumn=thema.getSpatial_admin_ref();
+                                                                
+                                //create relation query
+                                String relationFunction=null;
+                                if (zoekopties_object.equalsIgnoreCase("1"))
+                                    relationFunction="Disjoint";                                    
+                                else if (zoekopties_object.equalsIgnoreCase("2"))
+                                    relationFunction="Within";
+                                else if (zoekopties_object.equalsIgnoreCase("3"))
+                                    relationFunction="Overlaps";
+                                else
+                                    log.error("Deze analyse/zoek_optie is niet geimplementeerd!");
+                                String query= SpatialUtil.hasRelationQuery(themaGeomTabel,analyseGeomTabel,relationFunction,themaGeomIdColumn);
+                                Connection connection = sess.connection();
+                                try {
+                                    PreparedStatement statement = connection.prepareStatement(query);
+                                    try {
+                                        ResultSet rs = statement.executeQuery();
+                                        while(rs.next()) {
+                                            pks.add(rs.getObject(themaGeomIdColumn));
+                                        }
+                                        
+                                    } finally {
+                                        statement.close();
+                                    }
+                                } catch (SQLException ex) {
+                                    log.error("", ex);
+                                } finally {
+                                    try {
+                                        connection.close();
+                                    } catch (SQLException ex) {
+                                        log.error("", ex);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (pks.size()>0){
+            List thema_items = SpatialUtil.getThemaData(t, true);
+            request.setAttribute("thema_items", thema_items);
+            request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
+        }        
+        return mapping.findForward("doanalyse");
     }
     
     public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -394,10 +475,28 @@ public class GetViewerDataAction extends BaseHibernateAction {
     protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         String xcoord = request.getParameter("xcoord");
         String ycoord = request.getParameter("ycoord");
-        
+        String s= request.getParameter("scale");
+        double scale=0.0;
+        try{
+            if (s!=null){
+                scale= Double.parseDouble(s);
+                //af ronden op 1 decimaal
+                scale=Math.round(scale*10)/10;
+            }
+        }
+        catch (NumberFormatException nfe){
+            scale=0.0;
+            log.info("Scale is geen double dus wordt genegeerd");
+        }
         double x = Double.parseDouble(xcoord);
         double y = Double.parseDouble(ycoord);
-        double distance = 10.0;
+        double distance=10.0;
+        if (scale> 0.0){
+            distance=scale*(distance);
+        }            
+        else{
+            distance = 10.0;
+        }
         int srid = 28992; // RD-new
         
         ArrayList pks = new ArrayList();

@@ -42,6 +42,7 @@
             alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
             return;
         }
+        document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
         document.forms[0].xcoord.value=x;
         document.forms[0].ycoord.value=y;
         document.forms[0].metadata.value = '';
@@ -431,6 +432,7 @@
         <input type="hidden" name="themaid" />
         <input type="hidden" name="xcoord" />
         <input type="hidden" name="ycoord" />
+        <input type="hidden" name="scale" />
     </form>
     
     <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">

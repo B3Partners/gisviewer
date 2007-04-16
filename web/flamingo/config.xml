@@ -8,7 +8,7 @@
         Configuration of the flamingo viewer.
 -->
 
-<FLAMINGO  id="flamingo" xmlns:fmc="flamingo" lang="en" languages="en,nl" tooltipdelay="300" commtojava="true" preloadtitle="Prototypemap">
+<FLAMINGO  id="flamingo" xmlns:fmc="flamingo" lang="en" languages="en,nl" tooltipdelay="300" commtojava="true" preloadtitle="Prototypemap" useexternalinterface="true">
     <style id=".tooltip" font-family="Verdana" font-size="11" color="#880000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>

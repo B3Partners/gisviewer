@@ -261,7 +261,8 @@
     
     function checkboxClick(obj) {
         if(obj.checked) {
-            var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&EXCEPTIONS=INIMAGE&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
+            //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
+            var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&BGCOLOR=0xF0F0F0";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
             
             if(checkboxArray.length > 0) {
@@ -278,8 +279,8 @@
                 }else{
                     standardParam="?"+standardParam;
                 }
+                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' timeout='30' retryonerror='10' format='image/png' transparent='true' id='fmcLayer"+obj.value+"' url='"+obj.theItem.wmsurl+standardParam+"' layers='"+obj.theItem.wmslayers+"' query_layers='"+obj.theItem.wmsquerylayers+"'/>";
                 
-                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' FORMAT='image/png' TRANSPARENT='true' ID='fmcLayer"+obj.value+"' URL='"+obj.theItem.wmsurl+standardParam+"' LAYERS='"+obj.theItem.wmslayers+"' QUERY_LAYERS='"+obj.theItem.wmsquerylayers+"'/>";
                 if (flamingo){
                     flamingo.call("map1","addLayer",newLayer);
                 }

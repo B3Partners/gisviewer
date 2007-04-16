@@ -66,12 +66,12 @@ public abstract class BaseHibernateAction extends ExtendedMethodAction {
                 if(nextSqlE != null) {
                     msg = msg + ": " + nextSqlE;
                 }
-//            } else if (e instanceof java.sql.SQLException) {
-//                msg = e.toString();
-//                SQLException nextSqlE = ((java.sql.SQLException)e).getNextException();
-//                if(nextSqlE != null) {
-//                    msg = msg + ": " + nextSqlE;
-//                }
+            } else if (e instanceof java.sql.SQLException) {
+                msg = e.toString();
+                SQLException nextSqlE = ((java.sql.SQLException)e).getNextException();
+                if(nextSqlE != null) {
+                    msg = msg + ": " + nextSqlE;
+                }
             } else {
                 msg = e.toString();
             }

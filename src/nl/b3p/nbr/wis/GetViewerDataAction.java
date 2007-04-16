@@ -148,8 +148,9 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                 //zoek het type object op.
                                 String themaGeomType=null;
                                 Connection connection = sess.connection();
+                                String q="select * from geometry_columns gc where gc.f_table_name = '"+themaGeomTabel+"'";
                                 try {
-                                    PreparedStatement statement = connection.prepareStatement("select * from geometry_columns gc where gc.f_table_name = '"+themaGeomTabel+"'");
+                                    PreparedStatement statement = connection.prepareStatement(q);
                                     try {
                                         ResultSet rs = statement.executeQuery();
                                         if (rs.next()){
@@ -168,7 +169,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                     }
                                 }
                                 if (themaGeomType==null){
-                                    log.error("Kan het type geoobject niet vinden");
+                                    log.error("Kan het type geoobject niet vinden: "+q);
+                                    
                                     return null;
                                 }
 
@@ -183,14 +185,14 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
                                             String query=SpatialUtil.intersectionLength("max",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
                                             log.info(query);
-                                            result.append("<b>Grootste thema lengte(km): ");
+                                            result.append("<b>Grootste lengte(km) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
                                             String query=SpatialUtil.intersectionArea("max",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
                                             log.info(query);
-                                            result.append("<b>Grootste thema oppervlakte(km2): ");
+                                            result.append("<b>Grootste oppervlakte(km2) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }                                        
@@ -203,14 +205,14 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
                                             String query=SpatialUtil.intersectionLength("min",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
                                             log.info(query);
-                                            result.append("<b>Kleinste thema lengte(km): ");
+                                            result.append("<b>Kleinste lengte(km) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
                                             String query=SpatialUtil.intersectionArea("min",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
                                             log.info(query);
-                                            result.append("<b>Kleinste thema oppervlakte(km2): ");
+                                            result.append("<b>Kleinste oppervlakte(km2) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }  
@@ -223,14 +225,14 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
                                             String query=SpatialUtil.intersectionLength("avg",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
                                             log.info(query);
-                                            result.append("<b>Gemiddelde thema lengte(km): ");
+                                            result.append("<b>Gemiddelde lengte(km) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
                                             String query=SpatialUtil.intersectionArea("avg",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
                                             log.info(query);
-                                            result.append("<b>Gemiddelde thema oppervlakte(km2): ");
+                                            result.append("<b>Gemiddelde oppervlakte(km2) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }  
@@ -241,7 +243,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                         if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
                                             String query= SpatialUtil.containsQuery("count(*)",analyseGeomTabel,themaGeomTabel,analyseGeomIdColumn,analyseGeomId);
                                             log.info(query);
-                                            result.append("<b>Aantal: ");
+                                            result.append("<b>Aantal "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"count"});
                                             result.append("</b>");
                                         }
@@ -249,14 +251,14 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                             //create query and get in KM
                                             String query=SpatialUtil.intersectionLength("sum",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
                                             log.info(query);
-                                            result.append("<b>Totale lengte(km): ");
+                                            result.append("<b>Totale lengte(km) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
                                         else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
                                             String query=SpatialUtil.intersectionArea("sum",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
                                             log.info(query);
-                                            result.append("<b>Totale oppervlakte(km2): ");
+                                            result.append("<b>Totale oppervlakte(km2) "+t.getNaam()+":");
                                             executeQuery(query,sess,result, new String[]{"result"});                                            
                                             result.append("</b>");
                                         }
@@ -266,7 +268,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                         }
                     }
                 }
-                if (pn.equalsIgnoreCase("geselecteerd_object")) {
+                /*if (pn.equalsIgnoreCase("geselecteerd_object")) {
                     Object pv = params.get(pn);
                     String ps = null;
                     if (pv instanceof String)
@@ -282,7 +284,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                             result.append(sa[2]);
                         }
                     }
-                }
+                }*/
             }
         }
         request.setAttribute("waarde", result.toString());
@@ -296,7 +298,17 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 ResultSet rs = statement.executeQuery();
                 while (rs.next()){
                     for (int i=0; i < columns.length; i++){
-                        result.append(rs.getObject(columns[i]));
+                        result.append("<br/>");
+                        Object resultObject=rs.getObject(columns[i]);
+                        if (resultObject instanceof java.lang.Double){
+                            double resultDouble=((Double)resultObject).doubleValue();
+                            resultDouble*=100;
+                            resultDouble=Math.round(resultDouble);
+                            resultDouble/=100;
+                            result.append(resultDouble);
+                        }else{
+                            result.append(resultObject);
+                        }
                     }
                     result.append("<br/>");
                 }
@@ -376,10 +388,11 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                 else if (zoekopties_object.equalsIgnoreCase("2"))
                                     relationFunction="Within";
                                 else if (zoekopties_object.equalsIgnoreCase("3"))
-                                    relationFunction="Overlaps";
+                                    relationFunction="Intersects";
                                 else
                                     log.error("Deze analyse/zoek_optie is niet geimplementeerd!");
-                                String query= SpatialUtil.hasRelationQuery(themaGeomTabel,analyseGeomTabel,relationFunction,themaGeomIdColumn);
+                                String query= SpatialUtil.hasRelationQuery(themaGeomTabel,analyseGeomTabel,relationFunction,themaGeomIdColumn,analyseGeomId);
+                                log.info(query);
                                 Connection connection = sess.connection();
                                 try {
                                     PreparedStatement statement = connection.prepareStatement(query);

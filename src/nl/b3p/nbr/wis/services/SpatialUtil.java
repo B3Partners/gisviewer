@@ -193,16 +193,17 @@ public class SpatialUtil {
      *Maakt een query string die alle objecten selecteerd uit tb1 waarvan het object een relatie heeft volgens de meegegeven relatie
      *met het geo object van tb2
      */
-    static public String hasRelationQuery(String tb1,String tb2, String relationFunction,String saf){
+    static public String hasRelationQuery(String tb1,String tb2, String relationFunction,String saf, String analyseObjectId){
         //"select * from <themaGeomTabel> tb1, <analyseGeomTable> tb2 where tb1.<theGeom> tb2.<theGeom>";
-        return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf);
+        return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId);
     }
-    static public String hasRelationQuery(String tb1,String geomColumn1,String tb2, String geomColumn2, String relationFunction,String saf){
+    static public String hasRelationQuery(String tb1,String geomColumn1,String tb2, String geomColumn2, String relationFunction,String saf,String idColumnName,String analyseObjectId){
         //"select * from <themaGeomTabel> tb1, <analyseGeomTable> tb2 where tb1.<theGeom> tb2.<theGeom>";
         StringBuffer sq= new StringBuffer();
-        sq.append("select DISTINCT tb1."+saf+" ");
+        sq.append("select tb1."+saf+" ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
-        sq.append("where "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+")");
+        sq.append("where tb2."+idColumnName+" = "+analyseObjectId+" ");
+        sq.append("and "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+")");
         return sq.toString();
     }
     static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1){

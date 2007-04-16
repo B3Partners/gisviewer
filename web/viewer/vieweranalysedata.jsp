@@ -120,7 +120,7 @@
                         <input type="radio" value="2" name="zoekopties_object" /> Geheel in gebied<br />
                         <input type="radio" value="3" name="zoekopties_object" /> Met overlap, geheel of gedeeltelijk in gebied
                     </div>
-                    <div class="optie"><input type="radio" value="2" name="zoekopties" id="waardeoptie" onclick="showDiv('waarde_opties')" /> Geef waarde (*)</div>
+                    <div class="optie"><input type="radio" value="2" name="zoekopties" id="waardeoptie" onclick="showDiv('waarde_opties')" /> Geef waarde</div>
                     <div id="waarde_opties" style="display: none;">
                         <input type="radio" value="1" name="zoekopties_waarde" /> Maximale waarde<br />
                         <input type="radio" value="2" name="zoekopties_waarde" /> Minimale waarde<br />
@@ -142,7 +142,7 @@
             </c:otherwise>
         </c:choose>
         <c:if test="${not empty waarde}">
-            <div class="optie" style="margin-left: 10px;"><strong>Waarde</strong><br /><c:out value="${waarde}" escapeXml="false" /></div>
+            <div class="optie" style="margin-left: 10px;"><div class="waardeResult"><c:out value="${waarde}" escapeXml="false" /></div></div>
         </c:if>
         
         <c:if test="${not empty object}">

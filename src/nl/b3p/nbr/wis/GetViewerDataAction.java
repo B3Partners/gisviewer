@@ -456,7 +456,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
                                 else
                                     log.error("Deze analyse/zoek_optie is niet geimplementeerd!");
                                 String query= SpatialUtil.hasRelationQuery(themaGeomTabel,analyseGeomTabel,relationFunction,themaGeomIdColumn,analyseGeomId);
-                                log.info(query);
                                 Connection connection = sess.connection();
                                 try {
                                     PreparedStatement statement = connection.prepareStatement(query);

@@ -203,7 +203,8 @@ public class SpatialUtil {
         sq.append("select tb1."+saf+" ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
         sq.append("where tb2."+idColumnName+" = "+analyseObjectId+" ");
-        sq.append("and "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+")");
+        sq.append("and "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+") ");
+        sq.append("limit 50");
         return sq.toString();
     }
     static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1){

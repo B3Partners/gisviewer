@@ -59,11 +59,12 @@ public class GetMapData {
         } catch (SQLException ex) {
             log.error("", ex);
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                log.error("", ex);
-            }
+//            try {
+//                connection.close();
+                sess.close();
+//            } catch (SQLException ex) {
+//                log.error("", ex);
+//            }
         }
 
         
@@ -100,13 +101,13 @@ public class GetMapData {
         cols.add("toevoeg");
         cols.add("nenwpl");
         
-        SessionFactory sf = HibernateUtil.getSessionFactory();
-        Session sess = sf.openSession();
-        Connection connection = sess.connection();
-        
         double x = Double.parseDouble(x_input);
         double y = Double.parseDouble(y_input);
         int srid = 28992; // RD-new
+        
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session sess = sf.openSession();
+        Connection connection = sess.connection();
         
         try {
             String q = SpatialUtil.closestSelectQuery(cols, sptn, x, y, distance, srid);
@@ -126,11 +127,12 @@ public class GetMapData {
         } catch (SQLException ex) {
             log.error("", ex);
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                log.error("", ex);
-            }
+//            try {
+//                connection.close();
+                sess.close();
+//            } catch (SQLException ex) {
+//                log.error("", ex);
+//            }
         }
         
         return "" + postcode + " " + huisnr + " " + toev + " - " + plaats;

@@ -12,6 +12,8 @@
     <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
     <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
     <script>
+    var allActiveLayers="";
+    var layerUrl=null;
     function doAjaxRequest(point_x, point_y) {
         JMapData.getData(point_x, point_y, handleGetData);
         JMapData.getKadastraleData(point_x, point_y, handleGetKadastraleData);
@@ -259,7 +261,7 @@
         return false;
     }
     
-    function checkboxClick(obj) {
+    function checkboxClick(obj, dontRefresh) {
         if(obj.checked) {
             //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
             var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&BGCOLOR=0xF0F0F0";
@@ -279,21 +281,37 @@
                 }else{
                     standardParam="?"+standardParam;
                 }
-                var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' timeout='30' retryonerror='10' format='image/png' transparent='true' id='fmcLayer"+obj.value+"' url='"+obj.theItem.wmsurl+standardParam+"' layers='"+obj.theItem.wmslayers+"' query_layers='"+obj.theItem.wmsquerylayers+"'/>";
-                
-                if (flamingo){
-                    flamingo.call("map1","addLayer",newLayer);
+                if (layerUrl==null){
+                    layerUrl=obj.theItem.wmsurl+standardParam;
+                }
+                allActiveLayers+= ","+obj.theItem.wmslayers;
+                if (!dontRefresh){
+                    refreshLayer();
                 }
             }            
         } else {
             //alert("layer uit");
             deleteFromArray(obj);
             if (obj.theItem.wmsurl){
-                flamingo.call("map1","removeLayer","fmcLayer"+obj.value);
+                allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
+                refreshLayer();                
             }
         }
     }
     
+    function refreshLayer(){
+        var layersToAdd;
+        if (allActiveLayers.length>0){
+            layersToAdd= allActiveLayers.substring(1);
+        }else{
+            layersToAdd="";
+        }
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' timeout='30' retryonerror='10' format='image/png' transparent='true' id='fmcLayer' url='"+layerUrl+"' layers='"+layersToAdd+"' query_layers='"+layersToAdd+"'/>";
+        if (flamingo){
+            flamingo.call("map1","removeLayer","fmcLayer");
+            flamingo.call("map1","addLayer",newLayer);
+        }        
+    }
     function loadObjectInfo(x,y) {
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
@@ -498,11 +516,13 @@
         if(doOnInit){
             doOnInit=false;
             for (var i=0; i < layersAan.length; i++){
-                checkboxClick(layersAan[i]);
+                checkboxClick(layersAan[i],true);
             }
+            refreshLayer();
         }
     }
     </script>
+    
     <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
     <script language="JavaScript" type="text/javascript" src="<html:rewrite page='/js/enableJsFlamingo.js' module='' />">
 

@@ -29,7 +29,7 @@
 </script>
 <p style="margin-top: 50px;">
     <hr size="1" style="color: Black;" width="100%" />
-    <table>
+    <table width="100%">
         <tr>
             <td>
                 <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" />

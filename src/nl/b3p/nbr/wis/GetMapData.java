@@ -59,16 +59,8 @@ public class GetMapData {
         } catch (SQLException ex) {
             log.error("", ex);
         } finally {
-//            try {
-//                connection.close();
-                sess.close();
-//            } catch (SQLException ex) {
-//                log.error("", ex);
-//            }
+            sess.close();
         }
-
-        
-        
         
         String rdX = "" + Math.round(x);
         String rdY = "" + Math.round(y);
@@ -84,7 +76,7 @@ public class GetMapData {
         return new String[]{rdX, rdY, hm, "" + Math.round(dist), n_nr};
     }
     
-    public String getKadastraleData(String x_input, String y_input) { 
+    public String getKadastraleData(String x_input, String y_input) {
         ArrayList cols = new ArrayList();
         
         // bepaal gemeente
@@ -127,12 +119,7 @@ public class GetMapData {
         } catch (SQLException ex) {
             log.error("", ex);
         } finally {
-//            try {
-//                connection.close();
-                sess.close();
-//            } catch (SQLException ex) {
-//                log.error("", ex);
-//            }
+            sess.close();
         }
         
         return "" + postcode + " " + huisnr + " " + toev + " - " + plaats;

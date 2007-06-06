@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
     Document   : config.xml
     Created on : 24 januari 2007, 11:16
@@ -12,9 +11,9 @@
     <style id=".tooltip" font-family="Verdana" font-size="11" color="#880000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
-    
-    <fmc:MonitorMap id="monitomr" left="25%" top="50%" width="50%" listento="map1"/>
-    <fmc:ToolGroup tool="zoom" listento="map1" width="148" height="65" left="0" top="0">
+    <fmc:MonitorLayer id="monitorl" left="25%" top="70%" width="50%" listento="map1"/>
+    <fmc:MonitorMap id="monitorm" left="25%" top="50%" width="50%" listento="map1"/>
+    <fmc:ToolGroup tool="zoom" listento="map1" width="148" height="65" left="0" top="0%">
         <fmc:ToolZoomin id="zoom"/>
         <fmc:ToolZoomout left="30"/>
         <fmc:ToolPan left="60"/>            
@@ -22,15 +21,15 @@
         <fmc:ToolMeasure left="120"/>
         <fmc:ToolIdentify left="150"/>            
         <fmc:ButtonFull left="180" listento="map1"/>
-    <fmc:Legend left="210" top="5" skin="f1" updatedelay="1">  
+    <fmc:Legend left="210" top="5" skin="f1" updatedelay="0">  
         <item label="Achtergrond" listento="OG2.achtergrond" canhide="true" />       
     </fmc:Legend>
     </fmc:ToolGroup>    
-    <fmc:Coordinates  listento="map1" left="70%" top="97%" decimals="0">  
+    <fmc:Coordinates  listento="map1" left="70%" top="1%" decimals="0">  
         <string id="xy" nl="Y: [y] X: [x]"/>
     </fmc:Coordinates/>
-    <fmc:BorderNavigation listento="map1" width="100%" height="97%" skin="f1"/>
-    <fmc:Map id="map1" left="0" top="0" height="97%" width="100%" bottom="bottom" visible="true" extent="67914,352460,200359,443186" fullextent="67914,352460,200359,443186">
+    <fmc:BorderNavigation listento="map1" top="5%" width="100%" height="95%" skin="f1"/>
+    <fmc:Map id="map1" left="0" top="5%" height="95%" width="100%" bottom="bottom" visible="true" extent="67914,352460,200359,443186" fullextent="67914,352460,200359,443186">
         <fmc:LayerIdentifyIcon  id="identifyicon"  />
         <fmc:LayerOGWMS timeout='30' retryonerror='10' format='image/png' transparent='true' id='OG2' url='http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis.map' layers='achtergrond' query_layers='' srs='EPSG:28992'/>
     </fmc:Map>

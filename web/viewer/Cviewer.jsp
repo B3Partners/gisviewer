@@ -306,7 +306,7 @@
         }else{
             layersToAdd="";
         }
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' timeout='30' retryonerror='10' format='image/png' transparent='true' id='fmcLayer' url='"+layerUrl+"' layers='achtergrond"+allActiveLayers+"' query_layers='"+layersToAdd+"' srs='EPSG:28992'/>";
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' id='OG2' timeout='30' retryonerror='10' format='image/png' transparent='true' url='"+layerUrl+"' layers='achtergrond"+allActiveLayers+"' query_layers='"+layersToAdd+"' srs='EPSG:28992'/>";
         if (flamingo){
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);

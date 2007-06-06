@@ -264,7 +264,7 @@
     function checkboxClick(obj, dontRefresh) {
         if(obj.checked) {
             //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
-            var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&BGCOLOR=0xF0F0F0";
+            var standardParam="SERVICE=WMS&VERSION=1.1.1";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
             
             if(checkboxArray.length > 0) {
@@ -306,7 +306,7 @@
         }else{
             layersToAdd="";
         }
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' timeout='30' retryonerror='10' format='image/png' transparent='true' id='fmcLayer' url='"+layerUrl+"' layers='"+layersToAdd+"' query_layers='"+layersToAdd+"'/>";
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='flamingo' timeout='30' retryonerror='10' format='image/png' transparent='true' id='fmcLayer' url='"+layerUrl+"' layers='achtergrond"+allActiveLayers+"' query_layers='"+layersToAdd+"' srs='EPSG:28992'/>";
         if (flamingo){
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);
@@ -382,8 +382,7 @@
     function eraseCookie(name) {
             createCookie(name,"",-1);
     }
-    </script>
-    
+    </script>    
     <div id="map"><div id="flashcontent">
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
@@ -521,7 +520,11 @@
             refreshLayer();
         }
     }
+    function moveToExtent(minx,miny,maxx,maxy){
+        flamingo.callMethod("map1", "moveToExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy}, 0);
+    }
     </script>
+    
     
     <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
     <script language="JavaScript" type="text/javascript" src="<html:rewrite page='/js/enableJsFlamingo.js' module='' />">

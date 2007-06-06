@@ -23,7 +23,7 @@
         <fmc:ToolIdentify left="150"/>            
         <fmc:ButtonFull left="180" listento="map1"/>
     <fmc:Legend left="210" top="5" skin="f1" updatedelay="1">  
-        <item label="Achtergrond" listento="OG2" canhide="true" />       
+        <item label="Achtergrond" listento="OG2.achtergrond" canhide="true" />       
     </fmc:Legend>
     </fmc:ToolGroup>    
     <fmc:Coordinates  listento="map1" left="70%" top="97%" decimals="0">  
@@ -32,6 +32,6 @@
     <fmc:BorderNavigation listento="map1" width="100%" height="97%" skin="f1"/>
     <fmc:Map id="map1" left="0" top="0" height="97%" width="100%" bottom="bottom" visible="true" extent="67914,352460,200359,443186" fullextent="67914,352460,200359,443186">
         <fmc:LayerIdentifyIcon  id="identifyicon"  />
-        <fmc:LayerOGWMS id="OG2" url="http://x3.b3p.nl/cgi-bin/mapserv?map=/home/mapserver/gstreet-demo.map&amp;SERVICE=WMS&amp;VERSION=1.1.1&amp;SRS=EPSG:28992&amp;WRAPDATELINE=true&amp;BGCOLOR=0xF0F0F0" QUERY_LAYERS="gstreet6,gstreet5,gstreet4,gstreet3,gstreet2,gstreet1" LAYERS="gstreet6,gstreet5,gstreet4,gstreet3,gstreet2,gstreet1" srs="EPSG:28992" exceptions="INIMAGE"/>
+        <fmc:LayerOGWMS timeout='30' retryonerror='10' format='image/png' transparent='true' id='OG2' url='http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis.map' layers='achtergrond' query_layers='' srs='EPSG:28992'/>
     </fmc:Map>
 </FLAMINGO>

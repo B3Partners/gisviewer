@@ -156,7 +156,8 @@ class FlamingoButton extends MovieClip {
 		}
 	}
 	function setEnabled(b:Boolean) {
-		if (not b) {
+	 
+		if (b) {
 			//var w = this.mc._width;
 			//var h = this.mc._height;
 			//var d = this.mc.createEmptyMovieClip("disable", 4);
@@ -171,11 +172,12 @@ class FlamingoButton extends MovieClip {
 			//}
 			//this.mc.attachMovie(this.uplink, "skin", 1);
 			
-			var c = new Color(this.mc.skin);
-			c.setRGB(0xcccccc);
+			this.mc.attachMovie(this.uplink, "skin", 1)
+			this.mc._alpha = 100;
 		} else {
 			this.mc.attachMovie(this.uplink, "skin", 1)
-			//this.mc.disable.removeMovieClip();
+			this.mc._alpha = 20;
+	
 		}
 		this.enabled = b;
 	}

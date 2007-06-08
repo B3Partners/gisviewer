@@ -1,6 +1,0 @@
-<flamingo>
-	<string id="tooltip" nl="kaartbeeld slepen" en="pan"/>
-        <cursor id="cursor" url="fmc/cursor/CursorPan.swf"/>
-        <cursor id="grab" url="fmc/cursor/CursorGrabWrinkle.swf"/>
-        <cursor id="busy" url="fmc/cursor/CursorBusy.swf"/>
-</flamingo>

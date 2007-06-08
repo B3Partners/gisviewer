@@ -1,6 +1,0 @@
-<flamingo>
-	<string id="tooltip" nl="informatie opvragen" en="identify"/>
-	<cursor id="cursor" url="fmc/cursor/CursorIdentify.swf"/>
-        <cursor id="click" url="fmc/cursor/CursorIdentifyClick.swf"/>
-        <cursor id="busy" url="fmc/cursor/CursorBusyIdentify.swf"/>
-</flamingo>

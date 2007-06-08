@@ -49,12 +49,17 @@ class ArcIMSConnector {
 	var geometry:Boolean = false;
 	var envelope:Boolean = false;
 	var beginrecord:Number = 1;
-	var objecttag:Object;
+	var request:String;
+	var response:String;
+	var responsetime:Number;
+	var error:String;
+	var url:String;
+	var requestid:Number = 0;
+	var requesttype:String;
 	//-----------------------
 	private var busy:Boolean = false;
 	private var layerid:String;
 	private var events:Object;
-	private static var requestid:Number = 0;
 	//private var requesttype:String;
 	//private var url:String;
 	//private var xrequest:XML;
@@ -104,78 +109,75 @@ class ArcIMSConnector {
 		}
 		return (_server+_servlet+"?ServiceName="+_service+"&ClientVersion=4.0&Form=false&Encode=false"+extra);
 	}
-	private function _sendrequest(sxml:String, requesttype:String, objecttag:Object):String {
+	private function _sendrequest(sxml:String, requesttype:String, objecttag:Object):Number {
 		if (this.busy) {
-			this.events.broadcastMessage("onError", "busy processing request...", this.objecttag, "ArcIMSConnector"+requestid);
+			this.error = "busy processing request...";
+			this.events.broadcastMessage("onError", this.error, objecttag, this.requestid);
 			return;
 		}
-		requestid++;
-
-		var reqid:String = "ArcIMSConnector"+requestid;
-		var reqtype = requesttype
+		this.requestid++;
+		this.requesttype = requesttype;
 		this.busy = true;
-		var url = this._getUrl(requesttype);
+		this.url = this._getUrl(requesttype);
+		this.request = sxml;
 		var xrequest:XML = new XML(sxml);
 		xrequest.contentType = "text/xml";
 		var xresponse:XML = new XML();
 		xresponse.ignoreWhite = true;
 		var thisObj:Object = this;
-		var error:String;
-		
-		this.events.broadcastMessage("onRequest", {requestid:reqid, requesttype:requesttype, url:url, request:sxml}, reqid);
+		this.error = "";
+		this.response = "";
+		this.events.broadcastMessage("onRequest", this);
 		xresponse.onLoad = function(success:Boolean):Void  {
-			var requesttime = (new Date()-starttime)/1000;
+			thisObj.response = this.toString();
+			thisObj.responsetime = (new Date()-starttime)/1000;
 			if (success) {
 				if (this.firstChild.nodeName == "ERROR") {
-					error = this.firstChild.childNodes[0].nodeValue;
-					thisObj.events.broadcastMessage("onResponse", {requestid:reqid, response:this.toString(), responsetime:requesttime, error:error}, reqid);
-					thisObj.events.broadcastMessage("onError", error, objecttag, reqid);
+					thisObj.error = this.firstChild.childNodes[0].nodeValue;
+					thisObj.events.broadcastMessage("onResponse", thisObj);
+					thisObj.events.broadcastMessage("onError", thisObj.error, objecttag, thisObj.requestid);
 				} else if (this.firstChild.firstChild.nodeName == "ERROR") {
-					error = this.firstChild.firstChild.childNodes[0].nodeValue;
-					thisObj.events.broadcastMessage("onResponse", {requestid:reqid,  response:this.toString(), responsetime:requesttime, error:error}, reqid);
-					thisObj.events.broadcastMessage("onError", error, objecttag, reqid);
+					thisObj.error = this.firstChild.firstChild.childNodes[0].nodeValue;
+					thisObj.events.broadcastMessage("onResponse", thisObj);
+					thisObj.events.broadcastMessage("onError", thisObj.error, objecttag, thisObj.requestid);
 				} else if (this.firstChild.firstChild.firstChild.nodeName == "ERROR") {
 					error = this.firstChild.firstChild.firstChild.childNodes[0].nodeValue;
-					thisObj.events.broadcastMessage("onResponse", {requestid:reqid,  response:this.toString(), responsetime:requesttime, error:error}, reqid);
-					thisObj.events.broadcastMessage("onError", error, objecttag, reqid);
+					thisObj.events.broadcastMessage("onResponse", thisObj);
+					thisObj.events.broadcastMessage("onError", thisObj.error, objecttag, thisObj.requestid);
 				} else {
-					
-					thisObj.events.broadcastMessage("onResponse", {requestid:reqid,  response:this.toString(), responsetime:requesttime}, reqid);
-					
-					switch (reqtype) {
+					thisObj.events.broadcastMessage("onResponse", thisObj);
+					switch (requesttype) {
 					case "getServices" :
-					
-						thisObj._processServices(this, objecttag, reqid);
+						thisObj._processServices(this, objecttag, thisObj.requestid);
 						break;
 					case "getImage" :
-					
-						thisObj._processImage(this, objecttag, reqid);
+						thisObj._processImage(this, objecttag, thisObj.requestid);
 						break;
 					case "getServiceInfo" :
-						thisObj._processServiceInfo(this, objecttag, reqid);
+						thisObj._processServiceInfo(this, objecttag, thisObj.requestid);
 						break;
 					case "getFeatures" :
-						thisObj._processFeatures(this, objecttag, reqid);
+						thisObj._processFeatures(this, objecttag, thisObj.requestid);
 						break;
 					}
 				}
 			} else {
-				error = "connection failed...";
-				thisObj.events.broadcastMessage("onResponse", {requestid:reqid, responsetime:requesttime, error:error}, reqid);
-				thisObj.events.broadcastMessage("onError", error, objecttag, reqid);
+				thisObj.error = "connection failed...";
+				thisObj.events.broadcastMessage("onResponse", thisObj);
+				thisObj.events.broadcastMessage("onError", thisObj.error, objecttag, thisObj.requestid);
 			}
 			thisObj.busy = false;
-			delete this
+			delete this;
 		};
 		var starttime:Date = new Date();
 		xrequest.sendAndLoad(url, xresponse);
-		return (reqid);
+		return (thisObj.requestid);
 	}
-	function getServices(objecttag:Object):String {
+	function getServices(objecttag:Object):Number {
 		var sxml:String = this.xmlheader+"\n<GETCLIENTSERVICES/>";
 		return (this._sendrequest(sxml, "getServices", objecttag));
 	}
-	private function _processServices(xml:XML, objecttag:Object, requestid:String):Void {
+	private function _processServices(xml:XML, objecttag:Object, requestid:Number):Void {
 		var services:Object = new Object();
 		var xnSERVICES = xml.firstChild.firstChild.firstChild.childNodes;
 		for (var i = 0; i<xnSERVICES.length; i++) {
@@ -192,7 +194,7 @@ class ArcIMSConnector {
 		}
 		this.events.broadcastMessage("onGetServices", services, objecttag, requestid);
 	}
-	function getServiceInfo(service:String, objecttag:Object):String {
+	function getServiceInfo(service:String, objecttag:Object):Number {
 		if (service != undefined) {
 			this.service = service;
 		}
@@ -204,7 +206,7 @@ class ArcIMSConnector {
 		str = str+"</ARCXML>";
 		return (this._sendrequest(str, "getServiceInfo", objecttag));
 	}
-	private function _processServiceInfo(xml:XML, objecttag:Object, requestid:String):Void {
+	private function _processServiceInfo(xml:XML, objecttag:Object, requestid:Number):Void {
 		var layer:Object;
 		var field:Object;
 		var layers = new Object();
@@ -268,18 +270,18 @@ class ArcIMSConnector {
 		}
 		this.events.broadcastMessage("onGetServiceInfo", extent, layers, objecttag, requestid);
 	}
-	function getImage(service:String, extent:Object, size:Object, layers:Object, objecttag:Object):String {
+	function getImage(service:String, extent:Object, size:Object, layers:Object, objecttag:Object):Number {
 		if (service != undefined) {
 			this.service = service;
 		}
-		this.objecttag = objecttag;
+
 		var str:String = this.xmlheader+"\n";
 		str = str+"<ARCXML version=\"1.1\">\n";
 		str = str+"<REQUEST>\n";
 		str = str+"<GET_IMAGE autoresize=\"true\">\n";
 		str = str+"<PROPERTIES>\n";
 		var rgb1:Object = _getRGB(this.backgroundcolor);
-		if (this.transcolor != undefined) {
+		if (not isNaN(this.transcolor)) {
 			var rgb2:Object = _getRGB(this.transcolor);
 			str = str+"<BACKGROUND  color=\""+rgb1.r+","+rgb1.g+","+rgb1.b+"\""+" transcolor=\""+rgb2.r+","+rgb2.g+","+rgb2.b+"\"  />\n";
 		} else {
@@ -297,12 +299,14 @@ class ArcIMSConnector {
 			if (layers != undefined) {
 				str = str+"<LAYERLIST order=\"false\" >\n";
 				for (var id in layers) {
-					if (layers[id].query == undefined or layers[id].query == "") {
-						str = str+"<LAYERDEF id=\""+id+"\" visible=\""+String(layers[id].visible)+"\"/>\n";
-					} else {
-						str = str+"<LAYERDEF id=\""+id+"\" visible=\""+String(layers[id].visible)+"\">\n";
-						str = str+"<SPATIALQUERY where=\""+layers[id].query+"\" />";
-						str = str+"\n</LAYERDEF>";
+					if (layers[id].visible != undefined) {
+						if (layers[id].query == undefined or layers[id].query == "") {
+							str = str+"<LAYERDEF id=\""+id+"\" visible=\""+String(layers[id].visible)+"\"/>\n";
+						} else {
+							str = str+"<LAYERDEF id=\""+id+"\" visible=\""+String(layers[id].visible)+"\">\n";
+							str = str+"<SPATIALQUERY where=\""+layers[id].query+"\" />";
+							str = str+"\n</LAYERDEF>";
+						}
 					}
 				}
 				str = str+"</LAYERLIST>";
@@ -326,10 +330,10 @@ class ArcIMSConnector {
 		str = str+"</GET_IMAGE>\n";
 		str = str+"</REQUEST>\n";
 		str = str+"</ARCXML>";
-		//trace(str);
+		
 		return (this._sendrequest(str, "getImage", objecttag));
 	}
-	private function _processImage(xml:XML, objecttag:Object, requestid:String):Void {
+	private function _processImage(xml:XML, objecttag:Object, requestid:Number):Void {
 		var extent = new Object();
 		var imageurl:String;
 		var legendurl:String;
@@ -352,7 +356,7 @@ class ArcIMSConnector {
 		}
 		this.events.broadcastMessage("onGetImage", extent, imageurl, legendurl, objecttag, requestid);
 	}
-	function getFeatures(service:String, layerid:String, extent:Object, subfields:String, query:String, objecttag:Object):String {
+	function getFeatures(service:String, layerid:String, extent:Object, subfields:String, query:String, objecttag:Object):Number {
 		this.layerid = layerid;
 		if (service != undefined) {
 			this.service = service;
@@ -363,7 +367,7 @@ class ArcIMSConnector {
 		if (query == undefined) {
 			query = "";
 		}
-		this.objecttag = objecttag;
+		
 		var str:String = this.xmlheader+"\n";
 		str = str+"<ARCXML version=\"1.1\">\n";
 		str = str+"<REQUEST>\n";
@@ -395,7 +399,7 @@ class ArcIMSConnector {
 		//trace(str);
 		return (this._sendrequest(str, "getFeatures", objecttag));
 	}
-	private function _processFeatures(xml:XML, objecttag:Object, requestid:String):Void {
+	private function _processFeatures(xml:XML, objecttag:Object, requestid:Number):Void {
 		//trace(xml);
 		var count:Number = 0;
 		var hasmore:Boolean = false;

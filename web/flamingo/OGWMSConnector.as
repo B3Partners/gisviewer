@@ -1,10 +1,15 @@
-﻿class OGWMSConnector {
+﻿dynamic class OGWMSConnector {
 	//meta
 	var version:String = "F2 Release Candidate 1";
 	//-----------------------
 	private var busy:Boolean = false;
 	private var events:Object;
-	private static var requestid:Number = 0;
+	var requestid:Number = 0;
+	var url:String 
+	var requesttype:String
+	var responsetime:Number 
+	var response:String 
+	var error:String
 	//-----------------------------------
 	function addListener(listener:Object) {
 		events.addListener(listener);
@@ -16,84 +21,92 @@
 		events = new Object();
 		AsBroadcaster.initialize(events);
 	}
-	function getCapabilities(url:String, args:Object, obj:Object):String {
+	function getCapabilities(url:String, args:Object, obj:Object):Number {
 		if (args == undefined) {
 			var args:Object = new Object();
 		}
 		args.REQUEST = "GetCapabilities";
 		return (this._request(url, args, obj));
 	}
-	function getMap(url:String, args:Object, obj:Object):String {
+	function getMap(url:String, args:Object, obj:Object):Number {
 		if (args == undefined) {
 			var args:Object = new Object();
 		}
 		args.REQUEST = "GetMap";
 		return (this._request(url, args, obj));
 	}
-	function getFeatureInfo(url:String, args:Object, obj:Object):String {
+	function getFeatureInfo(url:String, args:Object, obj:Object):Number {
 		if (args == undefined) {
 			var args:Object = new Object();
 		}
 		args.REQUEST = "GetFeatureInfo";
 		return (this._request(url, args, obj));
 	}
-	private function _request(url:String, args:Object, obj:Object):String {
+	private function _request(url:String, args:Object, obj:Object):Number {
 		if (this.busy) {
-			this.events.broadcastMessage("onError", "busy processing request...", obj, "OGWMSConnector_"+requestid);
+			this.error = "busy processing request..."
+			this.events.broadcastMessage("onError", this.error, obj, this.requestid);
 			return;
 		}
-		var error:String;
+		this.error=""
 		this.busy = true;
-		requestid++;
-		var reqid:String = "OGWMSConnector_"+requestid;
+		this.requestid++;
 		var req_url = url;
 		for (var arg in args) {
-			var req_url = this._changeArgs(req_url, arg, args[arg]);
+			req_url = this._changeArgs(req_url, arg, args[arg]);
 		}
-		this.events.broadcastMessage("onRequest", {requestid:reqid, url:req_url, requesttype:args.REQUEST}, reqid);
-		//if (args.REQUEST.toUpperCase() == "GETMAP") {
-		//this.busy = false;
-		//this.events.broadcastMessage("onGetMap", req_url, obj, reqid);
-		//this.events.broadcastMessage("onResponse", {requestid:reqid, url:req_url, requesttype:args.REQUEST}, reqid);
-		//} else {
-		var xrequest:XML = new XML();
-		xrequest.ignoreWhite = true;
-		var thisObj:Object = this;
-		xrequest.onLoad = function(success:Boolean) {
-			var time = (new Date()-starttime)/1000;
-			if (success) {
-				if (this.firstChild.nodeName.toLowerCase() == "serviceexceptionreport") {
-					error = this.firstChild.toString();
-					thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), error:error, responsetime:time}, reqid);
-					thisObj.events.broadcastMessage("onError", error, obj, reqid);
-				} else {
-					thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), responsetime:time}, reqid);
-					switch (args.REQUEST.toUpperCase()) {
-					case "GETCAPABILITIES" :
-						thisObj._processCapabilities(this, obj, reqid);
-						break;
-					case "GETFEATUREINFO" :
-						thisObj._processFeatureInfo(this, obj, reqid);
-						break;
-					case "GETMAP" :
-						thisObj.events.broadcastMessage("onGetMap", req_url, obj, reqid);
-						thisObj.events.broadcastMessage("onResponse", {requestid:reqid, url:req_url, requesttype:args.REQUEST}, reqid);
-						break;
+		this.url = req_url 
+		this.requesttype = args.REQUEST
+		this.events.broadcastMessage("onRequest", this);
+		//flamingo.tracer("A:"+args.REQUEST.toUpperCase() )
+		if (args.REQUEST.toUpperCase() == "GETMAP") {
+			this.busy = false;
+			this.events.broadcastMessage("onGetMap", req_url, obj, this.requestid);
+			this.events.broadcastMessage("onResponse", this);
+		} else {
+			var xrequest:XML = new XML();
+			xrequest.ignoreWhite = true;
+			var thisObj:Object = this;
+			xrequest.onLoad = function(success:Boolean) {
+				//trace("----------------------------------------")
+				//flamingo.tracer(success);
+				//flamingo.tracer(this.toString());
+				thisObj.responsetime = (new Date()-starttime)/1000;
+				thisObj.response  = this.toString()
+				if (success) {
+					if (this.firstChild.nodeName.toLowerCase() == "serviceexceptionreport") {
+						error = this.firstChild.toString();
+						thisObj.events.broadcastMessage("onResponse",thisObj);
+						thisObj.events.broadcastMessage("onError", error, obj, thisObj.requestid);
+					} else {
+						thisObj.events.broadcastMessage("onResponse", thisObj);
+						switch (args.REQUEST.toUpperCase()) {
+						case "GETCAPABILITIES" :
+							thisObj._processCapabilities(this, obj, thisObj.requestid);
+							break;
+						case "GETFEATUREINFO" :
+							thisObj._processFeatureInfo(this, obj, thisObj.requestid);
+							break;
+						case "GETMAP" :
+							thisObj.events.broadcastMessage("onGetMap", req_url, obj, thisObj.requestid);
+							thisObj.events.broadcastMessage("onResponse", thisObj);
+							break;
+						}
 					}
+				} else {
+					thisObj.error = "connection failed...";
+					thisObj.events.broadcastMessage("onResponse", thisObj);
+					thisObj.events.broadcastMessage("onError", thisObj.error , obj, reqid);
 				}
-			} else {
-				error = "connection failed...";
-				thisObj.events.broadcastMessage("onResponse", {requestid:reqid, requesttype:args.REQUEST, url:req_url, response:this.toString(), error:error, responsetime:time}, reqid);
-				thisObj.events.broadcastMessage("onError", "connection failed...", obj, reqid);
-			}
-			thisObj.busy = false;
-			// do some cleaning
-			delete this;
-		};
-		var starttime:Date = new Date();
-		xrequest.load(req_url);
-		//}
-		return (reqid);
+				thisObj.busy = false;
+				// do some cleaning
+				delete this;
+			};
+			var starttime:Date = new Date();
+			//flamingo.tracer(">>"+req_url+"<<");
+			xrequest.load(req_url);
+		}
+		return (this.requestid);
 	}
 	private function _processFeatureInfo(xml:XML, obj, reqid) {
 		switch (xml.firstChild.nodeName.toLowerCase()) {
@@ -381,6 +394,7 @@
 		return (layers);
 	}
 	private function _changeArgs(url:String, arg:String, val:String):String {
+		var amp = "&"
 		if (url.indexOf("?") == -1) {
 			return url+"?"+arg+"="+val;
 		}
@@ -388,7 +402,7 @@
 		if (p1 == -1) {
 			var p1:Number = url.toLowerCase().indexOf("?"+arg.toLowerCase()+"=", 0);
 			if (p1 == -1) {
-				return (url+"&"+arg+"="+val);
+				return (url+amp+arg+"="+val);
 			}
 			var p2:Number = url.indexOf("&", p1);
 			var s1:String = url.substring(0, p1);
@@ -401,10 +415,10 @@
 		var p2:Number = url.indexOf("&", p1);
 		var s1:String = url.substring(0, p1);
 		if (p2 == -1) {
-			return (s1+"&"+arg+"="+val);
+			return (s1+amp+arg+"="+val);
 		}
 		var s2:String = url.substring(p2, url.length);
-		return (s1+"&"+arg+"="+val+s2);
+		return (s1+amp+arg+"="+val+s2);
 	}
 	private function _asNumber(s:String):Number {
 		if (s == undefined) {

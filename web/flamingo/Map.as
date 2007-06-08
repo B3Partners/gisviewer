@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 dynamic class Map extends MovieClip {
 	//
-	static var version:String = "F2 Release Candidate 1";
+	public var version:String = "F2 Release Candidate 2";
 	public var conformal:Boolean;
 	public var mapunits:String;
 	public var __width:Number;
@@ -116,7 +116,7 @@ dynamic class Map extends MovieClip {
 			t.text = readme;
 			return;
 		}
-		//defaults                                                        
+		//defaults                                                                          
 		mapunits = "";
 		conformal = false;
 		hit = false;
@@ -132,7 +132,8 @@ dynamic class Map extends MovieClip {
 		movequality = "MEDIUM";
 		movetime = 200;
 		movesteps = 5;
-		maptipcalled = false;
+		maptipcal;
+		led = false;
 		maptipresolution = 3;
 		maptipcoord = new Object();
 		maptipcoord.x = 0;
@@ -156,7 +157,7 @@ dynamic class Map extends MovieClip {
 		lParent.onResize = function() {
 			thisObj.resize();
 		};
-		flamingo.addListener(lParent, flamingo.getParent(this));
+		flamingo.addListener(lParent, flamingo.getParent(this), this);
 		//
 		//flamingo
 		var lFlamingo:Object = new Object();
@@ -165,7 +166,7 @@ dynamic class Map extends MovieClip {
 				flamingo.raiseEvent(thisObj, "onAddLayer", thisObj, mc);
 			}
 		};
-		flamingo.addListener(lFlamingo, "flamingo");
+		flamingo.addListener(lFlamingo, "flamingo", this);
 		//
 		//special listener for mousewheel
 		var lMouse:Object = new Object();
@@ -268,35 +269,57 @@ dynamic class Map extends MovieClip {
 		this.createEmptyMovieClip("mLayers", 1);
 		this.createEmptyMovieClip("mLayers2", 2);
 		this.createEmptyMovieClip("mAcetate", 3);
-		//------------------------------------------
-		// step 3: XML
-		//------------------------------------------
-		/** @tag <fmc:Map>  
-		* This tag defines a map. A Map can contain different layer tags
-		* @hierarchy childnode of <flamingo> or <fmc:Window>
-		* @example
-		* @attr extent  Comma seperated list of minx,miny,maxx,maxy,{extentname} defining the current view of the map. 
-		* @attr fullextent  Comma seperated list of minx,miny,maxx,maxy,{extentname}. When defined, a map cannot zoom further out than this extent.
-		* @attr extenthistory (defaultvalue "0") Number of extents that are remembered.
-		* @attr mapunits (defaultvalue "") Values are "" or "DECIMALDEGREES". It affects the way distances are calculated.
-		* @attr conformal (defaultvalue "false") True or false. True: the map corrects the mapextent to ensure (in the center of the map) equal values for horizontal and vertical distances.
-		* @attr minscale  A map cannot zoom further in than this scale (defined in mapunits per pixel).
-		* @attr maxscale  A map cannot zoom further out than this scale (defined in mapunits per pixel).
-		* @attr holdonupdate  (defaultvalue "false") True or false. True: the map cannot update until the previous update is completed.
-		* @attr holdonidentify (defaultvalue "false") True or false. True: the map cannot perform an identify until the previous identify is completed.
-		* @attr fadesteps  (defaultvalue "3")  Number of steps of the fade-effect, which layers use to appear.
-		* @attr movetime  (defaultvalue "200") The time in miliseconds (1000 = 1 second) the map needs for moving to a new extent.
-		* @attr movesteps  (defaultvalue "5") The number of steps (resolution) of a move from the one extent to the other. More steps = smoother animation = more computer stress.
-		* @attr movequality  (defaultvalue "MEDIUM") The quality of the map during zooming. Values are "LOW", "MEDIUM", "HIGH" or "BEST".
-		* @attr maptipdelay (defaultvalue "") Time in miliseconds (1000 = 1 second) the mouse have to hover on one spot to raise a maptip event.
-		* @attr maptipresolution (defaultvalue "3") Number of pixels the mouse have to move to raise a new maptip event.
-		*/
 		var xml:XML = flamingo.getXML(this);
-		//if (xml.localName.toLowerCase() == this.componentname.toLowerCase()) {
+		this.setConfig(xml);
+	}
+	//------------------------------------------
+	// step 3: XML
+	//------------------------------------------
+	/** @tag <fmc:Map>  
+	* This tag defines a map. A Map can contain different layer tags
+	* @hierarchy childnode of <flamingo> or <fmc:Window>
+	* @example
+	* @attr extent  Comma seperated list of minx,miny,maxx,maxy,{extentname} defining the current view of the map. 
+	* @attr fullextent  Comma seperated list of minx,miny,maxx,maxy,{extentname}. When defined, a map cannot zoom further out than this extent.
+	* @attr extenthistory (defaultvalue "0") Number of extents that are remembered.
+	* @attr mapunits (defaultvalue "") Values are "" or "DECIMALDEGREES". It affects the way distances are calculated.
+	* @attr conformal (defaultvalue "false") True or false. True: the map corrects the mapextent to ensure (in the center of the map) equal values for horizontal and vertical distances.
+	* @attr minscale  A map cannot zoom further in than this scale (defined in mapunits per pixel).
+	* @attr maxscale  A map cannot zoom further out than this scale (defined in mapunits per pixel).
+	* @attr holdonupdate  (defaultvalue "false") True or false. True: the map cannot update until the previous update is completed.
+	* @attr holdonidentify (defaultvalue "false") True or false. True: the map cannot perform an identify until the previous identify is completed.
+	* @attr fadesteps  (defaultvalue "3")  Number of steps of the fade-effect, which layers use to appear.
+	* @attr movetime  (defaultvalue "200") The time in miliseconds (1000 = 1 second) the map needs for moving to a new extent.
+	* @attr movesteps  (defaultvalue "5") The number of steps (resolution) of a move from the one extent to the other. More steps = smoother animation = more computer stress.
+	* @attr movequality  (defaultvalue "MEDIUM") The quality of the map during zooming. Values are "LOW", "MEDIUM", "HIGH" or "BEST".
+	* @attr maptipdelay (defaultvalue "") Time in miliseconds (1000 = 1 second) the mouse have to hover on one spot to raise a maptip event.
+	* @attr maptipresolution (defaultvalue "3") Number of pixels the mouse have to move to raise a new maptip event.
+	* @attr clear  (defaultvalue "true") True or false. True: all existing layers will be removed from the map.
+	*/
+	/**
+	* Configurates a component by setting a xml.
+	* @attr xml:Object Xml or string representation of a xml.
+	*/
+	public function setConfig(xml:Object) {
+		if (typeof (xml) == "string") {
+			xml = new XML(String(xml)).firstChild;
+		}
+		if (flamingo.getType(this).toLowerCase() != xml.localName.toLowerCase()) {
+			return;
+		}
+		var clearlayers = true
+		//load default attributes, strings, styles and cursors 
+		flamingo.parseXML(this, xml);
+		//parse custom attributes
 		for (var attr in xml.attributes) {
 			var attr:String = attr.toLowerCase();
 			var val:String = xml.attributes[attr];
 			switch (attr) {
+			case "clear" :
+				if (val.toLowerCase() == "false") {
+					 clearlayers = false
+				}
+				break;
 			case "extenthistory" :
 				this.nrprevextents = Number(val);
 				break;
@@ -358,17 +381,15 @@ dynamic class Map extends MovieClip {
 				break;
 			}
 		}
+		
+		if (clearlayers){
+			this.clear()
+		}
 		resize();
 		flamingo.raiseEvent(this, "onInit", this);
 		//component resized further with adding layers
 		//go on with adding layers
-		var xlayers:Array = xml.childNodes;
-		if (xlayers.length>0) {
-			for (var i:Number = xlayers.length-1; i>=0; i--) {
-				this.addLayer(xlayers[i]);
-			}
-		}
-		//delete xml from repository                                                                                                                                                                                                                        
+		this.addLayers(xml);
 		flamingo.deleteXML(this);
 	}
 	private function maptip(x:Number, y:Number, coord:Object) {
@@ -414,24 +435,65 @@ dynamic class Map extends MovieClip {
 		this.update();
 	}
 	/**
-	* Adds a layer to the map
+	* Adds one or more layers to the map.
 	* If a layer is added the onAddLayer event will dispatch.
+	* @example
+	* var s = "<flamingo xmlns:fmc='fmc'>"
+	* s += "<fmc:LayerImage  id='NL'  imageurl='assets/nl.png' extent='13562,306839,278026,614073' />"
+	* s += "<fmc:LayerImage  id='NL2'  imageurl='assets/nl.png' extent='13562,306839,278026,614073' />"
+	* s += "</flamingo>"
+	* mymap.addLayers(s)
 	* @param xml:Object xml(or string representing an xml) with layer definition
-	* @return Movieclip  Clip of the layer.
 	*/
-	public function addLayer(xml:Object):MovieClip {
+	public function addLayers(xml:Object):Void {
 		if (typeof (xml) == "string") {
 			xml = new XML(String(xml)).firstChild;
 		}
-		var id = xml.attributes.id;
+		var xlayers:Array = xml.childNodes;
+		if (xlayers.length>0) {
+			for (var i:Number = xlayers.length-1; i>=0; i--) {
+				this.addLayer(xlayers[i]);
+			}
+		}
+	}
+	/**
+	* Adds one layer to the map
+	* If a layer is added the onAddLayer event will dispatch.
+	* @example
+	* var s = "<fmc:LayerImage xmlns:fmc='fmc'  id='NL'  imageurl='assets/nl.png' extent='13562,306839,278026,614073' />"
+	* mymap.addLayer(s)
+	* @param xml:Object xml(or string representing an xml) with layer definition
+	* @return String Id of the added layer.
+	*/
+	public function addLayer(xml:Object):String {
+		if (typeof (xml) == "string") {
+			xml = new XML(String(xml)).firstChild;
+		}
+		//determine id  
+		var mapid:String = flamingo.getId(this);
+		var id:String;
+		for (var attr in xml.attributes) {
+			if (attr.toLowerCase() == "id") {
+				id = xml.attributes[attr];
+				break;
+			}
+		}
 		if (id == undefined) {
 			id = flamingo.getUniqueId();
 			xml.attributes.id = id;
 		}
-		//if (mLayerMovie == undefined) {                                                                  
-		var mLayerMovie = this.mLayers;
-		//}
-		var mc:MovieClip = mLayerMovie.createEmptyMovieClip(id, mLayerMovie.getNextHighestDepth());
+		var layerid = mapid+"_"+id;
+		var depth = this.mLayers.getNextHighestDepth();
+		if (flamingo.exists(layerid)) {
+			//layer already exists, use original depth to add new layer
+			if (this.mLayers[layerid] != undefined) {
+				depth = this.mLayers[layerid].getDepth();
+			}
+			this.removeLayer(layerid);
+		}
+		// add new movie  
+		var d = new Date();
+		var mc:MovieClip = this.mLayers.createEmptyMovieClip(layerid, depth);
 		var thisObj = this;
 		var lLayer:Object = new Object();
 		lLayer.onUpdate = function(layer:MovieClip, nrtry:Number) {
@@ -473,10 +535,10 @@ dynamic class Map extends MovieClip {
 			thisObj.layersidentifying[layer._name].identifycomplete = true;
 			thisObj.checkIdentify();
 		};
-		flamingo.addListener(lLayer, id);
-		//layer listener
-		flamingo.loadComponent(xml, mc);
-		return (mc);
+		flamingo.addListener(lLayer, layerid, this);
+		flamingo.loadComponent(xml, mc, layerid);
+		
+		return id;
 	}
 	private function checkUpdate() {
 		var updatetotal:Number = 0;
@@ -489,6 +551,7 @@ dynamic class Map extends MovieClip {
 			}
 		}
 		flamingo.raiseEvent(this, "onUpdateProgress", this, layersupdated, updatetotal);
+
 		if (updatetotal == layersupdated) {
 			this.updating = false;
 			flamingo.raiseEvent(this, "onUpdateComplete", this);
@@ -518,6 +581,17 @@ dynamic class Map extends MovieClip {
 		for (var id in this.mLayers) {
 			this.removeLayer(id);
 		}
+	}
+	/**
+	* Gets a list of layerids.
+	* @return List of layerids.
+	*/
+	public function getLayers():Array {
+		var layers:Array = new Array();
+		for (var id in this.mLayers) {
+			layers.push(id);
+		}
+		return layers;
 	}
 	/**
 	* Removes a layer from the map.
@@ -814,7 +888,7 @@ dynamic class Map extends MovieClip {
 			var ry = this.getDistance({x:x, y:y-0.5}, {x:x, y:y+0.5});
 			ratio = rx/ry;
 		}
-		//var xs = (this._mapextent.maxx-this._mapextent.minx)/this.__width;                    
+		//var xs = (this._mapextent.maxx-this._mapextent.minx)/this.__width;                                      
 		//var ys = (this._mapextent.maxy-this._mapextent.miny)/this.__height;
 		//trace(xs/ys + "=" + this.__width/this.__height)
 		var angle = Math.atan(ratio);
@@ -847,13 +921,13 @@ dynamic class Map extends MovieClip {
 		}
 		//var ratio = 1
 		//if (this.conformal) {
-			//var rx = this.getDistance({x:x-0.5, y:y}, {x:x+0.5, y:y});
-			//var ry = this.getDistance({x:x, y:y-0.5}, {x:x, y:y+0.5});
-			//var ratio = rx/ry;
+		//var rx = this.getDistance({x:x-0.5, y:y}, {x:x+0.5, y:y});
+		//var ry = this.getDistance({x:x, y:y-0.5}, {x:x, y:y+0.5});
+		//var ratio = rx/ry;
 		//}
 		var ext:Object = new Object();
 		var nw = (this._currentextent.maxx-this._currentextent.minx)/percentage*100;
-		var nh = (this._currentextent.maxy-this._currentextent.miny)/percentage*100
+		var nh = (this._currentextent.maxy-this._currentextent.miny)/percentage*100;
 		ext.minx = x-nw/2;
 		ext.miny = y-nh/2;
 		ext.maxx = ext.minx+nw;
@@ -920,7 +994,7 @@ dynamic class Map extends MovieClip {
 		if (not this.isValidExtent(extent)) {
 			return;
 		}
-		// remember the original uncorrected extent                                                                                                                                             
+		// remember the original uncorrected extent                                                                                                                                                               
 		this._extent = this.copyExtent(extent);
 		// correct the extent and set as mapextent  
 		this._mapextent = this.copyExtent(extent);
@@ -1415,7 +1489,6 @@ dynamic class Map extends MovieClip {
 		if (this.minscale != undefined) {
 			var s = this.getScale(extent);
 			var ratio = 1;
-		
 			if (s<this.minscale) {
 				var scale = this.minscale;
 				var x = (extent.maxx+extent.minx)/2;
@@ -1429,7 +1502,7 @@ dynamic class Map extends MovieClip {
 					scale = this.meters2Degrees(scale*ratio)/Math.cos(rad(y));
 				}
 				var nw = this.__width*scale/ratio;
-				var nh = this.__height*scale;
+				var nh = this.__height*scale/ratio;
 				extent.minx = x-nw/2;
 				extent.miny = y-nh/2;
 				extent.maxx = extent.minx+nw;
@@ -1453,14 +1526,14 @@ dynamic class Map extends MovieClip {
 					scale = this.meters2Degrees(scale*ratio)/Math.cos(rad(y));
 				}
 				var nw = this.__width*scale/ratio;
-				var nh = this.__height*scale
+				var nh = this.__height*scale/ratio;
 				extent.minx = x-nw/2;
 				extent.miny = y-nh/2;
 				extent.maxx = extent.minx+nw;
 				extent.maxy = extent.miny+nh;
 			}
 		}
-		trace(this.getScale(extent))
+
 	}
 	/** 
 	 * Sets a custom cursor.

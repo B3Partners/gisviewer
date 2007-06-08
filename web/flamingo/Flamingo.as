@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import flash.external.ExternalInterface;
 class Flamingo {
-	private var version:String = "F2 Release Candidate 1";
+	private var version:String = "F2 Release Candidate 2";
 	//reference to main movie from which this class is loaded
 	//the main has error, tooltip and logo movies in library, which can be attached
 	//at the main movie the components are loaded at 'moviedepth'++
@@ -38,18 +38,20 @@ class Flamingo {
 	//at the main movie a tooltip movie can be loaded at depth 9998
 	//at the main movie a error movie can be loaded at depth 9997
 	private var mFlamingo:MovieClip;
-	//repository storing custom information of every loaded component (per component id)
+	//repository for storing custom information of every loaded component (per component id)
 	private var components:Object;
-	//repository storing default information per component url
+	//repository for storing default information per component url
 	private var components_per_url:Object;
+	//
+	//repository for storing xmls
+	private var xmlpool:Object;
+	//repository for storing configs
+	private var configpool:Object;
 	//default language setting
 	//default tooltip delay
 	//depth of first component
 	public var moviedepth:Number = 0;
 	//filename of configfile
-	private var configfile:String;
-	private var templatefile:String;
-	private var configloaded:Boolean;
 	private var useexternalinterface:Boolean;
 	private var preloadtitle:String;
 	private var tooltipdelay:Number = 500;
@@ -70,12 +72,18 @@ class Flamingo {
 	private var borderwidth:Number;
 	private var borderalpha:Number = 100;
 	private var flamingoid:String = "flamingo";
-	private var ids_toload:Object 
+	private var configs:Array;
+	private var loading:Boolean;
+	private var uniqueid:Number;
+	private var rooturl:String
 	//Flamingo class constructor
 	//@param mc MovieClip containing error-, logo- and tooltip movies in library
 	public function Flamingo(mc:MovieClip) {
-		//initialize objects
-		this.init();
+		//save base url of flamingo.swf
+		var url = mc._url.split("?")[0]
+		var a_url = url.split("/")
+		a_url.pop()
+		this.rooturl = a_url.join("/")
 		// make it possible to communicate from a html page with flamingo through the callFlamingo function
 		//ExternalInterface.addCallback("call", this, callMethod);
 		ExternalInterface.addCallback("callMethod", this, callMethod);
@@ -84,6 +92,8 @@ class Flamingo {
 		ExternalInterface.addCallback("call", this, callMethod);
 		ExternalInterface.addCallback("set", this, setProperty);
 		ExternalInterface.addCallback("get", this, getProperty);
+		this.xmlpool = new Object();
+		this.configpool = new Object();
 		this.components = new Object();
 		this.components_per_url = new Object();
 		//add the flamingo object to the components list and components per url list
@@ -91,14 +101,11 @@ class Flamingo {
 		this.components.flamingo.target = mc._target;
 		this.components.flamingo.url = "flamingo";
 		this.components_per_url.flamingo = new Object();
-		this.components_per_url.flamingo.string = new Object();
-		this.components_per_url.flamingo.cursor = new Object();
-		this.components_per_url.flamingo.style = new TextField.StyleSheet();
+		this.components_per_url.flamingo.strings = new Object();
+		this.components_per_url.flamingo.cursors = new Object();
+		this.components_per_url.flamingo.styles = new TextField.StyleSheet();
 		//keep a reference to the movie
 		this.mFlamingo = mc;
-		//create movie for cursors
-		this.mFlamingo.createEmptyMovieClip("flamingoCursors", 9999);
-		this.mFlamingo.createEmptyMovieClip("flamingoBorder", 10000);
 		//listener for Stage resize-event
 		var flamingo:Object = this;
 		var stageListener:Object = new Object();
@@ -107,44 +114,50 @@ class Flamingo {
 			flamingo.resizeid = setInterval(flamingo, "resize", 500);
 			//flamingo.resize()
 		};
-		Stage.addListener(stageListener);
 		//do some tricks with the Stage
-		Stage.showMenu = false;
+		//Stage.showMenu = false;
+		Stage.addListener(stageListener);
 		Stage.scaleMode = "noScale";
 		Stage.align = "TL";
+		//add custom context menu
+		var cm:ContextMenu = new ContextMenu();
+		cm.hideBuiltInItems();
+		cm.customItems.push(new ContextMenuItem("About Flamingo MapComponents...", about));
+		_root.menu = cm;
 		//
-		var keyListener:Object = new Object();
-		keyListener.onKeyDown = function() {
-			// 55 is key code for 7
-			if (Key.getCode() == 116) {
-				flamingo.loadConfig(flamingo.configfile);
-			}
-		};
-		Key.addListener(keyListener);
+		//var keyListener:Object = new Object();
+		//keyListener.onKeyDown = function() {
+		// 55 is key code for 7
+		//if (Key.getCode() == 116) {
+		//flamingo.loadConfig(flamingo.configfile);
+		//}
+		//};
+		//Key.addListener(keyListener);
 		//finally load flamingo.xml
 		var xml:XML = new XML();
 		xml.ignoreWhite = true;
 		xml.onLoad = function(success:Boolean) {
 			if (success) {
 				if (this.firstChild.nodeName.toLowerCase() == "flamingo") {
-					flamingo.parseString(this.firstChild, flamingo.components_per_url.flamingo.string);
-					flamingo.parseCursor(this.firstChild, flamingo.components_per_url.flamingo.cursor);
-					flamingo.parseStyle(this.firstChild, flamingo.components_per_url.flamingo.style);
+					flamingo.parseString(this.firstChild, flamingo.components_per_url.flamingo.strings);
+					flamingo.parseCursor(this.firstChild, flamingo.components_per_url.flamingo.cursors);
+					flamingo.parseStyle(this.firstChild, flamingo.components_per_url.flamingo.styles);
 				}
 			}
 			delete xml;
 		};
-		xml.load(getNocacheName("flamingo.xml", "second"));
+		xml.load(getNocacheName(this.correctUrl("flamingo.xml"), "second"));
+		//create movie for cursors
+		this.mFlamingo.createEmptyMovieClip("flamingoCursors", 9999);
+		this.mFlamingo.createEmptyMovieClip("flamingoBorder", 9998);
+		this.init();
 	}
 	private function init() {
-		this.configloaded = false;
-		this.useexternalinterface = false
+		this.useexternalinterface = true;
 		this.moviedepth = 0;
-		this.configfile = undefined;
-		this.templatefile = undefined;
-		this.configloaded = false;
 		this.preloadtitle = undefined;
 		this.tooltipdelay = 500;
+		this.loading = false;
 		this.skin = "";
 		this.lang = "en";
 		this.width = "100%";
@@ -161,9 +174,17 @@ class Flamingo {
 		this.borderwidth = undefined;
 		this.borderalpha = 100;
 		this.flamingoid = "flamingo";
-		this.mFlamingo.createEmptyMovieClip("flamingoCursors", 9999);
-		this.mFlamingo.createEmptyMovieClip("flamingoBorder", 10000);
+		this.mFlamingo.width = "100%";
+		this.mFlamingo.height = "100%";
 		this.raiseEvent(this, "onInit");
+		this.uniqueid = 1;
+	}
+	
+	/**
+	* Opens the internet page of flamingo-mc.
+	*/
+	public function about():Void {
+		getURL("http://www.flamingo-mc.org","_blank");
 	}
 	/**
 	* Resizes the application and fires the 'onResize' event.
@@ -194,7 +215,11 @@ class Flamingo {
 			mFlamingo.mLogo._x = (Stage.width/2);
 			mFlamingo.mLogo._y = (Stage.height/2);
 		}
-		//          
+		if (mFlamingo.mError != undefined) {
+			mFlamingo.mError._x = (Stage.width/2);
+			mFlamingo.mError._y = (Stage.height/2);
+		}
+		//                                                                                                                                
 		mFlamingo.clear();
 		mFlamingo.beginFill(backgroundcolor, backgroundalpha);
 		mFlamingo.moveTo(0, 0);
@@ -213,18 +238,11 @@ class Flamingo {
 		this.components.flamingo.broadcastMessage("onResize");
 	}
 	/**
-	* Checks if a configuration file is loaded.
-	* @return Boolean True if file is loaded, false if file is not loaded.
+	* Checks if a configuration file is being loaded.
+	* @return Boolean True if flamingo is busy loading a configuration.
 	*/
-	public function isConfigLoaded():Boolean {
-		return (this.configloaded);
-	}
-	/**
-	* Get the configuration filename.
-	* @return String Filename of configurationfile. 
-	*/
-	public function getConfigFile():String {
-		return (this.configfile);
+	public function isLoading():Boolean {
+		return (this.loading);
 	}
 	/**
 	* Removes all loaded components and initilizes Flamingo for a fresh start.
@@ -240,46 +258,193 @@ class Flamingo {
 		this.init();
 	}
 	/**
-	* Loads a configuration file.
-	* @param file:String Xml file with configuration.
+	* loads a xml-file in flamingo for later use.
 	*/
-	public function loadConfig(file:String, clear:Boolean):Void {
-		if (clear == undefined) {
-			clear = true;
+	public function loadXMLPool(file:String) {
+		if (file == undefined) {
+			//no file entered, quit
+			return;
 		}
-		if (clear) {
-			this.clear();
-			this.showLogo();
+		if (this.xmlpool[file] != undefined) {
+			//file is already downloaded or is being downloaded, so quit
+			return;
 		}
-		this.configloaded = false;
-		this.configfile = file;
-		var xml:XML = new XML();
-		xml.ignoreWhite = true;
+		this.xmlpool[file] = new XML();
+		this.xmlpool[file].ignoreWhite = true;
 		var flamingo = this;
-		xml.onLoad = function(success:Boolean) {
+		this.xmlpool[file].onLoad = function(success:Boolean) {
 			if (success) {
-				flamingo.parseXML(this);
+				flamingo.raiseEvent(flamingo, "onLoadXMLPool", file);
 			} else {
-				this.raiseEvent(this, "onError", "Error opening '"+file+"'...");
+				flamingo.raiseEvent(flamingo, "onError", "Error opening '"+file+"'...");
 				flamingo.showError("Flamingo error", "Error opening '"+file+"'...");
+				delete flamingo.xmlpool[file];
 			}
-			delete xml;
 		};
-		xml.load(getNocacheName(file, "second"));
+		this.xmlpool[file].load(getNocacheName(file, "second"));
+	}
+	public function clearXMLPool(file:String) {
+		// a clear is being performed with a delay
+		// in the mean time other functions can still make use of the xml
+		_global['setTimeout'](this, '_clearXMLPool', 2000, file);
+	}
+	private function _clearXMLPool(file:String) {
+		if (file == undefined) {
+			for (var id in this.xmlpool) {
+				delete this.xmlpool[id];
+			}
+			delete this.xmlpool;
+			this.xmlpool = new Object();
+		} else {
+			delete this.xmlpool[file];
+		}
+	}
+	public function getXMLfromPool(file:String, attributeid:String):String {
+		if (this.xmlpool[file] == undefined) {
+			return;
+		}
+		if (attributeid == undefined or attributeid.length == 0) {
+			return this.xmlpool[file].toString();
+		} else {
+			var node = findNode(this.xmlpool[file].firstChild, attributeid);
+			this.addNameSpaces(node);
+			return node.toString();
+		}
+	}
+	private function addNameSpaces(node:XMLNode) {
+		if (node.getNamespaceForPrefix(node.prefix) != null) {
+			node.attributes["xmlns:"+node.prefix] = node.getNamespaceForPrefix(node.prefix);
+		}
+		var childnodes = node.childNodes;
+		for (var i = 0; i<childnodes.length; i++) {
+			addNameSpaces(childnodes[i]);
+		}
+	}
+	private function findNode(node:XMLNode, id:String):XMLNode {
+		for (var attr in node.attributes) {
+			if (attr.toLowerCase() == "id") {
+				if (node.attributes[attr] == id) {
+					return node;
+				}
+			}
+		}
+		for (var i = 0; node.childNodes && i<node.childNodes.length; i++) {
+			var foundNode = findNode(node.childNodes[i], id);
+			if (foundNode != null) {
+				return foundNode;
+			}
+		}
+		return;
 	}
 	/**
 	* Sets a configuration. This configuration can be a xml or a string representing a valid xml.
 	* @param xml:Object Xml or string with configuration.
 	*/
-	public function setConfig(xml:Object):Void {
+	public function setConfig(xml:Object, showlogo:Boolean, id:String, targetid:String):Void {
 		if (typeof (xml) == "string") {
 			xml = new XML(String(xml));
 		}
-		this.clear();
-		this.configfile = "";
-		this.configloaded = false;
-		this.showLogo();
-		this.parseXML(xml);
+		if (showlogo == undefined) {
+			showlogo = true;
+		}
+		if (showlogo) {
+			this.showLogo();
+		}
+		this.configs.push({xml:xml, id:id, targetid:targetid});
+		this.processConfig();
+	}
+	/**
+	* Loads a configuration file.
+	* @param file:String Xml file with configuration.
+	* @param showlogo:Boolean [optional] True or false (default true)
+	* @param id:String [optional] Only the xml part belonging to this id will be loaded.
+	* @param target:String [optional] The xml will be loaded into this component.
+	*/
+	public function loadConfig(file:String, showlogo:Boolean, id:String, targetid:String):Void {
+		if (file == undefined or file.length == 0) {
+			return;
+		}
+		if (showlogo == undefined) {
+			showlogo = true;
+		}
+		if (showlogo) {
+			this.showLogo();
+		}
+		if (this.configs == undefined) {
+			this.configs = new Array();
+		}
+		// add config to the configs array                                               
+		this.configs.push({file:this.correctUrl(file), id:id, targetid:targetid});
+		this.processConfig();
+	}
+	private function processConfig():Void {
+		if (this.loading) {
+			// an other config is in the progress of loading, wait and return later
+			return;
+		}
+		if (this.configs.length == 0) {
+			//all configs are loaded
+			this.mFlamingo.mLogo.txt.htmlText = "";
+			this.mFlamingo.mLogo.gotoAndStop(1);
+			delete this.mFlamingo.mLogo.onPress;
+			this.removeLogo();
+			this.raiseEvent(this, "onLoadConfig");
+			for (var id in this.configpool) {
+				delete this.configpool[id];
+			}
+			delete this.configpool;
+			this.configpool = new Object();
+			return;
+		}
+		//trace("PROCESSINI")                                 
+		//load next config              
+		this.loading = true;
+		var obj = this.configs.shift();
+		var file = obj.file;
+		var xml = obj.xml;
+		var id = obj.id;
+		var targetid = obj.targetid;
+		if (file != undefined) {
+			if (this.configpool[file] == undefined) {
+				//load config
+				this.configpool[file] = new XML();
+				this.configpool[file].ignoreWhite = true;
+				var flamingo = this;
+				this.configpool[file].onLoad = function(success:Boolean) {
+					if (success) {
+						if (id == undefined) {
+							flamingo.parseConfigXML(this);
+						} else {
+							var xml = flamingo.findNode(this.firstChild, id);
+							flamingo.addComponent(xml, targetid);
+						}
+					} else {
+						flamingo.raiseEvent(flamingo, "onError", "Error opening '"+file+"'...");
+						flamingo.showError("Flamingo error", "Error opening '"+file+"'...");
+						flamingo.loading = false;
+						flamingo.processConfig();
+					}
+				};
+				this.configpool[file].load(getNocacheName(file, "second"));
+			} else {
+				//config already loaded 
+				if (id == undefined) {
+					//parse complete config
+					this.parseConfigXML(this.configpool[file]);
+				} else {
+					var xml = this.findNode(this.configpool[file].firstChild, id);
+					flamingo.addComponent(xml, targetid);
+				}
+			}
+		} else {
+			if (id == undefined) {
+				//parse complete config
+				this.parseConfigXML(xml);
+			} else {
+				var xml = this.findNode(xml.firstChild, id);
+				flamingo.addComponent(xml, targetid);
+			}
+		}
 	}
 	/**
 	* Returns a filename with a unique argument so the application is forced to get this file fresh from a server.
@@ -348,18 +513,22 @@ class Flamingo {
 	* @attr borderalpha (defaultvalue "100") Transparency of border. Default is "100" meaning opaque.
 	* @attr backgroundcolor  Color of the backgound in hexadecimal notation. If set, Flamingo will have a background, otherwhise Flamingo's background is transparent.
 	* @attr backgroundalpha (defaultvalue "100") Transparency of background if backgroundcolor is set.
+	* @attr clear  True or false. True: all existing components will be removed from the application.
 	*/
-	private function parseXML(xml:Object):Void {
+	private function parseConfigXML(xml:Object):Void {
 		//parses the ini-xml
 		var mFlamingo = this.getComponent("flamingo");
 		//defaults
-		mFlamingo.width = "100%";
-		mFlamingo.height = "100%";
 		if (xml.firstChild.nodeName.toLowerCase() == "flamingo") {
 			//retreive and convert the attributes 
 			for (var attr in xml.firstChild.attributes) {
 				var val:String = xml.firstChild.attributes[attr];
 				switch (attr.toLowerCase()) {
+				case "clear" :
+					if (val.toLowerCase() == "true") {
+						this.clear();
+					}
+					break;
 				case "id" :
 					this.flamingoid = val;
 				case "bordercolor" :
@@ -430,158 +599,160 @@ class Flamingo {
 			//gathered enough information for a proper resize
 			this.resize();
 			//get custom language settings
-			this.parseString(xml.firstChild, this.components_per_url.flamingo.string);
+			this.parseString(xml.firstChild, this.components_per_url.flamingo.strings);
 			//get custom cursors
-			this.parseCursor(xml.firstChild, this.components_per_url.flamingo.cursor);
+			this.parseCursor(xml.firstChild, this.components_per_url.flamingo.cursors);
 			//get styles
-			this.parseStyle(xml.firstChild, this.components_per_url.flamingo.style);
+			this.parseStyle(xml.firstChild, this.components_per_url.flamingo.styles);
 			//get guides
-			this.parseGuide(xml.firstChild, mFlamingo);
-			//load the first components         
-			//these components are responible for loading their own (child)components
-			var xnode:Array = xml.firstChild.childNodes;
-			if (xnode.length>0) {
-				for (var i:Number = xnode.length-1; i>=0; i--) {
-					this.addComponent(xnode[i]);
-				}
+			if (mFlamingo.guides == undefined) {
+				mFlamingo.guides = new Object();
 			}
+			this.parseGuide(xml.firstChild, mFlamingo.guides);
 		}
+		//load the components                                                                                      
+		//these components are responible for loading their own (child)components
+		this.addComponents(xml.firstChild);
 		delete xml;
 	}
-	/**
-	* Adds a component to the flamingo framework. Flamingo will make a movieclip to load the component into and give it an unique identifier.
-	* rule 1: a component has always a prefix
-	* rule 2: double ids are not allowed
-	* @param xml:Object Xml-node (or valid string representation of it) describing the component.
-	*/
-	public function addComponent2(xml:Object):Void {
+	public function addComponents(xml:Object):Void {
 		if (typeof (xml) == "string") {
 			xml = new XML(String(xml)).firstChild;
 		}
-		if (xml.prefix.length>0) {
-			var id = xml.attributes.id;
-			if (id == undefined) {
-				id = this.getUniqueId();
+		var xnode:Array = xml.childNodes;
+		if (xnode.length>0) {
+			for (var i:Number = xnode.length-1; i>=0; i--) {
+				this.addComponent(xnode[i]);
 			}
-			var mc:MovieClip = this.mFlamingo.createEmptyMovieClip(id, this.moviedepth++);
-			mc._visible = false;
-			loadComponent(xml, mc);
 		}
 	}
-	public function addComponent(xml:Object):Void {
+	/**
+	* Adds a component to the flamingo framework.
+	* A component has to have a prefix.
+	* @param xml:Object Xml-node (or valid string representation of it) describing the component.
+	* @param targetid:String [optional] Id at which the component will be registered. If omitted the id in the xml will be used. If there is no id at all, flamingo will generate a unique id.
+	*/
+	public function addComponent(xml:Object, targetid:String):Void {
+		//trace("-------------------ADDCOMPONENT:"+targetid);
+		//trace(xml);
 		if (typeof (xml) == "string") {
 			xml = new XML(String(xml)).firstChild;
 		}
-		if (xml.prefix.length>0) {
-			var id = xml.attributes.id;
-			if (id == undefined) {
-				id = this.getUniqueId();
-				xml.attributes.id = id;
-				//trace("1:"+id + xml.nodeName)
-				var mc:MovieClip = this.mFlamingo.createEmptyMovieClip(id, this.moviedepth++);
-				mc._visible = false;
-			} else {
-				//trace("2:"+id + xml.nodeName)
-				var mc = getComponent(id);
-				if (mc == undefined) {
-					//trace("2a:"+id + xml.nodeName)
-					var mc:MovieClip = this.mFlamingo.createEmptyMovieClip(id, this.moviedepth++);
-					mc._visible = false;
+		if (xml == undefined) {
+			this.doneLoading();
+			return;
+		}
+		if (targetid == undefined) {
+			for (var attr in xml.attributes) {
+				if (attr.toLowerCase() == "id") {
+					targetid = xml.attributes[attr];
+					break;
 				}
 			}
-			this.loadComponent(xml, mc);
+			if (targetid == undefined) {
+				targetid = this.getUniqueId();
+			}
+		}
+		if (this.components[targetid].target == undefined) {
+			//create e new movieclip
+			var mc:MovieClip = this.mFlamingo.createEmptyMovieClip(targetid, this.moviedepth++);
+			mc._visible = false;
+			this.loadComponent(xml, mc, targetid);
+		} else {
+			//id already exists
+			//load component into existing component when url's are the same
+			var url:String = this.correctUrl(xml.namespaceURI+"/"+xml.localName);
+			if (url == this.components[targetid].url) {
+				var mc = getComponent(targetid);
+				this.loadComponent(xml, mc, targetid);
+			} else {
+				this.raiseEvent(this, "onError", "The id '"+targetid+"' is already in use...");
+				this.showError("Flamingo error", "The id '"+targetid+"' is already in use...");
+				this.doneLoading();
+				return;
+			}
 		}
 	}
 	/**
 	* Loads a component and register it at the flamingo framework. This function should be used by components which can load other components.
 	* rule 1: a component has always a prefix
-	* rule 2: double ids are not allowed
+	* rule 2: double ids are allowed, if the nodename and prefix are the same of the used id and the component has a 'setConfig' method, if the prefix or nodename is different, the new component will be ignored
 	* @param xml:Object Xml-node describing the component.
-	* @param mc:Movieclip movieclip at which the component is loaded
-	* @return String Id of component.
+	* @param mc:Movieclip movieclip at which the component will be loaded
+	* @param targetid:String Id at which the component will be registered. 
 	*/
-	public function loadComponent(xml:Object, mc:MovieClip):String {
+	public function loadComponent(xml:Object, mc:MovieClip, targetid:String):Void {
 		//rule1: a component has a prefix and an id 
 		//rule2: a component can register only once, double ids are not allowed
+		if (xml == undefined) {
+			return;
+		}
+		if (mc == undefined) {
+			return;
+		}
+		if (targetid == undefined) {
+			return;
+		}
+		//                      
 		if (xml instanceof XML) {
 			xml = xml.firstChild;
 		}
-		var id:String;
-		for (var attr in xml.attributes) {
-			if (attr.toLowerCase() == "id") {
-				id = xml.attributes[attr];
-				break;
-			}
+		if (xml.prefix.length == 0) {
+			return;
 		}
-		if (id == undefined) {
-			id = this.getUniqueId();
+		var url:String = this.correctUrl(xml.namespaceURI+"/"+xml.localName);
+		if (url.length == 0) {
+			return;
 		}
-		if (id != undefined and xml.prefix.length>0) {
-			//now we're dealing with a component
-			if (this.components[id] == undefined) {
-				// make a referene 
-				// it is possible that the reference already exists
-				// because another component has already add a listener to this component
-				this.components[id] = new Object();
-			} else {
-				//check for double ids
-				if (this.components[id].target != undefined) {
-					this.killComponent(id)
-					this.components[id] = new Object();
-					//this.raiseEvent(this, "onError", "The id '"+id+"' is already in use...");
-					//this.showError("Flamingo error", "The id '"+id+"' is already in use...");
-					//return;
-				}
-			}
-			//add a reference for a component to the components object   
+		if (this.components[targetid].target != undefined and this.components[targetid].url != url) {
+			this.raiseEvent(this, "onError", "The id '"+targetid+"' is already in use...");
+			this.showError("Flamingo error", "The id '"+targetid+"' is already in use...");
+			this.doneLoading();
+			return;
+		}
+		if (this.components[targetid].target != undefined) {
+			mc = eval(this.components[targetid].target);
+		}
+		if (this.components[targetid].url == url and mc.setConfig != undefined) {
+			//component already exists and it can be configurated
+			this.components[targetid].init = false;
+			this.components[targetid].xml = xml;
+			mc.setConfig(xml);
+			this.components[targetid].init = true;
+			this.doneLoading();
+		} else {
+			//component new or existing component has no setConfig, so treat as new component 
+			//add a reference for a component to the components object    
 			//save xml, target, url and parent in components object
-			//this information is also used for monitoring if the components are loaded > see doneLoading
 			//if a component is loaded, its target should be known and registered > see loadComponent_source
-			var url:String = xml.namespaceURI+"/"+xml.localName;
-			this.components[id].url = url;
-			this.components[id].progress = "loading default settings...";
-			this.components[id].target = "";
-			this.components[id].xml = xml;
+			if (this.components[targetid] == undefined) {
+				this.components[targetid] = new Object();
+			}
+			this.components[targetid].init = false;
+			this.components[targetid].target = "";
+			this.components[targetid].url = url;
+			this.components[targetid].xml = xml;
+			//climb in the tree and search a good parent  
 			//find component parent
 			//component parent is the first parent movie that is registered in components
 			//can be differ from the flash _parent!!
 			var parentmc:MovieClip = mc._parent;
-			//climb in the tree and search a good parent                                                                                            
 			while (parentmc != undefined) {
 				if (parentmc._target == this.components.flamingo.target) {
-					this.components[id].parent = "flamingo";
+					this.components[targetid].parent = "flamingo";
 					break;
 				}
 				if (this.components[parentmc._name].target != undefined) {
-					this.components[id].parent = parentmc._name;
+					this.components[targetid].parent = parentmc._name;
 					break;
 				}
 				parentmc = parentmc._parent;
 			}
 			//get custom language, style and cursor definitions
-			this.components[id].string = new Object();
-			if (not this.parseString(xml, this.components[id].string)) {
-				delete this.components[id].string;
-			}
-			this.components[id].cursor = new Object();
-			if (not this.parseCursor(xml, this.components[id].cursor)) {
-				delete this.components[id].cursor;
-			}
-			this.components[id].style = new TextField.StyleSheet();
-			if (not this.parseStyle(xml, this.components[id].style)) {
-				delete this.components[id].style;
-			}
-			//2  more steps                                                                                                                                               
-			//step1:  load componentdefaults  (url+".xml")
-			//step2:  load component (url+".swf")
-			var obj:Object = new Object();
-			this.loadComponent_defaults(url, id, mc, obj);
-			return id;
-		} else {
-			return;
+			this.loadComponent_defaults(url, targetid, mc);
 		}
 	}
-	private function loadComponent_defaults(url:String, id:String, mc:MovieClip, obj:Object) {
+	private function loadComponent_defaults(url:String, id:String, mc:MovieClip) {
 		//load xml belonging to the component and retreive strings,styles and cursors
 		//load defaults once per component
 		if (this.components_per_url[url] == undefined) {
@@ -596,17 +767,17 @@ class Flamingo {
 				if (success) {
 					if (this.firstChild.nodeName.toLowerCase() == "flamingo") {
 						//flamingo.components_per_url[url] = new Object();
-						flamingo.components_per_url[url].string = new Object();
-						if (not flamingo.parseString(this.firstChild, flamingo.components_per_url[url].string)) {
-							delete flamingo.components_per_url[url].string;
+						flamingo.components_per_url[url].strings = new Object();
+						if (not flamingo.parseString(this.firstChild, flamingo.components_per_url[url].strings)) {
+							delete flamingo.components_per_url[url].strings;
 						}
-						flamingo.components_per_url[url].cursor = new Object();
-						if (not flamingo.parseCursor(this.firstChild, flamingo.components_per_url[url].cursor)) {
-							delete flamingo.components_per_url[url].cursor;
+						flamingo.components_per_url[url].cursors = new Object();
+						if (not flamingo.parseCursor(this.firstChild, flamingo.components_per_url[url].cursors)) {
+							delete flamingo.components_per_url[url].cursors;
 						}
-						flamingo.components_per_url[url].style = new TextField.StyleSheet();
-						if (not flamingo.parseStyle(this.firstChild, flamingo.components_per_url[url].style)) {
-							delete flamingo.components_per_url[url].style;
+						flamingo.components_per_url[url].styles = new TextField.StyleSheet();
+						if (not flamingo.parseStyle(this.firstChild, flamingo.components_per_url[url].styles)) {
+							delete flamingo.components_per_url[url].styles;
 						}
 					} else {
 						delete flamingo.components_per_url[url];
@@ -622,7 +793,9 @@ class Flamingo {
 			//this.components_per_url[url].xmlx.load(url+".xml");
 		} else {
 			//defaults already loaded
-			this.loadComponent_source(url, id, mc);
+			//this.loadComponent_source(url, id, mc);
+			var delay = Math.floor(Math.random()*(100-0+1))+0;
+			_global['setTimeout'](this, 'loadComponent_source', delay, url, id, mc);
 		}
 	}
 	private function loadComponent_source(url:String, id:String, mc:MovieClip) {
@@ -630,15 +803,15 @@ class Flamingo {
 		var thisObj = this;
 		var mcLoader:MovieClipLoader = new MovieClipLoader();
 		var lLoader:Object = new Object();
-		lLoader.onLoadProgress = function(mc:MovieClip, bytesLoaded:Number, bytesTotal:Number) {
-			thisObj.components[id].progress = "..."+Math.round(bytesLoaded/bytesTotal*100)+"%";
-		};
+		//lLoader.onLoadProgress = function(mc:MovieClip, bytesLoaded:Number, bytesTotal:Number) {
+		//thisObj.components[id].progress = "..."+Math.round(bytesLoaded/bytesTotal*100)+"%";
+		//};
 		lLoader.onLoadComplete = function(mc:MovieClip) {
 			//At this point we can set variables of a movieclip but scripts of the clip are not yet executed yet
 			//So we can set basic flamingo properties and store them at the movieclip itself
 			//retreive the basic attributes from the xml and store them at the componentmovie 
-			thisObj.processComponentXML(thisObj.components[id].xml, mc);
-			thisObj.parseGuide(thisObj.components[id].xml, mc);
+			//thisObj.parseComponentXML(thisObj.components[id].xml, mc);
+			//thisObj.parseGuide(thisObj.components[id].xml, mc);
 			// tell flamingo where this component can be found
 			thisObj.components[id].target = mc._target;
 			thisObj.components.flamingo.broadcastMessage("onLoadComponent", mc);
@@ -648,53 +821,61 @@ class Flamingo {
 			//trace("INIT");
 			// tell flamingo what  component it is and wat version
 			// it's a decent habbit to start every componentmovie with these 2 variables
-			delete thisObj.components[id].progress;
+			//delete thisObj.components[id].progress;
 			//componenent is up and running, so shout it to the world
 			//if (thisObj.mFlamingo.mLogo._visible and thisObj.mFlamingo.mLogo._currentframe == 1) {
-			if (not thisObj.configloaded) {
-				thisObj.doneLoading();
-			}
+			thisObj.components[id].init = true;
+			thisObj.doneLoading();
 		};
 		lLoader.onLoadError = function(mc:MovieClip, error:String, httpStatus:Number) {
 			this.raiseEvent(this, "onError", url+".swf\n"+error);
 			thisObj.showError("Flamingo", url+".swf\n"+error);
 		};
 		mcLoader.addListener(lLoader);
-		trace("loadclip:"+mc._target+":"+url);
 		mcLoader.loadClip(getNocacheName(url+".swf", this.nocache), mc);
 	}
-	private function doneLoading(showlogo:Boolean):Void {
+	private function doneLoading():Void {
+		//trace("----------------------------------------")
 		// this function is called after a component is loaded
+		if (not this.loading) {
+			return;
+		}
 		var nrloaded:Number = 0;
 		var nrtotal:Number = 0;
 		for (var id in this.components) {
-			nrtotal++;
-			if (this.components[id].target != "") {
-				nrloaded++;
+			if (id != "flamingo") {
+				//trace(id+this.components[id].target+","+this.components[id].init);
+				if (this.components[id].init != undefined) {
+					nrtotal++;
+					if (this.components[id].init) {
+						nrloaded++;
+					}
+				}
 			}
 		}
-		var p = Math.round(nrloaded/nrtotal*100);
-		if (this.preloadtitle != undefined) {
-			this.mFlamingo.mLogo.gotoAndStop(2);
-			this.mFlamingo.mLogo.txt.htmlText = "<span class='preloadtitle'>"+this.preloadtitle+newline+" "+p+"%</span>";
-		} else {
-			this.mFlamingo.mLogo.txt.htmlText = "<span class='preloadtitle'>"+this.version+" "+p+"%</span>";
+		if (this.mFlamingo.mLogo != undefined) {
+			var p = Math.round(nrloaded/nrtotal*100);
+			if (this.preloadtitle != undefined) {
+				this.mFlamingo.mLogo.gotoAndStop(2);
+				this.mFlamingo.mLogo.txt.htmlText = "<span class='preloadtitle'>"+this.preloadtitle+newline+" "+p+"%</span>";
+			} else {
+				this.mFlamingo.mLogo.txt.htmlText = "<span class='preloadtitle'>"+this.version+" "+p+"%</span>";
+			}
 		}
+		//trace(nrloaded +"=="+nrtotal)           
 		if (nrloaded == nrtotal) {
-			this.mFlamingo.mLogo.txt.htmlText = "";
-			this.mFlamingo.mLogo.gotoAndStop(1);
-			this.configloaded = true;
-			delete this.mFlamingo.mLogo.onPress;
-			this.removeLogo();
-			this.raiseEvent(this, "onLoadConfig");
+			this.loading = false;
+			_global['setTimeout'](this, 'processConfig', 100);
 		}
 	}
 	private function showLogo():Void {
+		var flamingo = this;
 		if (this.mFlamingo.mLogo == undefined) {
 			var mc = this.mFlamingo.attachMovie("logo", "mLogo", 9997);
 			mc._x = (Stage.width/2);
 			mc._y = (Stage.height/2);
 			mc.onPress = function() {
+				flamingo.doneLoading();
 			};
 			mc.hitArea = _root;
 			this.mFlamingo.mLogo.txt.styleSheet = this.getStyleSheet("flamingo");
@@ -708,6 +889,38 @@ class Flamingo {
 				this.removeMovieClip();
 			}
 		};
+	}
+	public function parseXML(comp:Object, xml:XML) {
+		var id:String = this.getId(comp);
+		if (id == undefined) {
+			return;
+		}
+		var mc = this.getComponent(id);
+		if (xml == undefined) {
+			xml = this.getXML(id);
+		}
+		//strings                 
+		if (mc.strings == undefined) {
+			mc.strings = new Object();
+		}
+		this.parseString(xml, mc.strings);
+		//cursors
+		if (mc.cursors == undefined) {
+			mc.cursors = new Object();
+		}
+		this.parseCursor(xml, mc.cursors);
+		//styles
+		if (mc.styles == undefined) {
+			mc.styles = new TextField.StyleSheet()
+		}
+		this.parseStyle(xml, mc.styles);
+		//guides
+		if (mc.guides == undefined) {
+			mc.guides = new Object();
+		}
+		this.parseGuide(xml, mc.guides);
+		//default flamingo attributes
+		this.parseComponentXML(xml, mc);
 	}
 	/** @tag <cursor> 
 	* With cursor you can add custom cursors to Flamingo. This tag can be situated in the configuration file of a component or in the configuration file of an application.
@@ -743,25 +956,33 @@ class Flamingo {
 						dy = Number(val);
 						break;
 					case "url" :
-						url = val;
-						cname = url.split("/").join("#");
-						cname = cname.split(".").join("#");
+						url = this.correctUrl(val);
+						
+
+						
 						break;
 					}
 				}
 				if (id.length>0 and url.length>0) {
-					b = true;
-					if (this.mFlamingo.flamingoCursors[cname] == undefined) {
-						var mc:MovieClip = this.mFlamingo.flamingoCursors.createEmptyMovieClip(cname, this.mFlamingo.flamingoCursors.getNextHighestDepth());
+					var cursormovie:String
+					for (var attr in this.mFlamingo.flamingoCursors){
+						if (this.mFlamingo.flamingoCursors[attr].url == url) {
+							
+							cursormovie = attr
+							break 
+						}
+					}
+					
+					if (cursormovie == undefined) {
+						var cursormovie = "cursor_"+this.mFlamingo.flamingoCursors.getNextHighestDepth()
+						var mc:MovieClip = this.mFlamingo.flamingoCursors.createEmptyMovieClip(cursormovie, this.mFlamingo.flamingoCursors.getNextHighestDepth());
 						mc._x = dx;
 						mc._y = dy;
-						var flamingo = this;
-						mc.progress = "loading";
+						mc.url = url
 						var mcLoader:MovieClipLoader = new MovieClipLoader();
 						var lLoader:Object = new Object();
 						lLoader.onLoadInit = function(mc:MovieClip) {
 							mc._visible = false;
-							//delete mc.progress
 						};
 						lLoader.onLoadError = function(mc:MovieClip, error:String, httpStatus:Number) {
 							mc.removeMovieClip();
@@ -769,11 +990,59 @@ class Flamingo {
 						mcLoader.addListener(lLoader);
 						mcLoader.loadClip(getNocacheName(url, this.nocache), mc);
 					}
-					cursors[id] = cname;
+					
+					cursors[id] = cursormovie
+					
+					
+					b = true;
+					
+					
 				}
 			}
 		}
 		return (b);
+	}
+	/**
+	* Sets a cursor for a component
+	* @param id:String Id of component.
+	* @param cursorid:String Id of cursor.
+	* @param url:String The url of the cursor movie.
+	*/
+	public function setCursor(id:String, cursorid:String, url:String, xoffset:Number, yoffset:Number) {
+		if (this.components[id] == undefined) {
+			return;
+		}
+		var mc = this.getComponent(id);
+		if (cursorid.length>0 and url.length>0) {
+			var cname = url.split("/").join("#");
+			cname = cname.split(".").join("#");
+			if (mc.cursors == undefined) {
+				mc.cursors = new Object();
+			}
+			mc.cursors[cursorid] = cname;
+			if (xoffset == undefined) {
+				xoffset = 0;
+			}
+			if (yoffset == undefined) {
+				yoffset = 0;
+			}
+			//var b:Boolean  = true;                                 
+			if (this.mFlamingo.flamingoCursors[cname] == undefined) {
+				var mc:MovieClip = this.mFlamingo.flamingoCursors.createEmptyMovieClip(cname, this.mFlamingo.flamingoCursors.getNextHighestDepth());
+				mc._x = xoffset;
+				mc._y = yoffset;
+				var mcLoader:MovieClipLoader = new MovieClipLoader();
+				var lLoader:Object = new Object();
+				lLoader.onLoadInit = function(mc:MovieClip) {
+					mc._visible = false;
+				};
+				lLoader.onLoadError = function(mc:MovieClip, error:String, httpStatus:Number) {
+					mc.removeMovieClip();
+				};
+				mcLoader.addListener(lLoader);
+				mcLoader.loadClip(getNocacheName(url, this.nocache), mc);
+			}
+		}
 	}
 	/** @tag <string> 
 	* With string you can add multi-language support to flamingo. This tag can be situated in the configuration file of a component or in the configuration file of an application.
@@ -857,6 +1126,27 @@ class Flamingo {
 			}
 		}
 		return (b);
+	}
+	/**
+	* Sets a language string for a component
+	* @param id:String Id of component.
+	* @param stringid:String Id of string.
+	* @param string:String The actually string.
+	* @param lang:String Language identifier.
+	*/
+	public function setString(id:String, stringid:String, string:String, lang:String) {
+		if (this.components[id] == undefined) {
+			return;
+		}
+		var mc = this.getComponent(id);
+		if (mc.strings == undefined) {
+			mc.strings = new Object();
+		}
+		lang = lang.toLowerCase();
+		if (mc.strings[lang] == undefined) {
+			mc.strings[lang] = new Object();
+		}
+		mc.strings[lang][stringid] = string;
 	}
 	/** @tag <style> 
 	* With style you can css-support to flamingo. This tag can be situated in the configuration file of a component or in the configuration file of an application.
@@ -946,6 +1236,22 @@ class Flamingo {
 		}
 		return (b);
 	}
+	/**
+	* Sets a stylestheet for a component
+	* @param id:String Id of component.
+	* @param styleid:String Id of stylesheet
+	* @param style:Object Stylesheet object. style.color, style.font-family...etc.
+	*/
+	public function setStyle(id:String, styleid:String, style:Object) {
+		if (this.components[id] == undefined) {
+			return;
+		}
+		var mc = this.getComponent(id);
+		if (mc.styles == undefined) {
+			mc.styles = new TextField.StyleSheet();
+		}
+		mc.styles.setStyle(styleid, style);
+	}
 	/** @tag <xguide> 
 	  * With xguide you can add invisible vertical lines to flamingo at which components can be aligned. This tag is situated in the configuration file of an application. There are two default yguides: "left" and "right", referering to the outer bounds of the movie.
 	  * @hierarchy child-node of <flamingo> or child-node of <fmc:{component}>
@@ -970,7 +1276,7 @@ class Flamingo {
 	  * @attr id  Unique identifier. You can define youre own.
 	  * @attr y  position, absolute (in pixels) or percentage (%). e.g.  y="50" or y="50%"
 	  */
-	private function parseGuide(xml:Object, mc:MovieClip):Boolean {
+	private function parseGuide(xml:Object, guides:Object):Boolean {
 		//this function searches for xguide and yguide, makes a collection if not extist
 		var b:Boolean = false;
 		var len = xml.childNodes.length;
@@ -979,17 +1285,17 @@ class Flamingo {
 			var tag = node.nodeName;
 			switch (tag.toLowerCase()) {
 			case "yguide" :
-				if (mc.yguides == undefined) {
-					mc.yguides = new Object();
+				if (guides.y == undefined) {
+					guides.y = new Object();
 				}
-				mc.yguides[node.attributes.id] = node.attributes.y;
+				guides.y[node.attributes.id] = node.attributes.y;
 				b = true;
 				break;
 			case "xguide" :
-				if (mc.xguides == undefined) {
-					mc.xguides = new Object();
+				if (guides.x == undefined) {
+					guides.x = new Object();
 				}
-				mc.xguides[node.attributes.id] = node.attributes.x;
+				guides.x[node.attributes.id] = node.attributes.x;
 				b = true;
 				break;
 			}
@@ -1015,7 +1321,7 @@ class Flamingo {
 	  * @attr maxheight  Maximum height of a component in pixels.
 	  * @attr minheight Minimum height of a component in pixels.
 	  */
-	private function processComponentXML(xml:XML, mc:MovieClip) {
+	private function parseComponentXML(xml:Object, mc:MovieClip) {
 		// this function get the basic attributes for a component and transform them to variables in the movieclip
 		for (var attr in xml.attributes) {
 			var attr:String = attr.toLowerCase();
@@ -1155,14 +1461,18 @@ class Flamingo {
 	}
 	/**
 	* Gets the internal Flamingo cursorid of a cursor of a component.
-	    * @param comp:Object  Id or MovieClip representing the component.
+	* @param comp:Object  Id or MovieClip representing the component.
 	* @param cursorid:String Id of the cursor used in the configuration file. See for supported cursor ids' the component documentation.
 	* @return String Id of a cursor.
 	*/
 	public function getCursorId(comp:Object, cursorid:String):String {
-		var id = this.getId(comp);
+		var id:String = this.getId(comp);
+		var mc = this.getComponent(id);
 		var url = this.components[id].url;
-		var cursor = this.components_per_url[url].cursor[cursorid];
+		var cursor = mc.cursors[cursorid];
+		if (cursor == undefined) {
+			cursor = this.components_per_url[url].cursors[cursorid];
+		}
 		return cursor;
 	}
 	/**
@@ -1181,6 +1491,7 @@ class Flamingo {
 		if (cursorid.length == 0) {
 			return;
 		}
+	
 		var mc = this.mFlamingo.flamingoCursors[cursorid];
 		if (mc != undefined) {
 			this.mFlamingo.flamingoCursors.getInstanceAtDepth(0)._visible = false;
@@ -1280,52 +1591,45 @@ class Flamingo {
 		if (id == undefined) {
 			return;
 		}
-		
-		var url = this.getUrl(id);
-		if (this.components[id].killtarget != undefined){
-			var mc = eval(this.components[id].killtarget)
-		}else{
-			var mc = eval(this.components[id].target)    
+		//determine target movie                                                
+		if (this.components[id].killtarget != undefined) {
+			var mc = eval(this.components[id].killtarget);
+		} else {
+			var mc = eval(this.components[id].target);
 		}
-		
-		trace("KILL:"+id+"("+mc._target+")")
-		 
-		mc.removeMovieClip();
-		//remove reference (and children ids ) from the components object
-		this.removeId(id);
-		//check listeners and remove empty occurences
-		for (var id in this.components) {
-			var c = this.components[id];
-			if (c._listeners != undefined) {
-				for (var i = 0; i<c._listeners.length; i++) {
-					if (String(c._listeners[i]) == "") {
-						c._listeners.splice(i, 1);
-						i--;
-					}
-				}
+		//give a change for components to clean things up 
+		this.raiseEvent(this, "onKillComponent", mc);
+		//remove children ids from the components object 
+		for (var c_id in this.components) {
+			if (this.components[c_id].parent == id) {
+				this.killComponent(c_id);
+			}
+		}
+		//removelisteners
+		for (var listenerid in this.components[id]._addedlisteners) {
+			for (var i = 0; i<this.components[id]._addedlisteners[listenerid].length; i++) {
+				this.removeListener(this.components[id]._addedlisteners[listenerid][i], listenerid);
 			}
 		}
 		//check  if there are other components with same url
-		// if not remove reference from components_per_url
+		// if not remove reference from components_per_url and remove cursors
 		var lastcomp:Boolean = true;
-		for (var c in this.components) {
-			if (this.components[c].url == url) {
-				lastcomp = false;
-				break;
+		var url = this.getUrl(id);
+		for (var c_id in this.components) {
+			if (c_id != id) {
+				if (this.components[c_id].url == url) {
+					lastcomp = false;
+					break;
+				}
 			}
 		}
 		if (lastcomp) {
 			delete this.components_per_url[url];
 		}
-		this.raiseEvent(this, "onKillComponent", id);
-	}
-	private function removeId(id:String) {
+		//remove clip                                                
+		mc.removeMovieClip();
+		//finaly delete entrance in repository
 		delete this.components[id];
-		for (var c in this.components) {
-			if (this.components[c].parent == id) {
-				this.removeId(c);
-			}
-		}
 	}
 	/**
 	* Gets a component by its identifier.
@@ -1397,7 +1701,7 @@ class Flamingo {
 	* @param listento:Object MovieClip or componentid or array of componentids.
 	* @see addListener
 	*/
-	public function removeListener(listener:Object, listento:Object):Void {
+	public function removeListener(listener:Object, listento:Object, caller:Object):Void {
 		var id:String;
 		if (listento == this) {
 			id = "flamingo";
@@ -1436,6 +1740,17 @@ class Flamingo {
 			return;
 		}
 		this.components[id].removeListener(listener);
+		if (caller != undefined) {
+			//remove a reference of the functions at the component repository
+			//if component get killed  the listeners first based on this list
+			var callerid = getId(caller);
+			for (var i = 0; i<this.components[callerid]._addedlisteners[id].length; i++) {
+				if (this.components[callerid]._addedlisteners[id][i] == listener) {
+					this.components[callerid]._addedlisteners[id].splice(i);
+					break;
+				}
+			}
+		}
 	}
 	/** 
 	* Adds a listener to (a) component(s).
@@ -1443,7 +1758,7 @@ class Flamingo {
 	* @param listento:Object MovieClip or componentid or array of componentids.
 	* @see removeListener
 	*/
-	public function addListener(listener:Object, listento:Object):Void {
+	public function addListener(listener:Object, listento:Object, caller:Object):Void {
 		var id:String;
 		if (listento == this) {
 			id = "flamingo";
@@ -1493,6 +1808,18 @@ class Flamingo {
 			AsBroadcaster.initialize(this.components[id]);
 		}
 		this.components[id].addListener(listener);
+		if (caller != undefined) {
+			//store a reference of the functions at the component repository
+			//if component get killed  the listeners first based on this list
+			var callerid = getId(caller);
+			if (this.components[callerid]._addedlisteners == undefined) {
+				this.components[callerid]._addedlisteners = new Object();
+			}
+			if (this.components[callerid]._addedlisteners[id] == undefined) {
+				this.components[callerid]._addedlisteners[id] = new Array();
+			}
+			this.components[callerid]._addedlisteners[id].push(listener);
+		}
 	}
 	/** 
 	* Fires an event for a component.
@@ -1510,11 +1837,16 @@ class Flamingo {
 		//first element of arguments is now: event
 		this.components[id].broadcastMessage.apply(this.components[id], arguments);
 		//this.components[id].broadcastMessage(event, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
+		//trace("-------------------------------------------------");
+		//trace(id+":"+event);
 		if (this.useexternalinterface) {
 			for (var i = 0; i<arguments.length; i++) {
-				if (typeof (arguments[i]) == "movieclip") {
-					arguments[i] = this.getId(arguments[i]);
-				}
+				//if (typeof (arguments[i]) == "movieclip") {
+				//arguments[i] = this.getId(arguments[i]);
+				//} else {
+				arguments[i] = this.objects2Javascript(arguments[i]);
+				//this.traceObj(arguments[i])
+				//}
 			}
 			var e = arguments.shift();
 			if (id == "flamingo") {
@@ -1533,6 +1865,45 @@ class Flamingo {
 			//}
 			//trace(s)
 			ExternalInterface.call.apply(null, arguments);
+			delete arguments;
+		}
+	}
+	private function traceObj(obj:Object) {
+		if (typeof (obj) == "object") {
+			for (var attr in obj) {
+				trace(attr+":");
+				traceObj(obj[attr]);
+			}
+		} else {
+			trace(">"+obj);
+		}
+	}
+	private function objects2Javascript(obj:Object):Object {
+		var new_obj;
+		if (typeof (obj) == "movieclip") {
+			new_obj = this.getId(obj);
+		} else if (typeof (obj) == "object") {
+			for (var attr in obj) {
+				if (new_obj == undefined) {
+					if (obj.length and obj.splice and obj.sort) {
+						//probably an array
+						new_obj = new Array();
+					} else {
+						new_obj = new Object();
+					}
+				}
+				//turn all attributenames (that are not numeric) into quoted attributenames                                                                                                               
+				if (isNaN(attr)) {
+					new_obj["'"+attr+"'"] = objects2Javascript(obj[attr]);
+				} else {
+					new_obj[attr] = objects2Javascript(obj[attr]);
+				}
+			}
+		}
+		if (new_obj == undefined) {
+			return obj;
+		} else {
+			return new_obj;
 		}
 	}
 	/** 
@@ -1590,11 +1961,12 @@ class Flamingo {
 	public function getString(comp:Object, stringid:String, defaultstring:String, lang:String):String {
 		// this function gets a language string (if exists) from the language objects in the flamingo-core
 		var id:String = this.getId(comp);
+		var mc = this.getComponent(id);
 		if (lang == undefined) {
 			lang = this.lang;
 		}
-		//1 search in langauge object of component                                                                                            
-		var strings:Object = this.components[id].string;
+		//1 search in langauge object of component                                                                                                                                                                                                                  
+		var strings:Object = mc.strings;
 		if (strings != undefined) {
 			var s = strings[stringid.toLowerCase()][lang.toLowerCase()];
 			if (s == undefined) {
@@ -1606,9 +1978,9 @@ class Flamingo {
 				return (s);
 			}
 		}
-		//2 search string in main language object                                                                                                                                                                                                                    
+		//2 search string in main language object                                                                                                                                                                                                                                                                                                                                          
 		var url = this.components[id].url;
-		var strings = this.components_per_url[url].string;
+		var strings = this.components_per_url[url].strings;
 		if (strings == undefined) {
 			return;
 		}
@@ -1725,56 +2097,56 @@ class Flamingo {
 		if (mc.left.length>0 and mc.width.length>0) {
 			//trace("x1")
 			pt.width = getAbs(mc.width, pw);
-			pt.x = convertPosition(mc.left, pw, parent.xguides);
+			pt.x = convertPosition(mc.left, pw, parent.guides.x);
 			return (pt);
 		}
 		if (mc.right.length>0 and mc.width.length>0) {
 			//trace("x2")
 			pt.width = getAbs(mc.width, pw);
-			pt.x = convertPosition(mc.right, pw, parent.xguides)-pt.width;
+			pt.x = convertPosition(mc.right, pw, parent.guides.x)-pt.width;
 			return (pt);
 		}
 		if (mc.xcenter.length>0 and mc.width.length>0) {
 			//trace("x3")
 			pt.width = getAbs(mc.width, pw);
-			pt.x = convertPosition(mc.xcenter, pw, parent.xguides)-(pt.width/2);
+			pt.x = convertPosition(mc.xcenter, pw, parent.guides.x)-(pt.width/2);
 			return (pt);
 		}
 		if (mc.left.length>0 and mc.right.length>0) {
 			//trace("x4")
-			pt.x = convertPosition(mc.left, pw, parent.xguides);
-			pt.width = convertPosition(mc.right, pw, parent.xguides)-pt.x;
+			pt.x = convertPosition(mc.left, pw, parent.guides.x);
+			pt.width = convertPosition(mc.right, pw, parent.guides.x)-pt.x;
 			return (pt);
 		}
 		if (mc.left.length>0 and mc.xcenter.length>0) {
 			//trace("x5")
-			pt.x = convertPosition(mc.left, pw, parent.xguides);
-			pt.width = (convertPosition(mc.xcenter, pw, parent.xguides)-pt.x)*2;
+			pt.x = convertPosition(mc.left, pw, parent.guides.x);
+			pt.width = (convertPosition(mc.xcenter, pw, parent.guides.x)-pt.x)*2;
 			return (pt);
 		}
 		if (mc.right.length>0 and mc.xcenter.length>0) {
 			//trace("x6")
-			var r = convertPosition(mc.right, pw, parent.xguides);
-			var c = convertPosition(mc.xcenter, pw, parent.xguides);
+			var r = convertPosition(mc.right, pw, parent.guides.x);
+			var c = convertPosition(mc.xcenter, pw, parent.guides.x);
 			pt.width = (r-c)*2;
 			pt.x = r-(pt.width/2);
 			return (pt);
 		}
 		if (mc.left.length>0) {
 			//trace("x7");
-			pt.x = convertPosition(mc.left, pw, parent.xguides);
+			pt.x = convertPosition(mc.left, pw, parent.guides.x);
 			pt.width = mc._width;
 			return (pt);
 		}
 		if (mc.right.length>0) {
 			//trace("x8")
-			pt.x = convertPosition(mc.right, pw, parent.xguides)-mc._width;
+			pt.x = convertPosition(mc.right, pw, parent.guides.x)-mc._width;
 			pt.width = mc._width;
 			return (pt);
 		}
 		if (mc.xcenter.length>0) {
 			//trace("x9")
-			pt.x = convertPosition(mc.xcenter, pw, parent.xguides)-(mc._width/2);
+			pt.x = convertPosition(mc.xcenter, pw, parent.guides.x)-(mc._width/2);
 			pt.width = mc._width;
 			return (pt);
 		}
@@ -1802,49 +2174,49 @@ class Flamingo {
 		}
 		if (mc.top.length>0 and mc.height.length>0) {
 			pt.height = getAbs(mc.height, ph);
-			pt.y = convertPosition(mc.top, ph, parent.yguides);
+			pt.y = convertPosition(mc.top, ph, parent.guides.y);
 			return (pt);
 		}
 		if (mc.bottom.length>0 and mc.height.length>0) {
 			pt.height = getAbs(mc.height, ph);
-			pt.y = convertPosition(mc.bottom, ph, parent.yguides)-pt.height;
+			pt.y = convertPosition(mc.bottom, ph, parent.guides.y)-pt.height;
 			return (pt);
 		}
 		if (mc.ycenter.length>0 and mc.height.length>0) {
 			pt.height = getAbs(mc.height, ph);
-			pt.y = convertPosition(mc.ycenter, ph, parent.yguides)-(pt.height/2);
+			pt.y = convertPosition(mc.ycenter, ph, parent.guides.y)-(pt.height/2);
 			return (pt);
 		}
 		if (mc.top.length>0 and mc.bottom.length>0) {
-			pt.y = convertPosition(mc.top, ph, parent.yguides);
-			pt.height = convertPosition(mc.bottom, ph, parent.yguides)-pt.y;
+			pt.y = convertPosition(mc.top, ph, parent.guides.y);
+			pt.height = convertPosition(mc.bottom, ph, parent.guides.y)-pt.y;
 			return (pt);
 		}
 		if (mc.top.length>0 and mc.ycenter.length>0) {
-			pt.y = convertPosition(mc.top, ph, mc._parent.yguides);
-			pt.height = (convertPosition(mc.ycenter, ph, parent.yguides)-pt.y)*2;
+			pt.y = convertPosition(mc.top, ph, mc._parent.guides.y);
+			pt.height = (convertPosition(mc.ycenter, ph, parent.guides.y)-pt.y)*2;
 			return (pt);
 		}
 		if (mc.bottom.length>0 and mc.ycenter.length>0) {
-			var b = convertPosition(mc.bottom, ph, parent.yguides);
-			var c = convertPosition(mc.ycenter, ph, parent.yguides);
+			var b = convertPosition(mc.bottom, ph, parent.guides.y);
+			var c = convertPosition(mc.ycenter, ph, parent.guides.y);
 			pt.height = (b-c)*2;
 			pt.y = b-(pt.width/2);
 			return (pt);
 		}
 		if (mc.top.length>0) {
-			pt.y = convertPosition(mc.top, ph, parent.yguides);
+			pt.y = convertPosition(mc.top, ph, parent.guides.y);
 			pt.height = mc._height;
 			return (pt);
 		}
 		if (mc.bottom.length>0) {
-			pt.y = convertPosition(mc.bottom, ph, parent.yguides)-mc._height;
+			pt.y = convertPosition(mc.bottom, ph, parent.guides.y)-mc._height;
 			pt.height = mc._height;
 			return (pt);
 		}
 		if (mc.ycenter.length>0) {
 			//trace("y9")
-			pt.y = convertPosition(mc.ycenter, ph, parent.yguides)-(mc._height/2);
+			pt.y = convertPosition(mc.ycenter, ph, parent.guides.y)-(mc._height/2);
 			pt.height = mc._height;
 			return (pt);
 		}
@@ -1861,7 +2233,7 @@ class Flamingo {
 		if (pos == undefined or pos.length == 0) {
 			return;
 		}
-		// determine second element, which should be a offset in pixels                                                                                                                                                                                                                                                     
+		// determine second element, which should be a offset in pixels                                                                                                                                                                                                                                                                                                                                                                           
 		var offset:Number = 0;
 		if (pos.indexOf(" ")>0) {
 			var a:Array = pos.split(" ");
@@ -1871,7 +2243,7 @@ class Flamingo {
 				offset = 0;
 			}
 		}
-		// calculate first element, which  can be a number, a percentage or a guide                                                                                                                                                                                                                                                     
+		// calculate first element, which  can be a number, a percentage or a guide                                                                                                                                                                                                                                                                                                                                                                           
 		var n:Number = 0;
 		if (isNaN(pos)) {
 			if (pos.substr(pos.length-1, 1) == "%") {
@@ -1916,18 +2288,20 @@ class Flamingo {
 	*/
 	public function getStyleSheet(comp:Object):Object {
 		var id:String = this.getId(comp);
+		var url:String = this.components[id].url;
 		//get the default stylesheet
 		var stylesheet = new TextField.StyleSheet();
-		var stylenames:Array = this.components_per_url[this.components[id].url].style.getStyleNames();
+		var stylenames:Array = this.components_per_url[url].styles.getStyleNames();
 		for (var i = 0; i<stylenames.length; i++) {
 			var stylename = stylenames[i];
-			var styleobj:Object = this.components_per_url[this.components[id].url].style.getStyle(stylename);
+			var styleobj:Object = this.components_per_url[url].styles.getStyle(stylename);
 			stylesheet.setStyle(stylename, styleobj);
 		}
-		var stylenames:Array = this.components[id].style.getStyleNames();
+		var mc = this.getComponent(id);
+		var stylenames:Array = mc.styles.getStyleNames();
 		for (var i = 0; i<stylenames.length; i++) {
 			var stylename = stylenames[i];
-			var styleobj:Object = this.components[id].style.getStyle(stylename);
+			var styleobj:Object = mc.styles.getStyle(stylename);
 			stylesheet.setStyle(stylename, styleobj);
 		}
 		return (stylesheet);
@@ -1946,16 +2320,8 @@ class Flamingo {
 	public function correctTarget(from:Object, to:MovieClip):Void {
 		var id = this.getId(from);
 		from = eval(this.components[id].target);
-		this.components[id].killtarget = this.components[id].target
+		this.components[id].killtarget = this.components[id].target;
 		this.components[id].target = to._target;
-		//move properties also to right movie
-		var attr:Array = new Array("yguides", "xguides", "width", "height", "top", "left", "right", "bottom", "xcenter", "ycenter", "maxheight", "minheight", "maxwidth", "minwidth", "listento");
-		for (var i = 0; i<attr.length; i++) {
-			if (from[attr[i]] != undefined) {
-				to[attr[i]] = from[attr[i]];
-				delete from[attr[i]];
-			}
-		}
 	}
 	/** 
 	* Gets every property of loaded components by using the component-id and propertyname.
@@ -2102,13 +2468,21 @@ class Flamingo {
 			if (this[method] == undefined) {
 				return;
 			}
-			return this[method].apply(this, arguments);
+			var r = this[method].apply(this, arguments);
+			if (typeof (r) == "movieclip") {
+				r = this.getId(r);
+			}
+			return r;
 		} else {
 			var func = eval(comp+"."+method);
 			if (func == undefined) {
 				return;
 			}
-			return func.apply(eval(comp), arguments);
+			var r = func.apply(eval(comp), arguments);
+			if (typeof (r) == "movieclip") {
+				r = this.getId(r);
+			}
+			return r;
 		}
 	}
 	//events	
@@ -2125,9 +2499,9 @@ class Flamingo {
 	}
 	/**
 	* Fires when a component is removed
-	* @param id:String Id of the removed component.
+	* @param  mc:MovieClip The component to be killed.
 	*/
-	public function onKillComponent(id:String):Void {
+	public function onKillComponent(mc:MovieClip):Void {
 	}
 	/**
 	* Fires when an error occurs.
@@ -2147,30 +2521,33 @@ class Flamingo {
 	public function onInit():Void {
 	}
 	/**
-	* Fires when a complete configuration file is loaded
-	* @param file:String the configuration file
+	* Fires when a XML is loaded.
+	* @param file:String The loaded file.
+	*/
+	public function onLoadXMLPool(file:String):Void {
+	}
+	/**
+	* Fires when a configuration file is loaded or set
 	*/
 	public function onLoadConfig():Void {
 	}
-	//* Fires when the skin is changed
-	//* @param skin the skin 
-	//public function onSetSkin(skin:String):Void {
-	//}
+
 	/**
-	* Returns a unigue unused identifier.
+	* Returns an unigue unused identifier.
 	* @return  String Id
 	*/
 	public function getUniqueId():String {
-		var id:String = "fmc_1";
-		var index:Number = 1;
+		var id:String = "fmc_"+this.uniqueid;
 		var found:Boolean = false;
 		while (not found) {
 			if (this.components[id] == undefined) {
 				found = true;
+				this.uniqueid++;
 			} else {
-				id = "fmc_"+index++;
+				id = "fmc_"+this.uniqueid++;
 			}
 		}
+		//store id for use
 		return (id);
 	}
 	/**
@@ -2183,9 +2560,69 @@ class Flamingo {
 		if (id == "flamingo") {
 			s = this.version;
 		} else {
-			var s:String = this.getComponent().version;
+			var s:String = this.getComponent(id).version;
 		}
 		return (s);
+	}
+	/**
+	* Returns list of components ids.
+	* @return Array List of components ids.
+	*/
+	public function getComponents():Array {
+		var a:Array = new Array();
+		for (var id in this.components) {
+			a.push(id);
+		}
+		a.reverse();
+		return a;
+	}
+	
+	public function print() {
+		//point=0.35mm
+		//pixel=0.28mm
+		// create PrintJob object
+		var my_pj:PrintJob = new PrintJob();
+		// display print dialog box, but only initiate the print job
+		// if start returns successfully.
+		if (my_pj.start()) {
+			// use a variable to track successful calls to addPage
+			var pagesToPrint:Number = 0;
+			// add specified area to print job
+			// repeat once for each page to be printed
+			var paperheight = my_pj.pageHeight;
+			var paperwidth = my_pj.pageWidth;
+			var flamingoheight = this.mFlamingo.__height;
+			var flamingowidth = this.mFlamingo.__width;
+			var scale = paperwidth/flamingowidth;
+			var scale = Math.min(scale, (paperheight/flamingoheight));
+			var xscale = this.mFlamingo._xscale;
+			var yscale = this.mFlamingo._yscale;
+			this.mFlamingo._xscale = this.mFlamingo._yscale=scale;
+			trace(">>"+scale);
+			if (my_pj.addPage(this.mFlamingo, {xMin:0, xMax:flamingowidth, yMin:0, yMax:flamingoheight}, {printAsBitmap:true}, 1)) {
+				pagesToPrint++;
+			}
+			this.mFlamingo._xscale = xscale;
+			this.mFlamingo._yscale = yscale;
+			// send pages from the spooler to the printer, but only if one or more   
+			// calls to addPage() was successful. You should always check for successful 
+			// calls to start() and addPage() before calling send().
+			if (pagesToPrint>0) {
+				my_pj.send();
+				// print page(s)
+			}
+		}
+		// clean up         
+		delete my_pj;
+		// delete object
+	}
+	/**
+	* Determines if a component is registered at the framework.
+	* @param comp:Object  MovieClip or componentid.
+	* @return Boolean True or false.
+	*/
+	public function exists(comp:Object):Boolean {
+		return this.components[this.getId(comp)].url != undefined;
 	}
 	/**
 	* Returns the type of a component. This is actually the filename without the path and the ".swf"
@@ -2232,7 +2669,11 @@ class Flamingo {
 		so.data[id] = obj;
 		so.flush();
 	}
-	public function tracer(msg) {
+	/** 
+	* Shows a simple textbox with a message. Tracer is intended for debugging in a browser environment.
+	* @param msg:String A message.
+	*/
+	public function tracer(msg:String) {
 		if (_root.mFlamingoTracer == undefined) {
 			_root.attachMovie("mTracer", "mFlamingoTracer", 10000);
 			_root.mFlamingoTracer.txt.text = msg;
@@ -2249,21 +2690,19 @@ class Flamingo {
 		var s = Number(a[2]);
 		return g+(m/60)+(s/3600);
 	}
-	public function collectCarbage() {
-		for (var id in this.components) {
-			var c = this.components[id];
-			if (c._listeners != undefined) {
-				for (var i = 0; i<c._listeners.length; i++) {
-					trace("kill:"+id);
-					for (var f in c._listeners[i]) {
-						trace("   "+f+":"+c._listeners[i][f]);
-					}
-					//if (String(c._listeners[i]) == "" or c._listeners[i] == undefined) {
-					//c._listeners.splice(i, 1);
-					//i--;
-					//}
-				}
-			}
+	/**
+	* Corrects a relative url with the flamingo root location.
+	* That is where flamingo.swf is located.
+	* @param url:String Url
+	* @return String The corrected url.
+	*/
+	public function correctUrl(url):String {
+		if (url.toLowerCase().indexOf("http", 0) == 0) {
+			return url;
 		}
+		if (url.toLowerCase().indexOf("file", 0) == 0) {
+			return url;
+		}
+		return this.rooturl+"/"+url
 	}
 }

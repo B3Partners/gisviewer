@@ -1,6 +1,0 @@
-<flamingo>
-	<string id="tooltip" nl="slepen, gooien en zoomen met het wieltje" en="pan, throw, and zoom with mousewheel"/>
-	<cursor id="cursor" url="fmc/cursor/CursorPan.swf"/>
-        <cursor id="grab" url="fmc/cursor/CursorGrab.swf"/>
-        <cursor id="busy" url="fmc/cursor/CursorBusy.swf"/>
-</flamingo>

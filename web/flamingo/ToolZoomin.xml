@@ -1,5 +1,0 @@
-<flamingo>
-   <string id="tooltip" nl="inzoomen" en="zoom in"/>
-   <cursor id="cursor" url="fmc/cursor/CursorZoomin.swf"/>
-   <cursor id="busy" url="fmc/cursor/CursorBusy.swf"/>
-</flamingo>

@@ -387,7 +387,7 @@
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
             <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=flamingo/config.xml", "flamingo", "659", "493", "8", "#FFFFFF");
+            var so = new SWFObject("flamingo/flamingo.swf?config=config.xml", "flamingo", "659", "493", "8", "#FFFFFF");
             </script>
             <!--[if lte IE 6]>
             <script type="text/javascript">

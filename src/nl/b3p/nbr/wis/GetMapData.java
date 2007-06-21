@@ -124,4 +124,79 @@ public class GetMapData {
         
         return "" + postcode + " " + huisnr + " " + toev + " - " + plaats;
     }
+    
+    public String getMapCoords(String postcode, String plaatsnaam, String n_nr, String hm) {
+        String searchparam = new String();
+        String param = new String();
+        String tabel = new String();
+        String query = new String();
+        
+        int xdist = 0;
+        int ydist = 0;
+        
+        if (!postcode.equals("")) {
+            xdist = 200;
+            ydist = 200;
+            tabel = "algm_pstk_acn_p";
+            searchparam = "postcode";
+            param = postcode;
+            query = SpatialUtil.postalcodeOrCityRDCoordinates(tabel, searchparam, param);
+        } else if (!plaatsnaam.equals("")) {
+            xdist = 1600;
+            ydist = 1600;
+            tabel = "algm_kom_10_wgw_v";
+            searchparam = "kom";
+            param = plaatsnaam;
+            query = SpatialUtil.cityRDCoordinates(tabel, searchparam, param);
+        } else if (!n_nr.equals("") && !hm.equals("")) {
+            xdist = 50;
+            ydist = 50;
+            tabel = "verv_nwb_hmn_p";
+            searchparam = "hm";
+            query = SpatialUtil.wolHMRDCoordinates(tabel, searchparam, hm.toUpperCase(), n_nr);
+        } else {
+            //Er is niets opgegeven....
+        }
+        
+        int x = 0;
+        int y = 0;
+        
+        
+        
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session sess = sf.openSession();
+        Connection connection = sess.connection();
+        
+        try {
+            
+            PreparedStatement statement = connection.prepareStatement(query);
+            String test = new String();
+            try {
+                ResultSet rs = statement.executeQuery();
+                if(rs.next()) {
+                    String point = rs.getString("pointsresult");
+                    int begin  = point.indexOf("(");
+                    int middle = point.indexOf(" ");
+                    int end    = point.indexOf(")");
+                    x = (int)(Double.parseDouble(point.substring(begin + 1, middle)));
+                    y = (int)(Double.parseDouble(point.substring(middle + 1, end)));
+                }
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            sess.close();
+        }
+        
+        if(x != 0 && y != 0) {
+            double minx = x - xdist;
+            double miny = y - ydist;
+            double maxx = x + xdist;
+            double maxy = y + ydist;
+            return "" + minx + "*" + miny + "*" + maxx + "*" + maxy;
+        } else
+            return "0*0*0*0";
+    }
 }

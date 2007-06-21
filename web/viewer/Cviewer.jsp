@@ -382,6 +382,69 @@
     function eraseCookie(name) {
             createCookie(name,"",-1);
     }
+    
+    function HideOrShow(controlToHide)
+    {
+        if (document.getElementById)
+        {
+            // Hide all regions
+            document.getElementById('show1').disabled = true;
+            document.getElementById('show2').disabled = true;
+            document.getElementById('show3').disabled = true;
+            document.getElementById('show1').value = 'search';
+            document.getElementById('show2').value = 'search';
+            document.getElementById('show3').value = 'search';
+
+            // Display the requested region
+            document.getElementById('show' + controlToHide).disabled = false;
+            document.getElementById('show' + controlToHide).value = '';
+        }
+    }
+    
+    function getCoords() {
+        var postcode = document.getElementById("show1").value;
+        var plaatsnaam = document.getElementById("show2").value;
+        var n_nr = document.getElementById("show3").value;
+        var hm = document.getElementById("show4").value;
+        JMapData.getMapCoords(postcode, plaatsnaam, n_nr, hm, getCoordsCallbackFunction);
+    }
+    
+    function getCoordsCallbackFunction(value){
+        var coords_array = value.split("*");
+        var minx = coords_array[0];
+        var miny = coords_array[1];
+        var maxx = coords_array[2];
+        var maxy = coords_array[3];
+        if (minx != 0 && miny != 0 && maxx != 0 && maxy != 0) {
+            moveToExtent(minx, miny, maxx, maxy);
+        }
+        document.getElementById('coordsResponseMinx').innerHTML = coords_array[0];
+        document.getElementById('coordsResponseMiny').innerHTML = coords_array[1];
+        document.getElementById('coordsResponseMaxx').innerHTML = coords_array[2];
+        document.getElementById('coordsResponseMaxy').innerHTML = coords_array[3];
+    }
+    
+    function showHide(nr, el) {
+        if(el.value == "") {
+            document.getElementById('show1').disabled = false;
+            document.getElementById('show2').disabled = false;
+            document.getElementById('show3').disabled = false;
+            document.getElementById('show4').disabled = false;
+        } else {
+            if(nr == 3 || nr == 4) {
+                document.getElementById('show1').disabled = true;
+                document.getElementById('show2').disabled = true;
+            } else if(nr == 2) {
+                document.getElementById('show1').disabled = true;
+                document.getElementById('show3').disabled = true;
+                document.getElementById('show4').disabled = true;
+            } else if(nr == 1) {
+                document.getElementById('show2').disabled = true;
+                document.getElementById('show3').disabled = true;
+                document.getElementById('show4').disabled = true;
+            }
+        }
+    }    
     </script>    
     <div id="map"><div id="flashcontent">
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
@@ -433,7 +496,47 @@
                     <b>Adres</b><br />
                     <span id="kadastraledata"></span>
                 </div>
+                
+                <!-- input fields for search -->
+                <div>
+                <h3>Zoek naar locatie:</h3>
+                <p>
+                    <table>
+                    <tr>
+                        <td>Postcode:</td>
+                        <td><input type="text" id="show1" name="show1" onchange="showHide(1, this);" size="5"/></td>
+                    </tr>
+                    <tr>
+                        <td>Plaatsnaam:</td>
+                        <td><input type="text" id="show2" name="show2" onchange="showHide(2, this);" size="20"/></td>
+                    </tr>
+                    <tr>
+                        <td>Weg nr:</td>
+                        <td><input type="text" id="show3" name="show3" onchange="showHide(3, this);" size="5"/></td>
+                    </tr>
+                    <tr>
+                        <td>Hectometer:</td>
+                        <td><input type="text" id="show4" name="show4" onchange="showHide(4, this);" size="5"/></td>
+                    </tr>
+                    </table> 
+
+                    <button onclick="getCoords();">
+                        Ga naar locatie
+                    </button><br>
+                    
+                    Locatie: 
+                    <span id="coordsResponseMinx" class="response">minx:</span>,&nbsp;
+                    <span id="coordsResponseMiny" class="response">miny:</span>,&nbsp;
+                    <span id="coordsResponseMaxx" class="response">maxx:</span>,&nbsp;
+                    <span id="coordsResponseMaxy" class="response">maxy:</span>
+                    
+                </p> 
+                </div>
+                <!-- end of search -->
             </div>
+
+               
+            
             <div id="objectvak" style="display: none;">
                 <iframe id="objectframe" name="objectframe" frameborder="0"></iframe>
             </div>

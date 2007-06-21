@@ -160,6 +160,36 @@ public class SpatialUtil {
         return sq.toString();
     }
     
+    static public String postalcodeOrCityRDCoordinates(String tabel, String searchparam, String param) {
+        return "select distinct astext(tbl.the_geom) as pointsresult from " + 
+                tabel + " tbl where tbl." + searchparam + " = '" + param + "'";
+    }
+    
+    static public String cityRDCoordinates(String tabel, String searchparam, String param) {
+        return "select distinct astext(centroid(tbl.the_geom)) as pointsresult from " + 
+                tabel + " tbl where lower(tbl." + searchparam + ") = lower('" + param + "')";
+    }
+    
+    
+    static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr) {
+        return  "select astext(hecto.the_geom) as pointsresult from " + tabel + " hecto where (" + 
+                "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")*" + 
+                "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")) = " +
+                "(select min("+
+                "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")*" + 
+                "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")) " + 
+                "from " + tabel + " hecto where hecto.n_nr = '" + n_nr + "' ) " + 
+                "AND hecto.n_nr = '" + n_nr + "'";
+        
+        /* Example query:
+         * select astext(hecto.the_geom) from verv_nwb_hmn_p hecto where 
+         * ((CAST(hecto.hm AS FLOAT) - 10.2)*(CAST(hecto.hm AS FLOAT) - 10.2)) = 
+         * (select min((CAST(hecto.hm AS FLOAT) - 10.2)*(CAST(hecto.hm AS FLOAT) 
+         * - 10.2)) from verv_nwb_hmn_p hecto where hecto.n_nr = 'N261' ) 
+         * AND hecto.n_nr = 'N261'
+         */
+    }
+    
     public static String intersectionArea(String operator,String tb1, String tb2, String id,int divide) {
         return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide);
     }

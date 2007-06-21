@@ -1,0 +1,42 @@
+SYMBOL
+	NAME "petrolico"
+	TYPE pixmap
+	IMAGE "symbols/petrol.gif"
+END
+SYMBOL
+	NAME "cameraico"
+	TYPE pixmap
+	IMAGE "symbols/foto.gif"
+END
+SYMBOL
+	NAME "point1"
+	TYPE ellipse
+	points
+		1 1
+	end
+	FILLED true
+END
+SYMBOL
+	NAME "verkeersbord"
+	TYPE pixmap
+	IMAGE "symbols/verkeersbord.GIF"
+END
+SYMBOL
+	NAME "verkeerslicht"
+	TYPE pixmap
+	IMAGE "symbols/verkeerslicht.gif"
+END
+SYMBOL
+	NAME "boom"
+	TYPE pixmap
+	IMAGE "symbols/boom.gif"
+END
+SYMBOL
+	NAME 'circle'
+	TYPE ELLIPSE
+	FILLED TRUE
+	POINTS 1 1 
+	END
+END
+
+	

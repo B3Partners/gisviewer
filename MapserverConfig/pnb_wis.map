@@ -1,0 +1,776 @@
+NAME wispnb
+STATUS ON
+SYMBOLSET "symbol.map"
+EXTENT 15000 322000 30000 640000
+FONTSET "../fonts/fonts.list"
+WEB
+  IMAGEPATH "../temp"
+  METADATA
+    "wms_title"				"WIS Provincie Noord Brabant"
+    "wms_onlineresource"		"http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis/pnb_wis.map&"
+    "wms_srs"				"EPSG:28992"
+  END
+END
+
+PROJECTION
+  "init=epsg:28992"
+END
+
+# available outputformats
+OUTPUTFORMAT
+  NAME gif
+  DRIVER "GD/GIF"
+  MIMETYPE "image/gif"
+  IMAGEMODE PC256
+  EXTENSION "gif"
+  TRANSPARENT ON
+END
+OUTPUTFORMAT
+  NAME png
+  DRIVER "GD/PNG"
+  MIMETYPE "image/png"
+  IMAGEMODE PC256
+  EXTENSION "png"
+  TRANSPARENT ON
+END
+#schaal balk
+SCALEBAR
+	STATUS ON
+	UNITS KILOMETERS
+	INTERVALS 4
+	TRANSPARENT TRUE
+	OUTLINECOLOR 0 0 0
+END
+#legenda
+LEGEND
+	STATUS ON
+	POSITION LR
+	TRANSPARENT TRUE
+END
+
+LAYER
+	NAME gstreet-demo
+	TYPE RASTER
+	STATUS OFF
+	CONNECTIONTYPE WMS
+	CONNECTION "http://x3.b3p.nl/cgi-bin/mapserv?map=/home/mapserver/gstreet-demo.map&"
+	METADATA
+		"wms_name" "gstreet-demo"
+		"wms_srs" "EPSG:28992"
+		"wms_request" "GetMap"
+		"wms_server_version" "1.1.1"
+		"wms_layers" "gstreet5,gstreet4,gstreet3,gstreet2,gstreet1"
+		"wms_request" "GetMap"
+		"wms_format" "image/png"
+	END
+END
+
+LAYER
+	NAME "algm_kom_10_wgw_v"
+	GROUP achtergrond
+	METADATA
+	    "wms_title"				"algm_kom_10_wgw_v"	    
+  	END
+	CONNECTIONTYPE postgis
+
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from algm_kom_10_wgw_v"
+	STATUS ON
+	TYPE POLYGON
+	TRANSPARENCY 20
+	DUMP TRUE
+	TEMPLATE bla
+	LABELITEM "kom"
+	CLASS
+		NAME "algm_kom_10_wgw_v"
+		OUTLINECOLOR 200 0 0
+		COLOR 255 0 0
+		LABEL
+			  ANTIALIAS true
+			  FONT arial
+			  TYPE TRUETYPE
+			  SIZE 11
+			  COLOR 255 0 0
+			  OUTLINECOLOR 254 254 254 
+			  BACKGROUNDCOLOR -1 -1 -1
+			  BACKGROUNDSHADOWCOLOR  -1 -1 -1
+			  # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+			  MINDISTANCE 100
+			  BUFFER 1
+			  MINFEATURESIZE 60
+        	END
+	END
+END
+
+LAYER
+	METADATA
+	    "wms_title"				"algm_pstk_acn_p"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "algm_pstk_acn_p"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from algm_pstk_acn_p"
+	STATUS ON
+	MAXSCALE 50000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "algm_pstk_acn_p"
+		
+		STYLE
+			COLOR 0 0 0			
+			SYMBOL 'circle'
+			SIZE 3
+			ANTIALIAS true
+      		END 
+		
+        END
+END
+#Weg onderdelen layer
+LAYER
+	METADATA
+	    "wms_title"				"baanvakken"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "baanvakken"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from baanvakken"
+	STATUS ON
+	#MAXSCALE 100000
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 50
+	CLASS
+		NAME "baanvakken"
+		STYLE
+			COLOR 180 180 180
+			OUTLINECOLOR 0 0 0
+		END
+	END
+END
+
+LAYER
+	METADATA
+	    "wms_title"				"cyclomedia"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "cyclomedia"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from cyclomedia"
+	STATUS ON
+	#MAXSCALE 200000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "cyclomedia"
+		STYLE
+			COLOR 33 0 33
+			OUTLINECOLOR 33 0 33
+			SYMBOL "cameraico"
+		END
+	END
+END
+
+#LAYER
+#	METADATA
+#	    "wms_title"				"dtb_preferred"	    
+#  	END
+#	CONNECTIONTYPE postgis
+#	NAME "dtb_preferred"
+#	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+#	DATA "the_geom from dtb_preferred_line USING UNIQUE id"
+#	STATUS ON
+#	#MAXSCALE 100000
+#	#MINSCALE 50000
+#	TYPE LINE
+#	DUMP TRUE
+#	TEMPLATE bla
+#	CLASS
+#		NAME "dtb_preferred"
+#		COLOR 33 0 33
+#		OUTLINECOLOR 33 0 33
+#	END
+#END
+
+#LAYER
+#	METADATA
+#	    "wms_title"				"dtb_all"	    
+#  	END
+#	CONNECTIONTYPE postgis
+#	NAME "dtb_all"
+#	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+#	DATA "the_geom from dtb_all_line USING UNIQUE id USING SRID=28992"
+#	STATUS ON
+#	#MAXSCALE 50000
+#	TYPE LINE
+#	DUMP TRUE
+#	TEMPLATE bla	
+#	CLASS
+#		NAME "dtb_all"
+#		COLOR 33 0 33
+#		OUTLINECOLOR 33 0 33
+#	END
+#END
+
+LAYER
+	METADATA
+	    "wms_title"				"algm_grs_2006_1_gem_v"	    
+  	END
+  	GROUP achtergrond
+	CONNECTIONTYPE postgis
+	NAME "algm_grs_2006_1_gem_v"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from algm_grs_2006_1_gem_v"
+	STATUS ON
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 30
+	LABELITEM "gemnaam"
+	CLASS
+		NAME "algm_grs_2006_1_gem_v"
+		STYLE
+			OUTLINECOLOR 33 0 33
+			COLOR 230 230 230
+			ANTIALIAS TRUE
+		END
+		LABEL
+		  ANTIALIAS true
+		  FONT arial
+		  TYPE TRUETYPE
+		  SIZE 11
+		  COLOR 0 0 0
+		  OUTLINECOLOR 254 254 254 
+		  BACKGROUNDCOLOR -1 -1 -1
+		  BACKGROUNDSHADOWCOLOR  -1 -1 -1
+		  # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+		  MINDISTANCE 100
+		  BUFFER 1
+		  MINFEATURESIZE 60
+        	END
+	END
+END
+LAYER
+	METADATA
+	    "wms_title"				"algm_grs_2006_1_gga_v"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "algm_grs_2006_1_gga_v"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from algm_grs_2006_1_gga_v"
+	STATUS ON
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "algm_grs_2006_1_gga_v"
+		TEXT ([GGA])
+		STYLE
+			SYMBOL 'circle'
+			SIZE 4
+			OUTLINECOLOR 150 150 150
+			COLOR -1 -1 -1			
+		END
+		LABEL
+			ANTIALIAS true
+			FONT arial-bold
+			TYPE TRUETYPE
+			SIZE 13
+			COLOR 0 0 0
+			OUTLINECOLOR 254 254 254 
+			BUFFER 1
+			MINFEATURESIZE 60
+		END
+	END
+END
+# percelen kaart van het kadaster
+LAYER
+	METADATA
+	    "wms_title"				"lki_pnb_v"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "lki_pnb_v"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from lki_pnb_v"
+	STATUS ON
+	MAXSCALE 50000
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 50
+	CLASS
+		NAME "lki_pnb_v"
+		COLOR 210 210 210
+		OUTLINECOLOR 0 0 0		
+	END
+END
+# Bomen layer
+LAYER
+	METADATA
+	    "wms_title"				"verv_beh_vta"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "verv_beh_vta"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from verv_beh_vta"
+	STATUS ON
+	#MAXSCALE 100000
+	TYPE POINT
+	TOLERANCE 20
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "verv_beh_vta"
+		STYLE
+			COLOR 200 200 200
+			OUTLINECOLOR 33 0 33
+			SYMBOL "boom"
+		END
+		
+	END
+END
+#Gladheidbestrijding 
+LAYER
+	METADATA
+	    "wms_title"				"strooiroutes"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "strooiroutes"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from strooiroutes"
+	STATUS ON
+	#MAXSCALE 700000
+	TYPE LINE
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "strooiroutes"
+		STYLE
+			COLOR 0 0 0
+			SYMBOL "circle"
+			SIZE 8
+		END
+		STYLE
+			COLOR 122 215 255
+			SYMBOL "circle"
+			SIZE 6
+		END
+	END
+END
+#Tankstations
+LAYER
+	METADATA
+	    "wms_title"				"tankstations_centroid"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "tankstations_centroid"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from tankstations_centroid"
+	STATUS ON
+	#MAXSCALE 700000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "tankstations_centroid"
+		STYLE
+			COLOR 200 200 200
+			OUTLINECOLOR 33 0 33
+			SYMBOL "petrolico"
+		END
+	END
+END
+#Verkeer regel installaties
+LAYER
+	METADATA
+	    "wms_title"				"verv_beh_10_vri_p"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "verv_beh_10_vri_p"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from verv_beh_10_vri_p"
+	STATUS ON
+	#MAXSCALE 200000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "verv_beh_10_vri_p"
+		COLOR 200 200 200
+		OUTLINECOLOR 33 0 33
+		SYMBOL "verkeerslicht"
+	END
+END
+# WOL layer
+LAYER
+	METADATA
+	    "wms_title"				"beh_10_wwl_m"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "beh_10_wwl_m"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from beh_10_wwl_m"
+	STATUS ON
+	TYPE LINE
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "beh_10_wwl_m"
+		STYLE
+			COLOR 33 0 33
+			OUTLINECOLOR 33 0 33
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+END
+#Ecologisch gebieden layer
+LAYER
+	METADATA
+	    "wms_title"				"bel_sp_2002_100_agh_v"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "bel_sp_2002_100_agh_v"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from bel_sp_2002_100_agh_v"
+	STATUS ON
+	#MAXSCALE 100000
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 50
+	CLASS
+		TEXT ([sub_klasse])
+		NAME "bel_sp_2002_100_agh_v"
+		STYLE	
+			OUTLINECOLOR 120 120 120		
+			COLOR 204 102 0
+		END
+		LABEL
+			ANTIALIAS true
+			FONT arial-bold
+			TYPE TRUETYPE
+			SIZE 10
+			COLOR 204 102 0
+			OUTLINECOLOR 254 254 254 
+			BUFFER 1
+			MINFEATURESIZE 100
+		END
+	END
+END
+
+# Groen vakken layer
+LAYER
+	METADATA
+	    "wms_title"				"groenv8"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "groenv8"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from groenv8"
+	STATUS ON
+	#MAXSCALE 100000
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 50
+	CLASS
+		NAME "groenv8"
+		OUTLINECOLOR 150 150 150
+		COLOR 82 163 0
+	END
+END
+#verkeers borden
+LAYER
+	METADATA
+	    "wms_title"				"verkeersborden"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "verkeersborden"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from verkeersborden"
+	STATUS ON
+	#MAXSCALE 200000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "verkeersborden"
+		STYLE
+			COLOR 33 0 33
+			OUTLINECOLOR 33 0 33
+			SYMBOL "verkeersbord"
+		END
+	END	
+END
+#Hecto meter paaltjes
+LAYER
+	METADATA
+	    "wms_title"				"verv_nwb_hmn_p"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "verv_nwb_hmn_p"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from verv_nwb_hmn_p"
+	STATUS ON
+	#MAXSCALE 200000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "verv_nwb_hmn_p"
+		TEXT ([hm])
+		COLOR 33 0 33
+		OUTLINECOLOR 33 0 33
+	    	LABEL
+	      		ANTIALIAS true
+	      		POSITION ul
+	      		FONT arial-bold
+	      		TYPE TRUETYPE
+	      		SIZE 8
+	      		COLOR 254 254 254
+	      		BACKGROUNDCOLOR 0 204 51
+	      		BACKGROUNDSHADOWCOLOR  -1 -1 -1
+	      		# Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+	      		MINDISTANCE 10
+	      		BUFFER 1
+    		END		
+	END
+END
+
+LAYER
+	METADATA
+	    "wms_title"				"telvakken"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "telvakken"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from telvakken"
+	STATUS ON
+	#MAXSCALE 100000
+	TYPE LINE
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "telvakken"
+		COLOR 0 0 255
+		SYMBOL "circle"
+		SIZE 2
+	END
+END
+
+#kaart met de nwbwegen
+LAYER
+  NAME nwb
+  GROUP achtergrond
+  METADATA
+    "wms_title" "nwb"
+    "group_title" "achtergrond"
+  END
+  TYPE LINE
+  STATUS ON
+  CONNECTIONTYPE postgis
+  CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+  DATA "the_geom from nwb"
+  PROJECTION
+    "init=epsg:28992"
+  END
+  DUMP TRUE
+  TEMPLATE bla
+  LABELITEM "stt_naam"
+  #CLASSITEM "wegbehsrt"
+  TRANSPARENCY 100
+  CLASS
+    BACKGROUNDCOLOR 220 220 220  
+    NAME "Rijkswegen"
+    TEXT (A[wegnummerint])
+    EXPRESSION ('[wegbehsrt]'="R")
+    MAXSCALE 5000000
+    MINSCALE 200000
+    STYLE
+    	COLOR 255 0 0    	
+	SYMBOL "circle"
+    	SIZE 2
+    	ANTIALIAS true
+    END
+    LABEL
+      ANTIALIAS true
+      FONT arial-bold
+      TYPE TRUETYPE
+      SIZE 8
+      MINFEATURESIZE 40
+      COLOR 254 254 254
+      BACKGROUNDCOLOR 255 0 0
+      BACKGROUNDSHADOWCOLOR  -1 -1 -1
+      # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+      MINDISTANCE 100
+      BUFFER 1
+    END
+  END
+  CLASS    
+      NAME "Rijkswegen"
+      TEXT (A[wegnummerint])
+      EXPRESSION ('[wegbehsrt]'="R")
+      MAXSCALE 200000
+      STYLE
+      	COLOR 255 0 0    	
+  	SYMBOL "circle"
+      	SIZE 10
+      	ANTIALIAS true
+      END
+      STYLE
+          COLOR 240 240 0    	
+      	SYMBOL "circle"
+          SIZE 8
+          ANTIALIAS true
+      END
+      STYLE
+          COLOR 255 0 0    	
+      	SYMBOL "circle"
+          SIZE 4
+          ANTIALIAS true
+      END
+      LABEL
+        ANTIALIAS true
+        FONT arial-bold
+        TYPE TRUETYPE
+        SIZE 8
+        MINFEATURESIZE 40
+        COLOR 254 254 254
+        BACKGROUNDCOLOR 255 0 0
+        BACKGROUNDSHADOWCOLOR  -1 -1 -1
+        # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+        MINDISTANCE 100
+        BUFFER 1
+      END
+  END
+  CLASS
+      NAME "Provincialewegen"
+      TEXT ([wegnummer])
+      EXPRESSION ('[wegbehsrt]'="P")
+      MAXSCALE 200000
+      MINSCALE 50000
+      STYLE
+      	COLOR 255 255 0
+      	SYMBOL "circle"
+      	SIZE 3
+      	ANTIALIAS true
+      END
+      LABEL
+        ANTIALIAS true
+        FONT arial-bold
+        TYPE TRUETYPE
+        SIZE 8
+        MINFEATURESIZE 40
+        COLOR 0 0 0
+        BACKGROUNDCOLOR 255 255 0
+        BACKGROUNDSHADOWCOLOR  -1 -1 -1
+        # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+        MINDISTANCE 100
+        BUFFER 1
+      END
+  END
+  CLASS
+        NAME "Provincialewegen"
+        TEXT ([wegnummer])
+        EXPRESSION ('[wegbehsrt]'="P")
+        MAXSCALE 50000
+        STYLE
+        	COLOR 0 0 0
+        	SYMBOL "circle"
+        	SIZE 8
+        	ANTIALIAS true
+        END
+        STYLE
+        	COLOR 255 255 0
+    		SYMBOL "circle"
+        	SIZE 6
+        	ANTIALIAS true
+        END
+        
+        LABEL
+          ANTIALIAS true
+          FONT arial-bold
+          TYPE TRUETYPE
+          SIZE 8
+          MINFEATURESIZE 40
+          COLOR 0 0 0
+          BACKGROUNDCOLOR 255 255 0
+          BACKGROUNDSHADOWCOLOR  -1 -1 -1
+          # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+          MINDISTANCE 100
+          BUFFER 1
+        END
+  END
+  CLASS
+      NAME "Gemeentewegen"
+      EXPRESSION ('[wegbehsrt]'="G")
+      MAXSCALE 50000
+      MINSCALE 10000
+      STYLE
+       COLOR 102 102 102
+       SYMBOL 'circle'
+       SIZE 3
+       ANTIALIAS true
+      END
+      STYLE
+	     COLOR 254 254 254
+	     SYMBOL 'circle'
+	     SIZE 1
+	     ANTIALIAS true
+      END 
+      LABEL
+        ANTIALIAS true
+        FONT arial
+        TYPE TRUETYPE
+        SIZE 8
+        COLOR 0 0 0
+        OUTLINECOLOR 254 254 254 
+        BACKGROUNDCOLOR -1 -1 -1
+        BACKGROUNDSHADOWCOLOR  -1 -1 -1
+        # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+        MINDISTANCE 100
+        BUFFER 1
+        ANGLE AUTO
+        MINFEATURESIZE 150
+      END
+  END
+  CLASS
+        NAME "Gemeentewegen"
+        EXPRESSION ('[wegbehsrt]'="G")
+        MAXSCALE 10000
+        STYLE
+         COLOR 102 102 102
+         SYMBOL 'circle'
+         SIZE 11
+         ANTIALIAS true
+        END
+        STYLE
+         COLOR 255 255 255
+         SYMBOL 'circle'
+         SIZE 9
+         ANTIALIAS true
+        END
+        LABEL
+          ANTIALIAS true
+          FONT arial
+          TYPE TRUETYPE
+          SIZE 8
+          COLOR 0 0 0
+          OUTLINECOLOR 254 254 254 
+          BACKGROUNDCOLOR -1 -1 -1
+          BACKGROUNDSHADOWCOLOR  -1 -1 -1
+          # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
+          MINDISTANCE 100
+          BUFFER 1
+          ANGLE AUTO
+          MINFEATURESIZE 60
+        END
+  END  
+END
+
+
+END

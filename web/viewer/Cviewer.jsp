@@ -409,19 +409,23 @@
         JMapData.getMapCoords(postcode, plaatsnaam, n_nr, hm, getCoordsCallbackFunction);
     }
     
-    function getCoordsCallbackFunction(value){
-        var coords_array = value.split("*");
-        var minx = coords_array[0];
-        var miny = coords_array[1];
-        var maxx = coords_array[2];
-        var maxy = coords_array[3];
-        if (minx != 0 && miny != 0 && maxx != 0 && maxy != 0) {
-            moveToExtent(minx, miny, maxx, maxy);
-        }
-        document.getElementById('coordsResponseMinx').innerHTML = coords_array[0];
-        document.getElementById('coordsResponseMiny').innerHTML = coords_array[1];
-        document.getElementById('coordsResponseMaxx').innerHTML = coords_array[2];
-        document.getElementById('coordsResponseMaxy').innerHTML = coords_array[3];
+    function getCoordsCallbackFunction(values){
+        var searchResults=document.getElementById("searchResults");
+        searchResults.innerHTML="";
+        if (values==null){
+            searchResults.innerHTML="Er zijn geen resultaten gevonden";
+        }else{
+            if (values.length > 1){
+                var linkList="Meerdere resultaten gevonden: <br>";
+                for (var i =0; i < values.length; i++){
+                    linkList+="<a href='#' onclick='javascript: moveToExtent("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a><br>";         
+                }
+                searchResults.innerHTML=linkList;
+            }
+            else{
+                moveToExtent(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);              
+            }
+        }    
     }
     
     function showHide(nr, el) {
@@ -450,7 +454,7 @@
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
             <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=config.xml", "flamingo", "659", "493", "8", "#FFFFFF");
+            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "659", "493", "8", "#FFFFFF");
             </script>
             <!--[if lte IE 6]>
             <script type="text/javascript">
@@ -524,11 +528,9 @@
                         Ga naar locatie
                     </button><br>
                     
-                    Locatie: 
-                    <span id="coordsResponseMinx" class="response">minx:</span>,&nbsp;
-                    <span id="coordsResponseMiny" class="response">miny:</span>,&nbsp;
-                    <span id="coordsResponseMaxx" class="response">maxx:</span>,&nbsp;
-                    <span id="coordsResponseMaxy" class="response">maxy:</span>
+                    <div class="searchResultsClass" id="searchResults">             
+                        
+                    </div>
                     
                 </p> 
                 </div>

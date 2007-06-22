@@ -13,7 +13,16 @@ WEB
 END
 
 PROJECTION
-  "init=epsg:28992"
+  #"init=epsg:28992"
+  "proj=stere"
+  "lat_0=52.15616055555555"
+  "lon_0=5.38763888888889"
+  "k=0.999908"
+  "x_0=155000"
+  "y_0=463000"
+  "ellps=bessel"
+  "units=m"
+  "no_defs"  
 END
 
 # available outputformats
@@ -48,25 +57,26 @@ LEGEND
 	TRANSPARENT TRUE
 END
 
-LAYER
-	NAME gstreet-demo
-	TYPE RASTER
-	STATUS OFF
-	CONNECTIONTYPE WMS
-	CONNECTION "http://x3.b3p.nl/cgi-bin/mapserv?map=/home/mapserver/gstreet-demo.map&"
-	METADATA
-		"wms_name" "gstreet-demo"
-		"wms_srs" "EPSG:28992"
-		"wms_request" "GetMap"
-		"wms_server_version" "1.1.1"
-		"wms_layers" "gstreet5,gstreet4,gstreet3,gstreet2,gstreet1"
-		"wms_request" "GetMap"
-		"wms_format" "image/png"
-	END
-END
+#LAYER
+#	STATUS OFF
+#	NAME gstreet-demo
+#	TYPE RASTER
+#	CONNECTIONTYPE WMS
+#	CONNECTION "http://x3.b3p.nl/cgi-bin/mapserv?map=/home/mapserver/gstreet-demo.map&"
+#	METADATA
+#		"wms_name" "gstreet-demo"
+#		"wms_srs" "EPSG:28992"
+#		"wms_request" "GetMap"
+#		"wms_server_version" "1.1.1"
+#		"wms_layers" "gstreet5,gstreet4,gstreet3,gstreet2,gstreet1"
+#		"wms_request" "GetMap"
+#		"wms_format" "image/png"
+#	END
+#END
 
 LAYER
 	NAME "algm_kom_10_wgw_v"
+	STATUS OFF
 	GROUP achtergrond
 	METADATA
 	    "wms_title"				"algm_kom_10_wgw_v"	    
@@ -75,7 +85,6 @@ LAYER
 
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from algm_kom_10_wgw_v"
-	STATUS ON
 	TYPE POLYGON
 	TRANSPARENCY 20
 	DUMP TRUE
@@ -92,8 +101,6 @@ LAYER
 			  SIZE 11
 			  COLOR 255 0 0
 			  OUTLINECOLOR 254 254 254 
-			  BACKGROUNDCOLOR -1 -1 -1
-			  BACKGROUNDSHADOWCOLOR  -1 -1 -1
 			  # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
 			  MINDISTANCE 100
 			  BUFFER 1
@@ -103,6 +110,7 @@ LAYER
 END
 
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"algm_pstk_acn_p"	    
   	END
@@ -110,7 +118,6 @@ LAYER
 	NAME "algm_pstk_acn_p"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from algm_pstk_acn_p"
-	STATUS ON
 	MAXSCALE 50000
 	TYPE POINT
 	DUMP TRUE
@@ -122,13 +129,13 @@ LAYER
 			COLOR 0 0 0			
 			SYMBOL 'circle'
 			SIZE 3
-			ANTIALIAS true
       		END 
 		
         END
 END
 #Weg onderdelen layer
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"baanvakken"	    
   	END
@@ -136,7 +143,6 @@ LAYER
 	NAME "baanvakken"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from baanvakken"
-	STATUS ON
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
@@ -152,6 +158,7 @@ LAYER
 END
 
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"cyclomedia"	    
   	END
@@ -159,7 +166,6 @@ LAYER
 	NAME "cyclomedia"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from cyclomedia"
-	STATUS ON
 	#MAXSCALE 200000
 	TYPE POINT
 	DUMP TRUE
@@ -182,7 +188,7 @@ END
 #	NAME "dtb_preferred"
 #	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 #	DATA "the_geom from dtb_preferred_line USING UNIQUE id"
-#	STATUS ON
+#	STATUS OFF
 #	#MAXSCALE 100000
 #	#MINSCALE 50000
 #	TYPE LINE
@@ -196,6 +202,7 @@ END
 #END
 
 #LAYER
+#	STATUS OFF
 #	METADATA
 #	    "wms_title"				"dtb_all"	    
 #  	END
@@ -203,7 +210,6 @@ END
 #	NAME "dtb_all"
 #	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 #	DATA "the_geom from dtb_all_line USING UNIQUE id USING SRID=28992"
-#	STATUS ON
 #	#MAXSCALE 50000
 #	TYPE LINE
 #	DUMP TRUE
@@ -216,6 +222,7 @@ END
 #END
 
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"algm_grs_2006_1_gem_v"	    
   	END
@@ -224,7 +231,6 @@ LAYER
 	NAME "algm_grs_2006_1_gem_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from algm_grs_2006_1_gem_v"
-	STATUS ON
 	TYPE POLYGON
 	DUMP TRUE
 	TEMPLATE bla
@@ -235,7 +241,6 @@ LAYER
 		STYLE
 			OUTLINECOLOR 33 0 33
 			COLOR 230 230 230
-			ANTIALIAS TRUE
 		END
 		LABEL
 		  ANTIALIAS true
@@ -244,9 +249,6 @@ LAYER
 		  SIZE 11
 		  COLOR 0 0 0
 		  OUTLINECOLOR 254 254 254 
-		  BACKGROUNDCOLOR -1 -1 -1
-		  BACKGROUNDSHADOWCOLOR  -1 -1 -1
-		  # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
 		  MINDISTANCE 100
 		  BUFFER 1
 		  MINFEATURESIZE 60
@@ -254,6 +256,7 @@ LAYER
 	END
 END
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"algm_grs_2006_1_gga_v"	    
   	END
@@ -261,7 +264,6 @@ LAYER
 	NAME "algm_grs_2006_1_gga_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from algm_grs_2006_1_gga_v"
-	STATUS ON
 	TYPE POLYGON
 	DUMP TRUE
 	TEMPLATE bla
@@ -288,6 +290,7 @@ LAYER
 END
 # percelen kaart van het kadaster
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"lki_pnb_v"	    
   	END
@@ -295,7 +298,6 @@ LAYER
 	NAME "lki_pnb_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from lki_pnb_v"
-	STATUS ON
 	MAXSCALE 50000
 	TYPE POLYGON
 	DUMP TRUE
@@ -309,6 +311,7 @@ LAYER
 END
 # Bomen layer
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"verv_beh_vta"	    
   	END
@@ -316,7 +319,6 @@ LAYER
 	NAME "verv_beh_vta"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from verv_beh_vta"
-	STATUS ON
 	#MAXSCALE 100000
 	TYPE POINT
 	TOLERANCE 20
@@ -334,6 +336,7 @@ LAYER
 END
 #Gladheidbestrijding 
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"strooiroutes"	    
   	END
@@ -341,7 +344,6 @@ LAYER
 	NAME "strooiroutes"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from strooiroutes"
-	STATUS ON
 	#MAXSCALE 700000
 	TYPE LINE
 	DUMP TRUE
@@ -362,6 +364,7 @@ LAYER
 END
 #Tankstations
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"tankstations_centroid"	    
   	END
@@ -369,7 +372,6 @@ LAYER
 	NAME "tankstations_centroid"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from tankstations_centroid"
-	STATUS ON
 	#MAXSCALE 700000
 	TYPE POINT
 	DUMP TRUE
@@ -385,6 +387,7 @@ LAYER
 END
 #Verkeer regel installaties
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"verv_beh_10_vri_p"	    
   	END
@@ -392,7 +395,6 @@ LAYER
 	NAME "verv_beh_10_vri_p"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from verv_beh_10_vri_p"
-	STATUS ON
 	#MAXSCALE 200000
 	TYPE POINT
 	DUMP TRUE
@@ -406,6 +408,7 @@ LAYER
 END
 # WOL layer
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"beh_10_wwl_m"	    
   	END
@@ -413,7 +416,6 @@ LAYER
 	NAME "beh_10_wwl_m"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from beh_10_wwl_m"
-	STATUS ON
 	TYPE LINE
 	DUMP TRUE
 	TEMPLATE bla
@@ -429,6 +431,7 @@ LAYER
 END
 #Ecologisch gebieden layer
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"bel_sp_2002_100_agh_v"	    
   	END
@@ -436,7 +439,6 @@ LAYER
 	NAME "bel_sp_2002_100_agh_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from bel_sp_2002_100_agh_v"
-	STATUS ON
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
@@ -464,6 +466,7 @@ END
 
 # Groen vakken layer
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"groenv8"	    
   	END
@@ -471,7 +474,6 @@ LAYER
 	NAME "groenv8"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from groenv8"
-	STATUS ON
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
@@ -485,6 +487,7 @@ LAYER
 END
 #verkeers borden
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"verkeersborden"	    
   	END
@@ -492,7 +495,6 @@ LAYER
 	NAME "verkeersborden"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from verkeersborden"
-	STATUS ON
 	#MAXSCALE 200000
 	TYPE POINT
 	DUMP TRUE
@@ -508,6 +510,7 @@ LAYER
 END
 #Hecto meter paaltjes
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"verv_nwb_hmn_p"	    
   	END
@@ -515,7 +518,6 @@ LAYER
 	NAME "verv_nwb_hmn_p"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from verv_nwb_hmn_p"
-	STATUS ON
 	#MAXSCALE 200000
 	TYPE POINT
 	DUMP TRUE
@@ -533,8 +535,6 @@ LAYER
 	      		SIZE 8
 	      		COLOR 254 254 254
 	      		BACKGROUNDCOLOR 0 204 51
-	      		BACKGROUNDSHADOWCOLOR  -1 -1 -1
-	      		# Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
 	      		MINDISTANCE 10
 	      		BUFFER 1
     		END		
@@ -542,6 +542,7 @@ LAYER
 END
 
 LAYER
+	STATUS OFF
 	METADATA
 	    "wms_title"				"telvakken"	    
   	END
@@ -549,7 +550,6 @@ LAYER
 	NAME "telvakken"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from telvakken"
-	STATUS ON
 	#MAXSCALE 100000
 	TYPE LINE
 	DUMP TRUE
@@ -565,13 +565,13 @@ END
 #kaart met de nwbwegen
 LAYER
   NAME nwb
+  STATUS OFF
   GROUP achtergrond
   METADATA
     "wms_title" "nwb"
     "group_title" "achtergrond"
   END
   TYPE LINE
-  STATUS ON
   CONNECTIONTYPE postgis
   CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
   DATA "the_geom from nwb"
@@ -594,7 +594,6 @@ LAYER
     	COLOR 255 0 0    	
 	SYMBOL "circle"
     	SIZE 2
-    	ANTIALIAS true
     END
     LABEL
       ANTIALIAS true
@@ -604,8 +603,6 @@ LAYER
       MINFEATURESIZE 40
       COLOR 254 254 254
       BACKGROUNDCOLOR 255 0 0
-      BACKGROUNDSHADOWCOLOR  -1 -1 -1
-      # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
       MINDISTANCE 100
       BUFFER 1
     END
@@ -619,19 +616,16 @@ LAYER
       	COLOR 255 0 0    	
   	SYMBOL "circle"
       	SIZE 10
-      	ANTIALIAS true
       END
       STYLE
           COLOR 240 240 0    	
       	SYMBOL "circle"
           SIZE 8
-          ANTIALIAS true
       END
       STYLE
           COLOR 255 0 0    	
       	SYMBOL "circle"
           SIZE 4
-          ANTIALIAS true
       END
       LABEL
         ANTIALIAS true
@@ -641,8 +635,6 @@ LAYER
         MINFEATURESIZE 40
         COLOR 254 254 254
         BACKGROUNDCOLOR 255 0 0
-        BACKGROUNDSHADOWCOLOR  -1 -1 -1
-        # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
         MINDISTANCE 100
         BUFFER 1
       END
@@ -657,7 +649,6 @@ LAYER
       	COLOR 255 255 0
       	SYMBOL "circle"
       	SIZE 3
-      	ANTIALIAS true
       END
       LABEL
         ANTIALIAS true
@@ -667,8 +658,6 @@ LAYER
         MINFEATURESIZE 40
         COLOR 0 0 0
         BACKGROUNDCOLOR 255 255 0
-        BACKGROUNDSHADOWCOLOR  -1 -1 -1
-        # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
         MINDISTANCE 100
         BUFFER 1
       END
@@ -682,13 +671,11 @@ LAYER
         	COLOR 0 0 0
         	SYMBOL "circle"
         	SIZE 8
-        	ANTIALIAS true
         END
         STYLE
         	COLOR 255 255 0
     		SYMBOL "circle"
         	SIZE 6
-        	ANTIALIAS true
         END
         
         LABEL
@@ -699,8 +686,6 @@ LAYER
           MINFEATURESIZE 40
           COLOR 0 0 0
           BACKGROUNDCOLOR 255 255 0
-          BACKGROUNDSHADOWCOLOR  -1 -1 -1
-          # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
           MINDISTANCE 100
           BUFFER 1
         END
@@ -714,13 +699,11 @@ LAYER
        COLOR 102 102 102
        SYMBOL 'circle'
        SIZE 3
-       ANTIALIAS true
       END
       STYLE
 	     COLOR 254 254 254
 	     SYMBOL 'circle'
 	     SIZE 1
-	     ANTIALIAS true
       END 
       LABEL
         ANTIALIAS true
@@ -729,9 +712,6 @@ LAYER
         SIZE 8
         COLOR 0 0 0
         OUTLINECOLOR 254 254 254 
-        BACKGROUNDCOLOR -1 -1 -1
-        BACKGROUNDSHADOWCOLOR  -1 -1 -1
-        # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
         MINDISTANCE 100
         BUFFER 1
         ANGLE AUTO
@@ -746,13 +726,11 @@ LAYER
          COLOR 102 102 102
          SYMBOL 'circle'
          SIZE 11
-         ANTIALIAS true
         END
         STYLE
          COLOR 255 255 255
          SYMBOL 'circle'
          SIZE 9
-         ANTIALIAS true
         END
         LABEL
           ANTIALIAS true
@@ -761,9 +739,6 @@ LAYER
           SIZE 8
           COLOR 0 0 0
           OUTLINECOLOR 254 254 254 
-          BACKGROUNDCOLOR -1 -1 -1
-          BACKGROUNDSHADOWCOLOR  -1 -1 -1
-          # Dezelfde autoweg minimaal 150 pixels van elkaar meerdere keren labelen
           MINDISTANCE 100
           BUFFER 1
           ANGLE AUTO

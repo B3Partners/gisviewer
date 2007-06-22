@@ -162,7 +162,7 @@ public class SpatialUtil {
     
     static public String postalcodeRDCoordinates(String tabel, String searchparam, String param) {
         return "select distinct " + searchparam + " as naam, astext(tbl.the_geom) as pointsresult from " + 
-                tabel + " tbl where tbl." + searchparam + " = '" + param + "'";
+                tabel + " tbl where lower(tbl." + searchparam + ") = lower('" + param + "')";
     }
     
     static public String cityRDCoordinates(String tabel, String searchparam, String param) {
@@ -177,8 +177,8 @@ public class SpatialUtil {
                 "(select min("+
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")*" + 
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")) " + 
-                "from " + tabel + " hecto where hecto.n_nr = '" + n_nr + "' ) " + 
-                "AND hecto.n_nr = '" + n_nr + "'";
+                "from " + tabel + " hecto where lower(hecto.n_nr) = lower('" + n_nr + "') ) " + 
+                "AND lower(hecto.n_nr) = lower('" + n_nr + "')";
         
         /* Example query:
          * select astext(hecto.the_geom) from verv_nwb_hmn_p hecto where 

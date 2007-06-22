@@ -429,26 +429,45 @@
     }
     
     function showHide(nr, el) {
-        if(el.value == "") {
-            document.getElementById('show1').disabled = false;
-            document.getElementById('show2').disabled = false;
-            document.getElementById('show3').disabled = false;
-            document.getElementById('show4').disabled = false;
-        } else {
-            if(nr == 3 || nr == 4) {
-                document.getElementById('show1').disabled = true;
-                document.getElementById('show2').disabled = true;
-            } else if(nr == 2) {
-                document.getElementById('show1').disabled = true;
-                document.getElementById('show3').disabled = true;
-                document.getElementById('show4').disabled = true;
-            } else if(nr == 1) {
-                document.getElementById('show2').disabled = true;
-                document.getElementById('show3').disabled = true;
-                document.getElementById('show4').disabled = true;
-            }
+        if(nr == 3 || nr == 4) {
+            document.getElementById('show1').disabled = true;
+            document.getElementById('show1').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show2').disabled = true;
+            document.getElementById('show2').style.backgroundColor = '#A1A1A1';
+        } else if(nr == 2) {
+            document.getElementById('show1').disabled = true;
+            document.getElementById('show1').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show3').disabled = true;
+            document.getElementById('show3').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show4').disabled = true;
+            document.getElementById('show4').style.backgroundColor = '#A1A1A1';
+        } else if(nr == 1) {
+            document.getElementById('show2').disabled = true;
+            document.getElementById('show2').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show3').disabled = true;
+            document.getElementById('show3').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show4').disabled = true;
+            document.getElementById('show4').style.backgroundColor = '#A1A1A1';
         }
-    }    
+    }
+    
+    function eraseSubmit() {
+        document.getElementById('show1').value = "";
+        document.getElementById('show2').value = "";
+        document.getElementById('show3').value = "";
+        document.getElementById('show4').value = "";
+        
+        document.getElementById('show1').style.backgroundColor = '';
+        document.getElementById('show2').style.backgroundColor = '';
+        document.getElementById('show3').style.backgroundColor = '';
+        document.getElementById('show4').style.backgroundColor = '';
+        
+        document.getElementById('show1').disabled = false;
+        document.getElementById('show2').disabled = false;
+        document.getElementById('show3').disabled = false;
+        document.getElementById('show4').disabled = false;
+    }
+    
     </script>    
     <div id="map"><div id="flashcontent">
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
@@ -508,24 +527,26 @@
                     <table>
                     <tr>
                         <td>Postcode:</td>
-                        <td><input type="text" id="show1" name="show1" onchange="showHide(1, this);" size="5"/></td>
+                        <td><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></td>
                     </tr>
                     <tr>
                         <td>Plaatsnaam:</td>
-                        <td><input type="text" id="show2" name="show2" onchange="showHide(2, this);" size="20"/></td>
+                        <td><input type="text" id="show2" name="show2" onfocus="showHide(2, this);" size="20"/></td>
                     </tr>
                     <tr>
-                        <td>Weg nr:</td>
-                        <td><input type="text" id="show3" name="show3" onchange="showHide(3, this);" size="5"/></td>
-                    </tr>
-                    <tr>
-                        <td>Hectometer:</td>
-                        <td><input type="text" id="show4" name="show4" onchange="showHide(4, this);" size="5"/></td>
+                        <td>Weg nr / hm:</td>
+                        <td>
+                            <input type="text" id="show3" name="show3" onfocus="showHide(3, this);" size="5"/> / 
+                            <input type="text" id="show4" name="show4" onfocus="showHide(4, this);" size="5"/>
+                        </td>
                     </tr>
                     </table> 
 
                     <button onclick="getCoords();">
                         Ga naar locatie
+                    </button>&nbsp;
+                    <button onclick="eraseSubmit();">
+                        Wis invoer
                     </button><br>
                     
                     <div class="searchResultsClass" id="searchResults">             

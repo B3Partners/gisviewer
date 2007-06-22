@@ -139,7 +139,7 @@ public class GetMapData {
             ydist = 200;
             tabel = "algm_pstk_acn_p";
             searchparam = "postcode";
-            param = postcode;
+            param = postcode.replaceAll(" ", "");
             query = SpatialUtil.postalcodeRDCoordinates(tabel, searchparam, param);
         } else if (!plaatsnaam.equals("")) {
             xdist = 1600;

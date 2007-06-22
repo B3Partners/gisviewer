@@ -526,7 +526,8 @@
                 
                 <!-- input fields for search -->
                 <div>
-                <h3>Zoek naar locatie:</h3>
+                <br>
+                <b>Zoek naar locatie:</b>
                 <p>
                     <table>
                     <tr>

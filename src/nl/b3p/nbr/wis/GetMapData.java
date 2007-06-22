@@ -141,7 +141,7 @@ public class GetMapData {
             searchparam = "postcode";
             param = postcode.replaceAll(" ", "");
             query = SpatialUtil.postalcodeRDCoordinates(tabel, searchparam, param);
-        } else if (!plaatsnaam.equals("")) {
+        } else if (!plaatsnaam.equals("") && (plaatsnaam.indexOf("%") == -1)) {
             xdist = 1600;
             ydist = 1600;
             tabel = "algm_kom_10_wgw_v";

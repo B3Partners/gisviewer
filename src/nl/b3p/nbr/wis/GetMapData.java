@@ -125,7 +125,7 @@ public class GetMapData {
         return "" + postcode + " " + huisnr + " " + toev + " - " + plaats;
     }
     
-    public String getMapCoords(String postcode, String plaatsnaam, String n_nr, String hm) {
+    public ArrayList getMapCoords(String postcode, String plaatsnaam, String n_nr, String hm) {
         String searchparam = new String();
         String param = new String();
         String tabel = new String();
@@ -140,7 +140,7 @@ public class GetMapData {
             tabel = "algm_pstk_acn_p";
             searchparam = "postcode";
             param = postcode;
-            query = SpatialUtil.postalcodeOrCityRDCoordinates(tabel, searchparam, param);
+            query = SpatialUtil.postalcodeRDCoordinates(tabel, searchparam, param);
         } else if (!plaatsnaam.equals("")) {
             xdist = 1600;
             ydist = 1600;
@@ -154,32 +154,33 @@ public class GetMapData {
             tabel = "verv_nwb_hmn_p";
             searchparam = "hm";
             query = SpatialUtil.wolHMRDCoordinates(tabel, searchparam, hm.toUpperCase(), n_nr);
-        } else {
-            //Er is niets opgegeven....
         }
         
-        int x = 0;
-        int y = 0;
-        
-        
-        
-        SessionFactory sf = HibernateUtil.getSessionFactory();
-        Session sess = sf.openSession();
-        Connection connection = sess.connection();
+        SessionFactory sf       = HibernateUtil.getSessionFactory();
+        Session sess            = sf.openSession();
+        Connection connection   = sess.connection();
+        ArrayList coords        = new ArrayList();
         
         try {
-            
             PreparedStatement statement = connection.prepareStatement(query);
-            String test = new String();
             try {
+                boolean searchplaats = true;
                 ResultSet rs = statement.executeQuery();
-                if(rs.next()) {
+                while(rs.next()) {
                     String point = rs.getString("pointsresult");
-                    int begin  = point.indexOf("(");
-                    int middle = point.indexOf(" ");
-                    int end    = point.indexOf(")");
-                    x = (int)(Double.parseDouble(point.substring(begin + 1, middle)));
-                    y = (int)(Double.parseDouble(point.substring(middle + 1, end)));
+                    int x = (int)(Double.parseDouble(point.substring(point.indexOf("(") + 1, point.indexOf(" "))));
+                    int y = (int)(Double.parseDouble(point.substring(point.indexOf(" ") + 1, point.indexOf(")"))));
+                    String naam = rs.getString("naam");
+                    if(x != 0 && y != 0 && searchplaats) {
+                        MapCoordsBean mbc = new MapCoordsBean();
+                        mbc.setNaam(rs.getString("naam"));
+                        mbc.setMinx("" + (x - xdist));
+                        mbc.setMiny("" + (y - ydist));
+                        mbc.setMaxx("" + (x + xdist));
+                        mbc.setMaxy("" + (y + ydist));
+                        coords.add(mbc);
+                        searchplaats = (!plaatsnaam.equals(""));
+                    }
                 }
             } finally {
                 statement.close();
@@ -190,13 +191,10 @@ public class GetMapData {
             sess.close();
         }
         
-        if(x != 0 && y != 0) {
-            double minx = x - xdist;
-            double miny = y - ydist;
-            double maxx = x + xdist;
-            double maxy = y + ydist;
-            return "" + minx + "*" + miny + "*" + maxx + "*" + maxy;
-        } else
-            return "0*0*0*0";
+        if (!coords.isEmpty()) {
+            return coords;
+        } else {
+            return null;
+        }
     }
 }

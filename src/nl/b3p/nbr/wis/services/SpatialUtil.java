@@ -160,19 +160,18 @@ public class SpatialUtil {
         return sq.toString();
     }
     
-    static public String postalcodeOrCityRDCoordinates(String tabel, String searchparam, String param) {
-        return "select distinct astext(tbl.the_geom) as pointsresult from " + 
+    static public String postalcodeRDCoordinates(String tabel, String searchparam, String param) {
+        return "select distinct " + searchparam + " as naam, astext(tbl.the_geom) as pointsresult from " + 
                 tabel + " tbl where tbl." + searchparam + " = '" + param + "'";
     }
     
     static public String cityRDCoordinates(String tabel, String searchparam, String param) {
-        return "select distinct astext(centroid(tbl.the_geom)) as pointsresult from " + 
-                tabel + " tbl where lower(tbl." + searchparam + ") = lower('" + param + "')";
+        return "select distinct " + searchparam + " as naam, astext(centroid(tbl.the_geom)) as pointsresult from " + 
+                tabel + " tbl where lower(tbl." + searchparam + ") like lower('%" + param + "%')";
     }
     
-    
     static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr) {
-        return  "select astext(hecto.the_geom) as pointsresult from " + tabel + " hecto where (" + 
+        return  "select " + searchparam + " as naam, astext(hecto.the_geom) as pointsresult from " + tabel + " hecto where (" + 
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")*" + 
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")) = " +
                 "(select min("+

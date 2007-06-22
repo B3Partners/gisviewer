@@ -430,24 +430,28 @@
     
     function showHide(nr, el) {
         if(nr == 3 || nr == 4) {
-            document.getElementById('show1').disabled = true;
             document.getElementById('show1').style.backgroundColor = '#A1A1A1';
-            document.getElementById('show2').disabled = true;
+            document.getElementById('show1').value = '';
             document.getElementById('show2').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show2').value = '';
+            document.getElementById('show3').style.backgroundColor = '';
+            document.getElementById('show4').style.backgroundColor = '';
         } else if(nr == 2) {
-            document.getElementById('show1').disabled = true;
             document.getElementById('show1').style.backgroundColor = '#A1A1A1';
-            document.getElementById('show3').disabled = true;
+            document.getElementById('show1').value = '';
+            document.getElementById('show2').style.backgroundColor = '';
             document.getElementById('show3').style.backgroundColor = '#A1A1A1';
-            document.getElementById('show4').disabled = true;
+            document.getElementById('show3').value = '';
             document.getElementById('show4').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show4').value = '';
         } else if(nr == 1) {
-            document.getElementById('show2').disabled = true;
+            document.getElementById('show1').style.backgroundColor = ''
             document.getElementById('show2').style.backgroundColor = '#A1A1A1';
-            document.getElementById('show3').disabled = true;
+            document.getElementById('show2').value = '';
             document.getElementById('show3').style.backgroundColor = '#A1A1A1';
-            document.getElementById('show4').disabled = true;
+            document.getElementById('show3').value = '';
             document.getElementById('show4').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show4').value = '';
         }
     }
     
@@ -527,7 +531,7 @@
                     <table>
                     <tr>
                         <td>Postcode:</td>
-                        <td><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></td>
+                        <td><div onclick="showHide(1, this);"><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></div></td>
                     </tr>
                     <tr>
                         <td>Plaatsnaam:</td>

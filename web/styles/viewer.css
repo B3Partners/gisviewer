@@ -191,7 +191,6 @@ button {
 
 .searchResultsClass{
     margin-top: 10px;
-    border: 1px solid black;
     width: 275px;
     height: 280px;    
     overflow: auto;

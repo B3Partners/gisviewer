@@ -13,6 +13,7 @@
     <xguide id="mx" x="50%"/>
     <fmc:MonitorLayer id="monitorl" left="25%" top="70%" width="50%" listento="map1">
         <string id="waiting"  en="Making... [layer] [percentage]%..." nl="Kaart aan het maken..."/>
+        <string id="loading"  en="Making... [layer] [percentage]%..." nl="Kaart aan het laden. [percentage]%"/>
     </fmc:MonitorLayer>    
     <fmc:ToolGroup tool="zoom" listento="map1" width="148" height="65" left="0" top="0%">
         <fmc:ToolZoomin id="zoom"/>

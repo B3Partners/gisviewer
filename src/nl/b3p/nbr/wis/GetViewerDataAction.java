@@ -107,7 +107,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         StringBuffer result = new StringBuffer("");
         Map params = request.getParameterMap();
-        if (!params.isEmpty()) {
+        if (!params.isEmpty() && t!=null) {
             Iterator it = params.keySet().iterator();
             Boolean done=false;
             while (it.hasNext()) {
@@ -493,57 +493,57 @@ public class GetViewerDataAction extends BaseHibernateAction {
     
     public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
-        
-        List thema_items = SpatialUtil.getThemaData(t, true);
-        request.setAttribute("thema_items", thema_items);
-        
-        String lagen = request.getParameter("lagen");
-        request.setAttribute(Themas.THEMAID, t.getId());
-        request.setAttribute("lagen", lagen);
-        request.setAttribute("xcoord", request.getParameter("xcoord"));
-        request.setAttribute("ycoord", request.getParameter("ycoord"));
-        
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        List ctl = null;
-        String hquery = "FROM Themas WHERE locatie_thema = true AND (moscow = 1 OR moscow = 2 OR moscow = 3) AND code < 3";
-//        if(!lagen.equals("ALL")) {
-//            hquery += " AND (";
-//            String[] alleLagen = lagen.split(",");
-//            boolean firstTime = true;
-//            for(int i = 0; i < alleLagen.length; i++) {
-//                if(firstTime) {
-//                    hquery += "id = " + alleLagen[i];
-//                    firstTime = false;
-//                } else {
-//                    hquery += " OR id = " + alleLagen[i];
-//                }
-//            }
-//            hquery += ")";
-//        }
-        
-        ArrayList analysedata = new ArrayList();
-        Query q = sess.createQuery(hquery);
-        ctl = q.list();
-        if(ctl != null) {
-            Iterator it = ctl.iterator();
-            while(it.hasNext()) {
-                ArrayList thema = new ArrayList();
-                Themas tt = (Themas) it.next();
-                thema.add(tt.getNaam());
-                thema.add(tt.getId());
-                
-                List tthema_items = SpatialUtil.getThemaData(tt, true);
-                
-                List pks = findPks(tt, mapping, dynaForm, request);
-                List ao = getThemaObjects(tt, pks, tthema_items);
-                if (ao==null)
-                    ao = new ArrayList();
-                thema.add(ao);
-                analysedata.add(thema);
+        if (t!=null){
+            List thema_items = SpatialUtil.getThemaData(t, true);
+            request.setAttribute("thema_items", thema_items);
+
+            String lagen = request.getParameter("lagen");
+            request.setAttribute(Themas.THEMAID, t.getId());
+            request.setAttribute("lagen", lagen);
+            request.setAttribute("xcoord", request.getParameter("xcoord"));
+            request.setAttribute("ycoord", request.getParameter("ycoord"));
+
+            Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+            List ctl = null;
+            String hquery = "FROM Themas WHERE locatie_thema = true AND (moscow = 1 OR moscow = 2 OR moscow = 3) AND code < 3";
+    //        if(!lagen.equals("ALL")) {
+    //            hquery += " AND (";
+    //            String[] alleLagen = lagen.split(",");
+    //            boolean firstTime = true;
+    //            for(int i = 0; i < alleLagen.length; i++) {
+    //                if(firstTime) {
+    //                    hquery += "id = " + alleLagen[i];
+    //                    firstTime = false;
+    //                } else {
+    //                    hquery += " OR id = " + alleLagen[i];
+    //                }
+    //            }
+    //            hquery += ")";
+    //        }
+
+            ArrayList analysedata = new ArrayList();
+            Query q = sess.createQuery(hquery);
+            ctl = q.list();
+            if(ctl != null) {
+                Iterator it = ctl.iterator();
+                while(it.hasNext()) {
+                    ArrayList thema = new ArrayList();
+                    Themas tt = (Themas) it.next();
+                    thema.add(tt.getNaam());
+                    thema.add(tt.getId());
+
+                    List tthema_items = SpatialUtil.getThemaData(tt, true);
+
+                    List pks = findPks(tt, mapping, dynaForm, request);
+                    List ao = getThemaObjects(tt, pks, tthema_items);
+                    if (ao==null)
+                        ao = new ArrayList();
+                    thema.add(ao);
+                    analysedata.add(thema);
+                }
             }
+            request.setAttribute("analyse_data", analysedata);            
         }
-        request.setAttribute("analyse_data", analysedata);
-        
         return mapping.findForward("analysedata");
     }
     
@@ -641,8 +641,9 @@ public class GetViewerDataAction extends BaseHibernateAction {
         return getThema(themaid);
     }
     protected Themas getThema(String themaid){
-        if (themaid==null)
+        if (themaid==null || themaid.length()==0){
             return null;
+        }
         Integer id = new Integer(themaid);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Themas t = (Themas)sess.get(Themas.class, id);

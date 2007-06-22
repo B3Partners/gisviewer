@@ -34,13 +34,28 @@
             <td>
                 <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" />
             </td>
-            <td valign="bottom">
+            <td valign="top">
                 <h1>WIS Demo voor de provincie Noord Brabant</h1>
             </td>
         </tr>
         <tr>
             <td colspan="2">
                 <p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" valign="bottom" align="center">
+                <a style="font-size: 13px; text-decoration: underline;" href="viewer.do">KLIK HIER OM DOOR TE GAAN NAAR DE WIS DEMO</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <p><br><br>
+            </td>
+        </tr>        
+        <tr>
+            <td colspan="2" valign="bottom" align="center">
+                <h1>Aanmelden voor de communicatie mailinglijst</h1>
             </td>
         </tr>
         <tr>

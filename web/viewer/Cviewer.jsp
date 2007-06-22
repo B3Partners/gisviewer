@@ -406,7 +406,9 @@
         var plaatsnaam = document.getElementById("show2").value;
         var n_nr = document.getElementById("show3").value;
         var hm = document.getElementById("show4").value;
+        document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
         JMapData.getMapCoords(postcode, plaatsnaam, n_nr, hm, getCoordsCallbackFunction);
+        
     }
     
     function getCoordsCallbackFunction(values){
@@ -527,8 +529,7 @@
                 <!-- input fields for search -->
                 <div>
                 <br>
-                <b>Zoek naar locatie:</b>
-                <p>
+                <b>Zoek naar locatie:</b>                
                     <table>
                     <tr>
                         <td>Postcode:</td>

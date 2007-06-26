@@ -45,10 +45,20 @@
         </action>
         <action path="/index" forward="/index.jsp"/>
         <action path="/help" forward="/help.jsp"/>
-        <action path="/etl" forward="/etl/etlBase.jsp"/>
+        
+        <action path="/etl" forward="/etl/etlHomeBase.jsp"/>
+        <action path="/etlscheduler" forward="/etl/etlSchedulerBase.jsp"/>
+        
+        
         <action path="/etltransform" type="nl.b3p.nbr.wis.ETLTransformAction">
             <forward name="success" path="/etl/etlTransformBase.jsp"/>
         </action>
+        
+        <action path="/etlthemalijst" type="nl.b3p.nbr.wis.ETLTransformAction">
+            <forward name="success" path="/etl/etlThemaLijstBase.jsp"/>
+        </action>
+        
+        
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.jsp"/>
             <forward name="continue" path="/index.jsp"/>

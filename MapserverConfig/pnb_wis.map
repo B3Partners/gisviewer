@@ -3,6 +3,7 @@ STATUS ON
 SYMBOLSET "symbol.map"
 EXTENT 15000 322000 30000 640000
 FONTSET "../fonts/fonts.list"
+IMAGECOLOR 255 255 255
 WEB
   IMAGEPATH "../temp"
   METADATA
@@ -560,6 +561,194 @@ LAYER
 		SYMBOL "circle"
 		SIZE 2
 	END
+END
+
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"kunstwerken"	    
+	    "gml_include_items" "all"
+  	END
+	CONNECTIONTYPE postgis
+	NAME "kunstwerken"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from kunstwerken"
+	#MAXSCALE 100000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	TOLERANCE 100
+	TRANSPARENCY alpha
+	CLASS
+		EXPRESSION ('[s]'="B")
+		NAME "Brug"
+		STYLE			
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "brug"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="B-H")
+		NAME "Brug-hoogte"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "brugHoogte"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="B-L")
+		NAME "B-L"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "bewegendeBrug"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="C")
+		NAME "Constructie"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "constructie"
+		END
+	END	
+	CLASS
+		
+		EXPRESSION ('[s]'="D")
+		NAME "Duiker"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "duiker"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="D-F")
+		NAME "Ontsnippering"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "ontsnippering"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="D-L")
+		NAME "Duiker langs weg liggend"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "duikerLangsWeg"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="K")
+		NAME "Knel kruispunt"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "knelKruispunt"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="O")
+		NAME "O"
+		TEXT ([s])
+		LABEL
+			ANTIALIAS true
+			FONT arial-bold
+			TYPE TRUETYPE
+			SIZE 8
+			COLOR 0 0 0
+			MINDISTANCE 10
+			BUFFER 1
+		END
+		STYLE
+			COLOR 0 0 255
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="R")
+		NAME "Rotonde"
+		STYLE
+			COLOR 0 0 255
+			SYMBOL "rotondeElement"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="R-A")
+		NAME "Rotonde asfalt"
+		STYLE
+			COLOR 0 0 255
+			SYMBOL "rotondeAsfalt"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="R-B")
+		NAME "Rotonde beton"
+		STYLE
+			COLOR 0 0 255
+			SYMBOL "rotondeBeton"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="R-E")
+		NAME "Rotonde element"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "rotondeElement"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="S")
+		NAME "Spoorwegovergang"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "spoorwegovergang"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="T")
+		NAME "Tunnel"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "tunnel"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="T-H")
+		NAME "Tunnel hoogte"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "tunnelHoogte"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="V")
+		NAME "Viadukt"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "viadukt"
+		END
+	END
+	CLASS
+		EXPRESSION ('[s]'="V-H")
+		NAME "Viadukt hoogte"
+		STYLE
+			ANGLE [weg_richting]
+			COLOR 0 0 255
+			SYMBOL "viaduktHoogte"
+		END
+	END		
 END
 
 #kaart met de nwbwegen

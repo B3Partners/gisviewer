@@ -562,7 +562,8 @@ LAYER
 		SIZE 2
 	END
 END
-
+# kunstwerken
+# Let op!! Dit is voor FSW 1.3.1 !!! Alle properties met ITEM er in (ANGLEITEM) worden vervangen door de waarde tussen [] te zetten.
 LAYER
 	STATUS OFF
 	METADATA
@@ -583,7 +584,7 @@ LAYER
 		EXPRESSION ('[s]'="B")
 		NAME "Brug"
 		STYLE			
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "brug"
 		END
@@ -592,7 +593,7 @@ LAYER
 		EXPRESSION ('[s]'="B-H")
 		NAME "Brug-hoogte"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "brugHoogte"
 		END
@@ -601,7 +602,7 @@ LAYER
 		EXPRESSION ('[s]'="B-L")
 		NAME "B-L"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "bewegendeBrug"
 		END
@@ -610,7 +611,7 @@ LAYER
 		EXPRESSION ('[s]'="C")
 		NAME "Constructie"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "constructie"
 		END
@@ -620,7 +621,7 @@ LAYER
 		EXPRESSION ('[s]'="D")
 		NAME "Duiker"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "duiker"
 		END
@@ -629,7 +630,7 @@ LAYER
 		EXPRESSION ('[s]'="D-F")
 		NAME "Ontsnippering"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "ontsnippering"
 		END
@@ -638,7 +639,7 @@ LAYER
 		EXPRESSION ('[s]'="D-L")
 		NAME "Duiker langs weg liggend"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "duikerLangsWeg"
 		END
@@ -647,7 +648,7 @@ LAYER
 		EXPRESSION ('[s]'="K")
 		NAME "Knel kruispunt"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "knelKruispunt"
 		END
@@ -699,7 +700,6 @@ LAYER
 		EXPRESSION ('[s]'="R-E")
 		NAME "Rotonde element"
 		STYLE
-			ANGLE [weg_richting]
 			COLOR 0 0 255
 			SYMBOL "rotondeElement"
 		END
@@ -708,7 +708,7 @@ LAYER
 		EXPRESSION ('[s]'="S")
 		NAME "Spoorwegovergang"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "spoorwegovergang"
 		END
@@ -717,7 +717,7 @@ LAYER
 		EXPRESSION ('[s]'="T")
 		NAME "Tunnel"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "tunnel"
 		END
@@ -726,7 +726,7 @@ LAYER
 		EXPRESSION ('[s]'="T-H")
 		NAME "Tunnel hoogte"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "tunnelHoogte"
 		END
@@ -735,7 +735,7 @@ LAYER
 		EXPRESSION ('[s]'="V")
 		NAME "Viadukt"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "viadukt"
 		END
@@ -744,7 +744,7 @@ LAYER
 		EXPRESSION ('[s]'="V-H")
 		NAME "Viadukt hoogte"
 		STYLE
-			ANGLE [weg_richting]
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "viaduktHoogte"
 		END
@@ -764,9 +764,6 @@ LAYER
   CONNECTIONTYPE postgis
   CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
   DATA "the_geom from nwb"
-  PROJECTION
-    "init=epsg:28992"
-  END
   DUMP TRUE
   TEMPLATE bla
   LABELITEM "stt_naam"

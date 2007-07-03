@@ -189,10 +189,10 @@ public class SpatialUtil {
          */
     }
     
-    public static String intersectionArea(String operator,String tb1, String tb2, String id,int divide) {
-        return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide);
+    public static String intersectionArea(String operator,String tb1, String tb2, String id,int divide, String extraCriteria) {
+        return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide, extraCriteria);
     }
-    static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,String idColumnName, String id,int divide){
+    static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,String idColumnName, String id,int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select ("+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+"))))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
@@ -200,14 +200,14 @@ public class SpatialUtil {
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
-        sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
     }  
-    static public String intersectionLength(String operator,String tb1,String tb2,String id,int divide){
-        return intersectionLength(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide);
+    static public String intersectionLength(String operator,String tb1,String tb2,String id,int divide, String extraCriteria){
+        return intersectionLength(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide, extraCriteria);
     }
     /**/
-    static public String intersectionLength(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2, String idColumnName, String id,int divide){
+    static public String intersectionLength(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2, String idColumnName, String id,int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select "+operator+"(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
@@ -215,39 +215,39 @@ public class SpatialUtil {
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
-        sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
     }
     /**
      *Maakt een query string die alle objecten selecteerd uit tb1 waarvan het object een relatie heeft volgens de meegegeven relatie
      *met het geo object van tb2
      */
-    static public String hasRelationQuery(String tb1,String tb2, String relationFunction,String saf, String analyseObjectId){
+    static public String hasRelationQuery(String tb1,String tb2, String relationFunction,String saf, String analyseObjectId, String extraCriteriaString){
         //"select * from <themaGeomTabel> tb1, <analyseGeomTable> tb2 where tb1.<theGeom> tb2.<theGeom>";
-        return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId);
+        return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId, extraCriteriaString);
     }
-    static public String hasRelationQuery(String tb1,String geomColumn1,String tb2, String geomColumn2, String relationFunction,String saf,String idColumnName,String analyseObjectId){
+    static public String hasRelationQuery(String tb1,String geomColumn1,String tb2, String geomColumn2, String relationFunction,String saf,String idColumnName,String analyseObjectId, String extraCriteriaString){
         //"select * from <themaGeomTabel> tb1, <analyseGeomTable> tb2 where tb1.<theGeom> tb2.<theGeom>";
         StringBuffer sq= new StringBuffer();
         sq.append("select tb1."+saf+" ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
         sq.append("where tb2."+idColumnName+" = "+analyseObjectId+" ");
         sq.append("and "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+") ");
-        sq.append("limit 50");
+        sq.append(extraCriteriaString + "limit 50");
         return sq.toString();
     }
-    static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1){
-        return containsQuery(select,table1,"the_geom",table2,"the_geom",tableIdColumn1,tableId1);
+    static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1, String extraCriteria){
+        return containsQuery(select,table1,"the_geom",table2,"the_geom",tableIdColumn1,tableId1, extraCriteria);
     }
     
-    static public String containsQuery(String select,String table1,String geomColumn1, String table2, String geomColumn2,String tableIdColumn1,String tableId1){
+    static public String containsQuery(String select,String table1,String geomColumn1, String table2, String geomColumn2,String tableIdColumn1,String tableId1, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
         sq.append(select+" ");
         sq.append("from ");
         sq.append(table1+ " tb1, "+table2+" tb2 where ");
         sq.append ("tb1."+tableIdColumn1+" = "+tableId1+" ");
-        sq.append("and Contains(tb1."+geomColumn1+",tb2."+geomColumn2+")");
+        sq.append("and Contains(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();       
     }
     static public void testMetaData(Connection conn) throws SQLException {

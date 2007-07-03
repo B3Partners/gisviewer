@@ -102,258 +102,408 @@ public class GetViewerDataAction extends BaseHibernateAction {
         return map;
     }
     
+    //TODO: Er kleeft een klein probleem aan analysewaarde en analyseobject.
+    //De twee methoden laten wel fouten zien als deze optreden, maar de foutmeldingen
+    //komen niet netjes op het scherm. Nu weet ik niet of dit wel of niet de bedoeling
+    //is, maar mooi is anders. :-)
+    
+    /**
+     * Methode die aangeroepen wordt aan de hand van de button 'bereken' in het analyse tabblad
+     * van de viewer. Deze methode stelt een query samen op basis van de gegevens die ingoevoerd
+     * zijn door de gebruiker om zo het gewenste resultaat te kunnen tonen.
+     *
+     * @param mapping The ActionMapping used to select this instance.
+     * @param form The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     * @param response The HTTP Response we are processing.
+     *
+     * @return an Actionforward object.
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Themas t = getThema(mapping, dynaForm, request);
+        Map inputParameters = null;
         
-        StringBuffer result = new StringBuffer("");
-        Map params = request.getParameterMap();
-        if (!params.isEmpty() && t!=null) {
-            Iterator it = params.keySet().iterator();
-            Boolean done=false;
-            while (it.hasNext()) {
-                String pn = (String) it.next();
-                if (pn.startsWith("ThemaItem")&&!done) {
-                    done=true;
-                    String tsTokens[]= pn.split("_");
-                    String themaId=tsTokens[1];
-                    Themas thema=getThema(themaId);
-                    if (params.get("zoekopties_waarde")!=null&&thema!=null){
-                        String zoekopties_waarde = getStringFromParam(params,"zoekopties_waarde");
-                        String zoekopties=getStringFromParam(params,"zoekopties");
-                        if (zoekopties_waarde!=null && zoekopties!=null) {
-                            String geselecteerd_object=getStringFromParam(params,"geselecteerd_object");
-                            if (geselecteerd_object!=null){
-                                //Bereken/haal de gegevens op die nodig zijn voor een spatial query                            
-                                String[] tokens = geselecteerd_object.split("_");
-                                Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-                                Themas objectThema=null;
-                                try {
-                                    Integer id= Integer.parseInt(tokens[1]);
-                                    objectThema=(Themas)sess.get(Themas.class, id);
-                                }catch(NumberFormatException nfe){
-                                    String id=tokens[1];
-                                    objectThema=(Themas)sess.get(Themas.class, id);
-                                }
-                                if (objectThema==null){
-                                    log.error("Kan het thema niet vinden");
-                                    addAlternateMessage(mapping, request, null, "Kan het thema niet vinden");
-                                    return analysedata(mapping, dynaForm, request, response);
-                                }
-                                //De gegevens van het analyse object die nodig zijn om een query uit te voeren.
-                                String analyseGeomTabel=objectThema.getSpatial_tabel();
-                                String analyseGeomIdColumn=objectThema.getSpatial_admin_ref();
-                                String analyseGeomId=tokens[2];
-                                
-                                String themaGeomTabel=thema.getSpatial_tabel();
-                                String themaGeomIdColumn=thema.getSpatial_admin_ref();
-                                //zoek het type object op.
-                                String themaGeomType=null;
-                                Connection connection = sess.connection();
-                                String q="select * from geometry_columns gc where gc.f_table_name = '"+themaGeomTabel+"'";
-                                try {
-                                    PreparedStatement statement = connection.prepareStatement(q);
-                                    try {
-                                        ResultSet rs = statement.executeQuery();
-                                        if (rs.next()){
-                                            themaGeomType=rs.getString("type");
-                                        }
-                                    } finally {
-                                        statement.close();
-                                    }
-                                } catch (SQLException ex) {
-                                    log.error("", ex);
-                                } finally {
-                                    try {
-                                        connection.close();
-                                    } catch (SQLException ex) {
-                                        log.error("", ex);
-                                    }
-                                }
-                                if (themaGeomType==null){
-                                    log.error("Kan het type geoobject niet vinden: "+q);
-                                    addAlternateMessage(mapping, request, null, "Kan het type geoobject niet vinden.");
-                                    return analysedata(mapping, dynaForm, request, response);
-                                }
-                                String analyseNaam=null;
-                                try {
-                                    PreparedStatement statement = connection.prepareStatement("select * from "+analyseGeomTabel+ " where "+analyseGeomIdColumn+" = "+analyseGeomId);
-                                    try {
-                                        ResultSet rs = statement.executeQuery();
-                                        if (rs.next()){
-                                            if (analyseGeomTabel.equalsIgnoreCase("algm_grs_2006_1_gem_v")){
-                                                analyseNaam="gemeente ";
-                                                analyseNaam+=rs.getString("gemnaam");
-                                            }else if(analyseGeomTabel.equalsIgnoreCase("algm_grs_2006_1_gga_v")){
-                                                analyseNaam="gga gebied ";
-                                                analyseNaam+=rs.getString("GGA");
-                                            }else if(analyseGeomTabel.equalsIgnoreCase("algm_kom_10_wgw_v")){
-                                                analyseNaam="Bebouwde kom ";
-                                                analyseNaam+=rs.getString("kom");
-                                            }
-                                        }
-                                    } finally {
-                                        statement.close();
-                                    }
-                                } catch (SQLException ex) {
-                                    log.error("", ex);
-                                } finally {
-                                    try {
-                                        connection.close();
-                                    } catch (SQLException ex) {
-                                        log.error("", ex);
-                                    }
-                                }                                
-                                //hier alle 'geef waarde' functies
-                                if (zoekopties.equalsIgnoreCase("2")){
-                                    //geef maximale
-                                    if (zoekopties_waarde.equalsIgnoreCase("1")){
-                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
-                                            result.append("<b>Niet mogelijk met dit thema-geometry-type<br/></b>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
-                                            String query=SpatialUtil.intersectionLength("max",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
-                                            log.info(query);
-                                            result.append("<b>Grootste lengte(km) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            String query=SpatialUtil.intersectionArea("max",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
-                                            log.info(query);
-                                            result.append("<b>Grootste oppervlakte(km2) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }                                        
-                                    }
-                                    //geef minimale waarde
-                                    else if (zoekopties_waarde.equalsIgnoreCase("2")){
-                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
-                                            result.append("<b>Niet mogelijk met dit thema-geometry-type<br/></b>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
-                                            String query=SpatialUtil.intersectionLength("min",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
-                                            log.info(query);
-                                            result.append("<b>Kleinste lengte(km) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            String query=SpatialUtil.intersectionArea("min",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
-                                            log.info(query);
-                                            result.append("<b>Kleinste oppervlakte(km2) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }  
-                                    }
-                                    //geef gemiddelde
-                                    else if (zoekopties_waarde.equalsIgnoreCase("3")){
-                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
-                                            result.append("<b>Niet mogelijk met dit thema-geometry-type</b><br/>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
-                                            String query=SpatialUtil.intersectionLength("avg",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
-                                            log.info(query);
-                                            result.append("<b>Gemiddelde lengte(km) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            String query=SpatialUtil.intersectionArea("avg",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
-                                            log.info(query);
-                                            result.append("<b>Gemiddelde oppervlakte(km2) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }  
-                                    }
-                                    //geef totale 
-                                    else if (zoekopties_waarde.equalsIgnoreCase("4")){
-                                                                 
-                                        if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
-                                            String query= SpatialUtil.containsQuery("count(*)",analyseGeomTabel,themaGeomTabel,analyseGeomIdColumn,analyseGeomId);
-                                            log.info(query);
-                                            result.append("<b>Aantal "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"count"});
-                                            result.append("</b>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
-                                            //create query and get in KM
-                                            String query=SpatialUtil.intersectionLength("sum",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000);
-                                            log.info(query);
-                                            result.append("<b>Totale lengte(km) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }
-                                        else if (themaGeomType.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
-                                            String query=SpatialUtil.intersectionArea("sum",themaGeomTabel,analyseGeomTabel,analyseGeomId,1000000);
-                                            log.info(query);
-                                            result.append("<b>Totale oppervlakte(km2) "+t.getNaam());
-                                            if (analyseNaam!=null){
-                                                result.append(" in "+analyseNaam);
-                                            }
-                                            result.append(":");
-                                            executeQuery(query,sess,result, new String[]{"result"});                                            
-                                            result.append("</b>");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                /*if (pn.equalsIgnoreCase("geselecteerd_object")) {
-                    Object pv = params.get(pn);
-                    String ps = null;
-                    if (pv instanceof String)
-                        ps = (String)pv;
-                    if (pv instanceof String[])
-                        ps = ((String[])pv)[0];
-                    if (ps!=null) {
-                        String[] sa = ps.split("_");
-                        if (sa.length==3) {
-                            result.append("thema id: ");
-                            result.append(sa[1]);
-                            result.append(", object id: ");
-                            result.append(sa[2]);
-                        }
-                    }
-                }*/
+        try {
+            inputParameters = this.getInputParameters(mapping, dynaForm, request, response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            log.error(message);
+            addAlternateMessage(mapping, request, null, message);
+            //return analysedata(mapping, dynaForm, request, response);
+        }
+        
+        //Alle invoervelden zijn bekend en door de verschillende controleprocedures gekomen
+        //om een juiste query uit te kunnen voeren.        
+        Object [] value = null;
+        //if ((Integer)inputParameters.get("zoekOpties") == 2) {
+            if ((Integer)inputParameters.get("zoekOpties_waarde") == 1){
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "max", 1000, "Grootste lengte(km)", "result"}; }
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "max", 1000000, "Grootste oppervlakte(km2)", "result"}; }
+            }
+            if ((Integer)inputParameters.get("zoekOpties_waarde") == 2){
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "min", 1000, "Kleinste lengte(km)", "result"}; }
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "min", 1000000, "Kleinste oppervlakte(km2)", "result"}; }
+            }
+            if ((Integer)inputParameters.get("zoekOpties_waarde") == 3){
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "avg", 1000, "Gemiddelde lengte(km)", "result"}; }
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "avg", 1000000, "Gemiddelde oppervlakte(km2)", "result"}; }
+            }
+            if ((Integer)inputParameters.get("zoekOpties_waarde") == 4){
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOINT)){ value = new Object[]{"POINT", "count(*)", null, "Aantal", "count"}; }
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "sum", 1000, "Totale lengte(km)", "result"}; }
+                if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "sum", 1000000, "Totale oppervlakte(km2)", "result"}; }
+            }
+        //}
+        
+        Map extraCriteria = (Map)inputParameters.get("extraCriteria");
+        StringBuffer extraCriteriaString = new StringBuffer();
+        Iterator it = extraCriteria.keySet().iterator();
+        while(it.hasNext()) {
+            String key = (String)it.next();
+            String keyvalue = (String)inputParameters.get(key);
+            if(keyvalue != "" && keyvalue != null) {
+                extraCriteriaString.append(" and tb2." + key + "='" + keyvalue + "'");
             }
         }
+        
+        StringBuffer result = new StringBuffer("");
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        if (value != null) {
+            String query = null;
+            if(value[0].equals("POINT")) {
+                query = SpatialUtil.containsQuery(
+                        (String) value[1], 
+                        (String)inputParameters.get("analyseGeomTabel"), 
+                        (String)inputParameters.get("themaGeomTabel"), 
+                        (String)inputParameters.get("analyseGeomIdColumn"), 
+                        (String)inputParameters.get("analyseGeomId"), 
+                        extraCriteriaString.toString());
+            } else if(value[0].equals("LINESTRING")) {
+                query = SpatialUtil.intersectionLength(
+                        (String) value[1], 
+                        (String)inputParameters.get("themaGeomTabel"), 
+                        (String)inputParameters.get("analyseGeomTabel"), 
+                        (String)inputParameters.get("analyseGeomId"), 
+                        (Integer) value[2], 
+                        extraCriteriaString.toString());
+            } else if(value[0].equals("POLYGON")) {
+                query = SpatialUtil.intersectionArea(
+                        (String) value[1], 
+                        (String)inputParameters.get("themaGeomTabel"), 
+                        (String)inputParameters.get("analyseGeomTabel"), 
+                        (String)inputParameters.get("analyseGeomId"), 
+                        (Integer) value[2], 
+                        extraCriteriaString.toString());
+            }
+            
+            log.info(query);
+            result.append("<b>" + value[3] + " " + ((Themas)inputParameters.get("thema")).getNaam());
+            
+            if ((String)inputParameters.get("analyseNaam")!=null){
+                result.append(" in " + (String)inputParameters.get("analyseNaam"));
+            }
+            result.append(":");
+            
+            executeQuery(query, sess, result, new String[]{(String)value[4]});                                            
+            result.append("</b>");
+        } else {
+            result.append("<b>Niet mogelijk met dit thema-geometry-type<br/></b>");
+        }
+        
         request.setAttribute("waarde", result.toString());
         return analysedata(mapping, dynaForm, request, response);
     }
+    // </editor-fold>
+    
+    /**
+     * Een private methode die alle gegevens van het request haalt en controleert op de aanwezig-
+     * heid van bepaalde vereiste waarden om een query mee samen te kunnen stellen. Als bepaalde
+     * waarden ontbreken zal er een Exception opgeworpen worden.
+     *
+     * @param mapping The ActionMapping used to select this instance.
+     * @param form The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     * @param response The HTTP Response we are processing.
+     *
+     * @return an Actionforward object.
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="private Map getInputParameters(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
+    private Map getInputParameters(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //Themas t = getThema(mapping, dynaForm, request);
+        /*
+         * Voordat we gaan beginnen met het samenstellen van een query die aan de juiste zoekparameter voldoet
+         * gaan we eerst al deze zoekparameters uit het request halen. Een aantal van deze zoekparameters zijn
+         * variabel en afhankelijk van het thema dat geselecteerd is. Om deze waarden met bijbehorende juiste
+         * naam te vinden is het eerst belangrijk om met een iterator over alle parameters heen te wandelen.
+         */
+        String textInputThemaId = null;
+        String optionInputThemaId = null;
+        
+        String geselecteerd_object = null;
+        int zoekOpties = 0;
+        int zoekOpties_object = 0;
+        int zoekOpties_waarde = 0;
+        
+        Map inputParameters = new HashMap();        
+        Map parameterMap = request.getParameterMap();
+        
+        /*
+         * Loop door alle parameters heen die meegegeven worden tijdens het request.
+         * Als eerste wordt er door de parameter Map gelopen waarbij er gezocht wordt 
+         * naar een id voor het thema waar de query op uitgevoerd moet worden. Zodra
+         * deze id gevonden is wordt er doorgegaan met het ophalen van de geselecteerde
+         * waarde in het drop-down menu in het Analysegebied.
+         * Vervolgens wordt de waarde uitgelezen van de radiobuttons die onder het drop
+         * down menu geprojecteerd staan. Deze radiobuttons zijn opgedeeld in twee cate-
+         * gorieen 'Geef object' en 'Geef waarde'. Vervolgens bestaat deze uit een paar
+         * opties.
+         */
+        if (!parameterMap.isEmpty()) {
+            //Vind het id van het thema waarvoor de textvelden ingevuld zijn
+            Iterator it = parameterMap.keySet().iterator();
+            while (it.hasNext()) {
+                String parameter = (String) it.next();
+                if (parameter.startsWith("ThemaItem")) {
+                    textInputThemaId = new String(parameter.split("_")[1]);
+                    break;
+                }
+            }
+            
+            geselecteerd_object = getStringFromParam(parameterMap,"geselecteerd_object");
+            inputParameters.put("geselecteerd_object", geselecteerd_object);
+            
+            zoekOpties = Integer.parseInt(getStringFromParam(parameterMap, "zoekopties"));
+            //inputParameters.put("zoekopties", zoekOpties); //is deze nodig?
+            if(zoekOpties == 1) {
+                String number = getStringFromParam(parameterMap, "zoekopties_object");
+                if(number != null) {
+                    zoekOpties_object = Integer.parseInt(number);
+                    inputParameters.put("zoekOpties_object", zoekOpties_object);
+                }
+            } else if (zoekOpties == 2) {
+                String number = getStringFromParam(parameterMap, "zoekopties_waarde");
+                if(number != null) {
+                    zoekOpties_waarde = Integer.parseInt(number);
+                    inputParameters.put("zoekOpties_waarde", zoekOpties_waarde);
+                }
+            }
+        }
+        
+        /*
+         * Na het vinden van de vastgestelde invoerboxen is het nog noodzaak dat de 
+         * waarden uitgelezen worden van de invoervelden die de gebruiker zelf in kan 
+         * vullen. Dit wordt hieronder gedaan. Van het betreffende thema wordt gekeken
+         * welke themadata dit thema bevat en welke daarvan een basisregel zijn. Ver-
+         * volgens wordt de naam van het invoerveld gegenereerd en wordt de waarde
+         * die de gebruiker ingevoerd heeft gelezen.
+         */
+        Map extraCriteria = new HashMap();
+        Themas thema = null;
+        if (textInputThemaId != null) {
+            thema = this.getThema(textInputThemaId);
+            inputParameters.put("thema", thema);
+            int themaId = thema.getId();
+            Set themaData = thema.getThemaData();   
+            Iterator themaDataIterator = themaData.iterator();
+            while (themaDataIterator.hasNext()) {
+                ThemaData td = (ThemaData)themaDataIterator.next();
+                int themaDataId = td.getId();
+                if(td.isBasisregel()) {
+                    String inputValue = "ThemaItem_" + themaId + "_" + themaDataId;
+                    String value = getStringFromParam(parameterMap,inputValue);
+                    String key = td.getLabel();
+                    extraCriteria.put(key, value);
+                }
+            }
+        }
+        
+        /*
+         * Van de verschillende invoer moet gecontroleerd worden of deze invoer wel voldoet aan de eisen
+         * namelijk of bepaalde items wel ingevuld zijn en of deze invoer wel klopt.
+         */
+        if (geselecteerd_object.equals("-1")) {
+            throw new Exception("Er is geen analysegebied geselecteerd");
+            //log.error("Er is geen analysegebied geselecteerd");
+            //addAlternateMessage(mapping, request, null, "Er is geen analysegebied geselecteerd");
+            //return analysedata(mapping, dynaForm, request, response);
+        }
+        
+        String[] tokens = geselecteerd_object.split("_");
+        Themas geselecteerdObjectThema = getObjectThema(tokens[1]);
+        if (geselecteerdObjectThema == null) {
+            throw new Exception("Kan het thema niet vinden");
+            //log.error("Kan het thema niet vinden");
+            //addAlternateMessage(mapping, request, null, "Kan het thema niet vinden");
+            //return analysedata(mapping, dynaForm, request, response);
+        }
+        
+        if (zoekOpties == 0 || (zoekOpties_object == 0 && zoekOpties_waarde == 0)) {
+            throw new Exception("Er is geen selectie criterium aangegeven door middel van de radio buttons");
+            //log.error("Er is geen selectie criterium aangegeven door middel van de radio buttons");
+            //addAlternateMessage(mapping, request, null, "Er is geen selectie criterium aangegeven door middel van de radio buttons");
+            //return analysedata(mapping, dynaForm, request, response);
+        }
+        
+        /*
+         * Alle eventuele foute invoer van de gebruiker is afgevangen. Nu dienen we te kijken wat
+         * we met de verschillende invoer kunnen doen. We beginnen met het thema dat hoort bij de 
+         * invoervelden, dit is ook het thema waar de uiteindelijke informatie over opgevraagd gaat 
+         * worden in de database. Opvragen wat voor type object het hier om gaat, namelijk een 
+         * MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, POLYGON, etc etc.
+         */
+        String themaGeomTabel   = thema.getSpatial_tabel();
+        String themaGeomIdColumn= thema.getSpatial_admin_ref();
+        String themaGeomType    = getThemaGeomType(themaGeomTabel);        
+        if (themaGeomType == null){
+            throw new Exception("Kan het type geo-object niet vinden: " + thema.getNaam());
+            //log.error("Kan het type geo-object niet vinden: " + thema.getNaam());
+            //addAlternateMessage(mapping, request, null, "Kan het type geo-object niet vinden.");
+            //return analysedata(mapping, dynaForm, request, response);
+        }       
+        
+        /* 
+         * Van het dropdown menu willen we nu nog weten wat voor naam er geselecteerd is, zodat deze
+         * in het resultaat weer opgenomen kan worden in de tekst.
+         */
+        String analyseGeomId        = tokens[2];
+        String analyseGeomTabel     = geselecteerdObjectThema.getSpatial_tabel();
+        String analyseGeomIdColumn  = geselecteerdObjectThema.getSpatial_admin_ref();        
+        String analyseNaam          = getAnalyseNaam(analyseGeomTabel, analyseGeomIdColumn, analyseGeomId);
+        if (analyseNaam == null){
+            throw new Exception("Kan het type geo-object niet vinden: " + geselecteerdObjectThema.getNaam());
+            //log.error("Kan het type geo-object niet vinden: " + geselecteerdObjectThema.getNaam());
+            //addAlternateMessage(mapping, request, null, "Kan het type geo-object niet vinden.");
+            //return analysedata(mapping, dynaForm, request, response);
+        }
+        
+        /*
+         * Stop nu al deze variabelen in de HashMap en return deze HashMap.
+         * In de andere methodes kunnen de waarden nu eenvoudig uitgelezen worden.
+         */
+        inputParameters.put("extraCriteria", extraCriteria);
+        inputParameters.put("themaGeomIdColumn", themaGeomIdColumn);
+        inputParameters.put("themaGeomTabel", themaGeomTabel);
+        inputParameters.put("themaGeomType", themaGeomType);
+        inputParameters.put("analyseGeomId", analyseGeomId);
+        inputParameters.put("analyseGeomTabel", analyseGeomTabel);
+        inputParameters.put("analyseGeomIdColumn", analyseGeomIdColumn);
+        inputParameters.put("analyseNaam", analyseNaam); 
+        return inputParameters;
+    }
+    // </editor-fold>
+        
+    /**
+     * Een private methode die het Thema Geometry type ophaalt uit de database.
+     *
+     * @param themaGeomTabel De table for which the Geometry type is requested.
+     *
+     * @return a String with the Geometry type.
+     *
+     */
+    // <editor-fold defaultstate="" desc="private String getThemaGeomType(String themaGeomTabel) method.">
+    private String getThemaGeomType(String themaGeomTabel) {
+        String themaGeomType = null;
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Connection connection = sess.connection();
+        String q = "select * from geometry_columns gc where gc.f_table_name = '" + themaGeomTabel + "'";
+        try {
+            PreparedStatement statement = connection.prepareStatement(q);
+            try {
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()){
+                    themaGeomType=rs.getString("type");
+                }
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
+        return themaGeomType;
+    }
+    // </editor-fold>
+        
+    /**
+     * Een private methode die de Analysenaam van een bepaalde tabel en kolom samenstelt met
+     * de opgegeven waarden.
+     *
+     * @param analyseGeomTabel De table for which the analysename is requested.
+     * @param analyseGeomIdColumn De column for which the analysename is requested.
+     * @param analyseGeomId De id for which the analysename is requested.
+     *
+     * @return a String with the analysename.
+     *
+     */
+    // <editor-fold defaultstate="" desc="private String getAnalyseNaam(String analyseGeomTabel, String analyseGeomIdColumn, String analyseGeomId) method.">
+    private String getAnalyseNaam(String analyseGeomTabel, String analyseGeomIdColumn, String analyseGeomId) {
+        String analyseNaam=null;
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Connection connection = sess.connection();
+        try {
+            PreparedStatement statement = 
+                    connection.prepareStatement("select * from "+analyseGeomTabel+ " where "+analyseGeomIdColumn+" = "+analyseGeomId);
+            try {
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()){
+                    if (analyseGeomTabel.equalsIgnoreCase("algm_grs_2006_1_gem_v")){
+                        analyseNaam="gemeente ";
+                        analyseNaam+=rs.getString("gemnaam");
+                    }else if(analyseGeomTabel.equalsIgnoreCase("algm_grs_2006_1_gga_v")){
+                        analyseNaam="gga gebied ";
+                        analyseNaam+=rs.getString("GGA");
+                    }else if(analyseGeomTabel.equalsIgnoreCase("algm_kom_10_wgw_v")){
+                        analyseNaam="Bebouwde kom ";
+                        analyseNaam+=rs.getString("kom");
+                    }
+                }
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        } 
+        return analyseNaam;
+    }
+    // </editor-fold>
+    
+    /**
+     * Een private methode het object thema ophaalt dat hoort bij een bepaald id.
+     *
+     * @param identifier String which identifies the object thema to be found.
+     *
+     * @return a Themas object representing the object thema.
+     *
+     */
+    // <editor-fold defaultstate="" desc="private Themas getObjectThema(String identifier) method.">
+    private Themas getObjectThema(String identifier) {
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Themas objectThema = null;
+        try {
+            Integer id  = Integer.parseInt(identifier);
+            objectThema =(Themas)sess.get(Themas.class, id);
+        } catch(NumberFormatException nfe) {
+            objectThema = (Themas)sess.get(Themas.class, identifier);
+        }
+        return objectThema;
+    }
+    // </editor-fold>
+    
     private void executeQuery(String query,Session sess, StringBuffer result, String[] columns){
         Connection connection = sess.connection();
         try {
@@ -391,9 +541,9 @@ public class GetViewerDataAction extends BaseHibernateAction {
     }
     
     private String getStringFromParam(Map params,String key){
-        Object ob= params.get(key);
+        Object ob = params.get(key);
         String zoekopties_waarde = null;
-        String string=null;
+        String string = null;
         if (ob instanceof String)
             string = (String)ob;
         if (ob instanceof String[])
@@ -401,95 +551,96 @@ public class GetViewerDataAction extends BaseHibernateAction {
         return string;
     }
     
+    /**
+     * Methode die aangeroepen wordt aan de hand van de button 'bereken' in het analyse tabblad
+     * van de viewer. Deze methode stelt een query samen op basis van de gegevens die ingoevoerd
+     * zijn door de gebruiker om zo het gewenste resultaat te kunnen tonen.
+     *
+     * @param mapping The ActionMapping used to select this instance.
+     * @param form The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     * @param response The HTTP Response we are processing.
+     *
+     * @return an Actionforward object.
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map inputParameters = null;
+        
+        try {
+            inputParameters = this.getInputParameters(mapping, dynaForm, request, response);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            log.error(message);
+            addAlternateMessage(mapping, request, null, message);
+            //return analysedata(mapping, dynaForm, request, response);
+        }
+        
         ArrayList pks = new ArrayList();
-        Themas t = getThema(mapping, dynaForm, request);
-        StringBuffer result = new StringBuffer("");
-        Map params = request.getParameterMap();
-        if (!params.isEmpty()) {
-            Iterator it = params.keySet().iterator();
-            Boolean done=false;
-            while (it.hasNext()) {
-                String pn = (String) it.next();
-                if (pn.startsWith("ThemaItem")&&!done) {
-                    done=true;
-                    String tsTokens[]= pn.split("_");
-                    String themaId=tsTokens[1];
-                    Themas thema=getThema(themaId);
-                    if (params.get("zoekopties_object")!=null&&thema!=null){
-                        String zoekopties_object = getStringFromParam(params,"zoekopties_object");
-                        String zoekopties=getStringFromParam(params,"zoekopties");
-                        if (zoekopties_object!=null && zoekopties!=null) {
-                            String geselecteerd_object=getStringFromParam(params,"geselecteerd_object");
-                            if (geselecteerd_object!=null&&geselecteerd_object.contains("_")){
-                                //Bereken/haal de gegevens op die nodig zijn voor een spatial query                            
-                                String[] tokens = geselecteerd_object.split("_");
-                                Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-                                Themas objectThema=null;
-                                try {
-                                    Integer id= Integer.parseInt(tokens[1]);
-                                    objectThema=(Themas)sess.get(Themas.class, id);
-                                }catch(NumberFormatException nfe){
-                                    String id=tokens[1];
-                                    objectThema=(Themas)sess.get(Themas.class, id);
-                                }
-                                if (objectThema==null){
-                                    log.error("Kan het thema niet vinden");
-                                    return null;
-                                }
-                                //De gegevens van het analyse object die nodig zijn om een query uit te voeren.
-                                String analyseGeomTabel=objectThema.getSpatial_tabel();
-                                String analyseGeomIdColumn=objectThema.getSpatial_admin_ref();
-                                String analyseGeomId=tokens[2];
-                                
-                                String themaGeomTabel=thema.getSpatial_tabel();
-                                String themaGeomIdColumn=thema.getSpatial_admin_ref();
-                                                                
-                                //create relation query
-                                String relationFunction=null;
-                                if (zoekopties_object.equalsIgnoreCase("1"))
-                                    relationFunction="Disjoint";                                    
-                                else if (zoekopties_object.equalsIgnoreCase("2"))
-                                    relationFunction="Within";
-                                else if (zoekopties_object.equalsIgnoreCase("3"))
-                                    relationFunction="Intersects";
-                                else
-                                    log.error("Deze analyse/zoek_optie is niet geimplementeerd!");
-                                String query= SpatialUtil.hasRelationQuery(themaGeomTabel,analyseGeomTabel,relationFunction,themaGeomIdColumn,analyseGeomId);
-                                Connection connection = sess.connection();
-                                try {
-                                    PreparedStatement statement = connection.prepareStatement(query);
-                                    try {
-                                        ResultSet rs = statement.executeQuery();
-                                        while(rs.next()) {
-                                            pks.add(rs.getObject(themaGeomIdColumn));
-                                        }
-                                        
-                                    } finally {
-                                        statement.close();
-                                    }
-                                } catch (SQLException ex) {
-                                    log.error("", ex);
-                                } finally {
-                                    try {
-                                        connection.close();
-                                    } catch (SQLException ex) {
-                                        log.error("", ex);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+
+        //create relation query
+        String relationFunction=null;
+        //String test = (String) inputParameters.get("zoekOpties_object");
+        if ((Integer)inputParameters.get("zoekOpties_object") == 1)
+            relationFunction="Disjoint";                                    
+        else if ((Integer)inputParameters.get("zoekOpties_object") == 2)
+            relationFunction="Within";
+        else if ((Integer)inputParameters.get("zoekOpties_object") == 3)
+            relationFunction="Intersects";
+        else
+            log.error("Deze analyse/zoek_optie is niet geimplementeerd!");
+        
+        Map extraCriteria = (Map)inputParameters.get("extraCriteria");
+        StringBuffer extraCriteriaString = new StringBuffer();
+        Iterator it = extraCriteria.keySet().iterator();
+        while(it.hasNext()) {
+            String key = (String)it.next();
+            String keyvalue = (String)extraCriteria.get(key);
+            if(keyvalue != "" && keyvalue != null) {
+                extraCriteriaString.append(" and tb1." + key + "='" + keyvalue + "'");
             }
         }
+
+        String query= SpatialUtil.hasRelationQuery(
+                (String)inputParameters.get("themaGeomTabel"), //tb1
+                (String)inputParameters.get("analyseGeomTabel"), //tb2
+                relationFunction, 
+                (String)inputParameters.get("themaGeomIdColumn"), 
+                (String)inputParameters.get("analyseGeomId"), 
+                extraCriteriaString.toString());
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Connection connection = sess.connection();
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            try {
+                ResultSet rs = statement.executeQuery();
+                while(rs.next()) {
+                    pks.add(rs.getObject((String)inputParameters.get("themaGeomIdColumn")));
+                }
+
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
+  
         if (pks.size()>0){
-            List thema_items = SpatialUtil.getThemaData(t, true);
+            List thema_items = SpatialUtil.getThemaData((Themas)inputParameters.get("thema"), true);
             request.setAttribute("thema_items", thema_items);
-            request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
+            request.setAttribute("regels", getThemaObjects((Themas)inputParameters.get("thema"), pks, thema_items));
         }        
         return mapping.findForward("doanalyse");
     }
+    // </editor-fold>
     
     public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
@@ -546,7 +697,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
         }
         return mapping.findForward("analysedata");
     }
-    
     
     protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         String xcoord = request.getParameter("xcoord");
@@ -640,6 +790,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         String themaid = request.getParameter(Themas.THEMAID);
         return getThema(themaid);
     }
+    
     protected Themas getThema(String themaid){
         if (themaid==null || themaid.length()==0){
             return null;

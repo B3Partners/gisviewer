@@ -56,6 +56,7 @@ LEGEND
 	STATUS ON
 	POSITION LR
 	TRANSPARENT TRUE
+	
 END
 
 #LAYER
@@ -563,6 +564,7 @@ LAYER
 	END
 END
 # kunstwerken
+# Klein bijzonderheidje zijn de angles die geven de richting aan waar het kunstwerk naar toe moet staan
 # Let op!! Dit is voor FSW 1.3.1 !!! Alle properties met ITEM er in (ANGLEITEM) worden vervangen door de waarde tussen [] te zetten.
 LAYER
 	STATUS OFF
@@ -574,7 +576,7 @@ LAYER
 	NAME "kunstwerken"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from kunstwerken"
-	#MAXSCALE 100000
+	MAXSCALE 50000
 	TYPE POINT
 	DUMP TRUE
 	TEMPLATE bla
@@ -583,7 +585,8 @@ LAYER
 	CLASS
 		EXPRESSION ('[s]'="B")
 		NAME "Brug"
-		STYLE			
+		STYLE	
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "brug"
@@ -593,6 +596,7 @@ LAYER
 		EXPRESSION ('[s]'="B-H")
 		NAME "Brug-hoogte"
 		STYLE
+				
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "brugHoogte"
@@ -602,6 +606,7 @@ LAYER
 		EXPRESSION ('[s]'="B-L")
 		NAME "B-L"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "bewegendeBrug"
@@ -611,6 +616,7 @@ LAYER
 		EXPRESSION ('[s]'="C")
 		NAME "Constructie"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "constructie"
@@ -621,6 +627,7 @@ LAYER
 		EXPRESSION ('[s]'="D")
 		NAME "Duiker"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "duiker"
@@ -630,6 +637,7 @@ LAYER
 		EXPRESSION ('[s]'="D-F")
 		NAME "Ontsnippering"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "ontsnippering"
@@ -639,6 +647,7 @@ LAYER
 		EXPRESSION ('[s]'="D-L")
 		NAME "Duiker langs weg liggend"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "duikerLangsWeg"
@@ -648,6 +657,7 @@ LAYER
 		EXPRESSION ('[s]'="K")
 		NAME "Knel kruispunt"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "knelKruispunt"
@@ -700,6 +710,8 @@ LAYER
 		EXPRESSION ('[s]'="R-E")
 		NAME "Rotonde element"
 		STYLE
+			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "rotondeElement"
 		END
@@ -708,6 +720,7 @@ LAYER
 		EXPRESSION ('[s]'="S")
 		NAME "Spoorwegovergang"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "spoorwegovergang"
@@ -717,6 +730,7 @@ LAYER
 		EXPRESSION ('[s]'="T")
 		NAME "Tunnel"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "tunnel"
@@ -726,6 +740,7 @@ LAYER
 		EXPRESSION ('[s]'="T-H")
 		NAME "Tunnel hoogte"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "tunnelHoogte"
@@ -735,6 +750,7 @@ LAYER
 		EXPRESSION ('[s]'="V")
 		NAME "Viadukt"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "viadukt"
@@ -744,13 +760,13 @@ LAYER
 		EXPRESSION ('[s]'="V-H")
 		NAME "Viadukt hoogte"
 		STYLE
+			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "viaduktHoogte"
 		END
 	END		
 END
-
 #kaart met de nwbwegen
 LAYER
   NAME nwb
@@ -801,17 +817,17 @@ LAYER
       STYLE
       	COLOR 255 0 0    	
   	SYMBOL "circle"
-      	SIZE 10
+      	SIZE 4
       END
       STYLE
           COLOR 240 240 0    	
       	SYMBOL "circle"
-          SIZE 8
+          SIZE 3
       END
       STYLE
           COLOR 255 0 0    	
       	SYMBOL "circle"
-          SIZE 4
+          SIZE 1
       END
       LABEL
         ANTIALIAS true
@@ -829,12 +845,11 @@ LAYER
       NAME "Provincialewegen"
       TEXT ([wegnummer])
       EXPRESSION ('[wegbehsrt]'="P")
-      MAXSCALE 200000
       MINSCALE 50000
       STYLE
-      	COLOR 255 255 0
+      	COLOR 0 0 0
       	SYMBOL "circle"
-      	SIZE 3
+      	SIZE 4
       END
       LABEL
         ANTIALIAS true
@@ -854,26 +869,18 @@ LAYER
         EXPRESSION ('[wegbehsrt]'="P")
         MAXSCALE 50000
         STYLE
-        	COLOR 0 0 0
-        	SYMBOL "circle"
-        	SIZE 8
+        	COLOR -1 -1 -1        	
         END
-        STYLE
-        	COLOR 255 255 0
-    		SYMBOL "circle"
-        	SIZE 6
-        END
-        
         LABEL
-          ANTIALIAS true
-          FONT arial-bold
-          TYPE TRUETYPE
-          SIZE 8
-          MINFEATURESIZE 40
-          COLOR 0 0 0
-          BACKGROUNDCOLOR 255 255 0
-          MINDISTANCE 100
-          BUFFER 1
+	  ANTIALIAS true
+	  FONT arial-bold
+	  TYPE TRUETYPE
+	  SIZE 8
+	  MINFEATURESIZE 40
+	  COLOR 0 0 0
+	  BACKGROUNDCOLOR 255 255 0
+	  MINDISTANCE 100
+	  BUFFER 1
         END
   END
   CLASS
@@ -932,6 +939,691 @@ LAYER
         END
   END  
 END
-
+#Alle dtb punten
+LAYER
+	NAME dtb_point
+	STATUS OFF
+	GROUP achtergrond
+	METADATA
+		"wms_title" "dtb_point"
+		"group_title" "achtergrond"
+	END
+	TYPE POINT
+	CONNECTIONTYPE postgis
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from dtb_lines_preferred as foo USING UNIQUE oid USING SRID=28992"
+	#for feature info"
+	DUMP TRUE
+	TEMPLATE bla
+	MAXSCALE 50000
+	TRANSPARENCY 100	
+	CLASS
+		EXPRESSION "Kant fietspad strook"
+		NAME "Kant fietspad strook"
+		STYLE
+			COLOR 255 125 0
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION "Kant goot"
+		NAME "Kant goot"
+		STYLE
+			COLOR 195 195 0
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION "Kant hoofdrijbaan"
+		NAME "Kant hoofdrijbaan"
+		STYLE
+			COLOR 0 0 0
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION "Kant overige verhardingen"
+		NAME "Kant overige verhardingen"
+		STYLE
+			COLOR 175 225 180
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION "Kant parallelweg"
+		NAME "Kant parallelweg"
+		STYLE
+			COLOR 255 0 255
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION "Kant verhoogde band"
+		NAME "Kant verhoogde band"
+		STYLE
+			COLOR 0 255 255
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION "Kant vlakbegrenzing puntstuk"
+		NAME "Kant vlakbegrenzing puntstuk"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+	CLASS
+		EXPRESSION "Kant voetpad"
+		NAME "Kant voetpad"
+		STYLE
+			COLOR 0 135 135
+			SYMBOL "point1"
+			SIZE 5
+		END
+	END
+END
+# alle dtb lijnen
+LAYER
+	NAME dtb_line
+	STATUS OFF
+	GROUP achtergrond
+	METADATA
+		"wms_title" "dtb_line"
+		"group_title" "achtergrond"
+	END
+	TYPE LINE
+	CONNECTIONTYPE postgis
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from dtb_lines_preferred as foo USING UNIQUE oid USING SRID=28992"
+	#for feature info"
+	DUMP TRUE
+	TEMPLATE bla	
+	MAXSCALE 50000
+	CLASSITEM "igds_level_comment"
+	CLASS
+		EXPRESSION "Afrastering"
+		NAME "Afrastering"
+		STYLE
+			COLOR 0 225 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END	
+	CLASS
+		EXPRESSION "Midden kantstreep onderbroken"
+		NAME "Midden kantstreep onderbroken"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Centrale antenne inrichtingselement"
+		NAME "Centrale antenne inrichtingselement"
+		STYLE
+			COLOR 120 0 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Duurzaam hekwerk of raster"
+		NAME "Duurzaam hekwerk of raster"
+		STYLE
+			COLOR 0 225 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Geleiderailconstructie"
+		NAME "Geleiderailconstructie"
+		STYLE
+			COLOR 175 255 170
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Hart sloot greppel kleiner dan 50 cm"
+		NAME "Hart sloot greppel kleiner dan 50 cm"
+		STYLE
+			COLOR 175 185 225
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Hectometerpaal of bord"
+		NAME "Hectometerpaal of bord"
+		STYLE
+			COLOR 235 100 235
+			SYMBOL "circle"
+			SIZE 2			
+		END
+	END
+	CLASS
+		EXPRESSION "Hectometrering bermpaal"
+		NAME "Hectometrering bermpaal"
+		STYLE
+			COLOR 255 255 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Hectometrering op reflectorpaal"
+		NAME "Hectometrering op reflectorpaal"
+		STYLE
+			COLOR 255 255 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Informatiebord"
+		NAME "Informatiebord"
+		STYLE
+			COLOR 255 255 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant fietspad strook"
+		NAME "Kant fietspad strook"
+		STYLE
+			COLOR 255 125 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant goot"
+		NAME "Kant goot"
+		STYLE
+			COLOR 195 195 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant halteplaats"
+		NAME "Kant halteplaats"
+		STYLE
+			COLOR 155 50 255
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant hoofdrijbaan"
+		NAME "Kant hoofdrijbaan"
+		STYLE
+			COLOR 0 0 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant overige verhardingen"
+		NAME "Kant overige verhardingen"
+		STYLE
+			COLOR 175 225 180
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant parallelweg"
+		NAME "Kant parallelweg"
+		STYLE
+			COLOR 255 0 255
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant parkeerstrook pechstrook"
+		NAME "Kant parkeerstrook pechstrook"
+		STYLE
+			COLOR 140 45 225
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant rabbat"
+		NAME "Kant rabbat"
+		STYLE
+			COLOR 235 200 220
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant verharde zijwegen en paden"
+		NAME "Kant verharde zijwegen en paden"
+		STYLE
+			COLOR 0 255 255
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant verhoogde band"
+		NAME "Kant verhoogde band"
+		STYLE
+			COLOR 0 255 255
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant vlakbegrenzing puntstuk"
+		NAME "Kant vlakbegrenzing puntstuk"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant vlakbegrenzing verdrijfstrepen doorgetrokken"
+		NAME "Kant vlakbegrenzing verdrijfstrepen doorgetrokken"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant voetgangersoversteekplaats"
+		NAME "Kant voetgangersoversteekplaats"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant voetpad"
+		NAME "Kant voetpad"
+		STYLE
+			COLOR 0 135 135
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant weg zonder verhardingsconstructie"
+		NAME "Kant weg zonder verhardingsconstructie"
+		STYLE
+			COLOR 120 120 120
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kniklijn talud"
+		NAME "Kniklijn talud"
+		STYLE
+			COLOR 215 195 215
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Materiaalscheiding"
+		NAME "Materiaalscheiding"
+		STYLE
+			COLOR 225 200 175 
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Midden asstreep onderbroken"
+		NAME "Midden asstreep onderbroken"
+		STYLE
+			COLOR  255 255 255
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Midden deeltsreep onderbroken"
+		NAME "Midden deelstreep onderbroken"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Midden kantstreep doorgetrokken"
+		NAME "Midden kantstreep doorgetrokken"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Midden kantstreep onderbroken"
+		NAME "Midden kantstreep onderbroken"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Onderkant talud"
+		NAME "Onderkant talud"
+		STYLE
+			COLOR 215 195 215
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Overige markeringen"
+		NAME "Overige markeringen"
+		STYLE
+			COLOR 150 150 150
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "PE grenspaal of steen"
+		NAME "PE grenspaal of steen"
+		STYLE
+			COLOR 255 255 0
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+END
+# alle dtb polygonen
+LAYER
+	NAME dtb_polygon
+	STATUS OFF
+	GROUP achtergrond
+	METADATA
+		"wms_title" "dtb_polygon"
+		"group_title" "achtergrond"
+	END
+	TYPE POLYGON
+	CONNECTIONTYPE postgis
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from dtb_lines_preferred as foo USING UNIQUE oid USING SRID=28992"
+	#for feature info"
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 100
+	MAXSCALE 50000
+	CLASSITEM "igds_level_comment"
+	CLASS
+		EXPRESSION "Afrastering"
+		NAME "Afrastering"
+		STYLE
+			COLOR 0 225 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END		
+	CLASS
+		EXPRESSION "Duurzaam hekwerk of raster"
+		NAME "Duurzaam hekwerk of raster"
+		STYLE
+			COLOR 0 225 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Geleiderailconstructie"
+		NAME "Geleiderailconstructie"
+		STYLE
+			COLOR 175 255 170
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Hectometerpaal of bord"
+		NAME "Hectometerpaal of bord"
+		STYLE
+			COLOR 235 100 235
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2			
+		END
+	END
+	CLASS
+		EXPRESSION "Hectometrering bermpaal"
+		NAME "Hectometrering bermpaal"
+		STYLE
+			COLOR 255 255 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Hectometrering op reflectorpaal"
+		NAME "Hectometrering op reflectorpaal"
+		STYLE
+			COLOR 255 255 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant fietspad strook"
+		NAME "Kant fietspad strook"
+		STYLE
+			COLOR 255 125 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant goot"
+		NAME "Kant goot"
+		STYLE
+			COLOR 195 195 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant halteplaats"
+		NAME "Kant halteplaats"
+		STYLE
+			COLOR 155 50 255
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant hoofdrijbaan"
+		NAME "Kant hoofdrijbaan"
+		STYLE
+			COLOR 0 0 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant overige verhardingen"
+		NAME "Kant overige verhardingen"
+		STYLE
+			COLOR 175 225 180
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant parallelweg"
+		NAME "Kant parallelweg"
+		STYLE
+			COLOR 255 0 255
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant parkeerstrook pechstrook"
+		NAME "Kant parkeerstrook pechstrook"
+		STYLE
+			COLOR 140 45 225
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant rabbat"
+		NAME "Kant rabbat"
+		STYLE
+			COLOR 235 200 220
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant verharde zijwegen en paden"
+		NAME "Kant verharde zijwegen en paden"
+		STYLE
+			COLOR 0 255 255
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant verhoogde band"
+		NAME "Kant verhoogde band"
+		STYLE
+			COLOR 0 255 255
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant vlakbegrenzing puntstuk"
+		NAME "Kant vlakbegrenzing puntstuk"
+		STYLE
+			COLOR 150 150 150
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant vlakbegrenzing verdrijfstrepen doorgetrokken"
+		NAME "Kant vlakbegrenzing verdrijfstrepen doorgetrokken"
+		STYLE
+			COLOR 150 150 150
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant voetgangersoversteekplaats"
+		NAME "Kant voetgangersoversteekplaats"
+		STYLE
+			COLOR 150 150 150
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant voetpad"
+		NAME "Kant voetpad"
+		STYLE
+			COLOR 0 135 135
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kant weg zonder verhardingsconstructie"
+		NAME "Kant weg zonder verhardingsconstructie"
+		STYLE
+			COLOR 120 120 120
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Kniklijn talud"
+		NAME "Kniklijn talud"
+		STYLE
+			COLOR 215 195 215
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Materiaalscheiding"
+		NAME "Materiaalscheiding"
+		STYLE
+			COLOR 225 200 175
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "Onderkant talud"
+		NAME "Onderkant talud"
+		STYLE
+			COLOR 215 195 215
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+	CLASS
+		EXPRESSION "PE grenspaal of steen"
+		NAME "PE grenspaal of steen"
+		STYLE
+			COLOR 255 255 0
+			OUTLINECOLOR -1 -1 -1
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+END
 
 END

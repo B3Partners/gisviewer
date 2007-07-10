@@ -66,7 +66,7 @@
                                         </div>
                                     </c:when>
                                     <c:otherwise>
-                                        <c:if test="${waarde eq ''}">
+                                        <c:if test="${waarde eq '' or  waarde eq null}">
                                             <c:set var="waarde" value="&nbsp;" />
                                         </c:if>
                                         <div style="width: ${breedte}; float: left;">

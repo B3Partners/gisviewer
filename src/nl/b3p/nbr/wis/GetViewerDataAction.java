@@ -130,8 +130,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
         } catch (Exception e) {
             String message = e.getMessage();
             log.error(message);
-            addAlternateMessage(mapping, request, null, message);
-            //return analysedata(mapping, dynaForm, request, response);
+            //addAlternateMessage(mapping, request, null, message); 
+            throw(e);
         }
         
         //Alle invoervelden zijn bekend en door de verschillende controleprocedures gekomen
@@ -155,6 +155,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "sum", 1000, "Totale lengte(km)", "result"}; }
                 if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "sum", 1000000, "Totale oppervlakte(km2)", "result"}; }
             }
+        
         //}
         
         Map extraCriteria = (Map)inputParameters.get("extraCriteria");
@@ -315,7 +316,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 if(td.isBasisregel()) {
                     String inputValue = "ThemaItem_" + themaId + "_" + themaDataId;
                     String value = getStringFromParam(parameterMap,inputValue);
-                    String key = td.getLabel();
+                    String key = td.getKolomnaam();
                     extraCriteria.put(key, value);
                 }
             }
@@ -695,7 +696,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             }
             request.setAttribute("analyse_data", analysedata);            
         }
-        return mapping.findForward("analysedata");
+    return mapping.findForward("analysedata");
     }
     
     protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {

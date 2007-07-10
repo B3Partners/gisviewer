@@ -142,7 +142,7 @@
             </c:otherwise>
         </c:choose>
         <c:if test="${not empty waarde}">
-            <div class="optie" style="margin-left: 10px;"><div class="waardeResult"><c:out value="${waarde}" escapeXml="false" /></div></div>
+            <div class="optie" style="margin-top: 100px; margin-left: 10px;"><div id="analyseResult" class="waardeResult"><c:out value="${waarde}" escapeXml="false" /></div></div>
         </c:if>
         
         <c:if test="${not empty object}">

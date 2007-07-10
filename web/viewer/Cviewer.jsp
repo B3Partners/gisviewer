@@ -74,6 +74,9 @@
     var activeThemaId = '';
     function setActiveThema(val) {
         activeThemaId = val;
+        if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
+            map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
+        }        
     }
     
     function setAnalyseValue(x,y) {
@@ -635,7 +638,6 @@
         // document.getElementById('hm_aanduiding').innerHTML = loadingStr;
         // document.getElementById('wegnaam').innerHTML = loadingStr;
         document.getElementById('kadastraledata').innerHTML = loadingStr;
-        
         handleGetAdminData(extend.maxx,extend.maxy);
         doAjaxRequest(extend.maxx,extend.maxy);
         loadObjectInfo(extend.maxx,extend.maxy);

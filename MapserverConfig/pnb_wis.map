@@ -563,6 +563,35 @@ LAYER
 		SIZE 2
 	END
 END
+
+#ontsnippering
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"ontsnippering"	  
+	END
+	CONNECTIONTYPE postgis
+	NAME "ontsnippering"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from ontsnippering"
+	MAXSCALE 50000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	TOLERANCE 100
+	TRANSPARENCY alpha
+	#Ontsnippering wordt al getoond in het thema ontsnippering
+	CLASS
+		NAME "Ontsnippering"
+		STYLE
+			
+			ANGLEITEM "weg_richting"
+			COLOR 0 0 255
+			SYMBOL "ontsnippering"
+		END
+	END
+END
+
 # kunstwerken
 # Klein bijzonderheidje zijn de angles die geven de richting aan waar het kunstwerk naar toe moet staan
 # Let op!! Dit is voor FSW 1.3.1 !!! Alle properties met ITEM er in (ANGLEITEM) worden vervangen door de waarde tussen [] te zetten.
@@ -633,16 +662,17 @@ LAYER
 			SYMBOL "duiker"
 		END
 	END
-	CLASS
-		EXPRESSION ('[s]'="D-F")
-		NAME "Ontsnippering"
-		STYLE
-			
-			ANGLEITEM "weg_richting"
-			COLOR 0 0 255
-			SYMBOL "ontsnippering"
-		END
-	END
+	#Ontsnippering wordt al getoond in het thema ontsnippering
+	#CLASS
+	#	EXPRESSION ('[s]'="D-F")
+	#	NAME "Ontsnippering"
+	#	STYLE
+	#		
+	#		ANGLEITEM "weg_richting"
+	#		COLOR 0 0 255
+	#		SYMBOL "ontsnippering"
+	#	END
+	#END
 	CLASS
 		EXPRESSION ('[s]'="D-L")
 		NAME "Duiker langs weg liggend"

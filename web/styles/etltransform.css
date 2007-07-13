@@ -1,61 +1,38 @@
-#kaartvak {
-    width: 500px;
-    height: 300px;
-    border: 1px solid Black;
+#kaderdiv {
+    padding-top: 15px;
+    width: 950px;
 }
 
-#adminvak {
-    width: 415px;
-    height: 290px;
-    border: 1px solid Black;
-    padding: 5px;
-}
-
-#geoafwijking {
-    width: 405px;
-    height: 120px;
-    border: 1px solid Black;
-}
-
-#adminafwijking {
-    width: 405px;
-    height: 120px;
-    border: 1px solid Black;
-}
-
-.hoofdvak {
-    margin-right: 20px;
-    margin-bottom: 20px;
+#tabvak {
+    display: block;
+    width: 950px;
+    height: 15px;
     float: left;
+    border: 1px solid Black;
+    border-bottom: 1px solid Black;
+    cursor: pointer;
 }
 
 select {
-    width: 400px;
-    height: 120px;
+    width: 260px;
     margin: 0px;
     overflow: auto;
-    border: 0px none White;
+    border: 1px solid Black;
 }
 
 option {
-    font-size: 10pt;
+    font-size: 9pt;
     background: white;
     color: #000000;
     font-family: arial, sans-serif;
 }
 
-.oud {
-    background-color: #dfd875;
+#rightdiv {
+    float: left;
+    width: 290px;
+    height: 489px;
 }
 
-.nieuw {
-    background-color: #75df79;
-}
-
-.parkeren {
-    background-color: #7587df;
-}
-
-.definitief_ontkoppeld {
-    background-color: #dfba75;
+#infovak{
+    height: 489px;
 }

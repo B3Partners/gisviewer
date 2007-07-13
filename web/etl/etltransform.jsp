@@ -7,178 +7,165 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
+<html>
+    <head>
+        <title>Analyse Data</title>
+        <LINK href="support.css" type=text/css rel=stylesheet>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
+        <script language="JavaScript" type="text/javascript">
+            function getObjects() {
+                document.forms[0].type.value    = document.getElementById('object_type').value;
+                document.forms[0].optie.value   = document.getElementById('object_optie').value;
+                document.forms[0].begin.value   = document.getElementById('begindate').value;
+                document.forms[0].end.value     = document.getElementById('enddate').value;
+                //document.forms[0].themaid.value = document.forms[0].themaid.value;
+                document.forms[0].edit.value    = "submit";
+                document.forms[0].submit();
+            }
+        </script>        
+        <script>
+            imgout = new Image(9,9);
+            imgin  = new Image(9,9);
+            imgout.src="<html:rewrite page='/images/u.gif' module='' />";
+            imgin.src="<html:rewrite page='/images/d.gif' module='' />";
 
-<script src='dwr/interface/JAdminData.js'></script>
-<script src='dwr/engine.js'></script>
-<!-- ABQIAAAAC343cGgZnunaZD9990Oi4xRrxo-vqJF2j9YSroPtu9HNqgCyPBSK2SK7GD_OHE1DHrZG_qN2bkXe_w -->
-<!-- ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRQscSysVS1XSjcAv6lVG_Fcz1dG_hTUtfUaDWssiqZBu5tkG9-_hOOq3w -->
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA3xrBHK8vrZa1xEjMbWh1hRRrxo-vqJF2j9YSroPtu9HNqgCyPBT3RKeL6MZXKFcLtQOV9A_keMkhYw" type="text/javascript"></script>
-<script type="text/javascript">
-    //<![CDATA[
-    /*google maps code*/
-    var map;
-    var bounds;
-    var southWest;
-    var northEast;
-    var lngSpan;
-    var latSpan;
-    var objects= [];
-    // the load done after the body is loaded
-    function load(){
-      if (GBrowserIsCompatible()) {
-        map = new GMap2(document.getElementById("kaartvak"));
-        //set center
-        map.setCenter(new GLatLng(51.6991361, 5.3198311), 13);
-        //add some controles
-        map.addControl(new GLargeMapControl());
-        map.addControl(new GMapTypeControl());
-        bounds = map.getBounds();
-        southWest = bounds.getSouthWest();
-        northEast = bounds.getNorthEast();
-        lngSpan = northEast.lng() - southWest.lng();
-        latSpan = northEast.lat() - southWest.lat();
-      }      
-    }
-    function handleUnLoad() { 
-        if (GBrowserIsCompatible()) { 
-            GUnload(); 
-        } 
-    } 
+            //Switch expand collapse icons
+            function filter(imagename, objectsrc) {
+                if (document.images) {
+                    document.images[imagename].src=eval(objectsrc+".src");
+                }
+            }
 
-    //voeg load en unload to aan body element
-    if (window.addEventListener) {
-      window.addEventListener("load", load, false);
-      //window.addEventListener("unload", handleUnLoad(),false);
-    }
-    else if (window.attachEvent) {
-      window.attachEvent("onload", load);
-      //window.attachEvent("onunload",handleUnLoad());
-    }
-    else {
-      window.onload = load;
-      window.onunload= GUnload;
-    }
-    /*Einde google maps code*/
-    
-    /*Schoon de map op*/   
-    function clearMap(){
-        if (map){
-            map.clearOverlays();
-        }
-    }
-    function drawObject(){
-        clearMap();
-        //map.addOverlay(objects[index]); 
-        //map.addOverlay(new GPolyline(createRandomPoints(4)));
-        var point = new GLatLng(southWest.lat() + latSpan * Math.random(),
-                          southWest.lng() + lngSpan * Math.random());
-        map.addOverlay(new GMarker(point));
-    }
-    
-    //]]>  
-</script>
-<div style="width: 1000px; margin-top: 20px;">
-    <div id="kop" style="clear: both; width: 800px; margin-bottom: 20px;">
-        <strong style="color: Red; font-size: 16px;">ETL-verwerking van GB PLANtsoen - Sloot</strong><br />
-        Datum: 29-11-2006
-    </div>
-    
-    <div class="hoofdvak">
-        <strong>Kaart met algemene achtergrond</strong>
-        <div id="kaartvak">
+            //show OR hide funtion depends on if element is shown or hidden
+            function shoh(id) {	
+                if (document.getElementById) { // DOM3 = IE5, NS6
+                    if (document.getElementById(id).style.display == "none"){
+                        document.getElementById(id).style.display = 'block';
+                        document.getElementById(id).style.width = '950px';
+                        document.getElementById(id).style.height = '160px';
+                        document.getElementById(id).style.border = '1px solid black';
+                        filter(("img"+id),'imgin');			
+                    } else {
+                        filter(("img"+id),'imgout');
+                        document.getElementById(id).style.display = 'none';			
+                    }	
+                } else { 
+                    if (document.layers) {	
+                        if (document.id.display == "none"){
+                            document.id.display = 'block';
+                            document.id.width = '950px';
+                            document.id.height = '160px';
+                            document.id.border = '1px solid black';
+                            filter(("img"+id),'imgin');
+                        } else {
+                            filter(("img"+id),'imgout');	
+                            document.id.display = 'none';
+                        }
+                    } else {
+                        if (document.all.id.style.visibility == "none"){
+                            document.all.id.style.display = 'block';
+                            document.all.id.style.width = '950px';
+                            document.all.id.style.height = '160px';
+                            document.all.id.style.border = '1px solid black';
+                        } else {
+                            filter(("img"+id),'imgout');
+                            document.all.id.style.display = 'none';
+                        }
+                    }
+                }
+            }
+            
+            
+            function showHide(nr, el) {
+                if(nr == 1 || nr == 2) {
+                    document.getElementById('batchdate').style.backgroundColor = '#A1A1A1';
+                    document.getElementById('batchdate').value = '';
+                    
+                    document.getElementById('batchdate').selectedIndex = 0;
+                    document.getElementById('batchdate').selected = true;
+                    
+                    document.getElementById('begindate').style.backgroundColor = '';
+                    document.getElementById('enddate').style.backgroundColor = '';
+                } else if(nr == 3) {
+                    document.getElementById('begindate').style.backgroundColor = '#A1A1A1';
+                    document.getElementById('begindate').value = '';
+                    document.getElementById('enddate').style.backgroundColor = '#A1A1A1';
+                    document.getElementById('enddate').value = '';
+                    document.getElementById('batchdate').style.backgroundColor = '';
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <form id="myid" target="dataframe">
+            <input type="hidden" name="type" />
+            <input type="hidden" name="optie" />
+            <input type="hidden" name="begin" />
+            <input type="hidden" name="end" />
+            <input type="hidden" name="themaid" value="${themaid}"/>
+            <input type="hidden" name="edit" />
+        </form>
+        
+        <div style="width: 1000px; margin-top: 20px;">
+            <div id="kop" style="clear: both; width: 800px; margin-bottom: 20px;">
+                <strong style="color: Red; font-size: 16px;">ETL - Onvolledige objecten van thema ${themaName}</strong><br />
+            </div>
+            
+            <div id="map">
+                <div id="flashcontent">
+                    <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
+                </div>
+                <script type="text/javascript">
+                    var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "659", "493", "8", "#FFFFFF");
+                </script>
+                <!--[if lte IE 6]>
+                <script type="text/javascript">
+                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "651", "488", "8", "#FFFFFF");
+                </script>
+                <![endif]-->
+                <script type="text/javascript">
+                    so.write("flashcontent");
+                </script>
+            </div>
+            <div id="rightdiv">                        
+                <div id="infovak">
+                    <strong>Van welke objecten wilt u de onvolledige data bekijken</strong>
+                    <div class="optie">
+                        <input type="radio" value="1" name="object_type" id="object_type"/> Nieuwe objecten<br />
+                        <input type="radio" value="2" name="object_type" id="object_type"/> Onvolledige nieuwe objecten<br />
+                        <input type="radio" value="3" name="object_type" id="object_type"/> Geupdate objecten<br />
+                        <input type="radio" value="4" name="object_type" id="object_type"/> Verwijderde objecten<br />
+                        <input type="radio" value="5" name="object_type" id="object_type"/> Onvolledig verwijderde objecten<br />
+                        <input type="radio" value="6" name="object_type" id="object_type"/> Niet verwerkbare objecten<br/>
+                        
+                        <p><b>Welk type objecten wilt u tonen?</b></p>
+                        <input type="radio" value="1" name="object_optie" id="object_optie"/> Alleen geografische objecten<br />
+                        <input type="radio" value="2" name="object_optie" id="object_optie"/> Alleen administratieve objecten<br />
+                        <input type="radio" value="3" name="object_optie" id="object_optie"/> Beide<br />
+                        
+                        <p><b>Van welke periode wilt u de gegevens bekijken:</b></p>
+                        van: <input type="text" size="5" id="begindate" name="begindate" onfocus="showHide(1, this);"> tot: <input type="text" size="5" id="enddate" name="enddate" onfocus="showHide(2, this);">
+                        
+                        <p><b>of kies een batchverwerking:</b></p>
+                        <p>
+                        <select id="batchdate" name="batchdate" onclick="showHide(3, this);">
+                            <option class="thema_object" value="-1">-- Selecteerd een Batchverwerking --</option>
+                            <c:forEach var="nBatchverwerking" items="${batches}">
+                                <option class="batch_object" value="${nBatchverwerking.id}">
+                                    ${nBatchverwerking.name}                                    
+                                </option>        
+                            </c:forEach>                            
+                        </select>
+                        </p>                        
+                        <button onclick="getObjects();" style="margin-left:10px;">
+                            Toon objecten
+                        </button>&nbsp;
+                    </div>                    
+                </div>
+            </div>
+            
+            <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
             
         </div>
-    </div>
-    <div class="hoofdvak">
-        <strong>Preview administratieve data</strong>
-        <div id="adminvak">
-            Hier kunt u een deel van de geselecteerde administratieve data bekijken.<br />
-            Klik hieronder op &eacute;&eacute;n van de afwijkende administratieve data om de data te bekijken.
-        </div>
-    </div>
-    
-    <div class="hoofdvak">
-        <strong>Geo-afwijking</strong>
-        <div id="geoafwijking">
-            <c:if test="${not empty geoafwijking}">
-                <form name="geoafwijking">
-                    <select size="2" name="geoa" id="geoa" onchange="selecteerGekoppelde(this);if(drawObject()){}">
-                        <c:forEach var="geoa" items="${geoafwijking}">
-                            <option id="<c:out value="${geoa.id}" />" class="<c:out value="${geoa.afwijking}"  />" value="<c:out value="${geoa.id}" />" ><c:out value="${geoa.naam}" /></option>
-                        </c:forEach>
-                    </select>
-                </form>
-            </c:if>
-        </div>
-    </div>
-    <div class="hoofdvak" style="width: 95px; text-align: center;">
-        <div style="height: 50px;">&nbsp;</div>
-        <div style="clear: left;">        
-            <button onclick="koppel()">Koppelen</button>
-        </div>
-    </div>
-    
-    <div class="hoofdvak">
-        <strong>Administratieve-afwijking</strong>
-        <div id="adminafwijking">
-            <c:if test="${not empty adminafwijking}">
-                <form name="adminafwijking">
-                    <select size="2" name="admina" id="admina" onchange="selecteerGekoppelde(this); doAjaxRequest(this);">
-                        <c:forEach var="admina" items="${adminafwijking}" varStatus="status">
-                            <option id="<c:out value="${admina.id}" />" value="<c:out value="${admina.id}" />" class="<c:out value="${admina.afwijking}" />"><c:out value="${admina.naam}" /></option>
-                        </c:forEach>
-                    </select>
-                </form>
-            </c:if>
-        </div>
-    </div>
-    
-    <div id="kop" style="clear: left; width: 540px; margin-bottom: 20px;">
-        <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'nieuw';">Nieuw</button> &nbsp; <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'oud';">Oud</button> &nbsp; <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'parkeren';">Parkeren</button> &nbsp; <button onclick="document.getElementById('geoa')[document.getElementById('geoa').selectedIndex].className = 'definitief_ontkoppeld';">Definitief ontkoppelen</button>
-    </div>
-    
-    <div id="kop" style="float: left; width: 400px; margin-bottom: 20px;">
-        <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'nieuw';">Nieuw</button> &nbsp; <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'oud';">Oud</button> &nbsp; <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'parkeren';">Parkeren</button> &nbsp; <button onclick="document.getElementById('admina')[document.getElementById('admina').selectedIndex].className = 'definitief_ontkoppeld';">Definitief ontkoppelen</button>
-    </div>
-    
-    <div class="hoofdvak">
-        <strong>Gekoppelde Geo-afwijkingingen</strong>
-        <div id="geoafwijking">
-            <form name="Ggeoafwijking">
-                <select size="2" name="Ggeoa" id="Ggeoa" onchange="selecteerGekoppelde(this);if(drawObject()){}"></select>
-            </form>
-        </div>
-    </div>
-    <div class="hoofdvak" style="width: 95px; text-align: center;">
-        <div style="height: 50px;">&nbsp;</div>
-        <div style="clear: left;">        
-            <button onclick="ontkoppel()">Ontkoppelen</button>
-        </div>
-    </div>
-    
-    <div class="hoofdvak">
-        <strong>Gekoppelde Administratieve-afwijkingingen</strong>
-        <div id="adminafwijking">
-            <form name="Gadminafwijking">
-                <select size="2" name="Gadmina" id="Gadmina" onchange="selecteerGekoppelde(this); doAjaxRequest(this);"></select>
-            </form>
-        </div>
-    </div>
-    
-    <div style="clear: left; width: 750px;" class="hoofdvak">
-        <div style="margin-bottom: 5px;"><strong>Leganda</strong></div>
-        <div style="clear: left;">
-            <nobr>
-                <span class="oud">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Oud &nbsp;
-                <span class="nieuw">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Nieuw &nbsp;
-                <span class="parkeren">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Parkeren &nbsp;
-                <span class="definitief_ontkoppeld">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; Definitief ontkoppeld &nbsp;
-            </nobr>
-        </div>
-    </div>
-    
-    <div style="float: left;" class="hoofdvak">
-        <br />
-        <button onclick="window.location = 'etl.do';" style="width: 150px;">Klaar met verwerken</button>
-    </div>
-</div>
+    </body>
+</html>

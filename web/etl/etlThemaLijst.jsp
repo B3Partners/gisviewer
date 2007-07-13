@@ -25,7 +25,7 @@
         if (!item.children) {
             var lnk = document.createElement('a');
             lnk.innerHTML = item.title ? item.title : item.id;
-            lnk.href = '<html:rewrite page="/etltransform.do?edit=submit&amp;id=' + item.id + '"/>';
+            lnk.href = '<html:rewrite page="/etltransform.do?showOptions=submit&themaid=' + item.id + '"/>';
             container.appendChild(lnk);
         } else {
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));

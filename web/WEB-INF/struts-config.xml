@@ -52,6 +52,7 @@
         
         <action path="/etltransform" type="nl.b3p.nbr.wis.ETLTransformAction">
             <forward name="success" path="/etl/etlTransformBase.jsp"/>
+            <forward name="showData" path="/viewer/vieweradmindata.jsp"/>
         </action>
         
         <action path="/etlthemalijst" type="nl.b3p.nbr.wis.ETLTransformAction">

@@ -14,16 +14,7 @@ WEB
 END
 
 PROJECTION
-  #"init=epsg:28992"
-  "proj=stere"
-  "lat_0=52.15616055555555"
-  "lon_0=5.38763888888889"
-  "k=0.999908"
-  "x_0=155000"
-  "y_0=463000"
-  "ellps=bessel"
-  "units=m"
-  "no_defs"  
+  "init=epsg:28992"  
 END
 
 # available outputformats
@@ -75,6 +66,40 @@ END
 #		"wms_format" "image/png"
 #	END
 #END
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"testpoint"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "testpoint"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from testtable as foo USING UNIQUE id USING SRID=28992"
+	MAXSCALE 50000
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "testpoint"
+		TEXT ([testpoint])
+		LABEL
+			ANTIALIAS true
+			POSITION ul
+			FONT arial-bold
+			TYPE TRUETYPE
+			SIZE 8
+			COLOR 0 0 0
+			MINDISTANCE 10
+			BUFFER 1
+    		END	
+		STYLE
+			COLOR 255 0 0			
+			SYMBOL 'circle'
+			SIZE 20
+      		END 
+		
+        END
+END
 
 LAYER
 	NAME "algm_kom_10_wgw_v"
@@ -125,8 +150,7 @@ LAYER
 	DUMP TRUE
 	TEMPLATE bla
 	CLASS
-		NAME "algm_pstk_acn_p"
-		
+		NAME "algm_pstk_acn_p"		
 		STYLE
 			COLOR 0 0 0			
 			SYMBOL 'circle'
@@ -543,8 +567,8 @@ LAYER
 	CLASS
 		NAME "Ontsnippering"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "ontsnippering"
 		END
@@ -625,8 +649,8 @@ LAYER
 		EXPRESSION ('[s]'="B")
 		NAME "Brug"
 		STYLE	
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "brug"
 		END
@@ -635,8 +659,8 @@ LAYER
 		EXPRESSION ('[s]'="B-H")
 		NAME "Brug-hoogte"
 		STYLE
-			ANGLEITEM "weg_richting"	
-			
+				
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "brugHoogte"
 		END
@@ -645,8 +669,8 @@ LAYER
 		EXPRESSION ('[s]'="B-L")
 		NAME "B-L"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "bewegendeBrug"
 		END
@@ -655,8 +679,8 @@ LAYER
 		EXPRESSION ('[s]'="C")
 		NAME "Constructie"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "constructie"
 		END
@@ -666,8 +690,8 @@ LAYER
 		EXPRESSION ('[s]'="D")
 		NAME "Duiker"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "duiker"
 		END
@@ -677,8 +701,8 @@ LAYER
 	#	EXPRESSION ('[s]'="D-F")
 	#	NAME "Ontsnippering"
 	#	STYLE
-	#		ANGLEITEM "weg_richting"
 	#		
+	#		ANGLEITEM "weg_richting"
 	#		COLOR 0 0 255
 	#		SYMBOL "ontsnippering"
 	#	END
@@ -687,8 +711,8 @@ LAYER
 		EXPRESSION ('[s]'="D-L")
 		NAME "Duiker langs weg liggend"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "duikerLangsWeg"
 		END
@@ -697,8 +721,8 @@ LAYER
 		EXPRESSION ('[s]'="K")
 		NAME "Knel kruispunt"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "knelKruispunt"
 		END
@@ -750,8 +774,8 @@ LAYER
 		EXPRESSION ('[s]'="R-E")
 		NAME "Rotonde element"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "rotondeElement"
 		END
@@ -760,8 +784,8 @@ LAYER
 		EXPRESSION ('[s]'="S")
 		NAME "Spoorwegovergang"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "spoorwegovergang"
 		END
@@ -770,8 +794,8 @@ LAYER
 		EXPRESSION ('[s]'="T")
 		NAME "Tunnel"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "tunnel"
 		END
@@ -780,8 +804,8 @@ LAYER
 		EXPRESSION ('[s]'="T-H")
 		NAME "Tunnel hoogte"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "tunnelHoogte"
 		END
@@ -790,8 +814,8 @@ LAYER
 		EXPRESSION ('[s]'="V")
 		NAME "Viadukt"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "viadukt"
 		END
@@ -800,8 +824,8 @@ LAYER
 		EXPRESSION ('[s]'="V-H")
 		NAME "Viadukt hoogte"
 		STYLE
-			ANGLEITEM "weg_richting"
 			
+			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
 			SYMBOL "viaduktHoogte"
 		END
@@ -885,7 +909,7 @@ LAYER
       NAME "Provincialewegen"
       TEXT ([wegnummer])
       EXPRESSION ('[wegbehsrt]'="P")
-      MINSCALE 50000
+      MINSCALE 20000
       STYLE
       	COLOR 0 0 0
       	SYMBOL "circle"
@@ -907,7 +931,7 @@ LAYER
         NAME "Provincialewegen"
         TEXT ([wegnummer])
         EXPRESSION ('[wegbehsrt]'="P")
-        MAXSCALE 50000
+        MAXSCALE 20000
         STYLE
         	COLOR -1 -1 -1        	
         END
@@ -926,7 +950,7 @@ LAYER
   CLASS
       NAME "Gemeentewegen"
       EXPRESSION ('[wegbehsrt]'="G")
-      MAXSCALE 50000
+      MAXSCALE 30000
       MINSCALE 10000
       STYLE
        COLOR 102 102 102
@@ -995,7 +1019,7 @@ LAYER
 	#for feature info"
 	DUMP TRUE
 	TEMPLATE bla
-	MAXSCALE 50000
+	MAXSCALE 20000
 	TRANSPARENCY 100	
 	CLASSITEM "igds_level_name"
 	CLASS
@@ -1115,6 +1139,7 @@ LAYER
 	METADATA
 		"wms_title" "dtb_line"
 		"group_title" "achtergrond"
+		"gml_include_items" "the_geom"
 	END
 	TYPE LINE
 	CONNECTIONTYPE postgis
@@ -1122,8 +1147,9 @@ LAYER
 	DATA "the_geom from dtb_lines_preferred as foo USING UNIQUE oid USING SRID=28992"
 	#for feature info"
 	DUMP TRUE
-	TEMPLATE bla	
-	MAXSCALE 50000
+	TEMPLATE bla
+	TOLERANCE 100
+	MAXSCALE 20000
 	CLASSITEM "igds_level_name"
 	CLASS
 		EXPRESSION "1101"
@@ -1458,7 +1484,7 @@ LAYER
 	DUMP TRUE
 	TEMPLATE bla
 	TRANSPARENCY 100
-	MAXSCALE 50000
+	MAXSCALE 20000
 	CLASSITEM "igds_level_name"
 	CLASS
 		EXPRESSION "1101"

@@ -578,6 +578,30 @@ LAYER
 	END
 END
 
+#Dynamische verkeers management
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"dvm"
+	END
+	CONNECTIONTYPE postgis
+	NAME "dvm"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from dvm"
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	TOLERANCE 100	
+	CLASS
+		NAME "dvm"
+		STYLE
+			COLOR 0 0 255
+			SYMBOL "point1"
+			SIZE 10
+		END
+	END
+END
+
 # kunstwerken
 # Klein bijzonderheidje zijn de angles die geven de richting aan waar het kunstwerk naar toe moet staan
 # Let op!! Dit is voor FSW 1.3.1 !!! Alle properties met ITEM er in (ANGLEITEM) worden vervangen door de waarde tussen [] te zetten.

@@ -825,11 +825,18 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 url.append("=");
                 url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
                 
+                String kolomnaam= td.getKolomnaam();
+                if (kolomnaam!=null){
+                    url.append("&");
+                    url.append(kolomnaam);
+                    url.append("=");
+                    url.append(URLEncoder.encode((rs.getObject(kolomnaam)).toString().trim(), "utf-8"));
+                }
                 regel.add(url.toString());
             } else if (td.getDataType().getId()==DataTypen.QUERY) {
                 StringBuffer url = new StringBuffer(td.getCommando());
-                String adminPk = t.getAdmin_pk();
-                url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
+                String kolomnaam = td.getKolomnaam();//t.getAdmin_pk();
+                url.append(URLEncoder.encode((rs.getObject(kolomnaam)).toString().trim(), "utf-8"));
                 
                 regel.add(url.toString());
             } else

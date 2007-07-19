@@ -1,8 +1,8 @@
--- Function: _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying)
+-- Function: _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying, alleenline boolean)
 
--- DROP FUNCTION _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying);
+-- DROP FUNCTION _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying, alleenline boolean);
 
-CREATE OR REPLACE FUNCTION _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying)
+CREATE OR REPLACE FUNCTION _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying, alleenline boolean)
   RETURNS geometry AS
 $BODY$DECLARE
 	line geometry;
@@ -42,12 +42,13 @@ BEGIN
 	ELSE
 		returnvalue= null;
 	END IF;
-	IF GeometryType(returnvalue)='LINESTRING' THEN
+	-- altijd een geom object terug geven als alleenline false is anders als het geom object geen line is een null returnen.
+	
+	IF GeometryType(returnvalue)='LINESTRING' OR NOT alleenline THEN
 		RETURN returnvalue;
 	ELSE
 		RETURN null;
 	END IF;
-	
 END;$BODY$
   LANGUAGE 'plpgsql' IMMUTABLE STRICT;
-ALTER FUNCTION _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying) OWNER TO postgres;
+ALTER FUNCTION _makesublinefromhm(paramhm1 character varying, paramhm2 character varying, paramwegnr character varying, alleenline boolean) OWNER TO postgres;

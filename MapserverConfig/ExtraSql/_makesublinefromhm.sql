@@ -45,6 +45,9 @@ BEGIN
 	-- altijd een geom object terug geven als alleenline false is anders als het geom object geen line is een null returnen.
 	
 	IF GeometryType(returnvalue)='LINESTRING' OR NOT alleenline THEN
+		IF nPoints(returnvalue) = 0 THEN
+			returnvalue = null;
+		END IF;
 		RETURN returnvalue;
 	ELSE
 		RETURN null;

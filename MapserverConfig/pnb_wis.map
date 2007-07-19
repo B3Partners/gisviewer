@@ -621,10 +621,75 @@ LAYER
 		STYLE
 			COLOR 0 0 255
 			SYMBOL "point1"
-			SIZE 10
+			SIZE 2
 		END
 	END
 END
+
+#Markeringen
+#Markeringen lijnen
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"markeringslijnen"
+	    "group_title" "markeringen"
+	END
+	CONNECTIONTYPE postgis
+	NAME "markeringslijnen"
+	GROUP markeringen
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from markeringen"
+	FILTER "geometrytype(the_geom)!='MULTILINE'"
+	TYPE LINE
+	DUMP TRUE
+	TEMPLATE bla
+	TOLERANCE 10	
+	CLASS
+		NAME "Markeringslijnen"
+		STYLE
+			COLOR 0 0 0
+			SYMBOL "circle"
+			SIZE 3
+		END
+		STYLE
+			COLOR 255 255 255
+			SYMBOL "circle"
+			SIZE 2
+		END
+	END
+END
+#Markeringen punten
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"markeringspunten"
+	    "group_title" "markeringen"
+	END
+	CONNECTIONTYPE postgis
+	NAME "Markeringspunten"
+	GROUP markeringen
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from markeringen"
+	FILTER "geometrytype(the_geom)!='MULTIPOINT'"
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	TOLERANCE 10	
+	CLASS
+		NAME "Markeringspunten"
+		STYLE
+			COLOR 0 0 0
+			SYMBOL "point1"
+			SIZE 4
+		END
+		STYLE
+			COLOR 255 255 255
+			SYMBOL "point1"
+			SIZE 2
+		END
+	END
+END
+
 
 # kunstwerken
 # Klein bijzonderheidje zijn de angles die geven de richting aan waar het kunstwerk naar toe moet staan
@@ -847,13 +912,13 @@ LAYER
   DUMP TRUE
   TEMPLATE bla
   LABELITEM "stt_naam"
-  #CLASSITEM "wegbehsrt"
+  CLASSITEM "wegbehsrt"
   TRANSPARENCY 100
   CLASS
     BACKGROUNDCOLOR 220 220 220  
     NAME "Rijkswegen"
     TEXT (A[wegnummerint])
-    EXPRESSION ('[wegbehsrt]'="R")
+    EXPRESSION "R"
     MAXSCALE 5000000
     MINSCALE 200000
     STYLE
@@ -876,7 +941,7 @@ LAYER
   CLASS    
       NAME "Rijkswegen"
       TEXT (A[wegnummerint])
-      EXPRESSION ('[wegbehsrt]'="R")
+      EXPRESSION "R"
       MAXSCALE 200000
       STYLE
       	COLOR 255 0 0    	
@@ -908,7 +973,7 @@ LAYER
   CLASS
       NAME "Provincialewegen"
       TEXT ([wegnummer])
-      EXPRESSION ('[wegbehsrt]'="P")
+      EXPRESSION "P"
       MINSCALE 20000
       STYLE
       	COLOR 0 0 0
@@ -930,7 +995,7 @@ LAYER
   CLASS
         NAME "Provincialewegen"
         TEXT ([wegnummer])
-        EXPRESSION ('[wegbehsrt]'="P")
+        EXPRESSION "P"
         MAXSCALE 20000
         STYLE
         	COLOR -1 -1 -1        	
@@ -949,7 +1014,7 @@ LAYER
   END
   CLASS
       NAME "Gemeentewegen"
-      EXPRESSION ('[wegbehsrt]'="G")
+      EXPRESSION "G"
       MAXSCALE 30000
       MINSCALE 10000
       STYLE
@@ -977,7 +1042,7 @@ LAYER
   END
   CLASS
         NAME "Gemeentewegen"
-        EXPRESSION ('[wegbehsrt]'="G")
+        EXPRESSION "G"
         MAXSCALE 10000
         STYLE
          COLOR 102 102 102

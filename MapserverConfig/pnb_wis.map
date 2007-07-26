@@ -6,11 +6,12 @@ FONTSET "../fonts/fonts.list"
 IMAGECOLOR 255 255 255
 WEB
   IMAGEPATH "../temp"
+  LOG "pnb_wis.log"
   METADATA
     "wms_title"				"WIS Provincie Noord Brabant"
     "wms_onlineresource"		"http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis/pnb_wis.map&"
     "wms_srs"				"EPSG:28992"
-  END
+  END  
 END
 
 PROJECTION
@@ -66,40 +67,6 @@ END
 #		"wms_format" "image/png"
 #	END
 #END
-LAYER
-	STATUS OFF
-	METADATA
-	    "wms_title"				"testpoint"	    
-  	END
-	CONNECTIONTYPE postgis
-	NAME "testpoint"
-	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from testtable as foo USING UNIQUE id USING SRID=28992"
-	MAXSCALE 50000
-	TYPE POINT
-	DUMP TRUE
-	TEMPLATE bla
-	CLASS
-		NAME "testpoint"
-		TEXT ([testpoint])
-		LABEL
-			ANTIALIAS true
-			POSITION ul
-			FONT arial-bold
-			TYPE TRUETYPE
-			SIZE 8
-			COLOR 0 0 0
-			MINDISTANCE 10
-			BUFFER 1
-    		END	
-		STYLE
-			COLOR 255 0 0			
-			SYMBOL 'circle'
-			SIZE 20
-      		END 
-		
-        END
-END
 
 LAYER
 	NAME "algm_kom_10_wgw_v"
@@ -526,6 +493,28 @@ LAYER
 	END
 END
 
+#Hectometer dwarstrepen
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"hm_dwarsstrepen"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "hm_dwarsstrepen"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=localhost"
+	DATA "the_geom from hm_dwarsstrepen"
+	#MAXSCALE 200000
+	TYPE LINE
+	DUMP TRUE
+	TEMPLATE bla
+	CLASS
+		NAME "hm_dwarsstrepen"
+		COLOR 0 0 0
+		SYMBOL "circle"
+		SIZE 2
+	END
+END
+
 LAYER
 	STATUS OFF
 	METADATA
@@ -566,12 +555,12 @@ LAYER
 	#Ontsnippering wordt al getoond in het thema ontsnippering
 	CLASS
 		NAME "Ontsnippering"
-		STYLE
-			
+		STYLE			
 			ANGLEITEM "weg_richting"
 			COLOR 0 0 255
-			SYMBOL "ontsnippering"
+			SYMBOL "ontsnippering"			
 		END
+		
 	END
 END
 
@@ -591,7 +580,6 @@ LAYER
 	TEMPLATE bla
 	TOLERANCE 100
 	TRANSPARENCY 30
-	#Ontsnippering wordt al getoond in het thema ontsnippering
 	CLASS
 		NAME "Ongevallen"
 		STYLE
@@ -690,6 +678,71 @@ LAYER
 	END
 END
 
+#bestemmingsplannen
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"bestemmingsplannen"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "bestemmingsplannen"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from bestemmingsplannen"
+	#MAXSCALE 100000
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 50
+	CLASS
+		NAME "bestemmingsplannen"
+		OUTLINECOLOR 150 150 150
+		COLOR 255 255 0
+	END
+END
+#stiltegebieden
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"stiltegebieden"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "stiltegebieden"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from stiltegebieden"
+	#MAXSCALE 100000
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 50
+	CLASS
+		NAME "stiltegebieden"
+		OUTLINECOLOR 150 150 150
+		COLOR 122 255 122
+	END
+END
+
+#stiltegebieden
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"waterschapsgrenzen"	    
+  	END
+	CONNECTIONTYPE postgis
+	NAME "waterschapsgrenzen"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from waterschapsgrenzen"
+	#MAXSCALE 100000
+	TYPE POLYGON
+	DUMP TRUE
+	TEMPLATE bla
+	TRANSPARENCY 50
+	CLASS
+		NAME "waterschapsgrenzen"
+		SYMBOL 'circle'
+		SIZE 4
+		OUTLINECOLOR 0 163 163
+	END
+END
 
 # kunstwerken
 # Klein bijzonderheidje zijn de angles die geven de richting aan waar het kunstwerk naar toe moet staan

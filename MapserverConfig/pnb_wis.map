@@ -490,7 +490,8 @@ LAYER
 	      		COLOR 254 254 254
 	      		BACKGROUNDCOLOR 0 204 51
 	      		MINDISTANCE 10
-	      		BUFFER 1
+	      		BUFFER 1	      		
+	      		POSITION cc
     		END		
 	END
 END

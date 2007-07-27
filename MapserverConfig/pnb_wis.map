@@ -464,10 +464,12 @@ END
 LAYER
 	STATUS OFF
 	METADATA
-	    "wms_title"				"verv_nwb_hmn_p"	    
+	    "wms_title"				"verv_nwb_hmn_p"
+	    "group_title" "hectometrering"
   	END
 	CONNECTIONTYPE postgis
 	NAME "verv_nwb_hmn_p"
+	GROUP hectometrering
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from verv_nwb_hmn_p"
 	#MAXSCALE 200000
@@ -497,11 +499,13 @@ END
 LAYER
 	STATUS OFF
 	METADATA
-	    "wms_title"				"hm_dwarsstrepen"	    
+	    "wms_title"				"hm_dwarsstrepen"
+	    "group_title" "hectometrering"
   	END
 	CONNECTIONTYPE postgis
 	NAME "hm_dwarsstrepen"
-	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=localhost"
+	GROUP hectometrering
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
 	DATA "the_geom from hm_dwarsstrepen"
 	#MAXSCALE 200000
 	TYPE LINE
@@ -557,8 +561,9 @@ LAYER
 		NAME "Ontsnippering"
 		STYLE			
 			ANGLEITEM "weg_richting"
-			COLOR 0 0 255
-			SYMBOL "ontsnippering"			
+			COLOR 0 255 0
+			SYMBOL "ontsnippering"
+			SIZE 20
 		END
 		
 	END
@@ -580,6 +585,7 @@ LAYER
 	TEMPLATE bla
 	TOLERANCE 100
 	TRANSPARENCY 30
+	#Ontsnippering wordt al getoond in het thema ontsnippering
 	CLASS
 		NAME "Ongevallen"
 		STYLE
@@ -741,6 +747,31 @@ LAYER
 		SYMBOL 'circle'
 		SIZE 4
 		OUTLINECOLOR 0 163 163
+	END
+END
+#Kruisingen
+LAYER
+	STATUS OFF
+	METADATA
+	    "wms_title"				"kruisingen"  
+    		"gml_include_items" "all"	  
+	END
+	CONNECTIONTYPE postgis
+	NAME "kruisingen"
+	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+	DATA "the_geom from kruisingen"
+	TYPE POINT
+	DUMP TRUE
+	TEMPLATE bla
+	TOLERANCE 100
+	#Ontsnippering wordt al getoond in het thema ontsnippering
+	CLASS
+		NAME "kruisingen"
+		STYLE
+			COLOR 255 0 0
+			SYMBOL "point1"
+			SIZE 20
+		END
 	END
 END
 

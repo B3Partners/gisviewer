@@ -17,7 +17,11 @@ BEGIN
     IF amultipts = null THEN
 	RETURN NULL;
     END IF;
-    apoint:= GeometryN(amultipts,1);
+    IF GeometryType(amultipts) = 'MULTIPOINT' THEN
+	apoint:= GeometryN(amultipts,1);
+    ELSE
+        apoint:= amultipts;
+    END IF;
     mindistance := min(distance(apoint,amultils));    
     pointExpand:=buffer(apoint,mindistance*1.5);
     roadIntersect:=Intersection(pointExpand,amultils);

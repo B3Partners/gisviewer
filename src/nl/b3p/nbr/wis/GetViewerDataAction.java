@@ -52,6 +52,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
     protected static final String ANALYSEOBJECT = "analyseobject";
     private List themalist = null;
     
+    private Map inputParameters = null;
+    
     
     protected Map getActionMethodPropertiesMap() {
         Map map = new HashMap();
@@ -123,8 +125,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Map inputParameters = null;
-        
         try {
             inputParameters = this.getInputParameters(mapping, dynaForm, request, response);
         } catch (Exception e) {
@@ -249,7 +249,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         int zoekOpties_object = 0;
         int zoekOpties_waarde = 0;
         
-        Map inputParameters = new HashMap();        
+        Map inputParams = new HashMap();        
         Map parameterMap = request.getParameterMap();
         
         /*
@@ -275,21 +275,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
             }
             
             geselecteerd_object = getStringFromParam(parameterMap,"geselecteerd_object");
-            inputParameters.put("geselecteerd_object", geselecteerd_object);
+            inputParams.put("geselecteerd_object", geselecteerd_object);
             
             zoekOpties = Integer.parseInt(getStringFromParam(parameterMap, "zoekopties"));
-            //inputParameters.put("zoekopties", zoekOpties); //is deze nodig?
+            inputParams.put("zoekopties", zoekOpties);
             if(zoekOpties == 1) {
                 String number = getStringFromParam(parameterMap, "zoekopties_object");
                 if(number != null) {
                     zoekOpties_object = Integer.parseInt(number);
-                    inputParameters.put("zoekOpties_object", zoekOpties_object);
+                    inputParams.put("zoekOpties_object", zoekOpties_object);
                 }
             } else if (zoekOpties == 2) {
                 String number = getStringFromParam(parameterMap, "zoekopties_waarde");
                 if(number != null) {
                     zoekOpties_waarde = Integer.parseInt(number);
-                    inputParameters.put("zoekOpties_waarde", zoekOpties_waarde);
+                    inputParams.put("zoekOpties_waarde", zoekOpties_waarde);
                 }
             }
         }
@@ -306,7 +306,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Themas thema = null;
         if (textInputThemaId != null) {
             thema = this.getThema(textInputThemaId);
-            inputParameters.put("thema", thema);
+            inputParams.put("thema", thema);
             int themaId = thema.getId();
             Set themaData = thema.getThemaData();   
             Iterator themaDataIterator = themaData.iterator();
@@ -385,15 +385,15 @@ public class GetViewerDataAction extends BaseHibernateAction {
          * Stop nu al deze variabelen in de HashMap en return deze HashMap.
          * In de andere methodes kunnen de waarden nu eenvoudig uitgelezen worden.
          */
-        inputParameters.put("extraCriteria", extraCriteria);
-        inputParameters.put("themaGeomIdColumn", themaGeomIdColumn);
-        inputParameters.put("themaGeomTabel", themaGeomTabel);
-        inputParameters.put("themaGeomType", themaGeomType);
-        inputParameters.put("analyseGeomId", analyseGeomId);
-        inputParameters.put("analyseGeomTabel", analyseGeomTabel);
-        inputParameters.put("analyseGeomIdColumn", analyseGeomIdColumn);
-        inputParameters.put("analyseNaam", analyseNaam); 
-        return inputParameters;
+        inputParams.put("extraCriteria", extraCriteria);
+        inputParams.put("themaGeomIdColumn", themaGeomIdColumn);
+        inputParams.put("themaGeomTabel", themaGeomTabel);
+        inputParams.put("themaGeomType", themaGeomType);
+        inputParams.put("analyseGeomId", analyseGeomId);
+        inputParams.put("analyseGeomTabel", analyseGeomTabel);
+        inputParams.put("analyseGeomIdColumn", analyseGeomIdColumn);
+        inputParams.put("analyseNaam", analyseNaam); 
+        return inputParams;
     }
     // </editor-fold>
         
@@ -568,8 +568,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Map inputParameters = null;
-        
         try {
             inputParameters = this.getInputParameters(mapping, dynaForm, request, response);
         } catch (Exception e) {
@@ -638,7 +636,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
             List thema_items = SpatialUtil.getThemaData((Themas)inputParameters.get("thema"), true);
             request.setAttribute("thema_items", thema_items);
             request.setAttribute("regels", getThemaObjects((Themas)inputParameters.get("thema"), pks, thema_items));
-        }        
+        }
+        this.fillForm(request);
         return mapping.findForward("doanalyse");
     }
     // </editor-fold>
@@ -654,6 +653,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             request.setAttribute("lagen", lagen);
             request.setAttribute("xcoord", request.getParameter("xcoord"));
             request.setAttribute("ycoord", request.getParameter("ycoord"));
+            
 
             Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
             List ctl = null;
@@ -694,10 +694,101 @@ public class GetViewerDataAction extends BaseHibernateAction {
                     analysedata.add(thema);
                 }
             }
-            request.setAttribute("analyse_data", analysedata);            
+            if(inputParameters != null) {
+                inputParameters.put("analyse_data", analysedata);
+            }
+            request.setAttribute("analyse_data", analysedata); 
         }
-    return mapping.findForward("analysedata");
+        this.fillForm(request);
+        return mapping.findForward("analysedata");
     }
+    
+    /**
+     * Methode die aangeroepen wordt om de input ingegeven door de gebruiker bij een analyse
+     * opdracht opnieuw op het scherm te plaatsen zodat de gebruiker terug kan zien waar ze 
+     * de analyse op heeft uitgevoerd.
+     * Deze methode maakt gebruik van de global variable inputParameters die een Map met alle
+     * ingegeven parameters bijhoudt plus alle parameters die afgeleid zijn uit de invoer van
+     * de gebruiker.
+     *
+     * @param request The HTTP Request we are processing.
+     */
+    // <editor-fold defaultstate="" desc="private void fillForm(HttpServletRequest request) method.">
+    private void fillForm(HttpServletRequest request) {
+        String [] checked = new String[]{null, null, null, null, null, null, null, null, null};
+        String [] selection = new String[]{null, null, null, null, null, null, null, null};
+        if(inputParameters != null) {
+            Map extraCriteria = (Map)inputParameters.get("extraCriteria");
+            ArrayList items = new ArrayList();
+            if(extraCriteria != null) {
+                Themas thema = (Themas) inputParameters.get("thema");
+                Set data = thema.getThemaData();
+                Iterator dataIterator = data.iterator();
+                while(dataIterator.hasNext()) {
+                    ThemaData themaData = (ThemaData) dataIterator.next();
+                    String kolomNaam = themaData.getKolomnaam();
+                    Iterator it = extraCriteria.keySet().iterator();
+                    while(it.hasNext()) {
+                        String key = (String)it.next();
+                        if(key.equalsIgnoreCase(kolomNaam)) {
+                            String keyvalue = (String)extraCriteria.get(key);
+                            String itemNaam = "ThemaItem_" + thema.getId() + "_" + themaData.getId();
+                            String [] item = new String[]{itemNaam, keyvalue};
+                            items.add(item);
+                            break;
+                        }
+                    }
+                }
+            }
+            request.setAttribute("items", items);
+                       
+            String selectedObject = (String) inputParameters.get("geselecteerd_object");
+            ArrayList analysedata = (ArrayList) inputParameters.get("analyse_data");
+            boolean found = false;
+            if(analysedata != null) {
+                Iterator analysedataIterator = analysedata.iterator();
+                int totalLength = analysedata.size();
+                selection = new String[totalLength];
+                int atPoint = 0;
+                while (analysedataIterator.hasNext()) {
+                    ArrayList areas = (ArrayList) analysedataIterator.next();
+                    Integer mainAreaId = (Integer) areas.get(1);
+                    ArrayList subAreas = (ArrayList) areas.get(2);
+                    Iterator subAreasIterator = subAreas.iterator();
+                    while (subAreasIterator.hasNext()) {
+                        Integer subAreaId = (Integer) ((ArrayList)(subAreasIterator.next())).get(0);
+                        String selectedName = "ThemaObject_" + mainAreaId + "_" + subAreaId;
+                        if(selectedName.equalsIgnoreCase(selectedObject)) {
+                            selection[atPoint] = "selected";
+                            found = true;
+                        }
+                        if(found)
+                            break;
+                    }
+                    if(found)
+                        break;
+                    atPoint++;
+                }
+            }
+            
+            Integer optie = (Integer)inputParameters.get("zoekopties");
+            if (optie != null) {
+                if (optie.intValue() == 1) {
+                    checked[0] = "checked";
+                    Integer optieObject = (Integer)inputParameters.get("zoekOpties_object");
+                    checked[optieObject.intValue()] = "checked";
+                } else if (optie.intValue() == 2) {
+                    checked[4] = "checked";
+                    Integer optieWaarde = (Integer)inputParameters.get("zoekOpties_waarde");
+                    checked[4 + optieWaarde.intValue()] = "checked";
+                }
+            }
+            
+        }
+        request.setAttribute("selection", selection);
+        request.setAttribute("checked", checked);
+    }
+    // </editor-fold>
     
     protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         String xcoord = request.getParameter("xcoord");
@@ -996,20 +1087,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
         String hquery = "FROM Themas WHERE locatie_thema = true AND (moscow = 1 OR moscow = 2 OR moscow = 3) AND code < 3";
-//        if(!lagen.equals("ALL")) {
-//            hquery += " AND (";
-//            String[] alleLagen = lagen.split(",");
-//            boolean firstTime = true;
-//            for(int i = 0; i < alleLagen.length; i++) {
-//                if(firstTime) {
-//                    hquery += "id = " + alleLagen[i];
-//                    firstTime = false;
-//                } else {
-//                    hquery += " OR id = " + alleLagen[i];
-//                }
-//            }
-//            hquery += ")";
-//        }
         
         Query q = sess.createQuery(hquery);
         ctl = q.list();

@@ -47,6 +47,7 @@ public class Themas {
     private Set themaData;
     private Set themaVerantwoordelijkheden;
     private Set themaApplicaties;
+    private Integer update_frequentie_in_dagen;
      
     /** Creates a new instance of Themas */
     public Themas() {
@@ -259,5 +260,12 @@ public class Themas {
     public void setThemaApplicaties(Set themaApplicaties) {
         this.themaApplicaties = themaApplicaties;
     }
-    
+
+    public Integer getUpdate_frequentie_in_dagen() {
+        return update_frequentie_in_dagen;
+    }
+
+    public void setUpdate_frequentie_in_dagen(Integer update_frequentie_in_dagen) {
+        this.update_frequentie_in_dagen = update_frequentie_in_dagen;
+    }
 }

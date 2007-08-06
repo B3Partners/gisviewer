@@ -186,7 +186,7 @@
                     </table>
                 </c:if>
                 <c:if test="${not empty themas.themaData}">
-                <p>
+                    <p>
                     <h1>C. Administratieve gegevens van ${themas.naam}</h1>
                     <table>
                         <tr>
@@ -281,7 +281,7 @@
                 </c:if>
                 
                 <c:if test="${not empty themas.themaVerantwoordelijkheden}">
-                <p>
+                    <p>
                     <h1>D. Verantwoordelijken voor ${themas.naam}</h1>
                     <table>
                         <tr>
@@ -362,6 +362,36 @@
                         </c:forEach>
                     </table>
                 </c:if>
+                
+                <c:if test="${not empty themas}">
+                    <p>
+                    <h1>E. Update frequentie voor ${themas.naam}</h1>
+                    <table>
+                        <tr>
+                            <th>
+                                <c:out value="Frequentie in dagen"/>
+                            </th>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty themas.update_frequentie_in_dagen}">
+                                        <c:choose>
+                                            <c:when test="${themas.update_frequentie_in_dagen == 1}">
+                                                een keer per dag.
+                                            </c:when>
+                                            <c:otherwise>
+                                                een keer per <c:out value="${themas.update_frequentie_in_dagen}"/> dagen.
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:otherwise>
+                                        Frequentie (nog) onbekend.
+                                    </c:otherwise>
+                                </c:choose> 
+                            </td>
+                        </tr>
+                    </table>
+                </c:if>
+                
             </c:when>
             <c:otherwise>
                 Er is geen informatie gevonden!

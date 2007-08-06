@@ -216,6 +216,7 @@
         <property name="wms_url"/>
         <property name="wms_layers"/>
         <property name="wms_querylayers"/>
+        <property name="update_frequentie_in_dagen"/>
         <set name="themaData" lazy="false" cascade="all-delete-orphan" order-by="dataorder, basisregel desc, label">
             <key column="thema"/>
             <one-to-many class="nl.b3p.nbr.wis.db.ThemaData"/>

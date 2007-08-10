@@ -78,7 +78,7 @@ LAYER
 	CONNECTIONTYPE postgis
 
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from algm_kom_10_wgw_v"
+	DATA "the_geom from algm_kom_10_wgw_v as foo USING UNIQUE id USING SRID=28992"
 	TYPE POLYGON
 	TRANSPARENCY 20
 	DUMP TRUE

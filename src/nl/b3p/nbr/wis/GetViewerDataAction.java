@@ -42,6 +42,9 @@ import org.hibernate.Session;
 public class GetViewerDataAction extends BaseHibernateAction {
     
     private static final Log log = LogFactory.getLog(GetViewerDataAction.class);
+        
+    private Map inputParameters = null;
+    private List themalist = null;
     
     protected static final String ADMINDATA = "admindata";
     protected static final String ANALYSEDATA = "analysedata";
@@ -50,11 +53,13 @@ public class GetViewerDataAction extends BaseHibernateAction {
     protected static final String OBJECTDATA = "objectdata";
     protected static final String ANALYSEWAARDE = "analysewaarde";
     protected static final String ANALYSEOBJECT = "analyseobject";
-    private List themalist = null;
-    
-    private Map inputParameters = null;
-    
-    
+        
+    /** 
+     * Return een hashmap die een property koppelt aan een Action.
+     *
+     * @return Map hashmap met action properties.
+     */
+    // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap()">
     protected Map getActionMethodPropertiesMap() {
         Map map = new HashMap();
         
@@ -103,11 +108,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         return map;
     }
-    
-    //TODO: Er kleeft een klein probleem aan analysewaarde en analyseobject.
-    //De twee methoden laten wel fouten zien als deze optreden, maar de foutmeldingen
-    //komen niet netjes op het scherm. Nu weet ik niet of dit wel of niet de bedoeling
-    //is, maar mooi is anders. :-)
+    // </editor-fold>
     
     /**
      * Methode die aangeroepen wordt aan de hand van de button 'bereken' in het analyse tabblad
@@ -115,7 +116,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
      * zijn door de gebruiker om zo het gewenste resultaat te kunnen tonen.
      *
      * @param mapping The ActionMapping used to select this instance.
-     * @param form The DynaValidatorForm bean for this request.
+     * @param dynaForm The DynaValidatorForm bean for this request.
      * @param request The HTTP Request we are processing.
      * @param response The HTTP Response we are processing.
      *
@@ -505,7 +506,16 @@ public class GetViewerDataAction extends BaseHibernateAction {
     }
     // </editor-fold>
     
-    private void executeQuery(String query,Session sess, StringBuffer result, String[] columns){
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param query String
+     * @param sess Session
+     * @param result StringBuffer
+     * @param columns String[]
+     */
+    // <editor-fold defaultstate="" desc="private void executeQuery(String query, Session sess, StringBuffer result, String[] columns)">
+    private void executeQuery(String query, Session sess, StringBuffer result, String[] columns){
         Connection connection = sess.connection();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -540,8 +550,18 @@ public class GetViewerDataAction extends BaseHibernateAction {
             }
         }
     }
+    // </editor-fold>
     
-    private String getStringFromParam(Map params,String key){
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param params Map
+     * @param key String
+     *
+     * @return String
+     */
+    // <editor-fold defaultstate="" desc="private String getStringFromParam(Map params, String key)">
+    private String getStringFromParam(Map params, String key){
         Object ob = params.get(key);
         String zoekopties_waarde = null;
         String string = null;
@@ -551,6 +571,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
             string = ((String[])ob)[0]; 
         return string;
     }
+    // </editor-fold>
     
     /**
      * Methode die aangeroepen wordt aan de hand van de button 'bereken' in het analyse tabblad
@@ -558,7 +579,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
      * zijn door de gebruiker om zo het gewenste resultaat te kunnen tonen.
      *
      * @param mapping The ActionMapping used to select this instance.
-     * @param form The DynaValidatorForm bean for this request.
+     * @param dynaForm The DynaValidatorForm bean for this request.
      * @param request The HTTP Request we are processing.
      * @param response The HTTP Response we are processing.
      *
@@ -642,6 +663,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
     }
     // </editor-fold>
     
+    /**
+     * Methode die aangeroepen wordt door de methode analysewaarde.
+     * Deze methode zet een aantal attributen op het request en stelt een query waarmee
+     * de thema's die in de database staan op het scherm getoond zullen worden.
+     *
+     * @param mapping The ActionMapping used to select this instance.
+     * @param dynaForm The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     * @param response The HTTP Response we are processing.
+     *
+     * @return an Actionforward object.
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward analysedata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
         if (t!=null){
@@ -702,6 +738,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         this.fillForm(request);
         return mapping.findForward("analysedata");
     }
+    // </editor-fold>
     
     /**
      * Methode die aangeroepen wordt om de input ingegeven door de gebruiker bij een analyse
@@ -790,6 +827,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
     }
     // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param t Themas
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     *
+     * @return List
+     *
+     * @throws Exception
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request)">
     protected List findPks(Themas t, ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         String xcoord = request.getParameter("xcoord");
         String ycoord = request.getParameter("ycoord");
@@ -846,7 +898,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
         }
         return pks;
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     *
+     * @return ActionForward
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
         
@@ -863,7 +929,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         return mapping.findForward("admindata");
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     *
+     * @return ActionForward
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward aanvullendeinfo(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward aanvullendeinfo(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         
         Themas t = getThema(mapping, dynaForm, request);
@@ -877,12 +957,36 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         return mapping.findForward("aanvullendeinfo");
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     *
+     * @return ActionForward
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request)">
     protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
         String themaid = request.getParameter(Themas.THEMAID);
         return getThema(themaid);
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param themaid String
+     *
+     * @return Themas
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected Themas getThema(String themaid)">
     protected Themas getThema(String themaid){
         if (themaid==null || themaid.length()==0){
             return null;
@@ -892,7 +996,22 @@ public class GetViewerDataAction extends BaseHibernateAction {
         Themas t = (Themas)sess.get(Themas.class, id);
         return t;
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param rs ResultSet
+     * @param t Themas
+     * @param thema_items List
+     *
+     * @return List
+     *
+     * @throws SQLException, UnsupportedEncodingException
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected List getRegel(ResultSet rs, Themas t, List thema_items)">
     protected List getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
         ArrayList regel = new ArrayList();
         
@@ -935,7 +1054,22 @@ public class GetViewerDataAction extends BaseHibernateAction {
         }
         return regel;
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param t Themas
+     * @param pks List
+     * @param thema_items List
+     *
+     * @return List
+     *
+     * @throws SQLException, UnsupportedEncodingException
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected List getThemaObjects(Themas t, List pks, List thema_items)">
     protected List getThemaObjects(Themas t, List pks, List thema_items) throws SQLException, UnsupportedEncodingException {
         if (t==null)
             return null;
@@ -1017,7 +1151,22 @@ public class GetViewerDataAction extends BaseHibernateAction {
         }
         return regels;
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param t Themas
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     *
+     * @return List
+     *
+     * @throws SQLException
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request)">
     protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) throws SQLException {
         ArrayList pks = new ArrayList();
         
@@ -1073,13 +1222,41 @@ public class GetViewerDataAction extends BaseHibernateAction {
         }
         return pks;
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     *
+     * @return ActionForward
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward metadata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward metadata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themas", t);
         return mapping.findForward("metadata");
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     *
+     * @return ActionForward
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward objectdata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward objectdata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String lagen = request.getParameter("lagen");
         ArrayList objectdata = new ArrayList();
@@ -1111,8 +1288,23 @@ public class GetViewerDataAction extends BaseHibernateAction {
         
         return mapping.findForward("objectdata");
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     *
+     * @return ActionForward
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return mapping.findForward(SUCCESS);
     }
+    // </editor-fold>
 }

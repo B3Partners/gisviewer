@@ -1,10 +1,12 @@
-/*
- * ViewerAction.java
+/**
+ * @(#)ViewerAction.java
+ * @author Roy Braam
+ * @version 1.00 2006/11/29
  *
- * Created on 29 november 2006, 9:49
+ * Purpose: a class handling the different actions which come from classes extending this class.
+ *
+ * @copyright 2007 All rights reserved. B3Partners
  */
-
-
 
 package nl.b3p.nbr.wis;
 
@@ -33,12 +35,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- *
- * @author Roy
- * @version
- */
-
 public class ViewerAction extends BaseHibernateAction {
     
     private static final Log log = LogFactory.getLog(ViewerAction.class);
@@ -46,7 +42,12 @@ public class ViewerAction extends BaseHibernateAction {
     protected static final String KNOP = "knop";
     private List themalist = null;
     
-    
+    /** 
+     * Return een hashmap die een property koppelt aan een Action.
+     *
+     * @return Map hashmap met action properties.
+     */
+    // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap()">
     protected Map getActionMethodPropertiesMap() {
         Map map = new HashMap();
         
@@ -61,17 +62,22 @@ public class ViewerAction extends BaseHibernateAction {
         
         return map;
     }
+    // </editor-fold>
     
     /**
      * Dit is een voorbeeld knop zoals deze in de jsp zou kunnen staan.
      * De property van die knop is dan 'knop'.
-     * @param mapping
-     * @param dynaForm
-     * @param request
-     * @param response
-     * @throws java.lang.Exception
-     * @return
+     *
+     * @param mapping The ActionMapping used to select this instance.
+     * @param dynaForm The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     * @param response The HTTP Response we are processing.
+     *
+     * @return an Actionforward object.
+     *
+     * @throws Exception
      */
+    // <editor-fold defaultstate="" desc="public ActionForward knop(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward knop(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         
         ActionErrors errors = dynaForm.validate(mapping, request);
@@ -86,12 +92,36 @@ public class ViewerAction extends BaseHibernateAction {
         addDefaultMessage(mapping, request);
         return getDefaultForward(mapping, request);
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param mapping The ActionMapping used to select this instance.
+     * @param dynaForm The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     * @param response The HTTP Response we are processing.
+     *
+     * @return an Actionforward object.
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         createLists(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param dynaForm The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request)">
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
@@ -128,7 +158,20 @@ public class ViewerAction extends BaseHibernateAction {
         }
         request.setAttribute("tree", root);
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param root JSONArray
+     * @param rootCluster Clusters
+     * @param list List
+     *
+     * @throws JSONException
+     *
+     * @see Clusters
+     */
+    // <editor-fold defaultstate="" desc="private void getSubClusters(JSONArray root, Clusters rootCluster, List list)">
     private void getSubClusters(JSONArray root, Clusters rootCluster, List list) throws JSONException {
         ArrayList subclusters = new ArrayList();
         Iterator it = list.iterator();
@@ -153,7 +196,19 @@ public class ViewerAction extends BaseHibernateAction {
             }
         }
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param root JSONArray
+     * @param rootCluster Clusters
+     *
+     * @throws JSONException
+     *
+     * @see Clusters
+     */
+    // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster)">
     private void getChildren(JSONArray root, Clusters rootCluster) throws JSONException {
         if(themalist == null) return;
         ArrayList childs = new ArrayList();
@@ -176,4 +231,5 @@ public class ViewerAction extends BaseHibernateAction {
             }
         }
     }
+    // </editor-fold>
 }

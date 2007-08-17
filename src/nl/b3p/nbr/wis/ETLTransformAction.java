@@ -26,17 +26,11 @@ package nl.b3p.nbr.wis;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +38,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
-import nl.b3p.nbr.wis.db.EtlProces;
 import nl.b3p.nbr.wis.db.Clusters;
 import nl.b3p.nbr.wis.db.DataTypen;
 import nl.b3p.nbr.wis.db.ThemaData;
@@ -130,9 +123,6 @@ public class ETLTransformAction extends BaseHibernateAction {
     public ActionForward edit(ActionMapping mapping, DynaValidatorForm  dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String themaid              = (String)request.getParameter("themaid");
         int statusInt               = Integer.parseInt((String)request.getParameter("type"));
-        String begin                = (String)request.getParameter("begin");
-        String end                  = (String)request.getParameter("end");
-        String selectedEtlProcesId  = (String)request.getParameter("etlprocesid");
         
         //Eerst moet de status van de te tonen objecten opgevraagd worden.
         String status = "";        

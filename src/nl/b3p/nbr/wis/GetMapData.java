@@ -1,3 +1,13 @@
+/**
+ * @(#)GetMapData.java
+ * @author Roy Braam
+ * @version 1.00 2006/11/30
+ *
+ * Purpose: a class handling the different actions which come from classes extending this class.
+ *
+ * @copyright 2007 All rights reserved. B3Partners
+ */
+
 package nl.b3p.nbr.wis;
 
 import java.sql.Connection;
@@ -20,8 +30,22 @@ public class GetMapData {
     
     private static final Log log = LogFactory.getLog(GetMapData.class);
     
+    /** 
+     * Creeert een nieuwe instantie van GetMapData.
+     */
+    // <editor-fold defaultstate="" desc="public GetMapData()">
     public GetMapData() {}
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param x_input String
+     * @param y_input String
+     *
+     * @return String [] met de data.
+     */
+    // <editor-fold defaultstate="" desc="public String[] getData(String x_input, String y_input)">
     public String[] getData(String x_input, String y_input) {
         
         double x = Double.parseDouble(x_input);
@@ -75,7 +99,17 @@ public class GetMapData {
                 "<b>Wegnaam</b><br />" + n_nr + "<br /><br />"; */
         return new String[]{rdX, rdY, hm, "" + Math.round(dist), n_nr};
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param x_input String
+     * @param y_input String
+     *
+     * @return String [] met de kadastrale data.
+     */
+    // <editor-fold defaultstate="" desc="public String getKadastraleData(String x_input, String y_input)">
     public String getKadastraleData(String x_input, String y_input) {
         ArrayList cols = new ArrayList();
         
@@ -124,7 +158,19 @@ public class GetMapData {
         
         return "" + postcode + " " + huisnr + " " + toev + " - " + plaats;
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!!!
+     *
+     * @param postcode String met de postcode
+     * @param plaatsnaam String met de plaatsnaam
+     * @param n_nr String met het wegnummer
+     * @param hm String met hectometer paal nummer
+     *
+     * @return String [] met de kadastrale data.
+     */
+    // <editor-fold defaultstate="" desc="public ArrayList getMapCoords(String postcode, String plaatsnaam, String n_nr, String hm)">
     public ArrayList getMapCoords(String postcode, String plaatsnaam, String n_nr, String hm) {
         String searchparam = new String();
         String param = new String();
@@ -146,7 +192,7 @@ public class GetMapData {
             ydist = 1600;
             tabel = "algm_kom_10_wgw_v";
             searchparam = "kom";
-            param = plaatsnaam;
+            param = plaatsnaam.replaceAll("\\'", "''");            
             query = SpatialUtil.cityRDCoordinates(tabel, searchparam, param);
         } else if (!n_nr.equals("") && !hm.equals("")) {
             xdist = 50;
@@ -197,4 +243,5 @@ public class GetMapData {
             return null;
         }
     }
+    // </editor-fold>
 }

@@ -14,7 +14,21 @@
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <script type="text/javascript">
             function popUp(URL, naam) {
-                eval("page" + naam + " = window.open(URL, '" + naam + "', 'toolbar=0,scrollbars=1,location=0,statusbar=1,menubar=0,resizable=1,width=800,height=400');");
+                var screenwidth = 1024;
+                var screenheight = 768;
+                var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+                var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+                properties = "toolbar = 0, " + 
+                             "scrollbars = 1, " + 
+                             "location = 0, " + 
+                             "statusbar = 1, " + 
+                             "menubar = 0, " + 
+                             "resizable = 1, " + 
+                             "width = " + screenwidth + ", " + 
+                             "height = " + screenheight + ", " + 
+                             "top = " + popuptop + ", " + 
+                             "left = " + popupleft;
+                eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
             }
         </script>
     </head>

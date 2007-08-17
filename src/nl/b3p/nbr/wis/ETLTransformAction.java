@@ -1,12 +1,27 @@
-/*
- * ETLTransformAction.java
+/**
+ * @(#)HibernateUtil.java
+ * @author Geert Plaisier
+ * @version 1.00 2006/11/30
  *
- * Created on 30 november 2006, 12:54
+ * Purpose: a class handling the different actions which come from classes extending this class.
+ *
+ * @copyright 2007 All rights reserved. B3Partners
+ */
+
+/*
+ * Wat gaan we precies doen met deze ETL beheer tool? Het is de bedoeling dat een gebruiker
+ * straks de mogelijkheid heeft om door middel van eenvoudige selectie criteria van een bepaald
+ * thema op te kunnen vragen wat er voor gebreken in de objecten zijn bij dit thema.
+ * Met eenvoudige selectie criteria wordt hier dan bedoelt dat een gebruiker aangeeft in welk
+ * thema hij geinteresseerd is en vervolgens wat voor informatie hij over dit thema wil zien.
+ * Hier kan bijvoorbeeld ingegeven worden welke status een object dient te hebben, wat voor
+ * type object het om zou moeten gaan en binnen welke periodes (of batchperiode) dit object 
+ * verwerkt zou moeten zijn.
+ * 
+ * 
  */
 
 package nl.b3p.nbr.wis;
-
-
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -17,6 +32,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +44,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
+import nl.b3p.nbr.wis.db.EtlProces;
 import nl.b3p.nbr.wis.db.Clusters;
 import nl.b3p.nbr.wis.db.DataTypen;
 import nl.b3p.nbr.wis.db.ThemaData;
@@ -45,65 +62,49 @@ import org.hibernate.Session;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-/**
- *
- * @author Geert
- * @version
- */
 
 public class ETLTransformAction extends BaseHibernateAction {
     
-    /* forward name="success" path="" */
-    private final static String SUCCESS = "success";
+    private static final Log log = LogFactory.getLog(ETLTransformAction.class);
+    
     private static final String ADMINDATA = "admindata";
     private static final String EDIT = "edit";
     private static final String SHOWOPTIONS = "showOptions";
-    
-    private static final Log log = LogFactory.getLog(ETLTransformAction.class);
-    
     private static final String KNOP = "knop";
     private List themalist = null;
-    
+        
     /**
-     * This is the action called from the Struts framework.
-     * @param mapping The ActionMapping used to select this instance.
-     * @param form The optional ActionForm bean for this request.
-     * @param request The HTTP Request we are processing.
-     * @param response The HTTP Response we are processing.
-     * @throws java.lang.Exception
-     * @return
+     * Actie die aangeroepen wordt vanuit het Struts frameword als een handeling aangeroepen wordt zonder property.
      *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      *
-    public ActionForward execute(ActionMapping mapping, DynaValidatorForm  dynaForm,
-            HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-        
-        ArrayList geoafwijking = new ArrayList();
-        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "g1", "oud"));
-        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 129", "g2", "nieuw"));
-        geoafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 394", "g3", "nieuw"));
-        geoafwijking.add(new AfwijkingsItem("Gedempte sloot", "g4", "nieuw"));
-        
-        ArrayList adminafwijking = new ArrayList();
-        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "a1", "oud"));
-        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 235", "a2", "nieuw"));
-        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 45", "a3", "parkeren"));
-        adminafwijking.add(new AfwijkingsItem("Sloot langs wegnummer 573", "a4", "definitief_ontkoppeld"));
-        
-        request.setAttribute("geoafwijking", geoafwijking);
-        request.setAttribute("adminafwijking", adminafwijking);
-        
-        return mapping.findForward(SUCCESS);
-        
-    }
-    */
-    
-    
+     * @return ActionForward
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         createLists(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }
+    // </editor-fold>
     
+    /**
+     * Actie die aangeroepen wordt vanuit het Struts frameword als een handeling aangeroepen wordt met een showOption property.
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     *
+     * @return ActionForward
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="public ActionForward showOptions(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward showOptions(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String themaid = request.getParameter("themaid");
         Themas t = getThema(mapping, dynaForm, request);
@@ -112,96 +113,203 @@ public class ETLTransformAction extends BaseHibernateAction {
         request.setAttribute("themaid", themaid);
         return mapping.findForward(SUCCESS);
     }
+    // </editor-fold>
     
     /**
-     * This is the action called from the Struts framework.
+     * Actie die aangeroepen wordt vanuit het Struts frameword als een handeling aangeroepen wordt met een edit property.
+     *
      * @param mapping The ActionMapping used to select this instance.
-     * @param form The optional ActionForm bean for this request.
+     * @param dynaForm The optional ActionForm bean for this request.
      * @param request The HTTP Request we are processing.
      * @param response The HTTP Response we are processing.
-     * @throws java.lang.Exception
-     * @return
+     *
+     * @return ActionForward
+     *
+     * @throws Exception
      */
+    // <editor-fold defaultstate="" desc="public ActionForward edit(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward edit(ActionMapping mapping, DynaValidatorForm  dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String type     = (String)request.getParameter("type");
-        String optie    = (String)request.getParameter("optie");
-        String begin    = (String)request.getParameter("begin");
-        String end      = (String)request.getParameter("end");
-        String themaid  = (String)request.getParameter("themaid");
+        String themaid              = (String)request.getParameter("themaid");
+        int statusInt               = Integer.parseInt((String)request.getParameter("type"));
+        String begin                = (String)request.getParameter("begin");
+        String end                  = (String)request.getParameter("end");
+        String selectedEtlProcesId  = (String)request.getParameter("etlprocesid");
         
-        int selectedType = Integer.parseInt(type);
-        int selectedOption = Integer.parseInt(optie);
-        
-        String statusQuery = "";        
-        if(selectedType == 1) {
-            statusQuery += " where status = NO";
-        } else if(selectedType == 2) {
-            statusQuery += " where status = ONO";
-        } else if(selectedType == 3) {
-            statusQuery += " where status = UO";
-        } else if(selectedType == 4) {
-            statusQuery += " where status = VO";
-        } else if(selectedType == 5) {
-            statusQuery += " where status = OVO";
-        } else if(selectedType == 6) {
-            statusQuery += " where status = FO";
+        //Eerst moet de status van de te tonen objecten opgevraagd worden.
+        String status = "";        
+        if(statusInt == 1) {
+            status = "NO";
+        } else if(statusInt == 2) {
+            status = "OAO";
+        } else if(statusInt == 3) {
+            status = "OGO";
+        } else if(statusInt == 4) {
+            status = "UO";
+        } else if(statusInt == 5) {
+            status = "VO";
+        } else if(statusInt == 6) {
+            status = "FO";
+        } else if(statusInt == 7) {
+            status = "OO";
         }
         
-        String selectionQuery = "";
-        if(selectedOption == 1) {
-            selectionQuery += " where objectType = the_geom";
-        } else if(selectedType == 2) {
-            selectionQuery += " where objectType = admin";
+        //Vervolgens moet gekeken worden in welke periode de etl processen uitgevoerd moesten zijn.
+        /*
+        List etlProcesses = null;
+        if ((begin.equals("") || end.equals("") || begin == null || end == null) && (selectedEtlProcesId.equals("-1"))) {
+            addAlternateMessage(mapping, request, null, "Er is geen datum of batch opgegeven.");
+            return getAlternateForward(mapping, request);
+        } else if (!selectedEtlProcesId.equals("-1")) {
+            etlProcesses = getEtlProcesses(selectedEtlProcesId);
+        } else {
+            DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+            Date start_date = null;
+            Date end_date = null;
+                        
+            try {
+                start_date = df.parse(begin);
+                end_date = df.parse(end);
+            } catch (ParseException ex) {
+                addAlternateMessage(mapping, request, null, "Opgegeven datum(s) niet in orde.");
+                return getAlternateForward(mapping, request);
+            }
+            
+            etlProcesses = getEtlProcesses(start_date.toString(), end_date.toString());
         }
-        
-        java.util.Date beginTimestampDate = null;
-        java.util.Date endTimestampDate = null;
-        
-        if(!begin.equals("") && !end.equals("")) {
-            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-            beginTimestampDate   = df.parse(begin);
-            endTimestampDate     = df.parse(end);
-        }
-        
-        String dateQuery = "";
-        if(beginTimestampDate != null && endTimestampDate != null) {
-            dateQuery = " where timestamp >= '" + beginTimestampDate + "' and timestamp <= '" + endTimestampDate + "'";
-        }
-        
-        String extraParamsQuery = statusQuery + " and" + selectionQuery + " and" + dateQuery;
-        
-        
-        
+        */
+        //Nu we alle gegevens weten die als selectiecriteria dienen, kunnen we een SQL statement
+        //op gaan zetten om die objecten op te vragen die aan de criteria voldoen.
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
-        List thema_items = SpatialUtil.getThemaData(t, true);
-        request.setAttribute("thema_items", thema_items);
-        if(thema_items != null && !thema_items.isEmpty()) {
-            request.setAttribute("regels", getThemaObjects(t, /*pks,*/ thema_items));
+        List thema_data = /*SpatialUtil.*/getThemaData(t, true);//, etlProcesses, status);
+        Object o = thema_data.get(1);
+        request.setAttribute("thema_items", thema_data);
+        if(thema_data != null && !thema_data.isEmpty()) {
+            request.setAttribute("regels", getThemaObjects(t, /*pks,*/ thema_data, status));
         } else {
             request.setAttribute("regels", null);
         }
-        this.addBatches(request);
+        //this.addBatches(request);
         return mapping.findForward("showData");
-        //return mapping.findForward("success");
     }
+    // </editor-fold>
     
-    private void addBatches(HttpServletRequest request) {
-        List batches = new ArrayList();
-        for(int i = 0; i < 10; i++) {
-            Batchverwerking batchverwerking = new Batchverwerking();
-            batchverwerking.setId(i);
-            batchverwerking.setName("Batchverwerking van " + (new Date()).toString());
-            batches.add(batchverwerking);
+    /**
+     * Laad een lijst met ETL processes uit de database door middel van de ETL proces start-, en eindtijd.
+     *
+     * @param start_time String
+     * @param end_time String
+     *
+     * @return List
+     */
+    // <editor-fold defaultstate="" desc="private List getEtlProcesses(String start_time, String end_time) method.">
+    private List getEtlProcesses(String start_time, String end_time) {
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        return sess.createQuery("from EtlProces where start_time like '%" + 
+                start_time + "%' and end_time like '%" + end_time + "%'").list();
+    }
+    // </editor-fold>
+    
+    /**
+     * Laad een specifiek ETL proces uit de database door middel van het ETL proces id.
+     *
+     * @param selectedEtlProcesId String
+     *
+     * @return List
+     */
+    // <editor-fold defaultstate="" desc="private List getEtlProcesses(String selectedEtlProcesId) method.">
+    private List getEtlProcesses(String selectedEtlProcesId) {
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        return sess.createQuery("from EtlProces where id = '" + selectedEtlProcesId + "'").list();
+    }
+    // </editor-fold>
+    
+    /**
+     * De methode zorgt voor een lijst met objecten. Ieder van deze objecten bevat gegevens over een bepaalde
+     * kolom horende bij een specifiek Thema dat meegegeven is aan de methode aanroep. De verschillende gegevens
+     * die er in opgeslagen liggen zijn per Thema gedefinieerd. Een voorbeeld van informatie in een dergelijk
+     * object is of een bepaalde kolom wel of geen basisregel is.
+     *
+     * @param t Themas
+     * @param basisregel boolean
+     * @param etlProcesses List
+     * @param status String
+     *
+     * @return List
+     */
+    // <editor-fold defaultstate="" desc="static public List getThemaData(Themas t, boolean basisregel, List etlProcesses, String status) method.">
+    static public List getThemaData(Themas t, boolean basisregel) {//, List etlProcesses, String status) {
+        String admintabel = t.getAdmin_tabel();
+        
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        
+        /*
+        String etlQuery = "";
+        Iterator etlIterator = etlProcesses.iterator();
+        while (etlIterator.hasNext()) {
+            EtlProces etl = (EtlProces)etlIterator.next();
+            int id = etl.getId();
+            etlQuery = " and etl_proces_id = " + id;
         }
-        request.setAttribute("batches", batches);
+        */
+        Query q = sess.createQuery("from ThemaData td where td.thema.id = :tid order by td.dataorder");
+        q.setInteger("tid", t.getId());
+       
+        String queryString = q.getQueryString();
+        List qu = q.list();
+        return qu;//.list();
     }
+    // </editor-fold>
     
+    /**
+     * Laad de verschillende ETL batches uit de database en plaats deze in het request om op het scherm een 
+     * lijst met batches te tonen.
+     *
+     * @param request HttpServletRequest
+     */
+    // <editor-fold defaultstate="" desc="private void addBatches(HttpServletRequest request) method.">
+    private void addBatches(HttpServletRequest request) {
+        List etlprocesses = new ArrayList();
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        List etlprocesList = sess.createQuery("from EtlProces order by start_time").list();
+        Iterator etlprocesIterator = etlprocesList.iterator();
+        while (etlprocesIterator.hasNext()) {
+            EtlProces etlproces = (EtlProces) etlprocesIterator.next();
+            etlproces.createName();
+            etlprocesses.add(etlproces);            
+        }
+        request.setAttribute("etlprocesses", etlprocesses);
+    }
+    // </editor-fold>
+    
+    /**
+     * Haal een Thema op uit de database door middel van een in het request meegegeven thema id.
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     *
+     * @return Themas
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) method.">
     protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
         String themaid = (String)request.getParameter("themaid");
         return getThema(themaid);
     }
+    // </editor-fold>
     
+    /**
+     * Haal een Thema op uit de database door middel van het meegegeven thema id.
+     *
+     * @param themaid String
+     *
+     * @return Themas
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected Themas getThema(String themaid) method.">
     protected Themas getThema(String themaid) {
         if (themaid==null || themaid.length()==0) {
             return null;
@@ -212,8 +320,23 @@ public class ETLTransformAction extends BaseHibernateAction {
         Themas t = (Themas)sess.get(Themas.class, id);
         return t;
     }
-        
-    protected List getThemaObjects(Themas t, /*List pks,*/ List thema_items) throws SQLException, UnsupportedEncodingException {
+    // </editor-fold>
+    
+    /**
+     * DOCUMENT ME!!!
+     *
+     * @param t Themas
+     * @param thema_items List
+     *
+     * @return List
+     *
+     * @throws SQLException
+     * @throws UnsupportedEncodingException
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected List getThemaObjects(Themas t, /*List pks,*/ List thema_items) throws SQLException, UnsupportedEncodingException method.">
+    protected List getThemaObjects(Themas t, /*List pks,*/ List thema_items, String status) throws SQLException, UnsupportedEncodingException {
         /*
         if (t==null)
             return null;
@@ -228,9 +351,9 @@ public class ETLTransformAction extends BaseHibernateAction {
         Connection connection = sess.connection();
         
         try {
-            
+                        
 //            int dt = SpatialUtil.getPkDataType( t, connection);
-            String taq = "select * from " + t.getSpatial_tabel();
+            String taq = "select * from " + t.getSpatial_tabel() + " where status = '" + status + "'";
 //            String taq = t.getAdmin_query();
 //            Iterator it = pks.iterator();
 //            for (int i=1; i<=pks.size(); i++) {
@@ -297,7 +420,22 @@ public class ETLTransformAction extends BaseHibernateAction {
         }
         return regels;
     }
+    // </editor-fold>
     
+    /**
+     * DOCUMENT ME!!!
+     *
+     * @param t Themas
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     *
+     * @return List
+     *
+     * @throws SQLException
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) method.">
     protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) throws SQLException {
         ArrayList pks = new ArrayList();
         
@@ -353,19 +491,49 @@ public class ETLTransformAction extends BaseHibernateAction {
         }
         return pks;
     }
+    // </editor-fold>
     
+    /**
+     * DOCUMENT ME!!!
+     *
+     * @param rs ResultSet
+     * @param t Themas
+     * @param thema_items List
+     *
+     * @return List
+     *
+     * @throws SQLException
+     * @throws UnsupportedEncodingException
+     *
+     * @see Themas
+     */
+    // <editor-fold defaultstate="" desc="protected List getRegel(ResultSet rs, Themas t, List thema_items) method.">
     protected List getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
         ArrayList regel = new ArrayList();
         
         Iterator it = thema_items.iterator();
         while(it.hasNext()) {
             ThemaData td = (ThemaData) it.next();
-            if (td.getDataType().getId()==DataTypen.DATA && td.getKolomnaam()!=null) {
-                String kn = td.getKolomnaam();
-                Object retval = null;
-                retval = rs.getObject(kn);
-                regel.add(retval);                
-            } else if (td.getDataType().getId()==DataTypen.URL) {
+            /*
+             * Controleer eerst om welk datatype dit themadata object om draait.
+             * Binnen het Datatype zijn er drie mogelijkheden, namelijk echt data, 
+             * een URL of een Query.
+             * In alle drie de gevallen moeten er verschillende handelingen verricht
+             * worden om deze informatie op het scherm te krijgen.
+             *
+             * In het eerste geval, wanneer het gaat om data, betreft dit de kolomnaam.
+             * Als deze kolomnaam ingevuld staat hoeft deze alleen opgehaald te worden
+             * en aan de arraylist regel toegevoegd te worden.
+             */
+            if (td.getDataType().getId() == DataTypen.DATA && td.getKolomnaam() != null) {
+                regel.add(rs.getObject(td.getKolomnaam()));
+                
+            /*
+             * In het tweede geval dient de informatie in de thema data als link naar een andere
+             * informatiebron. Deze link zal enigszins aangepast moeten worden om tot vollende 
+             * werkende link te dienen.
+             */                    
+            } else if (td.getDataType().getId() == DataTypen.URL) {
                 StringBuffer url = new StringBuffer(td.getCommando());
                 url.append(Themas.THEMAID);
                 url.append("=");
@@ -378,18 +546,40 @@ public class ETLTransformAction extends BaseHibernateAction {
                 url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
                 
                 regel.add(url.toString());
+                
+            /*
+             * De laatste mogelijkheid betreft een query. Vanuit de themadata wordt nu een 
+             * een commando url opgehaald en deze wordt met de admin primary key uit het 
+             * Thema aangevuld.
+             */    
             } else if (td.getDataType().getId()==DataTypen.QUERY) {
                 StringBuffer url = new StringBuffer(td.getCommando());
                 String adminPk = t.getAdmin_pk();
                 url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
-                
                 regel.add(url.toString());
             } else
+                
+            /*
+             * Indien een datatype aan geen van de voorwaarden voldoet wordt er een
+             * lege regel aan de regel arraylist toegevoegd.
+             */  
                 regel.add("");
         }
         return regel;
     }
-        
+    // </editor-fold>
+    
+    /**
+     * Methode die aangeroepen wordt om de boomstructuur op te bouwen. De opbouw wordt op een iteratieve en recursieve
+     * manier uitgevoerd waarbij over de verschillende thema's heen gewandeld wordt om van deze thema's de children
+     * (clusters) te bepalen en in de juiste volgorde in de lijst te plaatsen.
+     *
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     *
+     * @throws Exception
+     */
+    // <editor-fold defaultstate="" desc="protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) method.">
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List ctl = null;
@@ -405,8 +595,6 @@ public class ETLTransformAction extends BaseHibernateAction {
         
         JSONArray children = new JSONArray();
         root.put("children", children);
-        
-        
         
         if (ctl!=null) {
             Iterator it = ctl.iterator();
@@ -426,7 +614,20 @@ public class ETLTransformAction extends BaseHibernateAction {
         }
         request.setAttribute("tree", root);
     }
+    // </editor-fold>
     
+    /**
+     * private method die zorg draagt het opzetten van de boomstructuur van de verschillende thema's.
+     *
+     * @param root JSONArray
+     * @param rootCluster Clusters
+     * @param list List
+     *
+     * @throws JSONException
+     *
+     * @see Clusters
+     */
+    // <editor-fold defaultstate="" desc="private void getSubClusters(JSONArray root, Clusters rootCluster, List list) method.">
     private void getSubClusters(JSONArray root, Clusters rootCluster, List list) throws JSONException {
         ArrayList subclusters = new ArrayList();
         Iterator it = list.iterator();
@@ -451,7 +652,19 @@ public class ETLTransformAction extends BaseHibernateAction {
             }
         }
     }
+    // </editor-fold>
     
+    /**
+     * private method die child objecten toevoegd aan het meegegeven root object.
+     *
+     * @param root JSONArray
+     * @param rootCluster Clusters
+     *
+     * @throws JSONException
+     *
+     * @see Clusters
+     */
+    // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster) method.">
     private void getChildren(JSONArray root, Clusters rootCluster) throws JSONException {
         if(themalist == null) return;
         ArrayList childs = new ArrayList();
@@ -474,7 +687,14 @@ public class ETLTransformAction extends BaseHibernateAction {
             }
         }
     }
-        
+    // </editor-fold>
+    
+    /**
+     * Return een hashmap die verschillende user gedefinieerde properties koppelt aan Actions.
+     *
+     * @return Map
+     */
+    // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap() method.">
     protected Map getActionMethodPropertiesMap() {
         Map map = new HashMap();
         
@@ -499,5 +719,5 @@ public class ETLTransformAction extends BaseHibernateAction {
         
         return map;
     }
+    // </editor-fold>
 }
-

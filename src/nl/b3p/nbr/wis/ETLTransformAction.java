@@ -108,7 +108,6 @@ public class ETLTransformAction extends BaseHibernateAction {
     public ActionForward showOptions(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String themaid = request.getParameter("themaid");
         Themas t = getThema(mapping, dynaForm, request);
-        this.addBatches(request);
         request.setAttribute("themaName", t.getNaam());
         request.setAttribute("themaid", themaid);
         return mapping.findForward(SUCCESS);
@@ -153,32 +152,6 @@ public class ETLTransformAction extends BaseHibernateAction {
             status = "OO";
         }
         
-        //Vervolgens moet gekeken worden in welke periode de etl processen uitgevoerd moesten zijn.
-        /*
-        List etlProcesses = null;
-        if ((begin.equals("") || end.equals("") || begin == null || end == null) && (selectedEtlProcesId.equals("-1"))) {
-            addAlternateMessage(mapping, request, null, "Er is geen datum of batch opgegeven.");
-            return getAlternateForward(mapping, request);
-        } else if (!selectedEtlProcesId.equals("-1")) {
-            etlProcesses = getEtlProcesses(selectedEtlProcesId);
-        } else {
-            DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-            Date start_date = null;
-            Date end_date = null;
-                        
-            try {
-                start_date = df.parse(begin);
-                end_date = df.parse(end);
-            } catch (ParseException ex) {
-                addAlternateMessage(mapping, request, null, "Opgegeven datum(s) niet in orde.");
-                return getAlternateForward(mapping, request);
-            }
-            
-            etlProcesses = getEtlProcesses(start_date.toString(), end_date.toString());
-        }
-        */
-        //Nu we alle gegevens weten die als selectiecriteria dienen, kunnen we een SQL statement
-        //op gaan zetten om die objecten op te vragen die aan de criteria voldoen.
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
         List thema_data = /*SpatialUtil.*/getThemaData(t, true);//, etlProcesses, status);
@@ -189,38 +162,7 @@ public class ETLTransformAction extends BaseHibernateAction {
         } else {
             request.setAttribute("regels", null);
         }
-        //this.addBatches(request);
         return mapping.findForward("showData");
-    }
-    // </editor-fold>
-    
-    /**
-     * Laad een lijst met ETL processes uit de database door middel van de ETL proces start-, en eindtijd.
-     *
-     * @param start_time String
-     * @param end_time String
-     *
-     * @return List
-     */
-    // <editor-fold defaultstate="" desc="private List getEtlProcesses(String start_time, String end_time) method.">
-    private List getEtlProcesses(String start_time, String end_time) {
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        return sess.createQuery("from EtlProces where start_time like '%" + 
-                start_time + "%' and end_time like '%" + end_time + "%'").list();
-    }
-    // </editor-fold>
-    
-    /**
-     * Laad een specifiek ETL proces uit de database door middel van het ETL proces id.
-     *
-     * @param selectedEtlProcesId String
-     *
-     * @return List
-     */
-    // <editor-fold defaultstate="" desc="private List getEtlProcesses(String selectedEtlProcesId) method.">
-    private List getEtlProcesses(String selectedEtlProcesId) {
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        return sess.createQuery("from EtlProces where id = '" + selectedEtlProcesId + "'").list();
     }
     // </editor-fold>
     
@@ -240,45 +182,11 @@ public class ETLTransformAction extends BaseHibernateAction {
     // <editor-fold defaultstate="" desc="static public List getThemaData(Themas t, boolean basisregel, List etlProcesses, String status) method.">
     static public List getThemaData(Themas t, boolean basisregel) {//, List etlProcesses, String status) {
         String admintabel = t.getAdmin_tabel();
-        
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        
-        /*
-        String etlQuery = "";
-        Iterator etlIterator = etlProcesses.iterator();
-        while (etlIterator.hasNext()) {
-            EtlProces etl = (EtlProces)etlIterator.next();
-            int id = etl.getId();
-            etlQuery = " and etl_proces_id = " + id;
-        }
-        */
         Query q = sess.createQuery("from ThemaData td where td.thema.id = :tid order by td.dataorder");
         q.setInteger("tid", t.getId());
-       
         String queryString = q.getQueryString();
-        List qu = q.list();
-        return qu;//.list();
-    }
-    // </editor-fold>
-    
-    /**
-     * Laad de verschillende ETL batches uit de database en plaats deze in het request om op het scherm een 
-     * lijst met batches te tonen.
-     *
-     * @param request HttpServletRequest
-     */
-    // <editor-fold defaultstate="" desc="private void addBatches(HttpServletRequest request) method.">
-    private void addBatches(HttpServletRequest request) {
-        List etlprocesses = new ArrayList();
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        List etlprocesList = sess.createQuery("from EtlProces order by start_time").list();
-        Iterator etlprocesIterator = etlprocesList.iterator();
-        while (etlprocesIterator.hasNext()) {
-            EtlProces etlproces = (EtlProces) etlprocesIterator.next();
-            etlproces.createName();
-            etlprocesses.add(etlproces);            
-        }
-        request.setAttribute("etlprocesses", etlprocesses);
+        return q.list();
     }
     // </editor-fold>
     

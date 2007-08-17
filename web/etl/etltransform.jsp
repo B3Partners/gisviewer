@@ -13,50 +13,20 @@
         <LINK href="support.css" type=text/css rel=stylesheet>
         <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
         <script language="JavaScript" type="text/javascript">
-            function getObjects() {
-//                document.forms[0].begin.value   = document.getElementById('begindate').value;
-//                document.forms[0].end.value     = document.getElementById('enddate').value;
-                                
+            function getObjects() {                                
                 for (var i = 1; i < 8; i++) {
                     if(document.getElementById('radio' + i).checked) { 
                         document.forms[0].type.value = document.getElementById('radio' + i).value;
                     }
                 }
-                
                 document.forms[0].edit.value    = "submit";
                 document.forms[0].submit();
             }
-            
-//            function updateSelection(etlSelection) {
-//                document.forms[0].etlprocesid.value = etlSelection.options[etlSelection.selectedIndex].value;
-//            }
-            
-//            function showHide(nr, el) {
-//                if(nr == 1 || nr == 2) {
-//                    document.getElementById('etlprocesid').style.backgroundColor = '#A1A1A1';
-//                    document.getElementById('etlprocesid').value = '';
-//                    
-//                    document.getElementById('etlprocesid').selectedIndex = 0;
-//                    document.getElementById('etlprocesid').selected = true;
-//                    
-//                    document.getElementById('begindate').style.backgroundColor = '';
-//                    document.getElementById('enddate').style.backgroundColor = '';
-//                } else if(nr == 3) {
-//                    document.getElementById('begindate').style.backgroundColor = '#A1A1A1';
-//                    document.getElementById('begindate').value = '';
-//                    document.getElementById('enddate').style.backgroundColor = '#A1A1A1';
-//                    document.getElementById('enddate').value = '';
-//                    document.getElementById('etlprocesid').style.backgroundColor = '';
-//                }
-//            }
         </script>
     </head>
     <body>
         <form id="myid" target="dataframe">
             <input type="hidden" name="type" />
-//            <input type="hidden" name="begin" />
-//            <input type="hidden" name="end" />
-//            <input type="hidden" name="etlprocesid" />
             <input type="hidden" name="themaid" value="${themaid}"/>
             <input type="hidden" name="edit" />
         </form>
@@ -93,24 +63,7 @@
                         <input type="radio" value="5" name="radiogroup" id="radio5"/> Verwijderde objecten<br />
                         <input type="radio" value="6" name="radiogroup" id="radio6"/> Niet verwerkbare objecten<br/>
                         <input type="radio" value="7" name="radiogroup" id="radio7"/> Ongewijzigde objecten<br />
-                        
                         <p>
-                        <%--
-                        <b>Van welke periode wilt u de gegevens bekijken:</b></p>
-                        van: <input type="text" size="5" id="begindate" name="begindate" onfocus="showHide(1, this);"> 
-                        tot: <input type="text" size="5" id="enddate" name="enddate" onfocus="showHide(2, this);">
-                        
-                        <p><b>of kies een batchverwerking:</b></p>
-                        <p>
-                        <select id="etlprocesid" name="etlprocesid" onclick="showHide(3, this);" onchange="updateSelection(this);">
-                            <option id="etl_object" class="etl_object" value="-1">-- Selecteerd een Batchverwerking --</option>
-                            <c:forEach var="nEtlProces" items="${etlprocesses}">
-                                <option id="etl_object" class="etl_object" value="${nEtlProces.id}">
-                                    ${nEtlProces.naam}                                    
-                                </option>        
-                            </c:forEach>                            
-                        </select>
-                        --%>
                         </p>                        
                         <button onclick="getObjects();" style="margin-left:10px;">
                             Toon objecten

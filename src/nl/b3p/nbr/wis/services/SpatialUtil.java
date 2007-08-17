@@ -1,8 +1,14 @@
-/*
- * SpatialUtil.java
+/**
+ * @(#)SpatialUtil.java
+ * @author Chris van Lith
+ * @version 1.00 2007/03/08
  *
- * Created on 8 maart 2007, 17:47
+ * Purpose: Een klasse specifiek voor de uitvoering van alle spatial query's
+ * die binnen het project van belang zijn. Iedere query kent zijn eigen methode
+ * of maakt gebruik van een combinatie van methoden om het gewenste resultaat
+ * op een zo efficient mogelijke manier te bereiken.
  *
+ * @copyright 2007 All rights reserved. B3Partners
  */
 
 package nl.b3p.nbr.wis.services;
@@ -22,11 +28,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-
-/**
- *
- * @author Chris
- */
 public class SpatialUtil {
     
     private static final Log log = LogFactory.getLog(SpatialUtil.class);
@@ -35,8 +36,17 @@ public class SpatialUtil {
     public static final String MULTILINESTRING="multilinestring";
     public static final String MULTIPOLYGON="multipolygon";
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param t Themas
+     * @param conn Connection
+     *
+     * @return int
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public int getPkDataType(Themas t, Connection conn)">
     static public int getPkDataType(Themas t, Connection conn) throws SQLException {
-        
         DatabaseMetaData dbmd = conn.getMetaData();
         String dbtn = t.getAdmin_tabel();
         String adminPk = t.getAdmin_pk();
@@ -52,7 +62,18 @@ public class SpatialUtil {
         }
         return dt;
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param x double
+     * @param y double
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String createClickGeom(double x, double y, int srid)">
     static public String createClickGeom(double x, double y, int srid) {
         StringBuffer sq = new StringBuffer();
         sq.append(" PointFromText ( ");
@@ -66,7 +87,18 @@ public class SpatialUtil {
         sq.append(") ");
         return sq.toString();
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param t Themas
+     * @param basisregel boolean
+     *
+     * @return List
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public List getThemaData(Themas t, boolean basisregel)">
     static public List getThemaData(Themas t, boolean basisregel) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         
@@ -76,7 +108,22 @@ public class SpatialUtil {
         q.setBoolean("br", basisregel);
         return q.list();
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param kolom String
+     * @param tabel String
+     * @param x double
+     * @param y double
+     * @param distance double
+     * @param srid int
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String maxDistanceQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
     static public String maxDistanceQuery(String kolom, String tabel, double x, double y, double distance, int srid) {
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
@@ -91,7 +138,21 @@ public class SpatialUtil {
         sq.append(distance);
         return sq.toString();
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param kolom String
+     * @param tabel String
+     * @param x double
+     * @param y double
+     * @param srid int
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String intersectQuery(String kolom, String tabel, double x, double y, int srid)">
     static public String intersectQuery(String kolom, String tabel, double x, double y, int srid) {
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
@@ -105,7 +166,22 @@ public class SpatialUtil {
         sq.append(") = true ");
         return sq.toString();
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param kolom String
+     * @param tabel String
+     * @param x double
+     * @param y double
+     * @param distance double
+     * @param srid int
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
     static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid) {
         // Als thema punten of lijnen dan afstand
         // Als thema polygon dan Intersects
@@ -135,7 +211,22 @@ public class SpatialUtil {
         
         return sq.toString();
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param cols ArrayList
+     * @param tabel String
+     * @param x double
+     * @param y double
+     * @param distance double
+     * @param srid int
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String closestSelectQuery(ArrayList cols, String tabel, double x, double y, double distance, int srid)">
     static public String closestSelectQuery(ArrayList cols, String tabel, double x, double y, double distance, int srid) {
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
@@ -159,17 +250,54 @@ public class SpatialUtil {
         sq.append(" order by dist limit 1");
         return sq.toString();
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param tabel String
+     * @param searchparam String
+     * @param param String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String postalcodeRDCoordinates(String tabel, String searchparam, String param)">
     static public String postalcodeRDCoordinates(String tabel, String searchparam, String param) {
         return "select distinct " + searchparam + " as naam, astext(tbl.the_geom) as pointsresult from " + 
                 tabel + " tbl where lower(tbl." + searchparam + ") = lower('" + param + "')";
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param tabel String
+     * @param searchparam String
+     * @param param String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String cityRDCoordinates(String tabel, String searchparam, String param)">
     static public String cityRDCoordinates(String tabel, String searchparam, String param) {
         return "select distinct " + searchparam + " as naam, astext(centroid(tbl.the_geom)) as pointsresult from " + 
                 tabel + " tbl where lower(tbl." + searchparam + ") like lower('%" + param + "%')";
     }
+    // </editor-fold>
     
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param tabel String
+     * @param searchparam String
+     * @param hm String
+     * @param n_nr String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr)">
     static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr) {
         return  "select " + searchparam + " as naam, astext(hecto.the_geom) as pointsresult from " + tabel + " hecto where (" + 
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")*" + 
@@ -188,11 +316,45 @@ public class SpatialUtil {
          * AND hecto.n_nr = 'N261'
          */
     }
+    // </editor-fold>
     
-    public static String intersectionArea(String operator,String tb1, String tb2, String id,int divide, String extraCriteria) {
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param operator String
+     * @param tb1 String
+     * @param tb2 String
+     * @param divide int
+     * @param extraCriteria String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="public static String intersectionArea(String operator,String tb1, String tb2, String id,int divide, String extraCriteria)">
+    public static String intersectionArea(String operator,String tb1, String tb2, String id, int divide, String extraCriteria) {
         return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide, extraCriteria);
     }
-    static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,String idColumnName, String id,int divide, String extraCriteria){
+    // </editor-fold>
+    
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param operator String
+     * @param tb1 String
+     * @param geomColumn1 String
+     * @param tb2 String
+     * @param geomColumn2 String
+     * @param idColumnName String
+     * @param id String
+     * @param divide int
+     * @param extraCriteria String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,String idColumnName, String id,int divide, String extraCriteria)">
+    static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,
+            String idColumnName, String id, int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select ("+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+"))))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
@@ -203,11 +365,46 @@ public class SpatialUtil {
         sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
     }  
-    static public String intersectionLength(String operator,String tb1,String tb2,String id,int divide, String extraCriteria){
+    // </editor-fold>
+    
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param operator String
+     * @param tb1 String
+     * @param tb2 String
+     * @param id String
+     * @param divide int
+     * @param extraCriteria String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String intersectionLength(String operator,String tb1,String tb2,String id,int divide, String extraCriteria)">
+    static public String intersectionLength(String operator, String tb1, String tb2, String id, int divide, String extraCriteria){
         return intersectionLength(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide, extraCriteria);
     }
-    /**/
-    static public String intersectionLength(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2, String idColumnName, String id,int divide, String extraCriteria){
+    // </editor-fold>
+    
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param operator String
+     * @param tb1 String
+     * @param geomColumn1 String
+     * @param tb2 String
+     * @param geomColumn2 String
+     * @param idColumnName String
+     * @param id String
+     * @param divide int
+     * @param extraCriteria String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String intersectionLength(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2, String idColumnName, String id,int divide, String extraCriteria)">
+    static public String intersectionLength(String operator, String tb1, String geomColumn1, String tb2, String geomColumn2, 
+            String idColumnName, String id, int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select "+operator+"(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
@@ -218,15 +415,51 @@ public class SpatialUtil {
         sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
     }
+    // </editor-fold>
+    
     /**
      *Maakt een query string die alle objecten selecteerd uit tb1 waarvan het object een relatie heeft volgens de meegegeven relatie
      *met het geo object van tb2
      */
-    static public String hasRelationQuery(String tb1,String tb2, String relationFunction,String saf, String analyseObjectId, String extraCriteriaString){
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param tb1 String
+     * @param tb2 String
+     * @param relationFunction String
+     * @param saf String
+     * @param analyseObjectId String
+     * @param extraCriteriaString String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String hasRelationQuery(String tb1,String tb2, String relationFunction,String saf, String analyseObjectId, String extraCriteriaString)">
+    static public String hasRelationQuery(String tb1, String tb2, String relationFunction, String saf, String analyseObjectId, String extraCriteriaString){
         //"select * from <themaGeomTabel> tb1, <analyseGeomTable> tb2 where tb1.<theGeom> tb2.<theGeom>";
         return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId, extraCriteriaString);
     }
-    static public String hasRelationQuery(String tb1,String geomColumn1,String tb2, String geomColumn2, String relationFunction,String saf,String idColumnName,String analyseObjectId, String extraCriteriaString){
+    // </editor-fold>
+    
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param tb1 String
+     * @param geomColumn1 String
+     * @param tb2 String
+     * @param geomColumn2 String
+     * @param relationFunction String
+     * @param saf String
+     * @param idColumnName String
+     * @param analyseObjectId String
+     * @param extraCriteriaString String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String hasRelationQuery(String tb1,String geomColumn1,String tb2, String geomColumn2, String relationFunction,String saf,String idColumnName,String analyseObjectId, String extraCriteriaString)">
+    static public String hasRelationQuery(String tb1, String geomColumn1, String tb2, String geomColumn2, 
+            String relationFunction, String saf, String idColumnName, String analyseObjectId, String extraCriteriaString){
         //"select * from <themaGeomTabel> tb1, <analyseGeomTable> tb2 where tb1.<theGeom> tb2.<theGeom>";
         StringBuffer sq= new StringBuffer();
         sq.append("select tb1."+saf+" ");
@@ -236,11 +469,46 @@ public class SpatialUtil {
         sq.append(extraCriteriaString + "limit 50");
         return sq.toString();
     }
-    static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1, String extraCriteria){
+    // </editor-fold>
+    
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param select String
+     * @param table1 String
+     * @param table2 String
+     * @param tableIdColumn1 String
+     * @param tableId1 String
+     * @param extraCriteria String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1, String extraCriteria)">
+    static public String containsQuery(String select, String table1, String table2, String tableIdColumn1, 
+            String tableId1, String extraCriteria){
         return containsQuery(select,table1,"the_geom",table2,"the_geom",tableIdColumn1,tableId1, extraCriteria);
     }
+    // </editor-fold>
     
-    static public String containsQuery(String select,String table1,String geomColumn1, String table2, String geomColumn2,String tableIdColumn1,String tableId1, String extraCriteria){
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param select String
+     * @param table1 String
+     * @param geomColumn1 String
+     * @param table2 String
+     * @param geomColumn2 String
+     * @param tableIdColumn1 String
+     * @param tableId1 String
+     * @param extraCriteria String
+     *
+     * @return String
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public String containsQuery(String select,String table1,String geomColumn1, String table2, String geomColumn2,String tableIdColumn1,String tableId1, String extraCriteria)">
+    static public String containsQuery(String select, String table1, String geomColumn1, String table2, 
+            String geomColumn2, String tableIdColumn1, String tableId1, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
         sq.append(select+" ");
@@ -250,6 +518,17 @@ public class SpatialUtil {
         sq.append("and Contains(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();       
     }
+    // </editor-fold>
+    
+    /** 
+     * DOCUMENT ME!
+     * 
+     * @param conn Connection
+     *
+     * @throws Exception
+     * 
+     */
+    // <editor-fold defaultstate="" desc="static public void testMetaData(Connection conn) throws SQLException">
     static public void testMetaData(Connection conn) throws SQLException {
         
         Hashtable allTables = new Hashtable();
@@ -292,5 +571,5 @@ public class SpatialUtil {
         }
         return;
     }
-    
+    // </editor-fold>
 }

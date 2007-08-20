@@ -46,7 +46,11 @@
         <action path="/index" forward="/index.jsp"/>
         <action path="/help" forward="/help.jsp"/>
         
-        <action path="/etl" forward="/etl/etlHomeBase.jsp"/>
+        <!--action path="/etl" forward="/etl/etlHomeBase.jsp"/ -->
+        <action path="/etl" type="nl.b3p.nbr.wis.ETLOverviewAction">
+            <forward name="success" path="/etl/etlHomeBase.jsp"/>
+        </action>        
+        
         <action path="/etlscheduler" forward="/etl/etlSchedulerBase.jsp"/>
         
         

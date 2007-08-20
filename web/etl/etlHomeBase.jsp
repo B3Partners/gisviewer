@@ -2,5 +2,5 @@
 
 <tiles:insert page="/templates/template.jsp" flush="true">
   <tiles:put name="menu"   value="/nav/themabeheermenu.jsp" />
-  <tiles:put name="content"   value="/etl/etlHome.jsp" />
+  <tiles:put name="content"   value="/etl/etlhome.jsp" />
 </tiles:insert>

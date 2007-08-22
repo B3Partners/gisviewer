@@ -27,12 +27,12 @@ option {
     font-family: arial, sans-serif;
 }
 
-#rightdiv {
+#rightdiv_etl {
     float: left;
     width: 290px;
     height: 489px;
 }
 
-#infovak{
+#infovak_etl{
     height: 489px;
 }

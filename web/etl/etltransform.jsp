@@ -52,8 +52,8 @@
                     so.write("flashcontent");
                 </script>
             </div>
-            <div id="rightdiv">                        
-                <div id="infovak">
+            <div id="rightdiv_etl">                        
+                <div id="infovak_etl">
                     <strong>Van welke objecten wilt u de onvolledige data bekijken</strong>
                     <div class="optie">
                         <input type="radio" value="1" name="radiogroup" id="radio1"/> Nieuwe objecten<br />

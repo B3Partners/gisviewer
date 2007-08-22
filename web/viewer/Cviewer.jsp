@@ -7,11 +7,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
-    <script src='dwr/interface/JMapData.js'></script>
-    <script src='dwr/engine.js'></script>
-    <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
-    <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
-    <script>
+<script src='dwr/interface/JMapData.js'></script>
+<script src='dwr/engine.js'></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
+<script>
     var allActiveLayers="";
     var layerUrl=null;
     function doAjaxRequest(point_x, point_y) {
@@ -87,7 +88,7 @@
     }
     var layersAan= new Array();
     var doLayerClick= new Boolean(false);
-    var activeLayerFromCookie = readCookie('activelayer');
+    var activeLayerFromCookie = getActiveLayerId(readCookie('activelayer'));
     setActiveThema(activeLayerFromCookie);
     function createLabel(container, item) {
         doLayerClick=false;
@@ -95,29 +96,30 @@
             container.appendChild(document.createTextNode(item.title ? item.title : item.id));
         else {
             if (navigator.appName=="Microsoft Internet Explorer") {
-                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveThema(\'' + item.id + '\');">');
-                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '\', \'7\'); setActiveThema(\'' + item.id + '\');">');
+                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
+                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
             }
             else {
                 var el = document.createElement('input');
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
-                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id, '7'); setActiveThema(item.id)}
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id); setActiveThemaLabel(item.title) }
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
             if (navigator.appName=="Microsoft Internet Explorer") {
                 if(isInCookieArray(item.id)){
-                    var el2 = document.createElement('<input type="checkbox" checked="checked" value="' + item.id + '" onclick="checkboxClick(this)">');
+                    var el2 = document.createElement('<input type="checkbox" id="' + item.id + '" checked="checked" value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')">');
                     doLayerClick=true;
                 }
-                else var el2 = document.createElement('<input type="checkbox" value="' + item.id + '" onclick="checkboxClick(this)">');
+                else var el2 = document.createElement('<input type="checkbox" id="' + item.id + '" value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')">');
             }
             else {
                 var el2 = document.createElement('input');
+                el2.id = item.id;
                 el2.type = 'checkbox';
                 el2.value = item.id;
-                el2.onclick = function(){checkboxClick(this);}
+                el2.onclick = function(){checkboxClick(this, false, item.title);}
                 if(isInCookieArray(item.id)){
                     el2.checked = true;
                     doLayerClick=true;
@@ -142,97 +144,46 @@
         }
     }
     
+    function getActiveLayerId(cookiestring) {
+        var items = cookiestring.split('##');
+        return items[0];
+    }
+    
+    function getActiveThemaLabel(cookiestring) {
+        var items = cookiestring.split('##');
+        return items[1];
+    }
+    
+    function setActiveThemaLabel(activeThemaLabel) {
+        document.getElementById('actief_thema').innerHTML = 'Actieve thema: ' + activeThemaLabel;
+    }
+    
     function switchTab(obj) {
-        obj.style.background = '#FF0000';
-        obj.style.color = 'White';
-        obj.onmouseover = function(){}
-        obj.onmouseout = function(){}
-        obj.onclick = function(){}
+        eraseCookie('activetab');
+        createCookie('activetab', obj.id, '7');
+        document.getElementById('tab0').className = '';
+        document.getElementById('tab1').className = '';
+        document.getElementById('tab2').className = '';
+        document.getElementById('tab3').className = '';
+        document.getElementById('tab4').className = '';
+        obj.className="activelink";
+        document.getElementById('treevak').style.display = 'none';
+        document.getElementById('layermaindiv').style.display = 'none';
+        document.getElementById('infovak').style.display = 'none';
+        document.getElementById('objectvak').style.display = 'none';
+        document.getElementById('analysevak').style.display = 'none';
+        document.getElementById('volgordevak').style.display = 'none';
         if(obj.id == "tab0") {
             document.getElementById('treevak').style.display = 'block';
             document.getElementById('layermaindiv').style.display = 'block';
-            document.getElementById('infovak').style.display = 'none';
-            document.getElementById('objectvak').style.display = 'none';
-            document.getElementById('analysevak').style.display = 'none';
-            document.getElementById('tab1').style.backgroundColor = 'White';
-            document.getElementById('tab1').style.color = 'Black';
-            document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab1').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab1').onclick = function(){switchTab(this);}
-            document.getElementById('tab2').style.backgroundColor = 'White';
-            document.getElementById('tab2').style.color = 'Black';
-            document.getElementById('tab2').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab2').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab2').onclick = function(){switchTab(this);}
-            document.getElementById('tab3').style.backgroundColor = 'White';
-            document.getElementById('tab3').style.color = 'Black';
-            document.getElementById('tab3').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab3').onclick = function(){switchTab(this);}
-        }
-        if(obj.id == "tab1") {
-            document.getElementById('treevak').style.display = 'none';
-            document.getElementById('layermaindiv').style.display = 'none';
+        } else if(obj.id == "tab1") {
             document.getElementById('infovak').style.display = 'block';
-            document.getElementById('objectvak').style.display = 'none';
-            document.getElementById('analysevak').style.display = 'none';
-            document.getElementById('tab0').style.backgroundColor = 'White';
-            document.getElementById('tab0').style.color = 'Black';
-            document.getElementById('tab0').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab0').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab0').onclick = function(){switchTab(this);}
-            document.getElementById('tab2').style.backgroundColor = 'White';
-            document.getElementById('tab2').style.color = 'Black';
-            document.getElementById('tab2').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab2').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab2').onclick = function(){switchTab(this);}
-            document.getElementById('tab3').style.backgroundColor = 'White';
-            document.getElementById('tab3').style.color = 'Black';
-            document.getElementById('tab3').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab3').onclick = function(){switchTab(this);}
         } else if(obj.id == "tab2") {
-            document.getElementById('treevak').style.display = 'none';
-            document.getElementById('layermaindiv').style.display = 'none';
-            document.getElementById('infovak').style.display = 'none';
             document.getElementById('objectvak').style.display = 'block';
-            document.getElementById('analysevak').style.display = 'none';
-            document.getElementById('tab0').style.backgroundColor = 'White';
-            document.getElementById('tab0').style.color = 'Black';
-            document.getElementById('tab0').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab0').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab0').onclick = function(){switchTab(this);}
-            document.getElementById('tab1').style.backgroundColor = 'White';
-            document.getElementById('tab1').style.color = 'Black';
-            document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab1').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab1').onclick = function(){switchTab(this);}
-            document.getElementById('tab3').style.backgroundColor = 'White';
-            document.getElementById('tab3').style.color = 'Black';
-            document.getElementById('tab3').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab3').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab3').onclick = function(){switchTab(this);}
         } else if(obj.id == "tab3") {
-            document.getElementById('treevak').style.display = 'none';
-            document.getElementById('layermaindiv').style.display = 'none';
-            document.getElementById('infovak').style.display = 'none';
-            document.getElementById('objectvak').style.display = 'none';
             document.getElementById('analysevak').style.display = 'block';
-            document.getElementById('tab0').style.backgroundColor = 'White';
-            document.getElementById('tab0').style.color = 'Black';
-            document.getElementById('tab0').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab0').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab0').onclick = function(){switchTab(this);}            
-            document.getElementById('tab1').style.backgroundColor = 'White';
-            document.getElementById('tab1').style.color = 'Black';
-            document.getElementById('tab1').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab1').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab1').onclick = function(){switchTab(this);}
-            document.getElementById('tab2').style.backgroundColor = 'White';
-            document.getElementById('tab2').style.color = 'Black';
-            document.getElementById('tab2').onmouseover = function(){this.style.backgroundColor='#FF0000'; this.style.color = 'White';}
-            document.getElementById('tab2').onmouseout = function(){this.style.backgroundColor='White'; this.style.color = 'Black';}
-            document.getElementById('tab2').onclick = function(){switchTab(this);}
+        } else if(obj.id == "tab4") {
+            document.getElementById('volgordevak').style.display = 'block';
         }
     }
 
@@ -264,11 +215,12 @@
         return false;
     }
     
-    function checkboxClick(obj, dontRefresh) {
+    function checkboxClick(obj, dontRefresh, obj_name) {
         if(obj.checked) {
             //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
             var standardParam="SERVICE=WMS&VERSION=1.1.1";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
+            addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
             
             if(checkboxArray.length > 0) {
                 var arrayString = getArrayAsString();
@@ -295,6 +247,7 @@
         } else {
             //alert("layer uit");
             deleteFromArray(obj);
+            removeLayerFromVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
             if (obj.theItem.wmsurl){
                 allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
                 refreshLayer();                
@@ -358,6 +311,9 @@
             }
         }
         checkboxArray = tempArray;
+        var arrayString = getArrayAsString();
+        eraseCookie('checkedLayers');
+        createCookie('checkedLayers', arrayString, '7');
     }
     
     function createCookie(name,value,days) {
@@ -477,107 +433,81 @@
         document.getElementById('show4').disabled = false;
     }
     
-    </script>    
-    <div id="map"><div id="flashcontent">
-            <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
-        </div>
-            <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "659", "493", "8", "#FFFFFF");
-            </script>
-            <!--[if lte IE 6]>
-            <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "651", "488", "8", "#FFFFFF");
-            </script>
-            <![endif]-->
-            <script type="text/javascript">
-            so.write("flashcontent");
-            </script>
-        </div>
+    function addLayerToVolgorde(name, id) {
+        var selectbox = document.getElementById("volgorde_select");
+        selectbox.options[selectbox.options.length] = new Option(name, id, false, false);
+        var totalLength = selectbox.options.length;
+        if(totalLength > 1) {
+            for(var i = (totalLength - 1); i > -1; i--) {
+                s_swapOptions(selectbox, i, i-1);
+            }
+        }
+    }
     
-    <div id="rightdiv">
-        <div id="tabjes">
-            <div id="tab0">
-                Thema&lsquo;s
-            </div>
-            <div id="tab1">
-                Lokatie
-            </div>
-            <div id="tab2">
-                Gebieden
-            </div>
-            <div id="tab3">
-                Analyse
-            </div>
-        </div>
-        <div id="tab_container">
-            <div id="treevak" style="display: none;">
-                <div id="layermaindiv" style="display: none;"></div>
-            </div>
-            <div id="infovak" style="display: none;">
-                <div id="start_message">
-                    Klik op een punt op de kaart voor aanvullende informatie.
-                </div>
-                
-                <div id="algdatavak" style="margin: 0px; padding: 0px; display: none;">
-                    <b>RD Co&ouml;rdinaten</b><br />
-                    <span id="rdcoords"></span><br /><br />
-                    <b>Hectometer aanduiding</b><br />
-                    <span id="hm_aanduiding"></span><br /><br />
-                    <b>Wegnaam</b><br />
-                    <span id="wegnaam"></span><br /><br />
-                    <b>Adres</b><br />
-                    <span id="kadastraledata"></span>
-                </div>
-                
-                <!-- input fields for search -->
-                <div>
-                <br>
-                <b>Zoek naar locatie:</b>                
-                    <table>
-                    <tr>
-                        <td>Postcode:</td>
-                        <td><div onclick="showHide(1, this);"><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></div></td>
-                    </tr>
-                    <tr>
-                        <td>Plaatsnaam:</td>
-                        <td><input type="text" id="show2" name="show2" onfocus="showHide(2, this);" size="20"/></td>
-                    </tr>
-                    <tr>
-                        <td>Weg nr / hm:</td>
-                        <td>
-                            <input type="text" id="show3" name="show3" onfocus="showHide(3, this);" size="5"/> / 
-                            <input type="text" id="show4" name="show4" onfocus="showHide(4, this);" size="5"/>
-                        </td>
-                    </tr>
-                    </table> 
-
-                    <button onclick="getCoords();">
-                        Ga naar locatie
-                    </button>&nbsp;
-                    <button onclick="eraseSubmit();">
-                        Wis invoer
-                    </button><br>
-                    
-                    <div class="searchResultsClass" id="searchResults">             
-                        
-                    </div>
-                    
-                </p> 
-                </div>
-                <!-- end of search -->
-            </div>
-
-               
-            
-            <div id="objectvak" style="display: none;">
-                <iframe id="objectframe" name="objectframe" frameborder="0"></iframe>
-            </div>
-            <div id="analysevak" style="display: none;">
-                <iframe id="analyseframe" name="analyseframe" frameborder="0"></iframe>
-            </div>
-        </div>
-    </div>
+    function removeLayerFromVolgorde(name, id) {
+        var selectbox = document.getElementById("volgorde_select");
+        for(var i = 0; i < selectbox.options.length; i++) {
+            if(selectbox.options[i].value == id) {
+                selectbox.options[i] = null;
+            }
+        }
+    }
     
+    function moveVolgordeUp(selectbox) {
+        s_moveOptionUp(selectbox);
+    }
+    
+    function moveVolgordeDown(selectbox) {
+        s_moveOptionDown(selectbox);
+    }
+    
+    function refreshMapVolgorde(selectbox) {
+        parseVolgordeBox(selectbox);
+        refreshLayer();
+    }
+    
+    function deleteAllLayers(selectbox) {
+        var totalLength = selectbox.options.length;
+        for(var i = (totalLength - 1); i > -1; i--) {
+            document.getElementById(splitValue(selectbox.options[i].value)[0]).checked = false;
+            selectbox.options[i] = null;
+        }
+        allActiveLayers = "";
+        cookieArray = "";
+        eraseCookie('checkedLayers');
+        createCookie('checkedLayers', cookieArray, '7');
+        readCookieArrayIntoCheckboxArray();
+        refreshLayer();
+    }
+    
+    function parseVolgordeBox(selectbox) {
+        var cookieString = "";
+        var layersString = "";
+        var firstTime = true;
+        for(var i = 0; i < selectbox.options.length; i++) {
+            if(firstTime) {
+                cookieString = splitValue(selectbox.options[i].value)[0];
+                firstTime = false;
+            } else {
+                cookieString = "," + splitValue(selectbox.options[i].value)[0] + cookieString;
+            }
+            layersString = "," + splitValue(selectbox.options[i].value)[1] + layersString;
+        }
+        allActiveLayers = layersString;
+        cookieArray = cookieString;
+        eraseCookie('checkedLayers');
+        createCookie('checkedLayers', cookieArray, '7');
+        readCookieArrayIntoCheckboxArray();
+    }
+    
+    function splitValue(val) {
+        return val.split('##');
+    }
+</script>
+
+<script type="text/javascript" src="<html:rewrite page="/scripts/niftycube.js"/>"></script>
+
+<div style="display: none;">
     <form target="dataframe" method="post" action="viewerdata.do">
         <input type="hidden" name="admindata" />
         <input type="hidden" name="metadata" />
@@ -601,11 +531,115 @@
         <input type="hidden" name="xcoord" />
         <input type="hidden" name="ycoord" />        
     </form>
-    
-    <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
+</div>
 
-    <br /><br /><br />
-    <script type="text/javascript">
+<div id="bovenkant">
+    <div id="map"><div id="flashcontent">
+            <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
+        </div>
+        <script type="text/javascript">
+                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "658", "493", "8", "#FFFFFF");
+        </script>
+        <!--[if lte IE 6]>
+            <script type="text/javascript">
+            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "651", "488", "8", "#FFFFFF");
+            </script>
+        <![endif]-->
+        <script type="text/javascript">
+                so.write("flashcontent");
+        </script>
+    </div>
+    
+    <div id="rightdiv">
+        <div id="tabjes">
+            <ul id="nav">
+                <li id="tab0" onmouseover="switchTab(this);"><a href="#">Thema's</a></li>
+                <li id="tab4" onmouseover="switchTab(this);"><a href="#">Volgorde</a></li>
+                <li id="tab1" onmouseover="switchTab(this);"><a href="#">Zoeker</a></li>
+                <li id="tab2" onmouseover="switchTab(this);"><a href="#">Gebieden</a></li>
+                <li id="tab3" onmouseover="switchTab(this);"><a href="#">Analyse</a></li>
+            </ul>
+        </div>
+        <div id="tab_container">
+            <div id="treevak" style="display: none;">
+                <div id="layermaindiv" style="display: none;"></div>
+            </div>
+            <div id="infovak" style="display: none;">
+                <div id="start_message">
+                    Klik op een punt op de kaart voor aanvullende informatie.
+                </div>
+                
+                <div id="algdatavak" style="margin: 0px; padding: 0px; display: none;">
+                    <b>RD Co&ouml;rdinaten</b><br />
+                    <span id="rdcoords"></span><br /><br />
+                    <b>Hectometer aanduiding</b><br />
+                    <span id="hm_aanduiding"></span><br /><br />
+                    <b>Wegnaam</b><br />
+                    <span id="wegnaam"></span><br /><br />
+                    <b>Adres</b><br />
+                    <span id="kadastraledata"></span>
+                </div>
+                
+                <!-- input fields for search -->
+                <div>
+                    <br>
+                    <b>Zoek naar locatie:</b>                
+                    <table>
+                        <tr>
+                            <td>Postcode:</td>
+                            <td><div onclick="showHide(1, this);"><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></div></td>
+                        </tr>
+                        <tr>
+                            <td>Plaatsnaam:</td>
+                            <td><input type="text" id="show2" name="show2" onfocus="showHide(2, this);" size="20"/></td>
+                        </tr>
+                        <tr>
+                            <td>Weg nr / hm:</td>
+                            <td>
+                                <input type="text" id="show3" name="show3" onfocus="showHide(3, this);" size="5"/> / 
+                                <input type="text" id="show4" name="show4" onfocus="showHide(4, this);" size="5"/>
+                            </td>
+                        </tr>
+                    </table> 
+                    
+                    <button onclick="getCoords();">
+                        Ga naar locatie
+                    </button>&nbsp;
+                    <button onclick="eraseSubmit();">
+                        Wis invoer
+                    </button><br>
+                    <div class="searchResultsClass" id="searchResults"></div>
+                    
+                </div>
+                <!-- end of search -->
+            </div>
+            
+            <div id="objectvak" style="display: none;">
+                <iframe id="objectframe" name="objectframe" frameborder="0" src="empty_iframe.jsp"></iframe>
+            </div>
+            <div id="analysevak" style="display: none;">
+                <iframe id="analyseframe" name="analyseframe" frameborder="0" src="empty_iframe.jsp"></iframe>
+            </div>
+            <div id="volgordevak" style="display: none;">
+                Bepaal de volgorde waarin de kaartlagen getoond worden
+                <form>
+                    <select multiple="multiple" size="10" id="volgorde_select"></select>
+                    <input type="button" value="Omhoog" onclick="moveVolgordeUp(document.getElementById('volgorde_select'));" />
+                    <input type="button" value="Omlaag" onclick="moveVolgordeDown(document.getElementById('volgorde_select'));" />
+                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde(document.getElementById('volgorde_select'));" />
+                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers(document.getElementById('volgorde_select'));" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="onderbalk">Viewer en details<span id="actief_thema">Actieve thema: </span></div>
+<div id="dataframediv">
+    <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
+</div>
+<div class="onderbalk">Informatie</div>
+
+<script type="text/javascript">
         treeview_create({
             "id": "layermaindiv",
             "root": ${tree},
@@ -620,13 +654,19 @@
             "saveScrollState": true,
             "expandAll": false
         });
-    </script>
-    
-    <script type="text/javascript">
-    switchTab(document.getElementById('tab0'));
-        
-     //always call this script after the SWF object script has called the flamingo viewer.
+</script>
 
+<script type="text/javascript">
+    var activeTab = readCookie('activetab');
+    if(activeTab != null) {
+        switchTab(document.getElementById(activeTab));
+    } else {
+        switchTab(document.getElementById('tab0'));
+    }
+    Nifty("ul#nav a","medium transparent top");
+    setActiveThemaLabel(getActiveThemaLabel(readCookie('activelayer')));
+    
+    //always call this script after the SWF object script has called the flamingo viewer.
     //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
     function map1_onIdentify(movie,extend){
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
@@ -648,8 +688,20 @@
     function map1_OG2_onUpdateResponse(){
         if(doOnInit){
             doOnInit=false;
-            for (var i=0; i < layersAan.length; i++){
-                checkboxClick(layersAan[i],true);
+            if(checkboxArray.length == layersAan.length) {
+                var newLayersAan = new Array();
+                for(var j=0; j < checkboxArray.length; j++) {
+                    for (var k=0; k < layersAan.length; k++) {
+                        if(layersAan[k].theItem.id == checkboxArray[j]) {
+                            newLayersAan[newLayersAan.length] = layersAan[k];
+                        }
+                    }
+                }
+            } else {
+                var newLayersAan = layersAan;
+            }
+            for (var i=0; i < newLayersAan.length; i++){
+                checkboxClick(newLayersAan[i],true,newLayersAan[i].theItem.title);
             }
             refreshLayer();
         }
@@ -657,9 +709,9 @@
     function moveToExtent(minx,miny,maxx,maxy){
         flamingo.callMethod("map1", "moveToExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy}, 0);
     }
-    </script>
-    
-    
-    <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
-    <script language="JavaScript" type="text/javascript" src="<html:rewrite page='/js/enableJsFlamingo.js' module='' />">
+</script>
+
+
+<%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
+<script language="JavaScript" type="text/javascript" src="<html:rewrite page='/js/enableJsFlamingo.js' module='' />">
 

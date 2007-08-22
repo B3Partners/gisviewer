@@ -14,7 +14,13 @@
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <style>
             td {
-            font-size: 8pt;
+                font-size: 8pt;
+            }
+            body {
+                background-image: url(/nbr_prototype/images/infovak_bg.jpg);
+                background-repeat: no-repeat;
+                background-position: 100% 100%;
+                background-attachment: fixed;
             }
         </style>
     </head>

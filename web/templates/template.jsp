@@ -15,7 +15,8 @@
         <link href="styles/etltransform.css" rel="stylesheet" type="text/css">
         <!--[if lte IE 6]>
             <link href="styles/viewer-ie6.css" rel="stylesheet" type="text/css">
-        <![endif]-->        
+        <![endif]-->
+        <link rel="stylesheet" type="text/css" href="styles/niftyCorners.css">
         <script type="text/javascript" src="scripts/etltransform.js"></script>
     </head>
     <body>

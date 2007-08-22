@@ -48,6 +48,12 @@
             clear: both;
             float: left;
             }
+            body {
+                background-image: url(/nbr_prototype/images/infovak_bg.jpg);
+                background-repeat: no-repeat;
+                background-position: 100% 100%;
+                background-attachment: fixed;
+            }
         </style>
         <script type="text/javascript">
         function showDiv(id) {

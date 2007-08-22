@@ -23,6 +23,7 @@ div{
     margin-right: auto;
     background-color: #FFF;
 }
+
 .topmenu{
     position: static;
     background-image: url("../images/patroon_a.gif");
@@ -40,7 +41,7 @@ div{
 a.menulink, a.menulink:visited, a.menulink:active {
     color: white;
     font-weight: bold;
-    margin-left: 20px;
+    margin-left: 15px;
     text-decoration: none; 
 }
 a.menulink:hover{

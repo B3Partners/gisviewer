@@ -25,10 +25,10 @@
                     <c:forEach var="ThemaItem" items="${thema_items}" varStatus="counter">
                         <c:choose>
                             <c:when test="${counter.count % 2 == 0}">
-                                <tr onmouseover="this.style.backgroundColor = '#CCCCCC;'" onmouseout="this.style.backgroundColor = '#FFFFFF;'">
+                                <tr>
                             </c:when>
                             <c:otherwise>
-                                <tr style="background-color: #DDDDDD;" onmouseover="this.style.backgroundColor = '#CCCCCC;'" onmouseout="this.style.backgroundColor = '#DDDDDD;'">
+                                <tr style="background-color: #DDDDDD;">
                             </c:otherwise>
                         </c:choose>
                         

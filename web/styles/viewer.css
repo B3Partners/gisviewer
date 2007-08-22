@@ -1,118 +1,168 @@
+#bovenkant {
+    width: 950px;
+    height: 498px;
+}
+
+.onderbalk {
+    width: 935px;
+    height: 19px;
+    background-color: #606060;
+    /*
+    border-bottom: 1px solid #606060;
+    border-left: 1px solid #606060;
+    border-right: 1px solid #606060;
+    */
+    margin: 0px;
+    margin-top: 0px;
+    color: White;
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 2px;
+    padding-left: 15px;
+}
+
+.onderbalk span {
+    font-size: 8pt;
+    font-weight: bold;
+    color: White;
+    float: right;
+    margin: 0px;
+    margin-right: 15px;
+    margin-top: -23px;
+}
+
 #map{
     position: static;
-    width: 659px;
+    width: 658px;
     height: 493px;
     margin-left: 0px;
     margin-top: 0px;
     float: left;
-    border-left: 1px solid Black;
-    border-top: 1px solid Black;
-    border-bottom: 1px solid Black;
+    /*border: 1px solid Black;*/
+    margin-top: 5px;
 }
 #rightdiv {
-    float: right;
-    width: 290px;
-    height: 300px;
-    height: 493px;
+    float: left;
+    width: 291px;
+    height: 476px;
+    margin-top: 21px;
 }
 #tabjes {
-    width: 290px;
-    height: 14px;
-    float: left;
-}
-#tabjes div {
-    display: block;
-    border: 1px solid Black;
-    width: 65px;
-    float: left;
-    padding-left: 5px;
-    border-bottom: 0px none White;
-    cursor: pointer;
-}
-#tab1 {
-    border-right: 0px none White;
+    width: 291px;
+    height: 18px;
+    text-align: center;
 }
 #treevak{
     margin: 0px;
+    margin-left: 0px;
     padding: 2px;
     padding-left: 4px;
-    width: 290px;
-    height: 280px;
-    height: 475px;
+    width: 285px;
+    height: 453px;
     float: left;
-    border: 1px solid Black;
+    border: 1px solid #606060;
+    border-left: 0px none White;
+    background-image: url(/nbr_prototype/images/infovak_bg.jpg);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
 }
 #infovak{
     margin: 0px;
+    margin-left: 0px;
     padding: 2px;
     padding-left: 4px;
-    width: 290px;
-    height: 280px;
-    height: 475px;
+    width: 285px;
+    height: 453px;
     float: left;
-    border: 1px solid Black;
+    border: 1px solid #606060;
+    border-left: 0px none White;
+    background-image: url(/nbr_prototype/images/infovak_bg.jpg);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+}
+#volgordevak{
+    margin: 0px;
+    margin-left: 0px;
+    padding: 6px;
+    padding-left: 6px;
+    width: 279px;
+    height: 445px;
+    float: left;
+    border: 1px solid #606060;
+    border-left: 0px none White;
+    background-image: url(/nbr_prototype/images/infovak_bg.jpg);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+}
+#volgordevak form {
+    margin-top: 4px;
 }
 #objectvak{
     margin: 0px;
     padding: 2px;
     padding-left: 4px;
-    width: 290px;
-    height: 280px;
-    height: 475px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+    width: 287px;
+    height: 455px;
     float: left;
-    border: 1px solid Black;
+    border: 1px solid #606060;
+    border-left: 0px none White;
 }
 #objectframe {
     margin: 0px;
     border: 0px;
-    width: 290px;
-    height: 475px;
-    height: 280px;    
+    width: 287px;
+    height: 455px;   
 }
 #analysevak{
     margin: 0px;
     padding: 2px;
     padding-left: 4px;
-    width: 290px;
-    height: 280px;
-    height: 475px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+    width: 287px;
+    height: 455px;
     float: left;
-    border: 1px solid Black;
+    border: 1px solid #606060;
+    border-left: 0px none White;
 }
 #analyseframe {
     margin: 0px;
     border: 0px;
-    width: 290px;
-    height: 280px;
-    height: 475px;    
+    width: 287px;
+    height: 455px;   
 }
 #dataframe {
-    border: 1px solid Black;
     float: left;
-    width: 955px;
+    width: 948px;
     height: 265px;
-    margin-top: 5px;
+}
+#dataframediv {
+    border: 1px solid #606060;
+    float: left;
+    width: 948px;
+    margin-top: 15px;
 }
 #admindatamaindiv{
     position: static;
     float: left;
-    width: 951px;
+    width: 950px;
     height: 265px;
     margin-top: 5px;
 }
 #tab_container {
-    height: 475px;
-    width: 290px;    
+    height: 458px;
+    width: 291px;
 }
 #layermaindiv{
     /*position: static;*/
-    background-color: #F0F0F0;
-    width: 280px;
-    height: 270px;
-    height: 465px;
+    margin: 0px;
+    border: 0px;
+    width: 277px;
+    height: 445px; 
     padding: 5px;
     overflow: auto;
-    background-color: White;
 }
 /*For the layers*/
 a, a:visited, a:active {
@@ -125,22 +175,34 @@ a:hover{
     text-decoration: underline;
 }
 /*For admindata*/
-.topRow{
-    clear: both;
+#admindata_table {
+    margin: 0px;
+    padding: 0px;
+    font-size: 8pt;
+    width: auto;
+}
+
+#admindata_table td {
+    margin: 0px;
+    padding: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+    border: 0px none White;
+}
+
+.topRow {
     background-image: url("../images/patroon_a.gif");
     background-repeat: repeat; 
     color: white;
     font-weight: bold;
-    padding-left: 5px;
 }
+
 .row{
-    clear: both;
+    color: Black;
     font-weight: bold;
-    width: 930px;
-    padding-left: 5px;
 }
 .row:hover {
-    background-color: #CCCCCC;
+    background-color: #606060;
 }
 .cell{
     float: left;
@@ -170,7 +232,7 @@ button {
 }
 
 #aanvullende_info_table tr:hover {
-    background-color: #CCCCCC;
+    background-color: #606060;
 }
 
 .aanvullende_info_th {
@@ -191,7 +253,6 @@ button {
 
 .searchResultsClass{
     margin-top: 10px;
-    width: 275px;
-    height: 140px;    
+    width: 275px;   
     overflow: auto;
 }

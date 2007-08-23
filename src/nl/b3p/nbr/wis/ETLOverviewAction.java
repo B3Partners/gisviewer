@@ -45,10 +45,10 @@ public class ETLOverviewAction extends BaseHibernateAction {
     private static final String KNOP = "knop";
     
     private static final String GIVEN_COLUMN_NAME = "status";
-    private static final String [] STATUS = new String [] {"NO", "OGO", "OAO", "GO", "VO", "FO", "OO"};
+    private static final String [] STATUS = new String [] {"NO", "OGO", "OAO", "GO", "VO", "OO"};
     
     private List themalist = null;
-        
+    
     /**
      * Actie die aangeroepen wordt vanuit het Struts frameword als een handeling aangeroepen wordt zonder property.
      *
@@ -67,10 +67,9 @@ public class ETLOverviewAction extends BaseHibernateAction {
         return mapping.findForward(SUCCESS);
     }
     // </editor-fold>
-    
-    
+        
     /**
-     * Methode die zorg draagt voor het vullen en op het request zetten van de overzichtsresultaten 
+     * Methode die zorg draagt voor het vullen en op het request zetten van de overzichtsresultaten
      * van de verschillende Thema afwijkingen die tijdens het laatste ETL proces aan het licht gekomen
      * zijn. Per Thema wordt er een onderscheidt gemaakt in de verschillende statussen die aan het
      * Thema toegekend kan zijn.
@@ -80,34 +79,14 @@ public class ETLOverviewAction extends BaseHibernateAction {
      */
     // <editor-fold defaultstate="" desc="private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request)">
     private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request) {
-        
-        
-        //Vraag eerst een lijst op van alle thema's die in de db bekend zijn
-        //Vraag vervolgens per thema alle items op
-        //Sorteer het thema op status en creeer arraylists met een deel van het thema
-        //geselecteerd per status
-        //Moet geen volledige Thema selectie gedaan worden alleen een count.
-        
-        
-        //Een lijst met alle themas (namen en admin tabellen)
-        //SELECT naam, admin_tabel FROM themas
-        
-        //de admin tabellen kunnen gebruikt worden in onderstaande QUERY
-        //De status moet iedere keer aangepast worden.
-        //SELECT COUNT(1) FROM tankstations_centroid WHERE status = 'OGO'
-        
-        //de integers die uit bovenstaande query komen,
-        //moeten opgeteld worden. Daarmee kan het percentage incorrecte
-        //gegevens uitgerekend worden.
         ArrayList overview = new ArrayList();
-        
         String thema_naam = null;
         String admin_tabel = null;
         
+        String themaQuery = "SELECT naam, admin_tabel FROM themas WHERE admin_tabel IS NOT NULL ORDER BY naam";
+        
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
-        
-        String themaQuery = "SELECT naam, admin_tabel FROM themas";
         try {
             PreparedStatement statement = connection.prepareStatement(themaQuery);
             try {
@@ -116,17 +95,7 @@ public class ETLOverviewAction extends BaseHibernateAction {
                     thema_naam  = rs.getString("naam");
                     admin_tabel = rs.getString("admin_tabel");
                     
-                    ArrayList count = new ArrayList();
-                    if(admin_tabel != null && checkThemaStatusAvailable(admin_tabel)) {
-                        //Doe dan iets waarmee de waarden opgehaald kunnen worden....
-                        count = getCount(thema_naam, admin_tabel);
-                    } else {
-                        count.add(thema_naam);
-                        for (int i = 0; i < STATUS.length; i++) {
-                            count.add("onbekend");
-                        }
-                    }
-                    overview.add(count);
+                    overview.add(getCount(thema_naam, admin_tabel));
                 }
             } finally {
                 statement.close();
@@ -145,41 +114,35 @@ public class ETLOverviewAction extends BaseHibernateAction {
     }
     // </editor-fold>
     
-    private boolean checkThemaStatusAvailable(String admin_tabel) {
-        //controleer van het thema of de admin tabel wel een status kolom heeft
-        boolean bool = false;
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
-        
-        try {
-            // Create a result set
-            PreparedStatement _statement = connection.prepareStatement("SELECT * FROM " + admin_tabel);
-            ResultSet result = _statement.executeQuery();
-            
-            // Get result set meta data
-            ResultSetMetaData rsmd = result.getMetaData();
-            int numColumns = rsmd.getColumnCount();
-            
-            // Get the column names; column indices start from 1
-            for (int i = 1; i < numColumns + 1; i++) {
-                String columnName = rsmd.getColumnName(i);
-                if(columnName.equalsIgnoreCase(GIVEN_COLUMN_NAME)) {
-                    bool = true;
-                }
-            }
-        } catch (SQLException ex) {
-            log.error("", ex);
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                log.error("", ex);
-            }
-        }
-        
-        return bool;
-    }
-    
+    /**
+     * Een methode die van een bepaald thema bepaald hoeveel hits er van elke status zijn.
+     * De verschillende statussen die gebruikt worden zijn:
+     * - NO
+     * - OGO
+     * - OAO
+     * - GO
+     * - VO
+     * - OO
+     *
+     * Naast deze statussen wordt ook berekend wat het totaal aantal statussen is en wat het percentage
+     * onvolledige objecten is binnen het thema. Deze wordt berekend uit het percentage OGO
+     * en OAO.
+     *
+     * Om deze berekening snel uit te kunnen voeren is de database geoptimaliseerd. Hiertoe zijn er van de
+     * huidige bruikbare tabellen indices gemaakt zodat de database een snelle response kan leveren.
+     *
+     * Een dergelijke index is als volgt gemaakt:
+     * CREATE INDEX tankstations_centroid_status_index ON tankstations_centroid USING BTREE (status_etl)
+     *
+     * Een dergelijke index kan ook weer verwijderd worden. Dit kan als volgt:
+     * DROP INDEX tankstations_centroid_status_index
+     *
+     * @param thema_naam String met de naam van het thema waar de telling van verricht moet worden.
+     * @param admin_tabel String met de naam van de tabel van het thema waar de tellingen uit opgehaald kunnen worden.
+     *
+     * @return ArrayList met de tellingen van de verschillende statussen voor het betreffende thema.
+     */
+    // <editor-fold defaultstate="" desc="private ArrayList getCount(String thema_naam, String admin_tabel)">
     private ArrayList getCount(String thema_naam, String admin_tabel) {
         ArrayList count = new ArrayList();
         count.add(thema_naam);
@@ -188,27 +151,48 @@ public class ETLOverviewAction extends BaseHibernateAction {
         Connection connection = sess.connection();
         
         if(admin_tabel != null) {
-            for (int i = 0; i < STATUS.length; i++) {
-                String query = "SELECT COUNT(1) FROM " + admin_tabel + " WHERE status = '" + STATUS[i] + "'";
+            int total = 0;
+            String query = "SELECT COUNT(1) as Total, " +
+                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[0] + "') AS Status_" + STATUS[0] + ", " +
+                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[1] + "') AS Status_" + STATUS[1] + ", " +
+                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[2] + "') AS Status_" + STATUS[2] + ", " +
+                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[3] + "') AS Status_" + STATUS[3] + ", " +
+                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[4] + "') AS Status_" + STATUS[4] + ", " +
+                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[5] + "') AS Status_" + STATUS[5] + " " +
+                    "FROM " + admin_tabel;
+            try {
+                PreparedStatement statement = connection.prepareStatement(query);
                 try {
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    try {
-                        ResultSet rs = statement.executeQuery();
-                        if (rs.next()){
-                            count.add(rs.getInt("status"));
-                        }
-                    } finally {
-                        statement.close();
+                    ResultSet rs = statement.executeQuery();
+                    if (rs.next()){
+                        count.add(rs.getInt("Status_" + STATUS[0]));
+                        count.add(rs.getInt("Status_" + STATUS[1]));
+                        count.add(rs.getInt("Status_" + STATUS[2]));
+                        count.add(rs.getInt("Status_" + STATUS[3]));
+                        count.add(rs.getInt("Status_" + STATUS[4]));
+                        count.add(rs.getInt("Status_" + STATUS[5]));
+                        total = rs.getInt("Total");
+                        count.add(total);
                     }
+                } finally {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                log.error("", ex);
+            } finally {
+                try {
+                    connection.close();
                 } catch (SQLException ex) {
                     log.error("", ex);
-                } finally {
-                    try {
-                        connection.close();
-                    } catch (SQLException ex) {
-                        log.error("", ex);
-                    }
                 }
+            }
+            int amountOGO = (Integer)count.get(2);
+            int amountOAO = (Integer)count.get(3);
+            if(total != 0) {
+                int percent = ((amountOGO + amountOAO) * 100) / total;
+                count.add(percent);
+            } else {
+                count.add(0);
             }
         } else {
             for (int i = 0; i < STATUS.length; i++) {
@@ -217,9 +201,7 @@ public class ETLOverviewAction extends BaseHibernateAction {
         }
         return count;
     }
-    
-    
-    
+    // </editor-fold>
     
     /**
      * Return een hashmap. Deze is verplicht overriden vanwege abstracte klasse BaseHibernateAction.

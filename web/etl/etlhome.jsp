@@ -8,487 +8,55 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
 
-INLOGGEN HIER GRAAG!!!!
-DOE MAAR NU!!!
-<%--
-<c:set var="focus" value="j_username" scope="request"/> 
-<tiles:insert definition="common.setFocus"/> 
+<link href="styles/main.css" rel="stylesheet" type="text/css">
+<link href="styles/viewer.css" rel="stylesheet" type="text/css">
+<p>
+    <h1>Overzicht verschillende Thema's met bijhorende resultaten</h1>
+</p>
+<p>
+    <table id="etl_overview_table" style="table-layout: fixed;">
+        <tr class="etlTopRow">
+            <td style="width: 300px;"><b>&nbsp;Thema naam</b></td>
+            <td><b>&nbsp;Aantal NO</b></td>
+            <td><b>&nbsp;Aantal OAO</b></td>
+            <td><b>&nbsp;Aantal OGO</b></td>
+            <td><b>&nbsp;Aantal GO</b></td>
+            <td><b>&nbsp;Aantal VO</b></td>
+            <td><b>&nbsp;Aantal OO</b></td>
+            <td><b>&nbsp;Totaal</b></td>
+            <td><b>&nbsp;% incorrect</b></td>
+        </tr>
 
-<form action="j_security_check" method='post' >
-    <div class="item">
-        <fmt:message key="themabeheer.username"/>:
-    </div>
-    <div class="value">
-        <input type="text" name="j_username">
-    </div>
-    <div class="item">
-        <fmt:message key="themabeheer.password"/>:
-    </div>
-    <div class="value">
-        <input type="password" name="j_password">
-    </div>
-    
-    <html:submit property="login" styleClass="knop">
-        <fmt:message key="button.login"/>
-    </html:submit>
-</form>
---%>
-<h1>Overzicht verschillende Thema's met bijhorende resultaten</h1>
-<table border="1">
-    <tr>
-        <td><b>Thema naam</b></td>
-        <td><b>Aantal NO</b></td>
-        <td><b>Aantal OAO</b></td>
-        <td><b>Aantal OGO</b></td>
-        <td><b>Aantal GO</b></td>
-        <td><b>Aantal VO</b></td>
-        <td><b>Aantal FO</b></td>
-        <td><b>Aantal OO</b></td>
-        <td><b>Totaal Aantal</b></td>
-        <td><b>% incorrect</b></td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-    <tr>
-        <td><b>Tankstation</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>71</td>
-        <td>33 %</td>
-    </tr>
-    <tr>
-        <td><b>GGA Gebieden</b></td>
-        <td>8</td>
-        <td>6</td>
-        <td>44</td>
-        <td>12</td>
-        <td>121</td>
-        <td>2</td>
-        <td>9</td>
-        <td>55</td>
-        <td>12 %</td>
-    </tr>
-    <tr>
-        <td><b>Gemeenten</b></td>
-        <td>5</td>
-        <td>6</td>
-        <td>8</td>
-        <td>12</td>
-        <td>11</td>
-        <td>2</td>
-        <td>7</td>
-        <td>234</td>
-        <td>66 %</td>
-    </tr>
-</table>
-
+        <c:forEach var="nItem" items="${overview}" varStatus="counter">
+            <c:choose>
+                <c:when test="${counter.count % 2 == 1}">
+                    <tr class="etlRow">
+                </c:when>
+                <c:otherwise>
+                    <tr class="etlRow" style="background-color: #DDDDDD;">
+                </c:otherwise>
+            </c:choose>
+            <c:forEach var="item" items="${nItem}" varStatus="i">
+                <c:choose>
+                    <c:when test="${i.count % 9 == 0}">
+                        <td style="width: 300px;"><b>&nbsp;${item}</b></td>
+                    </c:when>
+                    <c:otherwise>
+                        <td><b>&nbsp;${item}</b></td>                        
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            </tr>
+        </c:forEach>
+    </table>
+</p>
 <ul>
-    <li>NO  - Nieuwe objecten</li>
-    <li>OAO - Onvolledig Administratieve Objecten</li>
-    <li>OGO - Onvolledig Geografische Objecten</li>
-    <li>GO  - Geupdate Objecten</li>
-    <li>VO  - Verwijderde Objecten</li>
-    <li>FO  - Niet verwerkbare Objecten</li>
-    <li>OO  - Ongewijzigde Objecten</li>
+    <li><b>NO</b>  - Nieuwe objecten</li>
+    <li><b>OAO</b> - Onvolledig Administratieve Objecten</li>
+    <li><b>OGO</b> - Onvolledig Geografische Objecten</li>
+    <li><b>GO</b>  - Geupdate Objecten</li>
+    <li><b>VO</b>  - Verwijderde Objecten</li>
+    <li><b>OO</b>  - Ongewijzigde Objecten</li>
     <li>Totaal: alle objecten bij elkaar opgeteld</li>
-    <li>% incorrect: de verhouding tussen OAO + OGO + FO en het totaal.</li>
+    <li>% incorrect: ((OAO + OGO) / Totaal) * 100</li>
 </ul>

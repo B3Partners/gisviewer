@@ -251,7 +251,7 @@ public class ETLTransformAction extends BaseHibernateAction {
         try {
                         
 //            int dt = SpatialUtil.getPkDataType( t, connection);
-            String taq = "select * from " + t.getSpatial_tabel() + " where status = '" + status + "'";
+            String taq = "select * from " + t.getSpatial_tabel() + " where status_etl = '" + status + "'";
 //            String taq = t.getAdmin_query();
 //            Iterator it = pks.iterator();
 //            for (int i=1; i<=pks.size(); i++) {

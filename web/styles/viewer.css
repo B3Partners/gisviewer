@@ -258,23 +258,4 @@ button {
     overflow: auto;
 }
 
-#etl_overview_table {
-    margin: 0px;
-    padding: 0px;
-    padding-left: 2px;
-    padding-right: 2px;
-    border: 1px solid black;
-    width: 950px;
-}
 
-.etlTopRow {
-    background-image: url("../images/patroon_a.gif");
-    background-repeat: repeat; 
-    color: white;
-    font-weight: bold;
-}
-
-.etlRow{
-    color: Black;
-    font-weight: bold;
-}

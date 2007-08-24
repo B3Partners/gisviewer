@@ -34,5 +34,19 @@ option {
 }
 
 #infovak_etl{
-    height: 489px;
+
+    margin: 0px;
+    margin-left: 0px;
+    margin-top: 39px;
+    padding: 2px;
+    padding-left: 2px;
+    padding-top: 4px;
+    width: 287px;
+    height: 451px;
+    float: left;
+    border: 1px solid #606060;
+    border-left: 0px none White;
+    background-image: url(/nbr_prototype/images/infovak_bg.jpg);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
 }

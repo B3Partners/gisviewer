@@ -45,7 +45,7 @@ public class ETLOverviewAction extends BaseHibernateAction {
     private static final String KNOP = "knop";
     
     private static final String GIVEN_COLUMN_NAME = "status";
-    private static final String [] STATUS = new String [] {"NO", "OGO", "OAO", "GO", "VO", "OO"};
+    private static final String [] STATUS = new String [] {"NO", "OAO", "OGO", "GO", "VO", "OO"};
     
     private List themalist = null;
     

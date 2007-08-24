@@ -534,7 +534,8 @@
 </div>
 
 <div id="bovenkant">
-    <div id="map"><div id="flashcontent">
+    <div id="map">
+        <div id="flashcontent">
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
         <script type="text/javascript">

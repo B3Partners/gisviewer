@@ -485,10 +485,20 @@ public class ETLTransformAction extends BaseHibernateAction {
         Query q = sess.createQuery(hquery);
         ctl = q.list();
         
-        hquery = "FROM Themas WHERE cluster != 9 AND (moscow = 1 OR moscow = 2 OR moscow = 3) and code < 3";
+        hquery = "FROM Themas WHERE cluster != 9 AND (moscow = 1 OR moscow = 2 OR moscow = 3) and code < 3 ORDER BY naam";
         q = sess.createQuery(hquery);
         themalist = q.list();
         
+        /*
+        Iterator it = themalist.iterator();
+        while (it.hasNext()) {
+            Themas thema = (Themas) it.next();
+            thema.getNaam();
+        }
+         */
+        request.setAttribute("themalist", themalist);
+        
+        /*
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
         
         JSONArray children = new JSONArray();
@@ -511,6 +521,7 @@ public class ETLTransformAction extends BaseHibernateAction {
             }
         }
         request.setAttribute("tree", root);
+         */
     }
     // </editor-fold>
     
@@ -526,6 +537,7 @@ public class ETLTransformAction extends BaseHibernateAction {
      * @see Clusters
      */
     // <editor-fold defaultstate="" desc="private void getSubClusters(JSONArray root, Clusters rootCluster, List list) method.">
+    /*
     private void getSubClusters(JSONArray root, Clusters rootCluster, List list) throws JSONException {
         ArrayList subclusters = new ArrayList();
         Iterator it = list.iterator();
@@ -550,6 +562,7 @@ public class ETLTransformAction extends BaseHibernateAction {
             }
         }
     }
+     **/
     // </editor-fold>
     
     /**
@@ -563,6 +576,7 @@ public class ETLTransformAction extends BaseHibernateAction {
      * @see Clusters
      */
     // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster) method.">
+    /*
     private void getChildren(JSONArray root, Clusters rootCluster) throws JSONException {
         if(themalist == null) return;
         ArrayList childs = new ArrayList();
@@ -585,6 +599,7 @@ public class ETLTransformAction extends BaseHibernateAction {
             }
         }
     }
+     */
     // </editor-fold>
     
     /**

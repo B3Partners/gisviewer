@@ -9,7 +9,7 @@
 <%@ page isELIgnored="false"%>
 
 <link href="styles/main.css" rel="stylesheet" type="text/css">
-<link href="styles/viewer.css" rel="stylesheet" type="text/css">
+<link href="styles/etl.css" rel="stylesheet" type="text/css">
 <p>
     <h1>Overzicht verschillende Thema's met bijhorende resultaten</h1>
 </p>
@@ -37,12 +37,15 @@
                 </c:otherwise>
             </c:choose>
             <c:forEach var="item" items="${nItem}" varStatus="i">
+                <c:if test="${counter.count == 0}">
+                    <td style="width: 300px;"><b>&nbsp;${item}</b></td>
+                </c:if>
                 <c:choose>
-                    <c:when test="${i.count % 9 == 0}">
-                        <td style="width: 300px;"><b>&nbsp;${item}</b></td>
+                    <c:when test="${i.count == 9}">
+                        <td style="width: 300px;"><b>&nbsp;${item}&nbsp;%</b></td>
                     </c:when>
                     <c:otherwise>
-                        <td><b>&nbsp;${item}</b></td>                        
+                        <td>&nbsp;${item}</td>                        
                     </c:otherwise>
                 </c:choose>
             </c:forEach>

@@ -9,7 +9,7 @@ WEB
   LOG "pnb_wis.log"
   METADATA
     "wms_title"				"WIS Provincie Noord Brabant"
-    "wms_onlineresource"		"http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis/pnb_wis.map&"
+    "wms_onlineresource"		"http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis/pnb_wis.map&
     "wms_srs"				"EPSG:28992"
   END  
 END
@@ -48,6 +48,11 @@ LEGEND
 	STATUS ON
 	POSITION LR
 	TRANSPARENT TRUE
+	KEYSIZE 30 10
+	LABEL
+		COLOR 255 255 255
+		SIZE tiny
+	END
 	
 END
 
@@ -101,6 +106,7 @@ LAYER
 			  MINFEATURESIZE 60
         	END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 LAYER
@@ -125,6 +131,7 @@ LAYER
       		END 
 		
         END
+        PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Weg onderdelen layer
 LAYER
@@ -148,6 +155,7 @@ LAYER
 			OUTLINECOLOR 0 0 0
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 LAYER
@@ -171,6 +179,7 @@ LAYER
 			SYMBOL "cameraico"
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 LAYER
@@ -206,6 +215,7 @@ LAYER
 		  MINFEATURESIZE 60
         	END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 LAYER
 	STATUS OFF
@@ -239,6 +249,7 @@ LAYER
 			MINFEATURESIZE 60
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 # percelen kaart van het kadaster
 LAYER
@@ -260,6 +271,7 @@ LAYER
 		COLOR 210 210 210
 		OUTLINECOLOR 0 0 0		
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 # Bomen layer
 LAYER
@@ -285,6 +297,7 @@ LAYER
 		END
 		
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Gladheidbestrijding 
 LAYER
@@ -313,6 +326,7 @@ LAYER
 			SIZE 6
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Tankstations
 LAYER
@@ -336,6 +350,7 @@ LAYER
 			SYMBOL "petrolico"
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Verkeer regel installaties
 LAYER
@@ -357,6 +372,7 @@ LAYER
 		OUTLINECOLOR 33 0 33
 		SYMBOL "verkeerslicht"
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 # WOL layer
 LAYER
@@ -380,6 +396,7 @@ LAYER
 			SIZE 2
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Ecologisch gebieden layer
 LAYER
@@ -414,6 +431,7 @@ LAYER
 			MINFEATURESIZE 100
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 # Groen vakken layer
@@ -436,6 +454,7 @@ LAYER
 		OUTLINECOLOR 150 150 150
 		COLOR 82 163 0
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #verkeers borden
 LAYER
@@ -458,7 +477,8 @@ LAYER
 			OUTLINECOLOR 33 0 33
 			SYMBOL "verkeersbord"
 		END
-	END	
+	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Hecto meter paaltjes
 LAYER
@@ -490,10 +510,11 @@ LAYER
 	      		COLOR 254 254 254
 	      		BACKGROUNDCOLOR 0 204 51
 	      		MINDISTANCE 10
-	      		BUFFER 1	      		
-	      		POSITION cc
+	      		BUFFER 1
+	      		POSITION cc 
     		END		
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 #Hectometer dwarstrepen
@@ -518,6 +539,7 @@ LAYER
 		SYMBOL "circle"
 		SIZE 2
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 LAYER
@@ -539,6 +561,7 @@ LAYER
 		SYMBOL "circle"
 		SIZE 2
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 #ontsnippering
@@ -568,6 +591,7 @@ LAYER
 		END
 		
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 #ongevallen
@@ -595,6 +619,7 @@ LAYER
 			SIZE 20
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 #Dynamische verkeers management
@@ -619,6 +644,7 @@ LAYER
 			SIZE 2
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 #Markeringen
@@ -652,6 +678,7 @@ LAYER
 			SIZE 2
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Markeringen punten
 LAYER
@@ -683,6 +710,7 @@ LAYER
 			SIZE 2
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 #bestemmingsplannen
@@ -705,6 +733,7 @@ LAYER
 		OUTLINECOLOR 150 150 150
 		COLOR 255 255 0
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #stiltegebieden
 LAYER
@@ -726,6 +755,7 @@ LAYER
 		OUTLINECOLOR 150 150 150
 		COLOR 122 255 122
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 #stiltegebieden
@@ -749,6 +779,7 @@ LAYER
 		SIZE 4
 		OUTLINECOLOR 0 163 163
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Kruisingen
 LAYER
@@ -774,6 +805,7 @@ LAYER
 			SIZE 20
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 # kunstwerken
@@ -782,8 +814,7 @@ END
 LAYER
 	STATUS OFF
 	METADATA
-	    "wms_title"				"kunstwerken"	    
-	    "gml_include_items" "all"
+	    "wms_title"				"kunstwerken"	
   	END
 	CONNECTIONTYPE postgis
 	NAME "kunstwerken"
@@ -979,7 +1010,8 @@ LAYER
 			COLOR 0 0 255
 			SYMBOL "viaduktHoogte"
 		END
-	END		
+	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #kaart met de nwbwegen
 LAYER
@@ -1151,7 +1183,8 @@ LAYER
           ANGLE AUTO
           MINFEATURESIZE 60
         END
-  END  
+  END 
+  PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 #Alle dtb punten
 LAYER
@@ -1280,6 +1313,7 @@ LAYER
 			SIZE 2
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 # alle dtb lijnen
 LAYER
@@ -1616,6 +1650,7 @@ LAYER
 			SIZE 2
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 # alle dtb polygonen
 LAYER
@@ -1915,6 +1950,7 @@ LAYER
 			SIZE 2
 		END
 	END
+	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
 
 END

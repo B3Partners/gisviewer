@@ -691,7 +691,6 @@
         doAjaxRequest(extend.maxx,extend.maxy);
         loadObjectInfo(extend.maxx,extend.maxy);
     }
-    
     readCookieArrayIntoCheckboxArray();
     var doOnInit= new Boolean("true");
     function map1_OG2_onUpdateResponse(){
@@ -722,5 +721,4 @@
 
 
 <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
-<script language="JavaScript" type="text/javascript" src="<html:rewrite page='/js/enableJsFlamingo.js' module='' />">
-
+<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/js/enableJsFlamingo.js"/>">

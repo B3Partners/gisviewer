@@ -19,10 +19,10 @@
         <fmc:ToolZoomin id="zoom"/>
         <fmc:ToolZoomout left="30"/>
         <fmc:ToolPan left="60"/>
-        <fmc:ToolMeasure left="120"/>
-        <fmc:ToolIdentify left="150"/>
-        <fmc:ButtonFull left="180" listento="map1"/>
-    <fmc:Legend left="210" top="5" skin="f1" updatedelay="0" listento="map1">
+        <fmc:ToolMeasure left="90"/>
+        <fmc:ToolIdentify left="120"/>
+        <fmc:ButtonFull left="150" listento="map1"/>
+    <fmc:Legend left="180" top="5" skin="f1" updatedelay="0" listento="map1">
         <style id=".item" font-family="Arial, Sans-Serif" font-size="11" color="#000000"/>
         <item label=" Achtergrond" listento="OG2.achtergrond" canhide="true" />
     </fmc:Legend>

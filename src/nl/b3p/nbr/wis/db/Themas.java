@@ -41,6 +41,8 @@ public class Themas {
     private String wms_layers;
     //komma separated layers
     private String wms_querylayers;
+    //one layer to create a wms legend image
+    private String wms_legendlayer;
     private Set themaData;
     private Set themaVerantwoordelijkheden;
     private Set themaApplicaties;
@@ -667,4 +669,12 @@ public class Themas {
         this.update_frequentie_in_dagen = update_frequentie_in_dagen;
     }
     // </editor-fold>
+
+    public String getWms_legendlayer() {
+        return wms_legendlayer;
+    }
+
+    public void setWms_legendlayer(String wms_legendlayer) {
+        this.wms_legendlayer = wms_legendlayer;
+    }
 }

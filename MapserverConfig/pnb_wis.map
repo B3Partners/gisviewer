@@ -9,7 +9,7 @@ WEB
   LOG "pnb_wis.log"
   METADATA
     "wms_title"				"WIS Provincie Noord Brabant"
-    "wms_onlineresource"		"http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis/pnb_wis.map&
+    "wms_onlineresource"		"http://w1.b3p.nl/cgi-bin/mapserv.exe?map=e:/mapserver/pnb_wis/pnb_wis.map&"
     "wms_srs"				"EPSG:28992"
   END  
 END

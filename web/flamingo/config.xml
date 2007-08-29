@@ -19,7 +19,6 @@
         <fmc:ToolZoomin id="zoom"/>
         <fmc:ToolZoomout left="30"/>
         <fmc:ToolPan left="60"/>
-        <fmc:ToolSuperPan left="90"/>
         <fmc:ToolMeasure left="120"/>
         <fmc:ToolIdentify left="150"/>
         <fmc:ButtonFull left="180" listento="map1"/>

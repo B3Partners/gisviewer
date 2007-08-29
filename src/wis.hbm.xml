@@ -215,6 +215,7 @@
         <property name="spatial_admin_ref"/>
         <property name="wms_url"/>
         <property name="wms_layers"/>
+        <property name="wms_legendlayer"/>
         <property name="wms_querylayers"/>
         <property name="update_frequentie_in_dagen"/>
         <set name="themaData" lazy="false" cascade="all-delete-orphan" order-by="dataorder, basisregel desc, label">

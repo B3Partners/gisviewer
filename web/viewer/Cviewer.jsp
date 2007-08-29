@@ -226,7 +226,7 @@
             var standardParam="SERVICE=WMS&VERSION=1.1.1";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
             
-            var legendURL = obj.theItem.wmsurl + '&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslayers;
+            var legendURL = obj.theItem.wmsurl + '&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;
             addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers, legendURL);
             
             if(checkboxArray.length > 0) {

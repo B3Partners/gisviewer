@@ -87,6 +87,8 @@
         document.forms[2].themaid.value = activeThemaId;
         document.forms[2].submit();
     }
+    
+    
     var layersAan= new Array();
     var doLayerClick= new Boolean(false);
     var activeLayerFromCookie = getActiveLayerId(readCookie('activelayer'));
@@ -146,11 +148,13 @@
     }
     
     function getActiveLayerId(cookiestring) {
+        if(!cookiestring) return null;
         var items = cookiestring.split('##');
         return items[0];
     }
     
     function getActiveThemaLabel(cookiestring) {
+        if(!cookiestring) return "Geen";
         var items = cookiestring.split('##');
         return items[1];
     }

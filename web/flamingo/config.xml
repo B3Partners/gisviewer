@@ -8,7 +8,7 @@
 -->
 
 <FLAMINGO xmlns:fmc="fmc" id="flamingo" lang="nl" languages="en,nl" tooltipdelay="300" commtojava="true" preloadtitle="Prototypemap" useexternalinterface="true">
-    <style id=".tooltip" font-family="Verdana" font-size="11" color="#880000" display="block"/>
+    <style id=".tooltip" font-family="arial, sans-serif" font-size="11" color="#880000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
     <fmc:MonitorLayer id="monitorl" left="37%" top="50%" width="50%" listento="map1">
@@ -18,18 +18,20 @@
     <fmc:ToolGroup tool="zoom" listento="map1" width="148" height="65" left="0" top="0%">
         <fmc:ToolZoomin id="zoom"/>
         <fmc:ToolZoomout left="30"/>
-        <fmc:ToolPan left="60"/>            
+        <fmc:ToolPan left="60"/>
         <fmc:ToolSuperPan left="90"/>
         <fmc:ToolMeasure left="120"/>
-        <fmc:ToolIdentify left="150"/>            
+        <fmc:ToolIdentify left="150"/>
         <fmc:ButtonFull left="180" listento="map1"/>
-    <fmc:Legend left="210" top="5" skin="f1" updatedelay="0" listento="map1">  
-        <item label="Achtergrond" listento="OG2.achtergrond" canhide="true" />       
+    <fmc:Legend left="210" top="5" skin="f1" updatedelay="0" listento="map1">
+        <style id=".item" font-family="Arial, Sans-Serif" font-size="11" color="#000000"/>
+        <item label=" Achtergrond" listento="OG2.achtergrond" canhide="true" />
     </fmc:Legend>
     </fmc:ToolGroup>    
     <fmc:Coordinates listento="map1" left="80%" top="3%" decimals="0">  
-        <string id="xy" nl="Y: [y]     X: [x]"/>
-    </fmc:Coordinates/>
+        <style id=".xy" font-family="arial" font-size="11" />
+        <string id="xy" nl="Y: [y]     X: [x]" />
+    </fmc:Coordinates>
     <fmc:Container  borderwidth="1" bordercolor="#606060" left="0" top="7%" height="93%" width="100%">
     <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>
         <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extent="67914,352460,200359,443186" fullextent="67914,352460,200359,443186">

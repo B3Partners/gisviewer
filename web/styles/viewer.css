@@ -188,13 +188,15 @@ a:hover{
     padding-left: 2px;
     padding-right: 2px;
     border: 0px none White;
-    
 }
 
 .topRow {
     background-image: url("../images/patroon_a.gif");
-    background-repeat: repeat; 
-    color: white;
+    background-repeat: repeat;
+}
+
+.topRow th {
+    color: White;
     font-weight: bold;
 }
 
@@ -220,7 +222,7 @@ button {
     border: 1px solid Black;
     height: 15px;
     width: auto;
-    font-size: 10px; 
+    font-size: 8pt; 
     background: white; 
     color: #000000; 
     font-family: arial, sans-serif;
@@ -258,4 +260,26 @@ button {
     overflow: auto;
 }
 
-
+.orderLayerBox{
+    overflow: auto;
+    height: 325px;
+    width: 275px;
+    border: 1px solid #606060;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: White;
+}
+.orderLayerClass{
+    clear: both;
+    cursor: pointer;
+    background-color: White;
+    width: 273px;
+    padding-left: 2px;
+}
+.orderLayerClassSelected{
+    clear: both;
+    background-color: #bbbbbb;
+    width: 273px;
+    cursor: pointer;
+    padding-left: 2px;
+}

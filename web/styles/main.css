@@ -15,6 +15,11 @@ th {
 div{
     float: left;
 }
+div, td, th, span, input, textarea, select, option {
+    font-size: 8pt;
+    color: #000000; 
+    font-family: arial, sans-serif;
+}
 #maindiv{
     position: static;
     float: none;

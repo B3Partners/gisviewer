@@ -12,6 +12,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
 <script>
     var allActiveLayers="";
     var layerUrl=null;
@@ -220,7 +221,9 @@
             //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
             var standardParam="SERVICE=WMS&VERSION=1.1.1";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
-            addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
+            
+            var legendURL = obj.theItem.wmsurl + '&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslayers;
+            addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers, legendURL);
             
             if(checkboxArray.length > 0) {
                 var arrayString = getArrayAsString();
@@ -367,7 +370,6 @@
         var hm = document.getElementById("show4").value;
         document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
         JMapData.getMapCoords(postcode, plaatsnaam, n_nr, hm, getCoordsCallbackFunction);
-        
     }
     
     function getCoordsCallbackFunction(values){
@@ -433,44 +435,49 @@
         document.getElementById('show4').disabled = false;
     }
     
-    function addLayerToVolgorde(name, id) {
-        var selectbox = document.getElementById("volgorde_select");
-        selectbox.options[selectbox.options.length] = new Option(name, id, false, false);
-        var totalLength = selectbox.options.length;
-        if(totalLength > 1) {
-            for(var i = (totalLength - 1); i > -1; i--) {
-                s_swapOptions(selectbox, i, i-1);
-            }
+    function addLayerToVolgorde(name, id, legendURL) {      
+        var imgdiv = document.createElement("div");
+        imgdiv.style.width='30px';
+        imgdiv.style.height='20px';
+        imgdiv.style.marginRight='5px';
+        imgdiv.style.backgroundImage = 'url(' + legendURL + ')';
+        
+        var div = document.createElement("div");
+        div.name=id;
+        div.id=id;
+        div.className="orderLayerClass";
+        div.onclick=function(){selectLayer(this);};
+        div.appendChild(imgdiv);
+        div.appendChild(document.createTextNode(' ' + name));
+        
+        if(!orderLayerBox.hasChildNodes()) {
+            orderLayerBox.appendChild(div);
+        } else {
+            orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
         }
+
     }
     
     function removeLayerFromVolgorde(name, id) {
-        var selectbox = document.getElementById("volgorde_select");
-        for(var i = 0; i < selectbox.options.length; i++) {
-            if(selectbox.options[i].value == id) {
-                selectbox.options[i] = null;
-            }
-        }
+        var orderLayers=orderLayerBox.childNodes;
+        orderLayerBox.removeChild(document.getElementById(id));
+        // for (var i=0; i < orderLayers.length; i++){
+        //     if (orderLayers[i].id==id){
+        //         orderLayerBox.removeChild(orderLayers[i]);
+        //     }
+        // }
     }
     
-    function moveVolgordeUp(selectbox) {
-        s_moveOptionUp(selectbox);
-    }
-    
-    function moveVolgordeDown(selectbox) {
-        s_moveOptionDown(selectbox);
-    }
-    
-    function refreshMapVolgorde(selectbox) {
-        parseVolgordeBox(selectbox);
+    function refreshMapVolgorde() {
+        parseVolgordeBox();
         refreshLayer();
     }
     
-    function deleteAllLayers(selectbox) {
-        var totalLength = selectbox.options.length;
+    function deleteAllLayers() {
+        var totalLength = orderLayerBox.childNodes.length;
         for(var i = (totalLength - 1); i > -1; i--) {
-            document.getElementById(splitValue(selectbox.options[i].value)[0]).checked = false;
-            selectbox.options[i] = null;
+            document.getElementById(splitValue(orderLayerBox.childNodes[i].id)[0]).checked = false;
+            orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
         }
         allActiveLayers = "";
         cookieArray = "";
@@ -480,21 +487,16 @@
         refreshLayer();
     }
     
-    function parseVolgordeBox(selectbox) {
+    function parseVolgordeBox() {
         var cookieString = "";
         var layersString = "";
         var firstTime = true;
-        for(var i = 0; i < selectbox.options.length; i++) {
-            if(firstTime) {
-                cookieString = splitValue(selectbox.options[i].value)[0];
-                firstTime = false;
-            } else {
-                cookieString = "," + splitValue(selectbox.options[i].value)[0] + cookieString;
-            }
-            layersString = "," + splitValue(selectbox.options[i].value)[1] + layersString;
+        for(var i = 0; i < orderLayerBox.childNodes.length; i++) {
+            cookieString = "," + splitValue(orderLayerBox.childNodes[i].id)[0] + cookieString;
+            layersString = "," + splitValue(orderLayerBox.childNodes[i].id)[1] + layersString;
         }
         allActiveLayers = layersString;
-        cookieArray = cookieString;
+        cookieArray = cookieString.substring(1);
         eraseCookie('checkedLayers');
         createCookie('checkedLayers', cookieArray, '7');
         readCookieArrayIntoCheckboxArray();
@@ -555,7 +557,7 @@
         <div id="tabjes">
             <ul id="nav">
                 <li id="tab0" onmouseover="switchTab(this);"><a href="#">Thema's</a></li>
-                <li id="tab4" onmouseover="switchTab(this);"><a href="#">Volgorde</a></li>
+                <li id="tab4" onmouseover="switchTab(this);"><a href="#">Legenda</a></li>
                 <li id="tab1" onmouseover="switchTab(this);"><a href="#">Zoeker</a></li>
                 <li id="tab2" onmouseover="switchTab(this);"><a href="#">Gebieden</a></li>
                 <li id="tab3" onmouseover="switchTab(this);"><a href="#">Analyse</a></li>
@@ -624,11 +626,12 @@
             <div id="volgordevak" style="display: none;">
                 Bepaal de volgorde waarin de kaartlagen getoond worden
                 <form>
-                    <select multiple="multiple" size="10" id="volgorde_select"></select>
-                    <input type="button" value="Omhoog" onclick="moveVolgordeUp(document.getElementById('volgorde_select'));" />
-                    <input type="button" value="Omlaag" onclick="moveVolgordeDown(document.getElementById('volgorde_select'));" />
-                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde(document.getElementById('volgorde_select'));" />
-                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers(document.getElementById('volgorde_select'));" />
+                    <div id="orderLayerBox" class="orderLayerBox"></div>
+                    <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" />
+                    <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" />
+                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde();" />
+                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" />
+                    <div id="legenddiv" style="display: none; height: 40px; width: 40px; background-color: Black;"></div>
                 </form>
             </div>
         </div>
@@ -666,6 +669,7 @@
     }
     Nifty("ul#nav a","medium transparent top");
     setActiveThemaLabel(getActiveThemaLabel(readCookie('activelayer')));
+    var orderLayerBox= document.getElementById("orderLayerBox");    
     
     //always call this script after the SWF object script has called the flamingo viewer.
     //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.

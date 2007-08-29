@@ -5,26 +5,25 @@
         <data xmlns="http://www.netbeans.org/ns/web-project/3">
             <name>nbr_proto</name>
             <minimum-ant-version>1.6</minimum-ant-version>
-            <explicit-platform explicit-source-supported="true"/>
             <web-module-libraries>
                 <library files="6">
                     <file>${libs.struts.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="1">
-                    <file>${file.reference.mysql-connector-java-3.0.11-stable-bin.jar}</file>
+                <library files="2">
+                    <file>${libs.jstl11.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="17">
                     <file>${libs.B3pCommonsLib.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="11">
+                <library files="9">
                     <file>${libs.B3pHibernateLib.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="2">
-                    <file>${libs.jstl11.classpath}</file>
+                <library files="1">
+                    <file>${libs.B3pDwrLib.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
@@ -33,18 +32,6 @@
                 </library>
                 <library files="1">
                     <file>${reference.b3p-commons-hibernate.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
-                    <file>${libs.B3pDwrLib.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
-                    <file>${reference.commons-mail-b3p.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library files="1">
-                    <file>${reference.b3p-commons-mail.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
@@ -67,22 +54,6 @@
             </reference>
             <reference>
                 <foreign-project>b3p-commons-hibernate</foreign-project>
-                <artifact-type>jar</artifact-type>
-                <script>build.xml</script>
-                <target>jar</target>
-                <clean-target>clean</clean-target>
-                <id>jar</id>
-            </reference>
-            <reference>
-                <foreign-project>b3p-commons-mail</foreign-project>
-                <artifact-type>jar</artifact-type>
-                <script>build.xml</script>
-                <target>jar</target>
-                <clean-target>clean</clean-target>
-                <id>jar</id>
-            </reference>
-            <reference>
-                <foreign-project>commons-mail-b3p</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

@@ -374,7 +374,7 @@ public class GetViewerDataAction extends BaseHibernateAction {
         String analyseGeomId        = tokens[2];
         String analyseGeomTabel     = geselecteerdObjectThema.getSpatial_tabel();
         String analyseGeomIdColumn  = geselecteerdObjectThema.getSpatial_admin_ref();        
-        String analyseNaam          = getAnalyseNaam(analyseGeomTabel, analyseGeomIdColumn, analyseGeomId);
+        String analyseNaam          = getAnalyseNaam(analyseGeomTabel, analyseGeomIdColumn, analyseGeomId, geselecteerdObjectThema.getId(), geselecteerdObjectThema.getNaam());        
         if (analyseNaam == null){
             throw new Exception("Kan het type geo-object niet vinden: " + geselecteerdObjectThema.getNaam());
             //log.error("Kan het type geo-object niet vinden: " + geselecteerdObjectThema.getNaam());
@@ -447,29 +447,27 @@ public class GetViewerDataAction extends BaseHibernateAction {
      *
      */
     // <editor-fold defaultstate="" desc="private String getAnalyseNaam(String analyseGeomTabel, String analyseGeomIdColumn, String analyseGeomId) method.">
-    private String getAnalyseNaam(String analyseGeomTabel, String analyseGeomIdColumn, String analyseGeomId) {
-        String analyseNaam=null;
+    private String getAnalyseNaam(String analyseGeomTabel, String analyseGeomIdColumn, String analyseGeomId, int themaid, String themaNaam) {
+        String analyseNaam= themaNaam;
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         try {
             PreparedStatement statement = 
                     connection.prepareStatement("select * from "+analyseGeomTabel+ " where "+analyseGeomIdColumn+" = "+analyseGeomId);
+            PreparedStatement statement2 = 
+                    connection.prepareStatement("select kolomnaam from thema_data where thema = "+themaid+" order by dataorder");
+            
             try {
                 ResultSet rs = statement.executeQuery();
-                if (rs.next()){
-                    if (analyseGeomTabel.equalsIgnoreCase("algm_grs_2006_1_gem_v")){
-                        analyseNaam="gemeente ";
-                        analyseNaam+=rs.getString("gemnaam");
-                    }else if(analyseGeomTabel.equalsIgnoreCase("algm_grs_2006_1_gga_v")){
-                        analyseNaam="gga gebied ";
-                        analyseNaam+=rs.getString("GGA");
-                    }else if(analyseGeomTabel.equalsIgnoreCase("algm_kom_10_wgw_v")){
-                        analyseNaam="Bebouwde kom ";
-                        analyseNaam+=rs.getString("kom");
+                ResultSet rs2 = statement2.executeQuery();
+                if (rs.next() && rs2.next()){
+                    if(rs2.next()){                        
+                        analyseNaam+=" "+ rs.getString(rs2.getString("kolomnaam")); 
                     }
                 }
             } finally {
                 statement.close();
+                statement2.close();
             }
         } catch (SQLException ex) {
             log.error("", ex);
@@ -622,14 +620,21 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 extraCriteriaString.append(" and tb1." + key + "='" + keyvalue + "'");
             }
         }
-
+//      
+        String analyseGeomTabel = (String)inputParameters.get("analyseGeomTabel");
+/* This part of the query is taking to long.
+    if (analyseGeomTabel.equalsIgnoreCase("analysegebied_weg")){
+             extraCriteriaString.append("and tb2.wegnummer=(select w.prov_nr from beh_10_wwl_m w order by distance(w.the_geom,tb1.the_geom) limit 1)");
+        }        
+       */
         String query= SpatialUtil.hasRelationQuery(
                 (String)inputParameters.get("themaGeomTabel"), //tb1
-                (String)inputParameters.get("analyseGeomTabel"), //tb2
+                analyseGeomTabel, //tb2
                 relationFunction, 
                 (String)inputParameters.get("themaGeomIdColumn"), 
                 (String)inputParameters.get("analyseGeomId"), 
                 extraCriteriaString.toString());
+        
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         try {

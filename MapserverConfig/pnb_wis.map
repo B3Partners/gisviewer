@@ -2007,5 +2007,24 @@ LAYER
 	END
 	PROCESSING "CLOSE_CONNECTION=DEFER"
 END
-
+#LAYER
+#	STATUS OFF
+#	METADATA
+#	    "wms_title"				"vlekkenkaart2004 - 2006"	    
+#  	END
+#	CONNECTIONTYPE postgis
+#	NAME "vlekkenkaart2004_2006"
+#	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
+#	DATA "the_geom from vlekkenkaart2004_2006"
+#	TYPE POLYGON
+#	TRANSPARENCY 50
+#	CLASS
+#		NAME "vlekkenkaart2004_2006"
+#		STYLE
+#			OUTLINECOLOR 255 0 0
+#			COLOR 255 0 0		
+#		END
+#	END
+#	PROCESSING "CLOSE_CONNECTION=DEFER"
+#END
 END

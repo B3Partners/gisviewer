@@ -242,17 +242,16 @@ public class GetViewerDataAction extends BaseHibernateAction {
          * variabel en afhankelijk van het thema dat geselecteerd is. Om deze waarden met bijbehorende juiste
          * naam te vinden is het eerst belangrijk om met een iterator over alle parameters heen te wandelen.
          */
-        String textInputThemaId = null;
         String optionInputThemaId = null;
-        
         String geselecteerd_object = null;
+        
         int zoekOpties = 0;
         int zoekOpties_object = 0;
         int zoekOpties_waarde = 0;
         
         Map inputParams = new HashMap();        
         Map parameterMap = request.getParameterMap();
-        
+                
         /*
          * Loop door alle parameters heen die meegegeven worden tijdens het request.
          * Als eerste wordt er door de parameter Map gelopen waarbij er gezocht wordt 
@@ -265,16 +264,6 @@ public class GetViewerDataAction extends BaseHibernateAction {
          * opties.
          */
         if (!parameterMap.isEmpty()) {
-            //Vind het id van het thema waarvoor de textvelden ingevuld zijn
-            Iterator it = parameterMap.keySet().iterator();
-            while (it.hasNext()) {
-                String parameter = (String) it.next();
-                if (parameter.startsWith("ThemaItem")) {
-                    textInputThemaId = new String(parameter.split("_")[1]);
-                    break;
-                }
-            }
-            
             geselecteerd_object = getStringFromParam(parameterMap,"geselecteerd_object");
             inputParams.put("geselecteerd_object", geselecteerd_object);
             
@@ -304,9 +293,8 @@ public class GetViewerDataAction extends BaseHibernateAction {
          * die de gebruiker ingevoerd heeft gelezen.
          */
         Map extraCriteria = new HashMap();
-        Themas thema = null;
-        if (textInputThemaId != null) {
-            thema = this.getThema(textInputThemaId);
+        Themas thema = getThema(mapping, dynaForm, request);
+        if (thema != null) {
             inputParams.put("thema", thema);
             int themaId = thema.getId();
             Set themaData = thema.getThemaData();   
@@ -318,9 +306,13 @@ public class GetViewerDataAction extends BaseHibernateAction {
                     String inputValue = "ThemaItem_" + themaId + "_" + themaDataId;
                     String value = getStringFromParam(parameterMap,inputValue);
                     String key = td.getKolomnaam();
-                    extraCriteria.put(key, value);
+                    if (value != null) {
+                        extraCriteria.put(key, value);
+                    }
                 }
             }
+        } else {
+            throw new Exception("Fout in selectie van thema.");
         }
         
         /*
@@ -461,8 +453,11 @@ public class GetViewerDataAction extends BaseHibernateAction {
                 ResultSet rs = statement.executeQuery();
                 ResultSet rs2 = statement2.executeQuery();
                 if (rs.next() && rs2.next()){
-                    if(rs2.next()){                        
-                        analyseNaam+=" "+ rs.getString(rs2.getString("kolomnaam")); 
+                    if(rs2.next()){
+                        String extraString = rs.getString(rs2.getString("kolomnaam"));
+                        if (extraString != null) {
+                            analyseNaam+=" "+ extraString;
+                        }
                     }
                 }
             } finally {

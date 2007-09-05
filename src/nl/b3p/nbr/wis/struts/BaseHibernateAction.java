@@ -90,7 +90,7 @@ public abstract class BaseHibernateAction extends ExtendedMethodAction {
             MessageResources messages = getResources(request);
             
             if (e instanceof org.hibernate.JDBCException) {
-                msg = e.toString();
+                msg = e.getMessage();
                 SQLException sqle = ((org.hibernate.JDBCException)e).getSQLException();
                 msg = msg + ": " + sqle;
                 SQLException nextSqlE = sqle.getNextException();
@@ -98,13 +98,13 @@ public abstract class BaseHibernateAction extends ExtendedMethodAction {
                     msg = msg + ": " + nextSqlE;
                 }
             } else if (e instanceof java.sql.SQLException) {
-                msg = e.toString();
+                msg = e.getMessage();
                 SQLException nextSqlE = ((java.sql.SQLException)e).getNextException();
                 if(nextSqlE != null) {
                     msg = msg + ": " + nextSqlE;
                 }
             } else {
-                msg = e.toString();
+                msg = e.getMessage();
             }
             addAlternateMessage(mapping, request, null, msg);
             return getAlternateForward(mapping, request);

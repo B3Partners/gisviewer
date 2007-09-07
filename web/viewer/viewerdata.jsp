@@ -11,18 +11,12 @@
 <html:html>
     <head>
         <title>Viewer Data</title>
-        <style>
-            body {
-                background-image: url(/nbr_prototype/images/infovak_bg.jpg);
-                background-repeat: no-repeat;
-                background-position: 100% 100%;
-                background-attachment: fixed;
-            }
-        </style>
+        <link href="styles/viewer.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/viewer_b3p.css">
     </head>
-    <body>
+    <body class="tabvak_body">
         <html:messages id="error" message="true">
-            <div class="messages" style="border: 1px solid blue; width: 250px; padding: 5px; margin: 2px; font-size: 9pt; font-weight: bold;"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15"/>&nbsp;<c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
+            <div class="messages"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15"/>&nbsp;<c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
         </html:messages>
     </body>
 </html:html>

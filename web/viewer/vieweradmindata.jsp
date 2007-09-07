@@ -12,6 +12,7 @@
         <title>Viewer Data</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/viewer_b3p.css">
         <script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
         <script type="text/javascript">
             function popUp(URL, naam) {
@@ -32,16 +33,8 @@
                 eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
             }
         </script>
-        <style type="text/css">
-            .alternate {
-                background-color: #DDDDDD;
-            }
-            .selected {
-                background-color: #0094FF;
-            }
-        </style>
     </head>
-    <body style="margin: 0px; padding: 0px;">
+    <body style="margin: 0px; padding: 0px;" class="admindatabody">
         <c:choose>
             <c:when test="${not empty thema_items and not empty regels}">
                 
@@ -72,8 +65,8 @@
                         </tr>
                     </thead>
                 </table>
-                <div style="overflow: auto; height: 245px; width: 948px;">
-                    <table id="data_table" class="table-autosort table-stripeclass:alternate" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
+                <div class="admin_data_content_div">
+                    <table id="data_table" class="table-autosort table-stripeclass:admin_data_alternate_tr" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                         <tbody>
                             <c:set var="totale_breedte" value="50" />
                             <c:forEach var="regel" items="${regels}" varStatus="counter">
@@ -124,7 +117,7 @@
                 </div>
                 <script language="javascript" type="text/javascript">
                     var data_table = document.getElementById('data_table');
-                    Table.stripe(data_table, 'alternate');
+                    Table.stripe(data_table, 'admin_data_alternate_tr');
                     Table.sort(data_table, {sorttype:Sort['numeric'], col:0});
                     
                     var currentObj;
@@ -135,7 +128,7 @@
                         }
                         currentObj = obj;
                         currentObjOldStyle = obj.className;
-                        obj.className = obj.className + ' selected';
+                        obj.className = obj.className + ' admin_data_selected_tr';
                     }
                 </script>
             </c:when>

@@ -12,13 +12,14 @@
         <title>Viewer Data</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/viewer_b3p.css">
     </head>
-    <body>
+    <body class="admindatabody">
         <c:choose>
             <c:when test="${not empty thema_items and not empty regels}">
                 <table id="aanvullende_info_table">
-                    <tr>
-                        <th colspan="2" class="aanvullende_info_td" style="text-align: center; padding-bottom: 10px;">
+                    <tr class="topRow">
+                        <th colspan="2" class="aanvullende_info_td">
                             Aanvullende informatie
                         </th>
                     </tr>
@@ -28,7 +29,7 @@
                                 <tr>
                             </c:when>
                             <c:otherwise>
-                                <tr style="background-color: #DDDDDD;">
+                                <tr class="aanvullende_info_alternateTr">
                             </c:otherwise>
                         </c:choose>
                         

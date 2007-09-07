@@ -8,6 +8,4 @@
     <!-- <a class="menulink" href="etl.do"> --> 
     <a class="menulink" href="help.do"> &#155; Beschrijving </a>
 </div>
-<div class="brabantLogo"></div>
-
-   
+<div class="menu_boven_logo"></div>

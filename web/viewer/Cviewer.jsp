@@ -96,7 +96,7 @@
     function createLabel(container, item) {
         doLayerClick=false;
         if(item.cluster)
-            container.appendChild(document.createTextNode(item.title ? item.title : item.id));
+            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
         else {
             if (navigator.appName=="Microsoft Internet Explorer") {
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
@@ -397,27 +397,27 @@
     
     function showHide(nr, el) {
         if(nr == 3 || nr == 4) {
-            document.getElementById('show1').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show1').className= 'inputDisabled';
             document.getElementById('show1').value = '';
-            document.getElementById('show2').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show2').className= 'inputDisabled'
             document.getElementById('show2').value = '';
-            document.getElementById('show3').style.backgroundColor = '';
-            document.getElementById('show4').style.backgroundColor = '';
+            document.getElementById('show3').className = 'inputEnabled';
+            document.getElementById('show4').className = 'inputEnabled';
         } else if(nr == 2) {
-            document.getElementById('show1').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show1').className= 'inputDisabled'
             document.getElementById('show1').value = '';
-            document.getElementById('show2').style.backgroundColor = '';
-            document.getElementById('show3').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show2').className = 'inputEnabled';
+            document.getElementById('show3').className= 'inputDisabled'
             document.getElementById('show3').value = '';
-            document.getElementById('show4').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show4').className= 'inputDisabled'
             document.getElementById('show4').value = '';
         } else if(nr == 1) {
-            document.getElementById('show1').style.backgroundColor = ''
-            document.getElementById('show2').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show1').className = 'inputEnabled';
+            document.getElementById('show2').className= 'inputDisabled'
             document.getElementById('show2').value = '';
-            document.getElementById('show3').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show3').className= 'inputDisabled'
             document.getElementById('show3').value = '';
-            document.getElementById('show4').style.backgroundColor = '#A1A1A1';
+            document.getElementById('show4').className= 'inputDisabled'
             document.getElementById('show4').value = '';
         }
     }
@@ -428,10 +428,10 @@
         document.getElementById('show3').value = "";
         document.getElementById('show4').value = "";
         
-        document.getElementById('show1').style.backgroundColor = '';
-        document.getElementById('show2').style.backgroundColor = '';
-        document.getElementById('show3').style.backgroundColor = '';
-        document.getElementById('show4').style.backgroundColor = '';
+        document.getElementById('show1').className = 'inputEnabled';
+        document.getElementById('show2').className = 'inputEnabled';
+        document.getElementById('show3').className = 'inputEnabled';
+        document.getElementById('show4').className = 'inputEnabled';
         
         document.getElementById('show1').disabled = false;
         document.getElementById('show2').disabled = false;
@@ -452,7 +452,10 @@
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
         div.appendChild(imgdiv);
-        div.appendChild(document.createTextNode(' ' + name));
+        
+        var spanEl = document.createElement("span");
+        spanEl.innerHTML = ' ' + name;
+        div.appendChild(spanEl);
         
         if(!orderLayerBox.hasChildNodes()) {
             orderLayerBox.appendChild(div);
@@ -538,18 +541,18 @@
         <input type="hidden" name="ycoord" />        
     </form>
 </div>
-
+<div class="onderbalk">VIEWER</div>
 <div id="bovenkant">
     <div id="map">
         <div id="flashcontent">
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
         <script type="text/javascript">
-                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "658", "493", "8", "#FFFFFF");
+                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "653", "493", "8", "#FFFFFF");
         </script>
         <!--[if lte IE 6]>
             <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "651", "488", "8", "#FFFFFF");
+            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "646", "488", "8", "#FFFFFF");
             </script>
         <![endif]-->
         <script type="text/javascript">
@@ -568,15 +571,27 @@
             </ul>
         </div>
         <div id="tab_container">
-            <div id="treevak" style="display: none;">
+            <div id="treevak" style="display: none;" class="tabvak">
                 <div id="layermaindiv" style="display: none;"></div>
             </div>
-            <div id="infovak" style="display: none;">
+            
+            <div id="volgordevak" style="display: none;" class="tabvak">
+                Bepaal de volgorde waarin de kaartlagen getoond worden
+                <form>
+                    <div id="orderLayerBox" class="orderLayerBox"></div>
+                    <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" />
+                    <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" />
+                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde();" />
+                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" />
+                </form>
+            </div> 
+            
+            <div id="infovak" style="display: none;" class="tabvak">
                 <div id="start_message">
                     Klik op een punt op de kaart voor aanvullende informatie.
                 </div>
                 
-                <div id="algdatavak" style="margin: 0px; padding: 0px; display: none;">
+                <div id="algdatavak" style="display: none;">
                     <b>RD Co&ouml;rdinaten</b><br />
                     <span id="rdcoords"></span><br /><br />
                     <b>Hectometer aanduiding</b><br />
@@ -619,33 +634,21 @@
                     
                 </div>
                 <!-- end of search -->
-            </div>
+            </div>          
             
-            <div id="objectvak" style="display: none;">
+            <div id="objectvak" style="display: none;" class="tabvak_with_iframe">
                 <iframe id="objectframe" name="objectframe" frameborder="0" src="empty_iframe.jsp"></iframe>
             </div>
-            <div id="analysevak" style="display: none;">
+            <div id="analysevak" style="display: none;" class="tabvak_with_iframe">
                 <iframe id="analyseframe" name="analyseframe" frameborder="0" src="empty_iframe.jsp"></iframe>
-            </div>
-            <div id="volgordevak" style="display: none;">
-                Bepaal de volgorde waarin de kaartlagen getoond worden
-                <form>
-                    <div id="orderLayerBox" class="orderLayerBox"></div>
-                    <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" />
-                    <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" />
-                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde();" />
-                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" />
-                    <div id="legenddiv" style="display: none; height: 40px; width: 40px; background-color: Black;"></div>
-                </form>
             </div>
         </div>
     </div>
 </div>
-<div class="onderbalk">Viewer en details<span id="actief_thema">Actieve thema: </span></div>
+<div class="onderbalk">DETAILS<span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
     <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
 </div>
-<div class="onderbalk">Informatie</div>
 
 <script type="text/javascript">
         treeview_create({

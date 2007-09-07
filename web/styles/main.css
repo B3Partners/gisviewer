@@ -20,7 +20,7 @@ div, td, th, span, input, textarea, select, option {
     color: #000000; 
     font-family: arial, sans-serif;
 }
-#maindiv{
+#maindiv {
     position: static;
     float: none;
     width: 950px;
@@ -29,7 +29,7 @@ div, td, th, span, input, textarea, select, option {
     background-color: #FFF;
 }
 
-.topmenu{
+.topmenu {
     position: static;
     background-image: url("../images/patroon_a.gif");
     background-repeat: repeat;
@@ -37,7 +37,7 @@ div, td, th, span, input, textarea, select, option {
     height: 20px;
     padding-top: 5px;
 }
-.brabantLogo{
+.menu_boven_logo {
     position: static;
     background-image: url("../images/brabant.GIF");
     width: 950px;
@@ -49,10 +49,10 @@ a.menulink, a.menulink:visited, a.menulink:active {
     margin-left: 15px;
     text-decoration: none; 
 }
-a.menulink:hover{
+a.menulink:hover {
     text-decoration: underline;
 }
-.menuWhite{
+.menuWhite {
     color: white;
     font-weight: bold;
 }

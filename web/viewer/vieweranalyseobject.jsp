@@ -13,13 +13,9 @@
         <title>Viewer Data</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
-        <style>
-            td {
-                font-size: 8pt;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="styles/viewer_b3p.css">
     </head>
-    <body>
+    <body class="tabvak_body">
         <c:if test="${not empty object}">
             <c:out value="${object}" escapeXml="false" />
         </c:if>

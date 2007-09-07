@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Context voor nbr_prototype-->
-<Context crossContext="true" debug="5" docBase="nbr_prototype" path="/nbr_prototype" reloadable="true">
-    <Logger className="org.apache.catalina.logger.FileLogger" prefix="nbr_prototype." suffix=".log" timestamp="true"/>
+<Context path="/nbr_prototype">
     <Resource
         name="jdbc/wis"
         type="javax.sql.DataSource"
@@ -15,4 +13,4 @@
         maxActive="100"
     />
 </Context>
-<!-- Einde Context voor b3partners-->
+

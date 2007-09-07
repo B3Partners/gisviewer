@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE securityfilter-config PUBLIC
+    "-//SecurityFilter.org//DTD Security Filter Configuration 2.0//EN"
+    "http://www.securityfilter.org/dtd/securityfilter-config_2_0.dtd">
+
+<securityfilter-config>
+
+    <!-- Indexpagina door iedereen te bekijken -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Index</web-resource-name>
+            <url-pattern>/index.do</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
+
+    <!-- Viewer alleen door ingelogde personen -->
+    <!-- XXX hier kan niet het url-pattern "/*" gebruikt worden, omdat dan 
+         allerlei andere bestanden zoals css, javascript e.d. niet kunnen worden
+         geladen voor de /index.do pagina. Helaas zijn de pagina's die beveiligd
+         moeten worden niet in een module geplaatst, zodat alle actions apart
+         hier moeten worden genoemd ipv alleen de modules! Bij het toevoegen
+         van een action zou dit makkelijk kunnen worden vergeten...
+    -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Viewer</web-resource-name>
+            <url-pattern>/viewer.do</url-pattern>
+            <url-pattern>/viewerdata.do</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <!-- dit wordt niet ondersteund door securityfilter, moet met 
+                 Apache geregeld worden!
+            -->
+            <description>SSL</description>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- /etl* alleen voor themabeheerders -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>ETL Themabeheer</web-resource-name>
+            <url-pattern>/etl*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Themabeheerder</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+   <login-config>
+      <auth-method>FORM</auth-method>
+      <form-login-config>
+          <form-login-page>/login.do</form-login-page>
+          <form-error-page>/loginError.do</form-error-page>
+          <form-default-page>/viewer.do</form-default-page>
+          <form-logout-page>/logout.do</form-logout-page>
+      </form-login-config>
+   </login-config>
+
+   <realm className="nl.b3p.nbr.wis.services.NbrSecurityRealm"/>
+</securityfilter-config>

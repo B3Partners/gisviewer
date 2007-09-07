@@ -68,6 +68,10 @@
             <forward name="view" path="/index.jsp"/>
             <forward name="continue" path="/index.jsp"/>
         </action>
+
+        <action path="/login" forward="login"/>
+        <action path="/loginError" forward="loginError"/>
+        <action path="/logout" type="nl.b3p.nbr.wis.LogoutAction" parameter="/index.do"/>
         
     </action-mappings>
     

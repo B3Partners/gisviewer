@@ -6,6 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ page isELIgnored="false"%>
 <script src='dwr/interface/JMapData.js'></script>
 <script src='dwr/engine.js'></script>
@@ -541,7 +542,7 @@
         <input type="hidden" name="ycoord" />        
     </form>
 </div>
-<div class="onderbalk">VIEWER</div>
+<div class="onderbalk">VIEWER<span><tiles:insert page="/nav/userAndLogout.jsp"/></span></div>
 <div id="bovenkant">
     <div id="map">
         <div id="flashcontent">
@@ -552,7 +553,7 @@
         </script>
         <!--[if lte IE 6]>
             <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "653", "493", "8", "#FFFFFF");
+            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "652", "493", "8", "#FFFFFF");
             </script>
         <![endif]-->
         <script type="text/javascript">
@@ -609,7 +610,7 @@
                     <table>
                         <tr>
                             <td>Postcode:</td>
-                            <td><div onclick="showHide(1, this);"><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></div></td>
+                            <td><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></td>
                         </tr>
                         <tr>
                             <td>Plaatsnaam:</td>
@@ -724,4 +725,4 @@
 
 
 <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
-<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/js/enableJsFlamingo.js"/>">
+<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/js/enableJsFlamingo.js"/>"></script>

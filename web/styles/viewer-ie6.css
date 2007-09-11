@@ -2,7 +2,7 @@
     margin-top: 0px;
     margin-bottom: 0px;
     width: 653px;
-    height: 493px;
+    height: 494px;
 }
 
 #rightdiv {
@@ -14,9 +14,11 @@
 }
 
 #tabjes {
-    width: 291px;
+    width: 292px;
     height: 20px;
     text-align: center;
+    margin: 0px;
+    padding: 0px;
 }
 
 .tabvak {
@@ -29,27 +31,51 @@
     padding: 0px;
 }
 
+#treevak {
+    height: 473px;
+    width: 281px;
+    margin: 0px;
+}
+
+#infovak {
+    height: 468px;
+    width: 282px;
+    margin: 0px;
+    padding: 5px;
+}
+
+#algdatavak, #infovak div {
+    width: 275px;
+    clear: both;
+    margin: 0px;
+}
+
+#volgordevak {
+    height: 466px;
+    width: 280px;
+    margin: 0px;
+}
+
+#objectvak {
+    height: 473px;
+    width: 291px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#analysevak {
+    height: 473px;
+    width: 291px;
+    margin: 0px;
+    padding: 0px;
+}
+
 #objectframe, #analyseframe {
-    width: 290px;
+    margin: 0px;
+    padding: 0px;
+    width: 292px;
     height: 473px;   
 }
 
-#tab_container {
-    height: 458px;
-    width: 291px;
-}
-
-#layermaindiv {
-    height: 460px;
-    width: 276px;
-}
-
-#volgordevak{
-    width: 279px;
-    height: 473px;
-}
-
-#infovak div {
-    margin-left: 3px;
-    margin-top: 3px;
-}
+ul#nav li#tab4 a, ul#nav li#tab3 a { width: 58px; }
+ul#nav li#tab3 { margin-right: 0px; }

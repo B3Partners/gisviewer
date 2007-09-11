@@ -26,5 +26,5 @@
     <body>
         <div id="menu_div"><tiles:insert attribute="menu" /></div>
         <div id="maindiv"><div id="content_div"><tiles:insert attribute="content" /></div></div>
-        <div id="onder_div"><div id="onderbalk_logo"></div></div></body>
+        <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div></body>
 </html>

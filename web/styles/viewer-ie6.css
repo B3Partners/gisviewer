@@ -1,31 +1,55 @@
-#map{
-    width: 651px;
-    height: 488px;
+#map {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    width: 653px;
+    height: 493px;
 }
+
 #rightdiv {
-    height: 459px;
+    width: 291px;
+    height: 487px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 5px;
 }
-#treevak{
-    height: 469px;
+
+#tabjes {
+    width: 291px;
+    height: 20px;
+    text-align: center;
 }
-#infovak{
-    height: 469px;
+
+.tabvak {
+    height: 473px;
 }
-#objectvak{
-    height: 469px;
+
+.tabvak_with_iframe {
+    height: 473px;
+    margin: 0px;
+    padding: 0px;
 }
-#objectframe {
-    height: 469px;
+
+#objectframe, #analyseframe {
+    width: 290px;
+    height: 473px;   
 }
-#analysevak{
-    height: 469px;
-}
-#analyseframe {
-   height: 469px;    
-}
+
 #tab_container {
-    height: 469px; 
+    height: 458px;
+    width: 291px;
 }
-#layermaindiv{
-    height: 457px;
+
+#layermaindiv {
+    height: 460px;
+    width: 276px;
+}
+
+#volgordevak{
+    width: 279px;
+    height: 473px;
+}
+
+#infovak div {
+    margin-left: 3px;
+    margin-top: 3px;
 }

@@ -1,0 +1,423 @@
+body {
+    font-size: 8pt; 
+    background: #FFF0C5; 
+    color: #000000; 
+    font-family: arial, sans-serif;
+    margin: 0px;
+    padding: 0px;
+}
+th {
+    font-size: 8pt; 
+    font-weight: bold;
+    text-align: left;
+}
+
+div, td, th, span, input, textarea, select, option {
+    font-size: 8pt;
+    color: #000000; 
+    font-family: arial, sans-serif;
+}
+
+#maindiv {
+    background-color: #FFF0C5;
+    width: 970px;
+}
+
+#menu_div {
+    width: 100%;
+    background-image: url(/nbr_prototype/images/bovenbalk.gif);
+    background-repeat: repeat-x;
+    height: 50px;
+    text-align: center;
+}
+
+#onder_div {
+    width: 100%;
+    background-image: url(/nbr_prototype/images/onderbalk.gif);
+    background-repeat: repeat-x;
+    height: 50px;
+    display: block;
+}
+
+#onderbalk_logo {
+    background-image: url(/nbr_prototype/images/onderbalk_logo.gif);
+    background-repeat: no-repeat;
+    background-color: none;
+    width: 976px;
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    margin-left: -488px;
+    display: block;
+}
+
+.topmenu {
+    display: none;
+}
+
+.menu_boven_logo {
+    background-image: url(/nbr_prototype/images/kaartenbalielogo.gif);
+    background-repeat: no-repeat;
+    width: 948px;
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    margin-left: -461px;
+}
+
+#content_div {
+    background-image: url(/nbr_prototype/images/maindiv_bg.gif);
+    background-repeat: repeat-y;
+    width: 948px;
+    padding-left: 15px;
+    padding-right: 18px;
+    display: block;
+}
+
+#bovenkant {
+    background-color: White;
+}
+
+#dataframediv {
+    background-color: White;
+    margin-top: 0px;
+}
+
+a.menulink, a.menulink:visited, a.menulink:active {
+    color: white;
+    font-weight: bold;
+    margin-left: 15px;
+    text-decoration: none; 
+}
+
+a.menulink:hover {
+    text-decoration: underline;
+}
+
+.menuWhite {
+    color: white;
+    font-weight: bold;
+}
+
+h1{
+    font-weight: bold; 
+    font-size: 11pt; 
+    color: #FF0000
+}
+
+.inputEnabled {
+    background-color: White;
+}
+
+.inputDisabled {
+    background-color: #A1A1A1;
+}
+
+.onderbalk {
+    background-color: #606060;
+    color: #FFF0C4;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #FFD203;
+    background-image: url(/nbr_prototype/images/balk_links.gif);
+    background-repeat: no-repeat;
+    background-position: 0% 0%;
+    height: 20px;
+    padding-top: 3px;
+    margin: 0px;
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
+
+.onderbalk span {
+    font-size: 8pt;
+    font-weight: bold;
+    color: #19619B;
+    margin-top: -15px;
+}
+
+#map {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    width: 653px;
+}
+
+#rightdiv {
+    float: left;
+    width: 291px;
+    height: 487px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 5px;
+}
+
+#tabjes {
+    width: 291px;
+    height: 20px;
+    text-align: center;
+}
+
+.tabvak {
+    border: 0px none White;
+    background-image: url(/nbr_prototype/images/tabvak_bg.gif);
+    background-repeat: repeat-x;
+    background-color: White;
+    background-position: 0% 0%;
+    height: 473px;
+    color: White;
+    margin: 0px;
+}
+
+.tabvak div, .tabvak td {
+    color: White;
+}
+
+.tabvak_with_iframe {
+    border: 0px none White;
+    height: 473px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#objectframe, #analyseframe {
+    margin: 0px;
+    padding: 0px;
+    width: 290px;
+    height: 473px;   
+}
+
+#tab_container {
+    height: 458px;
+    width: 291px;
+    color: White;
+}
+
+#algdatavak span {
+    color: White;
+}
+
+.tabvak_body {
+    background-image: url(/nbr_prototype/images/tabvak_bg.gif);
+    background-repeat: repeat-x;
+    background-attachment: fixed;
+    padding-left: 6px;
+    padding-top: 6px;
+    color: white;
+}
+
+.tabvak_body td, .tabvak_body div, .tabvak_body th {
+    color: white;
+}
+
+#layermaindiv {
+    height: 460px;
+    width: 276px;
+}
+
+#layermaindiv a {
+    color: #FFF0C4;
+}
+
+#volgordevak{
+    width: 279px;
+    height: 473px;
+}
+
+#infovak div {
+    margin-left: 3px;
+    margin-top: 3px;
+}
+
+#dataframediv {
+    border: 1px solid #606060;
+    margin-bottom: 5px;
+}
+
+ul#nav li {
+    text-align: center;
+}
+
+ul#nav a {
+    background: #FFF0C4;
+    text-decoration: none;
+    color: #19619B;
+    font-size: 8pt;
+    height: 20px;
+}
+
+ul#nav a:hover {
+    background: #19619B;
+    color: #FFF0C4
+}
+
+ul#nav li.activelink a,ul#nav li.activelink a:hover {
+    background: #19619B;
+    color: #FFF0C4
+}
+
+ul#nav li#tab4 a { width: 57px; }
+
+a, a:visited, a:active {
+    color: #FFF0C4;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+#admindata_table {
+    font-size: 8pt;
+}
+
+#admindata_table td {
+    border: 0px none White;
+}
+
+.admindatabody {
+    background-color: White;
+}
+
+.topRow {
+    background-image: url("../images/patroon_kaartenbalie.gif");
+    background-repeat: repeat;
+}
+
+.topRow th {
+    color: White;
+    font-weight: bold;
+    padding-top: 2px;
+    padding-left: 3px;
+}
+
+.row {
+    color: Black;
+    font-weight: normal;
+}
+
+.row td {
+    padding-left: 3px;
+}
+
+.row:hover {
+    background-color: #606060;
+}
+
+.scrolldiv {
+    border: 1px solid black;
+}
+
+button {
+    border: 1px solid Black;
+    font-size: 8pt; 
+    background: white; 
+    color: #000000; 
+    font-family: arial, sans-serif;
+}
+
+#aanvullende_info_table {
+    border: 0px none White;
+}
+
+.aanvullende_info_th {
+    text-align: left;
+    font-size: 8pt;
+    height: 20px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none White;
+}
+
+.aanvullende_info_td {
+    font-size: 8pt;
+    text-align: center;
+    height: 20px;
+    margin: 0px;
+    padding: 0px;
+    border: 0px none White;
+}
+
+.aanvullende_info_alternateTr {
+    background-color: #E7EEF4;
+}
+
+.admin_data_content_div {
+    overflow: auto;
+    height: 245px;
+    width: 948px;
+}
+
+.admin_data_alternate_tr {
+    background-color: #E7EEF4;
+}
+.admin_data_selected_tr {
+    background-color: #19619B;
+}
+
+.waardeResult{    
+    font-size: 12px; 
+}
+
+.orderLayerBox{
+    border: 1px solid #606060;
+    background-color: White;
+    color: #175480;
+}
+
+.orderLayerClass{
+    cursor: pointer;
+    background-color: White;
+    color: #175480;
+}
+.orderLayerClassSelected{
+    background-color: #bbbbbb;
+    cursor: pointer;
+    color: #175480;
+}
+
+.orderLayerClass span, .orderLayerClassSelected span {
+    padding-top: 4px;
+    color: #175480;
+}
+
+ .tabvak_body td, #doanalysedataForm select {
+    font-size: 8pt;
+}
+
+#doanalysedataForm .thema_label {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.meta_data_body td {
+    font-size: 8pt;
+}
+
+.messages {
+    border: 1px solid blue;
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+.meta_data_alternate {
+    background-color: #E7EEF4;
+    color: #18639A;
+    width: 100%;
+}
+
+.meta_data_normal {
+    background-color: White;
+    color: #18639A;
+    width: 100%;
+}
+
+.meta_data_normal h1, .meta_data_alternate h1 {
+    color: #183B57;
+    font-size: 12px;
+    margin-left: 3px;
+}
+
+.meta_data_normal td, .meta_data_alternate td, .meta_data_normal th, .meta_data_alternate th {
+    color: #196297;
+}

@@ -12,17 +12,19 @@
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/etl.css" rel="stylesheet" type="text/css">
         <link href="styles/etltransform.css" rel="stylesheet" type="text/css">
-        <!--[if lte IE 6]>
-            <link href="styles/viewer-ie6.css" rel="stylesheet" type="text/css">
-        <![endif]-->
+        
         <link rel="stylesheet" type="text/css" href="styles/niftyCorners.css">
         <link rel="stylesheet" type="text/css" href="styles/ARC.css">
         <link rel="stylesheet" type="text/css" href="styles/viewer_b3p.css">
+        
+        <!--[if lte IE 6]>
+            <link href="styles/viewer-ie6.css" rel="stylesheet" type="text/css">
+        <![endif]-->
+        
         <script type="text/javascript" src="scripts/etltransform.js"></script>
     </head>
     <body>
         <div id="menu_div"><tiles:insert attribute="menu" /></div>
         <div id="maindiv"><div id="content_div"><tiles:insert attribute="content" /></div></div>
-        <div id="onder_div"><div id="onderbalk_logo"></div></div>
-    </body>
+        <div id="onder_div"><div id="onderbalk_logo"></div></div></body>
 </html>

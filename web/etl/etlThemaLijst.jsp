@@ -8,10 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
 
-<link href="styles/main.css" rel="stylesheet" type="text/css">
-<link href="styles/etl.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"/>
-<script type="text/javascript"></script>
 
 <p>
     <h1>Selecteer uw Thema</h1>

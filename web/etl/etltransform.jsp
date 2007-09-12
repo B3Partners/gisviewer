@@ -6,14 +6,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+
 <%@ page isELIgnored="false"%>
 
-<html>
+<!-- <html>
     <head>
         <title>Analyse Data</title>
-        <link href="etltransform.css" type=text/css rel=stylesheet>
-              <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
-        <script language="JavaScript" type="text/javascript">
+        <link href="etltransform.css" type=text/css rel=stylesheet> -->
+<script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
+<script language="JavaScript" type="text/javascript">
             function getObjects() {                                
                 for (var i = 1; i < 8; i++) {
                     if(document.getElementById('radio' + i).checked) { 
@@ -23,32 +25,38 @@
                 document.forms[0].edit.value    = "submit";
                 document.forms[0].submit();
             }
+</script>
+<!-- </head>
+    <body> -->
+<form id="myid" target="dataframe">
+    <input type="hidden" name="type" />
+    <input type="hidden" name="themaid" value="${themaid}"/>
+    <input type="hidden" name="edit" />
+</form>
+
+<div class="onderbalk">VIEWER<span><tiles:insert page="/nav/userAndLogout.jsp"/></span></div>
+<div id="bovenkant">
+    <div id="map">
+        <div id="flashcontent">
+            <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
+        </div>
+        <script type="text/javascript">
+                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "653", "493", "8", "#FFFFFF");
         </script>
-    </head>
-    <body>
-        <form id="myid" target="dataframe">
-            <input type="hidden" name="type" />
-            <input type="hidden" name="themaid" value="${themaid}"/>
-            <input type="hidden" name="edit" />
-        </form>
-        <div id="bovenkant">
-            <div id="map">
-                <div id="flashcontent">
-                    <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
-                </div>
-                <script type="text/javascript">
-                        var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "658", "493", "8", "#FFFFFF");
-                </script>
-                <!--[if lte IE 6]>
-                    <script type="text/javascript">
-                    var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "651", "488", "8", "#FFFFFF");
-                    </script>
-                <![endif]-->
-                <script type="text/javascript">
-                        so.write("flashcontent");
-                </script>
-            </div>
-            <div id="infovak_etl" style="display: block;">
+        <!--[if lte IE 6]>
+            <script type="text/javascript">
+            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "652", "493", "8", "#FFFFFF");
+            </script>
+        <![endif]-->
+        <script type="text/javascript">
+                so.write("flashcontent");
+        </script>
+    </div>
+    
+    <div id="rightdiv">
+        <div id="tabreplacement"></div>
+        <div id="tab_container">
+            <div id="infovak_etl" class="tabvak">
                 <strong>Bepaal hieronder van welke status van het thema u de data wilt bekijken</strong>
                 <div class="optie">
                     <input type="radio" value="1" name="radiogroup" id="radio1"/> Nieuwe objecten<br />
@@ -65,11 +73,13 @@
                     </button>&nbsp;
                 </div>
             </div>
-            <div class="onderbalk">Viewer en details<span id="actief_thema">Alle objecten van thema: ${themaName}</span></div>
-            <div id="dataframediv">
-                <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
-            </div>
-            <div class="onderbalk">Informatie</div>
         </div>
-    </body>
-</html>
+    </div>
+</div>
+<div class="onderbalk">DETAILS<span id="actief_thema">Actieve thema: </span></div>
+<div id="dataframediv">
+    <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
+</div>
+
+<!-- </body>
+</html> -->

@@ -1,6 +1,6 @@
 body {
     font-size: 8pt; 
-    background: #FFF0C5; 
+    background: White; 
     color: #000000; 
     font-family: arial, sans-serif;
     margin: 0px;
@@ -23,12 +23,33 @@ div, td, th, span, input, textarea, select, option {
     width: 970px;
 }
 
+#boven_div {
+    width: 990px;
+    height: 50px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+}
+
 #menu_div {
-    width: 100%;
+    background-image: url(/nbr_prototype/images/nbr/maindiv_bg.gif);
+    background-repeat: repeat-y;
+    width: 971px;
+    height: 50px;
+    text-align: center;
+    float: none;
+    padding-left: 10px;
+    margin-left: 10px;
+}
+
+#menubg {
     background-image: url(/nbr_prototype/images/nbr/bovenbalk.gif);
     background-repeat: repeat-x;
     height: 50px;
     text-align: center;
+    padding: 0px;
+    width: 962px;
 }
 
 #onder_div {
@@ -59,8 +80,8 @@ div, td, th, span, input, textarea, select, option {
     height: 50px;
     position: absolute;
     left: 50%;
-    margin-left: 87px;
-    padding-top: 20px;
+    margin-left: 86px;
+    padding-top: 25px;
 }
 
 a.menulink, a.menulink:visited, a.menulink:active {
@@ -68,19 +89,20 @@ a.menulink, a.menulink:visited, a.menulink:active {
     padding-top: 5px;
     padding-left: 10px;
     padding-right: 10px;
-    height: 21px;
+    height: 19px;
     border: 0px none White;
-    border-left: 1px solid #A0D9FF;
-    border-top: 1px solid #A0D9FF;
+    border-left: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
     border-right: 1px solid #102F44;
-    color: #A0D9FF;
+    color: #FFFFFF;
     margin: 0px;
     margin-left: 0px;
     float: right;
 }
 
 a.menulink:hover {
-
+    background-color: #FFFFFF;
+    color: #FF0000;
 }
 
 a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
@@ -88,13 +110,13 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     padding-top: 5px;
     padding-left: 10px;
     padding-right: 10px;
-    height: 21px;
+    height: 19px;
     border: 0px none White;
     border-left: 1px solid White;
     border-top: 1px solid White;
     border-right: 1px solid White;
     background-color: White;
-    color: #144264;
+    color: #FF0000;
     margin: 0px;
     margin-left: 15px;
     float: left;
@@ -111,7 +133,7 @@ a.activemenulink:hover {
     height: 50px;
     position: absolute;
     left: 50%;
-    margin-left: -475px;
+    margin-left: -476px;
 }
 
 #content_div {
@@ -130,17 +152,6 @@ a.activemenulink:hover {
 #dataframediv {
     background-color: White;
     margin-top: 0px;
-}
-
-a.menulink, a.menulink:visited, a.menulink:active {
-    color: white;
-    font-weight: bold;
-    margin-left: 15px;
-    text-decoration: none; 
-}
-
-a.menulink:hover {
-    text-decoration: underline;
 }
 
 .menuWhite {
@@ -163,26 +174,31 @@ h1{
 }
 
 .onderbalk {
-    background-color: #606060;
-    color: #FFF0C4;
+    background-color: White;
+    color: White;
     font-size: 14px;
     font-weight: bold;
-    background-color: #FFD203;
     background-image: url(/nbr_prototype/images/nbr/balk_links.gif);
     background-repeat: no-repeat;
     background-position: 0% 0%;
-    height: 20px;
+    height: 18px;
     padding-top: 3px;
     margin: 0px;
     margin-top: 5px;
     margin-bottom: 8px;
+    border: 1px solid #FF0000;
+    width: 933px;
 }
 
 .onderbalk span {
     font-size: 8pt;
     font-weight: bold;
-    color: #19619B;
+    color: #FF0000;
     margin-top: -15px;
+}
+
+.onderbalk a {
+    color: #FF0000;
 }
 
 #map {
@@ -287,24 +303,26 @@ ul#nav li {
 }
 
 ul#nav a {
-    background: #FFF0C4;
+    background: #FFA3A3;
     text-decoration: none;
-    color: #19619B;
+    color: Black;
     font-size: 8pt;
     height: 20px;
 }
 
 ul#nav a:hover {
-    background: #19619B;
-    color: #FFF0C4
+    background: #FF6060;
+    color: White
 }
 
 ul#nav li.activelink a,ul#nav li.activelink a:hover {
-    background: #19619B;
-    color: #FFF0C4
+    background: #FF6060;
+    color: White
 }
 
 ul#nav li#tab4 a { width: 57px; }
+ul#nav li#tab3 a { width: 58px; }
+ul#nav li#tab3 { margin-right: 0px; }
 
 a, a:visited, a:active {
     color: #FFF0C4;
@@ -469,4 +487,137 @@ button {
 
 .meta_data_normal td, .meta_data_alternate td, .meta_data_normal th, .meta_data_alternate th {
     color: #196297;
+}
+
+/* ETL Design */
+
+#infovak_etl{
+    height: 453px;
+}
+
+#tabreplacement {
+    height: 30px;
+    background-color: #D2E0EB;
+    width: 291px;
+    margin-bottom: 4px;
+}
+
+#etl_overview_table a {
+    color: #196299;
+}
+
+#etl_overview_table {
+    border: 0px none White;
+    margin-bottom: 15px;
+}
+
+.etlTopRow {
+    background-image: url("../images/patroon_nbr.gif");
+    background-repeat: repeat;
+}
+
+.etlTopRow td {
+    color: Black;
+    font-weight: bold;
+    padding-top: 2px;
+    padding-left: 3px;
+}
+
+.etlRowList:hover {
+    background-color: #dddddd;
+}
+
+/* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
+
+#content_style, #content_style div, #content_style td, #content_style th, #content_style li {
+    color: Black;
+}
+
+#content_style h1, #content_style h2, #content_style a {
+    color: Red;
+}
+
+#content_style hr {
+    color: Red;
+}
+
+#content_style {
+    padding: 8px;
+}
+
+#content_style .kolomtabel td {
+    padding: 15px;
+    width: 430px;
+    overflow: visible;
+}
+
+#content_style div {
+    background-color: #FFF0C5;
+    padding: 15px;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 440px;
+    margin-left: -15px;
+}
+
+#content_style h1 {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    font-style: normal;
+    margin-left: 0px;
+    margin-bottom: 15px;
+}
+
+#content_style h2 {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    font-style: normal;
+    margin-bottom: 0px;
+    margin-top: 15px;
+}
+
+#content_style div h2 {
+    margin-top: 0px;
+}
+
+#content_style img {
+    border: 1px solid Red;
+    padding: 4px;
+}
+
+#content_style a {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+#content_style a:hover {
+    color: Red;
+}
+
+#content_style .presentation_table {
+    border: 1px solid Red;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#content_style .presentation_table td {
+    border: 1px solid Red;
+    padding: 5px;
+    background-color: White;
+    width: auto;
+}
+
+#content_style .presentation_table th {
+    background-color: Red;
+    color: White;
+    font-weight: bold;
+    padding: 5px;
+}
+
+#content_style td ul {
+    margin: 0px;
+    padding-left: 18px;
 }

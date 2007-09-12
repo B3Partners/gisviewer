@@ -9,16 +9,16 @@
     <c:set var="lnkArray" value="${fn:split(links, '%')}" />
     
     <c:if test="${requestJSP eq 'index'}">
-        <c:set var="activelink" value="1" />
+        <c:set var="activelink" value="4" />
     </c:if>
     <c:if test="${requestJSP eq 'viewerBase'}">
-        <c:set var="activelink" value="2" />
-    </c:if>
-    <c:if test="${requestJSP eq 'etlTransformBase'}">
         <c:set var="activelink" value="3" />
     </c:if>
+    <c:if test="${requestJSP eq 'etlTransformBase'}">
+        <c:set var="activelink" value="2" />
+    </c:if>
     <c:if test="${requestJSP eq 'help'}">
-        <c:set var="activelink" value="4" />
+        <c:set var="activelink" value="1" />
     </c:if>
     
     <c:forEach items="${lnkArray}" var="link" varStatus="counter">

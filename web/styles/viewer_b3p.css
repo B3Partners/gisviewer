@@ -158,7 +158,7 @@ a.activemenulink:hover {
 h1{
     font-weight: bold; 
     font-size: 11pt; 
-    color: #FF0000
+    color: #196299;
 }
 
 .inputEnabled {
@@ -190,6 +190,11 @@ h1{
     font-weight: bold;
     color: #19619B;
     margin-top: -15px;
+}
+
+.onderbalk a {
+    color: #FFFFFF;
+    font-weight: bold;
 }
 
 #map {
@@ -337,12 +342,12 @@ a:hover{
     background-color: White;
 }
 
-.topRow {
+.topRow, .etlTopRow {
     background-image: url("../images/patroon_kaartenbalie.gif");
     background-repeat: repeat;
 }
 
-.topRow th {
+.topRow th, .etlTopRow td {
     color: White;
     font-weight: bold;
     padding-top: 2px;
@@ -478,4 +483,137 @@ button {
 
 .meta_data_normal td, .meta_data_alternate td, .meta_data_normal th, .meta_data_alternate th {
     color: #196297;
+}
+
+/* ETL Design */
+
+#infovak_etl{
+    height: 453px;
+}
+
+#tabreplacement {
+    height: 30px;
+    background-color: #D2E0EB;
+    width: 291px;
+    margin-bottom: 4px;
+}
+
+#etl_overview_table {
+    border: 0px none White;
+    margin-bottom: 15px;
+}
+
+#etl_overview_table a {
+    color: #196299;
+}
+
+.etlTopRow {
+    background-image: url("../images/patroon_kaartenbalie.gif");
+    background-repeat: repeat;
+}
+
+.etlTopRow td {
+    color: White;
+    font-weight: bold;
+    padding-top: 2px;
+    padding-left: 3px;
+}
+
+.etlRowList:hover {
+    background-color: #dddddd;
+}
+
+/* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
+
+#content_style, #content_style h1, #content_style h2, #content_style div, #content_style td, #content_style th, #content_style a, #content_style li {
+    color: #196299;
+}
+
+#content_style hr {
+    color: #196299;
+}
+
+#content_style {
+    padding: 8px;
+}
+
+#content_style .kolomtabel td {
+    padding: 15px;
+    width: 430px;
+    overflow: visible;
+}
+
+#content_style div {
+    background-color: #FFF0C5;
+    padding: 15px;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 440px;
+    margin-left: -15px;
+}
+
+#content_style h1 {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    font-style: normal;
+    margin-left: 0px;
+    margin-bottom: 15px;
+}
+
+#content_style h2 {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    font-style: normal;
+    margin-bottom: 0px;
+    margin-top: 15px;
+}
+
+#content_style div h2 {
+    margin-top: 0px;
+}
+
+#content_style img {
+    border: 1px solid #196096;
+    padding: 4px;
+}
+
+#content_style a {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+#content_style a:hover {
+    color: #FFD207;
+}
+
+#content_style .presentation_table {
+    border: 1px solid #196096;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#content_style .presentation_table td {
+    border: 1px solid #196096;
+    padding: 5px;
+    background-color: #E7EEF4;
+    width: auto;
+}
+
+#content_style .presentation_table th {
+    background-color: #196096;
+    color: White;
+    font-weight: bold;
+    padding: 5px;
+}
+
+#content_style td ul {
+    margin: 0px;
+    padding-left: 18px;
+}
+
+.nbr {
+    display: none;
 }

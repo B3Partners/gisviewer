@@ -8,8 +8,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page isELIgnored="false"%>
 
-<link href="styles/main.css" rel="stylesheet" type="text/css">
-<link href="styles/etl.css" rel="stylesheet" type="text/css">
 <p>
     <h1>Overzicht verschillende Thema's met bijhorende resultaten</h1>
 </p>

@@ -27,40 +27,32 @@
     }
     // -->
 </script>
-<p style="margin-top: 50px;">
+<div id="content_style">
     <hr size="1" style="color: Black;" width="100%" />
     <table width="100%">
         <tr>
-            <td>
-                <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" />
+            <td width="295">
+                <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" class="nbr" />
             </td>
             <td valign="top">
+                <br /><br />
                 <h1>WIS Demo voor de provincie Noord Brabant</h1>
+                <br /><br />
             </td>
         </tr>
         <tr>
-            <td colspan="2">
-                <p>
-            </td>
-        </tr>
         <tr>
             <td colspan="2" valign="bottom" align="center">
                 <a style="font-size: 13px; text-decoration: underline;" href="viewer.do">KLIK HIER OM DOOR TE GAAN NAAR DE WIS DEMO</a>
             </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p><br><br>
-            </td>
-        </tr>        
+        </tr>       
         <tr>
             <td colspan="2" valign="bottom" align="center">
-                <h1>Aanmelden voor de communicatie mailinglijst</h1>
+                <br /><br /><h2>Aanmelden voor de communicatie mailinglijst</h2>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <p>
                 <p>
                     Hier kunt u zich aanmelden voor het communicatie mailinglijst van het WIS project van de provincie Noord-Brabant.
                     Alleen medewerkers van de provincie met een betrokkenheid bij het project kunnen zich aanmelden.
@@ -69,12 +61,13 @@
                     uw aanmelding is geaccepteerd. Zodra u lid bent van de mailinglijst ontvangt u emails van het projectteam of
                     andere leden van deze lijst.
                 </p>
-                <p>U kunt zich hier ook altijd weer afmelden.</p>
+                <p>
+                    U kunt zich hier ook altijd weer afmelden.
+                </p>
                 <p>Via deze lijst wordt u op de hoogte gehouden van aanpassingen aan het prototype.
                     U kunt uw opmerkingen op het prototype via deze lijst kenbaar maken. En u kunt reageren op opmerkingen
                     van anderen.
                 </p>
-                <p>
             </td>
         </tr>
         <tr>
@@ -110,4 +103,4 @@
         </tr>
     </table>
     <hr size="1" style="color: Black;" width="100%" />
-</p>
+</div>

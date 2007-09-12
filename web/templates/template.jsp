@@ -24,7 +24,8 @@
         <script type="text/javascript" src="scripts/etltransform.js"></script>
     </head>
     <body>
-        <div id="menu_div"><tiles:insert attribute="menu" /></div>
+        <!-- !!! TEN BEHOEVE VAN NBR DESIGN COMMENTAAR ROND ONDERSTAANDE DIVS WEGHALEN !!! -->
+        <!-- <div id="boven_div"> --><div id="menu_div"><!-- <div id="menubg"> --><tiles:insert attribute="menu" /></div><!-- </div></div> -->
         <div id="maindiv"><div id="content_div"><tiles:insert attribute="content" /></div></div>
         <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div></body>
 </html>

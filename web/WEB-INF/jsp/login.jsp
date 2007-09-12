@@ -1,8 +1,8 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <form id="loginForm" action="j_security_check" method="POST">
-    <div style="height: 50px"></div>
-    <div style="width: 430px; margin: auto; border: 1px solid #dddddd;">
+<div style="height: 600px">
+    <div style="width: 430px; margin: 10px; border: 1px solid #dddddd;">
         <h2 align="center">Login</h2>
         <html:messages id="message" message="true">
             <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
@@ -13,6 +13,7 @@
             <tr><td><input type="Submit" value="Login"></td></tr>
         </table>
     </div>
+</div>    
 </form>
 
 <script language="JavaScript">

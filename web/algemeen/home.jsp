@@ -36,37 +36,31 @@
             </td>
             <td valign="top">
                 <br /><br />
-                <h1>WIS Demo voor de provincie Noord Brabant</h1>
+                <h1>B3P GIS Suite Demo</h1>
                 <br /><br />
             </td>
         </tr>
         <tr>
         <tr>
             <td colspan="2" valign="bottom" align="center">
-                <a style="font-size: 13px; text-decoration: underline;" href="viewer.do">KLIK HIER OM DOOR TE GAAN NAAR DE WIS DEMO</a>
+                <a style="font-size: 13px; text-decoration: underline;" href="viewer.do">KLIK HIER OM DOOR TE GAAN NAAR DE DEMO</a>
             </td>
         </tr>       
         <tr>
             <td colspan="2" valign="bottom" align="center">
-                <br /><br /><h2>Aanmelden voor de communicatie mailinglijst</h2>
+                <br /><br /><h2>Aanmelden voor de b3partners mailinglijst</h2>
             </td>
         </tr>
         <tr>
             <td colspan="2">
                 <p>
-                    Hier kunt u zich aanmelden voor het communicatie mailinglijst van het WIS project van de provincie Noord-Brabant.
-                    Alleen medewerkers van de provincie met een betrokkenheid bij het project kunnen zich aanmelden.
+                    Hier kunt u zich aanmelden voor het b3partners mailinglijst.
                 </p>
                 <p>U vult uw emailadres hieronder in en klikt op de aanmelden link. U ontvangt vervolgens een email of
-                    uw aanmelding is geaccepteerd. Zodra u lid bent van de mailinglijst ontvangt u emails van het projectteam of
-                    andere leden van deze lijst.
+                    uw aanmelding is geaccepteerd.
                 </p>
                 <p>
                     U kunt zich hier ook altijd weer afmelden.
-                </p>
-                <p>Via deze lijst wordt u op de hoogte gehouden van aanpassingen aan het prototype.
-                    U kunt uw opmerkingen op het prototype via deze lijst kenbaar maken. En u kunt reageren op opmerkingen
-                    van anderen.
                 </p>
             </td>
         </tr>
@@ -86,8 +80,8 @@
                 <html:form action="/listManager" focus="from">
                     <html:hidden property="xsl" value=""/>
                     <html:hidden property="to" value=""/>
-                    <html:hidden property="cc" value="wis@b3partners.nl"/>
-                    <html:hidden property="subject" value="aan- en afmelden Communicatieplatform WIS N-Br"/>
+                    <html:hidden property="cc" value="nieuwsbrief@b3partners.nl"/>
+                    <html:hidden property="subject" value="aan- en afmelden mailinglijst b3partners"/>
                     <html:hidden property="body" value=""/>
                     
                     <input type="hidden" name="send"/>

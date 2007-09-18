@@ -488,118 +488,45 @@ public class ETLTransformAction extends BaseHibernateAction {
         hquery = "FROM Themas WHERE cluster != 9 AND (moscow = 1 OR moscow = 2 OR moscow = 3) and code < 3 ORDER BY naam";
         q = sess.createQuery(hquery);
         themalist = q.list();
+        List newThemalist = new ArrayList(themalist);
         
-        /*
-        Iterator it = themalist.iterator();
-        while (it.hasNext()) {
-            Themas thema = (Themas) it.next();
-            thema.getNaam();
-        }
-         */
-        request.setAttribute("themalist", themalist);
-        
-        /*
-        JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
-        
-        JSONArray children = new JSONArray();
-        root.put("children", children);
-        
-        if (ctl!=null) {
-            Iterator it = ctl.iterator();
-            while (it.hasNext()) {
-                Clusters cluster = (Clusters)it.next();
-                if(cluster.getParent() == null) {
-                    JSONObject jsonCluster = new JSONObject().put("id", "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
-                    children.put(jsonCluster);
-                    
-                    JSONArray childrenCluster = new JSONArray();
-                    jsonCluster.put("children", childrenCluster);
-                    
-                    getChildren(childrenCluster, cluster);
-                    getSubClusters(childrenCluster, cluster, ctl);
-                }
-            }
-        }
-        request.setAttribute("tree", root);
-         */
-    }
-    // </editor-fold>
-    
-    /**
-     * private method die zorg draagt het opzetten van de boomstructuur van de verschillende thema's.
-     *
-     * @param root JSONArray
-     * @param rootCluster Clusters
-     * @param list List
-     *
-     * @throws JSONException
-     *
-     * @see Clusters
-     */
-    // <editor-fold defaultstate="" desc="private void getSubClusters(JSONArray root, Clusters rootCluster, List list) method.">
-    /*
-    private void getSubClusters(JSONArray root, Clusters rootCluster, List list) throws JSONException {
-        ArrayList subclusters = new ArrayList();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            Clusters cluster = (Clusters)it.next();
-            if(rootCluster == cluster.getParent()) {
-                subclusters.add(cluster);
-            }
-        }
-        if(!subclusters.isEmpty()) {
-            it = subclusters.iterator();
-            while(it.hasNext()) {
-                Clusters cl = (Clusters) it.next();
-                JSONObject jsonCluster = new JSONObject().put("id", "c" + cl.getId()).put("type", "child").put("title", cl.getNaam()).put("cluster", true);
-                root.put(jsonCluster);
-                
-                JSONArray childrenCluster = new JSONArray();
-                jsonCluster.put("children", childrenCluster);
-                
-                getChildren(childrenCluster, cl);
-                getSubClusters(childrenCluster, cl, list);
-            }
-        }
-    }
-     **/
-    // </editor-fold>
-    
-    /**
-     * private method die child objecten toevoegd aan het meegegeven root object.
-     *
-     * @param root JSONArray
-     * @param rootCluster Clusters
-     *
-     * @throws JSONException
-     *
-     * @see Clusters
-     */
-    // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster) method.">
-    /*
-    private void getChildren(JSONArray root, Clusters rootCluster) throws JSONException {
-        if(themalist == null) return;
-        ArrayList childs = new ArrayList();
+        boolean columnExists = false;
         Iterator it = themalist.iterator();
         while(it.hasNext()) {
-            Themas thema = (Themas) it.next();
-            if(thema.getCluster() == rootCluster) {
-                childs.add(thema);
+            Connection connection = sess.connection();
+            Themas t = (Themas)it.next();
+            String query = "SELECT * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='" + 
+                    t.getAdmin_tabel() + "' AND COLUMN_NAME = 'status_etl'";
+            try {
+                PreparedStatement statement = connection.prepareStatement(query);
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    if (rs.next()){
+                        columnExists = true;
+                    }
+                } finally {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                log.error("", ex);
+            } finally {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    log.error("", ex);
+                }
             }
-        }
-        if(!childs.isEmpty()) {
-            it = childs.iterator();
-            while(it.hasNext()) {
-                Themas th = (Themas) it.next();
-                String ttitel = th.getNaam();
-                JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
-                //put wms data
-                jsonCluster.put("wmsurl",th.getWms_url()).put("wmslayers",th.getWms_layers()).put("wmsquerylayers",th.getWms_querylayers());
-                root.put(jsonCluster);
+            if(!columnExists) {
+                newThemalist.remove(t);
             }
+            columnExists = false;
         }
+        
+        
+        
+        
+        request.setAttribute("themalist", newThemalist);
     }
-     */
     // </editor-fold>
     
     /**

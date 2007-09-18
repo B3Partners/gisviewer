@@ -94,8 +94,10 @@ public class ETLOverviewAction extends BaseHibernateAction {
                 while (rs.next()){
                     thema_naam  = rs.getString("naam");
                     admin_tabel = rs.getString("admin_tabel");
-                    
-                    overview.add(getCount(thema_naam, admin_tabel));
+                    ArrayList count = getCount(thema_naam, admin_tabel);
+                    if(count != null) {
+                        overview.add(getCount(thema_naam, admin_tabel));
+                    }
                 }
             } finally {
                 statement.close();
@@ -145,14 +147,18 @@ public class ETLOverviewAction extends BaseHibernateAction {
     // <editor-fold defaultstate="" desc="private ArrayList getCount(String thema_naam, String admin_tabel)">
     private ArrayList getCount(String thema_naam, String admin_tabel) {
         ArrayList count = new ArrayList();
-        count.add(thema_naam);
+        
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         
+        boolean columnExists = false;
         if(admin_tabel != null) {
-            int total = 0;
-            String query = "SELECT COUNT(1) as Total, " +
+            //Create two queries            
+            String existQuery = "SELECT * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='" + 
+                    admin_tabel + "' AND COLUMN_NAME = 'status_etl'";
+            
+            String selectQuery = "SELECT COUNT(1) as Total, " +
                     "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[0] + "') AS Status_" + STATUS[0] + ", " +
                     "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[1] + "') AS Status_" + STATUS[1] + ", " +
                     "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[2] + "') AS Status_" + STATUS[2] + ", " +
@@ -160,9 +166,30 @@ public class ETLOverviewAction extends BaseHibernateAction {
                     "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[4] + "') AS Status_" + STATUS[4] + ", " +
                     "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[5] + "') AS Status_" + STATUS[5] + " " +
                     "FROM " + admin_tabel;
+            
+            boolean exists = false;
             try {
-                PreparedStatement statement = connection.prepareStatement(query);
+                PreparedStatement statement = connection.prepareStatement(existQuery);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()){
+                    exists = true;
+                }
+                statement.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            } finally {
                 try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    log.error("", ex);
+                }
+            }
+            
+            if(exists) { 
+                try {
+                    count.add(thema_naam);
+                    int total = 0;
+                    PreparedStatement statement = connection.prepareStatement(selectQuery);
                     ResultSet rs = statement.executeQuery();
                     if (rs.next()){
                         count.add(rs.getInt("Status_" + STATUS[0]));
@@ -173,32 +200,32 @@ public class ETLOverviewAction extends BaseHibernateAction {
                         count.add(rs.getInt("Status_" + STATUS[5]));
                         total = rs.getInt("Total");
                         count.add(total);
+                        statement.close();
                     }
-                } finally {
+
+                    int amountOGO = (Integer)count.get(2);
+                    int amountOAO = (Integer)count.get(3);
+                    if(total != 0) {
+                        int percent = ((amountOGO + amountOAO) * 100) / total;
+                        count.add(percent);
+                    } else {
+                        count.add(0);
+                    }
                     statement.close();
-                }
-            } catch (SQLException ex) {
-                log.error("", ex);
-            } finally {
-                try {
-                    connection.close();
                 } catch (SQLException ex) {
                     log.error("", ex);
+                } finally {
+                    try {
+                        connection.close();
+                    } catch (SQLException ex) {
+                        log.error("", ex);
+                    }
                 }
-            }
-            int amountOGO = (Integer)count.get(2);
-            int amountOAO = (Integer)count.get(3);
-            if(total != 0) {
-                int percent = ((amountOGO + amountOAO) * 100) / total;
-                count.add(percent);
             } else {
-                count.add(0);
-            }
-        } else {
-            for (int i = 0; i < STATUS.length; i++) {
-                count.add("onbekend");
+                return null;
             }
         }
+        
         return count;
     }
     // </editor-fold>

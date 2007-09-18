@@ -351,7 +351,9 @@ public class GetViewerDataAction extends BaseHibernateAction {
          */
         String themaGeomTabel   = thema.getSpatial_tabel();
         String themaGeomIdColumn= thema.getSpatial_admin_ref();
-        String themaGeomType    = getThemaGeomType(themaGeomTabel);        
+        String themaGeomType    = getThemaGeomType(themaGeomTabel);
+        //als geomType nog niet is gevonden dan is het waarschijnljk een view en moet de thema colom view_geomtype ingevuld zijn
+        themaGeomType=thema.getView_geomtype();
         if (themaGeomType == null){
             throw new Exception("Kan het type geo-object niet vinden: " + thema.getNaam());
             //log.error("Kan het type geo-object niet vinden: " + thema.getNaam());

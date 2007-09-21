@@ -51,7 +51,7 @@
                                 <c:if test="${topRowStatus.last && totale_breedte < 948}">
                                     <c:set var="breedte" value="${breedte + (948 - totale_breedte)}" />
                                 </c:if>
-                                <th style="width: ${breedte};" class="table-sortable:default" onclick="Table.sort(data_table, {sorttype:Sort['default'], col:${topRowStatus.count}});">
+                                <th style="width: ${breedte}px;" class="table-sortable:default" onclick="Table.sort(data_table, {sorttype:Sort['default'], col:${topRowStatus.count}});">
                                     ${ThemaItem.label}
                                 </th>
                             </c:forEach>
@@ -61,7 +61,7 @@
                 <div class="admin_data_content_div">
                     <table id="data_table" class="table-autosort table-stripeclass:admin_data_alternate_tr" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                         <tbody>
-                            <c:set var="totale_breedte" value="50" />
+                            <c:set var="totale_breedte_onder" value="50" />
                             <c:forEach var="regel" items="${regels}" varStatus="counter">
                                 <tr class="row" onclick="colorRow(this);">
                                     <td style="width: 50px;" valign="top">
@@ -77,18 +77,18 @@
                                                     <c:set var="breedte" value="150" />
                                                 </c:otherwise>            
                                             </c:choose>
-                                            <c:set var="totale_breedte" value="${totale_breedte + breedte}" />
-                                            <c:if test="${kolom.last && totale_breedte < 931}">
-                                                <c:set var="breedte" value="${breedte + (931 - totale_breedte)}" />
+                                            <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
+                                            <c:if test="${kolom.last && totale_breedte_onder < 931}">
+                                                <c:set var="breedte" value="${breedte + (931 - totale_breedte_onder)}" />
                                             </c:if>
                                             <c:choose>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                                    <td style="width: ${breedte};" valign="top">
+                                                    <td style="width: ${breedte}px;" valign="top">
                                                         <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
                                                     </td>
                                                 </c:when>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
-                                                    <td style="width: ${breedte};" valign="top">
+                                                    <td style="width: ${breedte}px;" valign="top">
                                                         <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                                                     </td>
                                                 </c:when>
@@ -96,7 +96,7 @@
                                                     <c:if test="${waarde eq '' or  waarde eq null}">
                                                         <c:set var="waarde" value="&nbsp;" />
                                                     </c:if>
-                                                    <td style="width: ${breedte};" valign="top">
+                                                    <td style="width: ${breedte}px;" valign="top">
                                                         ${waarde}
                                                     </td>
                                                 </c:otherwise>

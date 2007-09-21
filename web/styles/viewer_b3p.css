@@ -18,20 +18,6 @@ div, td, th, span, input, textarea, select, option, button {
     font-family: arial, sans-serif;
 }
 
-.knop {
-    border: 1px solid White;
-    border-bottom: 2px solid White;
-    border-right: 2px solid White;
-    color: #196299;
-    padding: 3px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    background-color: #FFD203;
-    margin: 2px;
-    cursor: hand;
-    cursor: pointer;
-}
-
 #maindiv {
     background-color: #FFF0C5;
     width: 970px;
@@ -87,11 +73,11 @@ div, td, th, span, input, textarea, select, option, button {
 
 .topmenu {
     background-image: none;
-    width: 400px;
+    width: 360px;
     height: 50px;
     position: absolute;
     left: 50%;
-    margin-left: 87px;
+    margin-left: 127px;
     margin-top: 18px;
 }
 
@@ -136,6 +122,10 @@ a.activemenulink:hover {
 
 }
 
+.topmenu_basis a.activemenulink, a.activemenulink:visited, a.activemenulink:active { 
+    margin-left: 80px;
+}
+
 .menu_boven_logo {
     background-image: url(/nbr_prototype/images/kaartenbalielogo.gif);
     background-repeat: no-repeat;
@@ -162,6 +152,9 @@ a.activemenulink:hover {
 #dataframediv {
     background-color: White;
     margin-top: 0px;
+    border: 1px solid #606060;
+    margin-bottom: 5px;
+    overflow: hidden;
 }
 
 .menuWhite {
@@ -301,11 +294,6 @@ h1{
 #infovak div {
     margin-left: 3px;
     margin-top: 3px;
-}
-
-#dataframediv {
-    border: 1px solid #606060;
-    margin-bottom: 5px;
 }
 
 ul#nav li {

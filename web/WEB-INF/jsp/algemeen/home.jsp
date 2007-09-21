@@ -23,7 +23,7 @@
     }
     // -->
 </script>
-<div id="content_style" style="text-align: center; width: 930px; margin-right: 15px;">
+<div id="content_style" style="text-align: center; width: 900px; margin-right: 15px;">
     <hr size="1" width="100%" />
     
     <br /><br />

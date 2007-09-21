@@ -644,7 +644,7 @@
 </div>
 <div class="onderbalk">DETAILS<span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
-    <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
+    <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
 </div>
 
 <script type="text/javascript">
@@ -724,5 +724,5 @@
 </script>
 
 
-<%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
+<%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE --%>
 <script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

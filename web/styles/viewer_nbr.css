@@ -33,7 +33,7 @@ div, td, th, span, input, textarea, select, option, button {
 }
 
 #menu_div {
-    background-image: url(/nbr_prototype/images/nbr/maindiv_bg.gif);
+    background-image: url(/b3pgis/images/nbr/maindiv_bg.gif);
     background-repeat: repeat-y;
     width: 971px;
     height: 50px;
@@ -44,7 +44,7 @@ div, td, th, span, input, textarea, select, option, button {
 }
 
 #menubg {
-    background-image: url(/nbr_prototype/images/nbr/bovenbalk.gif);
+    background-image: url(/b3pgis/images/nbr/bovenbalk.gif);
     background-repeat: repeat-x;
     height: 50px;
     text-align: center;
@@ -54,14 +54,14 @@ div, td, th, span, input, textarea, select, option, button {
 
 #onder_div {
     width: 100%;
-    background-image: url(/nbr_prototype/images/nbr/onderbalk.gif);
+    background-image: url(/b3pgis/images/nbr/onderbalk.gif);
     background-repeat: repeat-x;
     height: 50px;
     display: block;
 }
 
 #onderbalk_logo {
-    background-image: url(/nbr_prototype/images/nbr/onderbalk_logo.gif);
+    background-image: url(/b3pgis/images/nbr/onderbalk_logo.gif);
     background-repeat: no-repeat;
     background-color: none;
     width: 976px;
@@ -73,7 +73,7 @@ div, td, th, span, input, textarea, select, option, button {
 }
 
 .topmenu {
-    background-image: url(/nbr_prototype/images/nbr/topmenubg.gif);
+    background-image: url(/b3pgis/images/nbr/topmenubg.gif);
     background-repeat: no-repeat;
     background-position: 100% 0%;
     width: 400px;
@@ -127,7 +127,7 @@ a.activemenulink:hover {
 }
 
 .menu_boven_logo {
-    background-image: url(/nbr_prototype/images/nbr/nbrlogo.gif);
+    background-image: url(/b3pgis/images/nbr/nbrlogo.gif);
     background-repeat: no-repeat;
     width: 200px;
     height: 50px;
@@ -137,7 +137,7 @@ a.activemenulink:hover {
 }
 
 #content_div {
-    background-image: url(/nbr_prototype/images/nbr/maindiv_bg.gif);
+    background-image: url(/b3pgis/images/nbr/maindiv_bg.gif);
     background-repeat: repeat-y;
     width: 948px;
     padding-left: 15px;
@@ -178,7 +178,7 @@ h1{
     color: White;
     font-size: 14px;
     font-weight: bold;
-    background-image: url(/nbr_prototype/images/nbr/balk_links.gif);
+    background-image: url(/b3pgis/images/nbr/balk_links.gif);
     background-repeat: no-repeat;
     background-position: 0% 0%;
     height: 18px;
@@ -224,7 +224,7 @@ h1{
 
 .tabvak {
     border: 0px none White;
-    background-image: url(/nbr_prototype/images/nbr/tabvak_bg.gif);
+    background-image: url(/b3pgis/images/nbr/tabvak_bg.gif);
     background-repeat: repeat-x;
     background-color: White;
     background-position: 0% 0%;
@@ -262,7 +262,7 @@ h1{
 }
 
 .tabvak_body {
-    background-image: url(/nbr_prototype/images/nbr/tabvak_bg.gif);
+    background-image: url(/b3pgis/images/nbr/tabvak_bg.gif);
     background-repeat: repeat-x;
     background-attachment: fixed;
     padding-left: 6px;

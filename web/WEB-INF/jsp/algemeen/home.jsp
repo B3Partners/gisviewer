@@ -28,7 +28,7 @@
     
     <br /><br />
     
-    <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" class="nbr" />
+    <img src="images/logo.gif" border="0" alt="Logo" class="nbr" />
     
     <h1>B3P GIS Suite Demo</h1>
     

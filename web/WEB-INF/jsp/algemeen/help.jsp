@@ -9,18 +9,20 @@
     <table class="kolomtabel">
         <tr>
             <td valign="top">
-                <h1>Korte beschrijving van WIS Demo</h1>
+                <h1>B3P GIS Suite Demo</h1>
                 
                 <div>
                     <h2>Introductie</h2>
-                    WIS demo is gebouwd om gebruikers in staat te stellen invloed te hebben op het ontwerpproces. Op basis van de vele gesprekken en beschikbare informatie is deze demo gebouwd. Het is dus uitdrukkelijk de bedoeling dat iedere ge&iuml;nteresseerde na deze bijeenkomst zelf deze demo gaat gebruiken.<br /><br />
-                    Deze demo staat op een testserver, welke soms wordt herstart. Als er even geen contact mogelijk is, dan verzoeken jullie het later nog een keer te proberen. Verder is de demo op dit moment nog niet volledig robuust en er treden soms &quot;verbindingsfouten&quot; op.
+                    Deze B3P GIS Suite demo toont de mogelijkheden van de GIS viewer zoals deze binnen de GIS suite gebruikt wordt.
+                    De getoonde kaarten zijn alleen ten bate van deze demo beschikbaar. Later worden voor elk project specifieke
+                    kaarten aangeschaft en geconfigureerd.
+                    <p>
+                    Deze demo staat op een testserver, welke soms wordt herstart. 
+                    Als er even geen contact mogelijk is, dan verzoeken wij u het later nog een keer te proberen. 
                 </div>
-                <h2>Hoofdelementen van het WIS</h2>
-                Het WIS bestaat uit een kaart, een paneel met tabbladen waarmee het WIS wordt bestuurd en vlak met resultaten.
-                <p>De kaart kan met de gebruikelijke knoppen bestuurd worden. Er ontbreekt nog zeker een knop, namelijk: export van kaartuitsnede naar formaat van keuze.</p>
-                <p>Het besturingspaneel kent nu 5 tabbladen: Thema's, Legenda, Zoeker, Gebieden en Analyse.</p>
-                
+                <h2>Hoofdelementen van de GIS Viewer</h2>
+                De GIS viewer bestaat uit een kaart, een paneel met tabbladen waarmee de viewer wordt bestuurd en een paneel met resultaten.
+                <!--
                 <table class="presentation_table">
                     <tr><th colspan="2">Kort samengevat</th></tr>
                     <tr>
@@ -39,18 +41,21 @@
                     </tr>
                     <tr>
                         <td>Tabbladen</td>
-                        <td><a href="#thema">Thema's</a>, <a href="#legenda">Legenda</a>, <a href="#zoeker">Zoeker</a>, <a href="#gebieden">Gebieden</a> en <a href="#analyse">Analyse</a>.</td>
+                        <td><a href="#thema">Thema's</a>, <a href="#legenda">Legenda</a>, <a href="#zoeker">Zoeker</a>, 
+                        <a href="#gebieden">Gebieden</a> en <a href="#analyse">Analyse</a>.</td>
                     </tr>
                 </table>
-                
+                -->
                 <a name="thema"></a><h2>Tabblad Thema's</h2>
                 <strong>Kaarten zichtbaar maken</strong><br />
-                Het tabblad Thema's bestaat uit een uitklapbare boomstructuur met alle selecteerbare thema's. Indien een thema nog geen vinkvak heeft dan is de onderliggende dataset nog niet aangemaakt. De gebruiker kan de thema's aan en uitzetten; de kaart wordt dan ververst. Het laatst aangevinkte thema komt altijd bovenop.
-                <p>De ACN en percelen kaartlaag zijn alleen zichtbaar wanneer ingezoomd om overmatige serverbelasting te voorkomen.</p>
+                Het tabblad Thema's bestaat uit een uitklapbare boomstructuur met alle selecteerbare thema's. 
+                Indien een thema geen vinkvak heeft dan is de onderliggende dataset niet aangemaakt. 
+                De gebruiker kan de thema's aan en uitzetten; de kaart wordt dan ververst.
+                <p>Sommige kaartlagen zijn pas zichtbaar wanneer ingezoomd om overmatige serverbelasting te voorkomen.</p>
                 
                 <p>
                     <strong>Kaartlaaginformatie</strong><br />
-                    De themanaam is een link naar projectdata van de kaartlaag. Hier wordt de MoSCoW status vermeld, de geselecteerde bronapplicaties, een beschrijving van de administratieve data en de verantwoordelijke medewerkers en afdelingen.
+                    De themanaam is een link naar metadata van de kaartlaag. 
                 </p>
                 
                 <p>
@@ -59,30 +64,48 @@
                 </p>
                 
                 <a name="legenda"></a><h2>Tabblad Legenda</h2>
-                Het tabblad legenda bestaat uit een vlak waarop u alle actieve kaartlagen kunt vinden. Bij deze kaartlagen is een afbeelding geplaatst waarop u kunt zien hoe u de betreffende kaartlaag op de kaart kunt onderscheiden.
-                <p>U kunt met de knoppen "Omlaag" en "Omhoog" de volgorde waarop de kaartlagen worden getoond aanpassen. Wilt u een bepaalde kaartlaag als bovenste kaartlaag hebben, dan kunt u met de knop "Omhoog" deze kaartlaag naar de gewenste positie verplaatsen. U dient vervolgens op de knop "Herlaad kaart" te klikken, waarmee de kaart ververst wordt en de kaartlagen worden getoond volgens de volgorde van het legendavak (bovenaan in het vak betekent bovenste kaartlaag).</p>
-                <p>Met de knop "Verwijder alle lagen" kunt u met &eacute;&eacute;n druk op de knop alle kaartlagen verwijderen en houdt u slechts de basiskaart over.</p>
+                Het tabblad legenda bestaat uit een paneel waarop u alle actieve kaartlagen kunt vinden. 
+                Bij deze kaartlagen is een afbeelding geplaatst waarop u kunt zien hoe u de betreffende kaartlaag op de kaart kunt onderscheiden.
+                <p>U kunt met de knoppen "Omlaag" en "Omhoog" de volgorde van de kaartlagen aanpassen. 
+                Wilt u een bepaalde kaartlaag als bovenste kaartlaag hebben, dan kunt u met de knop "Omhoog" deze kaartlaag naar de gewenste positie verplaatsen. 
+                U dient vervolgens op de knop "Herlaad kaart" te klikken, waarmee de kaart ververst wordt en 
+                de kaartlagen worden getoond volgens de volgorde van het legendapaneel (bovenaan in het vak betekent bovenste kaartlaag).</p>
+                <p>Met de knop "Verwijder alle lagen" kunt u met &eacute;&eacute;n druk op de knop alle kaartlagen verwijderen en 
+                houdt u slechts de basiskaart over.</p>
             </td>
             <td valign="top">               
                 <a name="zoeker"></a><h2>Tabblad Zoeker</h2>
                 Zodra in de kaart met de Info icoon wordt geklikt, haalt het WIS de lokatie-informatie op: RD x,y co&ouml;rdinaten, WOL/HM aanduiding en adres.
-                <p>Voor medewerkers die gewend zijn de WOL/HM aanduiding te gebruiken, kan hier altijd deze informatie worden opgevraagd.</p>
-                <p>Daarnaast vind u de mogelijkheid een bepaalde plek op de kaart op te zoeken. Dit kunt u doen door of het veld "Plaatsnaam" of het veld "Postcode" of het veld "Wegnr / hm" in te vullen en op de knop "Ga naar" te klikken.</p>
+                <p>Medewerkers die gewend zijn de WOL/HM aanduiding te gebruiken, kunnen hier altijd deze informatie vinden.</p>
+                <p>Daarnaast vind u de mogelijkheid een bepaalde locatie op de kaart op te zoeken. Dit kunt u doen door 
+                of het veld "Plaatsnaam" of het veld "Postcode" of het veld "Wegnr / hm" in te vullen en op de knop "Ga naar" te klikken.</p>
                 
                 <a name="gebieden"></a><h2>Tabblad Gebieden</h2>
-                Zodra in de kaart met de Info icoon wordt geklikt, haalt het WIS de gebieden op waarin het klikpunt zich bevindt. Per kaarlaag kan aangegeven worden of dit een gebied betreft dat in deze lijst moet worden opgenomen.
-                <p>Deze gebieden kunnen later bij de analyse worden gebruikt.</p>
+                Zodra in de kaart met de Info icoon wordt geklikt, haalt het WIS de gebieden op waarin het klikpunt zich bevindt. 
+                Per kaarlaag is door de beheerder aangegeven of dit een gebied betreft dat in deze lijst moet worden opgenomen.
+                <p>De gevonden gebieden kunnen later bij de analyse worden gebruikt.</p>
                 
                 <a name="analyse"></a><h2>Tabblad Analyse</h2>
-                Via het tabblad Analyse kunnen geografische selecties en berekeningen gedaan worden. De analyse heeft altijd betrekking op de actieve kaartlaag zoals deze onder tab Thema's is gekozen. Objecten van dit thema kunnen verder worden beperkt door extra criteria op te nemen (nog niet functioneel).
-                <p>Vervolgens kan opgegeven worden voor welk gebied de analyse moet worden uitgevoerd. Dit is een van de gebieden zoals bepaald onder de tab gebieden. Bij de analyse worden dus alle objecten meegenomen van de actieve kaartlaag welke liggen in het gebied van keuze.</p>
-                <p>Tenslotte dient aangegeven te worden of de gebruiker een selectie of een berekening wil uitvoeren. Bij een selectie kiest men &quot;Geef object&quot; en de gewenste subselectie. Na het klikken van de knop wordt een lijst van objecten getoond. Bij een berekening kiest men &quot;Geef waarde&quot; en vervolgens de gewenste subselectie. Na het klikken van de knop verschijnt on de de knop het resultaat van de berekening.</p>
-                <p>De werking van deze tab is nog niet volledig afgewerkt: berekende waarden blijven soms staan en de selectie criteria verdwijnen soms.</p>
+                Via het tabblad Analyse kunnen geografische selecties en berekeningen gedaan worden. 
+                De analyse heeft altijd betrekking op de actieve kaartlaag zoals deze onder tab Thema's is gekozen. 
+                Objecten van dit thema kunnen verder worden beperkt door extra criteria op te nemen.
+                <p>Vervolgens kan opgegeven worden voor welk gebied de analyse moet worden uitgevoerd. 
+                Dit is een van de gebieden zoals bepaald onder de tab Gebieden. 
+                Bij de analyse worden dus alle objecten meegenomen van de actieve kaartlaag welke liggen in het gebied van keuze.</p>
+                <p>Tenslotte dient aangegeven te worden of de gebruiker een selectie of een berekening wil uitvoeren. 
+                Bij een selectie kiest men &quot;Geef object&quot; en de gewenste subselectie. Na het klikken van de knop wordt een lijst van objecten getoond. 
+                Bij een berekening kiest men &quot;Geef waarde&quot; en vervolgens de gewenste subselectie. 
+                Na het klikken van de knop verschijnt on de de knop het resultaat van de berekening.</p>
                 
                 <h2>Weergeven van resultaten</h2>
-                Voor de gebruiker is de weergave van resultaten van het grootste belang. De objectlijsten in het resultatenvlak zullen ge&euml;xporteerd kunnen worden naar de computer van de gebruiker. Hiermee kan het deze resultaten verder verwerken in rapportages.
-                <p>Het WIS geeft de resultaten op 3 manieren weer. De meeste belangrijke informatie van een object wordt op de basisregel getoond en is dus direct zichtbaar. Indien er meer informatie beschikbaar is binnen het WIS dan kan via de I-knop een nieuw scherm worden gestart met extra informatie.</p>
-                <p>Voor enkele thema's (en dit worden er steeds meer) is buiten het WIS informatie beschikbaar welke via een webinterface bereikbaar is. Dergelijke informatie kan worden opgevraagd via de link-knop.</p>
+                Voor de gebruiker is de weergave van resultaten van het grootste belang. 
+                De objectlijsten in het resultatenpaneel kunnen ge&euml;xporteerd worden naar de computer van de gebruiker. 
+                Hiermee kan hij deze resultaten verder verwerken in rapportages.
+                <p>De viewer geeft de resultaten op 3 manieren weer. De meeste belangrijke informatie van een object wordt op de basisregel getoond en 
+                is dus direct zichtbaar. Indien er meer informatie beschikbaar is dan kan via de I-knop een nieuw scherm worden gestart 
+                met extra informatie.</p>
+                <p>Voor enkele thema's is buiten de viewer informatie beschikbaar welke via een webinterface bereikbaar is. 
+                Dergelijke informatie kan worden opgevraagd via de link-knop.</p>
                 
             </td>
         </tr>

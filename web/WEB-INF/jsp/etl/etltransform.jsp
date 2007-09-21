@@ -34,7 +34,7 @@
     <input type="hidden" name="edit" />
 </form>
 
-<div class="onderbalk">VIEWER<span><tiles:insert page="/nav/userAndLogout.jsp"/></span></div>
+<div class="onderbalk">VIEWER<span><tiles:insert name="loginblock"/></span></div>
 <div id="bovenkant">
     <div id="map">
         <div id="flashcontent">

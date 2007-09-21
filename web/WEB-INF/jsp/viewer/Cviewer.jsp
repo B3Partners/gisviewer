@@ -542,7 +542,7 @@
         <input type="hidden" name="ycoord" />        
     </form>
 </div>
-<div class="onderbalk">VIEWER<span><tiles:insert page="/nav/userAndLogout.jsp"/></span></div>
+<div class="onderbalk">VIEWER<span><tiles:insert name="loginblock"/></span></div>
 <div id="bovenkant">
     <div id="map">
         <div id="flashcontent">
@@ -725,4 +725,4 @@
 
 
 <%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE--%>
-<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/js/enableJsFlamingo.js"/>"></script>
+<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

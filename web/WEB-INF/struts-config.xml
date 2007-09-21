@@ -4,7 +4,6 @@
 "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
 "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
 
-
 <struts-config>
     <form-beans>
         <form-bean name="messagesForm" type="org.apache.struts.validator.DynaValidatorForm">
@@ -22,18 +21,57 @@
     </form-beans>
     
     <global-exceptions>
-        
     </global-exceptions>
     
     <global-forwards>
     </global-forwards>
     
     <action-mappings>
+        <action path="/index" forward="index"/>
+        <action path="/help" forward="help"/>
+        <action path="/login" forward="login"/>
+        <action path="/loginError" forward="loginError"/>
+        <action path="/logout" type="nl.b3p.nbr.wis.LogoutAction" parameter="/index.do"/>
+        
+        <action path="/viewer" type="nl.b3p.nbr.wis.ViewerAction">
+            <forward name="success" path="viewer"/>
+        </action>
+        <action path="/viewerdata" type="nl.b3p.nbr.wis.GetViewerDataAction">
+            <!-- <forward name="success" path="viewerdata"/> -->
+            <forward name="failure" path="viewerdata"/>
+            <forward name="admindata" path="vieweradmindata"/>
+            <forward name="doanalyse" path="vieweradmindata"/>
+            <forward name="metadata" path="viewermetadata"/>
+            <forward name="objectdata" path="viewerobjectdata"/>
+            <forward name="analysedata" path="vieweranalysedata"/>
+            <forward name="analyseobject" path="vieweranalyseobject"/>
+            <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
+        </action>
+        
+        <action path="/etl" type="nl.b3p.nbr.wis.ETLOverviewAction">
+            <forward name="success" path="etlhome"/>
+        </action>        
+        <action path="/etlscheduler" forward="etlscheduler"/>
+         <action path="/etltransform" type="nl.b3p.nbr.wis.ETLTransformAction">
+            <forward name="success" path="etltransform"/>
+            <forward name="showData" path="vieweradmindata"/>
+        </action>
+        <action path="/etlthemalijst" type="nl.b3p.nbr.wis.ETLTransformAction">
+            <forward name="success" path="etlthemalijst"/>
+        </action>
+        
+        <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
+            <forward name="view" path="/index.do"/>
+            <forward name="continue" path="/index.do"/>
+        </action>
+        
+    </action-mappings>
+    
+    <!-- action-mappings>
         <action path="/viewer" type="nl.b3p.nbr.wis.ViewerAction">
             <forward name="success" path="/viewer/viewerBase.jsp"/>
         </action>
         <action path="/viewerdata" type="nl.b3p.nbr.wis.GetViewerDataAction">
-            <!-- <forward name="success" path="/viewer/viewerdata.jsp"/> -->
             <forward name="failure" path="/viewer/viewerdata.jsp"/>
             <forward name="admindata" path="/viewer/vieweradmindata.jsp"/>
             <forward name="doanalyse" path="/viewer/vieweradmindata.jsp"/>
@@ -46,7 +84,6 @@
         <action path="/index" forward="/index.jsp"/>
         <action path="/help" forward="/help.jsp"/>
         
-        <!--action path="/etl" forward="/etl/etlHomeBase.jsp"/ -->
         <action path="/etl" type="nl.b3p.nbr.wis.ETLOverviewAction">
             <forward name="success" path="/etl/etlHomeBase.jsp"/>
         </action>        
@@ -68,12 +105,12 @@
             <forward name="view" path="/index.jsp"/>
             <forward name="continue" path="/index.jsp"/>
         </action>
-
+        
         <action path="/login" forward="login"/>
         <action path="/loginError" forward="loginError"/>
         <action path="/logout" type="nl.b3p.nbr.wis.LogoutAction" parameter="/index.do"/>
         
-    </action-mappings>
+    </action-mappings -->
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
     

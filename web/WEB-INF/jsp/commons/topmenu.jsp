@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<c:set var="requestURI" value="${fn:split(pageContext.request.requestURI, '/')}" />
+<c:set var="requestURI" value="${fn:split(request.getRequestURI, '/')}" />
 <c:set var="requestJSP" value="${fn:substring(requestURI[fn:length(requestURI) - 1], 0, fn:indexOf(requestURI[fn:length(requestURI) - 1], '.'))}" />
 
 <c:set var="links" value='<a class="*" href="help.do"> &#155; Beschrijving</a>%<a class="*" href="etl.do">&#155; ETL Themabeheer</a>%<a class="*" href="viewer.do">&#155; Viewer</a>%<a class="*" href="index.do">&#155; Home</a>' />

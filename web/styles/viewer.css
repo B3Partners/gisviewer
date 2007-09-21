@@ -189,7 +189,7 @@ a:hover{
     margin-top: 10px;
 }
 
-button {
+/* button.knop {
     border: 1px solid Black;
     height: 15px;
     width: auto;
@@ -197,7 +197,7 @@ button {
     background: white; 
     color: #000000; 
     font-family: arial, sans-serif;
-}
+} */
 
 #aanvullende_info_table {
     border: 0px none White;

@@ -1,13 +1,18 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script src='dwr/interface/JMapData.js'></script>
-<script src='dwr/engine.js'></script>
+<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+<script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
-<script>
+<script>  
+    var nr = 0;
+    function getNr() {
+        return nr++;
+    }
+    
     var allActiveLayers="";
     var layerUrl=null;
     function doAjaxRequest(point_x, point_y) {
@@ -88,6 +93,7 @@
     var activeLayerFromCookie = getActiveLayerId(readCookie('activelayer'));
     setActiveThema(activeLayerFromCookie);
     function createLabel(container, item) {
+        
         doLayerClick=false;
         if(item.cluster)
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
@@ -215,6 +221,7 @@
     }
     
     function checkboxClick(obj, dontRefresh, obj_name) {
+
         if(obj.checked) {
             //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
             var standardParam="SERVICE=WMS&VERSION=1.1.1";
@@ -573,10 +580,10 @@
                 Bepaal de volgorde waarin de kaartlagen getoond worden
                 <form>
                     <div id="orderLayerBox" class="orderLayerBox"></div>
-                    <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" />
-                    <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" />
-                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde();" />
-                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" />
+                    <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" class="knop" />
+                    <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" class="knop" />
+                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde();" class="knop" />
+                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" class="knop" />
                 </form>
             </div> 
             
@@ -618,12 +625,8 @@
                         </tr>
                     </table> 
                     
-                    <button onclick="getCoords();">
-                        Ga naar locatie
-                    </button>&nbsp;
-                    <button onclick="eraseSubmit();">
-                        Wis invoer
-                    </button><br>
+                    <input type="button" value="Ga naar locatie" onclick="getCoords();" class="knop" />&nbsp;
+                    <input type="button" value="Wis invoer" onclick="eraseSubmit();" class="knop" /><br />
                     <div class="searchResultsClass" id="searchResults"></div>
                     
                 </div>
@@ -714,6 +717,10 @@
     function moveToExtent(minx,miny,maxx,maxy){
         flamingo.callMethod("map1", "moveToExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy}, 0);
     }
+    
+    //alert(readCookie('activelayer'));
+    //alert(readCookie('activetab'));
+    //alert(readCookie('checkedLayers'));
 </script>
 
 

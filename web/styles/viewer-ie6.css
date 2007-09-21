@@ -32,9 +32,14 @@
 }
 
 #treevak {
-    height: 473px;
-    width: 281px;
+    height: 472px;
+    width: 282px;
     margin: 0px;
+}
+
+#layermaindiv {
+    width: 278px;
+    height: 455px;
 }
 
 #infovak {

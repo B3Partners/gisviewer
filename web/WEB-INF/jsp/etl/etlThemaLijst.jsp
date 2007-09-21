@@ -1,8 +1,6 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"/>
-
 <p>
     <h1>Selecteer uw Thema</h1>
 </p>

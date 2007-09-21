@@ -12,7 +12,7 @@ th {
     text-align: left;
 }
 
-div, td, th, span, input, textarea, select, option {
+div, td, th, span, input, textarea, select, option, button {
     font-size: 8pt;
     color: #000000; 
     font-family: arial, sans-serif;
@@ -373,14 +373,6 @@ a:hover{
 
 .scrolldiv {
     border: 1px solid black;
-}
-
-button {
-    border: 1px solid Black;
-    font-size: 8pt; 
-    background: white; 
-    color: #000000; 
-    font-family: arial, sans-serif;
 }
 
 #aanvullende_info_table {

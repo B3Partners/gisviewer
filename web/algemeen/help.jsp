@@ -6,7 +6,7 @@
 
 <div id="content_style">
     
-    <hr size="1" style="color: Black;" width="100%" />
+    <hr size="1" width="100%" />
     
     <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" class="nbr" />
     
@@ -23,7 +23,7 @@
                 <h2>Hoofdelementen van het WIS</h2>
                 Het WIS bestaat uit een kaart, een paneel met tabbladen waarmee het WIS wordt bestuurd en vlak met resultaten.
                 <p>De kaart kan met de gebruikelijke knoppen bestuurd worden. Er ontbreekt nog zeker een knop, namelijk: export van kaartuitsnede naar formaat van keuze.</p>
-                <p>Het besturingspaneel kent nu 4 tabbladen: Thema's, Legenda, Zoeker, Gebieden en Analyse.</p>
+                <p>Het besturingspaneel kent nu 5 tabbladen: Thema's, Legenda, Zoeker, Gebieden en Analyse.</p>
                 
                 <table class="presentation_table">
                     <tr><th colspan="2">Kort samengevat</th></tr>
@@ -43,7 +43,7 @@
                     </tr>
                     <tr>
                         <td>Tabbladen</td>
-                        <td><a href="#thema">Thema's</a>, <a href="#legenda">Legenda</a>, <a href="#lokatie">Zoeker</a>, <a href="#gebieden">Gebieden</a> en <a href="#analyse">Analyse</a>.</td>
+                        <td><a href="#thema">Thema's</a>, <a href="#legenda">Legenda</a>, <a href="#zoeker">Zoeker</a>, <a href="#gebieden">Gebieden</a> en <a href="#analyse">Analyse</a>.</td>
                     </tr>
                 </table>
                 
@@ -61,11 +61,17 @@
                     <strong>Actieve kaartlaag</strong><br />
                     Door het selecteren van een kaartlaag wordt deze kaartlaag actief en vervolgacties hebben betrekking op die kaartlaag
                 </p>
+                
+                <a name="legenda"></a><h2>Tabblad Legenda</h2>
+                Het tabblad legenda bestaat uit een vlak waarop u alle actieve kaartlagen kunt vinden. Bij deze kaartlagen is een afbeelding geplaatst waarop u kunt zien hoe u de betreffende kaartlaag op de kaart kunt onderscheiden.
+                <p>U kunt met de knoppen "Omlaag" en "Omhoog" de volgorde waarop de kaartlagen worden getoond aanpassen. Wilt u een bepaalde kaartlaag als bovenste kaartlaag hebben, dan kunt u met de knop "Omhoog" deze kaartlaag naar de gewenste positie verplaatsen. U dient vervolgens op de knop "Herlaad kaart" te klikken, waarmee de kaart ververst wordt en de kaartlagen worden getoond volgens de volgorde van het legendavak (bovenaan in het vak betekent bovenste kaartlaag).</p>
+                <p>Met de knop "Verwijder alle lagen" kunt u met &eacute;&eacute;n druk op de knop alle kaartlagen verwijderen en houdt u slechts de basiskaart over.</p>
             </td>
-            <td valign="top">
-                <a name="lokatie"></a><h2>Tabblad Lokatie</h2>
+            <td valign="top">               
+                <a name="zoeker"></a><h2>Tabblad Zoeker</h2>
                 Zodra in de kaart met de Info icoon wordt geklikt, haalt het WIS de lokatie-informatie op: RD x,y co&ouml;rdinaten, WOL/HM aanduiding en adres.
                 <p>Voor medewerkers die gewend zijn de WOL/HM aanduiding te gebruiken, kan hier altijd deze informatie worden opgevraagd.</p>
+                <p>Daarnaast vind u de mogelijkheid een bepaalde plek op de kaart op te zoeken. Dit kunt u doen door of het veld "Plaatsnaam" of het veld "Postcode" of het veld "Wegnr / hm" in te vullen en op de knop "Ga naar" te klikken.</p>
                 
                 <a name="gebieden"></a><h2>Tabblad Gebieden</h2>
                 Zodra in de kaart met de Info icoon wordt geklikt, haalt het WIS de gebieden op waarin het klikpunt zich bevindt. Per kaarlaag kan aangegeven worden of dit een gebied betreft dat in deze lijst moet worden opgenomen.
@@ -86,5 +92,5 @@
         </tr>
     </table>
     
-    <hr size="1" style="color: Black;" width="100%" />
+    <hr size="1" width="100%" />
 </div>

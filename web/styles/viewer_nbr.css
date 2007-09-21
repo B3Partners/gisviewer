@@ -621,3 +621,7 @@ button {
     margin: 0px;
     padding-left: 18px;
 }
+
+#content_style img.nbr {
+    margin-right: 50px;
+}

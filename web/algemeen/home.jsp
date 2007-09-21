@@ -27,51 +27,39 @@
     }
     // -->
 </script>
-<div id="content_style">
-    <hr size="1" style="color: Black;" width="100%" />
-    <table width="100%">
-        <tr>
-            <td width="295">
-                <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" class="nbr" />
-            </td>
-            <td valign="top">
-                <br /><br />
-                <h1>B3P GIS Suite Demo</h1>
-                <br /><br />
-            </td>
-        </tr>
-        <tr>
-        <tr>
-            <td colspan="2" valign="bottom" align="center">
-                <a style="font-size: 13px; text-decoration: underline;" href="viewer.do">KLIK HIER OM DOOR TE GAAN NAAR DE DEMO</a>
-            </td>
-        </tr>       
-        <tr>
-            <td colspan="2" valign="bottom" align="center">
-                <br /><br /><h2>Aanmelden voor de b3partners mailinglijst</h2>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p>
-                    Hier kunt u zich aanmelden voor het b3partners mailinglijst.
-                </p>
-                <p>U vult uw emailadres hieronder in en klikt op de aanmelden link. U ontvangt vervolgens een email of
-                    uw aanmelding is geaccepteerd.
-                </p>
-                <p>
-                    U kunt zich hier ook altijd weer afmelden.
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p>
-                <html:messages id="error" message="true">
-                    <div class="messages" style="padding-top: 5px">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
-                </html:messages>
-            </td>
-        </tr>
+<div id="content_style" style="text-align: center; width: 930px; margin-right: 15px;">
+    <hr size="1" width="100%" />
+    
+    <br /><br />
+    
+    <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" class="nbr" />
+    
+    <h1>B3P GIS Suite Demo</h1>
+    
+    <br /><br />
+    
+    <a style="font-size: 13px; text-decoration: underline;" href="viewer.do">KLIK HIER OM DOOR TE GAAN NAAR DE DEMO</a>
+    
+    <br /><br />
+    
+    <h2>Aanmelden voor de b3partners mailinglijst</h2>
+    
+    <p>
+        Hier kunt u zich aanmelden voor het b3partners mailinglijst.
+    </p>
+    <p>U vult uw emailadres hieronder in en klikt op de aanmelden link. U ontvangt vervolgens een email of
+        uw aanmelding is geaccepteerd.
+    </p>
+    <p>
+        U kunt zich hier ook altijd weer afmelden.
+    </p>
+    
+    <p>
+    <html:messages id="error" message="true">
+        <div class="messages" style="padding-top: 5px">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
+    </html:messages>
+    <p>
+    <table style="width: 360px; margin-left: 300px;">
         <tr>
             <td align="right" valign="top">
                 emailadres
@@ -96,5 +84,5 @@
             </td>
         </tr>
     </table>
-    <hr size="1" style="color: Black;" width="100%" />
+    <hr size="1" width="100%" />
 </div>

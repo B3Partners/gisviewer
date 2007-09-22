@@ -46,7 +46,7 @@
     
     <!-- viewer -->
     <definition name="viewer" extends="algemeen">
-        <put name="content" value="/WEB-INF/jsp/viewer/Cviewer.jsp"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>
     </definition>
     <definition name="tab" path="/WEB-INF/jsp/templates/tab.jsp"/>
     <definition name="viewerdata" extends="tab">

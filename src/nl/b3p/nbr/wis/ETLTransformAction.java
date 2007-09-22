@@ -1,5 +1,5 @@
 /**
- * @(#)HibernateUtil.java
+ * @(#)ETLTransformAction.java
  * @author Geert Plaisier
  * @version 1.00 2006/11/30
  *
@@ -15,17 +15,15 @@
  * Met eenvoudige selectie criteria wordt hier dan bedoelt dat een gebruiker aangeeft in welk
  * thema hij geinteresseerd is en vervolgens wat voor informatie hij over dit thema wil zien.
  * Hier kan bijvoorbeeld ingegeven worden welke status een object dient te hebben, wat voor
- * type object het om zou moeten gaan en binnen welke periodes (of batchperiode) dit object 
+ * type object het om zou moeten gaan en binnen welke periodes (of batchperiode) dit object
  * verwerkt zou moeten zijn.
- * 
- * 
+ *
+ *
  */
 
 package nl.b3p.nbr.wis;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,13 +36,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
-import nl.b3p.nbr.wis.db.Clusters;
-import nl.b3p.nbr.wis.db.DataTypen;
-import nl.b3p.nbr.wis.db.ThemaData;
 import nl.b3p.nbr.wis.db.Themas;
 import nl.b3p.nbr.wis.services.HibernateUtil;
 import nl.b3p.nbr.wis.services.SpatialUtil;
-import nl.b3p.nbr.wis.struts.BaseHibernateAction;
+import nl.b3p.nbr.wis.BaseGisAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionMapping;
@@ -52,20 +47,47 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class ETLTransformAction extends BaseHibernateAction {
+public class ETLTransformAction extends BaseGisAction {
     
     private static final Log log = LogFactory.getLog(ETLTransformAction.class);
     
     private static final String ADMINDATA = "admindata";
     private static final String EDIT = "edit";
     private static final String SHOWOPTIONS = "showOptions";
-    private static final String KNOP = "knop";
-    private List themalist = null;
+    
+    /**
+     * Return een hashmap die verschillende user gedefinieerde properties koppelt aan Actions.
+     *
+     * @return Map
+     */
+    // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap() method.">
+    protected Map getActionMethodPropertiesMap() {
+        Map map = new HashMap();
         
+        ExtendedMethodProperties hibProp = null;
+        hibProp = new ExtendedMethodProperties(ADMINDATA);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.admindata.failed");
+        map.put(ADMINDATA, hibProp);
+        
+        hibProp = new ExtendedMethodProperties(EDIT);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.admindata.failed");
+        map.put(EDIT, hibProp);
+        
+        hibProp = new ExtendedMethodProperties(SHOWOPTIONS);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        hibProp.setAlternateMessageKey("error.admindata.failed");
+        map.put(SHOWOPTIONS, hibProp);
+        
+        return map;
+    }
+    // </editor-fold>
+    
     /**
      * Actie die aangeroepen wordt vanuit het Struts frameword als een handeling aangeroepen wordt zonder property.
      *
@@ -125,7 +147,7 @@ public class ETLTransformAction extends BaseHibernateAction {
         int statusInt               = Integer.parseInt((String)request.getParameter("type"));
         
         //Eerst moet de status van de te tonen objecten opgevraagd worden.
-        String status = "";        
+        String status = "";
         if(statusInt == 1) {
             status = "NO";
         } else if(statusInt == 2) {
@@ -144,11 +166,11 @@ public class ETLTransformAction extends BaseHibernateAction {
         
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
-        List thema_data = /*SpatialUtil.*/getThemaData(t, true);//, etlProcesses, status);
+        List thema_data = SpatialUtil.getThemaData(t, false);
         Object o = thema_data.get(1);
         request.setAttribute("thema_items", thema_data);
         if(thema_data != null && !thema_data.isEmpty()) {
-            request.setAttribute("regels", getThemaObjects(t, /*pks,*/ thema_data, status));
+            request.setAttribute("regels", getThemaObjects(t, status, thema_data));
         } else {
             request.setAttribute("regels", null);
         }
@@ -157,70 +179,7 @@ public class ETLTransformAction extends BaseHibernateAction {
     // </editor-fold>
     
     /**
-     * De methode zorgt voor een lijst met objecten. Ieder van deze objecten bevat gegevens over een bepaalde
-     * kolom horende bij een specifiek Thema dat meegegeven is aan de methode aanroep. De verschillende gegevens
-     * die er in opgeslagen liggen zijn per Thema gedefinieerd. Een voorbeeld van informatie in een dergelijk
-     * object is of een bepaalde kolom wel of geen basisregel is.
-     *
-     * @param t Themas
-     * @param basisregel boolean
-     * @param etlProcesses List
-     * @param status String
-     *
-     * @return List
-     */
-    // <editor-fold defaultstate="" desc="static public List getThemaData(Themas t, boolean basisregel, List etlProcesses, String status) method.">
-    static public List getThemaData(Themas t, boolean basisregel) {//, List etlProcesses, String status) {
-        String admintabel = t.getAdmin_tabel();
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Query q = sess.createQuery("from ThemaData td where td.thema.id = :tid order by td.dataorder");
-        q.setInteger("tid", t.getId());
-        String queryString = q.getQueryString();
-        return q.list();
-    }
-    // </editor-fold>
-    
-    /**
-     * Haal een Thema op uit de database door middel van een in het request meegegeven thema id.
-     *
-     * @param mapping ActionMapping
-     * @param dynaForm DynaValidatorForm
-     * @param request HttpServletRequest
-     *
-     * @return Themas
-     *
-     * @see Themas
-     */
-    // <editor-fold defaultstate="" desc="protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) method.">
-    protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
-        String themaid = (String)request.getParameter("themaid");
-        return getThema(themaid);
-    }
-    // </editor-fold>
-    
-    /**
-     * Haal een Thema op uit de database door middel van het meegegeven thema id.
-     *
-     * @param themaid String
-     *
-     * @return Themas
-     *
-     * @see Themas
-     */
-    // <editor-fold defaultstate="" desc="protected Themas getThema(String themaid) method.">
-    protected Themas getThema(String themaid) {
-        if (themaid==null || themaid.length()==0) {
-            return null;
-        }
-        
-        Integer id = new Integer(themaid);
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Themas t = (Themas)sess.get(Themas.class, id);
-        return t;
-    }
-    // </editor-fold>
-    
-    /**
+     * /**
      * DOCUMENT ME!!!
      *
      * @param t Themas
@@ -233,241 +192,32 @@ public class ETLTransformAction extends BaseHibernateAction {
      *
      * @see Themas
      */
-    // <editor-fold defaultstate="" desc="protected List getThemaObjects(Themas t, /*List pks,*/ List thema_items) throws SQLException, UnsupportedEncodingException method.">
-    protected List getThemaObjects(Themas t, /*List pks,*/ List thema_items, String status) throws SQLException, UnsupportedEncodingException {
-        /*
+    protected List getThemaObjects(Themas t, String status, List thema_items) throws SQLException, UnsupportedEncodingException {
         if (t==null)
             return null;
-        if (pks==null || pks.isEmpty())
-            return null;
-        if (thema_items==null || thema_items.isEmpty())
-            return null;
-        */
         ArrayList regels = new ArrayList();
-        
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
+        String taq = "select * from " + t.getSpatial_tabel() + " where status_etl = ?";
         
         try {
-                        
-//            int dt = SpatialUtil.getPkDataType( t, connection);
-            String taq = "select * from " + t.getSpatial_tabel() + " where status_etl = '" + status + "'";
-//            String taq = t.getAdmin_query();
-//            Iterator it = pks.iterator();
-//            for (int i=1; i<=pks.size(); i++) {
-                PreparedStatement statement = connection.prepareStatement(taq);
-                /*
-                switch (dt) {
-                    case java.sql.Types.SMALLINT:
-                        statement.setShort(1, ((Short)pks.get(i-1)).shortValue());
-                        break;
-                    case java.sql.Types.INTEGER:
-                        statement.setInt(1, ((Integer)pks.get(i-1)).intValue());
-                        break;
-                    case java.sql.Types.BIGINT:
-                        statement.setLong(1, ((Long)pks.get(i-1)).longValue());
-                        break;
-                    case java.sql.Types.BIT:
-                        statement.setBoolean(1, ((Boolean)pks.get(i-1)).booleanValue());
-                        break;
-                    case java.sql.Types.DATE:
-                        statement.setDate(1, (Date)pks.get(i-1));
-                        break;
-                    case java.sql.Types.DECIMAL:
-                    case java.sql.Types.NUMERIC:
-                        statement.setBigDecimal(1, (BigDecimal)pks.get(i-1));
-                        break;
-                    case java.sql.Types.REAL:
-                        statement.setFloat(1, ((Float)pks.get(i-1)).floatValue());
-                        break;
-                    case java.sql.Types.FLOAT:
-                    case java.sql.Types.DOUBLE:
-                        statement.setDouble(1, ((Double)pks.get(i-1)).doubleValue());
-                        break;
-                    case java.sql.Types.TIME:
-                        statement.setTime(1, (Time)pks.get(i-1));
-                        break;
-                    case java.sql.Types.TIMESTAMP:
-                        statement.setTimestamp(1, (Timestamp)pks.get(i-1));
-                        break;
-                    case java.sql.Types.TINYINT:
-                        statement.setByte(1, ((Byte)pks.get(i-1)).byteValue());
-                        break;
-                    case java.sql.Types.CHAR:
-                    case java.sql.Types.LONGVARCHAR:
-                    case java.sql.Types.VARCHAR:
-                        statement.setString(1, (String)pks.get(i-1));
-                        break;
-                    case java.sql.Types.NULL:
-                    default:
-//                        SpatialUtil.testMetaData(connection);
-                        return null;
-                 
-                }*/
-                try {
-                    ResultSet rs = statement.executeQuery();
-                    while(rs.next()) {
-                        regels.add(getRegel(rs, t, thema_items));
-                    }
-                } finally {
-                    statement.close();
+            PreparedStatement statement = connection.prepareStatement(taq);
+            statement.setString(1, status);
+            try {
+                ResultSet rs = statement.executeQuery();
+                while(rs.next()) {
+                    regels.add(getRegel(rs, t, thema_items));
                 }
-//            }
+            } finally {
+                statement.close();
+            }
         } finally {
             connection.close();
         }
         return regels;
     }
-    // </editor-fold>
     
-    /**
-     * DOCUMENT ME!!!
-     *
-     * @param t Themas
-     * @param dynaForm DynaValidatorForm
-     * @param request HttpServletRequest
-     *
-     * @return List
-     *
-     * @throws SQLException
-     *
-     * @see Themas
-     */
-    // <editor-fold defaultstate="" desc="protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) method.">
-    protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) throws SQLException {
-        ArrayList pks = new ArrayList();
-        
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
-        
-        int dt = SpatialUtil.getPkDataType( t, connection);
-        String adminPk = t.getAdmin_pk();
-        switch (dt) {
-            case java.sql.Types.SMALLINT:
-                pks.add(new Short(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.INTEGER:
-                pks.add(new Integer(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.BIGINT:
-                pks.add(new Long(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.BIT:
-                pks.add(new Boolean(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.DATE:
-//                pks.add(new Date(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.DECIMAL:
-            case java.sql.Types.NUMERIC:
-                pks.add(new BigDecimal(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.REAL:
-                pks.add(new Float(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.FLOAT:
-            case java.sql.Types.DOUBLE:
-                pks.add(new Double(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.TIME:
-//                pks.add(new Time(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.TIMESTAMP:
-//                pks.add(new Timestamp(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.TINYINT:
-                pks.add(new Byte(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.CHAR:
-            case java.sql.Types.LONGVARCHAR:
-            case java.sql.Types.VARCHAR:
-                pks.add(request.getParameter(adminPk));
-                break;
-            case java.sql.Types.NULL:
-            default:
-                return null;
-        }
-        return pks;
-    }
-    // </editor-fold>
-    
-    /**
-     * DOCUMENT ME!!!
-     *
-     * @param rs ResultSet
-     * @param t Themas
-     * @param thema_items List
-     *
-     * @return List
-     *
-     * @throws SQLException
-     * @throws UnsupportedEncodingException
-     *
-     * @see Themas
-     */
-    // <editor-fold defaultstate="" desc="protected List getRegel(ResultSet rs, Themas t, List thema_items) method.">
-    protected List getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
-        ArrayList regel = new ArrayList();
-        
-        Iterator it = thema_items.iterator();
-        while(it.hasNext()) {
-            ThemaData td = (ThemaData) it.next();
-            /*
-             * Controleer eerst om welk datatype dit themadata object om draait.
-             * Binnen het Datatype zijn er drie mogelijkheden, namelijk echt data, 
-             * een URL of een Query.
-             * In alle drie de gevallen moeten er verschillende handelingen verricht
-             * worden om deze informatie op het scherm te krijgen.
-             *
-             * In het eerste geval, wanneer het gaat om data, betreft dit de kolomnaam.
-             * Als deze kolomnaam ingevuld staat hoeft deze alleen opgehaald te worden
-             * en aan de arraylist regel toegevoegd te worden.
-             */
-            if (td.getDataType().getId() == DataTypen.DATA && td.getKolomnaam() != null) {
-                regel.add(rs.getObject(td.getKolomnaam()));
-                
-            /*
-             * In het tweede geval dient de informatie in de thema data als link naar een andere
-             * informatiebron. Deze link zal enigszins aangepast moeten worden om tot vollende 
-             * werkende link te dienen.
-             */                    
-            } else if (td.getDataType().getId() == DataTypen.URL) {
-                StringBuffer url = new StringBuffer(td.getCommando());
-                url.append(Themas.THEMAID);
-                url.append("=");
-                url.append(t.getId());
-                
-                String adminPk = t.getAdmin_pk();
-                url.append("&");
-                url.append(adminPk);
-                url.append("=");
-                url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
-                
-                regel.add(url.toString());
-                
-            /*
-             * De laatste mogelijkheid betreft een query. Vanuit de themadata wordt nu een 
-             * een commando url opgehaald en deze wordt met de admin primary key uit het 
-             * Thema aangevuld.
-             */    
-            } else if (td.getDataType().getId()==DataTypen.QUERY) {
-                StringBuffer url = new StringBuffer(td.getCommando());
-                String adminPk = t.getAdmin_pk();
-                url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
-                regel.add(url.toString());
-            } else
-                
-            /*
-             * Indien een datatype aan geen van de voorwaarden voldoet wordt er een
-             * lege regel aan de regel arraylist toegevoegd.
-             */  
-                regel.add("");
-        }
-        return regel;
-    }
-    // </editor-fold>
-    
-    /**
+    /*
      * Methode die aangeroepen wordt om de boomstructuur op te bouwen. De opbouw wordt op een iteratieve en recursieve
      * manier uitgevoerd waarbij over de verschillende thema's heen gewandeld wordt om van deze thema's de children
      * (clusters) te bepalen en in de juiste volgorde in de lijst te plaatsen.
@@ -477,87 +227,34 @@ public class ETLTransformAction extends BaseHibernateAction {
      *
      * @throws Exception
      */
-    // <editor-fold defaultstate="" desc="protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) method.">
-    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        List ctl = null;
-        String hquery = "FROM Clusters WHERE id != 9";
-        Query q = sess.createQuery(hquery);
-        ctl = q.list();
-        
-        hquery = "FROM Themas WHERE cluster != 9 AND (moscow = 1 OR moscow = 2 OR moscow = 3) and code < 3 ORDER BY naam";
-        q = sess.createQuery(hquery);
-        themalist = q.list();
+    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) {
+        List ctl = SpatialUtil.getValidClusters();
+        List themalist = SpatialUtil.getValidThemas(false);
         List newThemalist = new ArrayList(themalist);
         
-        boolean columnExists = false;
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Connection connection = sess.connection();
+        
         Iterator it = themalist.iterator();
         while(it.hasNext()) {
-            Connection connection = sess.connection();
             Themas t = (Themas)it.next();
-            String query = "SELECT * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='" + 
-                    t.getAdmin_tabel() + "' AND COLUMN_NAME = 'status_etl'";
+            boolean etlExists = false;
             try {
-                PreparedStatement statement = connection.prepareStatement(query);
-                try {
-                    ResultSet rs = statement.executeQuery();
-                    if (rs.next()){
-                        columnExists = true;
-                    }
-                } finally {
-                    statement.close();
-                }
-            } catch (SQLException ex) {
-                log.error("", ex);
-            } finally {
-                try {
-                    connection.close();
-                } catch (SQLException ex) {
-                    log.error("", ex);
-                }
+                etlExists = SpatialUtil.isEtlThema(t, connection);
+            } catch (SQLException sqle) {
+                
             }
-            if(!columnExists) {
-                newThemalist.remove(t);
+            if (!etlExists) {
+                 newThemalist.remove(t);
             }
-            columnExists = false;
         }
-        
-        
-        
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            log.error("", ex);
+        }
         
         request.setAttribute("themalist", newThemalist);
     }
-    // </editor-fold>
     
-    /**
-     * Return een hashmap die verschillende user gedefinieerde properties koppelt aan Actions.
-     *
-     * @return Map
-     */
-    // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap() method.">
-    protected Map getActionMethodPropertiesMap() {
-        Map map = new HashMap();
-        
-        ExtendedMethodProperties hibProp = null;
-        hibProp = new ExtendedMethodProperties(ADMINDATA);
-        hibProp.setDefaultForwardName(SUCCESS);
-        hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.admindata.failed");
-        map.put(ADMINDATA, hibProp);
-        
-        hibProp = new ExtendedMethodProperties(EDIT);
-        hibProp.setDefaultForwardName(SUCCESS);
-        hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.admindata.failed");
-        map.put(EDIT, hibProp);
-        
-        hibProp = new ExtendedMethodProperties(SHOWOPTIONS);
-        hibProp.setDefaultForwardName(SUCCESS);
-        hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.admindata.failed");
-        map.put(SHOWOPTIONS, hibProp);
-        
-        return map;
-    }
-    // </editor-fold>
 }

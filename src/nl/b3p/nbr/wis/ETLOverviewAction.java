@@ -13,16 +13,18 @@ package nl.b3p.nbr.wis;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
+import nl.b3p.nbr.wis.db.Themas;
 import nl.b3p.nbr.wis.services.HibernateUtil;
+import nl.b3p.nbr.wis.services.SpatialUtil;
 import nl.b3p.nbr.wis.struts.BaseHibernateAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,15 +41,28 @@ public class ETLOverviewAction extends BaseHibernateAction {
     
     private static final Log log = LogFactory.getLog(ETLOverviewAction.class);
     
-    private static final String ADMINDATA = "admindata";
-    private static final String EDIT = "edit";
-    private static final String SHOWOPTIONS = "showOptions";
     private static final String KNOP = "knop";
     
-    private static final String GIVEN_COLUMN_NAME = "status";
     private static final String [] STATUS = new String [] {"NO", "OAO", "OGO", "GO", "VO", "OO"};
     
-    private List themalist = null;
+    /**
+     * Return een hashmap. Deze is verplicht overriden vanwege abstracte klasse BaseHibernateAction.
+     *
+     * @return Map
+     */
+    // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap() method.">
+    protected Map getActionMethodPropertiesMap() {
+        Map map = new HashMap();
+        
+        ExtendedMethodProperties hibProp = null;
+        hibProp = new ExtendedMethodProperties(KNOP);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        map.put(KNOP, hibProp);
+        
+        return map;
+    }
+    // </editor-fold>
     
     /**
      * Actie die aangeroepen wordt vanuit het Struts frameword als een handeling aangeroepen wordt zonder property.
@@ -67,7 +82,7 @@ public class ETLOverviewAction extends BaseHibernateAction {
         return mapping.findForward(SUCCESS);
     }
     // </editor-fold>
-        
+    
     /**
      * Methode die zorg draagt voor het vullen en op het request zetten van de overzichtsresultaten
      * van de verschillende Thema afwijkingen die tijdens het laatste ETL proces aan het licht gekomen
@@ -77,44 +92,21 @@ public class ETLOverviewAction extends BaseHibernateAction {
      * @param dynaForm DynaValidatorForm
      * @param request HttpServletRequest
      */
-    // <editor-fold defaultstate="" desc="private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request)">
     private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request) {
+        List themalist = SpatialUtil.getValidThemas(false);
         ArrayList overview = new ArrayList();
-        String thema_naam = null;
-        String admin_tabel = null;
-        
-        String themaQuery = "SELECT naam, admin_tabel FROM themas WHERE admin_tabel IS NOT NULL ORDER BY naam";
-        
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
-        try {
-            PreparedStatement statement = connection.prepareStatement(themaQuery);
-            try {
-                ResultSet rs = statement.executeQuery();
-                while (rs.next()){
-                    thema_naam  = rs.getString("naam");
-                    admin_tabel = rs.getString("admin_tabel");
-                    ArrayList count = getCount(thema_naam, admin_tabel);
-                    if(count != null) {
-                        overview.add(getCount(thema_naam, admin_tabel));
-                    }
+        if(themalist != null) {
+            Iterator it = themalist.iterator();
+            while(it.hasNext()) {
+                Themas t = (Themas) it.next();
+                ArrayList count = getCount(t);
+                if(count != null) {
+                    overview.add(count);
                 }
-            } finally {
-                statement.close();
-            }
-        } catch (SQLException ex) {
-            log.error("", ex);
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                log.error("", ex);
             }
         }
         request.setAttribute("overview", overview);
-        //return themaGeomType;
     }
-    // </editor-fold>
     
     /**
      * Een methode die van een bepaald thema bepaald hoeveel hits er van elke status zijn.
@@ -145,84 +137,60 @@ public class ETLOverviewAction extends BaseHibernateAction {
      * @return ArrayList met de tellingen van de verschillende statussen voor het betreffende thema.
      */
     // <editor-fold defaultstate="" desc="private ArrayList getCount(String thema_naam, String admin_tabel)">
-    private ArrayList getCount(String thema_naam, String admin_tabel) {
-        ArrayList count = new ArrayList();
-        
-        
+    private ArrayList getCount(Themas t) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
         
-        boolean columnExists = false;
-        if(admin_tabel != null) {
-            //Create two queries            
-            String existQuery = "SELECT * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='" + 
-                    admin_tabel + "' AND COLUMN_NAME = 'status_etl'";
-            
-            String selectQuery = "SELECT COUNT(1) as Total, " +
-                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[0] + "') AS Status_" + STATUS[0] + ", " +
-                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[1] + "') AS Status_" + STATUS[1] + ", " +
-                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[2] + "') AS Status_" + STATUS[2] + ", " +
-                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[3] + "') AS Status_" + STATUS[3] + ", " +
-                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[4] + "') AS Status_" + STATUS[4] + ", " +
-                    "  (SELECT COUNT(1) FROM " + admin_tabel + " AS subresult WHERE subresult.status_etl = '" + STATUS[5] + "') AS Status_" + STATUS[5] + " " +
-                    "FROM " + admin_tabel;
-            
-            boolean exists = false;
-            try {
-                PreparedStatement statement = connection.prepareStatement(existQuery);
-                ResultSet rs = statement.executeQuery();
-                if (rs.next()){
-                    exists = true;
+        boolean exists = false;
+        try {
+            exists = SpatialUtil.isEtlThema(t, connection);
+        } catch (SQLException ex) {
+            log.error("",ex);
+        }
+        if(!exists)
+            return null;
+        
+        String admin_tabel = t.getAdmin_tabel();
+        String selectQuery = "SELECT COUNT(1) as Total ";
+        for (int i=0; i<6; i++) {
+            selectQuery += ", (SELECT COUNT(1) FROM " + admin_tabel +
+                    " AS subresult WHERE subresult.status_etl = '" +
+                    STATUS[i] + "') AS Status_" + STATUS[i] + " ";
+        }
+        selectQuery += "FROM " + admin_tabel;
+        
+        
+        ArrayList count = new ArrayList();
+        count.add(t.getNaam());
+        try {
+            int total = 0;
+            PreparedStatement statement = connection.prepareStatement(selectQuery);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()){
+                for (int i=0; i<6; i++) {
+                    count.add(rs.getInt("Status_" + STATUS[i]));
                 }
+                total = rs.getInt("Total");
+                count.add(total);
                 statement.close();
-            } catch (SQLException ex) {
-                log.error("", ex);
-            } finally {
-                try {
-                    connection.close();
-                } catch (SQLException ex) {
-                    log.error("", ex);
-                }
             }
             
-            if(exists) { 
-                try {
-                    count.add(thema_naam);
-                    int total = 0;
-                    PreparedStatement statement = connection.prepareStatement(selectQuery);
-                    ResultSet rs = statement.executeQuery();
-                    if (rs.next()){
-                        count.add(rs.getInt("Status_" + STATUS[0]));
-                        count.add(rs.getInt("Status_" + STATUS[1]));
-                        count.add(rs.getInt("Status_" + STATUS[2]));
-                        count.add(rs.getInt("Status_" + STATUS[3]));
-                        count.add(rs.getInt("Status_" + STATUS[4]));
-                        count.add(rs.getInt("Status_" + STATUS[5]));
-                        total = rs.getInt("Total");
-                        count.add(total);
-                        statement.close();
-                    }
-
-                    int amountOGO = (Integer)count.get(2);
-                    int amountOAO = (Integer)count.get(3);
-                    if(total != 0) {
-                        int percent = ((amountOGO + amountOAO) * 100) / total;
-                        count.add(percent);
-                    } else {
-                        count.add(0);
-                    }
-                    statement.close();
-                } catch (SQLException ex) {
-                    log.error("", ex);
-                } finally {
-                    try {
-                        connection.close();
-                    } catch (SQLException ex) {
-                        log.error("", ex);
-                    }
-                }
+            int amountOGO = (Integer)count.get(2);
+            int amountOAO = (Integer)count.get(3);
+            if(total != 0) {
+                int percent = ((amountOGO + amountOAO) * 100) / total;
+                count.add(percent);
             } else {
-                return null;
+                count.add(0);
+            }
+            statement.close();
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
             }
         }
         
@@ -230,35 +198,4 @@ public class ETLOverviewAction extends BaseHibernateAction {
     }
     // </editor-fold>
     
-    /**
-     * Return een hashmap. Deze is verplicht overriden vanwege abstracte klasse BaseHibernateAction.
-     *
-     * @return Map
-     */
-    // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap() method.">
-    protected Map getActionMethodPropertiesMap() {
-        Map map = new HashMap();
-        
-        ExtendedMethodProperties hibProp = null;
-        hibProp = new ExtendedMethodProperties(ADMINDATA);
-        hibProp.setDefaultForwardName(SUCCESS);
-        hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.admindata.failed");
-        map.put(ADMINDATA, hibProp);
-        
-        hibProp = new ExtendedMethodProperties(EDIT);
-        hibProp.setDefaultForwardName(SUCCESS);
-        hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.admindata.failed");
-        map.put(EDIT, hibProp);
-        
-        hibProp = new ExtendedMethodProperties(SHOWOPTIONS);
-        hibProp.setDefaultForwardName(SUCCESS);
-        hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.admindata.failed");
-        map.put(SHOWOPTIONS, hibProp);
-        
-        return map;
-    }
-    // </editor-fold>
 }

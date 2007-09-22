@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/b3pgis">
-  <Resource driverClassName="org.postgresql.Driver" maxActive="100" maxIdle="30" maxWait="5000" name="jdbc/wis" password="***REMOVED***" type="javax.sql.DataSource" url="jdbc:postgresql://localhost:5432/b3p_gis" username="postgres" validationQuery="select now();"/>
+  <Resource driverClassName="org.postgresql.Driver" maxActive="100" maxIdle="30" 
+  maxWait="5000" name="jdbc/wis" password="***REMOVED***" type="javax.sql.DataSource" 
+  url="jdbc:postgresql://x5.b3p.nl:5432/b3p_gis" username="postgres" validationQuery="select now();"/>
 </Context>

@@ -21,6 +21,7 @@ import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.nbr.wis.db.Clusters;
 import nl.b3p.nbr.wis.db.Themas;
 import nl.b3p.nbr.wis.services.HibernateUtil;
+import nl.b3p.nbr.wis.services.SpatialUtil;
 import nl.b3p.nbr.wis.struts.BaseHibernateAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,7 +41,6 @@ public class ViewerAction extends BaseHibernateAction {
     private static final Log log = LogFactory.getLog(ViewerAction.class);
     
     protected static final String KNOP = "knop";
-    private List themalist = null;
     
     /** 
      * Return een hashmap die een property koppelt aan een Action.
@@ -55,9 +55,7 @@ public class ViewerAction extends BaseHibernateAction {
         
         hibProp = new ExtendedMethodProperties(KNOP);
         hibProp.setDefaultForwardName(SUCCESS);
-        hibProp.setDefaultMessageKey("warning.knop.done");
         hibProp.setAlternateForwardName(FAILURE);
-        hibProp.setAlternateMessageKey("error.knop.failed");
         map.put(KNOP, hibProp);
         
         return map;
@@ -123,15 +121,8 @@ public class ViewerAction extends BaseHibernateAction {
      */
     // <editor-fold defaultstate="" desc="protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request)">
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        List ctl = null;
-        String hquery = "FROM Clusters WHERE id != 9";
-        Query q = sess.createQuery(hquery);
-        ctl = q.list();
-        
-        hquery = "FROM Themas WHERE cluster != 9 AND (moscow = 1 OR moscow = 2 OR moscow = 3) and code < 3";
-        q = sess.createQuery(hquery);
-        themalist = q.list();
+        List ctl = SpatialUtil.getValidClusters();
+        List themalist = SpatialUtil.getValidThemas(false);
         
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
         
@@ -151,8 +142,8 @@ public class ViewerAction extends BaseHibernateAction {
                     JSONArray childrenCluster = new JSONArray();
                     jsonCluster.put("children", childrenCluster);
                     
-                    getChildren(childrenCluster, cluster);
-                    getSubClusters(childrenCluster, cluster, ctl);
+                    getChildren(themalist, childrenCluster, cluster);
+                    getSubClusters(themalist, childrenCluster, cluster, ctl);
                 }
             }
         }
@@ -172,7 +163,7 @@ public class ViewerAction extends BaseHibernateAction {
      * @see Clusters
      */
     // <editor-fold defaultstate="" desc="private void getSubClusters(JSONArray root, Clusters rootCluster, List list)">
-    private void getSubClusters(JSONArray root, Clusters rootCluster, List list) throws JSONException {
+    private void getSubClusters(List themalist, JSONArray root, Clusters rootCluster, List list) throws JSONException {
         ArrayList subclusters = new ArrayList();
         Iterator it = list.iterator();
         while (it.hasNext()) {
@@ -191,8 +182,8 @@ public class ViewerAction extends BaseHibernateAction {
                 JSONArray childrenCluster = new JSONArray();
                 jsonCluster.put("children", childrenCluster);
                 
-                getChildren(childrenCluster, cl);
-                getSubClusters(childrenCluster, cl, list);
+                getChildren(themalist, childrenCluster, cl);
+                getSubClusters(themalist, childrenCluster, cl, list);
             }
         }
     }
@@ -209,8 +200,9 @@ public class ViewerAction extends BaseHibernateAction {
      * @see Clusters
      */
     // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster)">
-    private void getChildren(JSONArray root, Clusters rootCluster) throws JSONException {
-        if(themalist == null) return;
+    private void getChildren(List themalist, JSONArray root, Clusters rootCluster) throws JSONException {
+        if(themalist == null) 
+            return;
         ArrayList childs = new ArrayList();
         Iterator it = themalist.iterator();
         while(it.hasNext()) {

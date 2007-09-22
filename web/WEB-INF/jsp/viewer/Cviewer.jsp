@@ -718,11 +718,6 @@
         flamingo.callMethod("map1", "moveToExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy}, 0);
     }
     
-    //alert(readCookie('activelayer'));
-    //alert(readCookie('activetab'));
-    //alert(readCookie('checkedLayers'));
 </script>
 
-
-<%-- script tag niet afgesloten zodat flamingo ook in 1 keer goed werkt in IE --%>
 <script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

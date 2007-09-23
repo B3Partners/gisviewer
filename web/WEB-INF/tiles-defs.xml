@@ -48,15 +48,18 @@
     <definition name="viewer" extends="algemeen">
         <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>
     </definition>
-    <definition name="tab" path="/WEB-INF/jsp/templates/tab.jsp"/>
-    <definition name="viewerdata" extends="tab">
-        <put name="content" value="/WEB-INF/jsp/viewer/viewerdata.jsp"/>
-    </definition>
-    <definition name="vieweradmindata" extends="tab">
+    <!-- viewer databody-->
+    <definition name="databody" path="/WEB-INF/jsp/templates/databody.jsp"/>
+    <definition name="vieweradmindata" extends="databody">
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp"/>
     </definition>
-    <definition name="viewermetadata" extends="tab">
+    <definition name="viewermetadata" extends="databody">
         <put name="content" value="/WEB-INF/jsp/viewer/viewermetadata.jsp"/>
+    </definition>
+    <definition name="tab" path="/WEB-INF/jsp/templates/tab.jsp"/>
+    <!-- viewer tab-->
+    <definition name="viewerdata" extends="tab">
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerdata.jsp"/>
     </definition>
     <definition name="viewerobjectdata" extends="tab">
         <put name="content" value="/WEB-INF/jsp/viewer/viewerobjectdata.jsp"/>
@@ -67,7 +70,9 @@
     <definition name="vieweranalyseobject" extends="tab">
         <put name="content" value="/WEB-INF/jsp/viewer/vieweranalyseobject.jsp"/>
     </definition>
-    <definition name="vieweraanvullendeinfo" extends="tab">
+    <!-- viewer popup -->
+    <definition name="popup" path="/WEB-INF/jsp/templates/popup.jsp"/>
+    <definition name="vieweraanvullendeinfo" extends="popup">
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>
     </definition>
     

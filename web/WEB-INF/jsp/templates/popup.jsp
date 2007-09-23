@@ -8,18 +8,18 @@
 
 <html:html>
     <head>
-        <title>Viewer Tab</title>
+        <title>Viewer Popup</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css" >
         <script type="text/javascript">  
             function checkLocation() {
-                if (top.location == self.location)
-                    top.location = '<html:rewrite page="/index.do"/>';
+                if (top.location != self.location)
+                    top.location = self.location;
             };
         </script>
     </head>
-    <body onload="checkLocation()" class="tabvak_body">
+    <body onload="checkLocation()" class="admindatabody">
         <tiles:insert attribute="content" />
     </body>
 </html:html>

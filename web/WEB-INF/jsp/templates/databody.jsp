@@ -8,7 +8,7 @@
 
 <html:html>
     <head>
-        <title>Viewer Tab</title>
+        <title>Viewer Data</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css" >
@@ -19,7 +19,8 @@
             };
         </script>
     </head>
-    <body onload="checkLocation()" class="tabvak_body">
+    <%-- TODO combineren met <body class="meta_data_body"> --%>
+    <body onload="checkLocation()" class="admindatabody">
         <tiles:insert attribute="content" />
     </body>
 </html:html>

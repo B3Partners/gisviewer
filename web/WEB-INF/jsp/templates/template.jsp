@@ -1,10 +1,12 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
+
+<%@include file="/WEB-INF/jsp/taglibs.jsp" %>
+<%@ page isELIgnored="false"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<html>
+<html:html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>B3P GIS Suite Demo</title>
@@ -22,10 +24,17 @@
         <![endif]-->
         
         <script type="text/javascript" src="scripts/etltransform.js"></script>
+        <script type="text/javascript">  
+            function checkLocation() {
+                if (top.location != self.location)
+                    top.location = self.location;
+            };
+        </script>
+        
     </head>
-    <body>
+    <body onload="checkLocation()">
         <!-- !!! TEN BEHOEVE VAN NBR DESIGN COMMENTAAR ROND ONDERSTAANDE DIVS WEGHALEN !!! -->
         <!-- <div id="boven_div"> --><div id="menu_div"><!-- <div id="menubg"> --><tiles:insert attribute="menu" /></div><!-- </div></div> -->
         <div id="maindiv"><div id="content_div"><tiles:insert attribute="content" /></div></div>
-        <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div></body>
-</html>
+    <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div></body>
+</html:html>

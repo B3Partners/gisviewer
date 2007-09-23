@@ -19,11 +19,5 @@
 <script language="JavaScript">
 <!--
     document.forms.loginForm.j_username.focus();
-    
-    //window.onload = function() {
-    //    if (top.location != self.location)
-    //    top.location = self.location;
-    //};
-
 // -->
 </script>

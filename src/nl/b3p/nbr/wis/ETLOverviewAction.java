@@ -25,7 +25,6 @@ import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.nbr.wis.db.Themas;
 import nl.b3p.nbr.wis.services.HibernateUtil;
 import nl.b3p.nbr.wis.services.SpatialUtil;
-import nl.b3p.nbr.wis.struts.BaseHibernateAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForward;
@@ -37,7 +36,7 @@ import org.hibernate.Session;
  * ETLOverviewAction definition:
  */
 
-public class ETLOverviewAction extends BaseHibernateAction {
+public class ETLOverviewAction extends BaseGisAction {
     
     private static final Log log = LogFactory.getLog(ETLOverviewAction.class);
     
@@ -93,7 +92,7 @@ public class ETLOverviewAction extends BaseHibernateAction {
      * @param request HttpServletRequest
      */
     private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request) {
-        List themalist = SpatialUtil.getValidThemas(false);
+        List themalist = getValidThemas(false, request);
         ArrayList overview = new ArrayList();
         if(themalist != null) {
             Iterator it = themalist.iterator();

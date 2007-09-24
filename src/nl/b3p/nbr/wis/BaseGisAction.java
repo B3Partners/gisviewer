@@ -54,29 +54,49 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      */
     protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
         String themaid = (String)request.getParameter("themaid");
-        return getThema(themaid);
-    }
-    
-    /**
-     * Haal een Thema op uit de database door middel van het meegegeven thema id.
-     *
-     * @param themaid String
-     *
-     * @return Themas
-     *
-     * @see Themas
-     */
-    protected Themas getThema(String themaid) {
-        if (themaid==null || themaid.length()==0) {
-            return null;
-        }
+        Themas t = SpatialUtil.getThema(themaid);
         
-        Integer id = new Integer(themaid);
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Themas t = (Themas)sess.get(Themas.class, id);
+        // Check de rechten op alle layers uit het thema
+        if (!checkThemaRights(t,  request))
+            return null;
+        
         return t;
     }
     
+    protected List getValidThemas(boolean locatie,  HttpServletRequest request) {
+        List l = SpatialUtil.getValidThemas(locatie);
+        List checkedList = new ArrayList();
+        if (l!=null) {
+            Iterator it = l.iterator();
+            while(it.hasNext()) {
+                Themas t = (Themas)it.next();
+                if (checkThemaRights(t,  request))
+                    checkedList.add(t);
+                
+            }
+        }
+        return checkedList;
+    }
+    
+    protected boolean checkThemaRights(Themas t,  HttpServletRequest request) {
+        String wmsls = t.getWms_layers();
+        if (wmsls==null || wmsls.length()==0)
+            return false;
+        
+        String wmsqls = t.getWms_querylayers();
+        if (wmsqls!=null || wmsqls.length()>0)
+            wmsls += "," + wmsqls;
+        String wmslls = t.getWms_legendlayer();
+        if (wmslls!=null || wmslls.length()>0)
+            wmsls += "," + wmslls;
+        
+        String[] wmsla = wmsls.split(",");
+        for (int i=0; i<wmsla.length; i++) {
+            if(!request.isUserInRole("layer_" + wmsla[i]))
+                return false;
+        }
+        return true;
+    }
     
     /**
      * DOCUMENT ME!!!
@@ -251,42 +271,12 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      */
     protected String getThemaGeomType(Themas thema) throws Exception {
         String themaGeomType = thema.getView_geomtype();
-        
         if (themaGeomType!=null)
             return themaGeomType;
         
-        //Als geom type niet ingevuld bij thema dan proberen te achterhalen
-        //via geometry_columns postgis
-        String themaGeomTabel   = thema.getSpatial_tabel();
-        
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
-        String q = "select * from geometry_columns gc where gc.f_table_name = '" + themaGeomTabel + "'";
-        try {
-            PreparedStatement statement = connection.prepareStatement(q);
-            try {
-                ResultSet rs = statement.executeQuery();
-                if (rs.next()){
-                    themaGeomType=rs.getString("type");
-                }
-            } finally {
-                statement.close();
-            }
-        } catch (SQLException ex) {
-            log.error("", ex);
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                log.error("", ex);
-            }
-        }
-        
-        String tname = thema.getNaam();
-        if (themaGeomType == null)
-            throw new Exception("Kan het type geo-object niet vinden: " + tname);
-        
-        return themaGeomType;
+        Connection conn = sess.connection();
+        return SpatialUtil.getThemaGeomType(thema, conn);
     }
     
     /**

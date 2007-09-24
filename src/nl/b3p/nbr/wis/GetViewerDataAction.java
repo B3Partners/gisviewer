@@ -277,16 +277,6 @@ public class GetViewerDataAction extends BaseGisAction {
     }
     // </editor-fold>
     
-    protected Map fillMap(String type, String func, Integer factor, String desc, String[] columns) {
-        Map sqdef = new HashMap();
-        sqdef.put("type", type);
-        sqdef.put("function", func);
-        sqdef.put("factor", factor);
-        sqdef.put("desciption", desc);
-        sqdef.put("columns", columns);
-        return sqdef;
-    }
-    
     /**
      * Methode die aangeroepen wordt door de methode analysewaarde.
      * Deze methode zet een aantal attributen op het request en stelt een query waarmee
@@ -319,7 +309,7 @@ public class GetViewerDataAction extends BaseGisAction {
             request.setAttribute("ycoord", request.getParameter("ycoord"));
             
             ArrayList analysedata = new ArrayList();
-            List ctl = SpatialUtil.getValidThemas(true);
+            List ctl = getValidThemas(true, request);
             if(ctl != null) {
                 Iterator it = ctl.iterator();
                 while(it.hasNext()) {
@@ -457,7 +447,7 @@ public class GetViewerDataAction extends BaseGisAction {
         String lagen = request.getParameter("lagen");
         ArrayList objectdata = new ArrayList();
         
-        List ctl = SpatialUtil.getValidThemas(true);
+        List ctl = getValidThemas(true, request);
         if(ctl != null) {
             Iterator it = ctl.iterator();
             while(it.hasNext()) {

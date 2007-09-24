@@ -30,8 +30,12 @@
         <action path="/index" forward="index"/>
         <action path="/help" forward="help"/>
         <action path="/login" forward="login"/>
-        <action path="/loginError" forward="loginError"/>
-        <action path="/logout" type="nl.b3p.nbr.wis.LogoutAction" parameter="/index.do"/>
+        <action path="/loginError" type="nl.b3p.nbr.wis.services.LoginAction">
+            <forward name="success" path="login"/>
+        </action>
+        <action path="/logout" type="nl.b3p.nbr.wis.services.LogoutAction">
+            <forward name="success" path="/index.do" redirect="true"/>
+        </action>
         
         <action path="/viewer" type="nl.b3p.nbr.wis.ViewerAction">
             <forward name="success" path="viewer"/>
@@ -52,7 +56,7 @@
             <forward name="success" path="etlhome"/>
         </action>        
         <action path="/etlscheduler" forward="etlscheduler"/>
-         <action path="/etltransform" type="nl.b3p.nbr.wis.ETLTransformAction">
+        <action path="/etltransform" type="nl.b3p.nbr.wis.ETLTransformAction">
             <forward name="success" path="etltransform"/>
             <forward name="showData" path="vieweradmindata"/>
         </action>

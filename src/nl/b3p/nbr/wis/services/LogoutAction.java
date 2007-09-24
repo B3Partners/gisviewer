@@ -2,16 +2,14 @@
  * $Id$
  */
 
-package nl.b3p.nbr.wis;
+package nl.b3p.nbr.wis.services;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.*;
 
 /**
- * Deze Action invalideert de sessie (met eventuele authenticatie info) en forward
- * naar de locatie die is aangegeven met het "parameter" attribuut in de action
- * mapping.
+ * Deze Action invalideert de sessie (met eventuele authenticatie info).
  */
 public class LogoutAction extends Action {
 
@@ -19,8 +17,7 @@ public class LogoutAction extends Action {
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         request.getSession().invalidate();
-        response.sendRedirect(request.getContextPath() + mapping.getParameter());
-        return null;
+        return mapping.findForward("success");
     }
 }
 

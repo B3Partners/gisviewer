@@ -43,6 +43,27 @@ public class SpatialUtil {
         return q.list();
     }
     
+    /**
+     * Haal een Thema op uit de database door middel van het meegegeven thema id.
+     *
+     * @param themaid String
+     *
+     * @return Themas
+     *
+     * @see Themas
+     */
+    public static Themas getThema(String themaid) {
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        if (themaid==null || themaid.length()==0) {
+            return null;
+        }
+        
+        Integer id = new Integer(themaid);
+        Themas t = (Themas)sess.get(Themas.class, id);
+        return t;
+    }
+    
+    
     public static List getValidThemas(boolean locatie) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String hquery = "FROM Themas WHERE cluster != 9 ";
@@ -90,6 +111,37 @@ public class SpatialUtil {
         }
         return false;
     }
+
+   static public String getThemaGeomType(Themas t, Connection conn) throws Exception {
+       String themaGeomType = null; 
+       String themaGeomTabel = t.getSpatial_tabel();
+        
+        String q = "select * from geometry_columns gc where gc.f_table_name = '" + themaGeomTabel + "'";
+        try {
+            PreparedStatement statement = conn.prepareStatement(q);
+            try {
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()){
+                    themaGeomType=rs.getString("type");
+                }
+            } finally {
+                statement.close();
+            }
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
+        
+        String tname = t.getNaam();
+        if (themaGeomType == null)
+            throw new Exception("Kan het type geo-object niet vinden: " + tname);
+        return themaGeomType;
+   }
     
     /**
      * DOCUMENT ME!

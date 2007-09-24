@@ -135,23 +135,86 @@ public class GetViewerDataAction extends BaseGisAction {
         
         //Alle invoervelden zijn bekend en door de verschillende controleprocedures gekomen
         //om een juiste query uit te kunnen voeren.
-        Object [] value = null;
-        if ((Integer)inputParameters.get("zoekOpties_waarde") == 1){
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "max", 1000, "Grootste lengte(km)", "result"}; }
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "max", 1000000, "Grootste oppervlakte(km2)", "result"}; }
-        }
-        if ((Integer)inputParameters.get("zoekOpties_waarde") == 2){
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "min", 1000, "Kleinste lengte(km)", "result"}; }
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "min", 1000000, "Kleinste oppervlakte(km2)", "result"}; }
-        }
-        if ((Integer)inputParameters.get("zoekOpties_waarde") == 3){
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "avg", 1000, "Gemiddelde lengte(km)", "result"}; }
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "avg", 1000000, "Gemiddelde oppervlakte(km2)", "result"}; }
-        }
-        if ((Integer)inputParameters.get("zoekOpties_waarde") == 4){
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOINT)){ value = new Object[]{"POINT", "count(*)", null, "Aantal", "count"}; }
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){ value = new Object[]{"LINESTRING", "sum", 1000, "Totale lengte(km)", "result"}; }
-            if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){ value = new Object[]{"POLYGON", "sum", 1000000, "Totale oppervlakte(km2)", "result"}; }
+        int zow = 0;
+        if (inputParameters.get("zoekOpties_waarde")!=null)
+            zow = ((Integer)inputParameters.get("zoekOpties_waarde")).intValue();
+        String tgt = (String)inputParameters.get("themaGeomType");
+        
+        String stype = null;
+        String sfunction = null;
+        int sfactor = -1;
+        String sdesc = null;
+        String[] scolumns = null;
+        
+        
+        switch (zow) {
+            case 1:
+                if (tgt.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                    stype = "LINESTRING";
+                    sfunction = "max";
+                    sfactor = 1000;
+                    sdesc = "Grootste lengte(km)";
+                    scolumns = new String[]{"result"};
+                } else if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                    stype = "POLYGON";
+                    sfunction = "max";
+                    sfactor = 1000000;
+                    sdesc = "Grootste oppervlakte(km2)";
+                    scolumns = new String[]{"result"};
+                }
+                break;
+            case 2:
+                if (tgt.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                    stype = "LINESTRING";
+                    sfunction = "min";
+                    sfactor = 1000;
+                    sdesc = "Kleinste lengte(km)";
+                    scolumns = new String[]{"result"};
+                } else if (tgt.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                    stype = "POLYGON";
+                    sfunction = "min";
+                    sfactor = 1000000;
+                    sdesc = "Kleinste oppervlakte(km2)";
+                    scolumns = new String[]{"result"};
+                }
+                break;
+            case 3:
+                if (tgt.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                    stype = "LINESTRING";
+                    sfunction = "avg";
+                    sfactor = 1000;
+                    sdesc = "Gemiddelde lengte(km)";
+                    scolumns = new String[]{"result"};
+                } else if (tgt.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                    stype = "POLYGON";
+                    sfunction = "avg";
+                    sfactor = 1000000;
+                    sdesc = "Gemiddelde oppervlakte(km2)";
+                    scolumns = new String[]{"result"};
+                }
+                break;
+            case 4:
+                if (tgt.equalsIgnoreCase(SpatialUtil.MULTIPOINT)){
+                    stype = "POINT";
+                    sfunction = "count(*)";
+                    sfactor = -1;
+                    sdesc = "Aantal";
+                    scolumns = new String[]{"count"};
+                } else if (tgt.equalsIgnoreCase(SpatialUtil.MULTILINESTRING)){
+                    stype = "LINESTRING";
+                    sfunction = "sum";
+                    sfactor = 1000;
+                    sdesc = "Totale lengte(km)";
+                    scolumns = new String[]{"result"};
+                } else if (tgt.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                    stype = "POLYGON";
+                    sfunction = "sum";
+                    sfactor = 1000000;
+                    sdesc = "Totale oppervlakte(km2)";
+                    scolumns = new String[]{"result"};
+                }
+                break;
+            default:
         }
         
         Map extraCriteria = (Map)inputParameters.get("extraCriteria");
@@ -167,43 +230,43 @@ public class GetViewerDataAction extends BaseGisAction {
         
         StringBuffer result = new StringBuffer("");
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        if (value != null) {
+        if (stype != null) {
             String query = null;
-            if(value[0].equals("POINT")) {
+            if("POINT".equalsIgnoreCase(stype)) {
                 query = SpatialUtil.containsQuery(
-                        (String) value[1],
+                        sfunction,
                         (String)inputParameters.get("analyseGeomTabel"),
                         (String)inputParameters.get("themaGeomTabel"),
                         (String)inputParameters.get("analyseGeomIdColumn"),
                         (String)inputParameters.get("analyseGeomId"),
                         extraCriteriaString.toString());
-            } else if(value[0].equals("LINESTRING")) {
+            } else if("LINESTRING".equalsIgnoreCase(stype)) {
                 query = SpatialUtil.intersectionLength(
-                        (String) value[1],
+                        sfunction,
                         (String)inputParameters.get("themaGeomTabel"),
                         (String)inputParameters.get("analyseGeomTabel"),
                         (String)inputParameters.get("analyseGeomId"),
-                        (Integer) value[2],
+                        sfactor,
                         extraCriteriaString.toString());
-            } else if(value[0].equals("POLYGON")) {
+            } else if("POLYGON".equalsIgnoreCase(stype)) {
                 query = SpatialUtil.intersectionArea(
-                        (String) value[1],
+                        sfunction,
                         (String)inputParameters.get("themaGeomTabel"),
                         (String)inputParameters.get("analyseGeomTabel"),
                         (String)inputParameters.get("analyseGeomId"),
-                        (Integer) value[2],
+                        sfactor,
                         extraCriteriaString.toString());
             }
             
             log.debug(query);
-            result.append("<b>" + value[3] + " " + ((Themas)inputParameters.get("thema")).getNaam());
+            result.append("<b>" + sdesc + " " + ((Themas)inputParameters.get("thema")).getNaam());
             
             if ((String)inputParameters.get("analyseNaam")!=null){
                 result.append(" in " + (String)inputParameters.get("analyseNaam"));
             }
             result.append(":");
             
-            executeQuery(query, sess, result, new String[]{(String)value[4]});
+            executeQuery(query, sess, result, scolumns);
             result.append("</b>");
         } else {
             result.append("<b>Niet mogelijk met dit thema-geometry-type<br/></b>");
@@ -213,6 +276,16 @@ public class GetViewerDataAction extends BaseGisAction {
         return analysedataParameters(inputParameters, mapping, dynaForm, request);
     }
     // </editor-fold>
+    
+    protected Map fillMap(String type, String func, Integer factor, String desc, String[] columns) {
+        Map sqdef = new HashMap();
+        sqdef.put("type", type);
+        sqdef.put("function", func);
+        sqdef.put("factor", factor);
+        sqdef.put("desciption", desc);
+        sqdef.put("columns", columns);
+        return sqdef;
+    }
     
     /**
      * Methode die aangeroepen wordt door de methode analysewaarde.
@@ -240,7 +313,7 @@ public class GetViewerDataAction extends BaseGisAction {
             request.setAttribute("thema_items", thema_items);
             
             String lagen = request.getParameter("lagen");
-            request.setAttribute(Themas.THEMAID, t.getId());
+            request.setAttribute(Themas.THEMAID, new Integer(t.getId()));
             request.setAttribute("lagen", lagen);
             request.setAttribute("xcoord", request.getParameter("xcoord"));
             request.setAttribute("ycoord", request.getParameter("ycoord"));
@@ -253,7 +326,7 @@ public class GetViewerDataAction extends BaseGisAction {
                     ArrayList thema = new ArrayList();
                     Themas tt = (Themas) it.next();
                     thema.add(tt.getNaam());
-                    thema.add(tt.getId());
+                    thema.add(new Integer(tt.getId()));
                     
                     List tthema_items = SpatialUtil.getThemaData(tt, true);
                     
@@ -297,12 +370,14 @@ public class GetViewerDataAction extends BaseGisAction {
         
         //create relation query
         String relationFunction=null;
-        //String test = (String) inputParameters.get("zoekOpties_object");
-        if ((Integer)inputParameters.get("zoekOpties_object") == 1)
+        int zoo = 0;
+        if (inputParameters.get("zoekOpties_object")!=null)
+            zoo = ((Integer)inputParameters.get("zoekOpties_object")).intValue();
+        if (zoo == 1)
             relationFunction="Disjoint";
-        else if ((Integer)inputParameters.get("zoekOpties_object") == 2)
+        else if (zoo == 2)
             relationFunction="Within";
-        else if ((Integer)inputParameters.get("zoekOpties_object") == 3)
+        else if (zoo == 3)
             relationFunction="Intersects";
         else
             log.error("Deze analyse/zoek_optie is niet geimplementeerd!");
@@ -628,18 +703,18 @@ public class GetViewerDataAction extends BaseGisAction {
             inputParams.put("geselecteerd_object", geselecteerd_object);
             
             zoekOpties = Integer.parseInt(getStringFromParam(parameterMap, "zoekopties"));
-            inputParams.put("zoekopties", zoekOpties);
+            inputParams.put("zoekopties", new Integer(zoekOpties));
             if(zoekOpties == 1) {
                 String number = getStringFromParam(parameterMap, "zoekopties_object");
                 if(number != null) {
                     zoekOpties_object = Integer.parseInt(number);
-                    inputParams.put("zoekOpties_object", zoekOpties_object);
+                    inputParams.put("zoekOpties_object", new Integer(zoekOpties_object));
                 }
             } else if (zoekOpties == 2) {
                 String number = getStringFromParam(parameterMap, "zoekopties_waarde");
                 if(number != null) {
                     zoekOpties_waarde = Integer.parseInt(number);
-                    inputParams.put("zoekOpties_waarde", zoekOpties_waarde);
+                    inputParams.put("zoekOpties_waarde", new Integer(zoekOpties_waarde));
                 }
             }
         }

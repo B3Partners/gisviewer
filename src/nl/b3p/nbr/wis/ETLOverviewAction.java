@@ -168,20 +168,20 @@ public class ETLOverviewAction extends BaseHibernateAction {
             ResultSet rs = statement.executeQuery();
             if (rs.next()){
                 for (int i=0; i<6; i++) {
-                    count.add(rs.getInt("Status_" + STATUS[i]));
+                    count.add(new Integer(rs.getInt("Status_" + STATUS[i])));
                 }
                 total = rs.getInt("Total");
-                count.add(total);
+                count.add(new Integer(total));
                 statement.close();
             }
             
-            int amountOGO = (Integer)count.get(2);
-            int amountOAO = (Integer)count.get(3);
-            if(total != 0) {
-                int percent = ((amountOGO + amountOAO) * 100) / total;
-                count.add(percent);
+            Integer amountOGO = (Integer)count.get(2);
+            Integer amountOAO = (Integer)count.get(3);
+            if(total != 0 && amountOGO!=null && amountOAO!=null) {
+                int percent = ((amountOGO.intValue() + amountOAO.intValue()) * 100) / total;
+                count.add(new Integer(percent));
             } else {
-                count.add(0);
+                count.add(new Integer(0));
             }
             statement.close();
         } catch (SQLException ex) {

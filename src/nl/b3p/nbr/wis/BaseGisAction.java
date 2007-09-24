@@ -231,8 +231,8 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Themas objectThema = null;
         try {
-            Integer id  = Integer.parseInt(identifier);
-            objectThema =(Themas)sess.get(Themas.class, id);
+            int id  = Integer.parseInt(identifier);
+            objectThema =(Themas)sess.get(Themas.class, new Integer(id));
         } catch(NumberFormatException nfe) {
             objectThema = (Themas)sess.get(Themas.class, identifier);
         }

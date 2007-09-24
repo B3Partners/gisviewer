@@ -7,19 +7,19 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
-<script>  
+<script>
     var nr = 0;
     function getNr() {
         return nr++;
     }
-    
+
     var allActiveLayers="";
     var layerUrl=null;
     function doAjaxRequest(point_x, point_y) {
         JMapData.getData(point_x, point_y, handleGetData);
         JMapData.getKadastraleData(point_x, point_y, handleGetKadastraleData);
     }
-    
+
     function handleGetData(str) {
         var rd = "X: " + str[0] + "<br />" + "Y: " + str[1];
         document.getElementById('rdcoords').innerHTML = rd;
@@ -27,19 +27,19 @@
         document.getElementById('wegnaam').innerHTML = str[4];
         document.getElementById('rdcoords').innerHTML = rd;
     }
-    
+
     function handleGetKadastraleData(str) {
         document.getElementById('kadastraledata').innerHTML = str;
     }
-    
+
     function handleGetAdminData(x,y) {
-        var childs = document.getElementsByName('selkaartlaag');        
+        var childs = document.getElementsByName('selkaartlaag');
         var selkaart = null;
         for(i = 0; i < childs.length; i++) {
             if(childs[i].checked) {
                 selkaart = childs[i];
             }
-        }        
+        }
         if(selkaart == null) {
             alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
             return;
@@ -52,14 +52,14 @@
         document.forms[0].themaid.value = selkaart.value;
         document.forms[0].submit();
     }
-    
+
     function getMetaData(id) {
         document.forms[0].metadata.value = 't';
         document.forms[0].admindata.value = '';
         document.forms[0].themaid.value = id;
         document.forms[0].submit();
     }
-    
+
     var cookieArray = readCookie('checkedLayers');
     function isInCookieArray(id) {
         if(cookieArray == null) return false;
@@ -71,29 +71,29 @@
         }
         return false;
     }
-    
+
     var activeThemaId = '';
     function setActiveThema(val) {
         activeThemaId = val;
         if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
             map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
-        }        
+        }
     }
-    
+
     function setAnalyseValue(x,y) {
         document.forms[2].xcoord.value=x;
         document.forms[2].ycoord.value=y;
         document.forms[2].themaid.value = activeThemaId;
         document.forms[2].submit();
     }
-    
-    
+
+
     var layersAan= new Array();
     var doLayerClick= new Boolean(false);
     var activeLayerFromCookie = getActiveLayerId(readCookie('activelayer'));
     setActiveThema(activeLayerFromCookie);
     function createLabel(container, item) {
-        
+
         doLayerClick=false;
         if(item.cluster)
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
@@ -142,27 +142,27 @@
             }
             container.appendChild(document.createTextNode('  '));
             container.appendChild(lnk);
-            
-            
+
+
         }
     }
-    
+
     function getActiveLayerId(cookiestring) {
         if(!cookiestring) return null;
         var items = cookiestring.split('##');
         return items[0];
     }
-    
+
     function getActiveThemaLabel(cookiestring) {
         if(!cookiestring) return "Geen";
         var items = cookiestring.split('##');
         return items[1];
     }
-    
+
     function setActiveThemaLabel(activeThemaLabel) {
         document.getElementById('actief_thema').innerHTML = 'Actieve thema: ' + activeThemaLabel;
     }
-    
+
     function switchTab(obj) {
         eraseCookie('activetab');
         createCookie('activetab', obj.id, '7');
@@ -192,7 +192,7 @@
         }
     }
 
-    var checkboxArray = new Array();  
+    var checkboxArray = new Array();
     function readCookieArrayIntoCheckboxArray() {
         if(cookieArray != null) {
             var tempArr = cookieArray.split(',');
@@ -209,7 +209,7 @@
             }
         }
     }
-    
+
     function isInCheckboxArray(id) {
         if(checkboxArray == null) return false;
         for(i = 0; i < checkboxArray.length; i++) {
@@ -219,17 +219,17 @@
         }
         return false;
     }
-    
+
     function checkboxClick(obj, dontRefresh, obj_name) {
 
         if(obj.checked) {
             //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
             var standardParam="SERVICE=WMS&VERSION=1.1.1";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
-            
+
             var legendURL = obj.theItem.wmsurl + '&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;
             addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers, legendURL);
-            
+
             if(checkboxArray.length > 0) {
                 var arrayString = getArrayAsString();
                 eraseCookie('checkedLayers');
@@ -237,7 +237,7 @@
             } else {
                 eraseCookie('checkedLayers');
             }
-            
+
             if (obj.theItem.wmsurl){
                 if (obj.theItem.wmsurl.indexOf("?")>0){
                     standardParam="&"+standardParam;
@@ -251,18 +251,18 @@
                 if (!dontRefresh){
                     refreshLayer();
                 }
-            }            
+            }
         } else {
             //alert("layer uit");
             deleteFromArray(obj);
             removeLayerFromVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
             if (obj.theItem.wmsurl){
                 allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
-                refreshLayer();                
+                refreshLayer();
             }
         }
     }
-    
+
     function refreshLayer(){
         var layersToAdd;
         if (allActiveLayers.length>0){
@@ -270,11 +270,12 @@
         }else{
             layersToAdd="";
         }
+        //var newLayer= "<fmc:LayerOGWMS xmlns:fmc='fmc' id='OG2' timeout='30' retryonerror='10' format='image/png' transparent='true' url='"+layerUrl+"' layers='318_achtergrond"+allActiveLayers+"' query_layers='"+layersToAdd+"' srs='EPSG:28992'/>";
         var newLayer= "<fmc:LayerOGWMS xmlns:fmc='fmc' id='OG2' timeout='30' retryonerror='10' format='image/png' transparent='true' url='"+layerUrl+"' layers='achtergrond"+allActiveLayers+"' query_layers='"+layersToAdd+"' srs='EPSG:28992'/>";
         if (flamingo && layerUrl!=null){
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);
-        }        
+        }
     }
     function loadObjectInfo(x,y) {
         if(checkboxArray.length > 0) {
@@ -293,7 +294,7 @@
         document.forms[1].submit();
         setAnalyseValue(x,y);
     }
-    
+
     function getArrayAsString() {
         var ret = "";
         var firstTime = true;
@@ -307,7 +308,7 @@
         }
         return ret;
     }
-    
+
     function deleteFromArray(obj) {
         if(checkboxArray.length == 1 && checkboxArray[0] == obj) checkboxArray = new Array();
         var tempArray = new Array();
@@ -323,7 +324,7 @@
         eraseCookie('checkedLayers');
         createCookie('checkedLayers', arrayString, '7');
     }
-    
+
     function createCookie(name,value,days) {
             if (days) {
                     var date = new Date();
@@ -343,13 +344,13 @@
                     if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
             }
             return null;
-            
+
     }
-    
+
     function eraseCookie(name) {
             createCookie(name,"",-1);
     }
-    
+
     function HideOrShow(controlToHide)
     {
         if (document.getElementById)
@@ -367,7 +368,7 @@
             document.getElementById('show' + controlToHide).value = '';
         }
     }
-    
+
     function getCoords() {
         var postcode = document.getElementById("show1").value;
         var plaatsnaam = document.getElementById("show2").value;
@@ -376,7 +377,7 @@
         document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
         JMapData.getMapCoords(postcode, plaatsnaam, n_nr, hm, getCoordsCallbackFunction);
     }
-    
+
     function getCoordsCallbackFunction(values){
         var searchResults=document.getElementById("searchResults");
         searchResults.innerHTML="";
@@ -386,16 +387,16 @@
             if (values.length > 1){
                 var linkList="Meerdere resultaten gevonden: <br>";
                 for (var i =0; i < values.length; i++){
-                    linkList+="<a href='#' onclick='javascript: moveToExtent("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a><br>";         
+                    linkList+="<a href='#' onclick='javascript: moveToExtent("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a><br>";
                 }
                 searchResults.innerHTML=linkList;
             }
             else{
-                moveToExtent(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);              
+                moveToExtent(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
             }
-        }    
+        }
     }
-    
+
     function showHide(nr, el) {
         if(nr == 3 || nr == 4) {
             document.getElementById('show1').className= 'inputDisabled';
@@ -422,42 +423,42 @@
             document.getElementById('show4').value = '';
         }
     }
-    
+
     function eraseSubmit() {
         document.getElementById('show1').value = "";
         document.getElementById('show2').value = "";
         document.getElementById('show3').value = "";
         document.getElementById('show4').value = "";
-        
+
         document.getElementById('show1').className = 'inputEnabled';
         document.getElementById('show2').className = 'inputEnabled';
         document.getElementById('show3').className = 'inputEnabled';
         document.getElementById('show4').className = 'inputEnabled';
-        
+
         document.getElementById('show1').disabled = false;
         document.getElementById('show2').disabled = false;
         document.getElementById('show3').disabled = false;
         document.getElementById('show4').disabled = false;
     }
-    
-    function addLayerToVolgorde(name, id, legendURL) {      
+
+    function addLayerToVolgorde(name, id, legendURL) {
         var imgdiv = document.createElement("div");
         imgdiv.style.width='30px';
         imgdiv.style.height='20px';
         imgdiv.style.marginRight='5px';
         imgdiv.style.backgroundImage = 'url(' + legendURL + ')';
-        
+
         var div = document.createElement("div");
         div.name=id;
         div.id=id;
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
         div.appendChild(imgdiv);
-        
+
         var spanEl = document.createElement("span");
         spanEl.innerHTML = ' ' + name;
         div.appendChild(spanEl);
-        
+
         if(!orderLayerBox.hasChildNodes()) {
             orderLayerBox.appendChild(div);
         } else {
@@ -465,7 +466,7 @@
         }
 
     }
-    
+
     function removeLayerFromVolgorde(name, id) {
         var orderLayers=orderLayerBox.childNodes;
         orderLayerBox.removeChild(document.getElementById(id));
@@ -475,12 +476,12 @@
         //     }
         // }
     }
-    
+
     function refreshMapVolgorde() {
         parseVolgordeBox();
         refreshLayer();
     }
-    
+
     function deleteAllLayers() {
         var totalLength = orderLayerBox.childNodes.length;
         for(var i = (totalLength - 1); i > -1; i--) {
@@ -494,7 +495,7 @@
         readCookieArrayIntoCheckboxArray();
         refreshLayer();
     }
-    
+
     function parseVolgordeBox() {
         var cookieString = "";
         var layersString = "";
@@ -509,7 +510,7 @@
         createCookie('checkedLayers', cookieArray, '7');
         readCookieArrayIntoCheckboxArray();
     }
-    
+
     function splitValue(val) {
         return val.split('##');
     }
@@ -526,20 +527,20 @@
         <input type="hidden" name="ycoord" />
         <input type="hidden" name="scale" />
     </form>
-    
+
     <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">
         <input type="hidden" name="objectdata" value="t" />
         <input type="hidden" name="lagen" />
         <input type="hidden" name="xcoord" />
-        <input type="hidden" name="ycoord" />        
+        <input type="hidden" name="ycoord" />
     </form>
-    
+
     <form id="analysedataForm" name="analysedataForm" target="analyseframe" method="post" action="viewerdata.do">
         <input type="hidden" name="analysedata" value="t" />
         <input type="hidden" name="themaid" />
         <input type="hidden" name="lagen" />
         <input type="hidden" name="xcoord" />
-        <input type="hidden" name="ycoord" />        
+        <input type="hidden" name="ycoord" />
     </form>
 </div>
 <div class="onderbalk">VIEWER<span><tiles:insert name="loginblock"/></span></div>
@@ -560,7 +561,7 @@
                 so.write("flashcontent");
         </script>
     </div>
-    
+
     <div id="rightdiv">
         <div id="tabjes">
             <ul id="nav">
@@ -575,7 +576,7 @@
             <div id="treevak" style="display: none;" class="tabvak">
                 <div id="layermaindiv" style="display: none;"></div>
             </div>
-            
+
             <div id="volgordevak" style="display: none;" class="tabvak">
                 Bepaal de volgorde waarin de kaartlagen getoond worden
                 <form>
@@ -585,13 +586,13 @@
                     <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde();" class="knop" />
                     <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" class="knop" />
                 </form>
-            </div> 
-            
+            </div>
+
             <div id="infovak" style="display: none;" class="tabvak">
                 <div id="start_message">
                     Klik op een punt op de kaart voor aanvullende informatie.
                 </div>
-                
+
                 <div id="algdatavak" style="display: none;">
                     <b>RD Co&ouml;rdinaten</b><br />
                     <span id="rdcoords"></span><br /><br />
@@ -602,11 +603,11 @@
                     <b>Adres</b><br />
                     <span id="kadastraledata"></span>
                 </div>
-                
+
                 <!-- input fields for search -->
                 <div>
                     <br>
-                    <b>Zoek naar locatie:</b>                
+                    <b>Zoek naar locatie:</b>
                     <table>
                         <tr>
                             <td>Postcode:</td>
@@ -619,20 +620,20 @@
                         <tr>
                             <td>Weg nr / hm:</td>
                             <td>
-                                <input type="text" id="show3" name="show3" onfocus="showHide(3, this);" size="5"/> / 
+                                <input type="text" id="show3" name="show3" onfocus="showHide(3, this);" size="5"/> /
                                 <input type="text" id="show4" name="show4" onfocus="showHide(4, this);" size="5"/>
                             </td>
                         </tr>
-                    </table> 
-                    
+                    </table>
+
                     <input type="button" value="Ga naar locatie" onclick="getCoords();" class="knop" />&nbsp;
                     <input type="button" value="Wis invoer" onclick="eraseSubmit();" class="knop" /><br />
                     <div class="searchResultsClass" id="searchResults"></div>
-                    
+
                 </div>
                 <!-- end of search -->
-            </div>          
-            
+            </div>
+
             <div id="objectvak" style="display: none;" class="tabvak_with_iframe">
                 <iframe id="objectframe" name="objectframe" frameborder="0" src="empty_iframe.jsp"></iframe>
             </div>
@@ -652,7 +653,7 @@
             "id": "layermaindiv",
             "root": ${tree},
             "rootChildrenAsRoots": true,
-            "itemLabelCreatorFunction": createLabel,        
+            "itemLabelCreatorFunction": createLabel,
             "toggleImages": {
                 "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
                 "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
@@ -673,15 +674,15 @@
     }
     Nifty("ul#nav a","medium transparent top");
     setActiveThemaLabel(getActiveThemaLabel(readCookie('activelayer')));
-    var orderLayerBox= document.getElementById("orderLayerBox");    
-    
+    var orderLayerBox= document.getElementById("orderLayerBox");
+
     //always call this script after the SWF object script has called the flamingo viewer.
     //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
     function map1_onIdentify(movie,extend){
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
         document.getElementById('start_message').style.display = 'none';
         document.getElementById('algdatavak').style.display = 'block';
-        
+
         var loadingStr = "Bezig met laden...";
         // document.getElementById('rdcoords').innerHTML = loadingStr;
         // document.getElementById('hm_aanduiding').innerHTML = loadingStr;
@@ -717,7 +718,7 @@
     function moveToExtent(minx,miny,maxx,maxy){
         flamingo.callMethod("map1", "moveToExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy}, 0);
     }
-    
+
 </script>
 
 <script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

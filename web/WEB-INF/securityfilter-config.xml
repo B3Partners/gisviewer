@@ -47,18 +47,26 @@
             <url-pattern>/etl*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>Themabeheerder</role-name>
+            <role-name>themabeheerder</role-name>
         </auth-constraint>
     </security-constraint>
 
    <login-config>
-      <auth-method>FORM</auth-method>
+      <auth-method>FORM_COOKIE_TOKEN</auth-method>
       <form-login-config>
           <form-login-page>/login.do</form-login-page>
           <form-error-page>/loginError.do</form-error-page>
           <form-default-page>/viewer.do</form-default-page>
           <form-logout-page>/logout.do</form-logout-page>
       </form-login-config>
+      <cookie-auth-token-config>
+          <set-cookies>true</set-cookies>
+          <accept-cookie>false</accept-cookie>
+          <secret-key>de176b8440c9f602</secret-key>
+          <extra-hash-string>sXzzsrig09520uie10as:l&lt;x:lZa</extra-hash-string>
+          <cookie-paths>/kaartenbalie_wis</cookie-paths>
+          <cookie-expire>3600</cookie-expire>
+      </cookie-auth-token-config>
    </login-config>
 
    <realm className="nl.b3p.nbr.wis.services.NbrSecurityRealm"/>

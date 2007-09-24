@@ -39,15 +39,17 @@ public class Themas {
     private String wms_url;
     //komma separated layers
     private String wms_layers;
+    private String wms_layers_real;
     //komma separated layers
     private String wms_querylayers;
+    private String wms_querylayers_real;
     //one layer to create a wms legend image
     private String wms_legendlayer;
+    private String wms_legendlayer_real;
     private Set themaData;
     private Set themaVerantwoordelijkheden;
     private Set themaApplicaties;
     private Integer update_frequentie_in_dagen;
-    private String view_geomtype;
      
     /** Creates a new instance of Themas */
     public Themas() {
@@ -679,11 +681,27 @@ public class Themas {
         this.wms_legendlayer = wms_legendlayer;
     }
 
-    public String getView_geomtype() {
-        return view_geomtype;
+    public String getWms_layers_real() {
+        return wms_layers_real;
     }
 
-    public void setView_geomtype(String view_geomtype) {
-        this.view_geomtype = view_geomtype;
+    public void setWms_layers_real(String wms_layers_real) {
+        this.wms_layers_real = wms_layers_real;
+    }
+
+    public String getWms_querylayers_real() {
+        return wms_querylayers_real;
+    }
+
+    public void setWms_querylayers_real(String wms_querylayers_real) {
+        this.wms_querylayers_real = wms_querylayers_real;
+    }
+
+    public String getWms_legendlayer_real() {
+        return wms_legendlayer_real;
+    }
+
+    public void setWms_legendlayer_real(String wms_legendlayer_real) {
+        this.wms_legendlayer_real = wms_legendlayer_real;
     }
 }

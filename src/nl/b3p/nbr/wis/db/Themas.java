@@ -50,6 +50,7 @@ public class Themas {
     private Set themaVerantwoordelijkheden;
     private Set themaApplicaties;
     private Integer update_frequentie_in_dagen;
+    private String view_geomtype;
      
     /** Creates a new instance of Themas */
     public Themas() {
@@ -703,5 +704,12 @@ public class Themas {
 
     public void setWms_legendlayer_real(String wms_legendlayer_real) {
         this.wms_legendlayer_real = wms_legendlayer_real;
+    }
+    
+    public String getView_geomtype() {
+        return view_geomtype;
+    }
+    public void setView_geomtype(String view_geomtype) {
+        this.view_geomtype = view_geomtype;
     }
 }

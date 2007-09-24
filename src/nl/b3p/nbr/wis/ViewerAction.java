@@ -142,8 +142,8 @@ public class ViewerAction extends BaseHibernateAction {
                     JSONArray childrenCluster = new JSONArray();
                     jsonCluster.put("children", childrenCluster);
                     
-                    getChildren(themalist, childrenCluster, cluster);
-                    getSubClusters(themalist, childrenCluster, cluster, ctl);
+                    getChildren(request, themalist, childrenCluster, cluster);
+                    getSubClusters(request, themalist, childrenCluster, cluster, ctl);
                 }
             }
         }
@@ -163,7 +163,7 @@ public class ViewerAction extends BaseHibernateAction {
      * @see Clusters
      */
     // <editor-fold defaultstate="" desc="private void getSubClusters(JSONArray root, Clusters rootCluster, List list)">
-    private void getSubClusters(List themalist, JSONArray root, Clusters rootCluster, List list) throws JSONException {
+    private void getSubClusters(HttpServletRequest request, List themalist, JSONArray root, Clusters rootCluster, List list) throws JSONException, Exception {
         ArrayList subclusters = new ArrayList();
         Iterator it = list.iterator();
         while (it.hasNext()) {
@@ -182,8 +182,8 @@ public class ViewerAction extends BaseHibernateAction {
                 JSONArray childrenCluster = new JSONArray();
                 jsonCluster.put("children", childrenCluster);
                 
-                getChildren(themalist, childrenCluster, cl);
-                getSubClusters(themalist, childrenCluster, cl, list);
+                getChildren(request, themalist, childrenCluster, cl);
+                getSubClusters(request, themalist, childrenCluster, cl, list);
             }
         }
     }
@@ -200,7 +200,7 @@ public class ViewerAction extends BaseHibernateAction {
      * @see Clusters
      */
     // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster)">
-    private void getChildren(List themalist, JSONArray root, Clusters rootCluster) throws JSONException {
+    private void getChildren(HttpServletRequest request, List themalist, JSONArray root, Clusters rootCluster) throws JSONException, Exception {
         if(themalist == null) 
             return;
         ArrayList childs = new ArrayList();
@@ -217,8 +217,51 @@ public class ViewerAction extends BaseHibernateAction {
                 Themas th = (Themas) it.next();
                 String ttitel = th.getNaam();
                 JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
-                //put wms data
-                jsonCluster.put("wmsurl",th.getWms_url()).put("wmslayers",th.getWms_layers()).put("wmsquerylayers",th.getWms_querylayers()).put("wmslegendlayer",th.getWms_legendlayer());
+                
+                /* false = werk direct op mapserver
+                 * true = gebruik kaartenbalie, en check voor het toevoegen van
+                 * de layer of de principal er rechten op heeft (kaartenbalie 
+                 * zal indien dat niet het geval is wel een fout geven) - maar 
+                 * toon de layer ook niet aan de gebruiker -> zie NbrSecurityRealm
+                 */
+                boolean TEST_KAARTENBALIE = false;
+                
+                if(TEST_KAARTENBALIE && th.getWms_layers_real() != null) {
+                    
+                    /* XXX check of de principal recht heeft op de layers neemt aan
+                     * er maar een layer is...
+                     */
+                    if(th.getWms_layers().indexOf(',') != -1 
+                    || th.getWms_querylayers().indexOf(',') != -1
+                    || th.getWms_legendlayer().indexOf(',') != -1) {
+                        throw new Exception("Meerdere WMS layers voor thema niet ondersteund");
+                    }
+
+                    /* Indien principal geen recht heeft om de layer te zien,
+                     * skip dan dit thema */
+                    if(!request.isUserInRole("layer_" + th.getWms_layers())) {
+                        continue;
+                    }
+                    /* mogelijk dus dat query/legendlayer anders zijn dan layer
+                     * die zichtbaar is op de kaart (?!), dus als op die layer
+                     * geen rechten zit, geef dan niet de namen daarvoor mee
+                     * aan de view
+                     */
+                    String queryLayer = request.isUserInRole("layer_" + th.getWms_querylayers()) ? th.getWms_querylayers_real() : "";
+                    String legendLayer = request.isUserInRole("layer_" + th.getWms_legendlayer()) ? th.getWms_legendlayer_real() : "";
+                    
+                    jsonCluster
+                            .put("wmsurl", "http://localhost:8084/kaartenbalie_wis/wms/") /* tijdelijke hack, zodat de WMS urls in de config db nog direct op mapserver werken... */
+                            .put("wmslayers", th.getWms_layers_real())
+                            .put("wmsquerylayers", queryLayer)
+                            .put("wmslegendlayer", legendLayer);
+                } else {
+                    jsonCluster
+                            .put("wmsurl",th.getWms_url())
+                            .put("wmslayers",th.getWms_layers())
+                            .put("wmsquerylayers",th.getWms_querylayers())
+                            .put("wmslegendlayer",th.getWms_legendlayer());
+                }
                 root.put(jsonCluster);
             }
         }

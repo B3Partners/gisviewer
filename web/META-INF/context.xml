@@ -3,4 +3,16 @@
   <Resource driverClassName="org.postgresql.Driver" maxActive="100" maxIdle="30" 
   maxWait="5000" name="jdbc/wis" password="***REMOVED***" type="javax.sql.DataSource" 
   url="jdbc:postgresql://x5.b3p.nl:5432/b3p_gis" username="postgres" validationQuery="select now();"/>
+    <Resource
+            name="jdbc/kaartenbalie_wis"
+            type="javax.sql.DataSource"
+            driverClassName="com.mysql.jdbc.Driver"
+            password="XnigASDNggds"
+            maxIdle="30"
+            maxWait="5000"
+            validationQuery="select now();"
+            username="kaartenbalie_wis"
+            url="jdbc:mysql://x5.b3p.nl:3306/kaartenbalie_wis"
+            maxActive="100"
+    />
 </Context>

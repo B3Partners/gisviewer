@@ -264,7 +264,6 @@
     }
 
     function refreshLayer(){
-        alert('refreshLayer');
         var layersToAdd;
         if (allActiveLayers.length>0){
             layersToAdd= allActiveLayers.substring(1);

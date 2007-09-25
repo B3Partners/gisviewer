@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
+import org.apache.struts.util.MessageResources;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +38,7 @@ public class ViewerAction extends BaseGisAction {
     
     protected static final String KNOP = "knop";
     
-    /** 
+    /**
      * Return een hashmap die een property koppelt aan een Action.
      *
      * @return Map hashmap met action properties.
@@ -87,7 +88,7 @@ public class ViewerAction extends BaseGisAction {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * DOCUMENT ME!!!
      *
      * @param mapping The ActionMapping used to select this instance.
@@ -106,7 +107,7 @@ public class ViewerAction extends BaseGisAction {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * DOCUMENT ME!!!
      *
      * @param dynaForm The DynaValidatorForm bean for this request.
@@ -143,10 +144,15 @@ public class ViewerAction extends BaseGisAction {
             }
         }
         request.setAttribute("tree", root);
+        
+        // zet kaartenbalie url
+        MessageResources messages = getResources(request);
+        String kburl = messages.getMessage("config.kburl");
+        request.setAttribute("kburl", kburl);
     }
     // </editor-fold>
     
-    /** 
+    /**
      * DOCUMENT ME!!!
      *
      * @param root JSONArray
@@ -184,7 +190,7 @@ public class ViewerAction extends BaseGisAction {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * DOCUMENT ME!!!
      *
      * @param root JSONArray
@@ -196,7 +202,7 @@ public class ViewerAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster)">
     private void getChildren(List themalist, JSONArray root, Clusters rootCluster) throws JSONException, Exception {
-        if(themalist == null) 
+        if(themalist == null)
             return;
         ArrayList childs = new ArrayList();
         Iterator it = themalist.iterator();
@@ -213,21 +219,13 @@ public class ViewerAction extends BaseGisAction {
                 String ttitel = th.getNaam();
                 JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
                 
-                /* false = werk direct op mapserver
-                 * true = gebruik kaartenbalie
-                 */
-                boolean TEST_KAARTENBALIE = false;
-                
-                if(TEST_KAARTENBALIE && th.getWms_layers_real() != null) {
-                    
-                     jsonCluster
-                            .put("wmsurl", "http://localhost:8084/kaartenbalie_wis/wms/") /* tijdelijke hack, zodat de WMS urls in de config db nog direct op mapserver werken... */
+                if(th.getWms_layers_real() != null) {
+                    jsonCluster
                             .put("wmslayers", th.getWms_layers_real())
                             .put("wmsquerylayers", th.getWms_querylayers_real())
                             .put("wmslegendlayer", th.getWms_legendlayer_real());
                 } else {
                     jsonCluster
-                            .put("wmsurl",th.getWms_url())
                             .put("wmslayers",th.getWms_layers())
                             .put("wmsquerylayers",th.getWms_querylayers())
                             .put("wmslegendlayer",th.getWms_legendlayer());

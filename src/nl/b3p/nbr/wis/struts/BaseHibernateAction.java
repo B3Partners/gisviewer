@@ -87,7 +87,6 @@ public abstract class BaseHibernateAction extends ExtendedMethodAction {
         } catch(Exception e) {
             tx.rollback();
             log.error("Exception occured, rollback", e);
-            MessageResources messages = getResources(request);
             
             if (e instanceof org.hibernate.JDBCException) {
                 msg = e.getMessage();

@@ -4,8 +4,8 @@
 <dwr>
     <allow>
         <create creator="new" javascript="JMapData">
-            <param name="class" value="nl.b3p.nbr.wis.GetMapData"/>
+            <param name="class" value="nl.b3p.gis.viewer.GetMapData"/>
         </create>
-        <convert converter="bean" match="nl.b3p.nbr.wis.MapCoordsBean"/>
+        <convert converter="bean" match="nl.b3p.gis.viewer.MapCoordsBean"/>
     </allow>
 </dwr>

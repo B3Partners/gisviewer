@@ -36,7 +36,7 @@
 
 	<target name="hbm2ddl" depends="compile">
 		<hibernatetool destdir=".">
-			<!-- de namingstrategy staat ook in nl.b3p.nbr.wis.services.HibernateUtil -->
+			<!-- de namingstrategy staat ook in nl.b3p.gis.viewer.services.HibernateUtil -->
 			<configuration configurationfile="${hibernate.cfg}" namingstrategy="org.hibernate.cfg.ImprovedNamingStrategy"/>
 
 			<classpath>

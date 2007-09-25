@@ -30,17 +30,17 @@
         <action path="/index" forward="index"/>
         <action path="/help" forward="help"/>
         <action path="/login" forward="login"/>
-        <action path="/loginError" type="nl.b3p.nbr.wis.services.LoginAction">
+        <action path="/loginError" type="nl.b3p.gis.viewer.services.LoginAction">
             <forward name="success" path="login"/>
         </action>
-        <action path="/logout" type="nl.b3p.nbr.wis.services.LogoutAction">
+        <action path="/logout" type="nl.b3p.gis.viewer.services.LogoutAction">
             <forward name="success" path="/index.do" redirect="true"/>
         </action>
         
-        <action path="/viewer" type="nl.b3p.nbr.wis.ViewerAction">
+        <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>
         </action>
-        <action path="/viewerdata" type="nl.b3p.nbr.wis.GetViewerDataAction">
+        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction">
             <!-- <forward name="success" path="viewerdata"/> -->
             <forward name="failure" path="viewerdata"/>
             <forward name="admindata" path="vieweradmindata"/>
@@ -52,15 +52,15 @@
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
         </action>
         
-        <action path="/etl" type="nl.b3p.nbr.wis.ETLOverviewAction">
+        <action path="/etl" type="nl.b3p.gis.viewer.ETLOverviewAction">
             <forward name="success" path="etlhome"/>
         </action>        
         <action path="/etlscheduler" forward="etlscheduler"/>
-        <action path="/etltransform" type="nl.b3p.nbr.wis.ETLTransformAction">
+        <action path="/etltransform" type="nl.b3p.gis.viewer.ETLTransformAction">
             <forward name="success" path="etltransform"/>
             <forward name="showData" path="vieweradmindata"/>
         </action>
-        <action path="/etlthemalijst" type="nl.b3p.nbr.wis.ETLTransformAction">
+        <action path="/etlthemalijst" type="nl.b3p.gis.viewer.ETLTransformAction">
             <forward name="success" path="etlthemalijst"/>
         </action>
         

@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="nl.b3p.nbr.wis.db.Applicaties">
+    <class name="nl.b3p.gis.viewer.db.Applicaties">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -23,7 +23,7 @@
         <property name="opmerking"/>
         <many-to-one lazy="false" name="leverancier"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Clusters">
+    <class name="nl.b3p.gis.viewer.db.Clusters">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -33,21 +33,21 @@
         <many-to-one name="parent" column="parent"/>
         <set name="children" inverse="true" cascade="all-delete-orphan">
             <key column="parent"/>
-            <one-to-many class="nl.b3p.nbr.wis.db.Clusters"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.Clusters"/>
         </set>
         <set name="themas" cascade="all-delete-orphan">
             <key column="cluster"/>
-            <one-to-many class="nl.b3p.nbr.wis.db.Themas"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.Themas"/>
         </set>
     </class>
-    <class name="nl.b3p.nbr.wis.db.DataTypen">
+    <class name="nl.b3p.gis.viewer.db.DataTypen">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
         </id>
         <property name="naam"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.FunctieItems">
+    <class name="nl.b3p.gis.viewer.db.FunctieItems">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -60,7 +60,7 @@
         <property name="uitvoer" not-null="true"/>
         <many-to-one name="functie"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Leveranciers">
+    <class name="nl.b3p.gis.viewer.db.Leveranciers">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -75,7 +75,7 @@
         <property name="info" not-null="true"/>
         <property name="opmerkingen"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.LocatieAanduidingen">
+    <class name="nl.b3p.gis.viewer.db.LocatieAanduidingen">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -83,7 +83,7 @@
         <property name="naam"/>
         <property name="omschrijving"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Medewerkers">
+    <class name="nl.b3p.gis.viewer.db.Medewerkers">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -95,7 +95,7 @@
         <property name="Locatie"/>
         <property name="email"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Moscow">
+    <class name="nl.b3p.gis.viewer.db.Moscow">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -104,7 +104,7 @@
         <property name="naam"/>
         <property name="omschrijving"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Onderdeel">
+    <class name="nl.b3p.gis.viewer.db.Onderdeel">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -114,7 +114,7 @@
         <property name="locatie"/>
         <property name="regio" not-null="true"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.OnderdeelMedewerkers">
+    <class name="nl.b3p.gis.viewer.db.OnderdeelMedewerkers">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -123,14 +123,14 @@
         <many-to-one name="onderdeel"/>
         <property name="vertegenwoordiger" not-null="true"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Rollen">
+    <class name="nl.b3p.gis.viewer.db.Rollen">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
         </id>
         <property name="naam"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.ThemaApplicaties">
+    <class name="nl.b3p.gis.viewer.db.ThemaApplicaties">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -144,7 +144,7 @@
         <property name="definitief" not-null="true"/>
         <property name="standaard" not-null="true"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.ThemaFuncties">
+    <class name="nl.b3p.gis.viewer.db.ThemaFuncties">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -155,7 +155,7 @@
         <many-to-one name="applicatie" lazy="false"/>
         <property name="protocol"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.ThemaData">
+    <class name="nl.b3p.gis.viewer.db.ThemaData">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -174,7 +174,7 @@
         <property name="kolomnaam"/>
         <property name="dataorder"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden">
+    <class name="nl.b3p.gis.viewer.db.ThemaVerantwoordelijkheden">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -187,7 +187,7 @@
         <property name="gewenste_situatie" not-null="true"/>
         <property name="opmerkingen"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Themas">
+    <class name="nl.b3p.gis.viewer.db.Themas">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -223,25 +223,25 @@
         <property name="update_frequentie_in_dagen"/>
         <set name="themaData" lazy="false" cascade="all-delete-orphan" order-by="dataorder, basisregel desc, label">
             <key column="thema"/>
-            <one-to-many class="nl.b3p.nbr.wis.db.ThemaData"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.ThemaData"/>
         </set>
         <set name="themaVerantwoordelijkheden" lazy="false" cascade="all-delete-orphan" order-by="rol, huidige_situatie desc">
             <key column="thema"/>
-            <one-to-many class="nl.b3p.nbr.wis.db.ThemaVerantwoordelijkheden"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.ThemaVerantwoordelijkheden"/>
         </set>
         <set name="themaApplicaties" lazy="false" cascade="all-delete-orphan" order-by="definitief desc, voorkeur desc">
             <key column="thema"/>
-            <one-to-many class="nl.b3p.nbr.wis.db.ThemaApplicaties"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.ThemaApplicaties"/>
         </set>
     </class>
-    <class name="nl.b3p.nbr.wis.db.WaardeTypen">
+    <class name="nl.b3p.gis.viewer.db.WaardeTypen">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
         </id>
         <property name="naam"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.WorkshopMedewerkers">
+    <class name="nl.b3p.gis.viewer.db.WorkshopMedewerkers">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>
@@ -250,7 +250,7 @@
         <many-to-one name="medewerker"/>
         <property name="aanwezig" not-null="true"/>
     </class>
-    <class name="nl.b3p.nbr.wis.db.Workshops">
+    <class name="nl.b3p.gis.viewer.db.Workshops">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
             <generator class="identity"/>

@@ -69,5 +69,5 @@
       </cookie-auth-token-config>
    </login-config>
 
-   <realm className="nl.b3p.nbr.wis.services.GisSecurityRealm"/>
+   <realm className="nl.b3p.gis.viewer.services.GisSecurityRealm"/>
 </securityfilter-config>

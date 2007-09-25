@@ -5,7 +5,7 @@
 	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
-		<property name="connection.datasource">java:comp/env/jdbc/wis</property>
+		<property name="connection.datasource">java:comp/env/jdbc/gisviewer</property>
 
 		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 

@@ -28,7 +28,7 @@ public class NbrSecurityRealm implements SecurityRealmInterface, ExternalAuthent
     
     public Principal authenticate(String username, String password) {
         try {
-            DataSource ds = (DataSource)new InitialContext().lookup("java:comp/env/jdbc/kaartenbalie_wis");
+            DataSource ds = (DataSource)new InitialContext().lookup("java:comp/env/jdbc/kaartenbalie");
             
             Connection c = null;
             PreparedStatement ps = null;

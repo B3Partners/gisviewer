@@ -8,7 +8,7 @@
  * @copyright 2007 All rights reserved. B3Partners
  */
 
-package nl.b3p.nbr.wis;
+package nl.b3p.gis.viewer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,9 +17,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
-import nl.b3p.nbr.wis.db.Themas;
-import nl.b3p.nbr.wis.services.HibernateUtil;
-import nl.b3p.nbr.wis.services.SpatialUtil;
+import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.services.HibernateUtil;
+import nl.b3p.gis.viewer.services.SpatialUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;

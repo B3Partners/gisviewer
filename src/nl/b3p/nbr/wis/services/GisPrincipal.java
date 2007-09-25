@@ -2,7 +2,7 @@
  * $Id: NbrPrincipal.java 6852 2007-09-24 11:47:11Z Matthijs $
  */
 
-package nl.b3p.nbr.wis.services;
+package nl.b3p.gis.viewer.services;
 
 import java.security.Principal;
 import java.util.HashSet;

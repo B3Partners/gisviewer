@@ -2,7 +2,7 @@
  * $Id: NbrSecurityRealm.java 6875 2007-09-25 14:54:38Z Chris $
  */
 
-package nl.b3p.nbr.wis.services;
+package nl.b3p.gis.viewer.services;
 
 import java.security.Principal;
 import java.sql.Connection;

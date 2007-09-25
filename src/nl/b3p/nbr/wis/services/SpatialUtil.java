@@ -11,7 +11,7 @@
  * @copyright 2007 All rights reserved. B3Partners
  */
 
-package nl.b3p.nbr.wis.services;
+package nl.b3p.gis.viewer.services;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import nl.b3p.nbr.wis.db.Themas;
+import nl.b3p.gis.viewer.db.Themas;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;

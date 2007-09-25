@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package nl.b3p.nbr.wis.services;
+package nl.b3p.gis.viewer.services;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -2,7 +2,7 @@
  * $Id: LogoutAction.java 6755 2007-09-07 10:00:31Z Matthijs $
  */
 
-package nl.b3p.nbr.wis.services;
+package nl.b3p.gis.viewer.services;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

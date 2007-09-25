@@ -8,7 +8,7 @@
  * @copyright 2007 All rights reserved. B3Partners
  */
 
-package nl.b3p.nbr.wis.db;
+package nl.b3p.gis.viewer.db;
 
 public class FunctieItems {
     

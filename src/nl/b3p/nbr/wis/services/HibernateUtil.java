@@ -10,7 +10,7 @@
  * @copyright 2007 All rights reserved. B3Partners
  */
 
-package nl.b3p.nbr.wis.services;
+package nl.b3p.gis.viewer.services;
 
 import org.apache.commons.logging.*;
 import org.hibernate.*;

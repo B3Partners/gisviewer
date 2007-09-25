@@ -21,7 +21,7 @@
  *
  */
 
-package nl.b3p.nbr.wis;
+package nl.b3p.gis.viewer;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
@@ -36,10 +36,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
-import nl.b3p.nbr.wis.db.Themas;
-import nl.b3p.nbr.wis.services.HibernateUtil;
-import nl.b3p.nbr.wis.services.SpatialUtil;
-import nl.b3p.nbr.wis.BaseGisAction;
+import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.services.HibernateUtil;
+import nl.b3p.gis.viewer.services.SpatialUtil;
+import nl.b3p.gis.viewer.BaseGisAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionMapping;

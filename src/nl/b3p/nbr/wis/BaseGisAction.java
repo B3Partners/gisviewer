@@ -7,7 +7,7 @@
  * @copyright 2007 All rights reserved. B3Partners
  */
 
-package nl.b3p.nbr.wis;
+package nl.b3p.gis.viewer;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -24,12 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import nl.b3p.nbr.wis.db.DataTypen;
-import nl.b3p.nbr.wis.db.ThemaData;
-import nl.b3p.nbr.wis.db.Themas;
-import nl.b3p.nbr.wis.services.HibernateUtil;
-import nl.b3p.nbr.wis.services.SpatialUtil;
-import nl.b3p.nbr.wis.struts.*;
+import nl.b3p.gis.viewer.db.DataTypen;
+import nl.b3p.gis.viewer.db.ThemaData;
+import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.services.HibernateUtil;
+import nl.b3p.gis.viewer.services.SpatialUtil;
+import nl.b3p.gis.viewer.struts.BaseHibernateAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionMapping;

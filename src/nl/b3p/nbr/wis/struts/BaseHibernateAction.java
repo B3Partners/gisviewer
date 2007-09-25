@@ -12,7 +12,7 @@
  * @copyright 2007 All rights reserved. B3Partners
  */
 
-package nl.b3p.nbr.wis.struts;
+package nl.b3p.gis.viewer.struts;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodAction;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
-import nl.b3p.nbr.wis.services.HibernateUtil;
+import nl.b3p.gis.viewer.services.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;

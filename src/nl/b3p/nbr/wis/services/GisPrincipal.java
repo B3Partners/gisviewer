@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: NbrPrincipal.java 6852 2007-09-24 11:47:11Z Matthijs $
  */
 
 package nl.b3p.nbr.wis.services;
@@ -9,11 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NbrPrincipal implements Principal {
+public class GisPrincipal implements Principal {
     private String name;
     private Set roles;
     
-    public NbrPrincipal(String name, List roles) {
+    public GisPrincipal(String name, List roles) {
         this.name = name;
         this.roles = new HashSet();
         this.roles.addAll(roles);

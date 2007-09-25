@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: NbrSecurityRealm.java 6875 2007-09-25 14:54:38Z Chris $
  */
 
 package nl.b3p.nbr.wis.services;
@@ -17,8 +17,8 @@ import org.apache.commons.logging.LogFactory;
 import org.securityfilter.realm.ExternalAuthenticatedRealm;
 import org.securityfilter.realm.SecurityRealmInterface;
 
-public class NbrSecurityRealm implements SecurityRealmInterface, ExternalAuthenticatedRealm {
-    private static final Log log = LogFactory.getLog(NbrSecurityRealm.class);
+public class GisSecurityRealm implements SecurityRealmInterface, ExternalAuthenticatedRealm {
+    private static final Log log = LogFactory.getLog(GisSecurityRealm.class);
     
     /* Naam van de organisatie van kaartenbalie gebruikers voor de rollen "gebruiker"
      * en "themabeheerder"
@@ -73,7 +73,7 @@ public class NbrSecurityRealm implements SecurityRealmInterface, ExternalAuthent
                     do {
                        roles.add("layer_" + rs.getString(5));
                     } while(rs.next());
-                    return new NbrPrincipal(name, roles);
+                    return new GisPrincipal(name, roles);
                 }
             } finally {
                 if(ps != null) {
@@ -94,6 +94,6 @@ public class NbrSecurityRealm implements SecurityRealmInterface, ExternalAuthent
     }
 
     public boolean isUserInRole(Principal principal, String rolename) {
-        return ((NbrPrincipal)principal).isInRole(rolename);
+        return ((GisPrincipal)principal).isInRole(rolename);
     }
 }

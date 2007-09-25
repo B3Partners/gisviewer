@@ -73,7 +73,7 @@
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
     
-    <message-resources  parameter="WisResources" null="true" />
+    <message-resources  parameter="ViewerResources" null="true" />
     
     <!-- ========================= Tiles plugin ===============================-->
     <plug-in className="org.apache.struts.tiles.TilesPlugin" >

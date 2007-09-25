@@ -25,7 +25,7 @@ div, td, th, span, input, textarea, select, option, button {
 
 #menu_div {
     width: 100%;
-    background-image: url(/b3pgis/images/bovenbalk.gif);
+    background-image: url(/gisviewer/images/bovenbalk.gif);
     background-repeat: repeat-x;
     height: 50px;
     text-align: center;
@@ -33,14 +33,14 @@ div, td, th, span, input, textarea, select, option, button {
 
 #onder_div {
     width: 100%;
-    background-image: url(/b3pgis/images/onderbalk.gif);
+    background-image: url(/gisviewer/images/onderbalk.gif);
     background-repeat: repeat-x;
     height: 50px;
     display: block;
 }
 
 #onderbalk_logo {
-    background-image: url(/b3pgis/images/onderbalk_logo.gif);
+    background-image: url(/gisviewer/images/onderbalk_logo.gif);
     background-repeat: no-repeat;
     background-color: none;
     width: 976px;
@@ -52,7 +52,7 @@ div, td, th, span, input, textarea, select, option, button {
 }
 
 #copyright {
-    background-image: url(/b3pgis/images/copyright.gif);
+    background-image: url(/gisviewer/images/copyright.gif);
     background-repeat: no-repeat;
     width: 120px;
     height: 50px;
@@ -62,7 +62,7 @@ div, td, th, span, input, textarea, select, option, button {
 }
 
 #initiatief {
-    background-image: url(/b3pgis/images/initiatief.gif);
+    background-image: url(/gisviewer/images/initiatief.gif);
     background-repeat: no-repeat;
     width: 334px;
     height: 50px;
@@ -127,7 +127,7 @@ a.activemenulink:hover {
 }
 
 .menu_boven_logo {
-    background-image: url(/b3pgis/images/kaartenbalielogo.gif);
+    background-image: url(/gisviewer/images/kaartenbalielogo.gif);
     background-repeat: no-repeat;
     width: 210px;
     height: 50px;
@@ -137,7 +137,7 @@ a.activemenulink:hover {
 }
 
 #content_div {
-    background-image: url(/b3pgis/images/maindiv_bg.gif);
+    background-image: url(/gisviewer/images/maindiv_bg.gif);
     background-repeat: repeat-y;
     width: 948px;
     padding-left: 15px;
@@ -182,7 +182,7 @@ h1{
     font-size: 14px;
     font-weight: bold;
     background-color: #FFD203;
-    background-image: url(/b3pgis/images/balk_links.gif);
+    background-image: url(/gisviewer/images/balk_links.gif);
     background-repeat: no-repeat;
     background-position: 0% 0%;
     height: 20px;
@@ -227,7 +227,7 @@ h1{
 
 .tabvak {
     border: 0px none White;
-    background-image: url(/b3pgis/images/tabvak_bg.gif);
+    background-image: url(/gisviewer/images/tabvak_bg.gif);
     background-repeat: repeat-x;
     background-color: White;
     background-position: 0% 0%;
@@ -265,7 +265,7 @@ h1{
 }
 
 .tabvak_body {
-    background-image: url(/b3pgis/images/tabvak_bg.gif);
+    background-image: url(/gisviewer/images/tabvak_bg.gif);
     background-repeat: repeat-x;
     background-attachment: fixed;
     padding-left: 6px;

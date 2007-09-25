@@ -7,6 +7,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
+
 <script>
     var nr = 0;
     function getNr() {
@@ -137,7 +138,7 @@
             lnk.href = '#';
             lnk.onclick = function(){ getMetaData(item.id) };
             container.appendChild(el);
-            if(item.wmsurl){
+            if(item.wmslayers){
                 container.appendChild(el2);
             }
             container.appendChild(document.createTextNode('  '));
@@ -224,12 +225,16 @@
 
         if(obj.checked) {
             //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
-            var standardParam="SERVICE=WMS&VERSION=1.1.1";
+            //var standardParam="SERVICE=WMS&VERSION=1.1.1";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
-
-            var legendURL = obj.theItem.wmsurl + '&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;
+            var legendURL="${kburl}";
+            if(legendURL.indexOf('?')> 0)
+                legendURL+='&';
+            else
+                legendURL+='?';
+            legendURL +='SERVICE=WMS&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;            
             addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers, legendURL);
-
+            
             if(checkboxArray.length > 0) {
                 var arrayString = getArrayAsString();
                 eraseCookie('checkedLayers');
@@ -238,14 +243,9 @@
                 eraseCookie('checkedLayers');
             }
 
-            if (obj.theItem.wmsurl){
-                if (obj.theItem.wmsurl.indexOf("?")>0){
-                    standardParam="&"+standardParam;
-                }else{
-                    standardParam="?"+standardParam;
-                }
+            if (obj.theItem.wmslayers){
                 if (layerUrl==null){
-                    layerUrl=obj.theItem.wmsurl+standardParam;
+                    layerUrl="${kburl}";
                 }
                 allActiveLayers+= ","+obj.theItem.wmslayers;
                 if (!dontRefresh){
@@ -256,7 +256,7 @@
             //alert("layer uit");
             deleteFromArray(obj);
             removeLayerFromVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
-            if (obj.theItem.wmsurl){
+            if (obj.theItem.wmslayers){
                 allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
                 refreshLayer();
             }
@@ -264,14 +264,14 @@
     }
 
     function refreshLayer(){
+        alert('refreshLayer');
         var layersToAdd;
         if (allActiveLayers.length>0){
             layersToAdd= allActiveLayers.substring(1);
         }else{
             layersToAdd="";
-        }
-        //var newLayer= "<fmc:LayerOGWMS xmlns:fmc='fmc' id='OG2' timeout='30' retryonerror='10' format='image/png' transparent='true' url='"+layerUrl+"' layers='318_achtergrond"+allActiveLayers+"' query_layers='"+layersToAdd+"' srs='EPSG:28992'/>";
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='fmc' id='OG2' timeout='30' retryonerror='10' format='image/png' transparent='true' url='"+layerUrl+"' layers='achtergrond"+allActiveLayers+"' query_layers='"+layersToAdd+"' srs='EPSG:28992'/>";
+        }        
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='fmc' id='OG2' timeout='30' retryonerror='10' format='image/png' transparent='true' url='"+layerUrl+"' layers='"+layersToAdd+"' query_layers='"+layersToAdd+"' srs='EPSG:28992' version='1.1.1'/>";
         if (flamingo && layerUrl!=null){
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);
@@ -694,7 +694,7 @@
     }
     readCookieArrayIntoCheckboxArray();
     var doOnInit= new Boolean("true");
-    function map1_OG2_onUpdateResponse(){
+    function map1_onInit(){
         if(doOnInit){
             doOnInit=false;
             if(checkboxArray.length == layersAan.length) {

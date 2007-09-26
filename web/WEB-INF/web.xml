@@ -28,7 +28,24 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <servlet>
+     <servlet>
+        <servlet-name>aconfig</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
+        <init-param>
+            <param-name>kburl</param-name>
+            <param-value>http://localhost:8084/kaartenbalie/wms/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>anonymous_user</param-name>
+            <param-value>anoniem</param-value>
+        </init-param>
+        <init-param>
+            <param-name>anonymous_password</param-name>
+            <param-value>anoniem</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+   <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
         <init-param>

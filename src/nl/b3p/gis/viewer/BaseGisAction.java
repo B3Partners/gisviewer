@@ -12,18 +12,18 @@ package nl.b3p.gis.viewer;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.security.Principal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import nl.b3p.gis.viewer.db.DataTypen;
 import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
@@ -63,6 +63,12 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         return t;
     }
     
+    /**
+     * 
+     * @param locatie 
+     * @param request 
+     * @return 
+     */
     protected List getValidThemas(boolean locatie,  HttpServletRequest request) {
         List l = SpatialUtil.getValidThemas(locatie);
         List checkedList = new ArrayList();
@@ -78,6 +84,13 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         return checkedList;
     }
     
+    /**
+     * Voeg alle layers samen voor een thema en controleer of de gebruiker
+     * voor alle layers rechten heeft. Zo nee, thema niet toevoegen.
+     * @param t 
+     * @param request 
+     * @return 
+     */
     protected boolean checkThemaRights(Themas t,  HttpServletRequest request) {
         String wmsls = t.getWms_layers();
         if (wmsls==null || wmsls.length()==0)
@@ -92,10 +105,29 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         
         String[] wmsla = wmsls.split(",");
         for (int i=0; i<wmsla.length; i++) {
-            if(!request.isUserInRole("layer_" + wmsla[i]))
+            if(!checkRoles("layer_" + wmsla[i], request))
                 return false;
         }
         return true;
+    }
+    
+    /**
+     * Als principal op request staat dan gebruik isUserInRole,
+     * zo nee, dan kijk op sessie of er default rollen voor
+     * niet ingelogde gebruikers staan.
+     * @param role 
+     * @param request 
+     * @return 
+     */
+    protected boolean checkRoles(String role, HttpServletRequest request) {
+        Principal user = request.getUserPrincipal();
+        if (user != null)
+            return request.isUserInRole(role);
+        HttpSession sess = request.getSession();
+        Set allRoles = (Set)sess.getAttribute(HibernateUtil.ANONYMOUS_ROLES);
+        if (allRoles==null)
+            return false;
+        return allRoles.contains(role);
     }
     
     /**

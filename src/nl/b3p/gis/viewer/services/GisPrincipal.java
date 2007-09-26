@@ -27,8 +27,12 @@ public class GisPrincipal implements Principal {
         return roles.contains(role);
     }
     
+    public Set getRoles() {
+        return roles;
+    }
+    
     public String toString() {
-        return "NbrPrincipal[name=" + name + "]";
+        return "GisPrincipal[name=" + name + "]";
     }
     
     /* TODO: implement equals/hashCode */

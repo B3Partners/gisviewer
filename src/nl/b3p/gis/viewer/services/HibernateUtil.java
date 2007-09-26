@@ -12,21 +12,33 @@
 
 package nl.b3p.gis.viewer.services;
 
-import org.apache.commons.logging.*;
-import org.hibernate.*;
-import org.hibernate.cfg.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
-public class HibernateUtil {
+public class HibernateUtil extends HttpServlet {
     
     private static final Log log = LogFactory.getLog(HibernateUtil.class);
     private static final SessionFactory sessionFactory;
     
-    /** 
+    public static String GEBRUIKERS_ROL = "gebruiker";
+    public static String THEMABEHEERDERS_ROL = "themabeheerder";
+    
+    public static String KBURL = "http://localhost:8084/kaartenbalie/wms/";
+    public static String ANONYMOUS_USER = "anoniem";
+    public static String ANONYMOUS_PASSWORD = "anoniem";
+    public static String ANONYMOUS_ROLES = "anoniem_rollen";
+    
+    /**
      * Initialiseer Hibernate.
      * Creeer de SessionFactory vanuit hibernate.cfg.xml.
      *
      * Gebruik ImprovedNamingStrategy. Let op, deze staat ook in build.xml bij hbm2ddl.
-     * 
+     *
      */
     // <editor-fold defaultstate="" desc="static">
     static {
@@ -41,7 +53,35 @@ public class HibernateUtil {
     }
     // </editor-fold>
     
-    /** 
+    /** Initializes the servlet.
+     */
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        
+        try {
+            String value = config.getInitParameter("kburl");
+            if (value!=null && value.length()>0)
+                KBURL = value;
+            value = config.getInitParameter("anonymous_user");
+            if (value!=null && value.length()>0)
+                ANONYMOUS_USER = value;
+            value = config.getInitParameter("anonymous_password");
+            if (value!=null && value.length()>0)
+                ANONYMOUS_PASSWORD = value;
+            
+            value = config.getInitParameter("gebruikers_rol");
+            if (value!=null && value.length()>0)
+                GEBRUIKERS_ROL = value;
+            value = config.getInitParameter("themabeheerders_rol");
+            if (value!=null && value.length()>0)
+                THEMABEHEERDERS_ROL = value;
+            
+        } catch(Exception e) {
+            throw new ServletException(e);
+        }
+    }
+    
+    /**
      * Returns the SessionFactory of Hibernate.
      *
      * @return SessionFactory met de Hibernate session factory.

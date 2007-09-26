@@ -10,16 +10,19 @@
 
 package nl.b3p.gis.viewer;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -119,6 +122,8 @@ public class ViewerAction extends BaseGisAction {
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         List ctl = SpatialUtil.getValidClusters();
         List themalist = getValidThemas(false, request);
+        
+        addUnknownLayers(ctl, themalist, request);
         
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
         
@@ -235,4 +240,58 @@ public class ViewerAction extends BaseGisAction {
         }
     }
     // </editor-fold>
+    
+    public void addUnknownLayers(List ctl, List themalist, HttpServletRequest request) {
+        Principal user = request.getUserPrincipal();
+        if (user==null || !(user instanceof GisPrincipal))
+            return;
+        // Als het een GisPrincipal is, dan kunnen we de rollen inspekteren voor
+        // extra lagen
+        GisPrincipal gisUser = (GisPrincipal)user;
+        Set roles = gisUser.getRoles();
+        if (roles==null || roles.isEmpty())
+            return;
+        
+        Clusters c = new Clusters();
+        c.setNaam("extra");
+        c.setParent(null);
+        int size = themalist.size();
+        
+        Iterator it = roles.iterator();
+        int tid = 100000;
+        while (it.hasNext()) {
+            String role = (String)it.next();
+            if (!role.startsWith("layer_"))
+                continue;
+            String layer = role.substring(6);
+            boolean found = false;
+            Iterator it2 = themalist.iterator();
+            while (it2.hasNext()) {
+                Themas t = (Themas)it2.next();
+                // als layer al gevonden in themas dan overslaan
+                if (layer.equals(t.getWms_layers_real()) ||
+                        layer.equals(t.getWms_layers())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Themas t = new Themas();
+                t.setId(tid++);
+                t.setNaam(layer);
+//                t.setWms_layers(layer);
+                t.setWms_layers_real(layer);
+//                t.setWms_legendlayer(layer);
+                t.setWms_legendlayer_real(layer);
+                t.setCluster(c);
+                // voeg extra laag als nieuw thema toe
+                themalist.add(t);
+            }
+        }
+        // voeg cluster toe als extra lagen gevonden zijn
+        if (size<themalist.size())
+            ctl.add(c);
+        
+    }
+    
 }

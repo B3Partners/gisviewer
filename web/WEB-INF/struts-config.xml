@@ -24,6 +24,7 @@
     </global-exceptions>
     
     <global-forwards>
+        <forward name="failure" path="/index.do"/>
     </global-forwards>
     
     <action-mappings>

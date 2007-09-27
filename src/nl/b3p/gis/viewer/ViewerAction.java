@@ -23,6 +23,7 @@ import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.GisPrincipal;
+import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -105,6 +106,10 @@ public class ViewerAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (!request.isUserInRole(HibernateUtil.GEBRUIKERS_ROL)) {
+            addMessage(request, RIGHTS_ERROR_KEY);
+            return mapping.findForward(FAILURE);
+        }
         createLists(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }
@@ -121,9 +126,7 @@ public class ViewerAction extends BaseGisAction {
     // <editor-fold defaultstate="" desc="protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request)">
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         List ctl = SpatialUtil.getValidClusters();
-        List themalist = getValidThemas(false, request);
-        
-        addUnknownLayers(ctl, themalist, request);
+        List themalist = getValidThemas(false, ctl, request);
         
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
         
@@ -151,9 +154,7 @@ public class ViewerAction extends BaseGisAction {
         request.setAttribute("tree", root);
         
         // zet kaartenbalie url
-        MessageResources messages = getResources(request);
-        String kburl = messages.getMessage("config.kburl");
-        request.setAttribute("kburl", kburl);
+        request.setAttribute("kburl", HibernateUtil.KBURL);
     }
     // </editor-fold>
     
@@ -241,57 +242,5 @@ public class ViewerAction extends BaseGisAction {
     }
     // </editor-fold>
     
-    public void addUnknownLayers(List ctl, List themalist, HttpServletRequest request) {
-        Principal user = request.getUserPrincipal();
-        if (user==null || !(user instanceof GisPrincipal))
-            return;
-        // Als het een GisPrincipal is, dan kunnen we de rollen inspekteren voor
-        // extra lagen
-        GisPrincipal gisUser = (GisPrincipal)user;
-        Set roles = gisUser.getRoles();
-        if (roles==null || roles.isEmpty())
-            return;
-        
-        Clusters c = new Clusters();
-        c.setNaam("extra");
-        c.setParent(null);
-        int size = themalist.size();
-        
-        Iterator it = roles.iterator();
-        int tid = 100000;
-        while (it.hasNext()) {
-            String role = (String)it.next();
-            if (!role.startsWith("layer_"))
-                continue;
-            String layer = role.substring(6);
-            boolean found = false;
-            Iterator it2 = themalist.iterator();
-            while (it2.hasNext()) {
-                Themas t = (Themas)it2.next();
-                // als layer al gevonden in themas dan overslaan
-                if (layer.equals(t.getWms_layers_real()) ||
-                        layer.equals(t.getWms_layers())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                Themas t = new Themas();
-                t.setId(tid++);
-                t.setNaam(layer);
-//                t.setWms_layers(layer);
-                t.setWms_layers_real(layer);
-//                t.setWms_legendlayer(layer);
-                t.setWms_legendlayer_real(layer);
-                t.setCluster(c);
-                // voeg extra laag als nieuw thema toe
-                themalist.add(t);
-            }
-        }
-        // voeg cluster toe als extra lagen gevonden zijn
-        if (size<themalist.size())
-            ctl.add(c);
-        
-    }
     
 }

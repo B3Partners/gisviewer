@@ -24,9 +24,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.DataTypen;
 import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import nl.b3p.gis.viewer.struts.BaseHibernateAction;
@@ -56,78 +58,150 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         String themaid = (String)request.getParameter("themaid");
         Themas t = SpatialUtil.getThema(themaid);
         
+        if (!HibernateUtil.CHECK_LOGIN_KAARTENBALIE)
+            return t;
+        
+        // Zoek layers die via roles binnen komen
+        List layersFromRoles = getLayerNamesFromRoles(request);
+        if (layersFromRoles==null)
+            return null;
+        
         // Check de rechten op alle layers uit het thema
-        if (!checkThemaRights(t,  request))
+        if (!checkThemaLayers(t,  layersFromRoles))
             return null;
         
         return t;
     }
     
     /**
-     * 
-     * @param locatie 
-     * @param request 
-     * @return 
+     * Indien een cluster wordt meegegeven dan voegt deze functie ook de layers
+     * die niet als thema geconfigureerd zijn, maar toch als role aan de principal
+     * zijn meegegeven als dummy thema toe. Als dit niet de bedoeling is dan
+     * dient null als cluster meegegeven te worden.
+     *
+     * @param locatie
+     * @param request
+     * @return
      */
-    protected List getValidThemas(boolean locatie,  HttpServletRequest request) {
-        List l = SpatialUtil.getValidThemas(locatie);
-        List checkedList = new ArrayList();
-        if (l!=null) {
-            Iterator it = l.iterator();
-            while(it.hasNext()) {
-                Themas t = (Themas)it.next();
-                if (checkThemaRights(t,  request))
-                    checkedList.add(t);
-                
+    protected List getValidThemas(boolean locatie, List ctl, HttpServletRequest request) {
+        List configuredThemasList = SpatialUtil.getValidThemas(locatie);
+        // Als geen check via kaartenbalie dan alle layers doorgeven
+        if (!HibernateUtil.CHECK_LOGIN_KAARTENBALIE)
+            return configuredThemasList;
+        
+        // Zoek layers die via roles binnen komen
+        List layersFromRoles = getLayerNamesFromRoles(request);
+        if (layersFromRoles==null)
+            return null;
+        
+        // Voeg alle themas toe die layers hebben die volgens de rollen
+        // acceptabel zijn (voldoende rechten dus).
+        List layersFound = new ArrayList();
+        List checkedThemaList = new ArrayList();
+        if (configuredThemasList!=null) {
+            Iterator it2 = configuredThemasList.iterator();
+            while(it2.hasNext()) {
+                Themas t = (Themas)it2.next();
+                if (checkThemaLayers(t,  layersFromRoles)) {
+                    checkedThemaList.add(t);
+                    layersFound.add(t.getNaam());
+                }
             }
         }
-        return checkedList;
+        
+        // Als geen cluster of alles al gevonden dan hier stoppen.
+        if (ctl==null || layersFound.size()==layersFromRoles.size())
+            return checkedThemaList;
+        
+        // Kijk welke lagen uit de rollen nog niet zijn toegevoegd
+        // en voeg deze alsnog toe via dummy thema en cluster.
+        Clusters c = new Clusters();
+        c.setNaam("Extra");
+        c.setParent(null);
+        ctl.add(c);
+        
+        Iterator it = layersFromRoles.iterator();
+        int tid = 100000;
+        while (it.hasNext()) {
+            String layer = (String)it.next();
+            if (layersFound.contains(layer))
+                continue;
+            
+            // Layer bestaat nog niet dus aanmaken
+            Themas t = new Themas();
+            t.setId(tid++);
+            t.setNaam(layer);
+//                t.setWms_layers(layer);
+            t.setWms_layers_real(layer);
+//                t.setWms_legendlayer(layer);
+            t.setWms_legendlayer_real(layer);
+            t.setCluster(c);
+            // voeg extra laag als nieuw thema toe
+            checkedThemaList.add(t);
+        }
+        return checkedThemaList;
+    }
+    
+    public List getLayerNamesFromRoles(HttpServletRequest request) {
+        Set roles = null;
+        Principal user = request.getUserPrincipal();
+        if (user==null || !(user instanceof GisPrincipal)) {
+            HttpSession sess = request.getSession();
+            roles = (Set)sess.getAttribute(HibernateUtil.ANONYMOUS_ROLES);
+        } else {
+            // Als het een GisPrincipal is, dan kunnen we de rollen inspekteren voor
+            // extra lagen
+            GisPrincipal gisUser = (GisPrincipal)user;
+            roles = gisUser.getRoles();
+        }
+        if (roles==null || roles.isEmpty())
+            return null;
+        
+        List lns = new ArrayList();
+        Iterator it = roles.iterator();
+        while (it.hasNext()) {
+            String role = (String)it.next();
+            if (!role.startsWith(HibernateUtil.LAYER_ROLE_PREFIX))
+                continue;
+            String layer = role.substring(6);
+            lns.add(layer);
+        }
+        if (lns.isEmpty())
+            return null;
+        return lns;
     }
     
     /**
      * Voeg alle layers samen voor een thema en controleer of de gebruiker
      * voor alle layers rechten heeft. Zo nee, thema niet toevoegen.
-     * @param t 
-     * @param request 
-     * @return 
+     * @param t
+     * @param request
+     * @return
      */
-    protected boolean checkThemaRights(Themas t,  HttpServletRequest request) {
-        String wmsls = t.getWms_layers();
+    protected boolean checkThemaLayers(Themas t,  List acceptableLayers) {
+        if (acceptableLayers==null)
+            return false;
+//        String wmsls = t.getWms_layers();
+        String wmsls = t.getWms_layers_real();
         if (wmsls==null || wmsls.length()==0)
             return false;
         
-        String wmsqls = t.getWms_querylayers();
+        // Misschien is dit te streng, alleen op wms layer checken?
+//        String wmsqls = t.getWms_querylayers();
+        String wmsqls = t.getWms_querylayers_real();
         if (wmsqls!=null || wmsqls.length()>0)
             wmsls += "," + wmsqls;
-        String wmslls = t.getWms_legendlayer();
+//        String wmslls = t.getWms_legendlayer();
+        String wmslls = t.getWms_legendlayer_real();
         if (wmslls!=null || wmslls.length()>0)
             wmsls += "," + wmslls;
         
         String[] wmsla = wmsls.split(",");
         for (int i=0; i<wmsla.length; i++) {
-            if(!checkRoles("layer_" + wmsla[i], request))
+            if(!acceptableLayers.contains(wmsla[i]))
                 return false;
         }
         return true;
-    }
-    
-    /**
-     * Als principal op request staat dan gebruik isUserInRole,
-     * zo nee, dan kijk op sessie of er default rollen voor
-     * niet ingelogde gebruikers staan.
-     * @param role 
-     * @param request 
-     * @return 
-     */
-    protected boolean checkRoles(String role, HttpServletRequest request) {
-        Principal user = request.getUserPrincipal();
-        if (user != null)
-            return request.isUserInRole(role);
-        HttpSession sess = request.getSession();
-        Set allRoles = (Set)sess.getAttribute(HibernateUtil.ANONYMOUS_ROLES);
-        if (allRoles==null)
-            return false;
-        return allRoles.contains(role);
     }
     
     /**

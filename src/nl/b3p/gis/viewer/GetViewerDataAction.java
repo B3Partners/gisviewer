@@ -309,7 +309,7 @@ public class GetViewerDataAction extends BaseGisAction {
             request.setAttribute("ycoord", request.getParameter("ycoord"));
             
             ArrayList analysedata = new ArrayList();
-            List ctl = getValidThemas(true, request);
+            List ctl = getValidThemas(true, null, request);
             if(ctl != null) {
                 Iterator it = ctl.iterator();
                 while(it.hasNext()) {
@@ -447,7 +447,7 @@ public class GetViewerDataAction extends BaseGisAction {
         String lagen = request.getParameter("lagen");
         ArrayList objectdata = new ArrayList();
         
-        List ctl = getValidThemas(true, request);
+        List ctl = getValidThemas(true, null, request);
         if(ctl != null) {
             Iterator it = ctl.iterator();
             while(it.hasNext()) {

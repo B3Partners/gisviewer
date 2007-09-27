@@ -229,7 +229,7 @@ public class ETLTransformAction extends BaseGisAction {
      */
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) {
         List ctl = SpatialUtil.getValidClusters();
-        List themalist = getValidThemas(false, request);
+        List themalist = getValidThemas(false, null, request);
         List newThemalist = new ArrayList(themalist);
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();

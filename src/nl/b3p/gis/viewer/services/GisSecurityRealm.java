@@ -10,12 +10,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.naming.InitialContext;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import nl.b3p.wms.capabilities.Layer;
+import nl.b3p.wms.capabilities.Roles;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
 import org.apache.commons.logging.Log;
@@ -30,14 +33,29 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
     
     private static final String FORM_USERNAME = "j_username";
     private static final String FORM_PASSWORD = "j_password";
+    private static final String CAPABILITIES_QUERYSTRING = "REQUEST=GetCapabilities&VERSION=1.1.1&SERVICE=WMS";
     
     public Principal authenticate(SecurityRequestWrapper request) {
+        
+        
         String username = request.getParameter(FORM_USERNAME);
         String password = request.getParameter(FORM_PASSWORD);
         HttpSession sess = request.getSession();
         
+        // Eventueel fake Principal aanmaken
+        if (!HibernateUtil.CHECK_LOGIN_KAARTENBALIE)
+            return authenticateFake(username);
+        
         // Haal rechten van user op
-        GisPrincipal user = authenticateHttp(HibernateUtil.KBURL, username, password);
+        String url = HibernateUtil.KBURL;
+        if (url.lastIndexOf('?') == url.length()-1)
+            url += CAPABILITIES_QUERYSTRING;
+        else if (url.lastIndexOf('&') == url.length()-1)
+            url += CAPABILITIES_QUERYSTRING;
+        else
+            url += "?" + CAPABILITIES_QUERYSTRING;
+        
+        GisPrincipal user = authenticateHttp(url, username, password);
         if (user!=null) {
             // Als rechten binnengekregen, dan anonieme rechten verwijderen
             sess.removeAttribute(HibernateUtil.ANONYMOUS_ROLES);
@@ -51,10 +69,10 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
             return null;
         
         // Kijk wat rechten voor anonieme gebruiker zijn en zet op sessie
-        user = authenticateHttp(HibernateUtil.KBURL, 
-                HibernateUtil.ANONYMOUS_USER, 
+        user = authenticateHttp(HibernateUtil.KBURL,
+                HibernateUtil.ANONYMOUS_USER,
                 HibernateUtil.ANONYMOUS_PASSWORD);
-        if (user!=null) 
+        if (user!=null)
             sess.setAttribute(HibernateUtil.ANONYMOUS_ROLES, user.getRoles());
         
         // Return null om te voorkomen dat cookie gezet wordt en de
@@ -70,6 +88,15 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         return ((GisPrincipal)principal).isInRole(rolename);
     }
     
+    protected GisPrincipal authenticateFake(String username) {
+        
+        List roles = new ArrayList();
+        roles.add(HibernateUtil.GEBRUIKERS_ROL);
+        roles.add(HibernateUtil.THEMABEHEERDERS_ROL);
+        
+        return new GisPrincipal(username, roles);
+    }
+    
     protected GisPrincipal authenticateHttp(String location, String username, String password) {
         WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
         ServiceProvider sp = null;
@@ -81,21 +108,32 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
             log.error("", ex);
         }
         
+        List allRoles = new ArrayList();
+        
         Set roles = sp.getAllRoles();
         if(roles==null || roles.isEmpty())
             return null;
-        List allRoles = new ArrayList();
-        allRoles.addAll(roles);
+            
+        Iterator it = roles.iterator();
+        while (it.hasNext()) {
+            Roles role = (Roles) it.next();
+            String name = role.getRole();
+            if (name!=null && name.length()>0)
+                allRoles.add(name);
+        }
         
         Set layers = sp.getAllLayers();
         if (layers!=null && !layers.isEmpty()) {
-            Iterator it = layers.iterator();
+            it = layers.iterator();
             while (it.hasNext()) {
-                String role = (String) it.next();
-                allRoles.add("layer_" + role);
+                Layer layer = (Layer) it.next();
+                String name = layer.getName();
+                if (name!=null && name.length()>0)
+                    allRoles.add(HibernateUtil.LAYER_ROLE_PREFIX + name);
             }
         }
         
+        log.debug("login: " + username + ", # roles: " + allRoles.size());
         return new GisPrincipal(username, allRoles);
     }
     
@@ -145,7 +183,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
                     
                     String name = rs.getString(1) + " " + rs.getString(2);
                     do {
-                        roles.add("layer_" + rs.getString(5));
+                        roles.add(HibernateUtil.LAYER_ROLE_PREFIX + rs.getString(5));
                     } while(rs.next());
                     return new GisPrincipal(name, roles);
                 }

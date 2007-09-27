@@ -24,14 +24,17 @@ public class HibernateUtil extends HttpServlet {
     
     private static final Log log = LogFactory.getLog(HibernateUtil.class);
     private static final SessionFactory sessionFactory;
+    public static final String LAYER_ROLE_PREFIX = "layer_";
     
-    public static String GEBRUIKERS_ROL = "gebruiker";
-    public static String THEMABEHEERDERS_ROL = "themabeheerder";
+    public static String GEBRUIKERS_ROL = "Gebruiker";
+    public static String THEMABEHEERDERS_ROL = "Themabeheerder";
     
     public static String KBURL = "http://localhost:8084/kaartenbalie/wms/";
     public static String ANONYMOUS_USER = "anoniem";
     public static String ANONYMOUS_PASSWORD = "anoniem";
     public static String ANONYMOUS_ROLES = "anoniem_rollen";
+    
+    public static boolean CHECK_LOGIN_KAARTENBALIE = true;
     
     /**
      * Initialiseer Hibernate.
@@ -75,6 +78,11 @@ public class HibernateUtil extends HttpServlet {
             value = config.getInitParameter("themabeheerders_rol");
             if (value!=null && value.length()>0)
                 THEMABEHEERDERS_ROL = value;
+            
+            value = config.getInitParameter("check_login_kaartenbalie");
+            if (value!=null && value.equalsIgnoreCase("false"))
+                CHECK_LOGIN_KAARTENBALIE = false;
+
             
         } catch(Exception e) {
             throw new ServletException(e);

@@ -4,11 +4,14 @@
     
     <hr size="1" width="100%" />
     
-    <img src="images/logo.gif" border="0" alt="Logo Noord Brabant" class="nbr" />
+    <img src="images/logo.gif" border="0" alt="Logo" class="nbr" />
     
     <table class="kolomtabel">
         <tr>
             <td valign="top">
+                <html:messages id="message" message="true">
+                    <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
+                </html:messages>
                 <h1>B3P GIS Suite Demo</h1>
                 
                 <div>
@@ -67,8 +70,8 @@
                 Het tabblad legenda bestaat uit een paneel waarop u alle actieve kaartlagen kunt vinden. 
                 Bij deze kaartlagen is een afbeelding geplaatst waarop u kunt zien hoe u de betreffende kaartlaag op de kaart kunt onderscheiden.
                 <p>U kunt met de knoppen "Omlaag" en "Omhoog" de volgorde van de kaartlagen aanpassen. 
-                Wilt u een bepaalde kaartlaag als bovenste kaartlaag hebben, dan kunt u met de knop "Omhoog" deze kaartlaag naar de gewenste positie verplaatsen. 
-                U dient vervolgens op de knop "Herlaad kaart" te klikken, waarmee de kaart ververst wordt en 
+                    Wilt u een bepaalde kaartlaag als bovenste kaartlaag hebben, dan kunt u met de knop "Omhoog" deze kaartlaag naar de gewenste positie verplaatsen. 
+                    U dient vervolgens op de knop "Herlaad kaart" te klikken, waarmee de kaart ververst wordt en 
                 de kaartlagen worden getoond volgens de volgorde van het legendapaneel (bovenaan in het vak betekent bovenste kaartlaag).</p>
                 <p>Met de knop "Verwijder alle lagen" kunt u met &eacute;&eacute;n druk op de knop alle kaartlagen verwijderen en 
                 houdt u slechts de basiskaart over.</p>
@@ -90,11 +93,11 @@
                 De analyse heeft altijd betrekking op de actieve kaartlaag zoals deze onder tab Thema's is gekozen. 
                 Objecten van dit thema kunnen verder worden beperkt door extra criteria op te nemen.
                 <p>Vervolgens kan opgegeven worden voor welk gebied de analyse moet worden uitgevoerd. 
-                Dit is een van de gebieden zoals bepaald onder de tab Gebieden. 
+                    Dit is een van de gebieden zoals bepaald onder de tab Gebieden. 
                 Bij de analyse worden dus alle objecten meegenomen van de actieve kaartlaag welke liggen in het gebied van keuze.</p>
                 <p>Tenslotte dient aangegeven te worden of de gebruiker een selectie of een berekening wil uitvoeren. 
-                Bij een selectie kiest men &quot;Geef object&quot; en de gewenste subselectie. Na het klikken van de knop wordt een lijst van objecten getoond. 
-                Bij een berekening kiest men &quot;Geef waarde&quot; en vervolgens de gewenste subselectie. 
+                    Bij een selectie kiest men &quot;Geef object&quot; en de gewenste subselectie. Na het klikken van de knop wordt een lijst van objecten getoond. 
+                    Bij een berekening kiest men &quot;Geef waarde&quot; en vervolgens de gewenste subselectie. 
                 Na het klikken van de knop verschijnt on de de knop het resultaat van de berekening.</p>
                 
                 <h2>Weergeven van resultaten</h2>
@@ -102,7 +105,7 @@
                 De objectlijsten in het resultatenpaneel kunnen ge&euml;xporteerd worden naar de computer van de gebruiker. 
                 Hiermee kan hij deze resultaten verder verwerken in rapportages.
                 <p>De viewer geeft de resultaten op 3 manieren weer. De meeste belangrijke informatie van een object wordt op de basisregel getoond en 
-                is dus direct zichtbaar. Indien er meer informatie beschikbaar is dan kan via de I-knop een nieuw scherm worden gestart 
+                    is dus direct zichtbaar. Indien er meer informatie beschikbaar is dan kan via de I-knop een nieuw scherm worden gestart 
                 met extra informatie.</p>
                 <p>Voor enkele thema's is buiten de viewer informatie beschikbaar welke via een webinterface bereikbaar is. 
                 Dergelijke informatie kan worden opgevraagd via de link-knop.</p>

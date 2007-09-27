@@ -40,6 +40,7 @@ public abstract class BaseHibernateAction extends ExtendedMethodAction {
     protected static final String SUCCESS = "success";
     protected static final String FAILURE = "failure";
     protected static final String VALIDATION_ERROR_KEY = "error.validation";
+    protected static final String RIGHTS_ERROR_KEY = "error.rights";
     
     /**
      * Een Struts action die doorverwijst naar de strandaard forward.

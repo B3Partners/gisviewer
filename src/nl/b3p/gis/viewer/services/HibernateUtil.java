@@ -26,8 +26,10 @@ public class HibernateUtil extends HttpServlet {
     private static final SessionFactory sessionFactory;
     public static final String LAYER_ROLE_PREFIX = "layer_";
     
-    public static String GEBRUIKERS_ROL = "Gebruiker";
-    public static String THEMABEHEERDERS_ROL = "Themabeheerder";
+    public static String GEBRUIKERS_ROL = "gebruiker";
+    public static String THEMABEHEERDERS_ROL = "themabeheerder";
+    public static String DEMOGEBRUIKERS_ROL = "demogebruiker";
+    public static String BEHEERDERS_ROL = "beheerder";
     
     public static String KBURL = "http://localhost:8084/kaartenbalie/wms/";
     public static String ANONYMOUS_USER = "anoniem";

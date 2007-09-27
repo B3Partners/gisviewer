@@ -47,7 +47,7 @@
             <url-pattern>/etl*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>Themabeheerder</role-name>
+            <role-name>themabeheerder</role-name>
         </auth-constraint>
     </security-constraint>
 

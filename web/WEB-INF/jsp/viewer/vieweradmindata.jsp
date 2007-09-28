@@ -71,8 +71,8 @@
                                         </c:otherwise>            
                                     </c:choose>
                                     <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
-                                    <c:if test="${kolom.last && totale_breedte_onder < 931}">
-                                        <c:set var="breedte" value="${breedte + (931 - totale_breedte_onder)}" />
+                                    <c:if test="${kolom.last && totale_breedte_onder < 915}">
+                                        <c:set var="breedte" value="${breedte + (915 - totale_breedte_onder)}" />
                                     </c:if>
                                     <c:choose>
                                         <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">

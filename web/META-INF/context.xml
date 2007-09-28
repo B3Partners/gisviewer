@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/gisviewer">
-  <Resource driverClassName="org.postgresql.Driver" maxActive="100" maxIdle="30" maxWait="5000" name="jdbc/gisviewer" password="***REMOVED***" type="javax.sql.DataSource" url="jdbc:postgresql://x5.b3p.nl:5432/b3p_gis" username="postgres" validationQuery="select now();"/>
-  <Resource driverClassName="com.mysql.jdbc.Driver" maxActive="100" maxIdle="30" maxWait="5000" name="jdbc/kaartenbalie" password="XnigASDNggds" type="javax.sql.DataSource" url="jdbc:mysql://x5.b3p.nl:3306/kaartenbalie_wis" username="kaartenbalie_wis" validationQuery="select now();"/>
+  	<!-- context voor tomcat 5.5 -->
+  	<!-- <Resource driverClassName="org.postgresql.Driver" maxActive="100" maxIdle="30" maxWait="5000" name="jdbc/gisviewer" password="***REMOVED***" type="javax.sql.DataSource" url="jdbc:postgresql://x5.b3p.nl:5432/b3p_gis" username="postgres" validationQuery="select now();"/>-->
+
+  	<!-- context voor tomcat 5.0 op x5 -->
+ 	<Resource auth="Container" name="jdbc/gisviewer" type="javax.sql.DataSource"/>
+	<ResourceParams name="jdbc/gisviewer">
+	<parameter>
+		<name>factory</name>
+		<value>org.apache.commons.dbcp.BasicDataSourceFactory</value>
+	</parameter>
+	<parameter>
+		<name>maxActive</name>
+		<value>100</value>
+	</parameter>
+	<parameter>
+		<name>maxIdle</name>
+		<value>30</value>
+	</parameter>
+	<parameter>
+		<name>maxWait</name>
+		<value>10000</value>
+	</parameter>
+	<parameter>
+		<name>minEvictableIdleTimeMillis</name>
+		<value>10000</value>
+	</parameter>
+	<parameter>
+		<name>timeBetweenEvictionRunsMillis</name>
+		<value>60000</value>
+	</parameter>
+	<parameter>
+		<name>username</name>
+		<value>postgres</value>
+	</parameter>
+	<parameter>
+		<name>password</name>
+		<value>***REMOVED***</value>
+	</parameter>
+	<parameter>
+		<name>driverClassName</name>
+		<value>org.postgresql.Driver</value>
+	</parameter>
+	<parameter>
+		<name>url</name>
+		<value>jdbc:postgresql://localhost:5432/b3p_gis</value>
+	</parameter>
+	<parameter>
+		<name>validationQuery</name>
+		<value>select now();</value>
+	</parameter>
+	</ResourceParams>
 </Context>

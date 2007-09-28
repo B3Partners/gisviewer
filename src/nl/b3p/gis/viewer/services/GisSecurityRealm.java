@@ -108,6 +108,9 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
             log.error("", ex);
         }
         
+        if (sp==null)
+            return null;
+        
         List allRoles = new ArrayList();
         
         Set roles = sp.getAllRoles();

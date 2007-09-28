@@ -137,7 +137,9 @@
             lnk.innerHTML = item.title ? item.title : item.id;
             lnk.href = '#';
             lnk.onclick = function(){ getMetaData(item.id) };
-            container.appendChild(el);
+            if(item.wmsquerylayers) {
+                container.appendChild(el);
+            }
             if(item.wmslayers){
                 container.appendChild(el2);
             }

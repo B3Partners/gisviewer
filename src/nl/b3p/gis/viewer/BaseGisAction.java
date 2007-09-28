@@ -104,7 +104,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 Themas t = (Themas)it2.next();
                 if (checkThemaLayers(t,  layersFromRoles)) {
                     checkedThemaList.add(t);
-                    layersFound.add(t.getNaam());
+                    layersFound.add(t.getWms_layers_real());
                 }
             }
         }

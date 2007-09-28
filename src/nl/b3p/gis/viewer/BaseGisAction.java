@@ -179,7 +179,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      * @return
      */
     protected boolean checkThemaLayers(Themas t,  List acceptableLayers) {
-        if (acceptableLayers==null)
+        if (t==null || acceptableLayers==null)
             return false;
 //        String wmsls = t.getWms_layers();
         String wmsls = t.getWms_layers_real();

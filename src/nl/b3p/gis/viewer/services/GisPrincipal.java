@@ -5,20 +5,51 @@
 package nl.b3p.gis.viewer.services;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import nl.b3p.wms.capabilities.Layer;
+import nl.b3p.wms.capabilities.Roles;
+import nl.b3p.wms.capabilities.ServiceProvider;
 
 public class GisPrincipal implements Principal {
+    
+    public static String ANONYMOUS_PRINCIPAL = "anoniem_principal";
+    
     private String name;
     private Set roles;
+    private ServiceProvider sp;
     
     public GisPrincipal(String name, List roles) {
         this.name = name;
         this.roles = new HashSet();
         this.roles.addAll(roles);
     }
-
+    
+    public GisPrincipal(String name, ServiceProvider sp) {
+        this.name = name;
+        this.sp = sp;
+        if(sp==null)
+            return;
+        
+        this.roles = new HashSet();
+        Set sproles = sp.getAllRoles();
+        if(sproles==null || sproles.isEmpty())
+            return;
+        
+        Iterator it = sproles.iterator();
+        while (it.hasNext()) {
+            Roles role = (Roles) it.next();
+            String sprole = role.getRole();
+            if (sprole!=null && sprole.length()>0)
+                roles.add(sprole);
+        }
+    }
+    
     public String getName() {
         return name;
     }
@@ -36,4 +67,67 @@ public class GisPrincipal implements Principal {
     }
     
     /* TODO: implement equals/hashCode */
+    
+    public ServiceProvider getSp() {
+        return sp;
+    }
+    
+    public void setSp(ServiceProvider sp) {
+        this.sp = sp;
+    }
+    
+    public List getLayerNames() {
+        if(sp==null)
+            return null;
+        Set layers = sp.getAllLayers();
+        if (layers==null  || layers.isEmpty())
+            return null;
+        
+        List allLayers = new ArrayList();
+        Iterator it = layers.iterator();
+        while (it.hasNext()) {
+            Layer layer = (Layer) it.next();
+            String name = layer.getName();
+            if (name!=null && name.length()>0)
+                allLayers.add(name);
+        }
+        return allLayers;
+    }
+    
+    public Layer getLayer(String layerName) {
+        if(sp==null)
+            return null;
+        Set layers = sp.getAllLayers();
+        if (layers==null  || layers.isEmpty())
+            return null;
+        
+        Iterator it = layers.iterator();
+        while (it.hasNext()) {
+            Layer layer = (Layer) it.next();
+            String name = layer.getName();
+            if (name==null || name.length()==0)
+                continue;
+            if (name.equalsIgnoreCase(layerName))
+                return layer;
+        }
+        return null;
+    }
+    
+    public String getLayerTitle(String layerName) {
+        Layer layer = getLayer(layerName);
+        if (layer==null)
+            return null;
+        return layer.getTitle();
+    }
+    
+    public static GisPrincipal getGisPrincipal(HttpServletRequest request) {
+        Principal user = request.getUserPrincipal();
+        if (user==null) {
+            HttpSession sess = request.getSession();
+            user = (Principal)sess.getAttribute(ANONYMOUS_PRINCIPAL);
+        }
+        if (user==null || !(user instanceof GisPrincipal))
+            return null;
+        return (GisPrincipal)user;
+    }
 }

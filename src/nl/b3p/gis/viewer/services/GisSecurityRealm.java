@@ -10,15 +10,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.naming.InitialContext;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import nl.b3p.wms.capabilities.Layer;
-import nl.b3p.wms.capabilities.Roles;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
 import org.apache.commons.logging.Log;
@@ -58,14 +53,14 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         GisPrincipal user = authenticateHttp(url, username, password);
         if (user!=null) {
             // Als rechten binnengekregen, dan anonieme rechten verwijderen
-            sess.removeAttribute(HibernateUtil.ANONYMOUS_ROLES);
+            sess.removeAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL);
             // door principal te returnen wordt cookie gezet
             return user;
         }
         
         // Kijken of er al anonieme rechten staan, zo ja niets meer doen
-        Set allRoles = (Set)sess.getAttribute(HibernateUtil.ANONYMOUS_ROLES);
-        if (allRoles!=null)
+        user = (GisPrincipal)sess.getAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL);
+        if (user!=null)
             return null;
         
         // Kijk wat rechten voor anonieme gebruiker zijn en zet op sessie
@@ -73,7 +68,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
                 HibernateUtil.ANONYMOUS_USER,
                 HibernateUtil.ANONYMOUS_PASSWORD);
         if (user!=null)
-            sess.setAttribute(HibernateUtil.ANONYMOUS_ROLES, user.getRoles());
+            sess.setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
         
         // Return null om te voorkomen dat cookie gezet wordt en de
         // gebruiker niet alsnog kan inloggen
@@ -111,33 +106,8 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         if (sp==null)
             return null;
         
-        List allRoles = new ArrayList();
-        
-        Set roles = sp.getAllRoles();
-        if(roles==null || roles.isEmpty())
-            return null;
-            
-        Iterator it = roles.iterator();
-        while (it.hasNext()) {
-            Roles role = (Roles) it.next();
-            String name = role.getRole();
-            if (name!=null && name.length()>0)
-                allRoles.add(name);
-        }
-        
-        Set layers = sp.getAllLayers();
-        if (layers!=null && !layers.isEmpty()) {
-            it = layers.iterator();
-            while (it.hasNext()) {
-                Layer layer = (Layer) it.next();
-                String name = layer.getName();
-                if (name!=null && name.length()>0)
-                    allRoles.add(HibernateUtil.LAYER_ROLE_PREFIX + name);
-            }
-        }
-        
-        log.debug("login: " + username + ", # roles: " + allRoles.size());
-        return new GisPrincipal(username, allRoles);
+        log.debug("login: " + username);
+        return new GisPrincipal(username, sp);
     }
     
     // database schema veranderd, dus werkt niet meer goed

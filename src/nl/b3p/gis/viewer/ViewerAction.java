@@ -10,19 +10,16 @@
 
 package nl.b3p.gis.viewer;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
-import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import org.apache.commons.logging.Log;
@@ -30,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
-import org.apache.struts.util.MessageResources;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,21 +129,25 @@ public class ViewerAction extends BaseGisAction {
         JSONArray children = new JSONArray();
         root.put("children", children);
         
-        
-        
         if (ctl!=null) {
             Iterator it = ctl.iterator();
             while (it.hasNext()) {
                 Clusters cluster = (Clusters)it.next();
                 if(cluster.getParent() == null) {
-                    JSONObject jsonCluster = new JSONObject().put("id", "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
-                    children.put(jsonCluster);
                     
-                    JSONArray childrenCluster = new JSONArray();
-                    jsonCluster.put("children", childrenCluster);
+                    boolean childrenAvailable = hasChildren(cluster, themalist);
+                    boolean subclustersAvailable = hasSubcluster(cluster, ctl);
                     
-                    getChildren(themalist, childrenCluster, cluster);
-                    getSubClusters(themalist, childrenCluster, cluster, ctl);
+                    if (childrenAvailable || subclustersAvailable) {
+                        JSONObject jsonCluster = new JSONObject().put("id", "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
+                        children.put(jsonCluster);
+                        
+                        JSONArray childrenCluster = new JSONArray();
+                        jsonCluster.put("children", childrenCluster);
+                        
+                        getChildren(themalist, childrenCluster, cluster);
+                        getSubClusters(themalist, childrenCluster, cluster, ctl);
+                    }
                 }
             }
         }
@@ -183,14 +183,20 @@ public class ViewerAction extends BaseGisAction {
             it = subclusters.iterator();
             while(it.hasNext()) {
                 Clusters cl = (Clusters) it.next();
-                JSONObject jsonCluster = new JSONObject().put("id", "c" + cl.getId()).put("type", "child").put("title", cl.getNaam()).put("cluster", true);
-                root.put(jsonCluster);
                 
-                JSONArray childrenCluster = new JSONArray();
-                jsonCluster.put("children", childrenCluster);
+                boolean childrenAvailable = hasChildren(cl, themalist);
+                boolean subclustersAvailable = hasSubcluster(cl, list);
                 
-                getChildren(themalist, childrenCluster, cl);
-                getSubClusters(themalist, childrenCluster, cl, list);
+                if (childrenAvailable || subclustersAvailable) {
+                    JSONObject jsonCluster = new JSONObject().put("id", "c" + cl.getId()).put("type", "child").put("title", cl.getNaam()).put("cluster", true);
+                    root.put(jsonCluster);
+                    
+                    JSONArray childrenCluster = new JSONArray();
+                    jsonCluster.put("children", childrenCluster);
+                    
+                    getChildren(themalist, childrenCluster, cl);
+                    getSubClusters(themalist, childrenCluster, cl, list);
+                }
             }
         }
     }
@@ -242,5 +248,26 @@ public class ViewerAction extends BaseGisAction {
     }
     // </editor-fold>
     
+    private boolean hasChildren(Clusters cluster, List themalist) {
+        if(themalist == null)
+            return false;
+        Iterator it = themalist.iterator();
+        while(it.hasNext()) {
+            Themas thema = (Themas) it.next();
+            if(thema.getCluster() == cluster)
+                return true;
+        }
+        return false;
+    }
+    
+    private boolean hasSubcluster(Clusters cluster, List ctl) {
+        Iterator it = ctl.iterator();
+        while (it.hasNext()) {
+            Clusters cl = (Clusters)it.next();
+            if(cl.getParent() == cluster)
+                return true;
+        }
+        return false;
+    }
     
 }

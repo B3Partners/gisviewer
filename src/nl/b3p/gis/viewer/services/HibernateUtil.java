@@ -32,11 +32,11 @@ public class HibernateUtil extends HttpServlet {
     public static String BEHEERDERS_ROL = "beheerder";
     
     public static String KBURL = "http://localhost:8084/kaartenbalie/wms/";
-    public static String ANONYMOUS_USER = "anoniem";
-    public static String ANONYMOUS_PASSWORD = "anoniem";
-    public static String ANONYMOUS_ROLES = "anoniem_rollen";
     
     public static boolean CHECK_LOGIN_KAARTENBALIE = true;
+    public static String ANONYMOUS_USER = "anoniem";
+    public static String ANONYMOUS_PASSWORD = "anoniem";
+    public static String KAARTENBALIE_CLUSTER = "Extra";
     
     /**
      * Initialiseer Hibernate.

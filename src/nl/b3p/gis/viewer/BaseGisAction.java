@@ -12,7 +12,6 @@ package nl.b3p.gis.viewer;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.security.Principal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,9 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.DataTypen;
 import nl.b3p.gis.viewer.db.ThemaData;
@@ -61,8 +58,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         if (!HibernateUtil.CHECK_LOGIN_KAARTENBALIE)
             return t;
         
-        // Zoek layers die via roles binnen komen
-        List layersFromRoles = getLayerNamesFromRoles(request);
+        // Zoek layers die via principal binnen komen
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        if (user==null)
+            return null;
+        List layersFromRoles = user.getLayerNames();
         if (layersFromRoles==null)
             return null;
         
@@ -89,8 +89,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         if (!HibernateUtil.CHECK_LOGIN_KAARTENBALIE)
             return configuredThemasList;
         
-        // Zoek layers die via roles binnen komen
-        List layersFromRoles = getLayerNamesFromRoles(request);
+        // Zoek layers die via principal binnen komen
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        if (user==null)
+            return null;
+        List layersFromRoles = user.getLayerNames();
         if (layersFromRoles==null)
             return null;
         
@@ -116,7 +119,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         // Kijk welke lagen uit de rollen nog niet zijn toegevoegd
         // en voeg deze alsnog toe via dummy thema en cluster.
         Clusters c = new Clusters();
-        c.setNaam("Extra");
+        c.setNaam(HibernateUtil.KAARTENBALIE_CLUSTER);
         c.setParent(null);
         ctl.add(c);
         
@@ -130,7 +133,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             // Layer bestaat nog niet dus aanmaken
             Themas t = new Themas();
             t.setId(tid++);
-            t.setNaam(layer);
+            t.setNaam(user.getLayerTitle(layer));
 //                t.setWms_layers(layer);
             t.setWms_layers_real(layer);
 //                t.setWms_legendlayer(layer);
@@ -140,35 +143,6 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             checkedThemaList.add(t);
         }
         return checkedThemaList;
-    }
-    
-    public List getLayerNamesFromRoles(HttpServletRequest request) {
-        Set roles = null;
-        Principal user = request.getUserPrincipal();
-        if (user==null || !(user instanceof GisPrincipal)) {
-            HttpSession sess = request.getSession();
-            roles = (Set)sess.getAttribute(HibernateUtil.ANONYMOUS_ROLES);
-        } else {
-            // Als het een GisPrincipal is, dan kunnen we de rollen inspekteren voor
-            // extra lagen
-            GisPrincipal gisUser = (GisPrincipal)user;
-            roles = gisUser.getRoles();
-        }
-        if (roles==null || roles.isEmpty())
-            return null;
-        
-        List lns = new ArrayList();
-        Iterator it = roles.iterator();
-        while (it.hasNext()) {
-            String role = (String)it.next();
-            if (!role.startsWith(HibernateUtil.LAYER_ROLE_PREFIX))
-                continue;
-            String layer = role.substring(6);
-            lns.add(layer);
-        }
-        if (lns.isEmpty())
-            return null;
-        return lns;
     }
     
     /**

@@ -4,8 +4,6 @@
     
     <hr size="1" width="100%" />
     
-    <img src="images/logo.gif" border="0" alt="Logo" class="nbr" />
-    
     <table class="kolomtabel">
         <tr>
             <td valign="top">
@@ -115,4 +113,5 @@
     </table>
     
     <hr size="1" width="100%" />
+    <tiles:insert name="loginblock"/>
 </div>

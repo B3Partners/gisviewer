@@ -25,7 +25,7 @@
     <input type="hidden" name="edit" />
 </form>
 
-<div class="onderbalk">VIEWER<span><tiles:insert name="loginblock"/></span></div>
+<div class="onderbalk">ETL VIEWER<span><tiles:insert name="loginblock"/></span></div>
 <div id="bovenkant">
     <div id="map">
         <div id="flashcontent">
@@ -67,7 +67,7 @@
         </div>
     </div>
 </div>
-<div class="onderbalk">DETAILS<span id="actief_thema">Actieve thema: </span></div>
+<div class="onderbalk">ETL DETAILS<span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
     <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
 </div>

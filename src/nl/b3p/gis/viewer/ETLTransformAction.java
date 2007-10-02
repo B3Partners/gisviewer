@@ -125,6 +125,7 @@ public class ETLTransformAction extends BaseGisAction {
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
         request.setAttribute("themaid", themaid);
+        request.setAttribute("layerToAdd", t.getWms_layers());
         return mapping.findForward(SUCCESS);
     }
     // </editor-fold>
@@ -163,6 +164,8 @@ public class ETLTransformAction extends BaseGisAction {
         } else if(statusInt == 7) {
             status = "OO";
         }
+        String url = HibernateUtil.KBURL + "filter=status_etl%3D'" + status + "'";
+        request.setAttribute("kburl", url);
         
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
@@ -174,6 +177,9 @@ public class ETLTransformAction extends BaseGisAction {
         } else {
             request.setAttribute("regels", null);
         }
+        
+        
+        request.setAttribute("themaName", t.getNaam());
         return mapping.findForward("showData");
     }
     // </editor-fold>

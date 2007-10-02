@@ -496,7 +496,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * Als deze kolomnaam ingevuld staat hoeft deze alleen opgehaald te worden
              * en aan de arraylist regel toegevoegd te worden.
              */
-            if (td.getDataType().getId() == DataTypen.DATA && td.getKolomnaam() != null) {
+            if (td.getDataType().getId() == DataTypen.DATA && td.getKolomnaam() != null && !td.getKolomnaam().equals("")) {
                 regel.add(rs.getObject(td.getKolomnaam()));
                 
             /*

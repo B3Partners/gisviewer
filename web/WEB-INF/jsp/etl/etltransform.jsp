@@ -1,24 +1,42 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<!-- <html>
-    <head>
-        <title>Analyse Data</title>
-        <link href="etltransform.css" type=text/css rel=stylesheet> -->
+
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script language="JavaScript" type="text/javascript">
-            function getObjects() {                                
-                for (var i = 1; i < 8; i++) {
-                    if(document.getElementById('radio' + i).checked) { 
-                        document.forms[0].type.value = document.getElementById('radio' + i).value;
-                    }
-                }
-                document.forms[0].edit.value    = "submit";
-                document.forms[0].submit();
+    function getObjects() {                                
+        for (var i = 1; i < 8; i++) {
+            if(document.getElementById('radio' + i).checked) { 
+                document.forms[0].type.value = document.getElementById('radio' + i).value;
             }
+        }
+        document.forms[0].edit.value    = "submit";
+        document.forms[0].submit();
+        refreshLayer();
+    }
+    
+    function isInCheckboxArray(id) {
+        if(checkboxArray == null) return false;
+        for(i = 0; i < checkboxArray.length; i++) {
+            if(checkboxArray[i] == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function refreshLayer(){
+        var layersToAdd = '${layerToAdd}';
+        layerUrl='${kburl}';
+        alert (layerUrl);
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\" retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl+"\" layers=\"achtergrond"+allActiveLayers+"\" query_layers=\""+layersToAdd+"\" srs=\"EPSG:28992\"/>";
+        if (flamingo && layerUrl!=null){
+            flamingo.call("map1","removeLayer","fmcLayer");
+            flamingo.call("map1","addLayer",newLayer);
+        }
+    }            
 </script>
-<!-- </head>
-    <body> -->
+
 <form id="myid" target="dataframe">
     <input type="hidden" name="type" />
     <input type="hidden" name="themaid" value="${themaid}"/>
@@ -67,10 +85,7 @@
         </div>
     </div>
 </div>
-<div class="onderbalk">ETL DETAILS<span id="actief_thema">Actieve thema: </span></div>
+<div class="onderbalk">ETL DETAILS<span id="actief_thema">Actieve thema: ${themaName}</span></div>
 <div id="dataframediv">
     <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
 </div>
-
-<!-- </body>
-</html> -->

@@ -106,6 +106,11 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         if (sp==null)
             return null;
         
+        if(sp.getAllRoles() == null || sp.getAllRoles().isEmpty()) {
+            log.error("ServiceProvider has no roles, denying login!");
+            return null;
+        }
+        
         log.debug("login: " + username);
         return new GisPrincipal(username, sp);
     }

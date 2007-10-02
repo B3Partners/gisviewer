@@ -195,8 +195,6 @@ public class ETLTransformAction extends BaseGisAction {
                 while(rs.next()) {
                     regels.add(getRegel(rs, t, thema_items));
                 }
-            }catch (Exception e){
-                log.debug("",e);
             } finally {
                 statement.close();
             }

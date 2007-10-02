@@ -1,4 +1,3 @@
-    
 NAME wispnb
 STATUS ON
 SYMBOLSET "symbol.map"
@@ -84,12 +83,14 @@ LAYER
 	CONNECTIONTYPE postgis
 
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from algm_kom_10_wgw_v as foo USING UNIQUE id USING SRID=28992"
+	#DATA "the_geom from algm_kom_10_wgw_v as foo USING UNIQUE id USING SRID=28992"
+	DATA "the_geom from (select oid,* from algm_kom_10_wgw_v where etl_proces_id=(select max(etl_proces_id) from algm_kom_10_wgw_v)) as foo"
 	TYPE POLYGON
 	TRANSPARENCY 20
 	DUMP TRUE
 	TEMPLATE bla
-	LABELITEM "kom"
+	LABELITEM "kom"	
+	FILTER "%filter%"
 	CLASS
 		NAME "algm_kom_10_wgw_v"
 		OUTLINECOLOR 200 0 0
@@ -144,12 +145,14 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "baanvakken"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from baanvakken"
+	#DATA "the_geom from baanvakken"
+	DATA "the_geom from (select oid,* from baanvakken where etl_proces_id=(select max(etl_proces_id) from baanvakken)) as foo"
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
 	TEMPLATE bla
-	TRANSPARENCY 50
+	TRANSPARENCY 50	
+	FILTER "%filter%"
 	CLASS
 		NAME "baanvakken"
 		STYLE
@@ -193,12 +196,14 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "algm_grs_2006_1_gem_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from algm_grs_2006_1_gem_v"
+	#DATA "the_geom from algm_grs_2006_1_gem_v as foo USING UNIQUE oid USING SRID=28992 where etl_proces_id= select max(etl_proces_id) from algm_grs_2006_1_gem_v"
+	DATA "the_geom from (select oid,* from algm_grs_2006_1_gem_v where etl_proces_id=(select max(etl_proces_id) from algm_grs_2006_1_gem_v)) as foo"
 	TYPE POLYGON
 	DUMP TRUE
 	TEMPLATE bla
 	TRANSPARENCY 30
 	LABELITEM "gemnaam"
+	FILTER "%filter%"	
 	CLASS
 		EXPRESSION ([oppbebouwing]> 20000000)
 		NAME "algm_grs_2006_1_gem_v1"
@@ -269,10 +274,12 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "algm_grs_2006_1_gga_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from algm_grs_2006_1_gga_v"
+	#DATA "the_geom from algm_grs_2006_1_gga_v"
+	DATA "the_geom from (select oid,* from algm_grs_2006_1_gga_v where etl_proces_id=(select max(etl_proces_id) from algm_grs_2006_1_gga_v)) as foo"
 	TYPE POLYGON
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "algm_grs_2006_1_gga_v"
 		TEXT ([GGA])
@@ -304,12 +311,14 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "lki_pnb_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from lki_pnb_v"
+	#DATA "the_geom from lki_pnb_v"
+	DATA "the_geom from (select oid,* from lki_pnb_v where etl_proces_id=(select max(etl_proces_id) from lki_pnb_v)) as foo"
 	MAXSCALE 50000
 	TYPE POLYGON
 	DUMP TRUE
 	TEMPLATE bla
-	TRANSPARENCY 50
+	TRANSPARENCY 50	
+	FILTER "%filter%"
 	CLASS
 		NAME "lki_pnb_v"
 		COLOR 210 210 210
@@ -326,12 +335,14 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "verv_beh_vta"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from verv_beh_vta"
+	#DATA "the_geom from verv_beh_vta"
+	DATA "the_geom from (select oid,* from verv_beh_vta where etl_proces_id=(select max(etl_proces_id) from verv_beh_vta)) as foo"
 	#MAXSCALE 100000
 	TYPE POINT
 	TOLERANCE 20
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "verv_beh_vta"
 		STYLE
@@ -352,11 +363,13 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "strooiroutes"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from strooiroutes"
+	#DATA "the_geom from strooiroutes"
+	DATA "the_geom from (select oid,* from strooiroutes where etl_proces_id=(select max(etl_proces_id) from strooiroutes)) as foo"
 	#MAXSCALE 700000
 	TYPE LINE
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "strooiroutes"
 		STYLE
@@ -381,11 +394,13 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "tankstations_centroid"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from tankstations_centroid"
+	#DATA "the_geom from tankstations_centroid"
+	DATA "the_geom from (select oid,* from tankstations_centroid where etl_proces_id=(select max(etl_proces_id) from tankstations_centroid)) as foo"
 	#MAXSCALE 700000
 	TYPE POINT
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "tankstations_centroid"
 		STYLE
@@ -405,11 +420,13 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "verv_beh_10_vri_p"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from verv_beh_10_vri_p"
+	#DATA "the_geom from verv_beh_10_vri_p"
+	DATA "the_geom from (select oid,* from verv_beh_10_vri_p where etl_proces_id=(select max(etl_proces_id) from verv_beh_10_vri_p)) as foo"
 	#MAXSCALE 200000
 	TYPE POINT
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "verv_beh_10_vri_p"
 		COLOR 200 200 200
@@ -427,10 +444,12 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "beh_10_wwl_m"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from beh_10_wwl_m"
+	#DATA "the_geom from beh_10_wwl_m"
+	DATA "the_geom from (select oid,* from beh_10_wwl_m where etl_proces_id=(select max(etl_proces_id) from beh_10_wwl_m)) as foo"
 	TYPE LINE
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "beh_10_wwl_m"
 		STYLE
@@ -451,12 +470,14 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "bel_sp_2002_100_agh_v"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from bel_sp_2002_100_agh_v"
+	#DATA "the_geom from bel_sp_2002_100_agh_v"
+	DATA "the_geom from (select oid,* from bel_sp_2002_100_agh_v where etl_proces_id=(select max(etl_proces_id) from bel_sp_2002_100_agh_v)) as foo"
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
 	TEMPLATE bla
-	TRANSPARENCY 50
+	TRANSPARENCY 50	
+	FILTER "%filter%"
 	CLASS
 		TEXT ([sub_klasse])
 		NAME "bel_sp_2002_100_agh_v"
@@ -510,11 +531,13 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "verkeersborden"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from verkeersborden"
+	#DATA "the_geom from verkeersborden"
+	DATA "the_geom from (select oid,* from verkeersborden where etl_proces_id=(select max(etl_proces_id) from verkeersborden)) as foo"
 	#MAXSCALE 200000
 	TYPE POINT
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "verkeersborden"
 		STYLE
@@ -536,11 +559,13 @@ LAYER
 	NAME "verv_nwb_hmn_p"
 	GROUP hectometrering
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from verv_nwb_hmn_p"
+	#DATA "the_geom from verv_nwb_hmn_p"
+	DATA "the_geom from (select oid,* from verv_nwb_hmn_p where etl_proces_id=(select max(etl_proces_id) from verv_nwb_hmn_p)) as foo"
 	#MAXSCALE 200000
 	TYPE POINT
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "verv_nwb_hmn_p"
 		TEXT ([hm])
@@ -595,11 +620,13 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "telvakken"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from telvakken"
+	#DATA "the_geom from telvakken"
+	DATA "the_geom from (select oid,* from telvakken where etl_proces_id=(select max(etl_proces_id) from telvakken)) as foo"
 	#MAXSCALE 100000
 	TYPE LINE
 	DUMP TRUE
-	TEMPLATE bla
+	TEMPLATE bla	
+	FILTER "%filter%"
 	CLASS
 		NAME "telvakken"
 		COLOR 0 0 255
@@ -618,14 +645,15 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "ontsnippering"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from ontsnippering"
+	#DATA "the_geom from ontsnippering"
+	DATA "the_geom from (select oid,* from ontsnippering where etl_proces_id=(select max(etl_proces_id) from ontsnippering)) as foo"	
 	MAXSCALE 50000
 	TYPE POINT
 	DUMP TRUE
 	TEMPLATE bla
 	TOLERANCE 100
-	TRANSPARENCY alpha
-	#Ontsnippering wordt al getoond in het thema ontsnippering
+	TRANSPARENCY alpha	
+	FILTER "%filter%"	
 	CLASS
 		NAME "Ontsnippering"
 		STYLE			
@@ -649,13 +677,14 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "ongevallen"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from ongevallen"
+	#DATA "the_geom from ongevallen"
+	DATA "the_geom from (select oid,* from ongevallen where etl_proces_id=(select max(etl_proces_id) from ongevallen)) as foo"
 	TYPE LINE
 	DUMP TRUE
 	TEMPLATE bla
 	TOLERANCE 100
-	TRANSPARENCY 30
-	#Ontsnippering wordt al getoond in het thema ontsnippering
+	TRANSPARENCY 30	
+	FILTER "%filter%"
 	CLASS
 		NAME "Ongevallen"
 		STYLE
@@ -676,11 +705,13 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "dvm"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from dvm"
+	#DATA "the_geom from dvm"
+	DATA "the_geom from (select oid,* from dvm where etl_proces_id=(select max(etl_proces_id) from dvm)) as foo"
 	TYPE POINT
 	DUMP TRUE
 	TEMPLATE bla
 	TOLERANCE 100	
+	FILTER "%filter%"	
 	CLASS
 		NAME "dvm"
 		STYLE
@@ -714,8 +745,9 @@ LAYER
 	NAME "markeringslijnen"
 	GROUP markeringen
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from markeringen"
-	FILTER "geometrytype(the_geom)!='MULTILINE'"
+	#DATA "the_geom from markeringen"
+	DATA "the_geom from (select oid,* from markeringen where etl_proces_id=(select max(etl_proces_id) from markeringen) and geometrytype(the_geom)!='MULTILINE') as foo"	
+	FILTER "%filter%"
 	TYPE LINE
 	DUMP TRUE
 	TEMPLATE bla
@@ -746,8 +778,9 @@ LAYER
 	NAME "Markeringspunten"
 	GROUP markeringen
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from markeringen"
-	FILTER "geometrytype(the_geom)!='MULTIPOINT'"
+	#DATA "the_geom from markeringen"
+	DATA "the_geom from (select oid,* from markeringen where etl_proces_id=(select max(etl_proces_id) from markeringen) and geometrytype(the_geom)!='MULTIPOINT') as foo"	
+	FILTER "%filter%"
 	TYPE POINT
 	DUMP TRUE
 	TEMPLATE bla
@@ -777,7 +810,9 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "bestemmingsplannen"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from bestemmingsplannen"
+	#DATA "the_geom from bestemmingsplannen"
+	DATA "the_geom from (select oid,* from bestemmingsplannen where etl_proces_id=(select max(etl_proces_id) from bestemmingsplannen)) as foo"	
+	FILTER "%filter%"
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
@@ -799,7 +834,9 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "stiltegebieden"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from stiltegebieden"
+	#DATA "the_geom from stiltegebieden"
+	DATA "the_geom from (select oid,* from stiltegebieden where etl_proces_id=(select max(etl_proces_id) from stiltegebieden)) as foo"	
+	FILTER "%filter%"
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
@@ -822,7 +859,9 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "waterschapsgrenzen"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from waterschapsgrenzen"
+	#DATA "the_geom from waterschapsgrenzen"
+	DATA "the_geom from (select oid,* from waterschapsgrenzen where etl_proces_id=(select max(etl_proces_id) from waterschapsgrenzen)) as foo"	
+	FILTER "%filter%"
 	#MAXSCALE 100000
 	TYPE POLYGON
 	DUMP TRUE
@@ -874,7 +913,9 @@ LAYER
 	CONNECTIONTYPE postgis
 	NAME "kunstwerken"
 	CONNECTION "user=postgres password=***REMOVED*** dbname=pnb_wis host=w1.b3p.nl"
-	DATA "the_geom from kunstwerken"
+	#DATA "the_geom from kunstwerken"
+	DATA "the_geom from (select oid,* from kunstwerken where etl_proces_id=(select max(etl_proces_id) from kunstwerken)) as foo"	
+	FILTER "%filter%"
 	MAXSCALE 50000
 	TYPE POINT
 	DUMP TRUE

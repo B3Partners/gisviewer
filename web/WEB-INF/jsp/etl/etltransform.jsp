@@ -5,14 +5,16 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script language="JavaScript" type="text/javascript">
     function getObjects() {                                
-        for (var i = 1; i < 8; i++) {
-            if(document.getElementById('radio' + i).checked) { 
-                document.forms[0].type.value = document.getElementById('radio' + i).value;
+        var radiobuttons=document.getElementsByName('radiogroup');
+        for (var i = 0; i < radiobuttons.length; i++) {
+            if(radiobuttons[i].checked) { 
+                document.forms[0].type.value = radiobuttons[i].value;
             }
         }
+        refreshLayer();
         document.forms[0].edit.value    = "submit";
         document.forms[0].submit();
-        refreshLayer();
+        
     }
     
     function isInCheckboxArray(id) {
@@ -28,8 +30,23 @@
     function refreshLayer(){
         var layersToAdd = '${layerToAdd}';
         layerUrl='${kburl}';
-        alert (layerUrl);
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\" retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl+"\" layers=\"achtergrond"+allActiveLayers+"\" query_layers=\""+layersToAdd+"\" srs=\"EPSG:28992\"/>";
+        //layerUrl="${kburl}"+"&filter=status_etl%3D'UO'%20or%20status_etl%3D'OO'%20or%20status_etl%3D'NO'";
+        var status;
+        var radiobuttons=document.getElementsByName('radiogroup');
+        for (var i = 0; i < radiobuttons.length; i++) {
+            if(radiobuttons[i].checked) {
+                status=radiobuttons[i].value;                
+            }
+        }
+        //alert(status);
+        if(layerUrl.indexOf('?')> 0)
+            layerUrl+='&';
+        else
+            layerUrl+='?';
+        layerUrl+="filter=status_etl%3D'"+status+"'";
+        //var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\" retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl+"\" layers=\"+allActiveLayers+"\" query_layers=\""+layersToAdd+"\" srs=\"EPSG:28992\"/>";
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\" retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl+"\" layers=\""+layersToAdd+"\" query_layers=\""+layersToAdd+"\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
+        alert(newLayer);
         if (flamingo && layerUrl!=null){
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);
@@ -68,13 +85,13 @@
             <div id="infovak_etl" class="tabvak">
                 <strong>Bepaal hieronder van welke status van het thema u de data wilt bekijken</strong>
                 <div class="optie">
-                    <input type="radio" value="1" name="radiogroup" id="radio1"/> Nieuwe objecten<br />
-                    <input type="radio" value="2" name="radiogroup" id="radio2"/> Onvolledige administratie objecten<br />
-                    <input type="radio" value="3" name="radiogroup" id="radio3"/> Onvolledige geografie objecten<br />
-                    <input type="radio" value="4" name="radiogroup" id="radio4"/> Geupdate objecten<br />
-                    <input type="radio" value="5" name="radiogroup" id="radio5"/> Verwijderde objecten<br />
-                    <input type="radio" value="6" name="radiogroup" id="radio6"/> Niet verwerkbare objecten<br/>
-                    <input type="radio" value="7" name="radiogroup" id="radio7"/> Ongewijzigde objecten<br />
+                    <input type="radio" value="NO" name="radiogroup" id="radio1"/> Nieuwe objecten<br />
+                    <input type="radio" value="OAO" name="radiogroup" id="radio2"/> Onvolledige administratie objecten<br />
+                    <input type="radio" value="OGO" name="radiogroup" id="radio3"/> Onvolledige geografie objecten<br />
+                    <input type="radio" value="UO" name="radiogroup" id="radio4"/> Geupdate objecten<br />
+                    <input type="radio" value="VO" name="radiogroup" id="radio5"/> Verwijderde objecten<br />
+                    <input type="radio" value="FO" name="radiogroup" id="radio6"/> Niet verwerkbare objecten<br/>
+                    <input type="radio" value="OO" name="radiogroup" id="radio7"/> Ongewijzigde objecten<br />
                     <p>
                     </p>                        
                     <button onclick="getObjects();" style="margin-left:10px;">
@@ -89,3 +106,4 @@
 <div id="dataframediv">
     <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
 </div>
+<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

@@ -125,7 +125,8 @@ public class ETLTransformAction extends BaseGisAction {
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
         request.setAttribute("themaid", themaid);
-        request.setAttribute("layerToAdd", t.getWms_layers());
+        request.setAttribute("layerToAdd", t.getWms_layers_real());        
+        request.setAttribute("kburl", HibernateUtil.KBURL);
         return mapping.findForward(SUCCESS);
     }
     // </editor-fold>
@@ -145,27 +146,7 @@ public class ETLTransformAction extends BaseGisAction {
     // <editor-fold defaultstate="" desc="public ActionForward edit(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward edit(ActionMapping mapping, DynaValidatorForm  dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String themaid              = (String)request.getParameter("themaid");
-        int statusInt               = Integer.parseInt((String)request.getParameter("type"));
-        
-        //Eerst moet de status van de te tonen objecten opgevraagd worden.
-        String status = "";
-        if(statusInt == 1) {
-            status = "NO";
-        } else if(statusInt == 2) {
-            status = "OAO";
-        } else if(statusInt == 3) {
-            status = "OGO";
-        } else if(statusInt == 4) {
-            status = "UO";
-        } else if(statusInt == 5) {
-            status = "VO";
-        } else if(statusInt == 6) {
-            status = "FO";
-        } else if(statusInt == 7) {
-            status = "OO";
-        }
-        String url = HibernateUtil.KBURL + "filter=status_etl%3D'" + status + "'";
-        request.setAttribute("kburl", url);
+        String status               = (String)request.getParameter("type");
         
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());

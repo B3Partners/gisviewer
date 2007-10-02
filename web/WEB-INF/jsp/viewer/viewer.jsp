@@ -9,6 +9,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
 
 <script>
+
     var nr = 0;
     function getNr() {
         return nr++;
@@ -248,6 +249,11 @@
             if (obj.theItem.wmslayers){
                 if (layerUrl==null){
                     layerUrl="${kburl}";
+                    if(layerUrl.indexOf('?')> 0)
+                        layerUrl+='&';
+                    else
+                        layerUrl+='?';
+                    layerUrl+="filter=status_etl%3D'UO'%20or%20status_etl%3D'OO'%20or%20status_etl%3D'NO'";
                 }
                 allActiveLayers+= ","+obj.theItem.wmslayers;
                 if (!dontRefresh){
@@ -272,7 +278,8 @@
         }else{
             layersToAdd="";
         }        
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc='fmc' id='OG2' timeout='30' retryonerror='10' format='image/png' transparent='true' url='"+layerUrl+"' layers='"+layersToAdd+"' query_layers='"+layersToAdd+"' srs='EPSG:28992' version='1.1.1'/>";
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\" retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl+"\" layers=\""+layersToAdd+"\" query_layers=\""+layersToAdd+"\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
+        //alert(newLayer);
         if (flamingo && layerUrl!=null){
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);

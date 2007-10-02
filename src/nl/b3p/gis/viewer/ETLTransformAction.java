@@ -185,7 +185,7 @@ public class ETLTransformAction extends BaseGisAction {
         ArrayList regels = new ArrayList();
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = sess.connection();
-        String taq = "select * from " + t.getSpatial_tabel() + " where status_etl = ?";
+        String taq = "select * from " + t.getSpatial_tabel() + " where status_etl = ? and etl_proces_id = (select max(etl_proces_id) from " + t.getSpatial_tabel() + ")";
         
         try {
             PreparedStatement statement = connection.prepareStatement(taq);
@@ -195,6 +195,8 @@ public class ETLTransformAction extends BaseGisAction {
                 while(rs.next()) {
                     regels.add(getRegel(rs, t, thema_items));
                 }
+            }catch (Exception e){
+                log.debug("",e);
             } finally {
                 statement.close();
             }

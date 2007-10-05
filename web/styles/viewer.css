@@ -344,6 +344,12 @@ a:hover{
     padding-bottom: 2px;
 }
 
+.meta_data_scroll {
+    width: 948px;
+    height: 263px;
+    overflow: auto;
+}
+
 #onder_div {
     display: none;
 }

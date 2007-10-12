@@ -111,163 +111,133 @@ public class ViewerAction extends BaseGisAction {
     }
     // </editor-fold>
     
-    /**
-     * DOCUMENT ME!!!
-     *
-     * @param dynaForm The DynaValidatorForm bean for this request.
-     * @param request The HTTP Request we are processing.
-     *
-     * @throws Exception
-     */
-    // <editor-fold defaultstate="" desc="protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request)">
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         List ctl = SpatialUtil.getValidClusters();
         List themalist = getValidThemas(false, ctl, request);
+        Map rootClusterMap = getClusterMap(themalist, ctl, null);
         
-        JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
-        
-        JSONArray children = new JSONArray();
-        root.put("children", children);
-        
-        if (ctl!=null) {
-            Iterator it = ctl.iterator();
-            while (it.hasNext()) {
-                Clusters cluster = (Clusters)it.next();
-                if(cluster.getParent() == null) {
-                    
-                    boolean childrenAvailable = hasChildren(cluster, themalist);
-                    boolean subclustersAvailable = hasSubcluster(cluster, ctl);
-                    
-                    if (childrenAvailable || subclustersAvailable) {
-                        JSONObject jsonCluster = new JSONObject().put("id", "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
-                        children.put(jsonCluster);
-                        
-                        JSONArray childrenCluster = new JSONArray();
-                        jsonCluster.put("children", childrenCluster);
-                        
-                        getChildren(themalist, childrenCluster, cluster);
-                        getSubClusters(themalist, childrenCluster, cluster, ctl);
-                    }
-                }
-            }
-        }
-        request.setAttribute("tree", root);
+        request.setAttribute("tree", createJasonObject(rootClusterMap));
         
         // zet kaartenbalie url
         request.setAttribute("kburl", HibernateUtil.KBURL);
     }
-    // </editor-fold>
     
-    /**
-     * DOCUMENT ME!!!
-     *
-     * @param root JSONArray
-     * @param rootCluster Clusters
-     * @param list List
-     *
-     * @throws JSONException
-     *
-     * @see Clusters
-     */
-    // <editor-fold defaultstate="" desc="private void getSubClusters(JSONArray root, Clusters rootCluster, List list)">
-    private void getSubClusters(List themalist, JSONArray root, Clusters rootCluster, List list) throws JSONException, Exception {
-        ArrayList subclusters = new ArrayList();
-        Iterator it = list.iterator();
+    private Map getClusterMap(List themalist, List clusterlist, Clusters rootCluster) throws JSONException, Exception {
+        if(themalist == null || clusterlist == null)
+            return null;
+        
+        List childrenList = getThemaList(themalist, rootCluster);
+        
+        List subclusters = null;
+        Iterator it = clusterlist.iterator();
         while (it.hasNext()) {
             Clusters cluster = (Clusters)it.next();
             if(rootCluster == cluster.getParent()) {
-                subclusters.add(cluster);
+                Map clusterMap = getClusterMap(themalist, clusterlist, cluster);
+                if (clusterMap == null || clusterMap.isEmpty())
+                    continue;
+                if (subclusters==null)
+                    subclusters = new ArrayList();
+                subclusters.add(clusterMap);
             }
         }
-        if(!subclusters.isEmpty()) {
-            it = subclusters.iterator();
-            while(it.hasNext()) {
-                Clusters cl = (Clusters) it.next();
-                
-                boolean childrenAvailable = hasChildren(cl, themalist);
-                boolean subclustersAvailable = hasSubcluster(cl, list);
-                
-                if (childrenAvailable || subclustersAvailable) {
-                    JSONObject jsonCluster = new JSONObject().put("id", "c" + cl.getId()).put("type", "child").put("title", cl.getNaam()).put("cluster", true);
-                    root.put(jsonCluster);
-                    
-                    JSONArray childrenCluster = new JSONArray();
-                    jsonCluster.put("children", childrenCluster);
-                    
-                    getChildren(themalist, childrenCluster, cl);
-                    getSubClusters(themalist, childrenCluster, cl, list);
-                }
-            }
-        }
+        
+        if ((childrenList==null || childrenList.isEmpty()) && ((subclusters==null || subclusters.isEmpty())))
+            return null;
+        
+        Map clusterNode = new HashMap();
+        clusterNode.put("subclusters", subclusters);
+        clusterNode.put("children", childrenList);
+        clusterNode.put("cluster", rootCluster);
+        
+        return clusterNode;
     }
-    // </editor-fold>
     
-    /**
-     * DOCUMENT ME!!!
-     *
-     * @param root JSONArray
-     * @param rootCluster Clusters
-     *
-     * @throws JSONException
-     *
-     * @see Clusters
-     */
-    // <editor-fold defaultstate="" desc="private void getChildren(JSONArray root, Clusters rootCluster)">
-    private void getChildren(List themalist, JSONArray root, Clusters rootCluster) throws JSONException, Exception {
+    private List getThemaList(List themalist, Clusters rootCluster) throws JSONException, Exception {
         if(themalist == null)
-            return;
-        ArrayList childs = new ArrayList();
+            return null;
+        ArrayList children = null;
         Iterator it = themalist.iterator();
         while(it.hasNext()) {
             Themas thema = (Themas) it.next();
             if(thema.getCluster() == rootCluster) {
-                childs.add(thema);
+                if (children==null)
+                    children = new ArrayList();
+                children.add(thema);
             }
         }
-        if(!childs.isEmpty()) {
-            it = childs.iterator();
-            while(it.hasNext()) {
-                Themas th = (Themas) it.next();
-                String ttitel = th.getNaam();
-                JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
-                
-                if(th.getWms_layers_real() != null) {
-                    jsonCluster
-                            .put("wmslayers", th.getWms_layers_real())
-                            .put("wmsquerylayers", th.getWms_querylayers_real())
-                            .put("wmslegendlayer", th.getWms_legendlayer_real());
-                } else {
-                    jsonCluster
-                            .put("wmslayers",th.getWms_layers())
-                            .put("wmsquerylayers",th.getWms_querylayers())
-                            .put("wmslegendlayer",th.getWms_legendlayer());
-                }
-                root.put(jsonCluster);
-            }
-        }
+        return children;
     }
-    // </editor-fold>
     
-    private boolean hasChildren(Clusters cluster, List themalist) {
-        if(themalist == null)
-            return false;
-        Iterator it = themalist.iterator();
+    protected JSONObject createJasonObject(Map rootClusterMap) throws JSONException {
+        if (rootClusterMap==null || rootClusterMap.isEmpty())
+            return null;
+        
+        List clusterMaps = (List)rootClusterMap.get("subclusters");
+        if (clusterMaps==null || clusterMaps.isEmpty())
+            return null;
+        
+        JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
+        root.put("children", getSubClusters(clusterMaps, null));
+        
+        return root;
+    }
+    
+    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray) throws JSONException {
+        if(subclusterMaps == null)
+            return clusterArray;
+        
+        Iterator it = subclusterMaps.iterator();
         while(it.hasNext()) {
-            Themas thema = (Themas) it.next();
-            if(thema.getCluster() == cluster)
-                return true;
+            Map clMap = (Map) it.next();
+            
+            Clusters cluster = (Clusters)clMap.get("cluster");
+            JSONObject jsonCluster = new JSONObject().put("id",
+                    "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
+            
+            List childrenList = (List)clMap.get("children");
+            JSONArray childrenArray = getChildren(childrenList);
+            List subsubclusterMaps = (List)clMap.get("subclusters");
+            childrenArray = getSubClusters(subsubclusterMaps, childrenArray);
+            jsonCluster.put("children",childrenArray);
+            
+            if (clusterArray==null)
+                clusterArray = new JSONArray();
+            clusterArray.put(jsonCluster);
+            
         }
-        return false;
+        return clusterArray;
     }
     
-    private boolean hasSubcluster(Clusters cluster, List ctl) {
-        Iterator it = ctl.iterator();
-        while (it.hasNext()) {
-            Clusters cl = (Clusters)it.next();
-            if(cl.getParent() == cluster)
-                return true;
+    private JSONArray getChildren(List children) throws JSONException {
+        if(children == null)
+            return null;
+        
+        JSONArray childrenArray = null;
+        Iterator it = children.iterator();
+        while(it.hasNext()) {
+            Themas th = (Themas) it.next();
+            String ttitel = th.getNaam();
+            JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
+            
+            if(th.getWms_layers_real() != null) {
+                jsonCluster
+                        .put("wmslayers", th.getWms_layers_real())
+                        .put("wmsquerylayers", th.getWms_querylayers_real())
+                        .put("wmslegendlayer", th.getWms_legendlayer_real());
+            } else {
+                jsonCluster
+                        .put("wmslayers",th.getWms_layers())
+                        .put("wmsquerylayers",th.getWms_querylayers())
+                        .put("wmslegendlayer",th.getWms_legendlayer());
+            }
+            
+            if (childrenArray==null)
+                childrenArray = new JSONArray();
+            childrenArray.put(jsonCluster);
         }
-        return false;
+        
+        return childrenArray;
     }
     
 }

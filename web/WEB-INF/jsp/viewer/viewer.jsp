@@ -227,8 +227,6 @@
     function checkboxClick(obj, dontRefresh, obj_name) {
 
         if(obj.checked) {
-            //var standardParam="SERVICE=WMS&VERSION=1.1.1&SRS=EPSG:28992&WRAPDATELINE=true&BGCOLOR=0xF0F0F0";
-            //var standardParam="SERVICE=WMS&VERSION=1.1.1";
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
             var legendURL="${kburl}";
             if(legendURL.indexOf('?')> 0)
@@ -278,8 +276,11 @@
         }else{
             layersToAdd="";
         }        
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\" retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl+"\" layers=\""+layersToAdd+"\" query_layers=\""+layersToAdd+"\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
-        //alert(newLayer);
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\"" +
+            "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
+            "\" getcapabilitiesurl=\""+layerUrl + "&SERVICE=WMS" +
+            "\" layers=\""+layersToAdd+"\" query_layers=\""+layersToAdd +
+            "\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
         if (flamingo && layerUrl!=null){
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);
@@ -535,14 +536,14 @@
         <input type="hidden" name="ycoord" />
         <input type="hidden" name="scale" />
     </form>
-
+    
     <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">
         <input type="hidden" name="objectdata" value="t" />
         <input type="hidden" name="lagen" />
         <input type="hidden" name="xcoord" />
         <input type="hidden" name="ycoord" />
     </form>
-
+    
     <form id="analysedataForm" name="analysedataForm" target="analyseframe" method="post" action="viewerdata.do">
         <input type="hidden" name="analysedata" value="t" />
         <input type="hidden" name="themaid" />
@@ -569,7 +570,7 @@
                 so.write("flashcontent");
         </script>
     </div>
-
+    
     <div id="rightdiv">
         <div id="tabjes">
             <ul id="nav">
@@ -584,7 +585,7 @@
             <div id="treevak" style="display: none;" class="tabvak">
                 <div id="layermaindiv" style="display: none;"></div>
             </div>
-
+            
             <div id="volgordevak" style="display: none;" class="tabvak">
                 Bepaal de volgorde waarin de kaartlagen getoond worden
                 <form>
@@ -595,12 +596,12 @@
                     <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" class="knop" />
                 </form>
             </div>
-
+            
             <div id="infovak" style="display: none;" class="tabvak">
                 <div id="start_message">
                     Klik op een punt op de kaart voor aanvullende informatie.
                 </div>
-
+                
                 <div id="algdatavak" style="display: none;">
                     <b>RD Co&ouml;rdinaten</b><br />
                     <span id="rdcoords"></span><br /><br />
@@ -611,7 +612,7 @@
                     <b>Adres</b><br />
                     <span id="kadastraledata"></span>
                 </div>
-
+                
                 <!-- input fields for search -->
                 <div>
                     <br>
@@ -633,15 +634,15 @@
                             </td>
                         </tr>
                     </table>
-
+                    
                     <input type="button" value="Ga naar locatie" onclick="getCoords();" class="knop" />&nbsp;
                     <input type="button" value="Wis invoer" onclick="eraseSubmit();" class="knop" /><br />
                     <div class="searchResultsClass" id="searchResults"></div>
-
+                    
                 </div>
                 <!-- end of search -->
             </div>
-
+            
             <div id="objectvak" style="display: none;" class="tabvak_with_iframe">
                 <iframe id="objectframe" name="objectframe" frameborder="0" src="empty_iframe.jsp"></iframe>
             </div>

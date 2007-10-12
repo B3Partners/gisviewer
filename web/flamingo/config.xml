@@ -31,7 +31,7 @@
     </fmc:Container>
     <fmc:Container  borderwidth="1" bordercolor="#606060" left="0" top="7%" height="93%" width="100%">
     <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>
-        <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extent="67914,352460,200359,443186" fullextent="67914,352460,200359,443186">
+        <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extent="12000,304000,280000,620000" fullextent="12000,304000,280000,620000">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>
         </fmc:Map>
     </fmc:Container>

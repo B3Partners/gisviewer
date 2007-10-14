@@ -134,6 +134,20 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         return super.unspecified(mapping, dynaForm, request, response);
     }
     
+    public ActionForward create(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Themas t = getThema(dynaForm, false);
+        if (t==null)
+            t = getFirstThema();
+        dynaForm.initialize(mapping);
+        String val = "";
+        if (t!=null)
+            val = Integer.toString(t.getId());
+        dynaForm.set("themaID", val);
+        prepareMethod(dynaForm, request, EDIT, LIST);
+        addDefaultMessage(mapping, request);
+        return getDefaultForward(mapping, request);
+    }
+    
     public ActionForward edit(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(dynaForm, false);
         if (t==null)
@@ -246,7 +260,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         td.setCommando(FormUtils.nullIfEmpty(dynaForm.getString("commando")));
         td.setDataorder(FormUtils.nullIfEmpty(dynaForm.getString("dataorder")));
         td.setEenheid(FormUtils.nullIfEmpty(dynaForm.getString("eenheid")));
-        td.setKolombreedte(FormUtils.StringToInteger(dynaForm.getString("kolombreedte")));
+        td.setKolombreedte(FormUtils.StringToInt(dynaForm.getString("kolombreedte")));
         td.setKolomnaam(FormUtils.nullIfEmpty(dynaForm.getString("kolomnaam")));
         td.setLabel(FormUtils.nullIfEmpty(dynaForm.getString("label")));
         td.setOmschrijving(FormUtils.nullIfEmpty(dynaForm.getString("omschrijving")));

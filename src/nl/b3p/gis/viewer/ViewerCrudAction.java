@@ -27,7 +27,7 @@ import org.hibernate.Transaction;
 
 public class ViewerCrudAction extends CrudAction {
     
-    private static final Log log = LogFactory.getLog(ViewerCrudAction.class);
+    private static Log log = LogFactory.getLog(ViewerCrudAction.class);
     
     protected ActionForward getUnspecifiedAlternateForward(ActionMapping mapping, HttpServletRequest request) {
         return mapping.findForward(FAILURE);

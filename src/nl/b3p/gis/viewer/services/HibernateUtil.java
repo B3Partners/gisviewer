@@ -24,7 +24,6 @@ public class HibernateUtil extends HttpServlet {
     
     private static final Log log = LogFactory.getLog(HibernateUtil.class);
     private static final SessionFactory sessionFactory;
-    public static final String LAYER_ROLE_PREFIX = "layer_";
     
     public static String GEBRUIKERS_ROL = "gebruiker";
     public static String THEMABEHEERDERS_ROL = "themabeheerder";

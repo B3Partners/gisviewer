@@ -1,0 +1,131 @@
+.knoppen {
+        padding-top: 3px;
+	padding-left: 2px;
+	padding-right: 2px;
+	padding-bottom: 3px;
+        float: left;
+        text-align: left;
+}
+
+.knoppenbalk {
+  width: 900px;
+  float: left;
+  clear: both;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.berichtenbalk {
+  width: 900px;
+  float: left;
+  clear: both;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.messages {
+  clear: both;
+  float: left;
+	color: #000000; 
+	font-size: 12px;
+	font-style: normal; 
+	font-family: verdana, arial, helvetica, sans-serif;
+	padding: 4px;
+	margin: 0px; 
+}
+
+.maintable {
+  padding: 0;
+  clear: both;
+  background-color: #FFF;
+  width: 900px;
+}
+
+/* Scrollable tabel met divs */
+.topbar {
+float: left;
+clear: both;
+background-color: #FFD96B;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 11px;
+font-weight: bold;
+color: #1C6CA7;
+vertical-align: middle;
+width: 902px; 
+}
+
+.scroll {
+width: 900px; 
+height: 306px; 
+overflow: auto;
+font-size: 11px;
+clear: both;
+border: solid 1px #1C6CA7;
+}
+
+.bar_regel {
+clear: both;
+padding-left: 3px;
+height: 17px;
+border-top: solid 1px #1C6CA7;
+border-left: solid 1px #1C6CA7;
+border-right: solid 1px #1C6CA7;
+}
+
+
+.regel_odd {
+clear: both;
+background-color: #FFF;
+height: 17px;
+padding-left: 3px;
+cursor: pointer;
+}
+
+.regel_even {
+clear: both;
+background-color: #EEE;
+height: 17px;
+padding-left: 3px;
+cursor: pointer;
+}
+
+.regel_over {
+clear: both;
+background-color: #DEDEDE;
+height: 17px;
+padding-left: 3px;
+cursor: pointer;
+}
+
+.regel_selected {
+clear: both;
+background-color: #FFEEBE;
+height: 17px;
+padding-left: 3px;
+cursor: none;
+}
+
+.bar_item {
+float: left;
+overflow: hidden;
+text-align: left;
+padding-left: 3px;
+padding-right: 3px;
+white-space: nowrap;
+text-align: left;
+height: 17px;
+border-right: solid 1px #1C6CA7;
+}
+
+.c_item {
+height: 17px;
+float: left;
+overflow: hidden;
+text-align: left;
+padding-left: 3px;
+padding-right: 3px;
+white-space: nowrap;
+text-align: left;
+border-right: solid 1px #1C6CA7;
+}
+
+

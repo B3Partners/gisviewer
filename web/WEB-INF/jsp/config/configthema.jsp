@@ -1,0 +1,172 @@
+<%@include file="/WEB-INF/jsp/taglibs.jsp" %>
+<%@ page isELIgnored="false"%>
+
+<c:set var="form" value="${themaForm}"/>
+<c:set var="action" value="${form.map.action}"/>
+<c:set var="mainid" value="${form.map.themaID}"/>
+
+<c:set var="save" value="${action == 'save'}"/>
+<c:set var="delete" value="${action == 'delete'}"/>
+
+<c:set var="focus" value="naam"/>
+
+<div class="onderbalk">THEMA CONFIG<span><tiles:insert name="loginblock"/></span></div>
+<html:form action="/configThema" focus="${focus}">
+    <html:hidden property="action"/>
+    <html:hidden property="alt_action"/>
+    <html:hidden property="themaID"/>
+    
+    <c:if test="${!empty allThemas}">
+        <div class="topbar">
+            <div class="bar_regel"> 
+                <div class="bar_item" style="width: 40px">Nr</div>
+                <div class="bar_item" style="width: 100px">Naam</div>
+                <div class="bar_item" style="width: 30px">Code</div>
+                <div class="bar_item" style="width: 100px">Admin Tabel</div>
+                <div class="bar_item" style="width: 100px">Spatial Tabel</div>
+                <div class="bar_item" style="width: 25px">Data</div>
+            </div>
+        </div>
+        <div class="scroll">
+            <c:forEach var="ci" varStatus="status" items="${allThemas}">
+                <c:choose>
+                    <c:when test="${ci.id != mainid}">
+                        <c:set var="class" value="regel_odd"/>
+                        <c:if test="${status.index % 2 == 0}">
+                            <c:set var="class" value="regel_even"/>
+                            <c:set var="classover" value="regel_over"/>
+                        </c:if>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="class" value="regel_selected"/>
+                        <c:set var="classover" value="regel_over"/>
+                    </c:otherwise>
+                </c:choose>								
+                <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}"/>
+                <div class="${class}" onmouseover="this.className='${classover}';" onmouseout="this.className='${class}';" onclick="javascript: window.location.href='${link}';">
+                    <div class="c_item" style="width: 40px"><c:out value="${ci.belangnr}"/>&nbsp;</div>
+                    <div class="c_item" style="width: 100px"><c:out value="${ci.naam}"/>&nbsp;</div>
+                    <div class="c_item" style="width: 30px"><c:out value="${ci.code}"/>&nbsp;</div>
+                    <div class="c_item" style="width: 100px"><c:out value="${ci.admin_tabel}"/>&nbsp;</div>
+                    <div class="c_item" style="width: 100px"><c:out value="${ci.spatial_tabel}"/>&nbsp;</div>
+                    <div class="c_item" style="width: 25px">
+                        <c:if test="${ci.code!='3'}">
+                            &nbsp;<html:link page="/configThemaData.do?edit=submit&themaID=${ci.id}">TD</html:link>&nbsp;
+                        </c:if>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
+    </c:if>
+    
+    <div class="berichtenbalk">
+        <html:messages id="error" message="true">
+            <div class="messages">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
+        </html:messages>
+    </div> 
+    
+    <div class="maintable">
+        <table cellpadding="2" cellspacing="2" border="0">
+            <tr><td>naam</td><td colspan="3"><html:text property="naam" size="140"/></td></tr>
+            <tr>
+                <td>
+                    Code:
+                </td>
+                <td colspan="3">
+                    <html:select property="code">
+                        <html:option value="1">Oorspronkelijk Thema (1)</html:option>
+                        <html:option value="2">Nieuw Thema (2)</html:option>
+                        <html:option value="3">Thema niet meer in gebruik (3)</html:option>
+                    </html:select>&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Moscow:
+                </td>
+                <td colspan="3">
+                    <html:select property="moscowID">
+                        <c:forEach var="cuItem" items="${listMoscow}">
+                            <html:option value="${cuItem.id}">
+                                <c:out value="${cuItem.naam}"/>
+                            </html:option>
+                        </c:forEach>
+                    </html:select>&nbsp;
+                </td>
+            </tr>
+            <tr><td>belangnr</td><td colspan="3"><html:text property="belangnr" size="140"/></td></tr>
+            <tr>
+                <td>
+                    Cluster:
+                </td>
+                <td colspan="3">
+                    <html:select property="clusterID">
+                        <c:forEach var="cuItem" items="${allClusters}">
+                            <html:option value="${cuItem.id}">
+                                <c:out value="${cuItem.naam}"/>
+                            </html:option>
+                        </c:forEach>
+                    </html:select>&nbsp;
+                </td>
+            </tr>
+            <tr><td>opmerkingen</td><td colspan="3"><html:text property="opmerkingen" size="140"/></td></tr>
+            <tr><td>analyse_thema</td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
+            <tr><td>locatie_thema</td><td colspan="3"><html:checkbox property="locatie_thema"/></td></tr>
+            <tr><td>admin_tabel_opmerkingen</td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
+            <tr><td>admin_tabel</td><td colspan="3"><html:text property="admin_tabel" size="140"/></td></tr>
+            <tr><td>admin_pk</td><td colspan="3"><html:text property="admin_pk" size="140"/></td></tr>
+            <tr><td>admin_pk_complex</td><td colspan="3"><html:checkbox property="admin_pk_complex"/></td></tr>
+            <tr><td>admin_spatial_ref</td><td colspan="3"><html:text property="admin_spatial_ref" size="140"/></td></tr>
+            <tr><td>admin_query</td><td colspan="3"><html:text property="admin_query" size="140"/></td></tr>
+            <tr><td>spatial_tabel_opmerkingen</td><td colspan="3"><html:text property="spatial_tabel_opmerkingen" size="140"/></td></tr>
+            <tr><td>spatial_tabel</td><td colspan="3"><html:text property="spatial_tabel" size="140"/></td></tr>
+            <tr><td>spatial_pk</td><td colspan="3"><html:text property="spatial_pk" size="140"/></td></tr>
+            <tr><td>spatial_pk_complex</td><td colspan="3"><html:checkbox property="spatial_pk_complex"/></td></tr>
+            <tr><td>spatial_admin_ref</td><td colspan="3"><html:text property="spatial_admin_ref" size="140"/></td></tr>
+            <tr><td>wms_url</td><td colspan="3"><html:text property="wms_url" size="140"/></td></tr>
+            <tr><td>wms_layers</td><td colspan="3"><html:text property="wms_layers" size="140"/></td></tr>
+            <tr><td>wms_layers_real</td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
+            <tr><td>wms_querylayers</td><td colspan="3"><html:text property="wms_querylayers" size="140"/></td></tr>
+            <tr><td>wms_querylayers_real</td><td colspan="3"><html:text property="wms_querylayers_real" size="140"/></td></tr>
+            <tr><td>wms_legendlayer</td><td colspan="3"><html:text property="wms_legendlayer" size="140"/></td></tr>
+            <tr><td>wms_legendlayer_real</td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
+            <tr><td>update_frequentie_in_dagen</td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
+            <tr><td>view_geomtype</td><td colspan="3"><html:text property="view_geomtype" size="140"/></td></tr>
+        </table>
+    </div>
+    
+    <div class="knoppenbalk">
+        <c:choose>
+            <c:when test="${save || delete}">
+                <div class="knoppen">
+                    <html:submit property="confirm" accesskey="o" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <fmt:message key="button.ok"/>
+                    </html:submit>
+                </div>
+                <div class="knoppen">
+                    <html:cancel accesskey="c" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <fmt:message key="button.cancel"/>
+                    </html:cancel>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="knoppen">
+                    <html:submit property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <fmt:message key="button.new"/>
+                    </html:submit>
+                </div> 
+                <div class="knoppen">
+                    <html:submit property="deleteConfirm" accesskey="d" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <fmt:message key="button.remove"/>
+                    </html:submit>
+                </div> 
+                <div class="knoppen">
+                    <html:submit property="saveConfirm" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <fmt:message key="button.save"/>
+                    </html:submit>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div> 
+    
+</html:form>

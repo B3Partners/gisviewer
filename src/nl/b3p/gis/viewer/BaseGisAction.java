@@ -516,17 +516,26 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 url.append("=");
                 url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
                 
+                String kolomNaam = td.getKolomnaam();
+                if (kolomNaam!=null && kolomNaam.length()>0 && !kolomNaam.equalsIgnoreCase(adminPk)) {
+                    url.append("&");
+                    url.append(kolomNaam);
+                    url.append("=");
+                    url.append(URLEncoder.encode((rs.getObject(kolomNaam)).toString().trim(), "utf-8"));
+                }
+                
                 regel.add(url.toString());
                 
             /*
              * De laatste mogelijkheid betreft een query. Vanuit de themadata wordt nu een
-             * een commando url opgehaald en deze wordt met de admin primary key uit het
-             * Thema aangevuld.
+             * een commando url opgehaald en deze wordt met de kolomnaam aangevuld.
              */
             } else if (td.getDataType().getId()==DataTypen.QUERY) {
                 StringBuffer url = new StringBuffer(td.getCommando());
-                String adminPk = t.getAdmin_pk();
-                url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
+                String kolomNaam = td.getKolomnaam();
+                if (kolomNaam==null || kolomNaam.length()==0)
+                    kolomNaam = t.getAdmin_pk();
+                url.append(URLEncoder.encode((rs.getObject(kolomNaam)).toString().trim(), "utf-8"));
                 regel.add(url.toString());
             } else
                 

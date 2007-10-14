@@ -97,9 +97,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         ServiceProvider sp = null;
         try {
             sp = wmscr.getProvider(location, username, password);
-        } catch (IOException ex) {
-            log.error("", ex);
-        } catch (SAXException ex) {
+        } catch (Exception ex) {
             log.error("", ex);
         }
         
@@ -163,7 +161,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
                     
                     String name = rs.getString(1) + " " + rs.getString(2);
                     do {
-                        roles.add(HibernateUtil.LAYER_ROLE_PREFIX + rs.getString(5));
+                        roles.add("layer_" + rs.getString(5));
                     } while(rs.next());
                     return new GisPrincipal(name, roles);
                 }

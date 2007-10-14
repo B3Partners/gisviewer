@@ -15,26 +15,12 @@
     </security-constraint>
 
     <!-- Viewer alleen door ingelogde personen -->
-    <!-- XXX hier kan niet het url-pattern "/*" gebruikt worden, omdat dan 
-         allerlei andere bestanden zoals css, javascript e.d. niet kunnen worden
-         geladen voor de /index.do pagina. Helaas zijn de pagina's die beveiligd
-         moeten worden niet in een module geplaatst, zodat alle actions apart
-         hier moeten worden genoemd ipv alleen de modules! Bij het toevoegen
-         van een action zou dit makkelijk kunnen worden vergeten...
-    -->
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Viewer</web-resource-name>
             <url-pattern>/viewer.do</url-pattern>
             <url-pattern>/viewerdata.do</url-pattern>
         </web-resource-collection>
-        <user-data-constraint>
-            <!-- dit wordt niet ondersteund door securityfilter, moet met 
-                 Apache geregeld worden!
-            -->
-            <description>SSL</description>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
         <auth-constraint>
             <role-name>*</role-name>
         </auth-constraint>
@@ -51,6 +37,16 @@
         </auth-constraint>
     </security-constraint>
 
+    <!-- /config* alleen voor beheerders -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Configuratie</web-resource-name>
+            <url-pattern>/config*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>beheerder</role-name>
+        </auth-constraint>
+    </security-constraint>
    <login-config>
       <auth-method>FORM_COOKIE_TOKEN</auth-method>
       <form-login-config>

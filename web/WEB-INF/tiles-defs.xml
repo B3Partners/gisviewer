@@ -76,6 +76,20 @@
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>
     </definition>
     
+    <!-- config -->   
+    <definition name="config" extends="template">
+        <put name="menu" value="/WEB-INF/jsp/commons/configmenu.jsp"/>
+    </definition>
+    <definition name="configthema" extends="config">
+        <put name="content" value="/WEB-INF/jsp/config/configthema.jsp"/>
+    </definition>
+    <definition name="configcluster" extends="config">
+        <put name="content" value="/WEB-INF/jsp/config/configcluster.jsp"/>
+    </definition>
+    <definition name="configthemadata" extends="config">
+        <put name="content" value="/WEB-INF/jsp/config/configthemadata.jsp"/>
+    </definition>
+
     <!-- tiles met herbruikbare onderdelen die in de content pagina's kunnen worden ge-insert  -->
     <definition name="loginblock" path="/WEB-INF/jsp/commons/userAndLogout.jsp"/>
     

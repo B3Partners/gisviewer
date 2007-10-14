@@ -17,6 +17,7 @@
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/etl.css" rel="stylesheet" type="text/css">
         <link href="styles/etltransform.css" rel="stylesheet" type="text/css">
+        <link href="styles/config.css" rel="stylesheet" type="text/css">
         
         <link rel="stylesheet" type="text/css" href="styles/niftyCorners.css">
         <link rel="stylesheet" type="text/css" href="styles/ARC.css">

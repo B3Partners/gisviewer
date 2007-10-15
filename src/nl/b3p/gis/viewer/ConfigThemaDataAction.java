@@ -235,7 +235,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         dynaForm.set("themaID", val);
         dynaForm.set("basisregel", new Boolean(td.isBasisregel()));
         dynaForm.set("voorbeelden", td.getVoorbeelden());
-        dynaForm.set("kolombreedte", FormUtils.IntegerToString(td.getKolombreedte()));
+        dynaForm.set("kolombreedte", FormUtils.IntToString(td.getKolombreedte()));
         val = "";
         if (td.getMoscow()!=null)
             val = Integer.toString(td.getMoscow().getId());

@@ -150,7 +150,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         if (t.getMoscow()!=null)
             val = Integer.toString(t.getMoscow().getId());
         dynaForm.set("moscowID", val);
-        dynaForm.set("belangnr", FormUtils.IntegerToString(t.getBelangnr()));
+        dynaForm.set("belangnr", FormUtils.IntToString(t.getBelangnr()));
         val = "";
         if (t.getCluster()!=null)
             val = Integer.toString(t.getCluster().getId());

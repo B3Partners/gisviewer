@@ -101,6 +101,20 @@ public class SpatialUtil {
         return dt;
     }
     
+    static public List getAdminColumnNames(Themas t, Connection conn) throws SQLException {
+        DatabaseMetaData dbmd = conn.getMetaData();
+        String dbtn = t.getAdmin_tabel();
+        ResultSet rs = dbmd.getColumns(null, null, dbtn, null);
+        List columns = null;
+        while (rs.next()) {
+            String columnName = rs.getString("COLUMN_NAME");
+            if (columns==null)
+                columns = new ArrayList();
+            columns.add(columnName);
+        }
+        return columns;
+    }
+    
     static public boolean isEtlThema(Themas t, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
         String dbtn = t.getAdmin_tabel();
@@ -111,10 +125,10 @@ public class SpatialUtil {
         }
         return false;
     }
-
-   static public String getThemaGeomType(Themas t, Connection conn) throws Exception {
-       String themaGeomType = null; 
-       String themaGeomTabel = t.getSpatial_tabel();
+    
+    static public String getThemaGeomType(Themas t, Connection conn) throws Exception {
+        String themaGeomType = null;
+        String themaGeomTabel = t.getSpatial_tabel();
         
         String q = "select * from geometry_columns gc where gc.f_table_name = '" + themaGeomTabel + "'";
         try {
@@ -141,7 +155,7 @@ public class SpatialUtil {
         if (themaGeomType == null)
             throw new Exception("Kan het type geo-object niet vinden: " + tname);
         return themaGeomType;
-   }
+    }
     
     /**
      * DOCUMENT ME!

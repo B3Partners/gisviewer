@@ -7,6 +7,7 @@
 
 package nl.b3p.gis.viewer;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.db.WaardeTypen;
 import nl.b3p.gis.viewer.services.HibernateUtil;
+import nl.b3p.gis.viewer.services.SpatialUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
@@ -109,8 +111,14 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         } else {
             t = td.getThema();
         }
+        if (t==null)
+            return;
+        
         Query q = sess.createQuery("from ThemaData where thema.id = :themaID order by dataorder, label");
         request.setAttribute("listThemaData", q.setParameter("themaID", new Integer(t.getId())).list());
+        
+        Connection conn = sess.connection();
+        request.setAttribute("listTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
     }
     
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -210,17 +218,24 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         // nieuwe default actie op delete zetten
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         
-        ThemaData t = getThemaData(dynaForm, false);
-        if (t==null) {
+        ThemaData td = getThemaData(dynaForm, false);
+        if (td==null) {
             prepareMethod(dynaForm, request, LIST, EDIT);
             addAlternateMessage(mapping, request, NOTFOUND_ERROR_KEY);
             return getAlternateForward(mapping, request);
         }
         
-        sess.delete(t);
+        Themas t = td.getThema();
+        t.getThemaData().remove(td);
+        sess.delete(td);
         sess.flush();
         
-        return super.delete(mapping, dynaForm, request, response);
+        td = getFirstThemaData(t);
+        dynaForm.initialize(mapping);
+        populateThemaDataForm(td, dynaForm, request);
+        prepareMethod(dynaForm, request, LIST, EDIT);
+        addDefaultMessage(mapping, request);
+        return getDefaultForward(mapping, request);
     }
     
     private void populateThemaDataForm(ThemaData td, DynaValidatorForm dynaForm, HttpServletRequest request) {

@@ -127,7 +127,18 @@
                 </td>
             </tr>
             <tr><td>commando</td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
-            <tr><td>kolomnaam</td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
+            <tr>
+                <td>kolomnaam</td>
+                <td colspan="2">
+                    <html:select property="kolomnaam">
+                        <html:option value=""/>
+                        <c:forEach var="cuItem" items="${listTableColumns}">
+                            <html:option value="${cuItem}"/>
+                        </c:forEach>
+                    </html:select>&nbsp;
+                </td>
+                <td>[<c:out value="${form.map.kolomnaam}"/>]</td>
+            </tr>
             <tr><td>dataorder</td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
         </table>
     </div>
@@ -165,5 +176,5 @@
             </c:otherwise>
         </c:choose>
     </div> 
-        
+    
 </html:form>

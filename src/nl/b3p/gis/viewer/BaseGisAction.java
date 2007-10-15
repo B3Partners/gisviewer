@@ -511,17 +511,23 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 url.append(t.getId());
                 
                 String adminPk = t.getAdmin_pk();
-                url.append("&");
-                url.append(adminPk);
-                url.append("=");
-                url.append(URLEncoder.encode((rs.getObject(adminPk)).toString().trim(), "utf-8"));
+                Object value = rs.getObject(adminPk);
+                if (value!=null) {
+                    url.append("&");
+                    url.append(adminPk);
+                    url.append("=");
+                    url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
+                }
                 
                 String kolomNaam = td.getKolomnaam();
-                if (kolomNaam!=null && kolomNaam.length()>0 && !kolomNaam.equalsIgnoreCase(adminPk)) {
-                    url.append("&");
-                    url.append(kolomNaam);
-                    url.append("=");
-                    url.append(URLEncoder.encode((rs.getObject(kolomNaam)).toString().trim(), "utf-8"));
+                value = rs.getObject(kolomNaam);
+                if (value!=null) {
+                    if (kolomNaam!=null && kolomNaam.length()>0 && !kolomNaam.equalsIgnoreCase(adminPk)) {
+                        url.append("&");
+                        url.append(kolomNaam);
+                        url.append("=");
+                        url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
+                    }
                 }
                 
                 regel.add(url.toString());
@@ -535,7 +541,10 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 String kolomNaam = td.getKolomnaam();
                 if (kolomNaam==null || kolomNaam.length()==0)
                     kolomNaam = t.getAdmin_pk();
-                url.append(URLEncoder.encode((rs.getObject(kolomNaam)).toString().trim(), "utf-8"));
+                Object value = rs.getObject(kolomNaam);
+                if (value!=null) {
+                    url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
+                }
                 regel.add(url.toString());
             } else
                 

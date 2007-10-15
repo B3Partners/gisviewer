@@ -138,6 +138,8 @@ public class ConfigClusterAction extends ViewerCrudAction {
     
     
     private void populateClustersForm(Clusters c, DynaValidatorForm dynaForm, HttpServletRequest request) {
+        if (c==null)
+            return;
         
         dynaForm.set("clusterID", Integer.toString(c.getId()));
         dynaForm.set("naam", c.getNaam());

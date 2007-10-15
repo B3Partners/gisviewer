@@ -64,7 +64,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         Themas t = getThema(dynaForm, false);
         if (t==null)
             t = getFirstThema();
-        populateThemasForm(t, dynaForm, request);
+         populateThemasForm(t, dynaForm, request);
         return super.unspecified(mapping, dynaForm, request, response);
     }
     
@@ -142,7 +142,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
     
     
     private void populateThemasForm(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) {
-        
+        if (t==null)
+            return;
         dynaForm.set("themaID", Integer.toString(t.getId()));
         dynaForm.set("code", t.getCode());
         dynaForm.set("naam", t.getNaam());

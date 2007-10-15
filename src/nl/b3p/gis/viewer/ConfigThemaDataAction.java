@@ -36,8 +36,8 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     
     private static final Log log = LogFactory.getLog(ConfigThemaAction.class);
     
-     protected static final String CHANGE = "change";
-   
+    protected static final String CHANGE = "change";
+    
     protected Map getActionMethodPropertiesMap() {
         Map map = super.getActionMethodPropertiesMap();
         
@@ -224,6 +224,8 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     }
     
     private void populateThemaDataForm(ThemaData td, DynaValidatorForm dynaForm, HttpServletRequest request) {
+        if (td==null)
+            return;
         
         dynaForm.set("themaDataID", Integer.toString(td.getId()));
         dynaForm.set("label", td.getLabel());

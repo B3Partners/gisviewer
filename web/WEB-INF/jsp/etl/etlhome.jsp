@@ -2,7 +2,7 @@
 <%@ page isELIgnored="false"%>
 
 <div class="onderbalk">ETL OVERZICHT<span><tiles:insert name="loginblock"/></span></div>
-<table id="etl_overview_table" style="table-layout: fixed;">
+<table id="etl_overview_table" style="table-layout: fixed; clear: left;">
 <tr class="etlTopRow">
     <td style="width: 300px;"><b>&nbsp;Thema naam</b></td>
     <td><b>&nbsp;Aantal NO</b></td>

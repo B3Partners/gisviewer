@@ -50,7 +50,10 @@ font-size: 11px;
 font-weight: bold;
 color: #1C6CA7;
 vertical-align: middle;
-width: 902px; 
+width: 901px;
+border-top: solid 1px #1C6CA7;
+border-left: solid 1px #1C6CA7;
+
 }
 
 .scroll {
@@ -66,9 +69,7 @@ border: solid 1px #1C6CA7;
 clear: both;
 padding-left: 3px;
 height: 17px;
-border-top: solid 1px #1C6CA7;
-border-left: solid 1px #1C6CA7;
-border-right: solid 1px #1C6CA7;
+
 }
 
 
@@ -78,6 +79,8 @@ background-color: #FFF;
 height: 17px;
 padding-left: 3px;
 cursor: pointer;
+overflow: hidden;
+width: 880px;
 }
 
 .regel_even {
@@ -86,6 +89,8 @@ background-color: #EEE;
 height: 17px;
 padding-left: 3px;
 cursor: pointer;
+overflow: hidden;
+width: 880px;
 }
 
 .regel_over {
@@ -94,6 +99,8 @@ background-color: #DEDEDE;
 height: 17px;
 padding-left: 3px;
 cursor: pointer;
+overflow: hidden;
+width: 880px;
 }
 
 .regel_selected {
@@ -102,6 +109,8 @@ background-color: #FFEEBE;
 height: 17px;
 padding-left: 3px;
 cursor: none;
+overflow: hidden;
+width: 880px;
 }
 
 .bar_item {

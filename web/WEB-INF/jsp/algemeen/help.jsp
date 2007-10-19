@@ -12,7 +12,7 @@
                 </html:messages>
                 <h1>B3P GIS Suite Demo</h1>
                 
-                <div>
+                <div class="inleiding">
                     <h2>Introductie</h2>
                     Deze B3P GIS Suite demo toont de mogelijkheden van de GIS viewer zoals deze binnen de GIS suite gebruikt wordt.
                     De getoonde kaarten zijn alleen ten bate van deze demo beschikbaar. Later worden voor elk project specifieke

@@ -76,11 +76,11 @@ div, td, th, span, input, textarea, select, option, button {
     background-image: url(/gisviewer/images/nbr/topmenubg.gif);
     background-repeat: no-repeat;
     background-position: 100% 0%;
-    width: 400px;
+    width: 440px;
     height: 50px;
     position: absolute;
     left: 50%;
-    margin-left: 86px;
+    margin-left: 46px;
     padding-top: 25px;
 }
 
@@ -543,7 +543,7 @@ a:hover{
     overflow: visible;
 }
 
-#content_style div {
+#content_style div.inleiding {
     background-color: #FFF0C5;
     padding: 15px;
     font-weight: bold;
@@ -571,7 +571,7 @@ a:hover{
     margin-top: 15px;
 }
 
-#content_style div h2 {
+#content_style div.inleiding h2 {
     margin-top: 0px;
 }
 

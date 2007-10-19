@@ -25,56 +25,58 @@
     <html:hidden property="admin_spatial_ref"/>
     <html:hidden property="analyse_thema"/>
     
-    <c:if test="${!empty allThemas}">
-        <div class="topbar">
-            <div class="bar_regel"> 
-                <div class="bar_item" style="width: 40px">Nr</div>
-                <div class="bar_item" style="width: 100px">Naam</div>
-                <div class="bar_item" style="width: 30px">Code</div>
-                <div class="bar_item" style="width: 100px">Admin Tabel</div>
-                <div class="bar_item" style="width: 100px">Spatial Tabel</div>
-                <div class="bar_item" style="width: 25px">Data</div>
-            </div>
-        </div>
-        <div class="scroll">
-            <c:forEach var="ci" varStatus="status" items="${allThemas}">
-                <c:choose>
-                    <c:when test="${ci.id != mainid}">
-                        <c:set var="class" value="regel_odd"/>
-                        <c:if test="${status.index % 2 == 0}">
-                            <c:set var="class" value="regel_even"/>
-                            <c:set var="classover" value="regel_over"/>
-                        </c:if>
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="class" value="regel_selected"/>
-                        <c:set var="classover" value="regel_over"/>
-                    </c:otherwise>
-                </c:choose>								
-                <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}"/>
-                <div class="${class}" onmouseover="this.className='${classover}';" onmouseout="this.className='${class}';" onclick="javascript: window.location.href='${link}';">
-                    <div class="c_item" style="width: 40px"><c:out value="${ci.belangnr}"/>&nbsp;</div>
-                    <div class="c_item" style="width: 100px"><c:out value="${ci.naam}"/>&nbsp;</div>
-                    <div class="c_item" style="width: 30px"><c:out value="${ci.code}"/>&nbsp;</div>
-                    <div class="c_item" style="width: 100px"><c:out value="${ci.admin_tabel}"/>&nbsp;</div>
-                    <div class="c_item" style="width: 100px"><c:out value="${ci.spatial_tabel}"/>&nbsp;</div>
-                    <div class="c_item" style="width: 25px">
-                        <c:if test="${ci.code!='3'}">
-                            &nbsp;<html:link page="/configThemaData.do?edit=submit&themaID=${ci.id}">TD</html:link>&nbsp;
-                        </c:if>
-                    </div>
+    <div style="float: left; clear: both; margin-left: 15px;">
+        <c:if test="${!empty allThemas}">
+            <div class="topbar">
+                <div class="bar_regel"> 
+                    <div class="bar_item" style="width: 40px;">Nr</div>
+                    <div class="bar_item" style="width: 358px;">Naam</div>
+                    <div class="bar_item" style="width: 30px;">Code</div>
+                    <div class="bar_item" style="width: 180px;">Admin Tabel</div>
+                    <div class="bar_item" style="width: 180px;">Spatial Tabel</div>
+                    <div class="bar_item" style="width: 68px;">Data</div>
                 </div>
-            </c:forEach>
-        </div>
-    </c:if>
-    
-    <div class="berichtenbalk">
-        <html:messages id="error" message="true">
-            <div class="messages">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
-        </html:messages>
-    </div> 
-    
-    <div class="maintable">
+            </div>
+            <div class="scroll">
+                <c:forEach var="ci" varStatus="status" items="${allThemas}">
+                    <c:choose>
+                        <c:when test="${ci.id != mainid}">
+                            <c:set var="class" value="regel_odd"/>
+                            <c:if test="${status.index % 2 == 0}">
+                                <c:set var="class" value="regel_even"/>
+                                <c:set var="classover" value="regel_over"/>
+                            </c:if>
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="class" value="regel_selected"/>
+                            <c:set var="classover" value="regel_over"/>
+                        </c:otherwise>
+                    </c:choose>								
+                    <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}"/>
+                    <div class="${class}" onmouseover="this.className='${classover}';" onmouseout="this.className='${class}';" onclick="javascript: window.location.href='${link}';">                            
+                        <div class="c_item" style="width: 40px;"><c:out value="${ci.belangnr}"/>&nbsp;</div>
+                        <div class="c_item" style="width: 358px;"><c:out value="${ci.naam}"/>&nbsp;</div>
+                        <div class="c_item" style="width: 30px;"><c:out value="${ci.code}"/>&nbsp;</div>
+                        <div class="c_item" style="width: 180px;"><c:out value="${ci.admin_tabel}"/>&nbsp;</div>
+                        <div class="c_item" style="width: 180px;"><c:out value="${ci.spatial_tabel}"/>&nbsp;</div>
+                        <div class="c_item" style="width: 51px; border-right: 0px none White;">
+                            <c:if test="${ci.code!='3'}">
+                                &nbsp;<html:link page="/configThemaData.do?edit=submit&themaID=${ci.id}">TD</html:link>&nbsp;
+                            </c:if>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+    </div>
+    <div id="content_style" style="float: left; clear: left;">
+        <div class="berichtenbalk">
+            <html:messages id="error" message="true">
+                <div class="messages">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
+            </html:messages>
+        </div> 
+        
+        <div class="maintable">
         <table cellpadding="2" cellspacing="2" border="0">
             <tr><td>naam</td><td colspan="3"><html:text property="naam" size="140"/></td></tr>
             <tr>
@@ -287,39 +289,39 @@
             
         </table>
     </div>
-    
-    <div class="knoppenbalk">
-        <c:choose>
-            <c:when test="${save || delete}">
-                <div class="knoppen">
-                    <html:submit property="confirm" accesskey="o" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                        <fmt:message key="button.ok"/>
-                    </html:submit>
-                </div>
-                <div class="knoppen">
-                    <html:cancel accesskey="c" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                        <fmt:message key="button.cancel"/>
-                    </html:cancel>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="knoppen">
-                    <html:submit property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                        <fmt:message key="button.new"/>
-                    </html:submit>
-                </div> 
-                <div class="knoppen">
-                    <html:submit property="deleteConfirm" accesskey="d" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                        <fmt:message key="button.remove"/>
-                    </html:submit>
-                </div> 
-                <div class="knoppen">
-                    <html:submit property="saveConfirm" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                        <fmt:message key="button.save"/>
-                    </html:submit>
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </div> 
-    
+        
+        <div class="knoppenbalk">
+            <c:choose>
+                <c:when test="${save || delete}">
+                    <div class="knoppen">
+                        <html:submit property="confirm" accesskey="o" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.ok"/>
+                        </html:submit>
+                    </div>
+                    <div class="knoppen">
+                        <html:cancel accesskey="c" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.cancel"/>
+                        </html:cancel>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="knoppen">
+                        <html:submit property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.new"/>
+                        </html:submit>
+                    </div> 
+                    <div class="knoppen">
+                        <html:submit property="deleteConfirm" accesskey="d" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.remove"/>
+                        </html:submit>
+                    </div> 
+                    <div class="knoppen">
+                        <html:submit property="saveConfirm" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.save"/>
+                        </html:submit>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div> 
+    </div>
 </html:form>

@@ -73,11 +73,11 @@ div, td, th, span, input, textarea, select, option, button {
 
 .topmenu {
     background-image: none;
-    width: 360px;
+    width: 440px;
     height: 50px;
     position: absolute;
     left: 50%;
-    margin-left: 127px;
+    margin-left: 46px;
     margin-top: 18px;
 }
 
@@ -517,6 +517,33 @@ a:hover{
     background-color: #dddddd;
 }
 
+/* Config design */
+.topbar {
+    background-image: url("../images/patroon_kaartenbalie.gif");
+    background-repeat: repeat;
+}
+
+.bar_item {
+    border: 0px none White;
+    font-weight: bold;
+    color: White;
+    padding-left: 4px;
+}
+
+.c_item {
+    color: #196299;
+}
+
+.c_item a {
+    color: #196299;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.c_item a:hover {
+    text-decoration: none;
+}
+
 /* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
 
 #content_style, #content_style h1, #content_style h2, #content_style div, #content_style td, #content_style th, #content_style a, #content_style li {
@@ -537,7 +564,7 @@ a:hover{
     overflow: visible;
 }
 
-#content_style div {
+#content_style div.inleiding {
     background-color: #FFF0C5;
     padding: 15px;
     font-weight: bold;
@@ -565,7 +592,7 @@ a:hover{
     margin-top: 15px;
 }
 
-#content_style div h2 {
+#content_style div.inleiding h2 {
     margin-top: 0px;
 }
 

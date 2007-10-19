@@ -155,7 +155,7 @@ public class GetViewerDataAction extends BaseGisAction {
                     sfactor = 1000;
                     sdesc = "Grootste lengte(km)";
                     scolumns = new String[]{"result"};
-                } else if (((String)inputParameters.get("themaGeomType")).equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
+                } else if (tgt.equalsIgnoreCase(SpatialUtil.MULTIPOLYGON)){
                     stype = "POLYGON";
                     sfunction = "max";
                     sfactor = 1000000;

@@ -543,9 +543,10 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     kolomNaam = t.getAdmin_pk();
                 Object value = rs.getObject(kolomNaam);
                 if (value!=null) {
-                    url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
-                }
-                regel.add(url.toString());
+                    url.append(value.toString().trim());
+                    regel.add(url.toString());
+                } else
+                    regel.add("");
             } else
                 
             /*

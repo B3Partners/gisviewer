@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,34 @@ public class SpatialUtil {
     public static final String MULTILINESTRING="multilinestring";
     public static final String MULTIPOLYGON="multipolygon";
     
+    public  static final List VALID_GEOMS = Arrays.asList(new String[] {
+        MULTIPOINT,
+        MULTILINESTRING,
+        MULTIPOLYGON
+    });
+    
+    public static final List INTERNAL_TABLES = Arrays.asList(new String[] {
+        "applicaties",
+        "clusters",
+        "data_typen",
+        "functie_items",
+        "leveranciers",
+        "locatie_aanduidingen",
+        "medewerkers",
+        "moscow",
+        "onderdeel",
+        "onderdeel_medewerkers",
+        "rollen",
+        "thema_applicaties",
+        "thema_data",
+        "thema_functies",
+        "thema_verantwoordelijkheden",
+        "themas",
+        "waarde_typen",
+        "workshop_medewerkers",
+        "workshops"
+    });
+
     public static List getValidClusters() {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String hquery = "FROM Clusters WHERE id != 9";
@@ -104,6 +133,8 @@ public class SpatialUtil {
     static public List getAdminColumnNames(Themas t, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
         String dbtn = t.getAdmin_tabel();
+        if (dbtn==null)
+            return null;
         ResultSet rs = dbmd.getColumns(null, null, dbtn, null);
         List columns = null;
         while (rs.next()) {
@@ -113,6 +144,38 @@ public class SpatialUtil {
             columns.add(columnName);
         }
         return columns;
+    }
+    
+    static public List getSpatialColumnNames(Themas t, Connection conn) throws SQLException {
+        DatabaseMetaData dbmd = conn.getMetaData();
+        String dbtn = t.getSpatial_tabel();
+        if (dbtn==null)
+            return null;
+        ResultSet rs = dbmd.getColumns(null, null, dbtn, null);
+        List columns = null;
+        while (rs.next()) {
+            String columnName = rs.getString("COLUMN_NAME");
+            if (columns==null)
+                columns = new ArrayList();
+            columns.add(columnName);
+        }
+        return columns;
+    }
+    
+    static public List getTableNames(Connection conn) throws SQLException {
+        DatabaseMetaData dbmd = conn.getMetaData();
+        String[] types = new String[] {"TABLE", "VIEW"};
+        ResultSet rs = dbmd.getTables(null, null, null, types);
+        List tables = null;
+        while (rs.next()) {
+            String tableName = rs.getString("TABLE_NAME");
+            if (INTERNAL_TABLES.contains(tableName.toLowerCase()))
+                continue;
+            if (tables==null)
+                tables = new ArrayList();
+            tables.add(tableName);
+        }
+        return tables;
     }
     
     static public boolean isEtlThema(Themas t, Connection conn) throws SQLException {

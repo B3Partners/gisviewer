@@ -16,6 +16,15 @@
     <html:hidden property="alt_action"/>
     <html:hidden property="themaID"/>
     
+    <html:hidden property="wms_url"/>
+    <html:hidden property="wms_layers"/>
+    <html:hidden property="wms_legendlayer"/>
+    <html:hidden property="wms_querylayers"/>
+    <html:hidden property="admin_pk_complex"/>
+    <html:hidden property="spatial_pk_complex"/>
+    <html:hidden property="admin_spatial_ref"/>
+    <html:hidden property="analyse_thema"/>
+    
     <c:if test="${!empty allThemas}">
         <div class="topbar">
             <div class="bar_regel"> 
@@ -110,28 +119,172 @@
                 </td>
             </tr>
             <tr><td>opmerkingen</td><td colspan="3"><html:text property="opmerkingen" size="140"/></td></tr>
-            <tr><td>analyse_thema</td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
             <tr><td>locatie_thema</td><td colspan="3"><html:checkbox property="locatie_thema"/></td></tr>
+            
+            <tr><td colspan="4">&nbsp;</td></tr>
             <tr><td>admin_tabel_opmerkingen</td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
-            <tr><td>admin_tabel</td><td colspan="3"><html:text property="admin_tabel" size="140"/></td></tr>
-            <tr><td>admin_pk</td><td colspan="3"><html:text property="admin_pk" size="140"/></td></tr>
-            <tr><td>admin_pk_complex</td><td colspan="3"><html:checkbox property="admin_pk_complex"/></td></tr>
-            <tr><td>admin_spatial_ref</td><td colspan="3"><html:text property="admin_spatial_ref" size="140"/></td></tr>
+            <tr>
+                <td>admin_tabel</td>
+                <td colspan="3">
+                    <html:select property="admin_tabel">
+                        <html:option value=""/>
+                        <c:forEach var="cuItem" items="${listTables}">
+                            <html:option value="${cuItem}"/>
+                        </c:forEach>
+                    </html:select>&nbsp;
+                </td>
+            </tr>
+            <c:choose>
+                <c:when test="${fn:length(listAdminTableColumns)>1}">
+                    <tr>
+                        <td>admin_pk</td>
+                        <td colspan="3">
+                            <html:select property="admin_pk">
+                                <html:option value=""/>
+                                <c:forEach var="cuItem" items="${listAdminTableColumns}">
+                                    <html:option value="${cuItem}"/>
+                                </c:forEach>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr><td>admin_pk</td><td colspan="3"><html:text property="admin_pk" size="140"/></td></tr>
+                    
+                </c:otherwise>
+            </c:choose>
             <tr><td>admin_query</td><td colspan="3"><html:text property="admin_query" size="140"/></td></tr>
+            
+            <tr><td colspan="4">&nbsp;</td></tr>
             <tr><td>spatial_tabel_opmerkingen</td><td colspan="3"><html:text property="spatial_tabel_opmerkingen" size="140"/></td></tr>
-            <tr><td>spatial_tabel</td><td colspan="3"><html:text property="spatial_tabel" size="140"/></td></tr>
-            <tr><td>spatial_pk</td><td colspan="3"><html:text property="spatial_pk" size="140"/></td></tr>
+            <tr>
+                <td>spatial_tabel</td>
+                <td colspan="3">
+                    <html:select property="spatial_tabel">
+                        <html:option value=""/>
+                        <c:forEach var="cuItem" items="${listTables}">
+                            <html:option value="${cuItem}"/>
+                        </c:forEach>
+                    </html:select>&nbsp;
+                </td>
+            </tr>
+            <c:choose>
+                <c:when test="${fn:length(listSpatialTableColumns)>1}">
+                    <tr>
+                        <td>spatial_pk</td>
+                        <td colspan="3">
+                            <html:select property="spatial_pk">
+                                <html:option value=""/>
+                                <c:forEach var="cuItem" items="${listSpatialTableColumns}">
+                                    <html:option value="${cuItem}"/>
+                                </c:forEach>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr><td>spatial_pk</td><td colspan="3"><html:text property="spatial_pk" size="140"/></td></tr>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${fn:length(listSpatialTableColumns)>1}">
+                    <tr>
+                        <td>spatial_admin_ref</td>
+                        <td colspan="3">
+                            <html:select property="spatial_admin_ref">
+                                <html:option value=""/>
+                                <c:forEach var="cuItem" items="${listSpatialTableColumns}">
+                                    <html:option value="${cuItem}"/>
+                                </c:forEach>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr><td>spatial_admin_ref</td><td colspan="3"><html:text property="spatial_admin_ref" size="140"/></td></tr>
+                </c:otherwise>
+            </c:choose>
+            <tr>
+                <td>view_geomtype</td>
+                <td colspan="3">
+                    <html:select property="view_geomtype">
+                        <html:option value=""/>
+                        <c:forEach var="cuItem" items="${listValidGeoms}">
+                            <html:option value="${cuItem}"/>
+                        </c:forEach>
+                    </html:select>&nbsp;
+                </td>
+            </tr>
+            
+            <tr><td colspan="4">&nbsp;</td></tr>
+            <c:choose>
+                <c:when test="${fn:length(listLayers)>1}">
+                    <tr>
+                        <td>wms_layers_real</td>
+                        <td colspan="3">
+                            <html:select property="wms_layers_real">
+                                <html:option value=""/>
+                                <c:forEach var="cuItem" items="${listLayers}">
+                                    <html:option value="${cuItem}"/>
+                                </c:forEach>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr><td>wms_layers_real</td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${fn:length(listLayers)>1}">
+                    <tr>
+                        <td>wms_querylayers_real</td>
+                        <td colspan="3">
+                            <html:select property="wms_querylayers_real">
+                                <html:option value=""/>
+                                <c:forEach var="cuItem" items="${listLayers}">
+                                    <html:option value="${cuItem}"/>
+                                </c:forEach>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr><td>wms_querylayers_real</td><td colspan="3"><html:text property="wms_querylayers_real" size="140"/></td></tr>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${fn:length(listLayers)>1}">
+                    <tr>
+                        <td>wms_legendlayer_real</td>
+                        <td colspan="3">
+                            <html:select property="wms_legendlayer_real">
+                                <html:option value=""/>
+                                <c:forEach var="cuItem" items="${listLayers}">
+                                    <html:option value="${cuItem}"/>
+                                </c:forEach>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <tr><td>wms_legendlayer_real</td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
+                </c:otherwise>
+            </c:choose>
+            
+            <tr><td colspan="4">&nbsp;</td></tr>
+            <tr><td>update_frequentie_in_dagen</td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
+            <%--
+            <tr><td>analyse_thema</td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
+            <tr><td>admin_spatial_ref</td><td colspan="3"><html:text property="admin_spatial_ref" size="140"/></td></tr>
+            <tr><td>admin_pk_complex</td><td colspan="3"><html:checkbox property="admin_pk_complex"/></td></tr>
             <tr><td>spatial_pk_complex</td><td colspan="3"><html:checkbox property="spatial_pk_complex"/></td></tr>
-            <tr><td>spatial_admin_ref</td><td colspan="3"><html:text property="spatial_admin_ref" size="140"/></td></tr>
             <tr><td>wms_url</td><td colspan="3"><html:text property="wms_url" size="140"/></td></tr>
             <tr><td>wms_layers</td><td colspan="3"><html:text property="wms_layers" size="140"/></td></tr>
-            <tr><td>wms_layers_real</td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
-            <tr><td>wms_querylayers</td><td colspan="3"><html:text property="wms_querylayers" size="140"/></td></tr>
-            <tr><td>wms_querylayers_real</td><td colspan="3"><html:text property="wms_querylayers_real" size="140"/></td></tr>
             <tr><td>wms_legendlayer</td><td colspan="3"><html:text property="wms_legendlayer" size="140"/></td></tr>
-            <tr><td>wms_legendlayer_real</td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
-            <tr><td>update_frequentie_in_dagen</td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
-            <tr><td>view_geomtype</td><td colspan="3"><html:text property="view_geomtype" size="140"/></td></tr>
+            <tr><td>wms_querylayers</td><td colspan="3"><html:text property="wms_querylayers" size="140"/></td></tr>
+            --%>
+            
         </table>
     </div>
     

@@ -71,7 +71,9 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         if (cs!=null && cs.size()>0) {
             return (ThemaData) cs.get(0);
         }
-        return null;
+        ThemaData td = new ThemaData();
+        td.setThema(t);
+        return td;
     }
     
     protected Themas getThema(DynaValidatorForm form, boolean createNew) {
@@ -118,7 +120,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         request.setAttribute("listThemaData", q.setParameter("themaID", new Integer(t.getId())).list());
         
         Connection conn = sess.connection();
-        request.setAttribute("listTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
+        request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
     }
     
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {

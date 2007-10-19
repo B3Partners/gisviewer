@@ -7,6 +7,7 @@
 
 package nl.b3p.gis.viewer;
 
+import java.sql.Connection;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +15,9 @@ import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Moscow;
 import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
+import nl.b3p.gis.viewer.services.SpatialUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
@@ -52,19 +55,64 @@ public class ConfigThemaAction extends ViewerCrudAction {
         return null;
     }
     
-    protected void createLists(DynaValidatorForm form, HttpServletRequest request) throws Exception {
-        super.createLists(form, request);
+    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
+        super.createLists(dynaForm, request);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         request.setAttribute("allThemas", sess.createQuery("from Themas order by belangnr").list());
         request.setAttribute("allClusters", sess.createQuery("from Clusters where id<>9 order by naam").list());
         request.setAttribute("listMoscow", sess.createQuery("from Moscow order by id").list());
+        
+        request.setAttribute("listValidGeoms", SpatialUtil.VALID_GEOMS);
+        
+        Themas t = getThema(dynaForm, false);
+        if (t==null)
+            t = getFirstThema();
+        
+        Connection conn = sess.connection();
+        List tns = SpatialUtil.getTableNames(conn);
+        if (t!=null) {
+            String sptn = t.getAdmin_tabel();
+            if (sptn!=null && !tns.contains(sptn)) {
+                tns.add(sptn);
+            }
+            String atn = t.getSpatial_tabel();
+            if (atn!=null && !tns.contains(atn)) {
+                tns.add(atn);
+            }
+        }
+        request.setAttribute("listTables", tns);
+        
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        if (user!=null) {
+            List lns = user.getLayerNames();
+            if (t!=null) {
+                String wlr = t.getWms_layers_real();
+                if (wlr!=null && !lns.contains(wlr)) {
+                    lns.add(wlr);
+                }
+                String wqr = t.getWms_querylayers_real();
+                if (wqr!=null && !lns.contains(wqr)) {
+                    lns.add(wqr);
+                }
+                String wllr = t.getWms_legendlayer_real();
+                if (wllr!=null && !lns.contains(wllr)) {
+                    lns.add(wllr);
+                }
+            }
+            request.setAttribute("listLayers", lns);
+        }
+        
+        if (t!=null) {
+            request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
+            request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(t, conn));
+        }
     }
     
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(dynaForm, false);
         if (t==null)
             t = getFirstThema();
-         populateThemasForm(t, dynaForm, request);
+        populateThemasForm(t, dynaForm, request);
         return super.unspecified(mapping, dynaForm, request, response);
     }
     

@@ -74,26 +74,27 @@
                                     <c:if test="${kolom.last && totale_breedte_onder < 915}">
                                         <c:set var="breedte" value="${breedte + (915 - totale_breedte_onder)}" />
                                     </c:if>
-                                    <c:choose>
-                                        <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                            <td style="width: ${breedte}px;" valign="top">
-                                                <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
-                                            </td>
-                                        </c:when>
-                                        <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
-                                            <td style="width: ${breedte}px;" valign="top">
-                                                <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
-                                            </td>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:if test="${waarde eq '' or  waarde eq null}">
-                                                <c:set var="waarde" value="&nbsp;" />
-                                            </c:if>
-                                            <td style="width: ${breedte}px;" valign="top">
-                                                ${waarde}
-                                            </td>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <td style="width: ${breedte}px;" valign="top">
+                                        <c:choose>
+                                            <c:when test="${waarde eq '' or  waarde eq null}">
+                                                &nbsp;
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:choose>
+                                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
+                                                        <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
+                                                    </c:when>
+                                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
+                                                        <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${waarde}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
                                 </c:if>
                             </c:forEach>
                         </tr>

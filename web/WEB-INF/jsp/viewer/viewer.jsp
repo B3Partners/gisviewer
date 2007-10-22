@@ -113,7 +113,7 @@
                 if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
             if (navigator.appName=="Microsoft Internet Explorer") {
-                if(isInCookieArray(item.id)){
+                if(isInCookieArray(item.id) || (cookieArray==null && item.visible=="on")){
                     var el2 = document.createElement('<input type="checkbox" id="' + item.id + '" checked="checked" value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')">');
                     doLayerClick=true;
                 }
@@ -125,7 +125,7 @@
                 el2.type = 'checkbox';
                 el2.value = item.id;
                 el2.onclick = function(){checkboxClick(this, false, item.title);}
-                if(isInCookieArray(item.id)){
+                if(isInCookieArray(item.id) || (cookieArray==null && item.visible=="on")){
                     el2.checked = true;
                     doLayerClick=true;
                 }

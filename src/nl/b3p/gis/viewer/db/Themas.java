@@ -25,7 +25,7 @@ public class Themas {
     private String opmerkingen;
     private boolean analyse_thema;
     private boolean locatie_thema;
-    private boolean visible = true;
+    private boolean visible = false;
     private String admin_tabel_opmerkingen;
     private String admin_tabel;
     private String admin_pk;

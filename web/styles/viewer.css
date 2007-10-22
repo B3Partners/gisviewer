@@ -309,6 +309,7 @@ a:hover{
 
 .tabvak_body {
     background-image: url(/gisviewer/images/infovak_bg.jpg);
+    background-color: #FFFFFF;
     background-repeat: no-repeat;
     background-position: 100% 100%;
     background-attachment: fixed;

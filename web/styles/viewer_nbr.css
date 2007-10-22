@@ -226,7 +226,7 @@ h1{
     border: 0px none White;
     background-image: url(/gisviewer/images/nbr/tabvak_bg.gif);
     background-repeat: repeat-x;
-    background-color: White;
+    background-color: #19619B;
     background-position: 0% 0%;
     height: 473px;
     color: White;
@@ -263,6 +263,7 @@ h1{
 
 .tabvak_body {
     background-image: url(/gisviewer/images/nbr/tabvak_bg.gif);
+    background-color: #19619B;
     background-repeat: repeat-x;
     background-attachment: fixed;
     padding-left: 6px;
@@ -285,7 +286,7 @@ h1{
 
 #volgordevak{
     width: 279px;
-    height: 473px;
+    height: 467px;
 }
 
 #infovak div {

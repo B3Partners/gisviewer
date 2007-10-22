@@ -77,10 +77,6 @@ public class ETLOverviewAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (!request.isUserInRole(HibernateUtil.THEMABEHEERDERS_ROL)) {
-            addMessage(request, RIGHTS_ERROR_KEY);
-            return mapping.findForward(FAILURE);
-        }
         createOverview(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }

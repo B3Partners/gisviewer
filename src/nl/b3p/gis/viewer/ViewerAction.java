@@ -102,10 +102,6 @@ public class ViewerAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (!request.isUserInRole(HibernateUtil.GEBRUIKERS_ROL)) {
-            addMessage(request, RIGHTS_ERROR_KEY);
-            return mapping.findForward(FAILURE);
-        }
         createLists(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }
@@ -219,6 +215,12 @@ public class ViewerAction extends BaseGisAction {
             Themas th = (Themas) it.next();
             String ttitel = th.getNaam();
             JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
+            
+            if (th.isVisible()) {
+                jsonCluster.put("visible", "on");
+            } else {
+                jsonCluster.put("visible", "off");
+            }
             
             if(th.getWms_layers_real() != null) {
                 jsonCluster

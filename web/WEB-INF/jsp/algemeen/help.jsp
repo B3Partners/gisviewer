@@ -9,7 +9,7 @@
             <td valign="top">
                 <html:messages id="message" message="true">
                     <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
-                </html:messages>
+                </html:messages><br/>
                 <h1>B3P GIS Suite Demo</h1>
                 
                 <div class="inleiding">

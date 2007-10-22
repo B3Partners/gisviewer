@@ -25,6 +25,7 @@ public class Themas {
     private String opmerkingen;
     private boolean analyse_thema;
     private boolean locatie_thema;
+    private boolean visible = true;
     private String admin_tabel_opmerkingen;
     private String admin_tabel;
     private String admin_pk;
@@ -51,12 +52,12 @@ public class Themas {
     private Set themaApplicaties;
     private Integer update_frequentie_in_dagen;
     private String view_geomtype;
-     
+    
     /** Creates a new instance of Themas */
     public Themas() {
     }
-
-    /** 
+    
+    /**
      * Return het ID van het thema.
      *
      * @return int ID van het thema.
@@ -67,7 +68,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set het ID van het thema.
      *
      * @param id int id
@@ -78,7 +79,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de code van het thema.
      *
      * @return String met de code van het thema.
@@ -89,7 +90,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de code van het thema.
      *
      * @param code String met de code van het thema.
@@ -100,7 +101,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de naam van het thema.
      *
      * @return String met het thema.
@@ -111,7 +112,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de naam van het thema.
      *
      * @param naam String met de naam van het thema.
@@ -122,7 +123,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return het belangnummer van het thema.
      *
      * @return int met het belangnummer van het thema.
@@ -133,7 +134,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set het belangnummer van het thema.
      *
      * @param belangnr int met het belangnummer van het thema.
@@ -141,10 +142,10 @@ public class Themas {
     // <editor-fold defaultstate="" desc="public void setBelangnr(int belangnr)">
     public void setBelangnr(int belangnr) {
         this.belangnr = belangnr;
-    }    
+    }
     // </editor-fold>
     
-    /** 
+    /**
      * Return opmerkingen behorende bij dit thema.
      *
      * @return String met opmerkingen.
@@ -155,7 +156,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set opmerkingen horende bij dit thema.
      *
      * @param opmerkingen String met opmerkingen horende bij dit thema.
@@ -166,7 +167,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Returns een boolean of dit een analyse_thema is.
      *
      * @return boolean true als dit een analyse_thema is, anders false.
@@ -177,7 +178,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set dit thema als een analyse_thema is. Als dit een analyse_thema is zet deze dan true, anders false.
      *
      * @param analyse_thema boolean met true als dit een analyse_thema is.
@@ -188,7 +189,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Returns een boolean of dit de locatie_thema is.
      *
      * @return boolean true als dit de locatie_thema is, anders false.
@@ -199,7 +200,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set dit thema als een locatie_thema is. Als dit een locatie_thema is zet deze dan true, anders false.
      *
      * @param locatie_thema boolean met true als dit een locatie_thema is.
@@ -209,8 +210,16 @@ public class Themas {
         this.locatie_thema = locatie_thema;
     }
     // </editor-fold>
-
-    /** 
+    
+    public boolean isVisible() {
+        return visible;
+    }
+    
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+    
+    /**
      * Return de moscow van dit thema.
      *
      * @return Moscow met de moscow van dit thema.
@@ -223,7 +232,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de moscow van dit thema.
      *
      * @param moscow Moscow met de moscow van dit thema.
@@ -235,12 +244,12 @@ public class Themas {
         this.moscow = moscow;
     }
     // </editor-fold>
-
     
     
     
     
-    /** 
+    
+    /**
      * Return het cluster van dit thema.
      *
      * @return Clusters met het cluster van dit thema.
@@ -253,7 +262,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set het cluster van dit thema.
      *
      * @param cluster Clusters met het cluster van dit thema.
@@ -266,7 +275,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return admin tabel opmerkingen van dit thema.
      *
      * @return String met de admin tabel opmerkingen van dit thema.
@@ -277,7 +286,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de admin tabel opmerkingen van dit thema.
      *
      * @param admin_tabel_opmerkingen String met de admin tabel opmerkingen van dit thema.
@@ -288,7 +297,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de admin tabel van dit thema.
      *
      * @return String met de admin tabel van dit thema.
@@ -299,7 +308,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de admin tabel van dit thema.
      *
      * @param admin_tabel String met de admin tabel van dit thema.
@@ -310,7 +319,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de admin primary key van dit thema.
      *
      * @return String met de admin primary key van dit thema.
@@ -321,7 +330,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de admin primary key van dit thema.
      *
      * @param admin_pk Moscow met de admin primary key van dit thema.
@@ -332,7 +341,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Returns een boolean of de admin primary key complex is.
      *
      * @return boolean true als de admin primary key complex is, anders false.
@@ -343,7 +352,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de admin primary key complex status. Als de admin primary key complex is zet deze dan true, anders false.
      *
      * @param admin_pk_complex boolean met true alsde admin primary key complex is.
@@ -354,7 +363,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de admin spatial referentie van dit thema.
      *
      * @return String met de admin spatial referentie van dit thema.
@@ -365,7 +374,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de admin spatial referentie van dit thema.
      *
      * @param admin_spatial_ref String met de admin spatial referentie van dit thema.
@@ -376,7 +385,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de admin query van dit thema.
      *
      * @return String met de admin query van dit thema.
@@ -387,7 +396,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de admin query van dit thema.
      *
      * @param admin_query String met de admin query van dit thema.
@@ -398,7 +407,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de spatial tabel opmerkingen van dit thema.
      *
      * @return String met de spatial tabel opmerkingen van dit thema.
@@ -409,7 +418,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de spatial tabel opmerkingen van dit thema.
      *
      * @param spatial_tabel_opmerkingen String met de spatial tabel opmerkingen van dit thema.
@@ -420,7 +429,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de spatial tabel van dit thema.
      *
      * @return Moscow met de spatial tabel van dit thema.
@@ -431,7 +440,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de spatial tabel van dit thema.
      *
      * @param spatial_tabel String met de spatial tabel van dit thema.
@@ -442,7 +451,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de spatial primary key van dit thema.
      *
      * @return String met de spatial primary key van dit thema.
@@ -453,7 +462,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de spatial primary key van dit thema.
      *
      * @param spatial_pk String met de spatial primary key van dit thema.
@@ -464,7 +473,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Returns een boolean of de spatial primary key complex is.
      *
      * @return boolean true als de spatial primary key complex is, anders false.
@@ -475,7 +484,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de spatial primary key complex status. Als de spatial primary key complex is zet deze dan true, anders false.
      *
      * @param spatial_pk_complex boolean met true als de spatial primary key complex is.
@@ -486,7 +495,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de spatial admin referentie van dit thema.
      *
      * @return String met de spatial admin referentie van dit thema.
@@ -497,7 +506,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de spatial admin referentie van dit thema.
      *
      * @param spatial_admin_ref String met de spatial admin referentie van dit thema.
@@ -508,7 +517,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de wms url van dit thema.
      *
      * @return String met de wms url van dit thema.
@@ -519,7 +528,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de wms url van dit thema.
      *
      * @param wms_url String met de wms url van dit thema.
@@ -530,7 +539,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de wms layers van dit thema.
      *
      * @return String met de wms layers van dit thema.
@@ -541,7 +550,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de wms layers van dit thema.
      *
      * @param wms_layers String met de wms layers van dit thema.
@@ -552,7 +561,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de wms query layers van dit thema.
      *
      * @return String met de wms query layers van dit thema.
@@ -563,7 +572,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de wms query layers van dit thema.
      *
      * @param wms_querylayers String met de wms query layers van dit thema.
@@ -574,7 +583,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de thema data van dit thema.
      *
      * @return Set met de thema data van dit thema.
@@ -587,7 +596,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de thema data van dit thema.
      *
      * @param themaData Set met de thema data van dit thema.
@@ -600,7 +609,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de thema verantwoordelijkheden van dit thema.
      *
      * @return Set met de thema verantwoordelijkheden van dit thema.
@@ -613,7 +622,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de thema verantwoordelijkheden van dit thema.
      *
      * @param themaVerantwoordelijkheden Set met de thema verantwoordelijkheden van dit thema.
@@ -626,7 +635,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de thema applicaties van dit thema.
      *
      * @return Set met de thema applicaties van dit thema.
@@ -639,7 +648,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de thema applicaties van dit thema.
      *
      * @param themaApplicaties Set met de thema applicaties van dit thema.
@@ -652,7 +661,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Return de update frequentie in dagen van dit thema.
      *
      * @return Integer met de update frequentie in dagen van dit thema.
@@ -663,7 +672,7 @@ public class Themas {
     }
     // </editor-fold>
     
-    /** 
+    /**
      * Set de update frequentie in dagen van dit thema.
      *
      * @param update_frequentie_in_dagen Integer met de update frequentie in dagen van dit thema.
@@ -673,35 +682,35 @@ public class Themas {
         this.update_frequentie_in_dagen = update_frequentie_in_dagen;
     }
     // </editor-fold>
-
+    
     public String getWms_legendlayer() {
         return wms_legendlayer;
     }
-
+    
     public void setWms_legendlayer(String wms_legendlayer) {
         this.wms_legendlayer = wms_legendlayer;
     }
-
+    
     public String getWms_layers_real() {
         return wms_layers_real;
     }
-
+    
     public void setWms_layers_real(String wms_layers_real) {
         this.wms_layers_real = wms_layers_real;
     }
-
+    
     public String getWms_querylayers_real() {
         return wms_querylayers_real;
     }
-
+    
     public void setWms_querylayers_real(String wms_querylayers_real) {
         this.wms_querylayers_real = wms_querylayers_real;
     }
-
+    
     public String getWms_legendlayer_real() {
         return wms_legendlayer_real;
     }
-
+    
     public void setWms_legendlayer_real(String wms_legendlayer_real) {
         this.wms_legendlayer_real = wms_legendlayer_real;
     }
@@ -712,4 +721,5 @@ public class Themas {
     public void setView_geomtype(String view_geomtype) {
         this.view_geomtype = view_geomtype;
     }
+    
 }

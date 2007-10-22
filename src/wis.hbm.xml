@@ -202,6 +202,7 @@
         <property name="opmerkingen"/>
         <property name="analyse_thema" not-null="true"/>
         <property name="locatie_thema" not-null="true"/>
+        <property name="visible" not-null="true"/>
         <property name="admin_tabel_opmerkingen"/>
         <property name="admin_tabel"/>
         <property name="admin_pk"/>

@@ -1,3 +1,4 @@
+/* Algemene BODY style */
 body {
     font-size: 8pt; 
     background: #FFF0C5; 
@@ -18,11 +19,30 @@ div, td, th, span, input, textarea, select, option, button {
     font-family: arial, sans-serif;
 }
 
+h1{
+    font-weight: bold; 
+    font-size: 11pt; 
+    color: #196299;
+}
+
+a, a:visited, a:active {
+    color: #FFF0C4;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+/* Einde Algemene BODY style */
+
+/* Breedte en achtergrond kleur van content DIV */
 #maindiv {
     background-color: #FFF0C5;
     width: 970px;
 }
 
+/* Bovenste balk / Menu style */
 #menu_div {
     width: 100%;
     background-image: url(/gisviewer/images/bovenbalk.gif);
@@ -31,6 +51,7 @@ div, td, th, span, input, textarea, select, option, button {
     text-align: center;
 }
 
+/* Onderste balk style */
 #onder_div {
     width: 100%;
     background-image: url(/gisviewer/images/onderbalk.gif);
@@ -39,18 +60,7 @@ div, td, th, span, input, textarea, select, option, button {
     display: block;
 }
 
-#onderbalk_logo {
-    background-image: url(/gisviewer/images/onderbalk_logo.gif);
-    background-repeat: no-repeat;
-    background-color: none;
-    width: 976px;
-    height: 50px;
-    position: absolute;
-    left: 50%;
-    margin-left: -488px;
-    display: block;
-}
-
+/* Copyright tekst in onderste balk */
 #copyright {
     background-image: url(/gisviewer/images/copyright.gif);
     background-repeat: no-repeat;
@@ -61,6 +71,7 @@ div, td, th, span, input, textarea, select, option, button {
     margin-left: -461px;
 }
 
+/* Initiatief + B3P logo in onderste balk */
 #initiatief {
     background-image: url(/gisviewer/images/initiatief.gif);
     background-repeat: no-repeat;
@@ -71,6 +82,7 @@ div, td, th, span, input, textarea, select, option, button {
     margin-left: 161px;
 }
 
+/* Menu style */
 .topmenu {
     background-image: none;
     width: 440px;
@@ -81,6 +93,7 @@ div, td, th, span, input, textarea, select, option, button {
     margin-top: 18px;
 }
 
+/* Menu links style */
 a.menulink, a.menulink:visited, a.menulink:active {
     display: block;
     padding-top: 5px;
@@ -97,10 +110,7 @@ a.menulink, a.menulink:visited, a.menulink:active {
     float: right;
 }
 
-a.menulink:hover {
-
-}
-
+/* Actieve menulinks style */
 a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     display: block;
     padding-top: 5px;
@@ -118,14 +128,12 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     float: left;
 }
 
-a.activemenulink:hover {
-
-}
-
+/* Uitlijnen van de menulinks */
 .topmenu_basis a.activemenulink, a.activemenulink:visited, a.activemenulink:active { 
     margin-left: 40px;
 }
 
+/* Logo op menubalk */
 .menu_boven_logo {
     background-image: url(/gisviewer/images/kaartenbalielogo.gif);
     background-repeat: no-repeat;
@@ -136,6 +144,7 @@ a.activemenulink:hover {
     margin-left: -461px;
 }
 
+/* Content DIV */
 #content_div {
     background-image: url(/gisviewer/images/maindiv_bg.gif);
     background-repeat: repeat-y;
@@ -145,10 +154,12 @@ a.activemenulink:hover {
     display: block;
 }
 
+/* Bovenst DIV (Flamingoviewer + tabs) */
 #bovenkant {
     background-color: White;
 }
 
+/* Stijl van onderste DIV (admin, thema data vak) */
 #dataframediv {
     background-color: White;
     margin-top: 0px;
@@ -157,25 +168,17 @@ a.activemenulink:hover {
     overflow: hidden;
 }
 
-.menuWhite {
-    color: white;
-    font-weight: bold;
-}
-
-h1{
-    font-weight: bold; 
-    font-size: 11pt; 
-    color: #196299;
-}
-
+/* Stijl voor een Enabled invoer veld */
 .inputEnabled {
     background-color: White;
 }
 
+/* Stijl voor een Disabled invoer veld */
 .inputDisabled {
     background-color: #A1A1A1;
 }
 
+/* Stijl van de balken (VIEWER, DETAILS, E.D.) */
 .onderbalk {
     background-color: #606060;
     color: #FFF0C4;
@@ -192,24 +195,30 @@ h1{
     margin-bottom: 8px;
 }
 
+/* Stijl van de teksten op de balken (VIEWER, DETAILS, E.D.) */
 .onderbalk span {
+    position: relative;
+    right: 0px;
+    top: -35px;
     font-size: 8pt;
     font-weight: bold;
     color: #19619B;
-    margin-top: -15px;
 }
 
+/* Stijl van de links op de balken (VIEWER, DETAILS, E.D.) */
 .onderbalk a {
     color: #FFFFFF;
     font-weight: bold;
 }
 
+/* Stijl Flamingo map DIV */
 #map {
     margin-top: 0px;
     margin-bottom: 0px;
     width: 653px;
 }
 
+/* Overkoepelende DIV aan de rechterkant (tabs + inhoud tabs) */
 #rightdiv {
     float: left;
     width: 291px;
@@ -219,12 +228,14 @@ h1{
     margin-left: 5px;
 }
 
+/* Overkoepelende DIV rond de tabjes */
 #tabjes {
     width: 291px;
     height: 20px;
     text-align: center;
 }
 
+/* Algemene stijl voor inhoud van de tabjes */
 .tabvak {
     border: 0px none White;
     background-image: url(/gisviewer/images/tabvak_bg.gif);
@@ -236,10 +247,12 @@ h1{
     margin: 0px;
 }
 
+/* Stijl voor de DIVs en TDs binnen het tabvak */
 .tabvak div, .tabvak td {
     color: White;
 }
 
+/* Stijl de tabvelden met een iframe (object en analyse) */
 .tabvak_with_iframe {
     border: 0px none White;
     height: 473px;
@@ -247,6 +260,7 @@ h1{
     padding: 0px;
 }
 
+/* Stijl van de Object en Analyse DIV */
 #objectframe, #analyseframe {
     margin: 0px;
     padding: 0px;
@@ -254,16 +268,19 @@ h1{
     height: 473px;   
 }
 
+/* Overkoepelende DIV rondom velden met de tab inhoud */
 #tab_container {
     height: 458px;
     width: 291px;
     color: White;
 }
 
+/* Stijl van de SPANS binnen het infotabje */
 #algdatavak span {
     color: White;
 }
 
+/* Stijl van de body van de in de IFRAME geladen tabs */
 .tabvak_body {
     background-image: url(/gisviewer/images/tabvak_bg.gif);
     background-color: #19619B;
@@ -274,29 +291,45 @@ h1{
     color: white;
 }
 
+/* Algemene Stijl voor de body van de in de IFRAME geladen tabs */
 .tabvak_body td, .tabvak_body div, .tabvak_body th {
     color: white;
 }
 
+.tabvak_body td, #doanalysedataForm select {
+    font-size: 8pt;
+}
+
+#doanalysedataForm .thema_label {
+    font-weight: bold;
+    font-style: italic;
+}
+/* EINDE Algemene Stijl voor de body van de in de IFRAME geladen tabs */
+
+/* Stijl van de JAVASCRIPT lagen-lijst */
 #layermaindiv {
     height: 455px;
     width: 276px;
 }
 
+/* Stijl van de links in de JAVASCRIPT lagen-lijst */
 #layermaindiv a {
     color: #FFF0C4;
 }
 
+/* Stijl voor de Volgorde/Legenda tab */
 #volgordevak{
     width: 279px;
     height: 461px;
 }
 
+/* Stijl van DIVs in het infovak (RD coordinaten, zoeker, e.d.) */
 #infovak div {
     margin-left: 3px;
     margin-top: 3px;
 }
 
+/* Opmaak van de tabjes */
 ul#nav li {
     text-align: center;
 }
@@ -322,17 +355,9 @@ ul#nav li.activelink a,ul#nav li.activelink a:hover {
 ul#nav li#tab4 a { width: 57px; }
 ul#nav li#tab3 a { width: 58px; }
 ul#nav li#tab3 { margin-right: 0px; }
+/* EINDE Opmaak van de tabjes */
 
-a, a:visited, a:active {
-    color: #FFF0C4;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-a:hover{
-    text-decoration: underline;
-}
-
+/* Opmaak admindata */
 #admindata_table {
     font-size: 8pt;
 }
@@ -412,11 +437,14 @@ a:hover{
 .admin_data_selected_tr {
     background-color: #19619B;
 }
+/* EINDE Opmaak admindata */
 
+/* Stijl van resultaat tekst van analyse */
 .waardeResult{    
     font-size: 12px; 
 }
 
+/* Opmaak Volgorde/Legenda vak */
 .orderLayerBox{
     border: 1px solid #606060;
     background-color: White;
@@ -438,16 +466,9 @@ a:hover{
     padding-top: 4px;
     color: #175480;
 }
+/* EINDE Opmaak Volgorde/Legenda vak */
 
- .tabvak_body td, #doanalysedataForm select {
-    font-size: 8pt;
-}
-
-#doanalysedataForm .thema_label {
-    font-weight: bold;
-    font-style: italic;
-}
-
+/* Opmaak meta data tabel */
 .meta_data_body td {
     font-size: 8pt;
 }
@@ -479,6 +500,7 @@ a:hover{
 .meta_data_normal td, .meta_data_alternate td, .meta_data_normal th, .meta_data_alternate th {
     color: #196297;
 }
+/* EINDE Opmaak meta data tabel */
 
 /* ETL Design */
 
@@ -517,6 +539,7 @@ a:hover{
 .etlRowList:hover {
     background-color: #dddddd;
 }
+/* EINDE ETL design */
 
 /* Config design */
 .topbar {
@@ -544,9 +567,9 @@ a:hover{
 .c_item a:hover {
     text-decoration: none;
 }
+/* EINDE config Design */
 
 /* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
-
 #content_style, #content_style h1, #content_style h2, #content_style div, #content_style td, #content_style th, #content_style a, #content_style li {
     color: #196299;
 }
@@ -639,3 +662,4 @@ a:hover{
 .nbr {
     display: none;
 }
+/* EINDE Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */

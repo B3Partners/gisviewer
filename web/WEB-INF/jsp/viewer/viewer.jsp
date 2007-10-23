@@ -450,23 +450,31 @@
         document.getElementById('show4').disabled = false;
     }
 
-    function addLayerToVolgorde(name, id, legendURL) {
-        var imgdiv = document.createElement("div");
-        imgdiv.style.width='30px';
-        imgdiv.style.height='20px';
-        imgdiv.style.marginRight='5px';
-        imgdiv.style.backgroundImage = 'url(' + legendURL + ')';
+    function addLayerToVolgorde(name, id, legendURL) {      
+        var myImage = new Image();
+        myImage.name = name;
+        myImage.src = legendURL;
+        
+        var legendimg = document.createElement("img");
+        legendimg.src = myImage.src;
+        legendimg.style.border = '0px none White';
+        if(myImage.height != '0') legendimg.alt = name;
+        if(myImage.height != '0') legendimg.title = name;
 
+        var spanEl = document.createElement("span");
+        spanEl.innerHTML = ' ' + name + '<br />';
+        spanEl.style.color = 'Black';
+        spanEl.style.fontWeight = 'bold';
+        
         var div = document.createElement("div");
         div.name=id;
         div.id=id;
+        div.title = name;
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
-        div.appendChild(imgdiv);
-
-        var spanEl = document.createElement("span");
-        spanEl.innerHTML = ' ' + name;
-        div.appendChild(spanEl);
+        
+        if(myImage.height != '23') div.appendChild(spanEl);
+        div.appendChild(legendimg);
 
         if(!orderLayerBox.hasChildNodes()) {
             orderLayerBox.appendChild(div);

@@ -453,13 +453,16 @@
     function addLayerToVolgorde(name, id, legendURL) {      
         var myImage = new Image();
         myImage.name = name;
+        myImage.onerror=new Function("this.style.height='0'; this.style.width='0';");        
         myImage.src = legendURL;
         
         var legendimg = document.createElement("img");
         legendimg.src = myImage.src;
+        legendimg.onerror=myImage.onerror;
         legendimg.style.border = '0px none White';
         if(myImage.height != '0') legendimg.alt = name;
         if(myImage.height != '0') legendimg.title = name;
+        
 
         var spanEl = document.createElement("span");
         spanEl.innerHTML = ' ' + name + '<br />';
@@ -472,8 +475,10 @@
         div.title = name;
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
-        
-        if(myImage.height != '23') div.appendChild(spanEl);
+        //alert(myImage.height + name);
+        if(myImage.height != '23'){
+            div.appendChild(spanEl);
+        }        
         div.appendChild(legendimg);
 
         if(!orderLayerBox.hasChildNodes()) {

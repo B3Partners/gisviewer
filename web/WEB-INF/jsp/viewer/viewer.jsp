@@ -475,13 +475,10 @@
         div.title = name;
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
-        //alert(myImage.height + name);
-        if(myImage.height != '23'){
+        //TODO: Werkt niet omdat de hoogte van een image pas bekend is als hij geladen is.
+        //if(myImage.height != '23'){
             div.appendChild(spanEl);
-        }
-        if (parseInt(myImage.height) > 23){
-            legendimg.style.marginLeft="20px";
-        }
+        //}        
         div.appendChild(legendimg);
 
         if(!orderLayerBox.hasChildNodes()) {

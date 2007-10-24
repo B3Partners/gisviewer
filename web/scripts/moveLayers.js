@@ -11,16 +11,19 @@ function switchLayers(element1,element2){
     var className=element1.className;
     var innerHTML=element1.innerHTML;
     var id=element1.id;
+    var title= element1.title;
 
     element1.name=element2.name;
     element1.className=element2.className;
     element1.innerHTML=element2.innerHTML;
     element1.id=element2.id;
+    element1.title=element2.title;
 
     element2.name=name;
     element2.className=className;
     element2.innerHTML=innerHTML;
     element2.id=id;
+    element2.title=title;
 }
 function moveSelected(amount){
     if (selectedLayer){

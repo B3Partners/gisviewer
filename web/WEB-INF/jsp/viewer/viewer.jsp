@@ -458,7 +458,7 @@
         
         var legendimg = document.createElement("img");
         legendimg.src = myImage.src;
-        legendimg.onerror=myImage.onerror;
+        legendimg.onerror=myImage.onerror;        
         legendimg.style.border = '0px none White';
         if(myImage.height != '0') legendimg.alt = name;
         if(myImage.height != '0') legendimg.title = name;
@@ -478,7 +478,10 @@
         //alert(myImage.height + name);
         if(myImage.height != '23'){
             div.appendChild(spanEl);
-        }        
+        }
+        if (parseInt(myImage.height) > 23){
+            legendimg.style.marginLeft="20px";
+        }
         div.appendChild(legendimg);
 
         if(!orderLayerBox.hasChildNodes()) {
@@ -486,7 +489,6 @@
         } else {
             orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
         }
-
     }
 
     function removeLayerFromVolgorde(name, id) {

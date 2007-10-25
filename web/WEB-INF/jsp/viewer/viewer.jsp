@@ -100,7 +100,7 @@
         if(item.cluster)
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
         else {
-            if(item.analyse && item.analyse=="on"){
+            if(item.analyse=="on"){
                 if (navigator.appName=="Microsoft Internet Explorer") {
                     if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
                     else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');

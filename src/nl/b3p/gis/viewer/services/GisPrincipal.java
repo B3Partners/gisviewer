@@ -6,6 +6,7 @@ package nl.b3p.gis.viewer.services;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import nl.b3p.wms.capabilities.Layer;
 import nl.b3p.wms.capabilities.Roles;
 import nl.b3p.wms.capabilities.ServiceProvider;
+import nl.b3p.wms.capabilities.Style;
+import nl.b3p.wms.capabilities.StyleDomainResource;
 
 public class GisPrincipal implements Principal {
     
@@ -76,7 +79,7 @@ public class GisPrincipal implements Principal {
         this.sp = sp;
     }
     
-    public List getLayerNames() {
+    public List getLayerNames(boolean legendGraphicOnly) {
         if(sp==null)
             return null;
         Set layers = sp.getAllLayers();
@@ -88,10 +91,35 @@ public class GisPrincipal implements Principal {
         while (it.hasNext()) {
             Layer layer = (Layer) it.next();
             String name = layer.getName();
-            if (name!=null && name.length()>0)
-                allLayers.add(name);
+            if (name!=null && name.length()>0) {
+                if ((legendGraphicOnly && hasLegendGraphic(layer)) ||
+                        !legendGraphicOnly)
+                    allLayers.add(name);
+            }
         }
+        if (allLayers!=null)
+            Collections.sort(allLayers);
         return allLayers;
+    }
+    
+    public boolean hasLegendGraphic(Layer l) {
+        Set styles = l.getStyles();
+        if (styles==null || styles.isEmpty())
+            return false;
+        Iterator it = styles.iterator();
+        while (it.hasNext()) {
+            Style style = (Style)it.next();
+            Set ldrs = style.getDomainResource();
+            if (ldrs==null || ldrs.isEmpty())
+                return false;
+            Iterator it2 = ldrs.iterator();
+            while (it2.hasNext()) {
+                StyleDomainResource sdr = (StyleDomainResource)it2.next();
+                if ("LegendURL".equalsIgnoreCase(sdr.getDomain()))
+                    return true;
+            }
+        }
+        return false;
     }
     
     public Layer getLayer(String layerName) {

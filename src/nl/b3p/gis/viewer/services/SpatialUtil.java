@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -64,7 +65,7 @@ public class SpatialUtil {
         "workshop_medewerkers",
         "workshops"
     });
-
+    
     public static List getValidClusters() {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String hquery = "FROM Clusters WHERE id != 9";
@@ -143,6 +144,8 @@ public class SpatialUtil {
                 columns = new ArrayList();
             columns.add(columnName);
         }
+        if (columns!=null)
+            Collections.sort(columns);
         return columns;
     }
     
@@ -159,6 +162,8 @@ public class SpatialUtil {
                 columns = new ArrayList();
             columns.add(columnName);
         }
+        if (columns!=null)
+            Collections.sort(columns);
         return columns;
     }
     
@@ -175,6 +180,8 @@ public class SpatialUtil {
                 tables = new ArrayList();
             tables.add(tableName);
         }
+        if (tables!=null)
+            Collections.sort(tables);
         return tables;
     }
     

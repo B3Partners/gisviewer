@@ -100,19 +100,17 @@
         if(item.cluster)
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
         else {
-            if(item.analyse=="on"){
-                if (navigator.appName=="Microsoft Internet Explorer") {
-                    if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
-                    else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
-                }
-                else {
-                    var el = document.createElement('input');
-                    el.type = 'radio';
-                    el.name = 'selkaartlaag';
-                    el.value = item.id;
-                    el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id); setActiveThemaLabel(item.title) }
-                    if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
-                }
+            if (navigator.appName=="Microsoft Internet Explorer") {
+                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
+                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
+            }
+            else {
+                var el = document.createElement('input');
+                el.type = 'radio';
+                el.name = 'selkaartlaag';
+                el.value = item.id;
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id); setActiveThemaLabel(item.title) }
+                if(activeLayerFromCookie != null && activeLayerFromCookie == item.id) el.checked = true;
             }
             if (navigator.appName=="Microsoft Internet Explorer") {
                 if(isInCookieArray(item.id) || (cookieArray==null && item.visible=="on")){
@@ -140,7 +138,7 @@
             lnk.innerHTML = item.title ? item.title : item.id;
             lnk.href = '#';
             lnk.onclick = function(){ getMetaData(item.id) };
-            if(item.wmsquerylayers) {
+            if(item.analyse=="on"){
                 container.appendChild(el);
             }
             if(item.wmslayers){

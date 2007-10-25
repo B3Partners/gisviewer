@@ -222,6 +222,12 @@ public class ViewerAction extends BaseGisAction {
                 jsonCluster.put("visible", "off");
             }
             
+            if (th.isAnalyse_thema()) {
+                jsonCluster.put("analyse", "on");
+            } else {
+                jsonCluster.put("analyse", "off");
+            }
+            
             if(th.getWms_layers_real() != null) {
                 jsonCluster
                         .put("wmslayers", th.getWms_layers_real())

@@ -84,7 +84,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (user!=null) {
-            List lns = user.getLayerNames();
+            List lns = user.getLayerNames(false);
             if (t!=null) {
                 String wlr = t.getWms_layers_real();
                 if (wlr!=null && !lns.contains(wlr)) {
@@ -94,12 +94,16 @@ public class ConfigThemaAction extends ViewerCrudAction {
                 if (wqr!=null && !lns.contains(wqr)) {
                     lns.add(wqr);
                 }
+            }
+            request.setAttribute("listLayers", lns);
+            List llns = user.getLayerNames(true);
+            if (t!=null) {
                 String wllr = t.getWms_legendlayer_real();
                 if (wllr!=null && !lns.contains(wllr)) {
                     lns.add(wllr);
                 }
             }
-            request.setAttribute("listLayers", lns);
+            request.setAttribute("listLegendLayers", llns);
         }
         
         if (t!=null) {
@@ -227,6 +231,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("wms_legendlayer_real", t.getWms_legendlayer_real());
         dynaForm.set("update_frequentie_in_dagen", FormUtils.IntegerToString(t.getUpdate_frequentie_in_dagen()));
         dynaForm.set("view_geomtype", t.getView_geomtype());
+        dynaForm.set("visible", new Boolean(t.isVisible()));
     }
     
     private void populateThemasObject(DynaValidatorForm dynaForm, Themas t, HttpServletRequest request) {
@@ -264,6 +269,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
         t.setWms_legendlayer_real(FormUtils.nullIfEmpty(dynaForm.getString("wms_legendlayer_real")));
         t.setUpdate_frequentie_in_dagen(FormUtils.StringToInteger(dynaForm.getString("update_frequentie_in_dagen")));
         t.setView_geomtype(FormUtils.nullIfEmpty(dynaForm.getString("view_geomtype")));
+        b = (Boolean)dynaForm.get("visible");
+        t.setVisible(b==null?false:b.booleanValue());
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         int mId=0, cId=0;

@@ -62,7 +62,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (user==null)
             return null;
-        List layersFromRoles = user.getLayerNames();
+        List layersFromRoles = user.getLayerNames(false);
         if (layersFromRoles==null)
             return null;
         
@@ -93,7 +93,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (user==null)
             return null;
-        List layersFromRoles = user.getLayerNames();
+        List layersFromRoles = user.getLayerNames(false);
         if (layersFromRoles==null)
             return null;
         
@@ -155,20 +155,17 @@ public abstract class BaseGisAction extends BaseHibernateAction {
     protected boolean checkThemaLayers(Themas t,  List acceptableLayers) {
         if (t==null || acceptableLayers==null)
             return false;
-//        String wmsls = t.getWms_layers();
         String wmsls = t.getWms_layers_real();
         if (wmsls==null || wmsls.length()==0)
             return false;
         
-        // Misschien is dit te streng, alleen op wms layer checken?
-//        String wmsqls = t.getWms_querylayers();
-        String wmsqls = t.getWms_querylayers_real();
-        if (wmsqls!=null || wmsqls.length()>0)
-            wmsls += "," + wmsqls;
-//        String wmslls = t.getWms_legendlayer();
-        String wmslls = t.getWms_legendlayer_real();
-        if (wmslls!=null || wmslls.length()>0)
-            wmsls += "," + wmslls;
+        // Dit is te streng alleen op wms layer checken
+//        String wmsqls = t.getWms_querylayers_real();
+//        if (wmsqls!=null && wmsqls.length()>0)
+//            wmsls += "," + wmsqls;
+//        String wmslls = t.getWms_legendlayer_real();
+//        if (wmslls!=null && wmslls.length()>0)
+//            wmsls += "," + wmslls;
         
         String[] wmsla = wmsls.split(",");
         for (int i=0; i<wmsla.length; i++) {

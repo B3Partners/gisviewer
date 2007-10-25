@@ -25,5 +25,6 @@
     </head>
     <body onload="checkLocation()" class="tabvak_body">
         <tiles:insert attribute="content" />
+        <tiles:insert definition="googleAnalytics"/>        
     </body>
 </html:html>

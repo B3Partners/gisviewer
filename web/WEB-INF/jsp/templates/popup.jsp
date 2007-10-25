@@ -11,7 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <META HTTP-EQUIV="Expires" CONTENT="-1">
         <META HTTP-EQUIV="Cache-Control" CONTENT="max-age=0, no-store">
-
+        
         <title>Viewer Popup</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
@@ -25,5 +25,6 @@
     </head>
     <body onload="checkLocation()" class="admindatabody">
         <tiles:insert attribute="content" />
+        <tiles:insert definition="googleAnalytics"/>        
     </body>
 </html:html>

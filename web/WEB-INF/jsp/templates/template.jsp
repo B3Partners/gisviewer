@@ -40,5 +40,7 @@
         <!-- !!! TEN BEHOEVE VAN NBR DESIGN COMMENTAAR ROND ONDERSTAANDE DIVS WEGHALEN !!! -->
         <!-- <div id="boven_div"> --><div id="menu_div"><!-- <div id="menubg"> --><tiles:insert attribute="menu" /></div><!-- </div></div> -->
         <div id="maindiv"><div id="content_div"><tiles:insert attribute="content" /></div></div>
-    <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div></body>
+        <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div>
+        <tiles:insert definition="googleAnalytics"/>        
+    </body>
 </html:html>

@@ -108,6 +108,7 @@ public class ViewerAction extends BaseGisAction {
     // </editor-fold>
     
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
+        super.createLists(dynaForm, request);
         List ctl = SpatialUtil.getValidClusters();
         List themalist = getValidThemas(false, ctl, request);
         Map rootClusterMap = getClusterMap(themalist, ctl, null);

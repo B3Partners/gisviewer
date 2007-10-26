@@ -33,6 +33,11 @@ public class ViewerCrudAction extends CrudAction {
         return mapping.findForward(FAILURE);
     }
     
+    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
+        // zet kaartenbalie url
+        request.setAttribute("kburl", HibernateUtil.KBURL);
+    }
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws Exception {
         

@@ -77,6 +77,7 @@ public class ETLOverviewAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        createLists(dynaForm, request);
         createOverview(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }

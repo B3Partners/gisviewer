@@ -40,6 +40,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
     private static final Log log = LogFactory.getLog(BaseGisAction.class);
     
     
+    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
+        // zet kaartenbalie url
+        request.setAttribute("kburl", HibernateUtil.KBURL);
+    }
+    
     /**
      * Haal een Thema op uit de database door middel van een in het request meegegeven thema id.
      *

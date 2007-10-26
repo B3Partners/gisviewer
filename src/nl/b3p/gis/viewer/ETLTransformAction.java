@@ -121,6 +121,7 @@ public class ETLTransformAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward showOptions(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward showOptions(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        createLists(dynaForm, request);
         String themaid = request.getParameter("themaid");
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
@@ -145,6 +146,7 @@ public class ETLTransformAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward edit(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) method.">
     public ActionForward edit(ActionMapping mapping, DynaValidatorForm  dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        createLists(dynaForm, request);
         String themaid              = (String)request.getParameter("themaid");
         String status               = (String)request.getParameter("type");
         
@@ -214,7 +216,8 @@ public class ETLTransformAction extends BaseGisAction {
      *
      * @throws Exception
      */
-    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) {
+    protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
+        super.createLists(dynaForm, request);
         List ctl = SpatialUtil.getValidClusters();
         List themalist = getValidThemas(false, null, request);
         List newThemalist = new ArrayList(themalist);

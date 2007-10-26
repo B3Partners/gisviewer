@@ -92,6 +92,7 @@
 
     var layersAan= new Array();
     var doLayerClick= new Boolean(false);
+    var noCookieButVisible= new Boolean(false);
     var activeLayerFromCookie = getActiveLayerId(readCookie('activelayer'));
     setActiveThema(activeLayerFromCookie);
     function createLabel(container, item) {
@@ -116,6 +117,9 @@
                 if(isInCookieArray(item.id) || (cookieArray==null && item.visible=="on")){
                     var el2 = document.createElement('<input type="checkbox" id="' + item.id + '" checked="checked" value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')">');
                     doLayerClick=true;
+                    if (cookieArray==null && item.visible=="on"){
+                        noCookieButVisible=true;
+                    }
                 }
                 else var el2 = document.createElement('<input type="checkbox" id="' + item.id + '" value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')">');
             }
@@ -128,11 +132,19 @@
                 if(isInCookieArray(item.id) || (cookieArray==null && item.visible=="on")){
                     el2.checked = true;
                     doLayerClick=true;
+                    if (cookieArray==null && item.visible=="on"){
+                        noCookieButVisible=true;
+                    }
                 }
             }
             el2.theItem=item;
             if (doLayerClick){
-                layersAan[layersAan.length]=el2;
+                if (noCookieButVisible){
+                    layersAan.unshift(el2);
+                }
+                else{
+                    layersAan.push(el2);
+                }
             }
             var lnk = document.createElement('a');
             lnk.innerHTML = item.title ? item.title : item.id;
@@ -729,7 +741,7 @@
             } else {
                 var newLayersAan = layersAan;
             }
-            for (var i=newLayersAan.length-1; i >= 0; i--){
+            for (var i=0; i < newLayersAan.length; i++){
                 checkboxClick(newLayersAan[i],true,newLayersAan[i].theItem.title);
             }
             refreshLayer();

@@ -12,7 +12,7 @@ package nl.b3p.gis.viewer.db;
 
 import java.util.Set;
 
-public class Themas {
+public class Themas implements Comparable {
     
     public static final String THEMAID = "themaid";
     
@@ -722,4 +722,19 @@ public class Themas {
         this.view_geomtype = view_geomtype;
     }
     
+    public int compareTo(Object o) {
+        if (!(o instanceof Themas))
+            throw new ClassCastException("A Themas object expected.");
+        
+        int ob = ((Themas) o).getBelangnr();
+        int tb = this.getBelangnr();
+        
+        String on = ((Themas) o).getNaam();
+        String tn = this.getNaam();
+        
+        int verschil = tb - ob;
+        if (verschil!=0 || on==null || tn==null)
+            return verschil;
+        return tn.compareTo(on);
+    }
 }

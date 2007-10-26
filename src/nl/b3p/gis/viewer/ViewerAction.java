@@ -11,6 +11,7 @@
 package nl.b3p.gis.viewer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -163,6 +164,8 @@ public class ViewerAction extends BaseGisAction {
                 children.add(thema);
             }
         }
+        if (children!=null)
+            Collections.reverse(children);
         return children;
     }
     

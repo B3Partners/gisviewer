@@ -139,9 +139,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             Themas t = new Themas();
             t.setId(tid++);
             t.setNaam(user.getLayerTitle(layer));
-//                t.setWms_layers(layer);
             t.setWms_layers_real(layer);
-//                t.setWms_legendlayer(layer);
             t.setWms_legendlayer_real(layer);
             t.setCluster(c);
             // voeg extra laag als nieuw thema toe

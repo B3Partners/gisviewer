@@ -225,7 +225,6 @@
     }
 
     function checkboxClick(obj, dontRefresh, obj_name) {
-
         if(obj.checked) {
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
             var legendURL="${kburl}";
@@ -730,7 +729,7 @@
             } else {
                 var newLayersAan = layersAan;
             }
-            for (var i=0; i < newLayersAan.length; i++){
+            for (var i=newLayersAan.length-1; i >= 0; i--){
                 checkboxClick(newLayersAan[i],true,newLayersAan[i].theItem.title);
             }
             refreshLayer();

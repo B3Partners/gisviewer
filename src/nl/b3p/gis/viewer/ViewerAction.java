@@ -16,13 +16,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
+import nl.b3p.wms.capabilities.SrsBoundingBox;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
@@ -115,9 +119,24 @@ public class ViewerAction extends BaseGisAction {
         Map rootClusterMap = getClusterMap(themalist, ctl, null);
         
         request.setAttribute("tree", createJasonObject(rootClusterMap));
-        
-        // zet kaartenbalie url
+         // zet kaartenbalie url
         request.setAttribute("kburl", HibernateUtil.KBURL);
+        
+        //stukje voor BBox toevoegen.
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        Set bboxen=user.getSp().getTopLayer().getSrsbb();
+        Iterator it=bboxen.iterator();
+        while(it.hasNext()){
+            SrsBoundingBox bbox= (SrsBoundingBox)it.next();
+            if(FormUtils.nullIfEmpty(bbox.getMaxx())!=null && FormUtils.nullIfEmpty(bbox.getMaxy())!=null &&FormUtils.nullIfEmpty(bbox.getMinx())!=null &&FormUtils.nullIfEmpty(bbox.getMiny())!=null){
+                if (bbox.getSrs()!=null && bbox.getSrs().equalsIgnoreCase("epsg:28992")){
+                    request.setAttribute("startExtent",bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy());
+                    break;
+                }
+            }
+            
+        }
+       
     }
     
     private Map getClusterMap(List themalist, List clusterlist, Clusters rootCluster) throws JSONException, Exception {

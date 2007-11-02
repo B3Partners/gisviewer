@@ -744,6 +744,12 @@
             for (var i=0; i < newLayersAan.length; i++){
                 checkboxClick(newLayersAan[i],true,newLayersAan[i].theItem.title);
             }
+            var bbox='${startExtent}';
+            if (bbox!=null && bbox.length>0){                
+                if (bbox.split(",").length==4){
+                    moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+                }
+            }
             refreshLayer();
         }
     }

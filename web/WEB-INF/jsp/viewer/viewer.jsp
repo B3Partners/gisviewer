@@ -289,7 +289,8 @@
         }        
         var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\"" +
             "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
-            "\" getcapabilitiesurl=\""+layerUrl + "&SERVICE=WMS" +
+            "\"exceptions=\"inimage\" getcapabilitiesurl=\""+layerUrl + "&SERVICE=WMS" +
+            "\"styles=\""+
             "\" layers=\""+layersToAdd+"\" query_layers=\""+layersToAdd +
             "\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
         if (flamingo && layerUrl!=null){

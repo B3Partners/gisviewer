@@ -117,19 +117,20 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             }
         }
         
-        // Als geen cluster of alles al gevonden dan hier stoppen.
-        if (ctl==null || layersFound.size()==layersFromRoles.size())
+        // Als geen cluster dan hier stoppen.
+        if (ctl==null)
             return checkedThemaList;
         
-        // Kijk welke lagen uit de rollen nog niet zijn toegevoegd
-        // en voeg deze alsnog toe via dummy thema en cluster.
+        //maak alvast een cluster aan voor als er kaarten worden gevonden die geen thema hebben.
         Clusters c = new Clusters();
         c.setNaam(HibernateUtil.KAARTENBALIE_CLUSTER);
         c.setParent(null);
-        ctl.add(c);
         
         Iterator it = layersFromRoles.iterator();
         int tid = 100000;
+        ArrayList extraThemaList = new ArrayList();
+        // Kijk welke lagen uit de rollen nog niet zijn toegevoegd
+        // en voeg deze alsnog toe via dummy thema en cluster.
         while (it.hasNext()) {
             String layer = (String)it.next();
             if (layersFound.contains(layer))
@@ -143,8 +144,15 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             t.setWms_legendlayer_real(layer);
             t.setCluster(c);
             // voeg extra laag als nieuw thema toe
-            checkedThemaList.add(t);
+            extraThemaList.add(t);
         }
+        if (extraThemaList.size()>0){
+            ctl.add(c);
+            for (int i=0; i < extraThemaList.size(); i++){
+                checkedThemaList.add(extraThemaList.get(i));
+            }
+        }        
+        
         return checkedThemaList;
     }
     

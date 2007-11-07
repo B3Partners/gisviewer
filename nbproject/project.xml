@@ -14,11 +14,11 @@
                     <file>${libs.jstl11.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="16">
+                <library files="17">
                     <file>${libs.B3pCommonsLib.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library files="9">
+                <library files="10">
                     <file>${libs.B3pHibernateLib.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -40,6 +40,10 @@
                 </library>
                 <library files="1">
                     <file>${reference.securityfilter-b3p.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="4">
+                    <file>${libs.B3pXalanLib.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

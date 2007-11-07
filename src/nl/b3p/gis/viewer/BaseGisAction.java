@@ -528,9 +528,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 }
                 
                 String kolomNaam = td.getKolomnaam();
-                value = rs.getObject(kolomNaam);
-                if (value!=null) {
-                    if (kolomNaam!=null && kolomNaam.length()>0 && !kolomNaam.equalsIgnoreCase(adminPk)) {
+                if (kolomNaam!=null && kolomNaam.length()>0 && !kolomNaam.equalsIgnoreCase(adminPk)) {
+                    value = rs.getObject(kolomNaam);
+                    if (value!=null) {                    
                         url.append("&");
                         url.append(kolomNaam);
                         url.append("=");

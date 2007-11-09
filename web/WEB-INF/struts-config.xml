@@ -119,14 +119,15 @@
         
         <action path="/etl" type="nl.b3p.gis.viewer.ETLOverviewAction">
             <forward name="success" path="etlhome"/>
-        </action>        
+        </action>
+        
+        <!-- Deze wordt op dit moment niet gebruikt, kan dus net zo goed uitgeschakeld worden.
         <action path="/etlscheduler" forward="etlscheduler"/>
+        -->
+        
         <action path="/etltransform" type="nl.b3p.gis.viewer.ETLTransformAction">
             <forward name="success" path="etltransform"/>
             <forward name="showData" path="vieweradmindata"/>
-        </action>
-        <action path="/etlthemalijst" type="nl.b3p.gis.viewer.ETLTransformAction">
-            <forward name="success" path="etlthemalijst"/>
         </action>
         
         <action path="/configThema" type="nl.b3p.gis.viewer.ConfigThemaAction" name="themaForm" scope="request" validate="false">

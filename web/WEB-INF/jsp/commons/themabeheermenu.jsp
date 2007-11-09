@@ -3,7 +3,7 @@
 <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
 <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
 
-<c:set var="links" value='<a class="*" href="etlthemalijst.do">&#155; ETL Afwijkingen</a>%<a class="*" href="etl.do">&#155; ETL Themabeheer</a>%<!--a class="*" href="etlscheduler.do">&#155; ETL Scheduler</a-->%<a class="*" href="index.do">&#155; Home</a>' />
+<c:set var="links" value='<a class="*" href="etl.do">&#155; ETL Themabeheer</a>%<a class="*" href="index.do">&#155; Home</a>' />
 
 <div class="topmenu">
     <c:set var="lnkArray" value="${fn:split(links, '%')}" />

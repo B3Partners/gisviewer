@@ -151,6 +151,9 @@ public class ETLOverviewAction extends BaseGisAction {
             return null;
         
         String admin_tabel = t.getAdmin_tabel();
+        if (admin_tabel == null)
+            return null;
+        
         String selectQuery = "SELECT COUNT(1) as Total ";
         for (int i=0; i<6; i++) {
             selectQuery += ", (SELECT COUNT(1) FROM " + admin_tabel +
@@ -161,6 +164,7 @@ public class ETLOverviewAction extends BaseGisAction {
         
         
         ArrayList count = new ArrayList();
+        count.add(t.getId());
         count.add(t.getNaam());
         try {
             int total = 0;
@@ -175,8 +179,8 @@ public class ETLOverviewAction extends BaseGisAction {
                 statement.close();
             }
             
-            Integer amountOGO = (Integer)count.get(2);
-            Integer amountOAO = (Integer)count.get(3);
+            Integer amountOGO = (Integer)count.get(3);
+            Integer amountOAO = (Integer)count.get(4);
             if(total != 0 && amountOGO!=null && amountOAO!=null) {
                 int percent = ((amountOGO.intValue() + amountOAO.intValue()) * 100) / total;
                 count.add(new Integer(percent));

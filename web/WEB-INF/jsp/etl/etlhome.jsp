@@ -14,7 +14,6 @@
     <td><b>&nbsp;Totaal</b></td>
     <td><b>&nbsp;% incorrect</b></td>
 </tr>
-
 <c:forEach var="nItem" items="${overview}" varStatus="counter">
     <c:choose>
         <c:when test="${counter.count % 2 == 1}">
@@ -25,11 +24,14 @@
         </c:otherwise>
     </c:choose>
     <c:forEach var="item" items="${nItem}" varStatus="i">
-        <c:if test="${counter.count == 0}">
-            <td style="width: 300px;"><b>&nbsp;${item}</b></td>
-        </c:if>
         <c:choose>
-            <c:when test="${i.count == 9}">
+            <c:when test="${i.count == 1}">
+                <td style="width: 300px;"><a href="<html:rewrite page="/etltransform.do?showOptions=submit&themaid=${item}"/>">
+            </c:when>
+            <c:when test="${i.count == 2}">
+                &nbsp;${item}</a></td>
+            </c:when>
+            <c:when test="${i.count == 10}">
                 <td style="width: 300px;"><b>&nbsp;${item}&nbsp;%</b></td>
             </c:when>
             <c:otherwise>

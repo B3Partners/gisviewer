@@ -37,9 +37,6 @@
     <definition name="etlscheduler" extends="etl">
         <put name="content" value="/WEB-INF/jsp/etl/etlScheduler.jsp"/>
     </definition>
-    <definition name="etlthemalijst" extends="etl">
-        <put name="content" value="/WEB-INF/jsp/etl/etlThemaLijst.jsp"/>
-    </definition>
     <definition name="etltransform" extends="etl">
         <put name="content" value="/WEB-INF/jsp/etl/etltransform.jsp"/>
     </definition>

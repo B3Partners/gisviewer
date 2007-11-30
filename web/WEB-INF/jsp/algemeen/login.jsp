@@ -8,7 +8,7 @@
                 <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
             </html:messages><br />
             <table>
-                <tr><td>E-mail adres:</td><td><input type="text" name="j_username" size="36"></td></tr>
+                <tr><td>Gebruikersnaam:</td><td><input type="text" name="j_username" size="36"></td></tr>
                 <tr><td>Wachtwoord:</td><td><input type="password" name="j_password" size="36"></td></tr>
                 <tr><td><input type="Submit" value="Login"></td></tr>
             </table>

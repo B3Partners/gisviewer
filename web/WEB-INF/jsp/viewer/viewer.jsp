@@ -9,7 +9,6 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
 
 <script>
-
     var nr = 0;
     function getNr() {
         return nr++;
@@ -46,7 +45,7 @@
             alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
             return;
         }
-        document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
+        document.forms[0].scale.value=flamingo.call("flamingo_map1", "getCurrentScale");
         document.forms[0].xcoord.value=x;
         document.forms[0].ycoord.value=y;
         document.forms[0].metadata.value = '';
@@ -78,7 +77,7 @@
     function setActiveThema(val) {
         activeThemaId = val;
         if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
-            map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
+            flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
         }
     }
 
@@ -96,7 +95,6 @@
     var activeLayerFromCookie = getActiveLayerId(readCookie('activelayer'));
     setActiveThema(activeLayerFromCookie);
     function createLabel(container, item) {
-
         doLayerClick=false;
         if(item.cluster)
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
@@ -254,7 +252,7 @@
             } else {
                 eraseCookie('checkedLayers');
             }
-
+            
             if (obj.theItem.wmslayers){
                 if (layerUrl==null){
                     layerUrl="${kburl}";
@@ -711,7 +709,7 @@
 
     //always call this script after the SWF object script has called the flamingo viewer.
     //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
-    function map1_onIdentify(movie,extend){
+    function flamingo_map1_onIdentify(movie,extend){
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
         document.getElementById('start_message').style.display = 'none';
         document.getElementById('algdatavak').style.display = 'block';
@@ -727,7 +725,7 @@
     }
     readCookieArrayIntoCheckboxArray();
     var doOnInit= new Boolean("true");
-    function map1_onInit(){
+    function flamingo_map1_onInit(){
         if(doOnInit){
             doOnInit=false;
             if(checkboxArray.length == layersAan.length) {
@@ -750,7 +748,7 @@
                 if (bbox.split(",").length==4){
                     moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
                 }
-            }
+            }            
             refreshLayer();
         }
     }

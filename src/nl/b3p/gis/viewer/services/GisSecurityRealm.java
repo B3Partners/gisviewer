@@ -62,13 +62,13 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
             return null;
         
         // Kijk wat rechten voor anonieme gebruiker zijn en zet op sessie
-        user = authenticateHttp(HibernateUtil.KBURL,
+        user = authenticateHttp(url,
                 HibernateUtil.ANONYMOUS_USER,
                 HibernateUtil.ANONYMOUS_PASSWORD);
         if (user!=null){
             sess.setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
         }else{
-            user = authenticateHttp(HibernateUtil.KBURL,null,null);
+            user = authenticateHttp(url,null,null);
             if (user!=null){
                 sess.setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
             }

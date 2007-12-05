@@ -9,6 +9,8 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
 
 <script>
+    //de vertraging voor het refreshen van de kaart.
+    var refreshDelay=1000;
     var nr = 0;
     function getNr() {
         return nr++;
@@ -264,7 +266,7 @@
                 }
                 allActiveLayers+= ","+obj.theItem.wmslayers;
                 if (!dontRefresh){
-                    refreshLayer();
+                    refreshLayerWithDelay();
                 }
             }
         } else {
@@ -273,11 +275,29 @@
             removeLayerFromVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
             if (obj.theItem.wmslayers){
                 allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
-                refreshLayer();
+                refreshLayerWithDelay();
             }
         }
     }
-
+    var timeouts=0;
+    function refreshLayerWithDelay(){
+        timeouts++;
+        document.getElementById("testresult").value=timeouts;
+        setTimeout("doRefreshLayer();",refreshDelay);
+        
+    }
+    function doRefreshLayer(){
+        timeouts--;
+        document.getElementById("testresult").value=timeouts;
+        if (timeouts<0){
+            alert(timeouts);
+            timeouts=0;
+        }
+        if (timeouts==0){
+            refreshLayer();
+        }
+        
+    }
     function refreshLayer(){
         var layersToAdd;
         if (allActiveLayers.length>0){
@@ -291,7 +311,7 @@
             "\"styles=\""+
             "\" layers=\""+layersToAdd+"\" query_layers=\""+layersToAdd +
             "\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
-        if (flamingo && layerUrl!=null){
+        if (flamingo && layerUrl!=null){            
             flamingo.call("map1","removeLayer","fmcLayer");
             flamingo.call("map1","addLayer",newLayer);
         }
@@ -674,7 +694,7 @@
         </div>
     </div>
 </div>
-<div class="onderbalk">DETAILS<span id="actief_thema">Actieve thema: </span></div>
+<div class="onderbalk">DETAILS <input id="testresult" type="text" value="3"></input> <span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
     <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
 </div>

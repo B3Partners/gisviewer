@@ -104,6 +104,7 @@
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>
+            <forward name="login" path="login"/>
         </action>
         <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction">
             <!-- <forward name="success" path="viewerdata"/> -->

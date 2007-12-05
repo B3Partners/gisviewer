@@ -20,10 +20,7 @@
             <web-resource-name>Viewer</web-resource-name>
             <url-pattern>/viewer.do</url-pattern>
             <url-pattern>/viewerdata.do</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>*</role-name>
-        </auth-constraint>
+        </web-resource-collection>       
     </security-constraint>
 
     <!-- /etl* alleen voor themabeheerders -->

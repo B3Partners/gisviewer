@@ -18,10 +18,15 @@ import nl.b3p.wms.capabilities.Roles;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import nl.b3p.wms.capabilities.Style;
 import nl.b3p.wms.capabilities.StyleDomainResource;
+import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class GisPrincipal implements Principal {
     
+    private static final Log log = LogFactory.getLog(GisPrincipal.class);
     public static String ANONYMOUS_PRINCIPAL = "anoniem_principal";
+    private static final String CAPABILITIES_QUERYSTRING = "REQUEST=GetCapabilities&VERSION=1.1.1&SERVICE=WMS";
     
     private String name;
     private Set roles;
@@ -154,8 +159,39 @@ public class GisPrincipal implements Principal {
             HttpSession sess = request.getSession();
             user = (Principal)sess.getAttribute(ANONYMOUS_PRINCIPAL);
         }
-        if (user==null || !(user instanceof GisPrincipal))
+        if (user==null){
+            //als user null is dan proberen een capabilitie op te halen zonder rollen
+            WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
+            ServiceProvider sp = null;
+            
+            // Maak een capabilities url voor het ophalen van de Capabilities
+            // TODO: Dit kan waarschijnlijk beter worden gedaan in de wmscr.getProvider() methode
+            //dus iets van een check op capabilities.
+            String url = HibernateUtil.KBURL;
+            if (url.lastIndexOf('?') > 0)
+                url += "&";
+            else 
+                url += "?";
+            url += CAPABILITIES_QUERYSTRING;
+            
+            try {
+                sp = wmscr.getProvider(url, null, null);
+            } catch (Exception ex) {
+                log.error("", ex);
+            }
+
+            if (sp==null) {
+                log.error("No ServiceProvider found, denying login!");
+                return null;
+            }
+            user = new GisPrincipal(HibernateUtil.ANONYMOUS_USER, sp);
+            if (user!=null){
+                request.getSession().setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
+            }
+        }
+        if (user==null || !(user instanceof GisPrincipal)){
             return null;
+        }
         return (GisPrincipal)user;
     }
 }

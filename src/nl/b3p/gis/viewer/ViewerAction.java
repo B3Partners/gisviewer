@@ -42,6 +42,7 @@ public class ViewerAction extends BaseGisAction {
     private static final Log log = LogFactory.getLog(ViewerAction.class);
     
     protected static final String KNOP = "knop";
+    protected static final String LOGIN = "login";
     
     /**
      * Return een hashmap die een property koppelt aan een Action.
@@ -107,6 +108,12 @@ public class ViewerAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //als er geen user principal is (ook geen anoniem) dan forwarden naar de login.
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        if (user==null){
+            log.info("Geen user beschikbaar, ook geen anoniem. Forward naar login om te proberen een user te maken met login gegevens.");
+            return mapping.findForward(LOGIN);
+        }
         createLists(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }
@@ -123,7 +130,7 @@ public class ViewerAction extends BaseGisAction {
         request.setAttribute("kburl", HibernateUtil.KBURL);
         
         //stukje voor BBox toevoegen.
-        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);        
         Set bboxen=user.getSp().getTopLayer().getSrsbb();
         Iterator it=bboxen.iterator();
         while(it.hasNext()){

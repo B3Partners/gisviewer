@@ -4,7 +4,6 @@
 
 package nl.b3p.gis.viewer.services;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +20,6 @@ import org.apache.commons.logging.LogFactory;
 import org.securityfilter.filter.SecurityRequestWrapper;
 import org.securityfilter.realm.ExternalAuthenticatedRealm;
 import org.securityfilter.realm.FlexibleRealmInterface;
-import org.xml.sax.SAXException;
 
 public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthenticatedRealm {
     private static final Log log = LogFactory.getLog(GisSecurityRealm.class);
@@ -67,8 +65,15 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         user = authenticateHttp(HibernateUtil.KBURL,
                 HibernateUtil.ANONYMOUS_USER,
                 HibernateUtil.ANONYMOUS_PASSWORD);
-        if (user!=null)
+        if (user!=null){
             sess.setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
+        }else{
+            user = authenticateHttp(HibernateUtil.KBURL,null,null);
+            if (user!=null){
+                sess.setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
+            }
+        }
+        
         
         // Return null om te voorkomen dat cookie gezet wordt en de
         // gebruiker niet alsnog kan inloggen
@@ -90,8 +95,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         roles.add(HibernateUtil.THEMABEHEERDERS_ROL);
         
         return new GisPrincipal(username, roles);
-    }
-    
+    }    
     protected GisPrincipal authenticateHttp(String location, String username, String password) {
         WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
         ServiceProvider sp = null;
@@ -181,6 +185,5 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
     
     public Principal authenticate(String username, String password) {
         return null;
-    }
-    
+    }    
 }

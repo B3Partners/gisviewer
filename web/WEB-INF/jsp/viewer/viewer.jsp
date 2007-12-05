@@ -281,14 +281,12 @@
     }
     var timeouts=0;
     function refreshLayerWithDelay(){
-        timeouts++;
-        document.getElementById("testresult").value=timeouts;
+        timeouts++;        
         setTimeout("doRefreshLayer();",refreshDelay);
         
     }
     function doRefreshLayer(){
-        timeouts--;
-        document.getElementById("testresult").value=timeouts;
+        timeouts--;        
         if (timeouts<0){
             alert(timeouts);
             timeouts=0;
@@ -694,7 +692,7 @@
         </div>
     </div>
 </div>
-<div class="onderbalk">DETAILS <input id="testresult" type="text" value="3"></input> <span id="actief_thema">Actieve thema: </span></div>
+<div class="onderbalk">DETAILS <span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
     <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
 </div>

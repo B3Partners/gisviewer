@@ -19,6 +19,7 @@ public class Themas implements Comparable {
     private int id;
     private String code;
     private String naam;
+    private String metadata_link;
     private Moscow moscow;
     private int belangnr;
     private Clusters cluster;
@@ -736,5 +737,13 @@ public class Themas implements Comparable {
         if (verschil!=0 || on==null || tn==null)
             return verschil;
         return tn.compareTo(on);
+    }
+
+    public String getMetadata_link() {
+        return metadata_link;
+    }
+
+    public void setMetadata_link(String metadata_link) {
+        this.metadata_link = metadata_link;
     }
 }

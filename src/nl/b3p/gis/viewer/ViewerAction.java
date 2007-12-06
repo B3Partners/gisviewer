@@ -140,8 +140,7 @@ public class ViewerAction extends BaseGisAction {
                     request.setAttribute("startExtent",bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy());
                     break;
                 }
-            }
-            
+            }            
         }
        
     }
@@ -268,6 +267,13 @@ public class ViewerAction extends BaseGisAction {
                         .put("wmslayers",th.getWms_layers())
                         .put("wmsquerylayers",th.getWms_querylayers())
                         .put("wmslegendlayer",th.getWms_legendlayer());
+            }
+            if (th.getMetadata_link()!=null){
+                String metadatalink=th.getMetadata_link();
+                metadatalink=metadatalink.replaceAll("%id%",""+th.getId());
+                jsonCluster.put("metadatalink",metadatalink);
+            }else{
+                jsonCluster.put("metadatalink","#");
             }
             
             if (childrenArray==null)

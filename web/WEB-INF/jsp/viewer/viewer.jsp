@@ -56,12 +56,18 @@
         document.forms[0].submit();
     }
 
-    function getMetaData(id) {
+    /*function getMetaData(id) {
         document.forms[0].metadata.value = 't';
         document.forms[0].admindata.value = '';
         document.forms[0].themaid.value = id;
         document.forms[0].submit();
+    }*/
+    function openUrlInIframe(url){
+        alert(url);
+        var iframe=document.getElementById("dataframe");
+        iframe.src=url;
     }
+        
 
     var cookieArray = readCookie('checkedLayers');
     function isInCookieArray(id) {
@@ -149,7 +155,9 @@
             var lnk = document.createElement('a');
             lnk.innerHTML = item.title ? item.title : item.id;
             lnk.href = '#';
-            lnk.onclick = function(){ getMetaData(item.id) };
+            //lnk.onclick = function(){ getMetaData(item.id) };
+            if (item.metadatalink && item.metadatalink.length > 0)
+                lnk.onclick = function(){openUrlInIframe(item.metadatalink)}; 
             if(item.analyse=="on"){
                 container.appendChild(el);
             }
@@ -694,7 +702,7 @@
 </div>
 <div class="onderbalk">DETAILS <span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
-    <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
+    <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
 </div>
 
 <script type="text/javascript">

@@ -194,6 +194,7 @@
         </id>
         <property name="code"/>
         <property name="naam"/>
+        <property name="metadata_link"/>
         <many-to-one name="moscow" lazy="false"/>
         <property name="belangnr" not-null="true"/>
         <many-to-one name="cluster" lazy="false">

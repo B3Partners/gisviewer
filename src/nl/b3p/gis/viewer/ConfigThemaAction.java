@@ -8,9 +8,11 @@
 package nl.b3p.gis.viewer;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.NotSupportedException;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Moscow;
@@ -67,8 +69,10 @@ public class ConfigThemaAction extends ViewerCrudAction {
         Themas t = getThema(dynaForm, false);
         if (t==null)
             t = getFirstThema();
-        
-        Connection conn = sess.connection();
+        Connection conn=null;
+        conn=t.getThemaDbConnection();
+        if (conn==null)
+            conn = sess.connection();
         List tns = SpatialUtil.getTableNames(conn);
         if (t!=null) {
             String sptn = t.getAdmin_tabel();
@@ -199,6 +203,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("themaID", Integer.toString(t.getId()));
         dynaForm.set("code", t.getCode());
         dynaForm.set("naam", t.getNaam());
+        dynaForm.set("metadatalink", t.getMetadata_link());
         String val = "";
         if (t.getMoscow()!=null)
             val = Integer.toString(t.getMoscow().getId());
@@ -211,6 +216,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("opmerkingen", t.getOpmerkingen());
         dynaForm.set("analyse_thema", new Boolean(t.isAnalyse_thema()));
         dynaForm.set("locatie_thema", new Boolean(t.isLocatie_thema()));
+        dynaForm.set("connection_url", t.getConnection_url());
         dynaForm.set("admin_tabel_opmerkingen", t.getAdmin_tabel_opmerkingen());
         dynaForm.set("admin_tabel", t.getAdmin_tabel());
         dynaForm.set("admin_pk", t.getAdmin_pk());
@@ -238,6 +244,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
         
         t.setCode(FormUtils.nullIfEmpty(dynaForm.getString("code")));
         t.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
+        t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("metadatalink")));
+        t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("connection_url")));
         t.setBelangnr(Integer.parseInt(dynaForm.getString("belangnr")));
         t.setOpmerkingen(FormUtils.nullIfEmpty(dynaForm.getString("opmerkingen")));
         Boolean b = (Boolean)dynaForm.get("analyse_thema");

@@ -264,7 +264,6 @@ public class SpatialUtil {
     // <editor-fold defaultstate="" desc="static public List getThemaData(Themas t, boolean basisregel)">
     static public List getThemaData(Themas t, boolean basisregel) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        
         String query = "from ThemaData td where td.thema.id = :tid ";
         if (basisregel)
             query += "and td.basisregel = :br ";

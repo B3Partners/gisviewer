@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.NotSupportedException;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.HibernateUtil;
@@ -181,12 +182,15 @@ public class ETLTransformAction extends BaseGisAction {
      *
      * @see Themas
      */
-    protected List getThemaObjects(Themas t, String status, List thema_items) throws SQLException, UnsupportedEncodingException {
+    protected List getThemaObjects(Themas t, String status, List thema_items) throws SQLException, UnsupportedEncodingException, NotSupportedException {
         if (t==null)
             return null;
         ArrayList regels = new ArrayList();
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
+        Connection connection=null;
+        connection=t.getThemaDbConnection();
+        if (connection==null)
+            connection = sess.connection();
         String taq = "select * from " + t.getSpatial_tabel() + " where status_etl = ? and etl_proces_id = (select max(etl_proces_id) from " + t.getSpatial_tabel() + ")";
         
         try {
@@ -223,11 +227,15 @@ public class ETLTransformAction extends BaseGisAction {
         List newThemalist = new ArrayList(themalist);
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
+        Connection connection=null;
         
         Iterator it = themalist.iterator();
         while(it.hasNext()) {
-            Themas t = (Themas)it.next();
+            Themas t = (Themas)it.next();            
+            connection=t.getThemaDbConnection();
+            if (connection==null)
+                connection = sess.connection();
+            
             boolean etlExists = false;
             try {
                 etlExists = SpatialUtil.isEtlThema(t, connection);
@@ -239,7 +247,8 @@ public class ETLTransformAction extends BaseGisAction {
             }
         }
         try {
-            connection.close();
+            if (connection!=null)
+                connection.close();
         } catch (SQLException ex) {
             log.error("", ex);
         }

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.NotSupportedException;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
@@ -259,14 +260,15 @@ public class GetViewerDataAction extends BaseGisAction {
             }
             
             log.debug(query);
-            result.append("<b>" + sdesc + " " + ((Themas)inputParameters.get("thema")).getNaam());
+            Themas t = (Themas)inputParameters.get("thema");
+            result.append("<b>" + sdesc + " " + t.getNaam());
             
             if ((String)inputParameters.get("analyseNaam")!=null){
                 result.append(" in " + (String)inputParameters.get("analyseNaam"));
             }
             result.append(":");
             
-            executeQuery(query, sess, result, scolumns);
+            executeQuery(query, sess, result, scolumns,t);
             result.append("</b>");
         } else {
             result.append("<b>Niet mogelijk met dit thema-geometry-type<br/></b>");
@@ -378,7 +380,7 @@ public class GetViewerDataAction extends BaseGisAction {
         while(it.hasNext()) {
             String key = (String)it.next();
             String keyvalue = (String)extraCriteria.get(key);
-            if(keyvalue != "" && keyvalue != null) {
+            if(keyvalue != null && keyvalue.length() > 0) {
                 extraCriteriaString.append(" and tb1." + key + "='" + keyvalue + "'");
             }
         }
@@ -398,7 +400,11 @@ public class GetViewerDataAction extends BaseGisAction {
                 extraCriteriaString.toString());
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
+        Themas th=(Themas)inputParameters.get("thema");
+        Connection connection = null;
+        connection=th.getThemaDbConnection();
+        if (connection==null)
+            connection=sess.connection();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             try {
@@ -561,7 +567,7 @@ public class GetViewerDataAction extends BaseGisAction {
      * @see Themas
      */
     // <editor-fold defaultstate="" desc="protected List getThemaObjects(Themas t, List pks, List thema_items)">
-    protected List getThemaObjects(Themas t, List pks, List thema_items) throws SQLException, UnsupportedEncodingException {
+    protected List getThemaObjects(Themas t, List pks, List thema_items) throws SQLException, UnsupportedEncodingException, NotSupportedException {
         if (t==null)
             return null;
         if (pks==null || pks.isEmpty())
@@ -572,8 +578,10 @@ public class GetViewerDataAction extends BaseGisAction {
         ArrayList regels = new ArrayList();
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
-        
+        Connection connection = null;
+        connection=t.getThemaDbConnection();
+        if (connection==null)
+            connection=sess.connection();        
         try {
             
             int dt = SpatialUtil.getPkDataType( t, connection);

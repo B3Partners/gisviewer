@@ -119,7 +119,10 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         Query q = sess.createQuery("from ThemaData where thema.id = :themaID order by dataorder, label");
         request.setAttribute("listThemaData", q.setParameter("themaID", new Integer(t.getId())).list());
         
-        Connection conn = sess.connection();
+        Connection conn=null;
+        conn=t.getThemaDbConnection();
+        if (conn==null)
+            conn = sess.connection();
         request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
     }
     

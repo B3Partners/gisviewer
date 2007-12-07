@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.NotSupportedException;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.DataTypen;
 import nl.b3p.gis.viewer.db.ThemaData;
@@ -199,11 +201,14 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      *
      * @see Themas
      */
-    protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) throws SQLException {
+    protected List getPks(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) throws SQLException, NotSupportedException {
         ArrayList pks = new ArrayList();
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
+        Connection connection = null;
+        connection=t.getThemaDbConnection();
+        if (connection==null)
+            connection=sess.connection();
         
         int dt = SpatialUtil.getPkDataType( t, connection);
         String adminPk = t.getAdmin_pk();
@@ -305,7 +310,10 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             return null;
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
+        Connection connection = null;
+        connection=t.getThemaDbConnection();
+        if (connection==null)
+            connection=sess.connection();
         
         try {
             String q = SpatialUtil.InfoSelectQuery(saf, sptn, x, y, distance, srid);
@@ -363,8 +371,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             return themaGeomType;
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection conn = sess.connection();
-        return SpatialUtil.getThemaGeomType(thema, conn);
+        Connection connection = null;
+        connection=thema.getThemaDbConnection();
+        if (connection==null)
+            connection=sess.connection();
+        return SpatialUtil.getThemaGeomType(thema, connection);
     }
     
     /**
@@ -378,7 +389,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      * @return a String with the analysename.
      *
      */
-    protected String getAnalyseNaam(String analyseGeomId, Themas t) {
+    protected String getAnalyseNaam(String analyseGeomId, Themas t) throws NotSupportedException, SQLException {
         
         String analyseGeomTabel     = t.getSpatial_tabel();
         String analyseGeomIdColumn  = t.getSpatial_admin_ref();
@@ -386,7 +397,10 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         
         String analyseNaam= t.getNaam();
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
+        Connection connection = null;
+        connection=t.getThemaDbConnection();
+        if (connection==null)
+            connection=sess.connection();
         try {
             PreparedStatement statement =
                     connection.prepareStatement("select * from "+analyseGeomTabel+
@@ -436,8 +450,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      * @param columns String[]
      */
     // <editor-fold defaultstate="" desc="private void executeQuery(String query, Session sess, StringBuffer result, String[] columns)">
-    protected void executeQuery(String query, Session sess, StringBuffer result, String[] columns){
-        Connection connection = sess.connection();
+    protected void executeQuery(String query, Session sess, StringBuffer result, String[] columns, Themas t) throws NotSupportedException, SQLException{
+        Connection connection = null;
+        connection=t.getThemaDbConnection();
+        if (connection==null)
+            connection=sess.connection();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             try {

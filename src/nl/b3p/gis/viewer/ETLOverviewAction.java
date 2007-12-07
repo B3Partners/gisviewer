@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.NotSupportedException;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.HibernateUtil;
@@ -92,7 +93,7 @@ public class ETLOverviewAction extends BaseGisAction {
      * @param dynaForm DynaValidatorForm
      * @param request HttpServletRequest
      */
-    private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request) {
+    private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request) throws NotSupportedException, SQLException {
         List themalist = getValidThemas(false, null, request);
         ArrayList overview = new ArrayList();
         if(themalist != null) {
@@ -137,9 +138,12 @@ public class ETLOverviewAction extends BaseGisAction {
      * @return ArrayList met de tellingen van de verschillende statussen voor het betreffende thema.
      */
     // <editor-fold defaultstate="" desc="private ArrayList getCount(String thema_naam, String admin_tabel)">
-    private ArrayList getCount(Themas t) {
+    private ArrayList getCount(Themas t) throws NotSupportedException, SQLException {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = sess.connection();
+        Connection connection=null;
+        connection=t.getThemaDbConnection();
+        if (connection==null)
+            connection = sess.connection();
         
         boolean exists = false;
         try {

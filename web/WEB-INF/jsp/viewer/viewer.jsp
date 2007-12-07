@@ -55,15 +55,7 @@
         document.forms[0].themaid.value = selkaart.value;
         document.forms[0].submit();
     }
-
-    /*function getMetaData(id) {
-        document.forms[0].metadata.value = 't';
-        document.forms[0].admindata.value = '';
-        document.forms[0].themaid.value = id;
-        document.forms[0].submit();
-    }*/
     function openUrlInIframe(url){
-        alert(url);
         var iframe=document.getElementById("dataframe");
         iframe.src=url;
     }
@@ -702,7 +694,7 @@
 </div>
 <div class="onderbalk">DETAILS <span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
-    <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
+    <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
 </div>
 
 <script type="text/javascript">

@@ -46,8 +46,8 @@
         if(selkaart == null) {
             alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
             return;
-        }
-        document.forms[0].scale.value=flamingo.call("flamingo_map1", "getCurrentScale");
+        }        
+        document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
         document.forms[0].xcoord.value=x;
         document.forms[0].ycoord.value=y;
         document.forms[0].metadata.value = '';

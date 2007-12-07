@@ -111,6 +111,7 @@
         <div class="maintable">
             <table cellpadding="2" cellspacing="2" border="0">
                 <tr><td>naam</td><td colspan="3"><html:text property="naam" size="140"/></td></tr>
+                <tr><td>Metadata link</td><td colspan="3"><html:text property="metadatalink" size="140"/></td></tr>
                 <tr>
                     <td>
                         Code:
@@ -157,6 +158,8 @@
                 <tr><td>analyse_thema</td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
                 <tr><td>default_visible</td><td colspan="3"><html:checkbox property="visible"/></td></tr>
                 
+                <tr><td colspan="4">&nbsp;</td></tr>
+                <tr><td>connection_url</td><td colspan="3"><html:text property="connection_url" size="140"/></td></tr>
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <tr><td>admin_tabel_opmerkingen</td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
                 <tr>

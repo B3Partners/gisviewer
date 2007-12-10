@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.NotSupportedException;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Clusters;
+import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Moscow;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.GisPrincipal;
@@ -70,7 +71,9 @@ public class ConfigThemaAction extends ViewerCrudAction {
         if (t==null)
             t = getFirstThema();
         Connection conn=null;
-        conn=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            conn=t.getConnectie().getJdbcConnection();
+        }
         if (conn==null)
             conn = sess.connection();
         List tns = SpatialUtil.getTableNames(conn);
@@ -82,9 +85,10 @@ public class ConfigThemaAction extends ViewerCrudAction {
             String atn = t.getSpatial_tabel();
             if (atn!=null && !tns.contains(atn)) {
                 tns.add(atn);
-            }
+            }            
         }
         request.setAttribute("listTables", tns);
+        
         
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (user!=null) {
@@ -109,7 +113,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
             }
             request.setAttribute("listLegendLayers", llns);
         }
-        
+        List connecties=sess.createQuery("from Connecties").list();
+        request.setAttribute("listConnecties",connecties);
         if (t!=null) {
             request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
             request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(t, conn));
@@ -205,6 +210,10 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("naam", t.getNaam());
         dynaForm.set("metadatalink", t.getMetadata_link());
         String val = "";
+        if (t.getConnectie()!=null)
+            val= Integer.toString(t.getConnectie().getId());
+        dynaForm.set("connectie",val);
+        val="";
         if (t.getMoscow()!=null)
             val = Integer.toString(t.getMoscow().getId());
         dynaForm.set("moscowID", val);
@@ -216,7 +225,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("opmerkingen", t.getOpmerkingen());
         dynaForm.set("analyse_thema", new Boolean(t.isAnalyse_thema()));
         dynaForm.set("locatie_thema", new Boolean(t.isLocatie_thema()));
-        dynaForm.set("connection_url", t.getConnection_url());
+        
         dynaForm.set("admin_tabel_opmerkingen", t.getAdmin_tabel_opmerkingen());
         dynaForm.set("admin_tabel", t.getAdmin_tabel());
         dynaForm.set("admin_pk", t.getAdmin_pk());
@@ -241,11 +250,15 @@ public class ConfigThemaAction extends ViewerCrudAction {
     }
     
     private void populateThemasObject(DynaValidatorForm dynaForm, Themas t, HttpServletRequest request) {
-        
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         t.setCode(FormUtils.nullIfEmpty(dynaForm.getString("code")));
         t.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
         t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("metadatalink")));
-        t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("connection_url")));
+        if (FormUtils.nullIfEmpty(dynaForm.getString("connectie"))!=null){
+            Integer conId= Integer.parseInt(dynaForm.getString("connectie"));
+            Connecties c=(Connecties) sess.get(Connecties.class,conId);
+            t.setConnectie(c);
+        }   
         t.setBelangnr(Integer.parseInt(dynaForm.getString("belangnr")));
         t.setOpmerkingen(FormUtils.nullIfEmpty(dynaForm.getString("opmerkingen")));
         Boolean b = (Boolean)dynaForm.get("analyse_thema");
@@ -278,9 +291,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
         t.setUpdate_frequentie_in_dagen(FormUtils.StringToInteger(dynaForm.getString("update_frequentie_in_dagen")));
         t.setView_geomtype(FormUtils.nullIfEmpty(dynaForm.getString("view_geomtype")));
         b = (Boolean)dynaForm.get("visible");
-        t.setVisible(b==null?false:b.booleanValue());
+        t.setVisible(b==null?false:b.booleanValue());        
         
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         int mId=0, cId=0;
         try {
             mId = Integer.parseInt(dynaForm.getString("moscowID"));

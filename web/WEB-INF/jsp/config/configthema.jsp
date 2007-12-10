@@ -159,7 +159,21 @@
                 <tr><td>default_visible</td><td colspan="3"><html:checkbox property="visible"/></td></tr>
                 
                 <tr><td colspan="4">&nbsp;</td></tr>
-                <tr><td>connection_url</td><td colspan="3"><html:text property="connection_url" size="140"/></td></tr>
+                <tr>
+                    <td>
+                        Connectie
+                    </td>
+                    <td colspan="3">
+                        <html:select property="connectie">
+                            <html:option value=""/>
+                            <c:forEach var="cuItem" items="${listConnecties}">
+                                <html:option value="${cuItem.id}">
+                                    <c:out value="${cuItem.naam}"/>
+                                </html:option>
+                            </c:forEach>
+                        </html:select>&nbsp;
+                    </td>
+                </tr>
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <tr><td>admin_tabel_opmerkingen</td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
                 <tr>

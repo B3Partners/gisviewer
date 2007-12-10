@@ -28,7 +28,7 @@ public class Themas implements Comparable {
     private int belangnr;
     private Clusters cluster;
     private String opmerkingen;
-    private String connection_url;
+    private Connecties connectie;
     private boolean analyse_thema;
     private boolean locatie_thema;
     private boolean visible = false;
@@ -742,53 +742,7 @@ public class Themas implements Comparable {
         if (verschil!=0 || on==null || tn==null)
             return verschil;
         return tn.compareTo(on);
-    }
-    
-    public Connection getThemaDbConnection() throws NotSupportedException, SQLException{
-        Connection conn=null;
-        if (this.getConnection_url()!=null && this.getConnection_url().length()>0){
-            //controleer of het een jdbc connectie is
-            if (this.getConnection_url().toLowerCase().startsWith("jdbc:")){
-                //als postgres is:
-                if (this.getConnection_url().toLowerCase().substring(5,this.getConnection_url().length()).startsWith("postgresql:")){
-                    DriverManager.registerDriver(new org.postgresql.Driver());
-                }
-                //als mysql is:
-                else if (this.getConnection_url().toLowerCase().substring(5,this.getConnection_url().length()).startsWith("mysql:")){
-                    DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-                }else{
-                    throw new NotSupportedException ("JDBC url: "+this.getConnection_url()+ " not supported");
-                }
-            }
-            //Test of het WFS is.
-            else if (true){
-                
-            }
-            else{
-                throw new NotSupportedException ("Connection url: "+this.getConnection_url()+ " not supported");
-            }
-            String username="";
-            String password="";
-            int indexp=this.getConnection_url().toLowerCase().indexOf("password=");
-            if (indexp>0){
-                int untilp=this.getConnection_url().indexOf("&",indexp);
-                if (untilp<0){
-                    untilp=this.getConnection_url().length();
-                }
-                password= this.getConnection_url().substring(indexp+9,untilp);
-            }
-            indexp=this.getConnection_url().toLowerCase().indexOf("username=");
-            if (indexp>0){
-                int untilp=this.getConnection_url().indexOf("&",indexp);
-                if (untilp<0){
-                    untilp=this.getConnection_url().length();
-                }
-                username= this.getConnection_url().substring(indexp+9,untilp);
-            }
-            conn = DriverManager.getConnection(this.getConnection_url(),username,password);
-        }
-        return conn;
-    }
+    }   
 
     public String getMetadata_link() {
         return metadata_link;
@@ -798,11 +752,12 @@ public class Themas implements Comparable {
         this.metadata_link = metadata_link;
     }
 
-    public String getConnection_url() {
-        return connection_url;
+    public Connecties getConnectie() {
+        return connectie;
     }
-
-    public void setConnection_url(String connection_url) {
-        this.connection_url = connection_url;
+    
+    public void setConnectie(Connecties connectie) {
+        this.connectie=connectie;
     }
+    
 }

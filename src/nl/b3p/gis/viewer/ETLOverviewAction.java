@@ -141,7 +141,9 @@ public class ETLOverviewAction extends BaseGisAction {
     private ArrayList getCount(Themas t) throws NotSupportedException, SQLException {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection=null;
-        connection=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            connection=t.getConnectie().getJdbcConnection();
+        }
         if (connection==null)
             connection = sess.connection();
         

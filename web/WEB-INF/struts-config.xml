@@ -26,7 +26,7 @@
             <form-property name="code" type="java.lang.String"/>
             <form-property name="naam" type="java.lang.String"/>
             <form-property name="metadatalink" type="java.lang.String"/>
-            <form-property name="connection_url" type="java.lang.String"/>
+            <form-property name="connectie" type="java.lang.String"/>
             <form-property name="moscowID" type="java.lang.String"/>
             <form-property name="belangnr" type="java.lang.String"/>
             <form-property name="clusterID" type="java.lang.String"/>

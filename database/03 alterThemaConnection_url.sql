@@ -1,1 +1,1 @@
-ALTER TABLE themas ADD COLUMN connection_url character varying(255);
+ALTER TABLE themas ADD COLUMN connectie integer;

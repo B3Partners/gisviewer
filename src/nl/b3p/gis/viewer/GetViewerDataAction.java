@@ -402,7 +402,9 @@ public class GetViewerDataAction extends BaseGisAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Themas th=(Themas)inputParameters.get("thema");
         Connection connection = null;
-        connection=th.getThemaDbConnection();
+        if (th.getConnectie()!=null){            
+            connection=th.getConnectie().getJdbcConnection();
+        }        
         if (connection==null)
             connection=sess.connection();
         try {
@@ -579,7 +581,9 @@ public class GetViewerDataAction extends BaseGisAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        connection=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            connection=t.getConnectie().getJdbcConnection();
+        } 
         if (connection==null)
             connection=sess.connection();        
         try {

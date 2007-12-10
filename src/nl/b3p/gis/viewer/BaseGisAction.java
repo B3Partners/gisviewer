@@ -206,7 +206,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        connection=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            connection=t.getConnectie().getJdbcConnection();
+        }
         if (connection==null)
             connection=sess.connection();
         
@@ -311,7 +313,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        connection=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            connection=t.getConnectie().getJdbcConnection();
+        }
         if (connection==null)
             connection=sess.connection();
         
@@ -372,7 +376,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        connection=thema.getThemaDbConnection();
+        if (thema.getConnectie()!=null){            
+            connection=thema.getConnectie().getJdbcConnection();
+        }
         if (connection==null)
             connection=sess.connection();
         return SpatialUtil.getThemaGeomType(thema, connection);
@@ -398,7 +404,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         String analyseNaam= t.getNaam();
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        connection=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            connection=t.getConnectie().getJdbcConnection();
+        }
         if (connection==null)
             connection=sess.connection();
         try {
@@ -452,7 +460,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
     // <editor-fold defaultstate="" desc="private void executeQuery(String query, Session sess, StringBuffer result, String[] columns)">
     protected void executeQuery(String query, Session sess, StringBuffer result, String[] columns, Themas t) throws NotSupportedException, SQLException{
         Connection connection = null;
-        connection=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            connection=t.getConnectie().getJdbcConnection();
+        }
         if (connection==null)
             connection=sess.connection();
         try {

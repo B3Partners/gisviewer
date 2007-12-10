@@ -120,7 +120,9 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         request.setAttribute("listThemaData", q.setParameter("themaID", new Integer(t.getId())).list());
         
         Connection conn=null;
-        conn=t.getThemaDbConnection();
+        if (t.getConnectie()!=null){            
+            conn=t.getConnectie().getJdbcConnection();
+        }
         if (conn==null)
             conn = sess.connection();
         request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));

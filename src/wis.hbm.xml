@@ -40,6 +40,16 @@
             <one-to-many class="nl.b3p.gis.viewer.db.Themas"/>
         </set>
     </class>
+    <class name="nl.b3p.gis.viewer.db.Connecties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="identity"/>
+        </id>
+        <property name="naam"/>
+        <property name="connectie_url"/>
+        <property name="gebruikersnaam"/>
+        <property name="wachtwoord"/>        
+    </class>
     <class name="nl.b3p.gis.viewer.db.DataTypen">
         <id name="id" type="int">
             <column name="id" not-null="true"/>
@@ -195,7 +205,7 @@
         <property name="code"/>
         <property name="naam"/>
         <property name="metadata_link"/>
-        <property name="connection_url"/>
+        <many-to-one name="connectie" lazy="false"/>
         <many-to-one name="moscow" lazy="false"/>
         <property name="belangnr" not-null="true"/>
         <many-to-one name="cluster" lazy="false">

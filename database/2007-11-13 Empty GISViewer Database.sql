@@ -683,6 +683,10 @@ CREATE INDEX data_types_pkey ON data_typen USING btree (id);
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
+INSERT INTO moscow (id, code, naam) VALUES ('1','M','Must Have'), ('2','S','Should Have'), ('3','C','Could Have'), ('4','W','Will Not Have'), ('5','O','Onbekend');
+INSERT INTO data_typen (id, naam) VALUES ('1','data'), ('2','url'), ('3','query');
+INSERT INTO waarde_typen (id, naam) VALUES ('1','string'), ('2','integer'), ('3','double'), ('4','date'), ('5','url');
+
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;

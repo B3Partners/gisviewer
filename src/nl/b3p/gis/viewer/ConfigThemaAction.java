@@ -4,15 +4,13 @@
  * Created on 13 oktober 2007, 19:08
  *
  */
-
 package nl.b3p.gis.viewer;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.NotSupportedException;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Connecties;
@@ -21,6 +19,10 @@ import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
+import nl.b3p.gis.viewer.services.WfsUtil;
+import nl.b3p.ogc.utils.OGCRequest;
+import nl.b3p.ogc.utils.OgcWfsClient;
+import nl.b3p.xml.wfs.WFS_Capabilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
@@ -34,198 +36,219 @@ import org.hibernate.Session;
  * @author Chris
  */
 public class ConfigThemaAction extends ViewerCrudAction {
-    
+
     private static final Log log = LogFactory.getLog(ConfigThemaAction.class);
-    
+
     protected Themas getThema(DynaValidatorForm form, boolean createNew) {
         Integer id = FormUtils.StringToInteger(form.getString("themaID"));
         Themas t = null;
-        if(id == null && createNew)
+        if (id == null && createNew) {
             t = new Themas();
-        else if (id != null) {
+        } else if (id != null) {
             Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-            t = (Themas)sess.get(Themas.class, id);
+            t = (Themas) sess.get(Themas.class, id);
         }
         return t;
     }
-    
+
     protected Themas getFirstThema() {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List cs = sess.createQuery("from Themas order by naam").setMaxResults(1).list();
-        if (cs!=null && cs.size()>0) {
+        if (cs != null && cs.size() > 0) {
             return (Themas) cs.get(0);
         }
         return null;
     }
-    
+
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         super.createLists(dynaForm, request);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         request.setAttribute("allThemas", sess.createQuery("from Themas order by belangnr").list());
         request.setAttribute("allClusters", sess.createQuery("from Clusters where id<>9 order by naam").list());
         request.setAttribute("listMoscow", sess.createQuery("from Moscow order by id").list());
-        
+
         request.setAttribute("listValidGeoms", SpatialUtil.VALID_GEOMS);
-        
+
         Themas t = getThema(dynaForm, false);
-        if (t==null)
+        if (t == null) {
             t = getFirstThema();
-        Connection conn=null;
-        if (t.getConnectie()!=null){            
-            conn=t.getConnectie().getJdbcConnection();
         }
-        if (conn==null)
-            conn = sess.connection();
-        List tns = SpatialUtil.getTableNames(conn);
-        if (t!=null) {
-            String sptn = t.getAdmin_tabel();
-            if (sptn!=null && !tns.contains(sptn)) {
-                tns.add(sptn);
+        Connection conn = null;
+        //als de thema geen connectie heeft ingesteld of een JDBC connectie maak dan een lijst vanuit de database.
+        if (t.getConnectie() == null || (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {
+            if (t.getConnectie() != null) {
+                conn = t.getConnectie().getJdbcConnection();
             }
-            String atn = t.getSpatial_tabel();
-            if (atn!=null && !tns.contains(atn)) {
-                tns.add(atn);
-            }            
+            if (conn == null) {
+                conn = sess.connection();
+            }
+            List tns = SpatialUtil.getTableNames(conn);
+            if (t != null) {
+                String sptn = t.getAdmin_tabel();
+                if (sptn != null && !tns.contains(sptn)) {
+                    tns.add(sptn);
+                }
+                String atn = t.getSpatial_tabel();
+                if (atn != null && !tns.contains(atn)) {
+                    tns.add(atn);
+                }
+            }
+            request.setAttribute("listTables", tns);
+            if (t != null) {
+                request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
+                request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(t, conn));
+            }
+
+        }//als het een WFS connectie is maak dan een lijst vanuit het WFS request.
+        else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
+            //Zet de features als lijst waaruit geselecteerd kan worden.
+            WFS_Capabilities cap = OgcWfsClient.getCapabilities(new OGCRequest(t.getConnectie().getConnectie_url()));
+            ArrayList tns = WfsUtil.getFeatureNameList(cap);
+            request.setAttribute("listTables", tns);            
+            request.setAttribute("listAdminTableColumns", WfsUtil.getFeatureAttributes(t,cap.getVersion()));               
+            
         }
-        request.setAttribute("listTables", tns);
-        
-        
+
+
+
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
-        if (user!=null) {
+        if (user != null) {
             List lns = user.getLayerNames(false);
-            if (t!=null) {
+            if (t != null) {
                 String wlr = t.getWms_layers_real();
-                if (wlr!=null && !lns.contains(wlr)) {
+                if (wlr != null && !lns.contains(wlr)) {
                     lns.add(wlr);
                 }
                 String wqr = t.getWms_querylayers_real();
-                if (wqr!=null && !lns.contains(wqr)) {
+                if (wqr != null && !lns.contains(wqr)) {
                     lns.add(wqr);
                 }
             }
             request.setAttribute("listLayers", lns);
             List llns = user.getLayerNames(true);
-            if (t!=null) {
+            if (t != null) {
                 String wllr = t.getWms_legendlayer_real();
-                if (wllr!=null && !lns.contains(wllr)) {
+                if (wllr != null && !lns.contains(wllr)) {
                     lns.add(wllr);
                 }
             }
             request.setAttribute("listLegendLayers", llns);
         }
-        List connecties=sess.createQuery("from Connecties").list();
-        request.setAttribute("listConnecties",connecties);
-        if (t!=null) {
-            request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
-            request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(t, conn));
-        }
+        List connecties = sess.createQuery("from Connecties").list();
+        request.setAttribute("listConnecties", connecties);
+
     }
-    
+
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(dynaForm, false);
-        if (t==null)
+        if (t == null) {
             t = getFirstThema();
+        }
         populateThemasForm(t, dynaForm, request);
         return super.unspecified(mapping, dynaForm, request, response);
     }
-    
+
     public ActionForward edit(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(dynaForm, false);
-        if (t==null)
+        if (t == null) {
             t = getFirstThema();
+        }
         populateThemasForm(t, dynaForm, request);
         return super.edit(mapping, dynaForm, request, response);
     }
-    
+
     public ActionForward save(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
+
         if (!isTokenValid(request)) {
             prepareMethod(dynaForm, request, EDIT, LIST);
             addAlternateMessage(mapping, request, TOKEN_ERROR_KEY);
             return getAlternateForward(mapping, request);
         }
-        
+
         // nieuwe default actie op delete zetten
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        
+
         ActionErrors errors = dynaForm.validate(mapping, request);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             addMessages(request, errors);
             prepareMethod(dynaForm, request, EDIT, LIST);
             addAlternateMessage(mapping, request, VALIDATION_ERROR_KEY);
             return getAlternateForward(mapping, request);
         }
-        
+
         Themas t = getThema(dynaForm, true);
-        if (t==null) {
+        if (t == null) {
             prepareMethod(dynaForm, request, LIST, EDIT);
             addAlternateMessage(mapping, request, NOTFOUND_ERROR_KEY);
             return getAlternateForward(mapping, request);
         }
-        
+
         populateThemasObject(dynaForm, t, request);
-        
+
         sess.saveOrUpdate(t);
         sess.flush();
-        
+
         /* Indien we input bijvoorbeeld herformatteren oid laad het dynaForm met
          * de waardes uit de database.
          */
         sess.refresh(t);
         populateThemasForm(t, dynaForm, request);
-        
+
         return super.save(mapping, dynaForm, request, response);
     }
-    
+
     public ActionForward delete(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
+
         if (!isTokenValid(request)) {
             prepareMethod(dynaForm, request, EDIT, LIST);
             addAlternateMessage(mapping, request, TOKEN_ERROR_KEY);
             return getAlternateForward(mapping, request);
         }
-        
+
         // nieuwe default actie op delete zetten
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        
+
         Themas t = getThema(dynaForm, false);
-        if (t==null) {
+        if (t == null) {
             prepareMethod(dynaForm, request, LIST, EDIT);
             addAlternateMessage(mapping, request, NOTFOUND_ERROR_KEY);
             return getAlternateForward(mapping, request);
         }
-        
+
         sess.delete(t);
         sess.flush();
-        
+
         return super.delete(mapping, dynaForm, request, response);
     }
-    
-    
+
     private void populateThemasForm(Themas t, DynaValidatorForm dynaForm, HttpServletRequest request) {
-        if (t==null)
+        if (t == null) {
             return;
+        }
         dynaForm.set("themaID", Integer.toString(t.getId()));
         dynaForm.set("code", t.getCode());
         dynaForm.set("naam", t.getNaam());
         dynaForm.set("metadatalink", t.getMetadata_link());
         String val = "";
-        if (t.getConnectie()!=null)
-            val= Integer.toString(t.getConnectie().getId());
-        dynaForm.set("connectie",val);
-        val="";
-        if (t.getMoscow()!=null)
+        if (t.getConnectie() != null) {
+            val = Integer.toString(t.getConnectie().getId());
+        }
+        dynaForm.set("connectie", val);
+        val = "";
+        if (t.getMoscow() != null) {
             val = Integer.toString(t.getMoscow().getId());
+        }
         dynaForm.set("moscowID", val);
         dynaForm.set("belangnr", FormUtils.IntToString(t.getBelangnr()));
         val = "";
-        if (t.getCluster()!=null)
+        if (t.getCluster() != null) {
             val = Integer.toString(t.getCluster().getId());
+        }
         dynaForm.set("clusterID", val);
         dynaForm.set("opmerkingen", t.getOpmerkingen());
         dynaForm.set("analyse_thema", new Boolean(t.isAnalyse_thema()));
         dynaForm.set("locatie_thema", new Boolean(t.isLocatie_thema()));
-        
+
         dynaForm.set("admin_tabel_opmerkingen", t.getAdmin_tabel_opmerkingen());
         dynaForm.set("admin_tabel", t.getAdmin_tabel());
         dynaForm.set("admin_pk", t.getAdmin_pk());
@@ -248,35 +271,35 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("view_geomtype", t.getView_geomtype());
         dynaForm.set("visible", new Boolean(t.isVisible()));
     }
-    
+
     private void populateThemasObject(DynaValidatorForm dynaForm, Themas t, HttpServletRequest request) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         t.setCode(FormUtils.nullIfEmpty(dynaForm.getString("code")));
         t.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
         t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("metadatalink")));
-        if (FormUtils.nullIfEmpty(dynaForm.getString("connectie"))!=null){
-            Integer conId= Integer.parseInt(dynaForm.getString("connectie"));
-            Connecties c=(Connecties) sess.get(Connecties.class,conId);
+        if (FormUtils.nullIfEmpty(dynaForm.getString("connectie")) != null) {
+            Integer conId = Integer.parseInt(dynaForm.getString("connectie"));
+            Connecties c = (Connecties) sess.get(Connecties.class, conId);
             t.setConnectie(c);
-        }   
+        }
         t.setBelangnr(Integer.parseInt(dynaForm.getString("belangnr")));
         t.setOpmerkingen(FormUtils.nullIfEmpty(dynaForm.getString("opmerkingen")));
-        Boolean b = (Boolean)dynaForm.get("analyse_thema");
-        t.setAnalyse_thema(b==null?false:b.booleanValue());
-        b = (Boolean)dynaForm.get("locatie_thema");
-        t.setLocatie_thema(b==null?false:b.booleanValue());
+        Boolean b = (Boolean) dynaForm.get("analyse_thema");
+        t.setAnalyse_thema(b == null ? false : b.booleanValue());
+        b = (Boolean) dynaForm.get("locatie_thema");
+        t.setLocatie_thema(b == null ? false : b.booleanValue());
         t.setAdmin_tabel_opmerkingen(FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel_opmerkingen")));
         t.setAdmin_tabel(FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel")));
         t.setAdmin_pk(FormUtils.nullIfEmpty(dynaForm.getString("admin_pk")));
-        b = (Boolean)dynaForm.get("admin_pk_complex");
-        t.setAdmin_pk_complex(b==null?false:b.booleanValue());
+        b = (Boolean) dynaForm.get("admin_pk_complex");
+        t.setAdmin_pk_complex(b == null ? false : b.booleanValue());
         t.setAdmin_spatial_ref(FormUtils.nullIfEmpty(dynaForm.getString("admin_spatial_ref")));
         t.setAdmin_query(FormUtils.nullIfEmpty(dynaForm.getString("admin_query")));
         t.setSpatial_tabel_opmerkingen(FormUtils.nullIfEmpty(dynaForm.getString("spatial_tabel_opmerkingen")));
         t.setSpatial_tabel(FormUtils.nullIfEmpty(dynaForm.getString("spatial_tabel")));
         t.setSpatial_pk(FormUtils.nullIfEmpty(dynaForm.getString("spatial_pk")));
-        b = (Boolean)dynaForm.get("spatial_pk_complex");
-        t.setSpatial_pk_complex(b==null?false:b.booleanValue());
+        b = (Boolean) dynaForm.get("spatial_pk_complex");
+        t.setSpatial_pk_complex(b == null ? false : b.booleanValue());
         t.setSpatial_admin_ref(FormUtils.nullIfEmpty(dynaForm.getString("spatial_admin_ref")));
         t.setWms_url(FormUtils.nullIfEmpty(dynaForm.getString("wms_url")));
         //komma separated layers
@@ -290,10 +313,10 @@ public class ConfigThemaAction extends ViewerCrudAction {
         t.setWms_legendlayer_real(FormUtils.nullIfEmpty(dynaForm.getString("wms_legendlayer_real")));
         t.setUpdate_frequentie_in_dagen(FormUtils.StringToInteger(dynaForm.getString("update_frequentie_in_dagen")));
         t.setView_geomtype(FormUtils.nullIfEmpty(dynaForm.getString("view_geomtype")));
-        b = (Boolean)dynaForm.get("visible");
-        t.setVisible(b==null?false:b.booleanValue());        
-        
-        int mId=0, cId=0;
+        b = (Boolean) dynaForm.get("visible");
+        t.setVisible(b == null ? false : b.booleanValue());
+
+        int mId = 0, cId = 0;
         try {
             mId = Integer.parseInt(dynaForm.getString("moscowID"));
         } catch (NumberFormatException ex) {
@@ -304,11 +327,9 @@ public class ConfigThemaAction extends ViewerCrudAction {
         } catch (NumberFormatException ex) {
             log.error("Illegal Cluster id", ex);
         }
-        Moscow m = (Moscow)sess.get(Moscow.class, new Integer(mId));
+        Moscow m = (Moscow) sess.get(Moscow.class, new Integer(mId));
         t.setMoscow(m);
-        Clusters c = (Clusters)sess.get(Clusters.class, new Integer(cId));
+        Clusters c = (Clusters) sess.get(Clusters.class, new Integer(cId));
         t.setCluster(c);
     }
-    
-    
 }

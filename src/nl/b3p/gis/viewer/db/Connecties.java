@@ -72,7 +72,8 @@ public class Connecties {
                 }else if (connectie_url.toLowerCase().substring(5,connectie_url.length()).startsWith("mysql:")){
                     this.setDialect(DIALECT_MYSQL);
                 }
-            }else{                
+            }else{
+                this.setType(TYPE_WFS);
             }
         }
     }

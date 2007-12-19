@@ -140,7 +140,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             
             // Layer bestaat nog niet dus aanmaken
             Themas t = new Themas();
-            t.setId(tid++);
+            t.setId(new Integer(tid++));
             t.setNaam(user.getLayerTitle(layer));
             t.setWms_layers_real(layer);
             t.setWms_legendlayer_real(layer);
@@ -399,7 +399,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         
         String analyseGeomTabel     = t.getSpatial_tabel();
         String analyseGeomIdColumn  = t.getSpatial_admin_ref();
-        int themaid = t.getId();
+        int themaid = t.getId().intValue();
         
         String analyseNaam= t.getNaam();
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();

@@ -105,8 +105,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
             WFS_Capabilities cap = OgcWfsClient.getCapabilities(new OGCRequest(t.getConnectie().getConnectie_url()));
             ArrayList tns = WfsUtil.getFeatureNameList(cap);
             request.setAttribute("listTables", tns);            
-            request.setAttribute("listAdminTableColumns", WfsUtil.getFeatureAttributes(t,cap.getVersion()));               
-            
+            request.setAttribute("listAdminTableColumns", WfsUtil.getFeatureAttributes(t,cap.getVersion()));                           
         }
 
 
@@ -136,7 +135,6 @@ public class ConfigThemaAction extends ViewerCrudAction {
         }
         List connecties = sess.createQuery("from Connecties").list();
         request.setAttribute("listConnecties", connecties);
-
     }
 
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -273,7 +271,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
     }
 
     private void populateThemasObject(DynaValidatorForm dynaForm, Themas t, HttpServletRequest request) {
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();        
         t.setCode(FormUtils.nullIfEmpty(dynaForm.getString("code")));
         t.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
         t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("metadatalink")));
@@ -282,7 +280,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
             Connecties c = (Connecties) sess.get(Connecties.class, conId);
             t.setConnectie(c);
         }
-        t.setBelangnr(Integer.parseInt(dynaForm.getString("belangnr")));
+        if (dynaForm.getString("belangnr")!=null && dynaForm.getString("belangnr").length()>0)
+            t.setBelangnr(Integer.parseInt(dynaForm.getString("belangnr")));
         t.setOpmerkingen(FormUtils.nullIfEmpty(dynaForm.getString("opmerkingen")));
         Boolean b = (Boolean) dynaForm.get("analyse_thema");
         t.setAnalyse_thema(b == null ? false : b.booleanValue());

@@ -305,7 +305,7 @@ public class GetViewerDataAction extends BaseGisAction {
             request.setAttribute("thema_items", thema_items);
             
             String lagen = request.getParameter("lagen");
-            request.setAttribute(Themas.THEMAID, new Integer(t.getId()));
+            request.setAttribute(Themas.THEMAID, t.getId());
             request.setAttribute("lagen", lagen);
             request.setAttribute("xcoord", request.getParameter("xcoord"));
             request.setAttribute("ycoord", request.getParameter("ycoord"));
@@ -318,7 +318,7 @@ public class GetViewerDataAction extends BaseGisAction {
                     ArrayList thema = new ArrayList();
                     Themas tt = (Themas) it.next();
                     thema.add(tt.getNaam());
-                    thema.add(new Integer(tt.getId()));
+                    thema.add(tt.getId());
                     
                     List tthema_items = SpatialUtil.getThemaData(tt, true);
                     
@@ -733,7 +733,7 @@ public class GetViewerDataAction extends BaseGisAction {
         Themas thema = getThema(mapping, dynaForm, request);
         if (thema != null) {
             inputParams.put("thema", thema);
-            int themaId = thema.getId();
+            int themaId = thema.getId().intValue();
             Set themaData = thema.getThemaData();
             Iterator themaDataIterator = themaData.iterator();
             while (themaDataIterator.hasNext()) {
@@ -845,7 +845,7 @@ public class GetViewerDataAction extends BaseGisAction {
                         String key = (String)it.next();
                         if(key.equalsIgnoreCase(kolomNaam)) {
                             String keyvalue = (String)extraCriteria.get(key);
-                            String itemNaam = "ThemaItem_" + thema.getId() + "_" + themaData.getId();
+                            String itemNaam = "ThemaItem_" + thema.getId().intValue() + "_" + themaData.getId();
                             String [] item = new String[]{itemNaam, keyvalue};
                             items.add(item);
                             break;

@@ -67,7 +67,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     protected ThemaData getFirstThemaData(Themas t) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Query q = sess.createQuery("from ThemaData where thema.id = :themaID order by dataorder, label");
-        List cs = q.setParameter("themaID", new Integer(t.getId())).setMaxResults(1).list();
+        List cs = q.setParameter("themaID", t.getId()).setMaxResults(1).list();
         if (cs!=null && cs.size()>0) {
             return (ThemaData) cs.get(0);
         }
@@ -117,7 +117,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
             return;
         
         Query q = sess.createQuery("from ThemaData where thema.id = :themaID order by dataorder, label");
-        request.setAttribute("listThemaData", q.setParameter("themaID", new Integer(t.getId())).list());
+        request.setAttribute("listThemaData", q.setParameter("themaID", t.getId()).list());
         
         Connection conn=null;
         if (t.getConnectie()!=null){            

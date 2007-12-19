@@ -55,18 +55,22 @@ public class WfsUtil {
             if (version!=null)
                 or.addOrReplaceParameter(OGCRequest.WMS_VERSION,version);
             String dbtn = t.getAdmin_tabel();  
-            if (dbtn==null)
+            if (dbtn==null || dbtn.length()<1)
                 return null;
             or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,dbtn);
             Element el=OgcWfsClient.getDescribeFeatureType(or);
             if (el==null)
                 return null;
             NodeList nlist=el.getElementsByTagName("complexType");
+            if (!(nlist.getLength()>0))
+                nlist=el.getElementsByTagName("xsd:complexType");
             if (!(nlist.getLength()>0)){
                 log.error("no complexType element found");
                 return null;
             }
             NodeList nl=((Element)nlist.item(0)).getElementsByTagName("element");
+            if (nl==null || !(nl.getLength()>0))
+                nl=((Element)nlist.item(0)).getElementsByTagName("xsd:element");
             returnvalue = new ArrayList();
             for (int i=0; i < nl.getLength(); i++){
                 Node n=nl.item(i);

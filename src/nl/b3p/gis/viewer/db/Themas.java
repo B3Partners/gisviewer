@@ -20,7 +20,7 @@ public class Themas implements Comparable {
     
     public static final String THEMAID = "themaid";
     
-    private int id;
+    private Integer id;
     private String code;
     private String naam;
     private String metadata_link;
@@ -69,7 +69,7 @@ public class Themas implements Comparable {
      * @return int ID van het thema.
      */
     // <editor-fold defaultstate="" desc="public int getId()">
-    public int getId() {
+    public Integer getId() {
         return id;
     }
     // </editor-fold>
@@ -80,7 +80,7 @@ public class Themas implements Comparable {
      * @param id int id
      */
     // <editor-fold defaultstate="" desc="public void setId(int id)">
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     // </editor-fold>

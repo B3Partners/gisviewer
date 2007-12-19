@@ -82,19 +82,18 @@
             <html:messages id="error" message="true">
                 <div class="messages">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
             </html:messages>
-        </div> 
-        
+        </div>         
         <div class="maintable" style="margin-top: 5px;">
             <table cellpadding="2" cellspacing="2" border="0">
-                <tr><td>label</td><td colspan="3"><html:text property="label" size="140"/></td></tr>
-                <tr><td>eenheid</td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
-                <tr><td>omschrijving</td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
-                <tr><td>basisregel</td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
-                <tr><td>voorbeelden</td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
-                <tr><td>kolombreedte</td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.label"/></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.eenheid"/></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.omschrijving"/></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.basisregel"/></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.voorbeelden"/></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.kolombreedte"/></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
                 <tr>
                     <td>
-                        Moscow:
+                        <fmt:message key="configthemadata.moscow"/>
                     </td>
                     <td colspan="3">
                         <html:select property="moscowID">
@@ -108,7 +107,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Waarde Type:
+                        <fmt:message key="configthemadata.waardetype"/>
                     </td>
                     <td colspan="3">
                         <html:select property="waardeTypeID">
@@ -122,7 +121,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Data Type:
+                        <fmt:message key="configthemadata.datatype"/>
                     </td>
                     <td colspan="3">
                         <html:select property="dataTypeID">
@@ -134,11 +133,11 @@
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr><td>commando</td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.commando"/></td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
                 <c:choose>
                     <c:when test="${fn:length(listAdminTableColumns)>1}">
                         <tr>
-                            <td>kolomnaam</td>
+                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></td>
                             <td colspan="3">
                                 <html:select property="kolomnaam">
                                     <html:option value=""/>
@@ -150,10 +149,10 @@
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td>kolomnaam</td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
+                        <tr><td><fmt:message key="configthemadata.kolomnaam"/></td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
                     </c:otherwise>
                 </c:choose>
-                <tr><td>dataorder</td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.dataorder"/></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
             </table>
         </div>
         
@@ -192,3 +191,22 @@
         </div> 
     </div> 
 </html:form>
+<script language="javascript">
+    function popUp(URL, naam) {
+        var screenwidth = 1024;
+        var screenheight = 768;
+        var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+        var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+        properties = "toolbar = 0, " + 
+                     "scrollbars = 1, " + 
+                     "location = 0, " + 
+                     "statusbar = 1, " + 
+                     "menubar = 0, " + 
+                     "resizable = 1, " + 
+                     "width = " + screenwidth + ", " + 
+                     "height = " + screenheight + ", " + 
+                     "top = " + popuptop + ", " + 
+                     "left = " + popupleft;
+        eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+    }
+</script>

@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.hibernate.Session;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -102,10 +103,18 @@ public class ConfigThemaAction extends ViewerCrudAction {
         }//als het een WFS connectie is maak dan een lijst vanuit het WFS request.
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
             //Zet de features als lijst waaruit geselecteerd kan worden.
-            WFS_Capabilities cap = OgcWfsClient.getCapabilities(new OGCRequest(t.getConnectie().getConnectie_url()));
+            WFS_Capabilities cap = WfsUtil.getCapabilities(t);
             ArrayList tns = WfsUtil.getFeatureNameList(cap);
-            request.setAttribute("listTables", tns);            
-            request.setAttribute("listAdminTableColumns", WfsUtil.getFeatureAttributes(t,cap.getVersion()));                           
+            request.setAttribute("listTables", tns);  
+            List elements=WfsUtil.getFeatureElements(t);
+            if (elements!=null){
+                ArrayList elementsNames= new ArrayList();
+                for (int i=0; i < elements.size(); i++){
+                    Element e = (Element)elements.get(i);
+                    elementsNames.add(e.getAttribute("name"));
+                }
+                request.setAttribute("listAdminTableColumns",elementsNames);                           
+            }
         }
 
 

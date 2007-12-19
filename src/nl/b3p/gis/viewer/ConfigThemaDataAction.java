@@ -8,12 +8,14 @@
 package nl.b3p.gis.viewer;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
+import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.DataTypen;
 import nl.b3p.gis.viewer.db.Moscow;
 import nl.b3p.gis.viewer.db.ThemaData;
@@ -21,6 +23,7 @@ import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.db.WaardeTypen;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
+import nl.b3p.gis.viewer.services.WfsUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
@@ -29,6 +32,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -119,13 +123,29 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         Query q = sess.createQuery("from ThemaData where thema.id = :themaID order by dataorder, label");
         request.setAttribute("listThemaData", q.setParameter("themaID", t.getId()).list());
         
-        Connection conn=null;
-        if (t.getConnectie()!=null){            
-            conn=t.getConnectie().getJdbcConnection();
+        String connectieType=Connecties.TYPE_JDBC;
+        if (t.getConnectie() == null || (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {          
+            Connection conn=null;
+            if (t.getConnectie()!=null){
+                conn=t.getConnectie().getJdbcConnection();
+            }
+            if (conn==null)
+                conn = sess.connection();
+            request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
         }
-        if (conn==null)
-            conn = sess.connection();
-        request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
+        else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+            connectieType=Connecties.TYPE_WFS;
+            List elements=WfsUtil.getFeatureElements(t);
+            if (elements!=null){
+                ArrayList elementsNames= new ArrayList();
+                for (int i=0; i < elements.size(); i++){
+                    Element e = (Element)elements.get(i);
+                    elementsNames.add(e.getAttribute("name"));
+                }
+                request.setAttribute("listAdminTableColumns",elementsNames);                           
+            }
+        }
+        request.setAttribute("connectieType",connectieType);
     }
     
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -274,7 +294,8 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         dynaForm.set("dataTypeID", val);
         dynaForm.set("commando", td.getCommando());
         dynaForm.set("kolomnaam", td.getKolomnaam());
-        dynaForm.set("dataorder", td.getDataorder());
+        if(td.getDataorder()!=null)
+            dynaForm.set("dataorder", FormUtils.IntToString(td.getDataorder()));
     }
     
     private void populateThemaDataObject(DynaValidatorForm dynaForm, ThemaData td, HttpServletRequest request) {
@@ -282,7 +303,8 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         Boolean b = (Boolean)dynaForm.get("basisregel");
         td.setBasisregel(b==null?false:b.booleanValue());
         td.setCommando(FormUtils.nullIfEmpty(dynaForm.getString("commando")));
-        td.setDataorder(FormUtils.nullIfEmpty(dynaForm.getString("dataorder")));
+        if (FormUtils.nullIfEmpty(dynaForm.getString("eenheid"))!=null)
+            td.setDataorder(Integer.parseInt(dynaForm.getString("dataorder")));
         td.setEenheid(FormUtils.nullIfEmpty(dynaForm.getString("eenheid")));
         td.setKolombreedte(FormUtils.StringToInt(dynaForm.getString("kolombreedte")));
         td.setKolomnaam(FormUtils.nullIfEmpty(dynaForm.getString("kolomnaam")));

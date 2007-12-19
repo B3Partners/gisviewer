@@ -25,7 +25,7 @@ public class ThemaData {
     private DataTypen dataType;
     private String commando;
     private String kolomnaam;
-    private String dataorder;
+    private Integer dataorder;
     
     /**
      * Creates a new instance of ThemaData
@@ -340,7 +340,7 @@ public class ThemaData {
      * @return String met de dataorder van de thema data.
      */
     // <editor-fold defaultstate="" desc="public String getDataorder()">
-    public String getDataorder() {
+    public Integer getDataorder() {
         return dataorder;
     }
     // </editor-fold>
@@ -351,7 +351,7 @@ public class ThemaData {
      * @param dataorder String met de dataorder van de thema data.
      */
     // <editor-fold defaultstate="" desc="public void setDataorder(String dataorder)">
-    public void setDataorder(String dataorder) {
+    public void setDataorder(Integer dataorder) {
         this.dataorder = dataorder;
     }
     // </editor-fold>

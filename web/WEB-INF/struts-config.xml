@@ -143,14 +143,12 @@
         </action> 
         <action path="/configThemaData" type="nl.b3p.gis.viewer.ConfigThemaDataAction" name="themaDataForm" scope="request" validate="false">
             <forward name="success" path="configthemadata"/>
-            <forward name="failure" path="configthemadata"/>
-        </action> 
-               
+            <forward name="failure" path="configthemadata"/>            
+        </action>
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>
             <forward name="continue" path="/index.do"/>
-        </action>
-        
+        </action>       
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

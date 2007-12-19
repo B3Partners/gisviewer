@@ -48,42 +48,36 @@ public class WfsUtil {
         return tns;    
     }
     
-    static public List getFeatureAttributes(Themas t, String version) throws Exception{
+    static public List getFeatureElements(Themas t) throws Exception{
         ArrayList returnvalue=null;
         if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
             OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
-            if (version!=null)
-                or.addOrReplaceParameter(OGCRequest.WMS_VERSION,version);
             String dbtn = t.getAdmin_tabel();  
             if (dbtn==null || dbtn.length()<1)
                 return null;
             or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,dbtn);
-            Element el=OgcWfsClient.getDescribeFeatureType(or);
-            if (el==null)
-                return null;
-            NodeList nlist=el.getElementsByTagName("complexType");
-            if (!(nlist.getLength()>0))
-                nlist=el.getElementsByTagName("xsd:complexType");
-            if (!(nlist.getLength()>0)){
-                log.error("no complexType element found");
-                return null;
-            }
-            NodeList nl=((Element)nlist.item(0)).getElementsByTagName("element");
-            if (nl==null || !(nl.getLength()>0))
-                nl=((Element)nlist.item(0)).getElementsByTagName("xsd:element");
-            returnvalue = new ArrayList();
-            for (int i=0; i < nl.getLength(); i++){
-                Node n=nl.item(i);
-                if (n.getLocalName()!=null && n.getLocalName().equalsIgnoreCase("element")){ 
-                    Element e= (Element) n;
-                    String name=e.getAttribute("name");
-                    returnvalue.add(name);                    
+            NodeList nl= OgcWfsClient.getFeatureElements(or);            
+            if (nl!=null){
+                for (int i=0; i < nl.getLength(); i++){
+                    if (returnvalue==null)
+                        returnvalue=new ArrayList();
+                    Element e=(Element)nl.item(i);
+                    returnvalue.add(e);
                 }
-            }           
+            }
         }
         else{
             return null;
         }
         return returnvalue;
     }
+    
+    static public WFS_Capabilities getCapabilities(Themas t) throws Exception{
+        if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
+            return OgcWfsClient.getCapabilities(new OGCRequest(t.getConnectie().getConnectie_url()));
+        }else
+            return null;
+    }
+
+    
 }

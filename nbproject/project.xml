@@ -31,6 +31,10 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library files="1">
+                    <file>${reference.jump-b3p.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library files="1">
                     <file>${reference.b3p-commons-hibernate.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -83,6 +87,14 @@
             </reference>
             <reference>
                 <foreign-project>b3p-commons-hibernate</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>jump-b3p</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

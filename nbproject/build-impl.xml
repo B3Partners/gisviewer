@@ -306,12 +306,14 @@
         <ant target="jar" inheritall="false" antfile="${project.b3p-commons-core}/build.xml"/>
         <ant target="jar" inheritall="false" antfile="${project.b3p-commons-gis}/build.xml"/>
         <ant target="jar" inheritall="false" antfile="${project.b3p-commons-hibernate}/build.xml"/>
+        <ant target="jar" inheritall="false" antfile="${project.jump-b3p}/build.xml"/>
         <ant target="jar" inheritall="false" antfile="${project.securityfilter-b3p}/build.xml"/>
     </target>
     <target name="deps-ear-jar" depends="init" if="dist.ear.dir" unless="no.deps">
         <ant target="jar" inheritall="false" antfile="${project.b3p-commons-core}/build.xml"/>
         <ant target="jar" inheritall="false" antfile="${project.b3p-commons-gis}/build.xml"/>
         <ant target="jar" inheritall="false" antfile="${project.b3p-commons-hibernate}/build.xml"/>
+        <ant target="jar" inheritall="false" antfile="${project.jump-b3p}/build.xml"/>
         <ant target="jar" inheritall="false" antfile="${project.securityfilter-b3p}/build.xml"/>
     </target>
     <target name="deps-jar" depends="init, deps-module-jar, deps-ear-jar" unless="no.deps"/>
@@ -504,6 +506,8 @@
         <copy-ear-war file="${libs.B3pDwrLib.classpath}" propname="included.lib.libs.B3pDwrLib.classpath.X"/>
         <basename property="included.lib.reference.b3p-commons-core.jar" file="${reference.b3p-commons-core.jar}"/>
         <copy-ear-war file="${reference.b3p-commons-core.jar}" propname="included.lib.reference.b3p-commons-core.jar.X"/>
+        <basename property="included.lib.reference.jump-b3p.jar" file="${reference.jump-b3p.jar}"/>
+        <copy-ear-war file="${reference.jump-b3p.jar}" propname="included.lib.reference.jump-b3p.jar.X"/>
         <basename property="included.lib.reference.b3p-commons-hibernate.jar" file="${reference.b3p-commons-hibernate.jar}"/>
         <copy-ear-war file="${reference.b3p-commons-hibernate.jar}" propname="included.lib.reference.b3p-commons-hibernate.jar.X"/>
         <basename property="included.lib.reference.b3p-commons-gis.jar" file="${reference.b3p-commons-gis.jar}"/>
@@ -528,7 +532,7 @@
         <copy-ear-war file="${libs.B3pSpatialLib.classpath}" propname="included.lib.libs.B3pSpatialLib.classpath.X"/>
         <mkdir dir="${build.web.dir.real}/META-INF"/>
         <manifest file="${build.web.dir.real}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${included.lib.libs.struts.classpath.1.X} ${included.lib.libs.struts.classpath.2.X} ${included.lib.libs.struts.classpath.3.X} ${included.lib.libs.struts.classpath.4.X} ${included.lib.libs.struts.classpath.5.X} ${included.lib.libs.struts.classpath.6.X} ${included.lib.libs.jstl11.classpath.1.X} ${included.lib.libs.jstl11.classpath.2.X} ${included.lib.libs.B3pCommonsLib.classpath.1.X} ${included.lib.libs.B3pCommonsLib.classpath.2.X} ${included.lib.libs.B3pCommonsLib.classpath.3.X} ${included.lib.libs.B3pCommonsLib.classpath.4.X} ${included.lib.libs.B3pCommonsLib.classpath.5.X} ${included.lib.libs.B3pCommonsLib.classpath.6.X} ${included.lib.libs.B3pCommonsLib.classpath.7.X} ${included.lib.libs.B3pCommonsLib.classpath.8.X} ${included.lib.libs.B3pCommonsLib.classpath.9.X} ${included.lib.libs.B3pCommonsLib.classpath.10.X} ${included.lib.libs.B3pCommonsLib.classpath.11.X} ${included.lib.libs.B3pCommonsLib.classpath.12.X} ${included.lib.libs.B3pCommonsLib.classpath.13.X} ${included.lib.libs.B3pCommonsLib.classpath.14.X} ${included.lib.libs.B3pCommonsLib.classpath.15.X} ${included.lib.libs.B3pCommonsLib.classpath.16.X} ${included.lib.libs.B3pCommonsLib.classpath.17.X} ${included.lib.libs.B3pHibernateLib.classpath.1.X} ${included.lib.libs.B3pHibernateLib.classpath.2.X} ${included.lib.libs.B3pHibernateLib.classpath.3.X} ${included.lib.libs.B3pHibernateLib.classpath.4.X} ${included.lib.libs.B3pHibernateLib.classpath.5.X} ${included.lib.libs.B3pHibernateLib.classpath.6.X} ${included.lib.libs.B3pHibernateLib.classpath.7.X} ${included.lib.libs.B3pHibernateLib.classpath.8.X} ${included.lib.libs.B3pHibernateLib.classpath.9.X} ${included.lib.libs.B3pHibernateLib.classpath.10.X} ${included.lib.libs.B3pDwrLib.classpath} ${included.lib.reference.b3p-commons-core.jar} ${included.lib.reference.b3p-commons-hibernate.jar} ${included.lib.reference.b3p-commons-gis.jar} ${included.lib.reference.securityfilter-b3p.jar} ${included.lib.libs.B3pXalanLib.classpath.1.X} ${included.lib.libs.B3pXalanLib.classpath.2.X} ${included.lib.libs.B3pXalanLib.classpath.3.X} ${included.lib.libs.B3pXalanLib.classpath.4.X} ${included.lib.libs.B3pCastorLib.classpath.1.X} ${included.lib.libs.B3pCastorLib.classpath.2.X} ${included.lib.libs.B3pCastorLib.classpath.3.X} ${included.lib.libs.B3pSpatialLib.classpath} "/>
+            <attribute name="Class-Path" value="${included.lib.libs.struts.classpath.1.X} ${included.lib.libs.struts.classpath.2.X} ${included.lib.libs.struts.classpath.3.X} ${included.lib.libs.struts.classpath.4.X} ${included.lib.libs.struts.classpath.5.X} ${included.lib.libs.struts.classpath.6.X} ${included.lib.libs.jstl11.classpath.1.X} ${included.lib.libs.jstl11.classpath.2.X} ${included.lib.libs.B3pCommonsLib.classpath.1.X} ${included.lib.libs.B3pCommonsLib.classpath.2.X} ${included.lib.libs.B3pCommonsLib.classpath.3.X} ${included.lib.libs.B3pCommonsLib.classpath.4.X} ${included.lib.libs.B3pCommonsLib.classpath.5.X} ${included.lib.libs.B3pCommonsLib.classpath.6.X} ${included.lib.libs.B3pCommonsLib.classpath.7.X} ${included.lib.libs.B3pCommonsLib.classpath.8.X} ${included.lib.libs.B3pCommonsLib.classpath.9.X} ${included.lib.libs.B3pCommonsLib.classpath.10.X} ${included.lib.libs.B3pCommonsLib.classpath.11.X} ${included.lib.libs.B3pCommonsLib.classpath.12.X} ${included.lib.libs.B3pCommonsLib.classpath.13.X} ${included.lib.libs.B3pCommonsLib.classpath.14.X} ${included.lib.libs.B3pCommonsLib.classpath.15.X} ${included.lib.libs.B3pCommonsLib.classpath.16.X} ${included.lib.libs.B3pCommonsLib.classpath.17.X} ${included.lib.libs.B3pHibernateLib.classpath.1.X} ${included.lib.libs.B3pHibernateLib.classpath.2.X} ${included.lib.libs.B3pHibernateLib.classpath.3.X} ${included.lib.libs.B3pHibernateLib.classpath.4.X} ${included.lib.libs.B3pHibernateLib.classpath.5.X} ${included.lib.libs.B3pHibernateLib.classpath.6.X} ${included.lib.libs.B3pHibernateLib.classpath.7.X} ${included.lib.libs.B3pHibernateLib.classpath.8.X} ${included.lib.libs.B3pHibernateLib.classpath.9.X} ${included.lib.libs.B3pHibernateLib.classpath.10.X} ${included.lib.libs.B3pDwrLib.classpath} ${included.lib.reference.b3p-commons-core.jar} ${included.lib.reference.jump-b3p.jar} ${included.lib.reference.b3p-commons-hibernate.jar} ${included.lib.reference.b3p-commons-gis.jar} ${included.lib.reference.securityfilter-b3p.jar} ${included.lib.libs.B3pXalanLib.classpath.1.X} ${included.lib.libs.B3pXalanLib.classpath.2.X} ${included.lib.libs.B3pXalanLib.classpath.3.X} ${included.lib.libs.B3pXalanLib.classpath.4.X} ${included.lib.libs.B3pCastorLib.classpath.1.X} ${included.lib.libs.B3pCastorLib.classpath.2.X} ${included.lib.libs.B3pCastorLib.classpath.3.X} ${included.lib.libs.B3pSpatialLib.classpath} "/>
         </manifest>
         <delete dir="${dist.ear.dir}/temp"/>
     </target>
@@ -570,6 +574,7 @@
         <copy file="${libs.B3pHibernateLib.classpath.libfile.1}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${libs.B3pDwrLib.classpath}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${reference.b3p-commons-core.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
+        <copy file="${reference.jump-b3p.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${reference.b3p-commons-hibernate.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${reference.b3p-commons-gis.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
         <copy file="${reference.securityfilter-b3p.jar}" todir="${build.web.dir.real}/WEB-INF/lib"/>
@@ -854,6 +859,7 @@
         <ant target="clean" inheritall="false" antfile="${project.b3p-commons-core}/build.xml"/>
         <ant target="clean" inheritall="false" antfile="${project.b3p-commons-gis}/build.xml"/>
         <ant target="clean" inheritall="false" antfile="${project.b3p-commons-hibernate}/build.xml"/>
+        <ant target="clean" inheritall="false" antfile="${project.jump-b3p}/build.xml"/>
         <ant target="clean" inheritall="false" antfile="${project.securityfilter-b3p}/build.xml"/>
     </target>
     <target name="do-clean" depends="init">

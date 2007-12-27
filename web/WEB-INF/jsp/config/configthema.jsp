@@ -196,27 +196,26 @@
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <c:choose>
-                    <c:when test="${fn:length(listAdminTableColumns)>1}">
-                        <tr>
-                            <td><fmt:message key="configthema.${connectieType}.adminpk"/></td>
-                            <td colspan="3">
-                                <html:select property="admin_pk">
-                                    <html:option value=""/>
-                                    <c:forEach var="cuItem" items="${listAdminTableColumns}">
-                                        <html:option value="${cuItem}"/>
-                                    </c:forEach>
-                                </html:select>&nbsp;
-                            </td>
-                        </tr>
-                    </c:when>
-                    <c:otherwise>
-                        <tr><td><fmt:message key="configthema.${connectieType}.adminpk"/></td><td colspan="3"><html:text property="admin_pk" size="140"/></td></tr>
-                        
-                    </c:otherwise>
-                </c:choose>
-                
                 <c:if test="${connectieType=='jdbc'}">
+                    <c:choose>
+                        <c:when test="${fn:length(listAdminTableColumns)>1}">
+                            <tr>
+                                <td><fmt:message key="configthema.${connectieType}.adminpk"/></td>
+                                <td colspan="3">
+                                    <html:select property="admin_pk">
+                                        <html:option value=""/>
+                                        <c:forEach var="cuItem" items="${listAdminTableColumns}">
+                                            <html:option value="${cuItem}"/>
+                                        </c:forEach>
+                                    </html:select>&nbsp;
+                                </td>
+                            </tr>
+                        </c:when>
+                        <c:otherwise>
+                            <tr><td><fmt:message key="configthema.${connectieType}.adminpk"/></td><td colspan="3"><html:text property="admin_pk" size="140"/></td></tr>
+
+                        </c:otherwise>
+                    </c:choose>
                     <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/></td><td colspan="3"><html:text property="admin_query" size="140"/></td></tr>
                     
                     <tr><td colspan="4">&nbsp;</td></tr>
@@ -267,8 +266,7 @@
                         <c:otherwise>
                             <tr><td><fmt:message key="configthema.${connectieType}.spatialadminref"/></td><td colspan="3"><html:text property="spatial_admin_ref" size="140"/></td></tr>
                         </c:otherwise>
-                    </c:choose>
-                </c:if>
+                    </c:choose>                
                 <tr>
                     <td><fmt:message key="configthema.viewgeomtype"/></td>
                     <td colspan="3">
@@ -280,7 +278,7 @@
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                
+                </c:if>
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <c:choose>
                     <c:when test="${fn:length(listLayers)>1}">

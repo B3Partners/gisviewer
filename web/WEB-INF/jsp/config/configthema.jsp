@@ -216,7 +216,7 @@
                     </c:otherwise>
                 </c:choose>
                 
-                <c:if test="${connectieType == jdbc}">
+                <c:if test="${connectieType=='jdbc'}">
                     <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/></td><td colspan="3"><html:text property="admin_query" size="140"/></td></tr>
                     
                     <tr><td colspan="4">&nbsp;</td></tr>

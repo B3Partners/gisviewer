@@ -9,6 +9,7 @@
 
 package nl.b3p.gis.viewer;
 
+import com.vividsolutions.jump.feature.Feature;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -592,7 +593,99 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         }
         return regel;
     }
-    
+    /**
+     * Zelfde als getRegel met Result set maar nu met Feature
+     *
+     * @param rs ResultSet
+     * @param t Themas
+     * @param thema_items List
+     *
+     * @return List
+     *
+     * @throws SQLException
+     * @throws UnsupportedEncodingException
+     *
+     * @see Themas
+     */
+    protected List getRegel(Feature f, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
+        ArrayList regel = new ArrayList();
+        
+        Iterator it = thema_items.iterator();
+        while(it.hasNext()) {
+            ThemaData td = (ThemaData) it.next();
+            /*
+             * Controleer eerst om welk datatype dit themadata object om draait.
+             * Binnen het Datatype zijn er drie mogelijkheden, namelijk echt data,
+             * een URL of een Query.
+             * In alle drie de gevallen moeten er verschillende handelingen verricht
+             * worden om deze informatie op het scherm te krijgen.
+             *
+             * In het eerste geval, wanneer het gaat om data, betreft dit de kolomnaam.
+             * Als deze kolomnaam ingevuld staat hoeft deze alleen opgehaald te worden
+             * en aan de arraylist regel toegevoegd te worden.
+             */
+            if (td.getDataType().getId() == DataTypen.DATA && td.getKolomnaam() != null && !td.getKolomnaam().equals("")) {
+                //regel.add(rs.getObject(td.getKolomnaam()));
+                regel.add(f.getString(td.getKolomnaam()));
+                
+            /*
+             * In het tweede geval dient de informatie in de thema data als link naar een andere
+             * informatiebron. Deze link zal enigszins aangepast moeten worden om tot vollende
+             * werkende link te dienen.
+             */
+            } else if (td.getDataType().getId() == DataTypen.URL) {
+                StringBuffer url = new StringBuffer(td.getCommando());
+                url.append(Themas.THEMAID);
+                url.append("=");
+                url.append(t.getId());
+                
+                String adminPk = t.getAdmin_pk();
+                Object value = f.getString(adminPk);
+                if (value!=null) {
+                    url.append("&");
+                    url.append(adminPk);
+                    url.append("=");
+                    url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
+                }
+                
+                String kolomNaam = td.getKolomnaam();
+                if (kolomNaam!=null && kolomNaam.length()>0 && !kolomNaam.equalsIgnoreCase(adminPk)) {
+                    value = f.getString(kolomNaam);
+                    if (value!=null) {                    
+                        url.append("&");
+                        url.append(kolomNaam);
+                        url.append("=");
+                        url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
+                    }
+                }
+                
+                regel.add(url.toString());
+                
+            /*
+             * De laatste mogelijkheid betreft een query. Vanuit de themadata wordt nu een
+             * een commando url opgehaald en deze wordt met de kolomnaam aangevuld.
+             */
+            } else if (td.getDataType().getId()==DataTypen.QUERY) {
+                StringBuffer url = new StringBuffer(td.getCommando());
+                String kolomNaam = td.getKolomnaam();
+                if (kolomNaam==null || kolomNaam.length()==0)
+                    kolomNaam = t.getAdmin_pk();
+                Object value = f.getString(kolomNaam);
+                if (value!=null) {
+                    url.append(value.toString().trim());
+                    regel.add(url.toString());
+                } else
+                    regel.add("");
+            } else
+                
+            /*
+             * Indien een datatype aan geen van de voorwaarden voldoet wordt er een
+             * lege regel aan de regel arraylist toegevoegd.
+             */
+                regel.add("");
+        }
+        return regel;
+    }
     /**
      * DOCUMENT ME!!!
      *

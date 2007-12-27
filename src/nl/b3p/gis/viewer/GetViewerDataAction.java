@@ -1,5 +1,6 @@
 package nl.b3p.gis.viewer;
 
+import com.vividsolutions.jump.feature.Feature;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -19,11 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.NotSupportedException;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
+import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import nl.b3p.gis.viewer.BaseGisAction;
+import nl.b3p.gis.viewer.services.WfsUtil;
+import nl.b3p.ogc.utils.OGCRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionMapping;
@@ -497,12 +501,16 @@ public class GetViewerDataAction extends BaseGisAction {
         
         List thema_items = SpatialUtil.getThemaData(t, true);
         request.setAttribute("thema_items", thema_items);
-        
-        List pks = null;
-        pks = findPks(t, mapping, dynaForm, request);
-        
-        request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
-        
+        //haal op met JDBC connectie
+        if (t.getConnectie()==null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)){
+            List pks = null;
+            pks = findPks(t, mapping, dynaForm, request);
+
+            request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
+        }//Haal op met WFS
+        else if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
+            request.setAttribute("regels",getThemaWfsObjects(t,thema_items,request));
+        }
         return mapping.findForward("admindata");
     }
     // </editor-fold>
@@ -554,6 +562,46 @@ public class GetViewerDataAction extends BaseGisAction {
         return mapping.findForward("metadata");
     }
     // </editor-fold>
+    
+    
+    /**
+     *
+     */
+    protected List getThemaWfsObjects(Themas t, List thema_items,HttpServletRequest request) throws Exception{
+        if (t==null)
+            return null;
+        if (thema_items==null || thema_items.isEmpty())
+            return null;
+        String xcoord = request.getParameter("xcoord");
+        String ycoord = request.getParameter("ycoord");
+        String s= request.getParameter("scale");
+        double scale=0.0;
+        try{
+            if (s!=null){
+                scale= Double.parseDouble(s);
+                //af ronden op 1 decimaal
+                scale=Math.round(scale*10)/10;
+            }
+        } catch (NumberFormatException nfe){
+            scale=0.0;
+            log.info("Scale is geen double dus wordt genegeerd");
+        }
+        double x = Double.parseDouble(xcoord);
+        double y = Double.parseDouble(ycoord);
+        double distance=10.0;
+        if (scale> 0.0){
+            distance=scale*(distance);
+        } else{
+            distance = 10.0;
+        }
+        ArrayList regels = new ArrayList();
+        ArrayList features= WfsUtil.getWFSObjects(t,x,y,distance);
+        for (int i=0; i < features.size(); i++){
+            Feature f = (Feature) features.get(i);
+            regels.add(getRegel(f,t,thema_items));
+        }
+        return regels;
+    }
     
     /**
      * DOCUMENT ME!!!

@@ -44,9 +44,9 @@
             <div class="topbar">
                 <div class="bar_regel"> 
                     <div class="bar_item" style="width: 180px">Volgorde</div>
-                    <div class="bar_item" style="width: 200px">Label</div>
-                    <div class="bar_item" style="width: 200px">Kolomnaam</div>
-                    <div class="bar_item" style="width: 290px">Basisregel</div>
+                    <div class="bar_item" style="width: 200px"><fmt:message key="configthemadata.label"/></div>
+                    <div class="bar_item" style="width: 200px"><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></div>
+                    <div class="bar_item" style="width: 290px"><fmt:message key="configthemadata.basisregel"/></div>
                 </div>
             </div>
             <div class="scroll">

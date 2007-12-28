@@ -534,12 +534,16 @@ public class GetViewerDataAction extends BaseGisAction {
         
         List thema_items = SpatialUtil.getThemaData(t, false);
         request.setAttribute("thema_items", thema_items);
-        
-        List pks = getPks(t, dynaForm, request);
-        
-        request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
-        
+        if (t.getConnectie()==null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)){
+            List pks = getPks(t, dynaForm, request);            
+            request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
+        }//Haal op met WFS
+        else if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
+            request.setAttribute("regels",getThemaWfsObjects(t,thema_items,request));
+        }
         return mapping.findForward("aanvullendeinfo");
+        
+        
     }
     // </editor-fold>
     

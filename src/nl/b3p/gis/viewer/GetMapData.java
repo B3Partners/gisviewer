@@ -10,6 +10,7 @@
 
 package nl.b3p.gis.viewer;
 
+import com.vividsolutions.jump.feature.Feature;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,8 @@ import java.util.Random;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
+import nl.b3p.gis.viewer.services.WfsUtil;
+import nl.b3p.ogc.utils.OgcWfsClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
@@ -36,6 +39,25 @@ public class GetMapData {
     // <editor-fold defaultstate="" desc="public GetMapData()">
     public GetMapData() {}
     // </editor-fold>
+    
+    
+    public String[] getArea(String elementId,String themaId, String attributeName, String compareValue){
+        Session sess=HibernateUtil.getSessionFactory().getCurrentSession();
+        sess.beginTransaction();
+        Themas t= (Themas)sess.get(Themas.class,new Integer(themaId)); 
+        String[] returnValue= new String[2];
+        returnValue[0]=elementId;
+        try {
+            Feature f=WfsUtil.getWfsObject(t,attributeName,compareValue);
+            sess.close();
+            returnValue[1]= new String(""+f.getGeometry().getArea());
+        } catch (Exception ex) {
+            sess.close();
+            log.error(ex);
+            returnValue[1]="Fout (zie log)";
+        }
+        return returnValue;
+    }
     
     /** 
      * DOCUMENT ME!!!

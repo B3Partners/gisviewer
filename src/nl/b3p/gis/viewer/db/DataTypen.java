@@ -15,6 +15,7 @@ public class DataTypen {
     public static final int DATA = 1;
     public static final int URL = 2;
     public static final int QUERY = 3;
+    public static final int FUNCTION = 4;
     
     private int id;
     private String naam;

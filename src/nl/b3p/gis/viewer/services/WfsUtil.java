@@ -24,6 +24,7 @@ import nl.b3p.xml.wfs.WFS_Capabilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.types.AnyNode;
+import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Unmarshaller;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -62,7 +63,7 @@ public class WfsUtil {
             if (dbtn==null || dbtn.length()<1)
                 return null;
             or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,dbtn);
-            NodeList nl= OgcWfsClient.getFeatureElements(OgcWfsClient.getDescribeFeatureType(or));
+            NodeList nl= OgcWfsClient.getDescribeFeatureElements(OgcWfsClient.getDescribeFeatureType(or));
             if (nl!=null){
                 for (int i=0; i < nl.getLength(); i++){
                     if (returnvalue==null)
@@ -100,6 +101,21 @@ public class WfsUtil {
         bbox[3]=y+distance2; 
         OgcWfsClient.addBboxFilter(gf,getGeometryAttributeName(t),bbox, ft);        
         return OgcWfsClient.getFeatureElements(gf,or);
+    }
+    
+    public static com.vividsolutions.jump.feature.Feature getWfsObject(Themas t, String attributeName, String compareValue) throws Exception{
+        if(t==null || t.getConnectie()==null || !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS))
+            return null;
+        OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
+        or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());
+        GetFeature gf = OgcWfsClient.getGetFeatureRequest(or);        
+        OgcWfsClient.addPropertyIsEqualToFilter(gf,attributeName,compareValue);
+        ArrayList features=OgcWfsClient.getFeatureElements(gf,or);
+        if (features==null || features.size()!=1){
+            throw new Exception("De gegeven id is niet uniek. Query geeft meerdere objecten");
+        }
+        return (com.vividsolutions.jump.feature.Feature)features.get(0);
+        
     }
     
     public static String getGeometryAttributeName(Themas t) throws Exception{

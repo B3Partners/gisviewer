@@ -1,25 +1,32 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
-
+<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+<script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript">
-            function popUp(URL, naam) {
-                var screenwidth = 600;
-                var screenheight = 500;
-                var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
-                var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
-                properties = "toolbar = 0, " + 
-                             "scrollbars = 1, " + 
-                             "location = 0, " + 
-                             "statusbar = 1, " + 
-                             "menubar = 0, " + 
-                             "resizable = 1, " + 
-                             "width = " + screenwidth + ", " + 
-                             "height = " + screenheight + ", " + 
-                             "top = " + popuptop + ", " + 
-                             "left = " + popupleft;
-                eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
-            }
+    function popUp(URL, naam) {
+        var screenwidth = 600;
+        var screenheight = 500;
+        var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+        var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+        properties = "toolbar = 0, " + 
+                     "scrollbars = 1, " + 
+                     "location = 0, " + 
+                     "statusbar = 1, " + 
+                     "menubar = 0, " + 
+                     "resizable = 1, " + 
+                     "width = " + screenwidth + ", " + 
+                     "height = " + screenheight + ", " + 
+                     "top = " + popuptop + ", " + 
+                     "left = " + popupleft;
+        eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+    }
+    function berekenOppervlakte(element, themaid, kolomnaam,value){
+        JMapData.getArea(element.id,themaid,kolomnaam,value,handleGetArea);
+    }
+    function handleGetArea(str){
+        document.getElementById(str[0]).innerHTML=str[1];
+    }
 </script>
 <c:choose>
     <c:when test="${not empty thema_items and not empty regels}">
@@ -86,6 +93,9 @@
                                                     </c:when>
                                                     <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
                                                         <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
+                                                    </c:when>
+                                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
+                                                        <a id="href${counter.count}${kolom.count-1}" href="#" onclick="${waarde}"><html:image src="./images/icons/information.png"/> </a>
                                                     </c:when>
                                                     <c:otherwise>
                                                         ${waarde}

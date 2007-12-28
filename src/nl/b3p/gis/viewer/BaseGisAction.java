@@ -594,7 +594,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         return regel;
     }
     /**
-     * Zelfde als getRegel met Result set maar nu met Feature
+     * Zelfde als getRegel met Resultset maar nu met Feature
      *
      * @param rs ResultSet
      * @param t Themas
@@ -614,7 +614,21 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         while(it.hasNext()) {
             ThemaData td = (ThemaData) it.next();
             /*
-             * Controleer eerst om welk datatype dit themadata object om draait.
+             * Controleer of de kolomnaam van dit themadata object wel voorkomt in de feature.
+             * zoniet kan het zijn dat er een prefix ns in staat. Die moet er dan van afgehaald worden. 
+             * Als het dan nog steeds niet bestaat: een lege toevoegen.
+             */
+            String kolomnaam=td.getKolomnaam();
+            if (!f.getSchema().hasAttribute(kolomnaam) && kolomnaam!=null){
+                if (kolomnaam.split(":").length>1){
+                    kolomnaam=kolomnaam.split(":")[1];
+                }
+            }
+            if (!f.getSchema().hasAttribute(kolomnaam)&& kolomnaam!=null){
+                regel.add("");
+            }
+            /*
+             * Controleer om welk datatype dit themadata object om draait.
              * Binnen het Datatype zijn er drie mogelijkheden, namelijk echt data,
              * een URL of een Query.
              * In alle drie de gevallen moeten er verschillende handelingen verricht
@@ -624,9 +638,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * Als deze kolomnaam ingevuld staat hoeft deze alleen opgehaald te worden
              * en aan de arraylist regel toegevoegd te worden.
              */
-            if (td.getDataType().getId() == DataTypen.DATA && td.getKolomnaam() != null && !td.getKolomnaam().equals("")) {
-                //regel.add(rs.getObject(td.getKolomnaam()));
-                regel.add(f.getString(td.getKolomnaam()));
+            else if (td.getDataType().getId() == DataTypen.DATA && kolomnaam != null && !kolomnaam.equals("")) {
+                          
+                regel.add(f.getString(kolomnaam));
                 
             /*
              * In het tweede geval dient de informatie in de thema data als link naar een andere
@@ -646,14 +660,13 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     url.append(adminPk);
                     url.append("=");
                     url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
-                }
+                }                
                 
-                String kolomNaam = td.getKolomnaam();
-                if (kolomNaam!=null && kolomNaam.length()>0 && !kolomNaam.equalsIgnoreCase(adminPk)) {
-                    value = f.getString(kolomNaam);
+                if (kolomnaam!=null && kolomnaam.length()>0 && !kolomnaam.equalsIgnoreCase(adminPk)) {
+                    value = f.getString(kolomnaam);
                     if (value!=null) {                    
                         url.append("&");
-                        url.append(kolomNaam);
+                        url.append(kolomnaam);
                         url.append("=");
                         url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
                     }
@@ -667,16 +680,34 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              */
             } else if (td.getDataType().getId()==DataTypen.QUERY) {
                 StringBuffer url = new StringBuffer(td.getCommando());
-                String kolomNaam = td.getKolomnaam();
-                if (kolomNaam==null || kolomNaam.length()==0)
-                    kolomNaam = t.getAdmin_pk();
-                Object value = f.getString(kolomNaam);
+                
+                if (kolomnaam==null || kolomnaam.length()==0)
+                    kolomnaam = t.getAdmin_pk();
+                Object value = f.getString(kolomnaam);
                 if (value!=null) {
                     url.append(value.toString().trim());
                     regel.add(url.toString());
                 } else
                     regel.add("");
-            } else
+            }else if (td.getDataType().getId()==DataTypen.FUNCTION){
+                StringBuffer function = new StringBuffer(td.getCommando());
+                function.append("(this, ");                
+                if (kolomnaam==null || kolomnaam.length()==0)
+                    kolomnaam = t.getAdmin_pk();
+                Object value = f.getString(kolomnaam);
+                if (value!=null) {
+                    function.append("'"+td.getThema().getId()+"'");
+                    function.append(",");
+                    function.append("'"+td.getKolomnaam()+"'");
+                    function.append(",");
+                    function.append("'"+value+"'");
+                    function.append(")");
+                    regel.add(function.toString());
+                }else{
+                    regel.add("");
+                }
+                
+            }else
                 
             /*
              * Indien een datatype aan geen van de voorwaarden voldoet wordt er een

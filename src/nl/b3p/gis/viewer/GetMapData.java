@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
+import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
@@ -41,21 +42,86 @@ public class GetMapData {
     // </editor-fold>
     
     
-    public String[] getArea(String elementId,String themaId, String attributeName, String compareValue){
-        Session sess=HibernateUtil.getSessionFactory().getCurrentSession();
+    public String[] getArea(String elementId,String themaId, String attributeName, String compareValue,String eenheid) throws SQLException{
+        Session sess=HibernateUtil.getSessionFactory().getCurrentSession();         
         sess.beginTransaction();
-        Themas t= (Themas)sess.get(Themas.class,new Integer(themaId)); 
+        Themas t= (Themas)sess.get(Themas.class,new Integer(themaId));        
         String[] returnValue= new String[2];
-        returnValue[0]=elementId;
-        try {
-            Feature f=WfsUtil.getWfsObject(t,attributeName,compareValue);
-            sess.close();
-            returnValue[1]= new String(""+f.getGeometry().getArea());
-        } catch (Exception ex) {
-            sess.close();
-            log.error(ex);
-            returnValue[1]="Fout (zie log)";
+        returnValue[0]=elementId;      
+        
+        
+        //Haal op met jdbc connectie
+        double area=0.0;
+        if (t.getConnectie()==null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)){
+            Connection conn=null;
+            if (t.getConnectie()!=null){
+                conn=t.getConnectie().getJdbcConnection();
+            }
+            if (conn==null){
+                conn=sess.connection();
+            }
+            String geomColumn=SpatialUtil.getTableGeomName(t,conn);
+            String tableName=t.getSpatial_tabel();
+            if (tableName==null)
+                tableName=t.getAdmin_tabel();            
+            
+            try {
+                String q = SpatialUtil.getAreaQuery(tableName,geomColumn,attributeName,compareValue);
+                PreparedStatement statement = conn.prepareStatement(q);
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    if(rs.next()){
+                        area =new Double(rs.getString(1)).doubleValue();      
+                    }
+                } finally {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                log.error("", ex);
+                returnValue[1]="Fout (zie log)";
+            } finally {
+                sess.close();
+            }
+            
+        }//Haal op met WFS
+        else if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
+            try {
+                Feature f=WfsUtil.getWfsObject(t,attributeName,compareValue);                
+                area=f.getGeometry().getArea();
+            } catch (Exception ex) {            
+                log.error("",ex);
+                returnValue[1]="Fout (zie log)";
+            } finally {
+                sess.close();
+            }           
         }
+        if (eenheid!=null && eenheid.equals("null")){
+            eenheid=null;
+        }
+        int divide=0;
+        if (eenheid!=null){
+            if (eenheid.equalsIgnoreCase("km")){
+                divide=1000000;
+            }else if (eenheid.equalsIgnoreCase("hm")){
+                divide=10000;
+            }
+        }
+        if (returnValue[1]==null){
+            if (area>0.0){
+                if (divide>0)
+                    area/=divide;
+                area*=100;
+                area=Math.round(area);
+                area/=100;                
+            }
+            String value=new String(""+area);
+            if (eenheid!=null){
+                value+=" "+eenheid;
+            }else{
+                value+=" m";
+            }
+            returnValue[1]=value;
+        }       
         return returnValue;
     }
     

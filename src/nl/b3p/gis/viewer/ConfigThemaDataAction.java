@@ -303,7 +303,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         Boolean b = (Boolean)dynaForm.get("basisregel");
         td.setBasisregel(b==null?false:b.booleanValue());
         td.setCommando(FormUtils.nullIfEmpty(dynaForm.getString("commando")));
-        if (FormUtils.nullIfEmpty(dynaForm.getString("eenheid"))!=null)
+        if (FormUtils.nullIfEmpty(dynaForm.getString("dataorder"))!=null)
             td.setDataorder(Integer.parseInt(dynaForm.getString("dataorder")));
         td.setEenheid(FormUtils.nullIfEmpty(dynaForm.getString("eenheid")));
         td.setKolombreedte(FormUtils.StringToInt(dynaForm.getString("kolombreedte")));

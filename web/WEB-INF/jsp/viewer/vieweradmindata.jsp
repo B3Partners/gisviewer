@@ -21,8 +21,8 @@
                      "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
     }
-    function berekenOppervlakte(element, themaid, kolomnaam,value){
-        JMapData.getArea(element.id,themaid,kolomnaam,value,handleGetArea);
+    function berekenOppervlakte(element, themaid, kolomnaam,value,eenheid){        
+        JMapData.getArea(element.id,themaid,kolomnaam,value,eenheid,handleGetArea);
     }
     function handleGetArea(str){
         document.getElementById(str[0]).innerHTML=str[1];

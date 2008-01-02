@@ -583,6 +583,27 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     regel.add(url.toString());
                 } else
                     regel.add("");
+            }else if (td.getDataType().getId()==DataTypen.FUNCTION){
+                StringBuffer function = new StringBuffer(td.getCommando());
+                function.append("(this, ");                
+                String kolomNaam = td.getKolomnaam();
+                if (kolomNaam==null || kolomNaam.length()==0)
+                    kolomNaam = t.getAdmin_pk();
+                Object value = rs.getObject(kolomNaam);
+                if (value!=null) {
+                    function.append("'"+td.getThema().getId()+"'");
+                    function.append(",");
+                    function.append("'"+kolomNaam+"'");
+                    function.append(",");
+                    function.append("'"+value+"'");
+                    function.append(",");
+                    function.append("'"+td.getEenheid()+"'");
+                    function.append(")");
+                    regel.add(function.toString());
+                }else{
+                    regel.add("");
+                }
+                
             } else
                 
             /*
@@ -695,12 +716,18 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 if (kolomnaam==null || kolomnaam.length()==0)
                     kolomnaam = t.getAdmin_pk();
                 Object value = f.getString(kolomnaam);
+                String queryName= td.getKolomnaam();
+                if (queryName==null){
+                    queryName=t.getAdmin_pk();
+                }
                 if (value!=null) {
                     function.append("'"+td.getThema().getId()+"'");
                     function.append(",");
-                    function.append("'"+td.getKolomnaam()+"'");
+                    function.append("'"+queryName+"'");
                     function.append(",");
                     function.append("'"+value+"'");
+                    function.append(",");
+                    function.append("'"+td.getEenheid()+"'");
                     function.append(")");
                     regel.add(function.toString());
                 }else{

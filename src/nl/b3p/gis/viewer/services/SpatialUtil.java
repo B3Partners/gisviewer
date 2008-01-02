@@ -130,6 +130,30 @@ public class SpatialUtil {
         }
         return dt;
     }
+     /**
+     * DOCUMENT ME!
+     *
+     * @param t Themas
+     * @param conn Connection
+     *
+     * @return int
+     *
+     */
+    static public String getTableGeomName(Themas t, Connection conn) throws SQLException{
+        DatabaseMetaData dbmd =conn.getMetaData();
+        String table= t.getSpatial_tabel();
+        if (table==null){
+            table=t.getAdmin_tabel();
+        }
+        ResultSet rs = dbmd.getColumns(null,null,table,null);
+        while (rs.next()){
+            String typenaam=rs.getString("TYPE_NAME");
+            if (typenaam.equalsIgnoreCase("geometry"))
+                return rs.getString("COLUMN_NAME");
+        }
+        return null;
+    }
+    
     
     static public List getAdminColumnNames(Themas t, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
@@ -685,5 +709,18 @@ public class SpatialUtil {
         return sq.toString();
     }
     // </editor-fold>
+
+    public static String getAreaQuery(String tableName, String geomColumn, String attributeName, String compareValue) {        
+        StringBuffer sq= new StringBuffer();
+        sq.append("select Area(");
+        sq.append(geomColumn);
+        sq.append(") from ");
+        sq.append(tableName+" tb where tb.");
+        sq.append(attributeName);
+        sq.append(" = '");
+        sq.append(compareValue);
+        sq.append("';");        
+        return sq.toString();
+    }
     
 }

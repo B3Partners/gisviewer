@@ -399,6 +399,8 @@ public class SpatialUtil {
         sq.append("(Intersects(");
         sq.append(createClickGeom(x, y, srid));
         sq.append(", tbl.the_geom) = true)");
+        sq.append(") order by Distance(tbl.the_geom, ");
+        sq.append(createClickGeom(x, y, srid));
         sq.append(")");
         
         log.debug("InfoSelectQuery: " + sq.toString());

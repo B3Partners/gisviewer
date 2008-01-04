@@ -109,6 +109,9 @@ a.menulink, a.menulink:visited, a.menulink:active {
     margin-left: 0px;
     float: right;
 }
+.configLink{   
+    color: #144264;
+}
 
 /* Actieve menulinks style */
 a.activemenulink, a.activemenulink:visited, a.activemenulink:active {

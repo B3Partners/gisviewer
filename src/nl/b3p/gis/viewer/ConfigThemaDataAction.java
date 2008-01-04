@@ -24,6 +24,7 @@ import nl.b3p.gis.viewer.db.WaardeTypen;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import nl.b3p.gis.viewer.services.WfsUtil;
+import nl.b3p.ogc.utils.OGCConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
@@ -32,6 +33,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.transform.ToListResultTransformer;
 import org.w3c.dom.Element;
 
 /**
@@ -250,6 +252,20 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
             if (conn==null)
                 conn = sess.connection();
             attributes=SpatialUtil.getAdminColumnNames(t, conn);
+            //als het attribuut van het type geometry is moet hij niet worden gebruikt
+            for (int i=0; i < attributes.size(); i++){
+                String attr = (String)attributes.get(i);
+                int type=SpatialUtil.getColumnDatatype(t,attr,conn);
+                if (type == java.sql.Types.OTHER){
+                    /*if (attributes==null){
+                        attributes=new ArrayList();
+                        attributes.add(attr);
+                    }*/
+                    attributes.remove(attr);
+                }
+                    
+            }
+            
         }
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             //connectieType=Connecties.TYPE_WFS;
@@ -257,8 +273,9 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
             if (elements!=null){
                 ArrayList elementsNames= new ArrayList();
                 for (int i=0; i < elements.size(); i++){
-                    Element e = (Element)elements.get(i);
-                    elementsNames.add(e.getAttribute("name"));
+                    Element e = (Element)elements.get(i);                    
+                    if (e.getAttribute("type")==null || !e.getAttribute("type").equalsIgnoreCase(OGCConstants.WFS_OBJECT_GEOMETRYTYPE))
+                        elementsNames.add(e.getAttribute("name"));
                 }
                 attributes=elementsNames;
             }
@@ -270,7 +287,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
                 String themadataobject = (String)attributes.get(i);
                 for (int j=0; j < bestaandeObjecten.size() && !bestaatAl; j++){
                     ThemaData td= (ThemaData)bestaandeObjecten.get(j);                    
-                    if (themadataobject.compareTo(td.getKolomnaam())==0){
+                    if (td.getKolomnaam()!=null && themadataobject.compareTo(td.getKolomnaam())==0){
                         bestaatAl=true;
                     }
                 }
@@ -287,6 +304,23 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
                     //niks doen
                 }
             }
+        }
+        //haal opnieuw de ThemaData objecten op om te kijken of er een Extra data veld is of nog moet aangemaakt worden.
+        List bestaandeObjecten=SpatialUtil.getThemaData(t,false);
+        boolean extraBestaat=false;
+        boolean nietBasisregels=false;
+        for (int i=0; i < bestaandeObjecten.size(); i++){
+            ThemaData td= (ThemaData)bestaandeObjecten.get(i);
+            if (!td.isBasisregel()){
+                nietBasisregels=true;
+            }
+            if (td.getCommando()!=null && td.getCommando().toLowerCase().startsWith("viewerdata.do?aanvullendeinfo=t")){
+                extraBestaat=true;
+            }
+        }
+        if (!extraBestaat && nietBasisregels){
+            ThemaData td=createDefaultExtraThemaData(t);
+            sess.saveOrUpdate(td);
         }
         return unspecified(mapping,dynaForm,request,response);        
     }
@@ -400,5 +434,16 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         td.setWaardeType(w);
     }
     
-    
+    protected ThemaData createDefaultExtraThemaData(Themas t){
+        Session sess=HibernateUtil.getSessionFactory().getCurrentSession();
+        ThemaData td = new ThemaData();
+        td.setLabel("Extra");
+        td.setBasisregel(true);
+        td.setKolombreedte(50);
+        td.setWaardeType((WaardeTypen) sess.get(WaardeTypen.class,WaardeTypen.STRING));
+        td.setDataType((DataTypen) sess.get(DataTypen.class,DataTypen.URL));
+        td.setCommando("viewerdata.do?aanvullendeinfo=t&");
+        td.setThema(t);
+        return td;
+    }
 }

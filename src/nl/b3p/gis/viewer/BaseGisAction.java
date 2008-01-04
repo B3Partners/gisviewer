@@ -764,19 +764,4 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         return string;
     }
     
-    
-    protected ThemaData createDefaultExtraThemaData(Themas t){
-        Session sess=HibernateUtil.getSessionFactory().getCurrentSession();
-        ThemaData td = new ThemaData();
-        td.setLabel("Extra");
-        td.setBasisregel(true);
-        td.setKolombreedte(50);
-        td.setWaardeType((WaardeTypen) sess.get(WaardeTypen.class,WaardeTypen.STRING));
-        td.setDataType((DataTypen) sess.get(DataTypen.class,DataTypen.URL));
-        td.setCommando("viewerdata.do?aanvullendeinfo=t&");
-        td.setThema(t);
-        return td;
-    }
-    
-    
 }

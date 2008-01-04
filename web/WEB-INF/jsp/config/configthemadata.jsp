@@ -16,7 +16,7 @@
     <html:hidden property="action"/>
     <html:hidden property="alt_action"/>
     <html:hidden property="themaDataID"/>
-    
+    <input type="hidden" name="createAllThemaData" id="createAllThemaData"/>
     <div class="maintable" style="margin-bottom: 10px; margin-left: 15px; float: left; clear: left;">
         <table>
             <tr>
@@ -34,6 +34,12 @@
                     <html:submit property="change"  styleClass="knop">
                         <fmt:message key="button.change"/>
                     </html:submit>
+                    <%--<html:submit property="createAllThemaData" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        Maak ontbrekende Themadata voor thema
+                    </html:submit>--%>
+                    <c:if test="${!save && !delete}">
+                        <a href="#" class="configLink" onclick="javascript: document.getElementById('createAllThemaData').value='doe';submit()">Maak ontbrekende Themadata objecten voor thema</a>
+                    </c:if>
                 </td>
             </tr>
         </table>
@@ -82,7 +88,40 @@
             <html:messages id="error" message="true">
                 <div class="messages">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
             </html:messages>
-        </div>         
+        </div>
+        <div class="knoppenbalk">
+            <c:choose>
+                <c:when test="${save || delete}">
+                    <div class="knoppen">
+                        <html:submit property="confirm" accesskey="o" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.ok"/>
+                        </html:submit>
+                    </div>
+                    <div class="knoppen">
+                        <html:cancel accesskey="c" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.cancel"/>
+                        </html:cancel>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="knoppen">
+                        <html:submit property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.new"/>
+                        </html:submit>
+                    </div> 
+                    <div class="knoppen">
+                        <html:submit property="deleteConfirm" accesskey="d" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.remove"/>
+                        </html:submit>
+                    </div> 
+                    <div class="knoppen">
+                        <html:submit property="saveConfirm" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            <fmt:message key="button.save"/>
+                        </html:submit>
+                    </div>                    
+                </c:otherwise>
+            </c:choose>
+        </div>
         <div class="maintable" style="margin-top: 5px;">
             <table cellpadding="2" cellspacing="2" border="0">
                 <tr><td><fmt:message key="configthemadata.label"/></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
@@ -154,46 +193,8 @@
                 </c:choose>
                 <tr><td><fmt:message key="configthemadata.dataorder"/></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
             </table>
-        </div>
-        
-        <div class="knoppenbalk">
-            <c:choose>
-                <c:when test="${save || delete}">
-                    <div class="knoppen">
-                        <html:submit property="confirm" accesskey="o" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                            <fmt:message key="button.ok"/>
-                        </html:submit>
-                    </div>
-                    <div class="knoppen">
-                        <html:cancel accesskey="c" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                            <fmt:message key="button.cancel"/>
-                        </html:cancel>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="knoppen">
-                        <html:submit property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                            <fmt:message key="button.new"/>
-                        </html:submit>
-                    </div> 
-                    <div class="knoppen">
-                        <html:submit property="deleteConfirm" accesskey="d" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                            <fmt:message key="button.remove"/>
-                        </html:submit>
-                    </div> 
-                    <div class="knoppen">
-                        <html:submit property="saveConfirm" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                            <fmt:message key="button.save"/>
-                        </html:submit>
-                    </div>
-                    <div class="knoppen">
-                        <html:submit property="createAllThemaData" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
-                            Maak ontbrekende Themadatas
-                        </html:submit>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div> 
+        </div>        
+         
     </div> 
 </html:form>
 <script language="javascript">

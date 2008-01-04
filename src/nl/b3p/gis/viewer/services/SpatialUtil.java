@@ -115,17 +115,21 @@ public class SpatialUtil {
      *
      */
     static public int getPkDataType(Themas t, Connection conn) throws SQLException {
+        String adminPk = t.getAdmin_pk();
+        return getColumnDatatype(t,adminPk,conn);        
+    }
+    
+    public static int getColumnDatatype(Themas t, String column, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
         String dbtn = t.getAdmin_tabel();
-        String adminPk = t.getAdmin_pk();
         int dt = java.sql.Types.NULL;
-        ResultSet rs = dbmd.getColumns(null, null, dbtn, adminPk);
+        ResultSet rs = dbmd.getColumns(null, null, dbtn, column);
         if (rs.next()) {
             dt = rs.getInt("DATA_TYPE");
         }
         if (dt==java.sql.Types.NULL) {
             log.debug("java.sql.Types.NULL voor tabelnaam: " + dbtn +
-                    ", pknaam: " + adminPk +
+                    ", pknaam: " + column +
                     ", SQL_DATA_TYPE:" + dt);
         }
         return dt;
@@ -722,5 +726,7 @@ public class SpatialUtil {
         sq.append("';");        
         return sq.toString();
     }
+
+    
     
 }

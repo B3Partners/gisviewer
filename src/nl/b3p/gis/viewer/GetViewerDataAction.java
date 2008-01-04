@@ -790,9 +790,9 @@ public class GetViewerDataAction extends BaseGisAction {
             Iterator themaDataIterator = themaData.iterator();
             while (themaDataIterator.hasNext()) {
                 ThemaData td = (ThemaData)themaDataIterator.next();
-                int themaDataId = td.getId();
+                Integer themaDataId = td.getId();
                 if(td.isBasisregel()) {
-                    String inputValue = "ThemaItem_" + themaId + "_" + themaDataId;
+                    String inputValue = "ThemaItem_" + themaId + "_" + themaDataId.intValue();
                     String value = getStringFromParam(parameterMap,inputValue);
                     String key = td.getKolomnaam();
                     if (value != null) {
@@ -897,7 +897,7 @@ public class GetViewerDataAction extends BaseGisAction {
                         String key = (String)it.next();
                         if(key.equalsIgnoreCase(kolomNaam)) {
                             String keyvalue = (String)extraCriteria.get(key);
-                            String itemNaam = "ThemaItem_" + thema.getId().intValue() + "_" + themaData.getId();
+                            String itemNaam = "ThemaItem_" + thema.getId().intValue() + "_" + themaData.getId().intValue();
                             String [] item = new String[]{itemNaam, keyvalue};
                             items.add(item);
                             break;

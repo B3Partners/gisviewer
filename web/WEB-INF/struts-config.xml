@@ -54,6 +54,7 @@
             <form-property name="update_frequentie_in_dagen" type="java.lang.String"/>
             <form-property name="view_geomtype" type="java.lang.String"/>
             <form-property name="visible" type="java.lang.Boolean"/>
+            <form-property name="themadataobjecten" type="java.lang.String[]"/>
        </form-bean>
        <form-bean name="clusterForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>

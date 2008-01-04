@@ -12,7 +12,7 @@ package nl.b3p.gis.viewer.db;
 
 public class ThemaData {
     
-    private int id;
+    private Integer id;
     private String label;
     private String eenheid;
     private String omschrijving;
@@ -39,7 +39,7 @@ public class ThemaData {
      * @return int ID van de thema data.
      */
     // <editor-fold defaultstate="" desc="public int getId()">
-    public int getId() {
+    public Integer getId() {
         return id;
     }
     // </editor-fold>
@@ -50,7 +50,7 @@ public class ThemaData {
      * @param id int id van de thema data.
      */
     // <editor-fold defaultstate="" desc="public void setId(int id)">
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     // </editor-fold>

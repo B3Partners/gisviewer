@@ -337,6 +337,29 @@
                 
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <tr><td><fmt:message key="configthema.updatefreqindagen"/></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
+                
+               <%-- <tr>
+                    <td><fmt:message key="configthema.themadata"/>(Verwijderen van Themadata objecten kan alleen via het scherm 'Themadata')</td>
+                    <td>
+                                                
+                        <c:forEach var="cuItem" items="${listAdminTableColumns}">
+                            <c:set var="tdExists" value="false"/>
+                            <c:forEach var="tdItem" items="${form.map.themadataobjecten}">
+                                <c:if test="${cuItem == tdItem}">
+                                    <c:set var="tdExists" value="true"/>                                    
+                                </c:if>
+                            </c:forEach>
+                            <c:choose>
+                                <c:when test="${tdExists}">
+                                    <html:multibox property="themadataobjecten" value="${cuItem}"/><c:out  value="${cuItem}"/><br/>
+                                </c:when>
+                                <c:otherwise>
+                                    <html:multibox property="themadataobjecten"  value="${cuItem}"/><c:out  value="${cuItem}"/><br/>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </td>                
+                </tr>--%>
                 <%--
             <tr><td>analyse_thema</td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
             <tr><td>admin_spatial_ref</td><td colspan="3"><html:text property="admin_spatial_ref" size="140"/></td></tr>

@@ -186,6 +186,11 @@
                             <fmt:message key="button.save"/>
                         </html:submit>
                     </div>
+                    <div class="knoppen">
+                        <html:submit property="createAllThemaData" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                            Maak ontbrekende Themadatas
+                        </html:submit>
+                    </div>
                 </c:otherwise>
             </c:choose>
         </div> 

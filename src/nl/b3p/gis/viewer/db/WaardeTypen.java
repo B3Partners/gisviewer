@@ -12,6 +12,12 @@ package nl.b3p.gis.viewer.db;
 
 public class WaardeTypen {
     
+    public static final int STRING =1;
+    public static final int INTEGER =2;
+    public static final int DOUBLE =3;
+    public static final int DATE =4;
+    public static final int URL =5;
+    
     private int id;
     private String naam;
     

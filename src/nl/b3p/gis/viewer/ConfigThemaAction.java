@@ -14,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Connecties;
+import nl.b3p.gis.viewer.db.DataTypen;
 import nl.b3p.gis.viewer.db.Moscow;
+import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
+import nl.b3p.gis.viewer.db.WaardeTypen;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
@@ -115,10 +118,9 @@ public class ConfigThemaAction extends ViewerCrudAction {
                 }
                 request.setAttribute("listAdminTableColumns",elementsNames);                           
             }
+            
         }
-
-
-
+        List themadataobjecten=sess.createQuery("select kolomnaam from ThemaData where thema = :thema").setEntity("thema",t).list();
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (user != null) {
             List lns = user.getLayerNames(false);
@@ -191,18 +193,19 @@ public class ConfigThemaAction extends ViewerCrudAction {
         }
 
         populateThemasObject(dynaForm, t, request);
-
+        
         sess.saveOrUpdate(t);
         sess.flush();
-
+        
         /* Indien we input bijvoorbeeld herformatteren oid laad het dynaForm met
          * de waardes uit de database.
          */
         sess.refresh(t);
+        
+        
         populateThemasForm(t, dynaForm, request);
-
         return super.save(mapping, dynaForm, request, response);
-    }
+    }    
 
     public ActionForward delete(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -277,6 +280,10 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("update_frequentie_in_dagen", FormUtils.IntegerToString(t.getUpdate_frequentie_in_dagen()));
         dynaForm.set("view_geomtype", t.getView_geomtype());
         dynaForm.set("visible", new Boolean(t.isVisible()));
+        
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        List themadataobjecten=sess.createQuery("select kolomnaam from ThemaData where thema = :thema").setEntity("thema",t).list();
+        dynaForm.set("themadataobjecten",themadataobjecten.toArray(new String[themadataobjecten.size()]));
     }
 
     private void populateThemasObject(DynaValidatorForm dynaForm, Themas t, HttpServletRequest request) {

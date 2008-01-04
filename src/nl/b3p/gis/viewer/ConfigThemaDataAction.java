@@ -43,6 +43,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     private static final Log log = LogFactory.getLog(ConfigThemaAction.class);
     
     protected static final String CHANGE = "change";
+    protected static final String CREATEALLTHEMADATA = "createAllThemaData";
     
     protected Map getActionMethodPropertiesMap() {
         Map map = super.getActionMethodPropertiesMap();
@@ -53,6 +54,9 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         crudProp.setDefaultForwardName(SUCCESS);
         map.put(CHANGE, crudProp);
         
+        crudProp = new ExtendedMethodProperties(CREATEALLTHEMADATA);
+        crudProp.setDefaultForwardName(SUCCESS);
+        map.put(CREATEALLTHEMADATA, crudProp);
         return map;
     }
     
@@ -234,6 +238,59 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         return super.save(mapping, dynaForm, request, response);
     }
     
+    public ActionForward createAllThemaData(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Themas t = getThema(dynaForm, false);
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        List attributes=null;
+        if (t.getConnectie() == null || (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {          
+            Connection conn=null;
+            if (t.getConnectie()!=null){
+                conn=t.getConnectie().getJdbcConnection();
+            }
+            if (conn==null)
+                conn = sess.connection();
+            attributes=SpatialUtil.getAdminColumnNames(t, conn);
+        }
+        else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+            //connectieType=Connecties.TYPE_WFS;
+            List elements=WfsUtil.getFeatureElements(t);
+            if (elements!=null){
+                ArrayList elementsNames= new ArrayList();
+                for (int i=0; i < elements.size(); i++){
+                    Element e = (Element)elements.get(i);
+                    elementsNames.add(e.getAttribute("name"));
+                }
+                attributes=elementsNames;
+            }
+        }        
+        if (attributes!=null ){
+            List bestaandeObjecten=SpatialUtil.getThemaData(t,false);
+            for (int i=0; i < attributes.size(); i++){
+                boolean bestaatAl=false;
+                String themadataobject = (String)attributes.get(i);
+                for (int j=0; j < bestaandeObjecten.size() && !bestaatAl; j++){
+                    ThemaData td= (ThemaData)bestaandeObjecten.get(j);                    
+                    if (themadataobject.compareTo(td.getKolomnaam())==0){
+                        bestaatAl=true;
+                    }
+                }
+                if (!bestaatAl){
+                    ThemaData td = new ThemaData();                    
+                    td.setBasisregel(false);
+                    td.setDataType((DataTypen) sess.get(DataTypen.class,DataTypen.DATA));
+                    td.setKolomnaam(themadataobject);
+                    td.setLabel(themadataobject);
+                    td.setThema(t);
+                    td.setWaardeType((WaardeTypen) sess.get(WaardeTypen.class,WaardeTypen.STRING));
+                    sess.saveOrUpdate(td);
+                }else{
+                    //niks doen
+                }
+            }
+        }
+        return unspecified(mapping,dynaForm,request,response);        
+    }
+    
     public ActionForward delete(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         
         if (!isTokenValid(request)) {
@@ -268,7 +325,6 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     private void populateThemaDataForm(ThemaData td, DynaValidatorForm dynaForm, HttpServletRequest request) {
         if (td==null)
             return;
-        
         dynaForm.set("themaDataID", Integer.toString(td.getId()));
         dynaForm.set("label", td.getLabel());
         dynaForm.set("eenheid", td.getEenheid());

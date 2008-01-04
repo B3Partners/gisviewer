@@ -95,7 +95,7 @@
                                                         <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                                                     </c:when>
                                                     <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
-                                                        <a id="href${counter.count}${kolom.count-1}" href="#" onclick="${waarde}"><html:image src="./images/icons/information.png"/> </a>
+                                                        <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${waarde}"><html:image src="./images/icons/information.png"/> </a>
                                                     </c:when>
                                                     <c:otherwise>
                                                         ${waarde}

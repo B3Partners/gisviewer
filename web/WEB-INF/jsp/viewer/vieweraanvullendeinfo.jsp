@@ -1,24 +1,31 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
-
+<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+<script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript">
-            function popUp(URL, naam) {
-                var screenwidth = 1024;
-                var screenheight = 768;
-                var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
-                var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
-                properties = "toolbar = 0, " + 
-                             "scrollbars = 1, " + 
-                             "location = 0, " + 
-                             "statusbar = 1, " + 
-                             "menubar = 0, " + 
-                             "resizable = 1, " + 
-                             "width = " + screenwidth + ", " + 
-                             "height = " + screenheight + ", " + 
-                             "top = " + popuptop + ", " + 
-                             "left = " + popupleft;
-                eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
-            }
+    function popUp(URL, naam) {
+        var screenwidth = 1024;
+        var screenheight = 768;
+        var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+        var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+        properties = "toolbar = 0, " + 
+                     "scrollbars = 1, " + 
+                     "location = 0, " + 
+                     "statusbar = 1, " + 
+                     "menubar = 0, " + 
+                     "resizable = 1, " + 
+                     "width = " + screenwidth + ", " + 
+                     "height = " + screenheight + ", " + 
+                     "top = " + popuptop + ", " + 
+                     "left = " + popupleft;
+        eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+    }
+    function berekenOppervlakte(element, themaid, kolomnaam,value,eenheid){        
+        JMapData.getArea(element.id,themaid,kolomnaam,value,eenheid,handleGetArea);
+    }
+    function handleGetArea(str){
+        document.getElementById(str[0]).innerHTML=str[1];
+    }
 </script>
 
 <c:choose>
@@ -50,6 +57,9 @@
                             </c:when>
                             <c:when test="${regels[0][counter.count - 1] eq ''}">
                                 -
+                            </c:when>
+                            <c:when test="${ThemaItem.dataType.id == 4}">
+                                <a class="datalink" id="href${counter.count-1}" href="#" onclick="${regels[0][counter.count - 1]}"><html:image src="./images/icons/information.png"/> </a>
                             </c:when>
                             <c:otherwise>
                                 ${regels[0][counter.count - 1]}

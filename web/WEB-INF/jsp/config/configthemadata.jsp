@@ -38,7 +38,7 @@
                         Maak ontbrekende Themadata voor thema
                     </html:submit>--%>
                     <c:if test="${!save && !delete}">
-                        <a href="#" class="configLink" onclick="javascript: document.getElementById('createAllThemaData').value='doe';submit()">Maak ontbrekende Themadata objecten voor thema</a>
+                        <a href="#" class="datalink" onclick="javascript: document.getElementById('createAllThemaData').value='doe';submit()">Maak ontbrekende Themadata objecten voor thema</a>
                     </c:if>
                 </td>
             </tr>

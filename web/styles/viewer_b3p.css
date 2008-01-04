@@ -109,7 +109,7 @@ a.menulink, a.menulink:visited, a.menulink:active {
     margin-left: 0px;
     float: right;
 }
-.configLink{   
+a.datalink, a.datalink:visited, a.datalink:active{   
     color: #144264;
 }
 

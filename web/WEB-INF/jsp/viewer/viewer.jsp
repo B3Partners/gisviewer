@@ -321,7 +321,7 @@
             "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
             "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+layerUrl + "&SERVICE=WMS" +
             "\"styles=\""+
-            "\" layers=\""+layersToAdd+"\" query_layers=\""+layersToAdd +
+            "\" layers=\""+layersToAdd+
             "\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
         if (flamingo && layerUrl!=null){            
             flamingo.call("map1","removeLayer","fmcLayer");

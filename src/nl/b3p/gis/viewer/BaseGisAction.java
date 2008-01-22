@@ -541,7 +541,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * informatiebron. Deze link zal enigszins aangepast moeten worden om tot vollende
              * werkende link te dienen.
              */
-            } else if (td.getDataType().getId() == DataTypen.URL) {
+            } else if (td.getDataType().getId() == DataTypen.URL && td.getCommando()!=null) {                
                 StringBuffer url = new StringBuffer(td.getCommando());
                 url.append(Themas.THEMAID);
                 url.append("=");

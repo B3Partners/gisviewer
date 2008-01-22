@@ -34,12 +34,12 @@
                     <html:submit property="change"  styleClass="knop">
                         <fmt:message key="button.change"/>
                     </html:submit>
-                    <%--<html:submit property="createAllThemaData" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                    <html:submit property="createAllThemaData" styleClass="knop">
                         Maak ontbrekende Themadata voor thema
-                    </html:submit>--%>
-                    <c:if test="${!save && !delete}">
+                    </html:submit>
+                    <%--c:if test="${!save && !delete}">
                         <a href="#" class="datalink" onclick="javascript: document.getElementById('createAllThemaData').value='doe';submit()">Maak ontbrekende Themadata objecten voor thema</a>
-                    </c:if>
+                    </c:if--%>
                 </td>
             </tr>
         </table>

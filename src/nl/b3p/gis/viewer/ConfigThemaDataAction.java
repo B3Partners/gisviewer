@@ -359,7 +359,10 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     private void populateThemaDataForm(ThemaData td, DynaValidatorForm dynaForm, HttpServletRequest request) {
         if (td==null)
             return;
-        dynaForm.set("themaDataID", Integer.toString(td.getId()));
+        if (td.getId()!=null)
+            dynaForm.set("themaDataID", Integer.toString(td.getId()));
+        else
+            dynaForm.set("themaDataID","");
         dynaForm.set("label", td.getLabel());
         dynaForm.set("eenheid", td.getEenheid());
         dynaForm.set("omschrijving", td.getOmschrijving());

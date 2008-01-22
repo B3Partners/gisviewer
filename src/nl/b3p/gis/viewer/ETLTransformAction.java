@@ -154,7 +154,6 @@ public class ETLTransformAction extends BaseGisAction {
         Themas t = getThema(mapping, dynaForm, request);
         request.setAttribute("themaName", t.getNaam());
         List thema_data = SpatialUtil.getThemaData(t, false);
-        Object o = thema_data.get(1);
         request.setAttribute("thema_items", thema_data);
         if(thema_data != null && !thema_data.isEmpty()) {
             request.setAttribute("regels", getThemaObjects(t, status, thema_data));

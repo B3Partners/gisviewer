@@ -276,7 +276,7 @@
                         layerUrl+='&';
                     else
                         layerUrl+='?';
-                    layerUrl+="filter=status_etl%3D'UO'%20or%20status_etl%3D'OO'%20or%20status_etl%3D'NO'";
+                    //layerUrl+="filter=status_etl%3D'UO'%20or%20status_etl%3D'OO'%20or%20status_etl%3D'NO'";
                 }
                 allActiveLayers+= ","+obj.theItem.wmslayers;
                 if (!dontRefresh){

@@ -177,7 +177,7 @@ public class GisPrincipal implements Principal {
             try {
                 sp = wmscr.getProvider(url, null, null);
             } catch (Exception ex) {
-                log.error("", ex);
+                log.debug("Can't log in anonymous");
             }
 
             if (sp==null) {

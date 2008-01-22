@@ -779,6 +779,7 @@
             if (bbox!=null && bbox.length>0){                
                 if (bbox.split(",").length==4){
                     moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+                    setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
                 }
             }            
             refreshLayer();
@@ -787,7 +788,9 @@
     function moveToExtent(minx,miny,maxx,maxy){
         flamingo.callMethod("map1", "moveToExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy}, 0);
     }
-
+    function setFullExtent(minx,miny,maxx,maxy){
+        flamingo.callMethod("map1","setFullExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy});
+    }
 </script>
 
 <script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

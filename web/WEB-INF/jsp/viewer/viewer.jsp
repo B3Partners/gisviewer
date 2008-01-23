@@ -769,7 +769,7 @@
         switchTab(document.getElementById('tab0'));
     }
     Nifty("ul#nav a","medium transparent top");
-    setActiveThemaLabel(getActiveThemaLabel(readCookie('activelayer')));
+    //setActiveThemaLabel(getActiveThemaLabel(readCookie('activelayer')));
     var orderLayerBox= document.getElementById("orderLayerBox");
 
     //always call this script after the SWF object script has called the flamingo viewer.

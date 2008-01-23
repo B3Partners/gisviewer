@@ -216,7 +216,8 @@ public class SpatialUtil {
     static public boolean isEtlThema(Themas t, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
         String dbtn = t.getAdmin_tabel();
-        int dt = java.sql.Types.NULL;
+        if (dbtn==null)
+            return false;
         ResultSet rs = dbmd.getColumns(null, null, dbtn, "status_etl");
         if (rs.next()) {
             return true;

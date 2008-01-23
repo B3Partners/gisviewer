@@ -24,10 +24,29 @@
     <c:forEach items="${lnkArray}" var="link" varStatus="counter">
         <c:choose>
             <c:when test="${counter.count == activelink}">
-                <c:out value="${fn:replace(link, '*', 'activemenulink')}" escapeXml="false" />    
+                <c:set var="link" value="${fn:replace(link, '*', 'activemenulink')}" />    
             </c:when>
             <c:otherwise>
-                <c:out value="${fn:replace(link, '*', 'menulink')}" escapeXml="false" />
+                <c:set var="link" value="${fn:replace(link, '*', 'menulink')}" />
+            </c:otherwise>
+        </c:choose>
+        <c:choose>
+            <c:when test="${counter.count == 1}">
+                <c:if test="${pageContext.request.remoteUser != null}">
+                    <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
+                        <c:out value="${link}" escapeXml="false" />
+                    </c:if>
+                </c:if>
+            </c:when>
+            <c:when test="${counter.count == 2}">
+                <c:if test="${pageContext.request.remoteUser != null}">
+                    <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
+                        <c:out value="${link}" escapeXml="false" />
+                    </c:if>
+                </c:if>
+            </c:when>
+            <c:otherwise>
+                <c:out value="${link}" escapeXml="false" />
             </c:otherwise>
         </c:choose>
     </c:forEach>

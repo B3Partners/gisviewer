@@ -630,11 +630,42 @@
     <div id="rightdiv">
         <div id="tabjes">
             <ul id="nav">
-                <li id="tab0" onmouseover="switchTab(this);"><a href="#">Thema's</a></li>
-                <li id="tab4" onmouseover="switchTab(this);"><a href="#">Legenda</a></li>
-                <li id="tab1" onmouseover="switchTab(this);"><a href="#">Zoeker</a></li>
-                <li id="tab2" onmouseover="switchTab(this);"><a href="#">Gebieden</a></li>
-                <li id="tab3" onmouseover="switchTab(this);"><a href="#">Analyse</a></li>
+                <script type="text/javascript">
+                var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
+                var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
+                var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
+                var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
+                var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
+
+                if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
+                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 57px;">Thema\'s</a></li>');
+                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 58px;">Legenda</a></li>');
+                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
+                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
+                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
+                } else if(demogebruiker) {                   
+                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 96px;">Thema\'s</a></li>');
+                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
+                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
+                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
+                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
+                } else {
+                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 57px;">Thema\'s</a></li>');
+                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 58px;">Legenda</a></li>');
+                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
+                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
+                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
+                }
+                </script>
+                <!--[if lte IE 6]>
+                    <script type="text/javascript">
+                        if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
+                            document.getElementById('tab3link').style.width = '58px';
+                        } else if(demogebruiker) {
+                            document.getElementById('tab1link').marginRight = '0px';
+                        }
+                    </script>
+                <![endif]-->
             </ul>
         </div>
         <div id="tab_container">

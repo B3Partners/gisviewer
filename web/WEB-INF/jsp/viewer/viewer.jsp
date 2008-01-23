@@ -102,10 +102,10 @@
             if (navigator.appName=="Microsoft Internet Explorer") {
                 if((activeLayerFromCookie != null && activeLayerFromCookie == item.id) || activeThemaId==null || activeThemaId.length == 0){
                     var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
+                    setActiveThemaLabel(item.title);
                     if (activeThemaId==null || activeThemaId.length == 0){
                         if(item.analyse=="on"){                            
                             setActiveThema(item.id);
-                            setActiveThemaLabel(item.title);
                         }
                     }
                 }
@@ -119,10 +119,10 @@
                 el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id); setActiveThemaLabel(item.title) }
                 if((activeLayerFromCookie != null && activeLayerFromCookie == item.id) || activeThemaId==null || activeThemaId.length == 0){
                     el.checked = true;
+                    setActiveThemaLabel(item.title);
                     if (activeThemaId==null || activeThemaId.length == 0){
                         if(item.analyse=="on"){
                             setActiveThema(item.id);
-                            setActiveThemaLabel(item.title);
                         }
                     }
                 }

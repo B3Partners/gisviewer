@@ -377,15 +377,27 @@ public class SpatialUtil {
      *
      */
     // <editor-fold defaultstate="" desc="static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
+    // <editor-fold defaultstate="" desc="static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
     static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid) {
         // Als thema punten of lijnen dan afstand
         // Als thema polygon dan Intersects
+        return InfoSelectQuery(kolom, tabel, x, y, distance, srid, null, null);
+    }
+    // </editor-fold>
+    
+    static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid, String organizationcodekey, String organizationcode) {
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
         sq.append(kolom);
         sq.append(" from ");
         sq.append(tabel);
         sq.append(" tbl where ");
+        
+        if (organizationcode != null){
+            sq.append("tbl." + organizationcodekey + " = '" + organizationcode + "'");
+            sq.append(" and ");
+        }
+        
         sq.append("(");
         sq.append("(Dimension(tbl.the_geom) < 2) ");
         sq.append("and ");

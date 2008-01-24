@@ -245,6 +245,12 @@ public class ViewerAction extends BaseGisAction {
             String ttitel = th.getNaam();
             JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
             
+            if (th.getOrganizationcodekey() != null && th.getOrganizationcodekey().length() > 0) {
+                jsonCluster.put("organizationcodekey", th.getOrganizationcodekey().toUpperCase());
+            } else {
+                jsonCluster.put("organizationcodekey", "");
+            }
+            
             if (th.isVisible()) {
                 jsonCluster.put("visible", "on");
             } else {

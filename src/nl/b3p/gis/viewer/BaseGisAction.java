@@ -14,7 +14,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,11 +27,11 @@ import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.DataTypen;
 import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
-import nl.b3p.gis.viewer.db.WaardeTypen;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import nl.b3p.gis.viewer.struts.BaseHibernateAction;
+import nl.b3p.wms.capabilities.ServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionMapping;
@@ -43,10 +42,30 @@ public abstract class BaseGisAction extends BaseHibernateAction {
     
     private static final Log log = LogFactory.getLog(BaseGisAction.class);
     
+    protected String getOrganizationCode(HttpServletRequest request) {
+        GisPrincipal gp = (GisPrincipal)request.getUserPrincipal();
+        if (gp != null) {
+            ServiceProvider sp = gp.getSp();
+            if (sp != null) {
+                return sp.getOrganizationCode();
+            } else {
+                log.error("Er is geen serviceprovider aanwezig bij GisPrincipal met naam: " + gp.getName());
+                return null;
+            }
+        } else {
+            log.error("Er is geen GisPrincipal aanwezig.");
+            return null;
+        }
+    }
     
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         // zet kaartenbalie url
         request.setAttribute("kburl", HibernateUtil.KBURL);
+        
+        String organizationcode = getOrganizationCode(request);
+        if (organizationcode != null && organizationcode.length() > 0) {
+            request.setAttribute("organizationcode", getOrganizationCode(request));
+        } 
     }
     
     /**
@@ -322,7 +341,15 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             connection=sess.connection();
         
         try {
-            String q = SpatialUtil.InfoSelectQuery(saf, sptn, x, y, distance, srid);
+            String organizationcodekey = t.getOrganizationcodekey();
+            String organizationcode = getOrganizationCode(request);
+            String q = null;
+            if (organizationcodekey != null && organizationcodekey.length() > 0 && 
+                    organizationcode != null && organizationcode.length() > 0){
+                q = SpatialUtil.InfoSelectQuery(saf, sptn, x, y, distance, srid, organizationcodekey, organizationcode);   
+            }else{
+                q = SpatialUtil.InfoSelectQuery(saf, sptn, x, y, distance, srid);
+            } 
             
             PreparedStatement statement = connection.prepareStatement(q);
             try {

@@ -233,6 +233,14 @@ public class GetViewerDataAction extends BaseGisAction {
             }
         }
         
+        Themas t = (Themas)inputParameters.get("thema");
+        String organizationcodekey = t.getOrganizationcodekey();
+        String organizationcode = getOrganizationCode(request);
+        if(organizationcode != null && organizationcode.length() > 0 && 
+                organizationcodekey != null && organizationcodekey.length() > 0) {
+            extraCriteriaString.append(" and tb2." + organizationcodekey + " = '" + organizationcode + "' ");
+        }
+        
         StringBuffer result = new StringBuffer("");
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         if (stype != null) {
@@ -264,7 +272,7 @@ public class GetViewerDataAction extends BaseGisAction {
             }
             
             log.debug(query);
-            Themas t = (Themas)inputParameters.get("thema");
+            //Themas t = (Themas)inputParameters.get("thema");
             result.append("<b>" + sdesc + " " + t.getNaam());
             
             if ((String)inputParameters.get("analyseNaam")!=null){
@@ -387,6 +395,15 @@ public class GetViewerDataAction extends BaseGisAction {
             if(keyvalue != null && keyvalue.length() > 0) {
                 extraCriteriaString.append(" and tb1." + key + "='" + keyvalue + "'");
             }
+        }
+        
+        Themas t = (Themas)inputParameters.get("thema");
+        String organizationcodekey = t.getOrganizationcodekey();
+        String organizationcode = getOrganizationCode(request);
+        if(organizationcode != null && organizationcode.length() > 0 && 
+                organizationcodekey != null && organizationcodekey.length() > 0) {
+            extraCriteriaString.append(" and tb1.projectid = '" + organizationcode + "' ");
+            //extraCriteriaString.append(" and tb2." + t.getOrganizationcodekey() + " = '" + organizationcodekey + "' ");
         }
         
         String analyseGeomTabel = (String)inputParameters.get("analyseGeomTabel");

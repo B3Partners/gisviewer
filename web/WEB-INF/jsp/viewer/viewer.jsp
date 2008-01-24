@@ -74,11 +74,16 @@
     }
 
     var activeThemaId = '';
+    var organizationCodeKey='';
     function setActiveThema(val) {
         activeThemaId = val;
         if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
             flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
         }
+    }
+    
+    function setOrganizationCodeKey(val){
+        organizationCodeKey=val;
     }
 
     function setAnalyseValue(x,y) {
@@ -101,12 +106,13 @@
         else {
             if (navigator.appName=="Microsoft Internet Explorer") {
                 if((activeLayerFromCookie != null && activeLayerFromCookie == item.id) || activeThemaId==null || activeThemaId.length == 0){
+                    setOrganizationCodeKey(item.organizationcodekey);
                     var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
-                    if(item.analyse=="on"){  
-                        setActiveThemaLabel(item.title);
+                    if(item.analyse=="on"){
+                        getActiveThemaLabel(item.title);
                         if (activeThemaId==null || activeThemaId.length == 0){
-                             setActiveThema(item.id);
-                        }
+                            setActiveThema(item.id);
+                        }                        
                     }
                 }
                 else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
@@ -119,8 +125,9 @@
                 el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id); setActiveThemaLabel(item.title) }
                 if((activeLayerFromCookie != null && activeLayerFromCookie == item.id) || activeThemaId==null || activeThemaId.length == 0){
                     el.checked = true;
+                    setOrganizationCodeKey(item.organizationcodekey);
                     if(item.analyse=="on"){
-                        setActiveThemaLabel(item.title);
+                        getActiveThemaLabel(item.title);
                         if (activeThemaId==null || activeThemaId.length == 0){
                             setActiveThema(item.id);
                         }
@@ -273,12 +280,15 @@
             
             if (obj.theItem.wmslayers){
                 if (layerUrl==null){
-                    layerUrl="${kburl}";
+                    layerUrl="${kburl}"; 
                     if(layerUrl.indexOf('?')> 0)
                         layerUrl+='&';
                     else
                         layerUrl+='?';
-                    //layerUrl+="filter=status_etl%3D'UO'%20or%20status_etl%3D'OO'%20or%20status_etl%3D'NO'";
+                        
+                    if('${organizationcode}' != null && '${organizationcode}' != '' && organizationCodeKey != '') {
+                        layerUrl = layerUrl + organizationCodeKey + "=${organizationcode}";
+                    }
                 }
                 allActiveLayers+= ","+obj.theItem.wmslayers;
                 if (!dontRefresh){

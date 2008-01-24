@@ -58,6 +58,7 @@ public class Themas implements Comparable {
     private Set themaApplicaties;
     private Integer update_frequentie_in_dagen;
     private String view_geomtype;
+    private String organizationcodekey;
     
     /** Creates a new instance of Themas */
     public Themas() {
@@ -760,4 +761,11 @@ public class Themas implements Comparable {
         this.connectie=connectie;
     }
     
+    public String getOrganizationcodekey() {
+        return organizationcodekey;
+    }
+
+    public void setOrganizationcodekey(String organizationcodekey) {
+        this.organizationcodekey = organizationcodekey;
+    }
 }

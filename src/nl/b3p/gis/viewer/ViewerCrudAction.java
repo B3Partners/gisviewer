@@ -14,7 +14,9 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.CrudAction;
+import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
+import nl.b3p.wms.capabilities.ServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -33,9 +35,31 @@ public class ViewerCrudAction extends CrudAction {
         return mapping.findForward(FAILURE);
     }
     
+    protected String getOrganizationCode(HttpServletRequest request) {
+        GisPrincipal gp = (GisPrincipal)request.getUserPrincipal();
+        if (gp != null) {
+            ServiceProvider sp = gp.getSp();
+            if (sp != null) {
+                return sp.getOrganizationCode();
+            } else {
+                log.error("Er is geen serviceprovider aanwezig bij GisPrincipal met naam: " + gp.getName());
+                return null;
+            }
+        } else {
+            log.error("Er is geen GisPrincipal aanwezig.");
+            return null;
+        }
+    }
+    
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         // zet kaartenbalie url
         request.setAttribute("kburl", HibernateUtil.KBURL);
+        
+        String organizationcode = getOrganizationCode(request);
+        if (organizationcode != null && organizationcode.length() > 0) {
+            request.setAttribute("organizationcodekey", organizationcode);
+            request.setAttribute("organizationcode", organizationcode);
+        }
     }
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)

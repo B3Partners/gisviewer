@@ -15,8 +15,7 @@
 <html:form action="/configThemaData" focus="${focus}">
     <html:hidden property="action"/>
     <html:hidden property="alt_action"/>
-    <html:hidden property="themaDataID"/>
-    <input type="hidden" name="createAllThemaData" id="createAllThemaData"/>
+    <html:hidden property="themaDataID"/>    
     <div class="maintable" style="margin-bottom: 10px; margin-left: 15px; float: left; clear: left;">
         <table>
             <tr>

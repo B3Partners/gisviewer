@@ -703,6 +703,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 url.append(t.getId());
                 
                 String adminPk = t.getAdmin_pk();
+                if (!f.getSchema().hasAttribute(adminPk) && adminPk!=null){
+                    if (adminPk.split(":").length>1){
+                        adminPk=adminPk.split(":")[1];
+                    }
+                }
                 Object value = f.getString(adminPk);
                 if (value!=null) {
                     url.append("&");

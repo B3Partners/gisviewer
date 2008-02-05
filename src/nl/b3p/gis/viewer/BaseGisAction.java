@@ -471,15 +471,10 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             }
         }
         
-//        if (analyseNaam == null){
-//            throw new Exception("Kan het type geo-object niet vinden: " + t.getNaam());
-//        }
-        
         return analyseNaam;
     }
     
     /**
-     * DOCUMENT ME!!!
      *
      * @param query String
      * @param sess Session
@@ -500,7 +495,8 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 ResultSet rs = statement.executeQuery();
                 while (rs.next()){
                     for (int i=0; i < columns.length; i++){
-                        result.append("<br/>");
+                        if (i!=0)
+                            result.append(", ");
                         Object resultObject=rs.getObject(columns[i]);
                         if (resultObject instanceof java.lang.Double){
                             double resultDouble=((Double)resultObject).doubleValue();
@@ -508,7 +504,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                             resultDouble=Math.round(resultDouble);
                             resultDouble/=100;
                             result.append(resultDouble);
-                        }else{
+                        } else if (resultObject!=null) {
                             result.append(resultObject);
                         }
                     }
@@ -568,7 +564,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * informatiebron. Deze link zal enigszins aangepast moeten worden om tot vollende
              * werkende link te dienen.
              */
-            } else if (td.getDataType().getId() == DataTypen.URL && td.getCommando()!=null) {                
+            } else if (td.getDataType().getId() == DataTypen.URL && td.getCommando()!=null) {  
                 StringBuffer url = new StringBuffer(td.getCommando());
                 url.append(Themas.THEMAID);
                 url.append("=");

@@ -357,7 +357,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     }
     
     private void populateThemaDataForm(ThemaData td, DynaValidatorForm dynaForm, HttpServletRequest request) {
-        if (td==null)
+         if (td==null)
             return;
         if (td.getId()!=null)
             dynaForm.set("themaDataID", Integer.toString(td.getId()));

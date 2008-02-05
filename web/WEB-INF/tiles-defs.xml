@@ -21,10 +21,7 @@
         <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
     </definition>
     <definition name="home" extends="algemeen">
-        <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
-    </definition>
-    <definition name="index" extends="algemeen">
-        <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>
     </definition>
     
     <!-- etl -->   

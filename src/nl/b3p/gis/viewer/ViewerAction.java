@@ -24,7 +24,6 @@ import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.GisPrincipal;
-import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import nl.b3p.wms.capabilities.SrsBoundingBox;
 import org.apache.commons.logging.Log;
@@ -41,7 +40,7 @@ public class ViewerAction extends BaseGisAction {
     
     private static final Log log = LogFactory.getLog(ViewerAction.class);
     
-    protected static final String KNOP = "knop";
+    protected static final String LIST = "list";
     protected static final String LOGIN = "login";
     
     /**
@@ -55,18 +54,17 @@ public class ViewerAction extends BaseGisAction {
         
         ExtendedMethodProperties hibProp = null;
         
-        hibProp = new ExtendedMethodProperties(KNOP);
-        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp = new ExtendedMethodProperties(LIST);
+        hibProp.setDefaultForwardName(LIST);
         hibProp.setAlternateForwardName(FAILURE);
-        map.put(KNOP, hibProp);
+        map.put(LIST, hibProp);
         
         return map;
     }
     // </editor-fold>
     
     /**
-     * Dit is een voorbeeld knop zoals deze in de jsp zou kunnen staan.
-     * De property van die knop is dan 'knop'.
+     * De knop berekent een lijst van thema's en stuurt dan door.
      *
      * @param mapping The ActionMapping used to select this instance.
      * @param dynaForm The DynaValidatorForm bean for this request.
@@ -78,16 +76,10 @@ public class ViewerAction extends BaseGisAction {
      * @throws Exception
      */
     // <editor-fold defaultstate="" desc="public ActionForward knop(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
-    public ActionForward knop(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward list(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         
-        ActionErrors errors = dynaForm.validate(mapping, request);
-        if(!errors.isEmpty()) {
-            addMessages(request, errors);
-            addAlternateMessage(mapping, request, VALIDATION_ERROR_KEY);
-            return getAlternateForward(mapping, request);
-        }
-        
-        createLists(dynaForm, request);
+        List themalist = getValidThemas(false, null, request);
+        request.setAttribute("themalist", themalist);
         
         addDefaultMessage(mapping, request);
         return getDefaultForward(mapping, request);
@@ -95,7 +87,6 @@ public class ViewerAction extends BaseGisAction {
     // </editor-fold>
     
     /**
-     * DOCUMENT ME!!!
      *
      * @param mapping The ActionMapping used to select this instance.
      * @param dynaForm The DynaValidatorForm bean for this request.
@@ -106,7 +97,6 @@ public class ViewerAction extends BaseGisAction {
      *
      * @throws Exception
      */
-    // <editor-fold defaultstate="" desc="public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //als er geen user principal is (ook geen anoniem) dan forwarden naar de login.
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
@@ -117,20 +107,23 @@ public class ViewerAction extends BaseGisAction {
         createLists(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }
-    // </editor-fold>
     
+        
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         super.createLists(dynaForm, request);
         List ctl = SpatialUtil.getValidClusters();
         List themalist = getValidThemas(false, ctl, request);
         Map rootClusterMap = getClusterMap(themalist, ctl, null);
         
-        request.setAttribute("tree", createJasonObject(rootClusterMap));
-         // zet kaartenbalie url
-        request.setAttribute("kburl", HibernateUtil.KBURL);
+        Integer actiefThemaId = null;
+        Themas actiefThema = SpatialUtil.getThema(request.getParameter("id"));
+        if (actiefThema!=null)
+            actiefThemaId = actiefThema.getId();
+        
+        request.setAttribute("tree", createJasonObject(rootClusterMap, actiefThemaId));
         
         //stukje voor BBox toevoegen.
-        GisPrincipal user = GisPrincipal.getGisPrincipal(request);        
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         Set bboxen=user.getSp().getTopLayer().getSrsbb();
         Iterator it=bboxen.iterator();
         while(it.hasNext()){
@@ -140,9 +133,9 @@ public class ViewerAction extends BaseGisAction {
                     request.setAttribute("startExtent",bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy());
                     break;
                 }
-            }            
+            }
         }
-       
+        
     }
     
     private Map getClusterMap(List themalist, List clusterlist, Clusters rootCluster) throws JSONException, Exception {
@@ -194,7 +187,7 @@ public class ViewerAction extends BaseGisAction {
         return children;
     }
     
-    protected JSONObject createJasonObject(Map rootClusterMap) throws JSONException {
+    protected JSONObject createJasonObject(Map rootClusterMap, Integer actiefThemaId) throws JSONException {
         if (rootClusterMap==null || rootClusterMap.isEmpty())
             return null;
         
@@ -203,12 +196,12 @@ public class ViewerAction extends BaseGisAction {
             return null;
         
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
-        root.put("children", getSubClusters(clusterMaps, null));
+        root.put("children", getSubClusters(clusterMaps, null, actiefThemaId));
         
         return root;
     }
     
-    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray) throws JSONException {
+    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, Integer actiefThemaId) throws JSONException {
         if(subclusterMaps == null)
             return clusterArray;
         
@@ -221,9 +214,9 @@ public class ViewerAction extends BaseGisAction {
                     "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
             
             List childrenList = (List)clMap.get("children");
-            JSONArray childrenArray = getChildren(childrenList);
+            JSONArray childrenArray = getChildren(childrenList, actiefThemaId);
             List subsubclusterMaps = (List)clMap.get("subclusters");
-            childrenArray = getSubClusters(subsubclusterMaps, childrenArray);
+            childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actiefThemaId);
             jsonCluster.put("children",childrenArray);
             
             if (clusterArray==null)
@@ -234,7 +227,7 @@ public class ViewerAction extends BaseGisAction {
         return clusterArray;
     }
     
-    private JSONArray getChildren(List children) throws JSONException {
+    private JSONArray getChildren(List children, Integer actiefThemaId) throws JSONException {
         if(children == null)
             return null;
         
@@ -242,8 +235,9 @@ public class ViewerAction extends BaseGisAction {
         Iterator it = children.iterator();
         while(it.hasNext()) {
             Themas th = (Themas) it.next();
+            Integer themaId = th.getId();
             String ttitel = th.getNaam();
-            JSONObject jsonCluster = new JSONObject().put("id", th.getId()).put("type", "child").put("title", ttitel).put("cluster", false);
+            JSONObject jsonCluster = new JSONObject().put("id", themaId).put("type", "child").put("title", ttitel).put("cluster", false);
             
             if (th.getOrganizationcodekey() != null && th.getOrganizationcodekey().length() > 0) {
                 jsonCluster.put("organizationcodekey", th.getOrganizationcodekey().toUpperCase());
@@ -251,16 +245,26 @@ public class ViewerAction extends BaseGisAction {
                 jsonCluster.put("organizationcodekey", "");
             }
             
-            if (th.isVisible()) {
+            if (actiefThemaId!=null && themaId!=null && themaId.compareTo(actiefThemaId)==0) {
                 jsonCluster.put("visible", "on");
+                if (th.isAnalyse_thema()) {
+                    jsonCluster.put("analyse", "active");
+                } else {
+                    jsonCluster.put("analyse", "off");
+                }
             } else {
-                jsonCluster.put("visible", "off");
-            }
-            
-            if (th.isAnalyse_thema()) {
-                jsonCluster.put("analyse", "on");
-            } else {
-                jsonCluster.put("analyse", "off");
+                // als een actiefThemaId is doorgegeven, dan negeren we de default
+                // instelling voor aanzetten kaartlagen en zetten allen die kaart aan.
+                if (th.isVisible() && actiefThemaId==null) {
+                    jsonCluster.put("visible", "on");
+                } else {
+                    jsonCluster.put("visible", "off");
+                }
+                if (th.isAnalyse_thema()) {
+                    jsonCluster.put("analyse", "on");
+                } else {
+                    jsonCluster.put("analyse", "off");
+                }
             }
             
             if(th.getWms_layers_real() != null) {
@@ -276,7 +280,7 @@ public class ViewerAction extends BaseGisAction {
             }
             if (th.getMetadata_link()!=null){
                 String metadatalink=th.getMetadata_link();
-                metadatalink=metadatalink.replaceAll("%id%",""+th.getId());
+                metadatalink=metadatalink.replaceAll("%id%",""+themaId);
                 jsonCluster.put("metadatalink",metadatalink);
             }else{
                 jsonCluster.put("metadatalink","#");

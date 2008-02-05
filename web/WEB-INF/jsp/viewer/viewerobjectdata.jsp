@@ -5,10 +5,10 @@
     <c:when test="${not empty object_data}">
         <c:forEach var="thema_object_data" items="${object_data}">
             <strong>
-                ${thema_object_data[0]}
+                ${thema_object_data[1]}
             </strong>
             <table>
-                <c:forEach var="regel" items="${thema_object_data[1]}">
+                <c:forEach var="regel" items="${thema_object_data[2]}">
                     <tr>
                         <c:forEach var="item" items="${regel}" end="1">
                             <td>
@@ -21,6 +21,6 @@
         </c:forEach>
     </c:when>
     <c:otherwise>
-        Er is geen objectdata gevonden!
+        Er zijn geen gebieden gevonden!
     </c:otherwise>
 </c:choose>

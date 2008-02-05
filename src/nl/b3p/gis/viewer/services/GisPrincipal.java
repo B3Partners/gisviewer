@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import nl.b3p.wms.capabilities.Layer;
 import nl.b3p.wms.capabilities.Roles;
 import nl.b3p.wms.capabilities.ServiceProvider;
@@ -21,6 +20,7 @@ import nl.b3p.wms.capabilities.StyleDomainResource;
 import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.securityfilter.filter.SecurityRequestWrapper;
 
 public class GisPrincipal implements Principal {
     
@@ -155,10 +155,6 @@ public class GisPrincipal implements Principal {
     
     public static GisPrincipal getGisPrincipal(HttpServletRequest request) {
         Principal user = request.getUserPrincipal();
-        if (user==null) {
-            HttpSession sess = request.getSession();
-            user = (Principal)sess.getAttribute(ANONYMOUS_PRINCIPAL);
-        }
         if (user==null){
             //als user null is dan proberen een capabilitie op te halen zonder rollen
             WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
@@ -170,28 +166,37 @@ public class GisPrincipal implements Principal {
             String url = HibernateUtil.KBURL;
             if (url.lastIndexOf('?') > 0)
                 url += "&";
-            else 
+            else
                 url += "?";
             url += CAPABILITIES_QUERYSTRING;
+            
+            log.debug("Trying anonymous login with url: " + url);
             
             try {
                 sp = wmscr.getProvider(url, null, null);
             } catch (Exception ex) {
-                log.debug("Can't log in anonymous");
+                // log.error("", ex);
+                log.debug("Can't log in anonymous: " +  ex.getMessage());
             }
-
             if (sp==null) {
                 log.error("No ServiceProvider found, denying login!");
                 return null;
             }
             user = new GisPrincipal(HibernateUtil.ANONYMOUS_USER, sp);
-            if (user!=null){
-                request.getSession().setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
+            
+            if (!(user instanceof GisPrincipal))
+                return null;
+            
+            if (request instanceof SecurityRequestWrapper) {
+                SecurityRequestWrapper srw = (SecurityRequestWrapper)request;
+                srw.setUserPrincipal(user);
+                log.debug("Automatic login for user: " + HibernateUtil.ANONYMOUS_USER);
             }
+            
         }
-        if (user==null || !(user instanceof GisPrincipal)){
+        
+        if (!(user instanceof GisPrincipal))
             return null;
-        }
         return (GisPrincipal)user;
     }
 }

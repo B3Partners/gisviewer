@@ -19,7 +19,7 @@
             <form-property name="mailhost" type="java.lang.String" initial="kmail.b3p.nl"/>
         </form-bean>
         
-       <form-bean name="themaForm" type="org.apache.struts.validator.DynaValidatorForm">
+        <form-bean name="themaForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
             <form-property name="themaID" type="java.lang.String"/>
@@ -55,16 +55,16 @@
             <form-property name="view_geomtype" type="java.lang.String"/>
             <form-property name="visible" type="java.lang.Boolean"/>
             <form-property name="themadataobjecten" type="java.lang.String[]"/>
-       </form-bean>
-       <form-bean name="clusterForm" type="org.apache.struts.validator.DynaValidatorForm">
+        </form-bean>
+        <form-bean name="clusterForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
             <form-property name="clusterID" type="java.lang.String"/>
             <form-property name="naam" type="java.lang.String"/>
             <form-property name="omschrijving" type="java.lang.String"/>
             <form-property name="parentID" type="java.lang.String"/>
-      </form-bean>
-      
+        </form-bean>
+        
         <form-bean name="themaDataForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
@@ -82,9 +82,24 @@
             <form-property name="commando" type="java.lang.String"/>
             <form-property name="kolomnaam" type="java.lang.String"/>
             <form-property name="dataorder" type="java.lang.String"/>
-      </form-bean>
-
- 
+        </form-bean>
+        
+        <form-bean name="viewerForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            <form-property name="themaid" type="java.lang.String"/>
+            <form-property name="xcoord" type="java.lang.String"/>
+            <form-property name="ycoord" type="java.lang.String"/>
+            <form-property name="scale" type="java.lang.String"/>
+            <form-property name="lagen" type="java.lang.String"/>
+            <form-property name="locatieveld" type="java.lang.String"/>
+            <form-property name="extraCriteria" type="java.lang.String"/>
+            <form-property name="geselecteerd_object" type="java.lang.String"/>
+            <form-property name="zoekopties" type="java.lang.String"/>
+            <form-property name="zoekopties_object" type="java.lang.String"/>
+            <form-property name="zoekopties_waarde" type="java.lang.String"/>
+        </form-bean>
+        
     </form-beans>
     
     <global-exceptions>
@@ -95,25 +110,26 @@
     </global-forwards>
     
     <action-mappings>
-        <action path="/index" forward="index"/>
+        <action path="/index" type="nl.b3p.gis.viewer.services.IndexAction">
+            <forward name="success" path="home"/>
+            <forward name="login" path="login"/>
+            <forward name="loginError" path="login"/>
+            <forward name="logout" path="/login.do" redirect="true"/>
+        </action>
+        <action path="/login" forward="/index.do?login=t"/>
+        <action path="/loginError" forward="/index.do?loginError=t"/>
+        <action path="/logout" forward="/index.do?logout=t"/>
         <action path="/help" forward="help"/>
-        <action path="/login" forward="login"/>
-        <action path="/loginError" type="nl.b3p.gis.viewer.services.LoginAction">
-            <forward name="success" path="login"/>
-        </action>
-        <action path="/logout" type="nl.b3p.gis.viewer.services.LogoutAction">
-            <forward name="success" path="/index.do" redirect="true"/>
-        </action>
+        <action path="/home" forward="home"/>
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>
             <forward name="login" path="login"/>
+            <forward name="list" path="index"/>
         </action>
-        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction">
-            <!-- <forward name="success" path="viewerdata"/> -->
+        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction" name="viewerForm" scope="request" validate="false">
             <forward name="failure" path="viewerdata"/>
             <forward name="admindata" path="vieweradmindata"/>
-            <forward name="doanalyse" path="vieweradmindata"/>
             <forward name="metadata" path="viewermetadata"/>
             <forward name="objectdata" path="viewerobjectdata"/>
             <forward name="analysedata" path="vieweranalysedata"/>
@@ -124,10 +140,6 @@
         <action path="/etl" type="nl.b3p.gis.viewer.ETLOverviewAction">
             <forward name="success" path="etlhome"/>
         </action>
-        
-        <!-- Deze wordt op dit moment niet gebruikt, kan dus net zo goed uitgeschakeld worden.
-        <action path="/etlscheduler" forward="etlscheduler"/>
-        -->
         
         <action path="/etltransform" type="nl.b3p.gis.viewer.ETLTransformAction">
             <forward name="success" path="etltransform"/>

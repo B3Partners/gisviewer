@@ -1,54 +1,65 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
+<%@ page isELIgnored="false"%>
 
-<c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
-<c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
+<script>
+    function printpage() {
+        window.print(); 
+    }
+</script>
 
-<c:set var="links" value='<a class="*" href="configThema.do">&#155; Configuratie</a>%<a class="*" href="etl.do">&#155; ETL Themabeheer</a>%<a class="*" href="viewer.do">&#155; Viewer</a>%<a class="*" href="index.do">&#155; Home</a>' />
+<c:if test="${pageContext.request.remoteUser != null}">
+    <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
+        <c:set var="beheerder" value="true"/>
+    </c:if>
+</c:if>
 
-<div class="topmenu topmenu_basis">
-    <c:set var="lnkArray" value="${fn:split(links, '%')}" />
-    
-    <c:if test="${requestJSP eq 'index.do'}">
-        <c:set var="activelink" value="4" />
-    </c:if>
-    <c:if test="${requestJSP eq 'viewer.do'}">
-        <c:set var="activelink" value="3" />
-    </c:if>
-    <c:if test="${requestJSP eq 'etl.do'}">
-        <c:set var="activelink" value="2" />
-    </c:if>
-    <c:if test="${requestJSP eq 'configThema.do'}">
-        <c:set var="activelink" value="1" />
-    </c:if>
-    
-    <c:forEach items="${lnkArray}" var="link" varStatus="counter">
+<div class="topmenu">
+    <div class="topmenu_menu">
+        <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
+        <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
+        
+        <c:set var="stijlklasse" value="menulink" />
+        <c:if test="${requestJSP eq 'help.do'}">
+            <c:set var="stijlklasse" value="activemenulink" />
+        </c:if>
+        <html:link page="/help.do" styleClass="${stijlklasse}" module="">&#155; Help</html:link>
+        
         <c:choose>
-            <c:when test="${counter.count == activelink}">
-                <c:set var="link" value="${fn:replace(link, '*', 'activemenulink')}" />    
+            <c:when test="${beheerder == true}">
+                <c:set var="stijlklasse" value="menulink" />
+                <c:if test="${requestJSP eq 'configThema.do'}">
+                    <c:set var="stijlklasse" value="activemenulink" />
+                </c:if>
+                <html:link page="/configThema.do" styleClass="${stijlklasse}" module="">&#155; Configuratie</html:link>
             </c:when>
             <c:otherwise>
-                <c:set var="link" value="${fn:replace(link, '*', 'menulink')}" />
+                <c:set var="stijlklasse" value="menulink" />
+                <c:if test="${requestJSP eq 'contact.do'}">
+                    <c:set var="stijlklasse" value="activemenulink" />
+                </c:if>
+                <html:link page="/index.do" styleClass="${stijlklasse}" module="">&#155; Contact</html:link>
             </c:otherwise>
         </c:choose>
-        <c:choose>
-            <c:when test="${counter.count == 1}">
-                <c:if test="${pageContext.request.remoteUser != null}">
-                    <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
-                        <c:out value="${link}" escapeXml="false" />
-                    </c:if>
-                </c:if>
-            </c:when>
-            <c:when test="${counter.count == 2}">
-                <c:if test="${pageContext.request.remoteUser != null}">
-                    <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
-                        <c:out value="${link}" escapeXml="false" />
-                    </c:if>
-                </c:if>
-            </c:when>
-            <c:otherwise>
-                <c:out value="${link}" escapeXml="false" />
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
+        
+        <c:set var="stijlklasse" value="menulink" />
+        <c:if test="${requestJSP eq 'uitleg.do'}">
+            <c:set var="stijlklasse" value="activemenulink" />
+        </c:if>
+        <html:link page="/index.do" styleClass="${stijlklasse}" module="">&#155; Uitleg</html:link>
+        
+        <html:link href="javascript: printpage();" styleClass="menulink" module="">&#155; Print kaart</html:link>
+        
+        <c:set var="stijlklasse" value="menulink" />
+        <c:if test="${requestJSP eq 'viewer.do'}">
+            <c:set var="stijlklasse" value="activemenulink" />
+        </c:if>
+        <html:link page="/viewer.do" styleClass="${stijlklasse}" module="">&#155; Viewer</html:link>
+        
+        <c:set var="stijlklasse" value="menulink" />
+        <c:if test="${requestJSP eq 'index.do'}">
+            <c:set var="stijlklasse" value="activemenulink" />
+        </c:if>
+        <html:link page="/index.do" styleClass="${stijlklasse}" module="">&#155; Home</html:link>
+    </div>
 </div>
 <div class="menu_boven_logo"></div>

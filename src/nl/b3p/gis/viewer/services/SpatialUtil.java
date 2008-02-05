@@ -666,19 +666,16 @@ public class SpatialUtil {
      * @return String
      *
      */
-    // <editor-fold defaultstate="" desc="static public String hasRelationQuery(String tb1,String geomColumn1,String tb2, String geomColumn2, String relationFunction,String saf,String idColumnName,String analyseObjectId, String extraCriteriaString)">
     static public String hasRelationQuery(String tb1, String geomColumn1, String tb2, String geomColumn2,
             String relationFunction, String saf, String idColumnName, String analyseObjectId, String extraCriteriaString){
-        //"select * from <themaGeomTabel> tb1, <analyseGeomTable> tb2 where tb1.<theGeom> tb2.<theGeom>";
         StringBuffer sq= new StringBuffer();
         sq.append("select tb1."+saf+" ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
         sq.append("where tb2."+idColumnName+" = "+analyseObjectId+" ");
         sq.append("and "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+") ");
-        sq.append(extraCriteriaString + "limit 50");
+        sq.append(extraCriteriaString + " limit 50");
         return sq.toString();
     }
-    // </editor-fold>
     
     /**
      * DOCUMENT ME!
@@ -693,15 +690,12 @@ public class SpatialUtil {
      * @return String
      *
      */
-    // <editor-fold defaultstate="" desc="static public String containsQuery(String select,String table1, String table2, String tableIdColumn1,String tableId1, String extraCriteria)">
-    static public String containsQuery(String select, String table1, String table2, String tableIdColumn1,
+    static public String withinQuery(String select, String table1, String table2, String tableIdColumn1,
             String tableId1, String extraCriteria){
-        return containsQuery(select,table1,"the_geom",table2,"the_geom",tableIdColumn1,tableId1, extraCriteria);
+        return withinQuery(select,table1,"the_geom",table2,"the_geom",tableIdColumn1,tableId1, extraCriteria);
     }
-    // </editor-fold>
     
     /**
-     * DOCUMENT ME!
      *
      * @param select String
      * @param table1 String
@@ -715,8 +709,7 @@ public class SpatialUtil {
      * @return String
      *
      */
-    // <editor-fold defaultstate="" desc="static public String containsQuery(String select,String table1,String geomColumn1, String table2, String geomColumn2,String tableIdColumn1,String tableId1, String extraCriteria)">
-    static public String containsQuery(String select, String table1, String geomColumn1, String table2,
+    static public String withinQuery(String select, String table1, String geomColumn1, String table2,
             String geomColumn2, String tableIdColumn1, String tableId1, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
@@ -724,10 +717,9 @@ public class SpatialUtil {
         sq.append("from ");
         sq.append(table1+ " tb1, "+table2+" tb2 where ");
         sq.append("tb1."+tableIdColumn1+" = "+tableId1+" ");
-        sq.append("and Contains(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
+        sq.append("and Within(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
     }
-    // </editor-fold>
 
     public static String getAreaQuery(String tableName, String geomColumn, String attributeName, String compareValue) {        
         StringBuffer sq= new StringBuffer();

@@ -89,10 +89,12 @@ public class WfsUtil {
         if(t==null || t.getConnectie()==null || !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS))
             return null;
         OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
-        or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());        
-        WFS_Capabilities cap= OgcWfsClient.getCapabilities(or);
+        or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());                
         GetFeature gf = OgcWfsClient.getGetFeatureRequest(or);
+        //beide nodig voor het maken van een bbox wfs query
+        WFS_Capabilities cap= OgcWfsClient.getCapabilities(or);
         FeatureType ft=OgcWfsClient.getCapabilitieFeatureType(cap,t.getAdmin_tabel()); 
+        
         double[] bbox=new double[4];
         double distance2=distance/2;
         bbox[0]=x-distance2;
@@ -100,6 +102,16 @@ public class WfsUtil {
         bbox[2]=x+distance2;
         bbox[3]=y+distance2; 
         OgcWfsClient.addBboxFilter(gf,getGeometryAttributeName(t),bbox, ft);        
+        return OgcWfsClient.getFeatureElements(gf,or);
+    }
+    
+    public static ArrayList getWFSObjects(Themas t, String key, String value) throws Exception {
+        if(t==null || t.getConnectie()==null || !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS))
+            return null;
+        OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
+        or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());        
+        GetFeature gf = OgcWfsClient.getGetFeatureRequest(or);        
+        OgcWfsClient.addPropertyIsEqualToFilter(gf,key,value);        
         return OgcWfsClient.getFeatureElements(gf,or);
     }
     

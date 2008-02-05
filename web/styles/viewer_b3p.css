@@ -85,11 +85,11 @@ a:hover{
 /* Menu style */
 .topmenu {
     background-image: none;
-    width: 440px;
+    width: 480px;
     height: 50px;
     position: absolute;
     left: 50%;
-    margin-left: 46px;
+    margin-left: 6px;
     margin-top: 18px;
 }
 
@@ -225,7 +225,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 #rightdiv {
     float: left;
     width: 291px;
-    height: 487px;
+    height: 387px;
     margin-top: 0px;
     margin-bottom: 0px;
     margin-left: 5px;
@@ -245,7 +245,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     background-repeat: repeat-x;
     background-color: #19619B;
     background-position: 0% 0%;
-    height: 467px;
+    height: 373px;
     color: White;
     margin: 0px;
 }
@@ -258,9 +258,16 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 /* Stijl de tabvelden met een iframe (object en analyse) */
 .tabvak_with_iframe {
     border: 0px none White;
-    height: 473px;
+    height: 373px;
     margin: 0px;
     padding: 0px;
+}
+
+/* Stijl van de layerlijst DIV */
+#treevak {
+    height: 367px;
+    width: 287px;
+    margin: 0px;
 }
 
 /* Stijl van de Object en Analyse DIV */
@@ -268,12 +275,12 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     margin: 0px;
     padding: 0px;
     width: 291px;
-    height: 473px;   
+    height: 373px;  
 }
 
 /* Overkoepelende DIV rondom velden met de tab inhoud */
 #tab_container {
-    height: 458px;
+    height: 358px;
     width: 291px;
     color: White;
 }
@@ -311,7 +318,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 
 /* Stijl van de JAVASCRIPT lagen-lijst */
 #layermaindiv {
-    height: 455px;
+    height: 355px;
     width: 276px;
 }
 
@@ -323,7 +330,13 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 /* Stijl voor de Volgorde/Legenda tab */
 #volgordevak{
     width: 279px;
-    height: 461px;
+    height: 361px;
+}
+
+/* Stijl van het infovak (RD coordinaten, zoeker, e.d.) */
+#infovak{
+    width: 287px;
+    height: 367px;
 }
 
 /* Stijl van DIVs in het infovak (RD coordinaten, zoeker, e.d.) */
@@ -430,7 +443,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 
 .admin_data_content_div {
     overflow: auto;
-    height: 245px;
+    height: 50px;
     width: 948px;
 }
 

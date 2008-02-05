@@ -12,7 +12,7 @@
         <META HTTP-EQUIV="Expires" CONTENT="-1">
         <META HTTP-EQUIV="Cache-Control" CONTENT="max-age=0, no-store">
         
-        <title>B3P GIS Suite Demo</title>
+        <title>POL 2006</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/etl.css" rel="stylesheet" type="text/css">
@@ -37,8 +37,7 @@
         
     </head>
     <body onload="checkLocation()">
-        <!-- !!! TEN BEHOEVE VAN NBR DESIGN COMMENTAAR ROND ONDERSTAANDE DIVS WEGHALEN !!! -->
-        <!-- <div id="boven_div"> --><div id="menu_div"><!-- <div id="menubg"> --><tiles:insert attribute="menu" /></div><!-- </div></div> -->
+        <div id="menu_div"><tiles:insert attribute="menu" /></div>
         <div id="maindiv"><div id="content_div"><tiles:insert attribute="content" /></div></div>
         <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div>
         <tiles:insert definition="googleAnalytics"/>        

@@ -1,9 +1,9 @@
 .topmenu {
-    margin-left: 41px;
+    margin-left: 1px;
 }
 
 .topmenu_basis a.activemenulink, a.activemenulink:visited, a.activemenulink:active { 
-    margin-left: 40px;
+    margin-left: 0px;
 }
 
 #map {

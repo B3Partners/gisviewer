@@ -23,6 +23,6 @@
         Ingelogd als: <c:out value="${pageContext.request.remoteUser}"/> | <a href="#"  onclick="javascript:logout();">Uitloggen</a>
     </c:when>
     <c:otherwise>
-        <a href="login.do">Inloggen</a>
+        <html:link page="/login.do" module="">Inloggen</html:link>
     </c:otherwise>
 </c:choose>

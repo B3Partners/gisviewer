@@ -19,40 +19,34 @@
     var allActiveLayers="";
     var layerUrl=null;
     function doAjaxRequest(point_x, point_y) {
-        JMapData.getData(point_x, point_y, handleGetData);
-        JMapData.getKadastraleData(point_x, point_y, handleGetKadastraleData);
+        var infoArray = new Array();
+        infoArray[0] = "gm_naam";
+        infoArray[1] = "bu_naam";
+        JMapData.getData(point_x, point_y, infoArray, "wijk_2006_cbs", 100, 28992, handleGetData);
     }
 
     function handleGetData(str) {
         var rd = "X: " + str[0] + "<br />" + "Y: " + str[1];
+        var adres = str[3] + ", " + str[4]; // + " (afstand: " + str[2] + " m.)"
         document.getElementById('rdcoords').innerHTML = rd;
-        document.getElementById('hm_aanduiding').innerHTML = str[2] + " (afstand: " + str[3] + " m.)";
-        document.getElementById('wegnaam').innerHTML = str[4];
-        document.getElementById('rdcoords').innerHTML = rd;
-    }
-
-    function handleGetKadastraleData(str) {
-        document.getElementById('kadastraledata').innerHTML = str;
+        document.getElementById('kadastraledata').innerHTML = adres;
     }
 
     function handleGetAdminData(x,y) {
-        var childs = document.getElementsByName('selkaartlaag');
-        var selkaart = null;
-        for(i = 0; i < childs.length; i++) {
-            if(childs[i].checked) {
-                selkaart = childs[i];
-            }
-        }
-        if(selkaart == null) {
+        if(activeThemaId == null || activeThemaId == '') {
             alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
             return;
         }        
-        document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
+        document.forms[0].admindata.value = 't';
+        document.forms[0].metadata.value = '';
+        document.forms[0].objectdata.value = '';
+        document.forms[0].analysedata.value = '';
+        document.forms[0].themaid.value = activeThemaId;
+        document.forms[0].lagen.value='';
         document.forms[0].xcoord.value=x;
         document.forms[0].ycoord.value=y;
-        document.forms[0].metadata.value = '';
-        document.forms[0].admindata.value = 't';
-        document.forms[0].themaid.value = selkaart.value;
+        document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
+        document.forms[0].target = 'dataframe';
         document.forms[0].submit();
     }
     function openUrlInIframe(url){
@@ -60,120 +54,123 @@
         iframe.src=url;
     }
         
+    function popUp(URL, naam) {
+        var screenwidth = 600;
+        var screenheight = 500;
+        var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+        var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+        properties = "toolbar = 0, " + 
+                     "scrollbars = 1, " + 
+                     "location = 0, " + 
+                     "statusbar = 1, " + 
+                     "menubar = 0, " + 
+                     "resizable = 1, " + 
+                     "width = " + screenwidth + ", " + 
+                     "height = " + screenheight + ", " + 
+                     "top = " + popuptop + ", " + 
+                     "left = " + popupleft;
+        eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+    }
 
     var cookieArray = readCookie('checkedLayers');
-    function isInCookieArray(id) {
-        if(cookieArray == null) return false;
+    // 0 = niet in cookie en niet visible, 
+    // >0 = in cookie, <0 = geen cookie maar wel visible
+    // alse item.analyse=="active" dan altijd visible
+    function getLayerPosition(item) {
+        if(cookieArray == null) {
+            if (item.visible=="on" || item.analyse=="active")
+                return -1; 
+            else
+                return 0;
+        }
         var arr = cookieArray.split(',');
         for(i = 0; i < arr.length; i++) {
-            if(arr[i] == id) {
-                return true;
+            if(arr[i] == item.id) {
+                return i+1;
             }
         }
-        return false;
+        if (item.analyse=="active")
+            return -1; 
+        return 0;
     }
 
     var activeThemaId = '';
-    var organizationCodeKey='';    
-    function setActiveThema(val) {
-        activeThemaId = val;
-        if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
-            flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
-        }
-    }
-   
-    function setOrganizationCodeKey(val){
-        organizationCodeKey=val;
-    }
-
-    function setAnalyseValue(x,y) {
-        document.forms[2].xcoord.value=x;
-        document.forms[2].ycoord.value=y;
-        document.forms[2].themaid.value = activeThemaId;
-        document.forms[2].submit();
-    }
-
-
-    var layersAan= new Array();
-    var doLayerClick= new Boolean(false);
-    var noCookieButVisible= new Boolean(false);
-    var activeLayerFromCookie = getActiveLayerId(readCookie('activelayer'));    
-    setActiveThema(activeLayerFromCookie);
-    function createLabel(container, item) {
-        doLayerClick=false;
-        if(item.cluster)
-            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
-        else {
-            if (navigator.appName=="Microsoft Internet Explorer") {
-                if((activeLayerFromCookie != null && activeLayerFromCookie == item.id) || activeThemaId==null || activeThemaId.length == 0){
-                    setOrganizationCodeKey(item.organizationcodekey);
-                    var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" checked="checked" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
-                    if(item.analyse=="on"){  
-                        setActiveThemaLabel(item.title);
-                        if (activeThemaId==null || activeThemaId.length == 0){
-                             setActiveThema(item.id);
-                        }
-                    }
-                }
-                else var el = document.createElement('<input type="radio" name="selkaartlaag" value="' + item.id + '" onclick="eraseCookie(\'activelayer\'); createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\'); setActiveThema(\'' + item.id + '\'); setActiveThemaLabel(\'' + item.title + '\');">');
+    function setActiveThema(id, label, overrule) {
+        if (activeThemaId==null || activeThemaId.length == 0 || overrule){
+            activeThemaId = id;
+            var atlabel = document.getElementById('actief_thema');
+            if (atlabel!=null && label!=null)
+                atlabel.innerHTML = 'Actieve thema: ' + label;
+            if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
+                flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
             }
-            else {
+        } 
+        return activeThemaId;
+    }
+    
+    var layersAan= new Array();
+    
+    function createLabel(container, item) {
+        if(item.cluster) {
+            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
+        } else {
+        
+            if(item.analyse=="on"){
+                setActiveThema(item.id, item.title);
+            } else if(item.analyse=="active"){
+                setActiveThema(item.id, item.title, true);
+            }
+            
+            var layerPos = getLayerPosition(item);
+
+            if (navigator.appName=="Microsoft Internet Explorer") {
+                var radioControleString = '<input type="radio" name="selkaartlaag" value="' + item.id + '"';
+                if (activeThemaId == item.id)
+                    radioControleString += ' checked="checked"';
+                radioControleString += ' onclick="eraseCookie(\'activelayer\');' + 
+                    ' createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\');' + 
+                    ' setActiveThema(\'' + item.id + '\', \'' + item.title + '\', true);"';
+                radioControleString += '>';
+                var el = document.createElement(radioControleString);
+                
+                var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
+                if(layerPos!=0)
+                    checkboxControleString += ' checked="checked"';
+                checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')"'; 
+                checkboxControleString += '>';
+                var el2 = document.createElement(checkboxControleString);
+                
+            } else {
                 var el = document.createElement('input');
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
-                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id); setActiveThemaLabel(item.title) }
-                if((activeLayerFromCookie != null && activeLayerFromCookie == item.id) || activeThemaId==null || activeThemaId.length == 0){
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title) }
+                if (activeThemaId == item.id)
                     el.checked = true;
-                    setOrganizationCodeKey(item.organizationcodekey);
-                    if(item.analyse=="on"){
-                        setActiveThemaLabel(item.title);
-                        if (activeThemaId==null || activeThemaId.length == 0){
-                            setActiveThema(item.id);
-                        }
-                    }
-                }
-            }
-            if (navigator.appName=="Microsoft Internet Explorer") {
-                if(isInCookieArray(item.id) || (cookieArray==null && item.visible=="on")){
-                    var el2 = document.createElement('<input type="checkbox" id="' + item.id + '" checked="checked" value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')">');
-                    doLayerClick=true;
-                    if (cookieArray==null && item.visible=="on"){
-                        noCookieButVisible=true;
-                    }
-                }
-                else var el2 = document.createElement('<input type="checkbox" id="' + item.id + '" value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')">');
-            }
-            else {
+
                 var el2 = document.createElement('input');
                 el2.id = item.id;
                 el2.type = 'checkbox';
                 el2.value = item.id;
                 el2.onclick = function(){checkboxClick(this, false, item.title);}
-                if(isInCookieArray(item.id) || (cookieArray==null && item.visible=="on")){
+                if(layerPos!=0)
                     el2.checked = true;
-                    doLayerClick=true;
-                    if (cookieArray==null && item.visible=="on"){
-                        noCookieButVisible=true;
-                    }
-                }
             }
+            
             el2.theItem=item;
-            if (doLayerClick){
-                if (noCookieButVisible){
-                    layersAan.unshift(el2);
-                }
-                else{
-                    layersAan.push(el2);
-                }
-            }
+            
+            if (layerPos<0)
+                layersAan.unshift(el2);
+            else if (layerPos>0)
+                layersAan.push(el2);
+            
             var lnk = document.createElement('a');
             lnk.innerHTML = item.title ? item.title : item.id;
             lnk.href = '#';
-            //lnk.onclick = function(){ getMetaData(item.id) };
-            if (item.metadatalink && item.metadatalink.length > 0)
-                lnk.onclick = function(){openUrlInIframe(item.metadatalink)}; 
-            if(item.analyse=="on"){
+            if (item.metadatalink && item.metadatalink.length > 1)
+                lnk.onclick = function(){popUp(item.metadatalink, "metadata")}; 
+            if(item.analyse=="on" || item.analyse=="active"){
                 container.appendChild(el);
             }
             if(item.wmslayers){
@@ -181,25 +178,7 @@
             }
             container.appendChild(document.createTextNode('  '));
             container.appendChild(lnk);
-
-
         }
-    }
-
-    function getActiveLayerId(cookiestring) {
-        if(!cookiestring) return null;
-        var items = cookiestring.split('##');
-        return items[0];
-    }
-
-    function getActiveThemaLabel(cookiestring) {
-        if(!cookiestring) return "Geen";
-        var items = cookiestring.split('##');
-        return items[1];
-    }
-
-    function setActiveThemaLabel(activeThemaLabel) {
-        document.getElementById('actief_thema').innerHTML = 'Actieve thema: ' + activeThemaLabel;
     }
 
     function switchTab(obj) {
@@ -240,11 +219,9 @@
             }
             if(checkboxArray.length > 0) {
                 var arrayString = getArrayAsString();
-                document.forms[1].lagen.value = arrayString;
-                document.forms[2].lagen.value = arrayString;
+                document.forms[0].lagen.value = arrayString;
             } else {
-                document.forms[1].lagen.value = 'ALL';
-                document.forms[2].lagen.value = 'ALL';
+                document.forms[0].lagen.value = 'ALL';
             }
         }
     }
@@ -280,11 +257,14 @@
             
             if (obj.theItem.wmslayers){
                 if (layerUrl==null){
-                    layerUrl="${kburl}";
+                    layerUrl="${kburl}"; 
                     if(layerUrl.indexOf('?')> 0)
                         layerUrl+='&';
                     else
                         layerUrl+='?';
+                        
+                    var organizationCodeKey = obj.theItem.organizationcodekey;   
+                        
                     if('${organizationcode}' != null && '${organizationcode}' != '' && organizationCodeKey != '') {
                         layerUrl = layerUrl + organizationCodeKey + "=${organizationcode}";
                     }
@@ -295,7 +275,6 @@
                 }
             }
         } else {
-            //alert("layer uit");
             deleteFromArray(obj);
             removeLayerFromVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
             if (obj.theItem.wmslayers){
@@ -335,26 +314,38 @@
             "\" layers=\""+layersToAdd+
             "\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
         if (flamingo && layerUrl!=null){            
-            flamingo.call("map1","removeLayer","fmcLayer");
-            flamingo.call("map1","addLayer",newLayer);
+            flamingo.call('map1','removeLayer','fmcLayer');
+            flamingo.call('map1','addLayer',newLayer);
         }
     }
     function loadObjectInfo(x,y) {
+        // vul object frame
+        document.forms[0].admindata.value = '';
+        document.forms[0].metadata.value = '';
+        document.forms[0].objectdata.value = 't';
+        document.forms[0].analysedata.value = '';
+        document.forms[0].themaid.value = activeThemaId;
+        
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
-            document.forms[1].lagen.value = arrayString;
-            document.forms[2].lagen.value = arrayString;
+            document.forms[0].lagen.value = arrayString;
             eraseCookie('checkedLayers');
             createCookie('checkedLayers', arrayString, '7');
         } else {
             eraseCookie('checkedLayers');
-            document.forms[1].lagen.value = 'ALL';
-            document.forms[2].lagen.value = 'ALL';
+            document.forms[0].lagen.value = 'ALL';
         }
-        document.forms[1].xcoord.value=x;
-        document.forms[1].ycoord.value=y;
-        document.forms[1].submit();
-        setAnalyseValue(x,y);
+        document.forms[0].xcoord.value = x;
+        document.forms[0].ycoord.value = y;
+        document.forms[0].scale.value = '';
+        document.forms[0].target = 'objectframe';
+        document.forms[0].submit();
+        
+        // vul analyse frame
+        document.forms[0].objectdata.value = '';
+        document.forms[0].analysedata.value = 't';
+        document.forms[0].target = 'analyseframe';
+        document.forms[0].submit();
     }
 
     function getArrayAsString() {
@@ -413,94 +404,38 @@
             createCookie(name,"",-1);
     }
 
-    function HideOrShow(controlToHide)
-    {
-        if (document.getElementById)
-        {
-            // Hide all regions
-            document.getElementById('show1').disabled = true;
-            document.getElementById('show2').disabled = true;
-            document.getElementById('show3').disabled = true;
-            document.getElementById('show1').value = 'search';
-            document.getElementById('show2').value = 'search';
-            document.getElementById('show3').value = 'search';
-
-            // Display the requested region
-            document.getElementById('show' + controlToHide).disabled = false;
-            document.getElementById('show' + controlToHide).value = '';
-        }
-    }
-
     function getCoords() {
-        var postcode = document.getElementById("show1").value;
-        var plaatsnaam = document.getElementById("show2").value;
-        var n_nr = document.getElementById("show3").value;
-        var hm = document.getElementById("show4").value;
+        var waarde = document.getElementById("locatieveld").value;
         document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
-        JMapData.getMapCoords(postcode, plaatsnaam, n_nr, hm, getCoordsCallbackFunction);
+        
+        var infoArray = new Array();
+        infoArray[0] = "gm_naam";
+        infoArray[1] = "bu_naam";
+        JMapData.getMapCoords(waarde, infoArray, "wijk_2006_cbs", 1000, 28992, getCoordsCallbackFunction);
     }
 
     function getCoordsCallbackFunction(values){
         var searchResults=document.getElementById("searchResults");
-        searchResults.innerHTML="";
-        if (values==null){
-            searchResults.innerHTML="Er zijn geen resultaten gevonden";
-        }else{
+        var sResult = "<br><b>Er zijn geen resultaten gevonden!<b>";
+        if (values!=null && values.length > 0) {
             if (values.length > 1){
-                var linkList="Meerdere resultaten gevonden: <br>";
-                for (var i =0; i < values.length; i++){
-                    linkList+="<a href='#' onclick='javascript: moveToExtent("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a><br>";
+                var displayLength = values.length;
+                if (displayLength<6) {
+                    sResult = "<br><b>Meerdere resultaten gevonden:<b><ol>";
+                } else {
+                    displayLength = 6;
+                    sResult = "<br><b>Er worden slechts 6 resultaten weergegeven:<b><ol>";
                 }
-                searchResults.innerHTML=linkList;
-            }
-            else{
-                moveToExtent(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
+                for (var i =0; i < displayLength; i++){
+                    sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a></li>";
+                }
+                sResult += "</ol>";
+            } else {
+                sResult = "<br><b>Locatie gevonden:<br>" + values[0].naam + "<b>";
+                moveAndIdentify(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
             }
         }
-    }
-
-    function showHide(nr, el) {
-        if(nr == 3 || nr == 4) {
-            document.getElementById('show1').className= 'inputDisabled';
-            document.getElementById('show1').value = '';
-            document.getElementById('show2').className= 'inputDisabled'
-            document.getElementById('show2').value = '';
-            document.getElementById('show3').className = 'inputEnabled';
-            document.getElementById('show4').className = 'inputEnabled';
-        } else if(nr == 2) {
-            document.getElementById('show1').className= 'inputDisabled'
-            document.getElementById('show1').value = '';
-            document.getElementById('show2').className = 'inputEnabled';
-            document.getElementById('show3').className= 'inputDisabled'
-            document.getElementById('show3').value = '';
-            document.getElementById('show4').className= 'inputDisabled'
-            document.getElementById('show4').value = '';
-        } else if(nr == 1) {
-            document.getElementById('show1').className = 'inputEnabled';
-            document.getElementById('show2').className= 'inputDisabled'
-            document.getElementById('show2').value = '';
-            document.getElementById('show3').className= 'inputDisabled'
-            document.getElementById('show3').value = '';
-            document.getElementById('show4').className= 'inputDisabled'
-            document.getElementById('show4').value = '';
-        }
-    }
-
-    function eraseSubmit() {
-        document.getElementById('show1').value = "";
-        document.getElementById('show2').value = "";
-        document.getElementById('show3').value = "";
-        document.getElementById('show4').value = "";
-
-        document.getElementById('show1').className = 'inputEnabled';
-        document.getElementById('show2').className = 'inputEnabled';
-        document.getElementById('show3').className = 'inputEnabled';
-        document.getElementById('show4').className = 'inputEnabled';
-
-        document.getElementById('show1').disabled = false;
-        document.getElementById('show2').disabled = false;
-        document.getElementById('show3').disabled = false;
-        document.getElementById('show4').disabled = false;
+        searchResults.innerHTML=sResult;
     }
 
     function addLayerToVolgorde(name, id, legendURL) {      
@@ -528,10 +463,6 @@
         div.title = name;
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
-        //TODO: Werkt niet omdat de hoogte van een image pas bekend is als hij geladen is.
-        //if(myImage.height != '23'){
-            div.appendChild(spanEl);
-        //}        
         div.appendChild(legendimg);
 
         if(!orderLayerBox.hasChildNodes()) {
@@ -544,11 +475,6 @@
     function removeLayerFromVolgorde(name, id) {
         var orderLayers=orderLayerBox.childNodes;
         orderLayerBox.removeChild(document.getElementById(id));
-        // for (var i=0; i < orderLayers.length; i++){
-        //     if (orderLayers[i].id==id){
-        //         orderLayerBox.removeChild(orderLayers[i]);
-        //     }
-        // }
     }
 
     function refreshMapVolgorde() {
@@ -591,31 +517,18 @@
 </script>
 
 <script type="text/javascript" src="<html:rewrite page="/scripts/niftycube.js"/>"></script>
-
 <div style="display: none;">
-    <form target="dataframe" method="post" action="viewerdata.do">
+    <html:form action="/viewerdata">
         <input type="hidden" name="admindata" />
         <input type="hidden" name="metadata" />
-        <input type="hidden" name="themaid" />
-        <input type="hidden" name="xcoord" />
-        <input type="hidden" name="ycoord" />
-        <input type="hidden" name="scale" />
-    </form>
-    
-    <form id="objectdataForm" name="objectdataForm" target="objectframe" method="post" action="viewerdata.do">
-        <input type="hidden" name="objectdata" value="t" />
-        <input type="hidden" name="lagen" />
-        <input type="hidden" name="xcoord" />
-        <input type="hidden" name="ycoord" />
-    </form>
-    
-    <form id="analysedataForm" name="analysedataForm" target="analyseframe" method="post" action="viewerdata.do">
-        <input type="hidden" name="analysedata" value="t" />
-        <input type="hidden" name="themaid" />
-        <input type="hidden" name="lagen" />
-        <input type="hidden" name="xcoord" />
-        <input type="hidden" name="ycoord" />
-    </form>
+        <input type="hidden" name="objectdata"/>
+        <input type="hidden" name="analysedata"/>
+        <html:hidden property="themaid" />
+        <html:hidden property="lagen" />
+        <html:hidden property="xcoord" />
+        <html:hidden property="ycoord" />
+        <html:hidden property="scale"/>
+    </html:form>
 </div>
 <div class="onderbalk">VIEWER<span><tiles:insert name="loginblock"/></span></div>
 <div id="bovenkant">
@@ -624,11 +537,11 @@
             <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
         </div>
         <script type="text/javascript">
-                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "653", "493", "8", "#FFFFFF");
+                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "653", "393", "8", "#FFFFFF");
         </script>
         <!--[if lte IE 6]>
             <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "652", "493", "8", "#FFFFFF");
+            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "652", "393", "8", "#FFFFFF");
             </script>
         <![endif]-->
         <script type="text/javascript">
@@ -653,17 +566,17 @@
                     document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
                     document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
                 } else if(demogebruiker) {                   
+                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
                     document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 96px;">Thema\'s</a></li>');
                     document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
-                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
                     document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
                     document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
                 } else {
-                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 57px;">Thema\'s</a></li>');
-                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 58px;">Legenda</a></li>');
-                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
-                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
-                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
+                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="display: none;">Thema\'s</a></li>');
+                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 144px;">Zoeker</a></li>');
+                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 143px;">Legenda</a></li>');
+                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
+                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
                 }
                 </script>
                 <!--[if lte IE 6]>
@@ -676,6 +589,7 @@
                     </script>
                 <![endif]-->
             </ul>
+            
         </div>
         <div id="tab_container">
             <div id="treevak" style="display: none;" class="tabvak">
@@ -688,23 +602,21 @@
                     <div id="orderLayerBox" class="orderLayerBox"></div>
                     <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" class="knop" />
                     <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" class="knop" />
-                    <input type="button" value="Kaart herladen" onclick="refreshMapVolgorde();" class="knop" />
-                    <input type="button" value="Verwijder alle lagen" onclick="deleteAllLayers();" class="knop" />
+                    <input type="button" value="Herladen" onclick="refreshMapVolgorde();" class="knop" />
+                    <input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" />
                 </form>
             </div>
             
             <div id="infovak" style="display: none;" class="tabvak">
                 <div id="start_message">
-                    Klik op een punt op de kaart voor aanvullende informatie.
+                    Kies de Info-tool en klik vervolgens op een punt<br/>
+                    op de kaart voor administratieve informatie<br/>
+                    van het object.
                 </div>
                 
                 <div id="algdatavak" style="display: none;">
                     <b>RD Co&ouml;rdinaten</b><br />
                     <span id="rdcoords"></span><br /><br />
-                    <b>Hectometer aanduiding</b><br />
-                    <span id="hm_aanduiding"></span><br /><br />
-                    <b>Wegnaam</b><br />
-                    <span id="wegnaam"></span><br /><br />
                     <b>Adres</b><br />
                     <span id="kadastraledata"></span>
                 </div>
@@ -713,26 +625,11 @@
                 <div>
                     <br>
                     <b>Zoek naar locatie:</b>
-                    <table>
-                        <tr>
-                            <td>Postcode:</td>
-                            <td><input type="text" id="show1" name="show1" onfocus="showHide(1, this);" size="5"/></td>
-                        </tr>
-                        <tr>
-                            <td>Plaatsnaam:</td>
-                            <td><input type="text" id="show2" name="show2" onfocus="showHide(2, this);" size="20"/></td>
-                        </tr>
-                        <tr>
-                            <td>Weg nr / hm:</td>
-                            <td>
-                                <input type="text" id="show3" name="show3" onfocus="showHide(3, this);" size="5"/> /
-                                <input type="text" id="show4" name="show4" onfocus="showHide(4, this);" size="5"/>
-                            </td>
-                        </tr>
-                    </table>
-                    
-                    <input type="button" value="Ga naar locatie" onclick="getCoords();" class="knop" />&nbsp;
-                    <input type="button" value="Wis invoer" onclick="eraseSubmit();" class="knop" /><br />
+                    <br>
+                    <input type="text" id="locatieveld" name="locatieveld" size="40"/>
+                    &nbsp;
+                    <input type="button" value=" Ga " onclick="getCoords();" class="knop" />
+                    <br>
                     <div class="searchResultsClass" id="searchResults"></div>
                     
                 </div>
@@ -754,7 +651,21 @@
 </div>
 
 <script type="text/javascript">
-        treeview_create({
+   function getActiveLayerId(cookiestring) {
+        if(!cookiestring) return null;
+        var items = cookiestring.split('##');
+        return items[0];
+    }
+    function getActiveLayerLabel(cookiestring) {
+        if(!cookiestring) return null;
+        var items = cookiestring.split('##');
+        return items[1];
+    }
+    var activeLayerIdFromCookie = getActiveLayerId(readCookie('activelayer'));    
+    var activeLayerLabelFromCookie = getActiveLayerLabel(readCookie('activelayer'));    
+    setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie);
+    
+    treeview_create({
             "id": "layermaindiv",
             "root": ${tree},
             "rootChildrenAsRoots": true,
@@ -768,9 +679,7 @@
             "saveScrollState": true,
             "expandAll": false
         });
-</script>
 
-<script type="text/javascript">
     var activeTab = readCookie('activetab');
     if(activeTab != null) {
         switchTab(document.getElementById(activeTab));
@@ -778,24 +687,22 @@
         switchTab(document.getElementById('tab0'));
     }
     Nifty("ul#nav a","medium transparent top");
-    //setActiveThemaLabel(getActiveThemaLabel(readCookie('activelayer')));
     var orderLayerBox= document.getElementById("orderLayerBox");
 
     //always call this script after the SWF object script has called the flamingo viewer.
-    //function wordt aangeroepen als er een identifie wordt gedaan met de tool op deze map.
+    //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
     function flamingo_map1_onIdentify(movie,extend){
         //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
         document.getElementById('start_message').style.display = 'none';
         document.getElementById('algdatavak').style.display = 'block';
 
         var loadingStr = "Bezig met laden...";
-        // document.getElementById('rdcoords').innerHTML = loadingStr;
-        // document.getElementById('hm_aanduiding').innerHTML = loadingStr;
-        // document.getElementById('wegnaam').innerHTML = loadingStr;
         document.getElementById('kadastraledata').innerHTML = loadingStr;
-        handleGetAdminData(extend.maxx,extend.maxy);
-        doAjaxRequest(extend.maxx,extend.maxy);
-        loadObjectInfo(extend.maxx,extend.maxy);
+        var xp = (extend.minx + extend.maxx)/2;
+        var yp = (extend.miny + extend.maxy)/2;
+        handleGetAdminData(xp,yp);
+        doAjaxRequest(xp,yp);
+        loadObjectInfo(xp,yp);
     }
     readCookieArrayIntoCheckboxArray();
     var doOnInit= new Boolean("true");
@@ -818,12 +725,13 @@
                 checkboxClick(newLayersAan[i],true,newLayersAan[i].theItem.title);
             }
             var bbox='${startExtent}';
-            if (bbox!=null && bbox.length>0){                
-                if (bbox.split(",").length==4){
+            if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
                     moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
                     setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-                }
-            }            
+            } else {
+                    moveToExtent(12000,304000,280000,620000);
+                    setFullExtent(12000,304000,280000,620000);
+            }
             refreshLayer();
         }
     }
@@ -833,6 +741,15 @@
     function setFullExtent(minx,miny,maxx,maxy){
         flamingo.callMethod("map1","setFullExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy});
     }
+    function doIdentify(minx,miny,maxx,maxy){
+        flamingo.callMethod("map1","identify", {minx:minx, miny:miny, maxx:maxx, maxy:maxy});
+        // TODO: Ook nog graag tool op Identify zetten, maar hoe?
+    }
+    function moveAndIdentify(minx,miny,maxx,maxy){
+        moveToExtent(minx,miny,maxx,maxy);
+        doIdentify(minx,miny,maxx,maxy);
+    }
+
 </script>
 
 <script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

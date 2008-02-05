@@ -36,9 +36,9 @@
                     <html:submit property="createAllThemaData" styleClass="knop">
                         Maak ontbrekende Themadata voor thema
                     </html:submit>
-                    <%--c:if test="${!save && !delete}">
+                    <%--<c:if test="${!save && !delete}">
                         <a href="#" class="datalink" onclick="javascript: document.getElementById('createAllThemaData').value='doe';submit()">Maak ontbrekende Themadata objecten voor thema</a>
-                    </c:if--%>
+                    </c:if>--%>
                 </td>
             </tr>
         </table>

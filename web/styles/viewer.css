@@ -1,6 +1,6 @@
 #bovenkant {
     width: 950px;
-    height: 498px;
+    height: 398px;
 }
 
 #algdatavak {
@@ -34,7 +34,7 @@
 #map{
     position: static;
     width: 658px;
-    height: 493px;
+    height: 393px;
     margin-left: 0px;
     margin-top: 0px;
     float: left;
@@ -44,7 +44,7 @@
 #rightdiv {
     float: left;
     width: 291px;
-    height: 476px;
+    height: 376px;
     margin-top: 21px;
 }
 #tabjes {
@@ -59,7 +59,7 @@
     padding: 2px;
     padding-left: 4px;
     width: 285px;
-    height: 453px;
+    height: 353px;
     float: left;
     border: 1px solid #606060;
     border-left: 0px none White;
@@ -72,7 +72,7 @@
     padding: 6px;
     padding-left: 6px;
     width: 279px;
-    height: 445px;
+    height: 345px;
 }
 
 #volgordevak form {
@@ -86,7 +86,7 @@
     padding-bottom: 0px;
     padding-right: 0px;
     width: 287px;
-    height: 455px;
+    height: 355px;
     float: left;
     border: 1px solid #606060;
     border-left: 0px none White;
@@ -96,18 +96,18 @@
     margin: 0px;
     border: 0px;
     width: 287px;
-    height: 455px;   
+    height: 355px;   
 }
 #analyseframe {
     margin: 0px;
     border: 0px;
     width: 287px;
-    height: 455px;   
+    height: 355px;   
 }
 #dataframe {
     float: left;
     width: 948px;
-    height: 265px;
+    height: 70px;
 }
 #dataframediv {
     border: 1px solid #606060;
@@ -123,7 +123,7 @@
     margin-top: 5px;
 }
 #tab_container {
-    height: 458px;
+    height: 358px;
     width: 291px;
 }
 #layermaindiv{
@@ -131,7 +131,7 @@
     margin: 0px;
     border: 0px;
     width: 277px;
-    height: 445px; 
+    height: 345px; 
     padding: 5px;
     overflow: auto;
 }
@@ -245,7 +245,7 @@ a:hover{
 
 .orderLayerBox{
     overflow: auto;
-    height: 325px;
+    height: 275px;
     width: 275px;
     border: 1px solid #606060;
     margin-top: 10px;

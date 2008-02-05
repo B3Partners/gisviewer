@@ -48,36 +48,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         else
             url += "?" + CAPABILITIES_QUERYSTRING;
         
-        GisPrincipal user = authenticateHttp(url, username, password);
-        if (user!=null) {
-            // Als rechten binnengekregen, dan anonieme rechten verwijderen
-            sess.removeAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL);
-            // door principal te returnen wordt cookie gezet
-            return user;
-        }
-        
-        // Kijken of er al anonieme rechten staan, zo ja niets meer doen
-        user = (GisPrincipal)sess.getAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL);
-        if (user!=null)
-            return null;
-        
-        // Kijk wat rechten voor anonieme gebruiker zijn en zet op sessie
-        user = authenticateHttp(url,
-                HibernateUtil.ANONYMOUS_USER,
-                HibernateUtil.ANONYMOUS_PASSWORD);
-        if (user!=null){
-            sess.setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
-        }else{
-            user = authenticateHttp(url,null,null);
-            if (user!=null){
-                sess.setAttribute(GisPrincipal.ANONYMOUS_PRINCIPAL, user);
-            }
-        }
-        
-        
-        // Return null om te voorkomen dat cookie gezet wordt en de
-        // gebruiker niet alsnog kan inloggen
-        return null;
+        return authenticateHttp(url, username, password);
     }
     
     public Principal getAuthenticatedPrincipal(String username) {
@@ -95,7 +66,8 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         roles.add(HibernateUtil.THEMABEHEERDERS_ROL);
         
         return new GisPrincipal(username, roles);
-    }    
+    }
+    
     protected GisPrincipal authenticateHttp(String location, String username, String password) {
         WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
         ServiceProvider sp = null;
@@ -117,70 +89,6 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         
         log.debug("login: " + username);
         return new GisPrincipal(username, sp);
-    }
-    
-    // database schema veranderd, dus werkt niet meer goed
-    protected GisPrincipal authenticateJdbc(String username, String password) {
-        try {
-            DataSource ds = (DataSource)new InitialContext().lookup("java:comp/env/jdbc/kaartenbalie");
-            
-            Connection c = null;
-            PreparedStatement ps = null;
-            try {
-                c = ds.getConnection();
-                /* let op: full join, dus levert alleen users op die rechten hebben
-                 * op minimaal 1 layer
-                 */
-                
-                /* TODO: haal rollen op ipv organization name en layers... */
-                ps = c.prepareStatement(
-                        "select u.firstname, u.lastname, u.username, o.name, l.name " +
-                        "from user u " +
-                        "join organization o on (o.organizationid = u.organizationid) " +
-                        "join organizationlayer ol on (ol.organizationid = u.organizationid) " +
-                        "join layer l on (l.layerid = ol.layerid) " +
-                        "where u.username = ? and u.password = ?");
-                ps.setString(1, username);
-                ps.setString(2, password);
-                ResultSet rs = ps.executeQuery();
-                if(!rs.next()) {
-                    return null;
-                } else {
-                    /* TODO: maak Principal met collectie van layers tot welke
-                     * hij toegang heeft (als roles) en of ie in de
-                     * themabeheerders organisatie zit?
-                     */
-                    List roles = new ArrayList();
-                    String organization = rs.getString(4);
-                    if(organization.equals(HibernateUtil.GEBRUIKERS_ROL)) {
-                        roles.add("gebruiker");
-                    } else if(organization.equals(HibernateUtil.THEMABEHEERDERS_ROL)) {
-                        roles.add("themabeheerder");
-                    } else {
-                        /* kaartenbalie gebruiker is niet lid van speciale PNB
-                         * organisatie, geen toegang
-                         */
-                        return null;
-                    }
-                    
-                    String name = rs.getString(1) + " " + rs.getString(2);
-                    do {
-                        roles.add("layer_" + rs.getString(5));
-                    } while(rs.next());
-                    return new GisPrincipal(name, roles);
-                }
-            } finally {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(c != null) {
-                    c.close();
-                }
-            }
-        } catch(Exception e) {
-            log.error("error authenticating username/password", e);
-            return null;
-        }
     }
     
     public Principal authenticate(String username, String password) {

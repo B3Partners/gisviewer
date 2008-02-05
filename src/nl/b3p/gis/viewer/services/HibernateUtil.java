@@ -35,7 +35,6 @@ public class HibernateUtil extends HttpServlet {
     
     public static boolean CHECK_LOGIN_KAARTENBALIE = true;
     public static String ANONYMOUS_USER = "anoniem";
-    public static String ANONYMOUS_PASSWORD = "anoniem";
     public static String KAARTENBALIE_CLUSTER = "Extra";
     
     /**
@@ -70,9 +69,6 @@ public class HibernateUtil extends HttpServlet {
             value = config.getInitParameter("anonymous_user");
             if (value!=null && value.length()>0)
                 ANONYMOUS_USER = value;
-            value = config.getInitParameter("anonymous_password");
-            if (value!=null && value.length()>0)
-                ANONYMOUS_PASSWORD = value;
             
             value = config.getInitParameter("gebruikers_rol");
             if (value!=null && value.length()>0)

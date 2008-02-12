@@ -307,9 +307,16 @@
         }else{
             layersToAdd="";
         }        
+        var capLayerUrl=layerUrl;
+        if(capLayerUrl.indexOf('?')> 0)
+            capLayerUrl+='&';
+        else
+            capLayerUrl+='?';
+        capLayerUrl+="SERVICE=WMS";
+        
         var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\"" +
             "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
-            "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+layerUrl + "&SERVICE=WMS" +
+            "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl + 
             "\"styles=\""+
             "\" layers=\""+layersToAdd+
             "\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";

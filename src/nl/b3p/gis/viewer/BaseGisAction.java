@@ -693,7 +693,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * werkende link te dienen.
              */
             } else if (td.getDataType().getId() == DataTypen.URL) {
-                StringBuffer url = new StringBuffer(td.getCommando());
+                StringBuffer url;
+                if (td.getCommando()!=null)
+                    url = new StringBuffer(td.getCommando());
+                else
+                    url = new StringBuffer();
                 url.append(Themas.THEMAID);
                 url.append("=");
                 url.append(t.getId());
@@ -729,7 +733,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * een commando url opgehaald en deze wordt met de kolomnaam aangevuld.
              */
             } else if (td.getDataType().getId()==DataTypen.QUERY) {
-                StringBuffer url = new StringBuffer(td.getCommando());
+                StringBuffer url;
+                if (td.getCommando()!=null)
+                    url = new StringBuffer(td.getCommando());
+                else
+                    url = new StringBuffer();
                 
                 if (kolomnaam==null || kolomnaam.length()==0)
                     kolomnaam = t.getAdmin_pk();
@@ -740,7 +748,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 } else
                     regel.add("");
             }else if (td.getDataType().getId()==DataTypen.FUNCTION){
-                StringBuffer function = new StringBuffer(td.getCommando());
+                StringBuffer function;
+                if (td.getCommando()!=null)
+                    function = new StringBuffer(td.getCommando());
+                else
+                    function = new StringBuffer();
                 function.append("(this, ");                
                 if (kolomnaam==null || kolomnaam.length()==0)
                     kolomnaam = t.getAdmin_pk();

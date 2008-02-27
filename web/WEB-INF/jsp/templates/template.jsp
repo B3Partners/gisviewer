@@ -25,7 +25,12 @@
         
         <!--[if lte IE 6]>
             <link href="styles/viewer-ie6.css" rel="stylesheet" type="text/css">
+            <script type="text/javascript" src="scripts/resizewindow-ie6.js"></script>
         <![endif]-->
+        <!--[if gte IE 7]>
+        <script type="text/javascript" src="scripts/resizewindow.js"></script>
+        <![endif]-->
+        <!--[if !IE]>--><script type="text/javascript" src="scripts/resizewindow.js"></script><!--<![endif]-->
         
         <script type="text/javascript" src="scripts/etltransform.js"></script>
         <script type="text/javascript">  

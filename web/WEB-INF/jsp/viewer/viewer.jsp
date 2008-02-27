@@ -537,7 +537,7 @@
         <html:hidden property="scale"/>
     </html:form>
 </div>
-<div class="onderbalk">VIEWER<span><tiles:insert name="loginblock"/></span></div>
+<div class="onderbalk" id="onderbalk_viewer">VIEWER<span><tiles:insert name="loginblock"/></span></div>
 <div id="bovenkant">
     <div id="map">
         <div id="flashcontent">
@@ -652,12 +652,17 @@
         </div>
     </div>
 </div>
-<div class="onderbalk">DETAILS <span id="actief_thema">Actieve thema: </span></div>
+<div class="onderbalk" id="onderbalk_details">DETAILS <span id="actief_thema">Actieve thema: </span></div>
 <div id="dataframediv">
     <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
 </div>
 
 <script type="text/javascript">
+   // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
+   var dataframehoogte = '70px';
+   document.getElementById('dataframediv').style.height = dataframehoogte;
+   document.getElementById('dataframe').style.height = dataframehoogte; 
+    
    function getActiveLayerId(cookiestring) {
         if(!cookiestring) return null;
         var items = cookiestring.split('##');
@@ -756,7 +761,29 @@
         moveToExtent(minx,miny,maxx,maxy);
         doIdentify(minx,miny,maxx,maxy);
     }
-
+    
+    window.onload = function() {
+        checkLocation();    
+        resizeViewer();
+        setTimeout("activateOnResize()", 2000);
+    }
+    
+    var isresizing = false;
+    var iframeloaded = false;
+    function activateOnResize() {
+        window.onresize = function() {
+            if(!isresizing) {
+                isresizing = true;
+                resizeViewer();
+                if(document.getElementById('dataframe').contentWindow.doResize) document.getElementById('dataframe').contentWindow.doResize();
+                setTimeout("setResizingDone()", 2000);
+            }
+        }
+    }
+    
+    function setResizingDone() {
+        isresizing = false;
+    }
 </script>
 
 <script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

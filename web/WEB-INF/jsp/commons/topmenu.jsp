@@ -13,7 +13,7 @@
     </c:if>
 </c:if>
 
-<div class="topmenu">
+<div class="topmenu" id="topmenu">
     <div class="topmenu_menu">
         <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
         <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />

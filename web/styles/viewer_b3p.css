@@ -93,6 +93,14 @@ a:hover{
     margin-top: 18px;
 }
 
+.topmenu_viewer {
+    background-image: none;
+    width: 480px;
+    height: 27px;
+    float: right;
+    margin-top: 23px;
+}
+
 /* Menu links style */
 a.menulink, a.menulink:visited, a.menulink:active {
     display: block;
@@ -160,6 +168,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 /* Bovenst DIV (Flamingoviewer + tabs) */
 #bovenkant {
     background-color: White;
+    width: 100%;
 }
 
 /* Stijl van onderste DIV (admin, thema data vak) */
@@ -242,9 +251,8 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 .tabvak {
     border: 0px none White;
     background-image: url(/gisviewer/images/tabvak_bg.gif);
-    background-repeat: repeat-x;
     background-color: #19619B;
-    background-position: 0% 0%;
+    background-repeat: repeat-x;
     height: 373px;
     color: White;
     margin: 0px;

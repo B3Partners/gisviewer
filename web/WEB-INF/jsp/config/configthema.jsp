@@ -113,7 +113,7 @@
             <table cellpadding="2" cellspacing="2" border="0">
                 <tr><td><fmt:message key="configthema.naam"/></td><td colspan="3"><html:text property="naam" size="140"/></td></tr>
                 <tr><td><fmt:message key="configthema.metadatalink"/></td><td colspan="3"><html:text property="metadatalink" size="140"/></td></tr>
-                <tr>
+                <tr class="optionalConfigItems">
                     <td>
                         <fmt:message key="configthema.code"/>
                     </td>
@@ -125,7 +125,7 @@
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr>
+                <tr class="optionalConfigItems">
                     <td>
                         <fmt:message key="configthema.moscow"/>
                     </td>
@@ -336,7 +336,7 @@
                 </c:choose>
                 
                 <tr><td colspan="4">&nbsp;</td></tr>
-                <tr><td><fmt:message key="configthema.updatefreqindagen"/></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
+                <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
                 
                <%-- <tr>
                     <td><fmt:message key="configthema.themadata"/>(Verwijderen van Themadata objecten kan alleen via het scherm 'Themadata')</td>

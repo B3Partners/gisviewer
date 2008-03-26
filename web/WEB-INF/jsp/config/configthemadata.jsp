@@ -127,9 +127,9 @@
                 <tr><td><fmt:message key="configthemadata.eenheid"/></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
                 <tr><td><fmt:message key="configthemadata.omschrijving"/></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
                 <tr><td><fmt:message key="configthemadata.basisregel"/></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.voorbeelden"/></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
+                <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
                 <tr><td><fmt:message key="configthemadata.kolombreedte"/></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
-                <tr>
+                <tr class="optionalConfigItems">
                     <td>
                         <fmt:message key="configthemadata.moscow"/>
                     </td>

@@ -136,5 +136,7 @@ white-space: nowrap;
 text-align: left;
 border-right: solid 1px #1C6CA7;
 }
-
+.optionalConfigItems{
+display: none;
+}
 

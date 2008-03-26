@@ -79,48 +79,50 @@ public class ConfigThemaAction extends ViewerCrudAction {
         }
         Connection conn = null;
         //als de thema geen connectie heeft ingesteld of een JDBC connectie maak dan een lijst vanuit de database.
-        if (t.getConnectie() == null || (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {
-            if (t.getConnectie() != null) {
-                conn = t.getConnectie().getJdbcConnection();
-            }
-            if (conn == null) {
-                conn = sess.connection();
-            }
-            List tns = SpatialUtil.getTableNames(conn);
-            if (t != null) {
-                String sptn = t.getAdmin_tabel();
-                if (sptn != null && !tns.contains(sptn)) {
-                    tns.add(sptn);
+        if (t!=null){
+            if (t.getConnectie() == null || (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {
+                if (t.getConnectie() != null) {
+                    conn = t.getConnectie().getJdbcConnection();
                 }
-                String atn = t.getSpatial_tabel();
-                if (atn != null && !tns.contains(atn)) {
-                    tns.add(atn);
+                if (conn == null) {
+                    conn = sess.connection();
                 }
-            }
-            request.setAttribute("listTables", tns);
-            if (t != null) {
-                request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
-                request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(t, conn));
-            }
+                List tns = SpatialUtil.getTableNames(conn);
+                if (t != null) {
+                    String sptn = t.getAdmin_tabel();
+                    if (sptn != null && !tns.contains(sptn)) {
+                        tns.add(sptn);
+                    }
+                    String atn = t.getSpatial_tabel();
+                    if (atn != null && !tns.contains(atn)) {
+                        tns.add(atn);
+                    }
+                }
+                request.setAttribute("listTables", tns);
+                if (t != null) {
+                    request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
+                    request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(t, conn));
+                }
 
-        }//als het een WFS connectie is maak dan een lijst vanuit het WFS request.
-        else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
-            //Zet de features als lijst waaruit geselecteerd kan worden.
-            WFS_Capabilities cap = WfsUtil.getCapabilities(t);
-            ArrayList tns = WfsUtil.getFeatureNameList(cap);
-            request.setAttribute("listTables", tns);  
-            List elements=WfsUtil.getFeatureElements(t);
-            if (elements!=null){
-                ArrayList elementsNames= new ArrayList();
-                for (int i=0; i < elements.size(); i++){
-                    Element e = (Element)elements.get(i);
-                    elementsNames.add(e.getAttribute("name"));
+            }//als het een WFS connectie is maak dan een lijst vanuit het WFS request.
+            else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
+                //Zet de features als lijst waaruit geselecteerd kan worden.
+                WFS_Capabilities cap = WfsUtil.getCapabilities(t);
+                ArrayList tns = WfsUtil.getFeatureNameList(cap);
+                request.setAttribute("listTables", tns);  
+                List elements=WfsUtil.getFeatureElements(t);
+                if (elements!=null){
+                    ArrayList elementsNames= new ArrayList();
+                    for (int i=0; i < elements.size(); i++){
+                        Element e = (Element)elements.get(i);
+                        elementsNames.add(e.getAttribute("name"));
+                    }
+                    request.setAttribute("listAdminTableColumns",elementsNames);                           
                 }
-                request.setAttribute("listAdminTableColumns",elementsNames);                           
+
             }
-            
-        }
-        List themadataobjecten=sess.createQuery("select kolomnaam from ThemaData where thema = :thema").setEntity("thema",t).list();
+            List themadataobjecten=sess.createQuery("select kolomnaam from ThemaData where thema = :thema").setEntity("thema",t).list();
+        }        
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (user != null) {
             List lns = user.getLayerNames(false);

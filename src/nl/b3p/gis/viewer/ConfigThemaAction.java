@@ -9,9 +9,11 @@ package nl.b3p.gis.viewer;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.services.FormUtils;
+import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.DataTypen;
@@ -42,7 +44,21 @@ import org.w3c.dom.Element;
 public class ConfigThemaAction extends ViewerCrudAction {
 
     private static final Log log = LogFactory.getLog(ConfigThemaAction.class);
-
+    private static final String REFRESHLISTS="refreshLists";
+    
+    protected Map getActionMethodPropertiesMap() {
+        Map map = super.getActionMethodPropertiesMap();        
+        ExtendedMethodProperties crudProp = new ExtendedMethodProperties(REFRESHLISTS);
+        crudProp.setDefaultForwardName(SUCCESS);        
+        crudProp.setAlternateForwardName(FAILURE);        
+        map.put(REFRESHLISTS, crudProp);        
+        return map;
+    }  
+    public ActionForward refreshLists(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+       createLists(dynaForm,request);
+       return mapping.findForward(SUCCESS);
+   
+    }
     protected Themas getThema(DynaValidatorForm form, boolean createNew) {
         Integer id = FormUtils.StringToInteger(form.getString("themaID"));
         Themas t = null;
@@ -76,6 +92,13 @@ public class ConfigThemaAction extends ViewerCrudAction {
         Themas t = getThema(dynaForm, false);
         if (t == null) {
             t = getFirstThema();
+            if (t!=null){
+                String val = "";
+                if (t.getConnectie() != null) {
+                    val = Integer.toString(t.getConnectie().getId());
+                }
+                dynaForm.set("connectie", val);
+            }
         }
         Connection conn = null;
         //als de thema geen connectie heeft ingesteld of een JDBC connectie maak dan een lijst vanuit de database.

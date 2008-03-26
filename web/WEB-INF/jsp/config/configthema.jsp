@@ -24,6 +24,7 @@
     <html:hidden property="spatial_pk_complex"/>
     <html:hidden property="admin_spatial_ref"/>
     
+    <input type="hidden" name="refreshLists"/>
     
     <div style="float: left; clear: both; margin-left: 15px;">
         <c:if test="${!empty allThemas}">
@@ -165,7 +166,7 @@
                         <fmt:message key="configthema.connectie"/>
                     </td>
                     <td colspan="3">
-                        <html:select property="connectie">
+                        <html:select property="connectie" onchange="refreshTheLists();">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listConnecties}">
                                 <html:option value="${cuItem.id}">
@@ -188,7 +189,7 @@
                 <tr>
                     <td><fmt:message key="configthema.${connectieType}.admintabel"/></td>
                     <td colspan="3">
-                        <html:select property="admin_tabel">
+                        <html:select property="admin_tabel" onchange="refreshTheLists();">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listTables}">
                                 <html:option value="${cuItem}"/>
@@ -223,7 +224,7 @@
                     <tr>
                         <td><fmt:message key="configthema.${connectieType}.spatialtabel"/></td>
                         <td colspan="3">
-                            <html:select property="spatial_tabel">
+                            <html:select property="spatial_tabel" onchange="refreshTheLists();">
                                 <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listTables}">
                                     <html:option value="${cuItem}"/>
@@ -376,3 +377,9 @@
         
     </div>
 </html:form>
+<script type="text/javascript">
+    function refreshTheLists(){
+        document.forms[0].refreshLists.value="do";
+        document.forms[0].submit();
+    }        
+</script>

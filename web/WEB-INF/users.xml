@@ -12,6 +12,5 @@
   <role rolename="gebruiker"/>
   <role rolename="themabeheerder"/>
   <role rolename="demogebruiker"/>
-  <user username="beheerder" password="beheerder" roles="beheerder"/>
 </Webapp-users>
 

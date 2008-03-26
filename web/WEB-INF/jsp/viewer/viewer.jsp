@@ -736,12 +736,21 @@
             for (var i=0; i < newLayersAan.length; i++){
                 checkboxClick(newLayersAan[i],true,newLayersAan[i].theItem.title);
             }
-            var bbox='${startExtent}';
+            var fullbbox='${fullExtent}';
+            var bbox='${extent}';
             if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
-                    moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-                    setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-            } else {
+                moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+            }else{
+                if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
+                    moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+                }else{
                     moveToExtent(12000,304000,280000,620000);
+                }
+            }
+            if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){                    
+                    setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+            } 
+            else {                   
                     setFullExtent(12000,304000,280000,620000);
             }
             refreshLayer();

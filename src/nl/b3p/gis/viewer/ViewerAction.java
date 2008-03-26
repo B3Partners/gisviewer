@@ -25,6 +25,7 @@ import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.SpatialUtil;
+import nl.b3p.wms.capabilities.Layer;
 import nl.b3p.wms.capabilities.SrsBoundingBox;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -126,14 +127,51 @@ public class ViewerAction extends BaseGisAction {
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         Set bboxen=user.getSp().getTopLayer().getSrsbb();
         Iterator it=bboxen.iterator();
-        while(it.hasNext()){
+       while(it.hasNext()){
             SrsBoundingBox bbox= (SrsBoundingBox)it.next();
             if(FormUtils.nullIfEmpty(bbox.getMaxx())!=null && FormUtils.nullIfEmpty(bbox.getMaxy())!=null &&FormUtils.nullIfEmpty(bbox.getMinx())!=null &&FormUtils.nullIfEmpty(bbox.getMiny())!=null){
                 if (bbox.getSrs()!=null && bbox.getSrs().equalsIgnoreCase("epsg:28992")){
-                    request.setAttribute("startExtent",bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy());
+                    request.setAttribute("fullExtent",bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy());
                     break;
                 }
             }
+        }
+        String extent=null;
+        //Controleer of een extent is meegegeven en of de extent een bbox is van 4 getallen
+        if (request.getParameter("extent")!=null && request.getParameter("extent").split(",").length==4){
+            try{
+                String requestExtent=request.getParameter("extent");
+                int test= Integer.parseInt(requestExtent.split(",")[0]);
+                test= Integer.parseInt(requestExtent.split(",")[1]);
+                test= Integer.parseInt(requestExtent.split(",")[2]);
+                test= Integer.parseInt(requestExtent.split(",")[3]);
+                extent=requestExtent;
+            }catch(NumberFormatException nfe){     
+                log.error("1 of meer van de opgegeven extent coordinaten is geen getal.");
+                extent=null;
+            }
+        }
+        //als er geen juiste extent is gevonden en er is een actiefthemaid meegegeven gebruik de bbox van die layer
+        if (extent==null && actiefThema!=null){
+            Layer layer=user.getLayer(actiefThema.getWms_layers_real());
+            if (layer!=null){
+                bboxen=layer.getSrsbb();
+                if (bboxen!=null){
+                    Iterator i=bboxen.iterator();
+                    while(i.hasNext()){
+                        SrsBoundingBox bbox= (SrsBoundingBox)i.next();
+                        if(FormUtils.nullIfEmpty(bbox.getMaxx())!=null && FormUtils.nullIfEmpty(bbox.getMaxy())!=null &&FormUtils.nullIfEmpty(bbox.getMinx())!=null &&FormUtils.nullIfEmpty(bbox.getMiny())!=null){
+                            if (bbox.getSrs()!=null && bbox.getSrs().equalsIgnoreCase("epsg:28992")){
+                                extent=""+bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy();
+                                break;
+                            }
+                        }            
+                    }
+                }
+            }
+        }
+        if (extent!=null){
+            request.setAttribute("extent",extent);
         }
         
     }

@@ -75,6 +75,9 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     }
     
     protected ThemaData getFirstThemaData(Themas t) {
+        if (t==null){
+            return null;
+        }
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Query q = sess.createQuery("from ThemaData where thema.id = :themaID order by dataorder, label");
         List cs = q.setParameter("themaID", t.getId()).setMaxResults(1).list();

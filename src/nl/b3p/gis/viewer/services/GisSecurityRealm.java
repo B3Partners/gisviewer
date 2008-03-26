@@ -13,6 +13,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import nl.b3p.commons.security.XmlSecurityDatabase;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
 import org.apache.commons.logging.Log;
@@ -56,7 +57,11 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
     }
     
     public boolean isUserInRole(Principal principal, String rolename) {
-        return ((GisPrincipal)principal).isInRole(rolename);
+        boolean inRole=((GisPrincipal)principal).isInRole(rolename);
+        if (!inRole){
+            inRole= XmlSecurityDatabase.isUserInRole(principal.getName(),rolename);
+        }
+        return inRole;
     }
     
     protected GisPrincipal authenticateFake(String username) {
@@ -83,10 +88,11 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         }
         
         if(sp.getAllRoles() == null || sp.getAllRoles().isEmpty()) {
-            log.error("ServiceProvider has no roles, denying login!");
-            return null;
-        }
-        
+            if (!XmlSecurityDatabase.booleanAuthenticate(username,password)){ 
+                log.error("ServiceProvider has no roles, denying login!");
+                return null;
+            }
+        }   
         log.debug("login: " + username);
         return new GisPrincipal(username, sp);
     }

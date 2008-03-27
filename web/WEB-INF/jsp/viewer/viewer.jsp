@@ -9,6 +9,8 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
 
 <script>
+    //Wel of niet cookies
+    var useCookies=true;
     //de vertraging voor het refreshen van de kaart.
     var refreshDelay=1000;
     var nr = 0;
@@ -292,7 +294,6 @@
     function doRefreshLayer(){
         timeouts--;        
         if (timeouts<0){
-            alert(timeouts);
             timeouts=0;
         }
         if (timeouts==0){
@@ -386,6 +387,7 @@
     }
 
     function createCookie(name,value,days) {
+         if(useCookies){
             if (days) {
                     var date = new Date();
                     date.setTime(date.getTime()+(days*24*60*60*1000));
@@ -393,9 +395,11 @@
             }
             else var expires = "";
             document.cookie = name+"="+value+expires+"; path=/";
+        }
     }
 
     function readCookie(name) {
+        if(useCookies){
             var nameEQ = name + "=";
             var ca = document.cookie.split(';');
             for(var i=0;i < ca.length;i++) {
@@ -403,12 +407,15 @@
                     while (c.charAt(0)==' ') c = c.substring(1,c.length);
                     if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
             }
-            return null;
+        }
+        return null;
 
     }
 
     function eraseCookie(name) {
+        if(useCookies){
             createCookie(name,"",-1);
+        }
     }
 
     function getCoords() {

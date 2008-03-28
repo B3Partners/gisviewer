@@ -29,89 +29,94 @@
     }
 </script>
 <c:choose>
-    <c:when test="${not empty thema_items and not empty regels}">
-        
-        <table id="admindata_table" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
-            <thead>
-                <tr class="topRow" style="height: 20px;">
-                    <th style="width: 50px;" class="table-sortable:numeric" id="volgnr_th" onclick="Table.sort(data_table, {sorttype:Sort['numeric'], col:0});">
-                        Volgnr
-                    </th>
-                    <c:set var="totale_breedte" value="50" />
-                    <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
-                        <c:choose>
-                            <c:when test="${ThemaItem.kolombreedte != 0}">
-                                <c:set var="breedte" value="${ThemaItem.kolombreedte}" />
-                            </c:when>
-                            <c:otherwise>
-                                <c:set var="breedte" value="150" />
-                            </c:otherwise>            
-                        </c:choose>
-                        <c:set var="totale_breedte" value="${totale_breedte + breedte}" />
-                        <c:if test="${topRowStatus.last && totale_breedte < 948}">
-                            <c:set var="breedte" value="${breedte + (948 - totale_breedte)}" />
-                        </c:if>
-                        <th style="width: ${breedte}px;" class="table-sortable:default" onclick="Table.sort(data_table, {sorttype:Sort['default'], col:${topRowStatus.count}});">
-                            ${ThemaItem.label}
+    <c:when test="${not empty thema_items_list and not empty regels_list}">
+        <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
+            <table id="admindata_table" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
+                <thead>
+                    <tr class="topRow" style="height: 20px;">
+                        <th style="width: 50px;" class="table-sortable:numeric" id="volgnr_th" onclick="Table.sort(data_table, {sorttype:Sort['numeric'], col:0});">
+                            Volgnr
                         </th>
-                    </c:forEach>
-                </tr>
-            </thead>
-        </table>
-        <div class="admin_data_content_div">
-            <table id="data_table" class="table-autosort table-stripeclass:admin_data_alternate_tr" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
-                <tbody>
-                    <c:set var="totale_breedte_onder" value="50" />
-                    <c:forEach var="regel" items="${regels}" varStatus="counter">
-                        <tr class="row" onclick="colorRow(this);">
-                            <td style="width: 50px;" valign="top">
-                                ${counter.count}
-                            </td>
-                            <c:forEach var="waarde" items="${regel}" varStatus="kolom">
-                                <c:if test="${thema_items[kolom.count - 1] != null}">
-                                    <c:choose>
-                                        <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
-                                            <c:set var="breedte" value="${thema_items[kolom.count - 1].kolombreedte}" />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:set var="breedte" value="150" />
-                                        </c:otherwise>            
-                                    </c:choose>
-                                    <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
-                                    <c:if test="${kolom.last && totale_breedte_onder < 915}">
-                                        <c:set var="breedte" value="${breedte + (915 - totale_breedte_onder)}" />
-                                    </c:if>
-                                    <td style="width: ${breedte}px;" valign="top">
+                        <c:set var="totale_breedte" value="50" />
+                        <c:set var="last_id" value="" />
+                        <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
+                            <c:choose>
+                                <c:when test="${ThemaItem.kolombreedte != 0}">
+                                    <c:set var="breedte" value="${ThemaItem.kolombreedte}" />
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set var="breedte" value="150" />
+                                </c:otherwise>            
+                            </c:choose>
+                            <c:set var="totale_breedte" value="${totale_breedte + breedte}" />
+                            <c:set var="kol_id" value=" id=\"header_kolom_item${topRowStatus.count}\"" />
+                            <c:set var="noOfKolommen" value="${topRowStatus.count}" />
+                            <th style="width: ${breedte}px;"${kol_id} class="table-sortable:default" onclick="Table.sort(data_table, {sorttype:Sort['default'], col:${topRowStatus.count}});">
+                                ${ThemaItem.label}
+                            </th>
+                        </c:forEach>
+                    </tr>
+                </thead>
+            </table>
+            <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>            
+            <div class="admin_data_content_div" id="admin_data_content_div">
+                <table id="data_table" class="table-autosort table-stripeclass:admin_data_alternate_tr" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
+                    <tbody>
+                        <c:forEach var="regel" items="${regels}" varStatus="counter">
+                            <c:set var="last_id" value="" />
+                            <tr class="row" onclick="colorRow(this);">
+                                <td style="width: 50px;" valign="top">
+                                    ${counter.count}
+                                </td>
+                                <c:set var="totale_breedte_onder" value="50" />
+                                <c:forEach var="waarde" items="${regel}" varStatus="kolom">
+
+                                    <c:if test="${thema_items[kolom.count - 1] != null}">
                                         <c:choose>
-                                            <c:when test="${waarde eq '' or  waarde eq null}">
-                                                &nbsp;
+                                            <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
+                                                <c:set var="breedte" value="${thema_items[kolom.count - 1].kolombreedte}" />
                                             </c:when>
                                             <c:otherwise>
-                                                <c:choose>
-                                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                                        <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
-                                                    </c:when>
-                                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
-                                                        <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
-                                                    </c:when>
-                                                    <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
-                                                        <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${waarde}"><html:image src="./images/icons/information.png"/> </a>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        ${waarde}
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                
-                                            </c:otherwise>
+                                                <c:set var="breedte" value="150" />
+                                            </c:otherwise>            
                                         </c:choose>
-                                    </td>
-                                </c:if>
-                            </c:forEach>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
+                                        <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
+                                        <c:if test="${kolom.last}">
+                                            <c:set var="last_id" value=" id=\"footer_last_item${counter.count}\"" />
+                                        </c:if>
+                                        <c:set var="noOfRegels" value="${counter.count}" />
+                                        <td style="width: ${breedte}px;"${last_id} valign="top">
+                                            <c:choose>
+                                                <c:when test="${waarde eq '' or  waarde eq null}">
+                                                    &nbsp;
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:choose>
+                                                        <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
+                                                            <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
+                                                        </c:when>
+                                                        <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
+                                                            <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
+                                                        </c:when>
+                                                        <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
+                                                            <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${waarde}"><html:image src="./images/icons/information.png"/> </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${waarde}
+                                                        </c:otherwise>
+                                                    </c:choose>
+
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </c:if>
+                                </c:forEach>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </c:forEach>
         <script language="javascript" type="text/javascript">
                     var data_table = document.getElementById('data_table');
                     Table.stripe(data_table, 'admin_data_alternate_tr');

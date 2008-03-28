@@ -11,6 +11,10 @@
 <script>
     //Wel of niet cookies
     var useCookies=true;
+    /*True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
+    * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
+    */
+    var multipleActiveThemas=false;
     //de vertraging voor het refreshen van de kaart.
     var refreshDelay=1000;
     var nr = 0;
@@ -98,16 +102,34 @@
 
     var activeThemaId = '';
     function setActiveThema(id, label, overrule) {
-        if (activeThemaId==null || activeThemaId.length == 0 || overrule){
-            activeThemaId = id;
-            var atlabel = document.getElementById('actief_thema');
-            if (atlabel!=null && label!=null)
-                atlabel.innerHTML = 'Actieve thema: ' + label;
-            if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
-                flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
-            }
-        } 
+        if(!multipleActiveThemas){
+            if (activeThemaId==null || activeThemaId.length == 0 || overrule){
+                activeThemaId = id;
+                var atlabel = document.getElementById('actief_thema');
+                if (atlabel!=null && label!=null)
+                    atlabel.innerHTML = 'Actieve thema: ' + label;
+                if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
+                    flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
+                }
+            } 
+        }
         return activeThemaId;
+    }
+    function addActiveThema(id){
+        if(activeThemaId==null ||activeThemaId.length==0){
+            activeThemaId=id;
+        }else{
+            activeThemaId+=","+id
+        }
+    }
+    function removeActiveThema(id){
+        if (activeThemaId){
+            if (activeThemaId.indexOf(","+id) > 0){
+                activeThemaId=activeThemaId.replace(","+id,"");
+            }else if (activeThemaId.indexOf("id")> 0){
+                activeThemaId=activeThemaId.replace(id,"");
+            }
+        }        
     }
     
     var layersAan= new Array();
@@ -115,8 +137,7 @@
     function createLabel(container, item) {
         if(item.cluster) {
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
-        } else {
-        
+        } else {        
             if(item.analyse=="on"){
                 setActiveThema(item.id, item.title);
             } else if(item.analyse=="active"){
@@ -172,9 +193,13 @@
             lnk.href = '#';
             if (item.metadatalink && item.metadatalink.length > 1)
                 lnk.onclick = function(){popUp(item.metadatalink, "metadata")}; 
+            
             if(item.analyse=="on" || item.analyse=="active"){
-                container.appendChild(el);
+                if (!multipleActiveThemas){
+                    container.appendChild(el);
+                }                
             }
+            
             if(item.wmslayers){
                 container.appendChild(el2);
             }
@@ -240,6 +265,9 @@
 
     function checkboxClick(obj, dontRefresh, obj_name) {
         if(obj.checked) {
+            if (multipleActiveThemas && (obj.theItem.analyse=="on" || obj.theItem.analyse=="active")){
+                addActiveThema(obj.value);
+            }
             if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
             var legendURL="${kburl}";
             if(legendURL.indexOf('?')> 0)
@@ -277,6 +305,9 @@
                 }
             }
         } else {
+            if (multipleActiveThemas){
+                removeActiveThema(obj.value);
+            }
             deleteFromArray(obj);
             removeLayerFromVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
             if (obj.theItem.wmslayers){

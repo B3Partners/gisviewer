@@ -69,6 +69,35 @@ public abstract class BaseGisAction extends BaseHibernateAction {
     }
     
     /**
+     * Haal alle themas op uit de database door middel van een in het request meegegeven thema id comma seperated list.
+     *
+     * @param mapping ActionMapping
+     * @param dynaForm DynaValidatorForm
+     * @param request HttpServletRequest
+     *
+     * @return Themas
+     *
+     * @see Themas
+     */
+    protected ArrayList getThemas(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
+        String themaids = (String)request.getParameter("themaid");
+        if (themaids==null || themaids.length()==0){
+            return null;
+        }
+        String[] ids= themaids.split(",");
+        ArrayList themas=null;
+        for (int i=0; i < ids.length; i++){
+            Themas t = getThema(ids[i],request);
+            if (t!=null){
+                if (themas==null){
+                    themas=new ArrayList();
+                }
+                themas.add(t);
+            }
+        }
+        return themas;
+    }
+    /**
      * Haal een Thema op uit de database door middel van een in het request meegegeven thema id.
      *
      * @param mapping ActionMapping
@@ -81,6 +110,12 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      */
     protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request) {
         String themaid = (String)request.getParameter("themaid");
+        return getThema(themaid,request);
+    }
+    /**
+     * Get the thema en doe wat checks
+     */
+    private Themas getThema(String themaid,HttpServletRequest request){
         Themas t = SpatialUtil.getThema(themaid);
         
         if (!HibernateUtil.CHECK_LOGIN_KAARTENBALIE)
@@ -803,5 +838,26 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             string = ((String[])ob)[0];
         return string;
     }
-    
+    /**
+     *Compare 2 thema datalists voor het tonen in de admindata. (dus niet volledige vergelijking maar alleen op label en basisregel)
+     */
+    public boolean compareThemaDataLists(List list1, List list2) {
+        for (int i1=0; i1 < list1.size(); i1++){
+            ThemaData td1 = (ThemaData)list1.get(i1);
+            if (td1.isBasisregel() && td1.getLabel()!=null){
+                boolean bevatGelijke=false;
+                for (int i2=0; i2 < list2.size(); i2++){
+                    ThemaData td2 = (ThemaData)list2.get(i2);                
+                    if (td1.isBasisregel()==td2.isBasisregel() && td1.getLabel().equalsIgnoreCase(td2.getLabel())){
+                        bevatGelijke=true;
+                        break;
+                    }
+                }
+                if (!bevatGelijke){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

@@ -129,20 +129,56 @@ public class GetViewerDataAction extends BaseGisAction {
      * regels
      */
     public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Themas t = getThema(mapping, dynaForm, request);
-        
-        List thema_items = SpatialUtil.getThemaData(t, true);
-        request.setAttribute("thema_items", thema_items);
-        //haal op met JDBC connectie
-        if (t.getConnectie()==null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)){
-            List pks = null;
-            pks = findPks(t, mapping, dynaForm, request);
+        //TODO: getThema werkt niet meer goed voor de gisviewer omdat het nu een aantal thema's kunnen zijn.
+        //Themas t = getThema(mapping, dynaForm, request);
+        ArrayList themas = getThemas(mapping,dynaForm,request);
+        ArrayList regels=new ArrayList();
+        ArrayList ti=null;
+        for (int i=0 ; i < themas.size(); i++){
+            Themas t=(Themas)themas.get(i);
+            List thema_items = SpatialUtil.getThemaData(t, true);
+            int themadatanummer=0;
+            if (ti!=null)
+                themadatanummer=ti.size();
+            if (ti!=null){
+                for (int a=0; a < ti.size(); a++){
+                    if (compareThemaDataLists((List)ti.get(a),thema_items)){
+                        themadatanummer=a;
+                        break;
+                    }
+                }                
+            }
+            //haal op met JDBC connectie
+            List l=null;
+            if (t.getConnectie()==null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)){
+                List pks = null;
+                pks = findPks(t, mapping, dynaForm, request);
+                if (themadatanummer==regels.size()){
+                    regels.add(new ArrayList());
+                }
+                l =getThemaObjects(t, pks, thema_items);
+                               
+            }//Haal op met WFS
+            else if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+                if (themadatanummer==regels.size()){
+                    regels.add(new ArrayList());
+                }
+                l =getThemaWfsObjectsWithXY(t,thema_items,request);
+                
+            }
+            if (l!=null && l.size()>0){
+                ((ArrayList)regels.get(themadatanummer)).addAll(l); 
+                if (ti==null){
+                ti=new ArrayList();
+                }
+                if (themadatanummer==ti.size()){
+                    ti.add(thema_items);
+                }
+            }
             
-            request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
-        }//Haal op met WFS
-        else if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
-            request.setAttribute("regels",getThemaWfsObjectsWithXY(t,thema_items,request));
         }
+        request.setAttribute("regels_list",regels);
+        request.setAttribute("thema_items_list", ti);
         return mapping.findForward("admindata");
     }
     

@@ -124,9 +124,9 @@
     }
     function removeActiveThema(id){
         if (activeThemaId){
-            if (activeThemaId.indexOf(","+id) > 0){
+            if (activeThemaId.indexOf(","+id) >= 0){
                 activeThemaId=activeThemaId.replace(","+id,"");
-            }else if (activeThemaId.indexOf("id")> 0){
+            }else if (activeThemaId.indexOf(id)>= 0){
                 activeThemaId=activeThemaId.replace(id,"");
             }
         }        

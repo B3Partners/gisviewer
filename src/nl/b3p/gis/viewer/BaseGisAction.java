@@ -775,7 +775,12 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     url = new StringBuffer();
                 
                 if (kolomnaam==null || kolomnaam.length()==0)
-                    kolomnaam = t.getAdmin_pk();
+                    kolomnaam = t.getAdmin_pk();                
+                if (!f.getSchema().hasAttribute(kolomnaam) && kolomnaam!=null){
+                    if (kolomnaam.split(":").length>1){
+                        kolomnaam=kolomnaam.split(":")[1];
+                    }
+                }
                 Object value = f.getString(kolomnaam);
                 if (value!=null) {
                     url.append(value.toString().trim());
@@ -791,6 +796,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 function.append("(this, ");                
                 if (kolomnaam==null || kolomnaam.length()==0)
                     kolomnaam = t.getAdmin_pk();
+                if (!f.getSchema().hasAttribute(kolomnaam) && kolomnaam!=null){
+                    if (kolomnaam.split(":").length>1){
+                        kolomnaam=kolomnaam.split(":")[1];
+                    }
+                }
                 Object value = f.getString(kolomnaam);
                 String queryName= td.getKolomnaam();
                 if (queryName==null){

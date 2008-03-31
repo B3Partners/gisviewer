@@ -55,14 +55,13 @@ public class WfsUtil {
         return tns;
     }
     
-    static public ArrayList getFeatureElements(Themas t) throws Exception{
+   static public ArrayList getFeatureElements(Connecties c,String adminTable) throws Exception{
         ArrayList returnvalue=null;
-        if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
-            OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
-            String dbtn = t.getAdmin_tabel();
-            if (dbtn==null || dbtn.length()<1)
+        if (c!=null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
+            OGCRequest or = new OGCRequest(c.getConnectie_url());            
+            if (adminTable==null || adminTable.length()<1)
                 return null;
-            or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,dbtn);
+            or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,adminTable);
             NodeList nl= OgcWfsClient.getDescribeFeatureElements(OgcWfsClient.getDescribeFeatureType(or));
             if (nl!=null){
                 for (int i=0; i < nl.getLength(); i++){
@@ -78,9 +77,9 @@ public class WfsUtil {
         return returnvalue;
     }
     
-    static public WFS_Capabilities getCapabilities(Themas t) throws Exception{
-        if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
-            return OgcWfsClient.getCapabilities(new OGCRequest(t.getConnectie().getConnectie_url()));
+    static public WFS_Capabilities getCapabilities(Connecties c) throws Exception{
+        if (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
+            return OgcWfsClient.getCapabilities(new OGCRequest(c.getConnectie_url()));
         }else
             return null;
     }
@@ -131,7 +130,7 @@ public class WfsUtil {
     }
     
     public static String getGeometryAttributeName(Themas t) throws Exception{
-        ArrayList elements = getFeatureElements(t);
+        ArrayList elements = getFeatureElements(t.getConnectie(),t.getAdmin_tabel());
         for (int i=0; i < elements.size(); i++){
             Element e = (Element)elements.get(i);
             if (e.getAttribute("type")!=null && e.getAttribute("type").equalsIgnoreCase(OGCRequest.WFS_OBJECT_GEOMETRYTYPE)){

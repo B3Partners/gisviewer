@@ -140,11 +140,11 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
             }
             if (conn==null)
                 conn = sess.connection();
-            request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t, conn));
+            request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t.getAdmin_tabel(), conn));
         }
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             connectieType=Connecties.TYPE_WFS;
-            List elements=WfsUtil.getFeatureElements(t);
+            List elements=WfsUtil.getFeatureElements(t.getConnectie(),t.getAdmin_tabel());
             if (elements!=null){
                 ArrayList elementsNames= new ArrayList();
                 for (int i=0; i < elements.size(); i++){
@@ -254,7 +254,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
             }
             if (conn==null)
                 conn = sess.connection();
-            attributes=SpatialUtil.getAdminColumnNames(t, conn);
+            attributes=SpatialUtil.getAdminColumnNames(t.getAdmin_tabel(), conn);
             //als het attribuut van het type geometry is moet hij niet worden gebruikt
             for (int i=0; i < attributes.size(); i++){
                 String attr = (String)attributes.get(i);
@@ -272,7 +272,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         }
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             //connectieType=Connecties.TYPE_WFS;
-            List elements=WfsUtil.getFeatureElements(t);
+            List elements=WfsUtil.getFeatureElements(t.getConnectie(),t.getAdmin_tabel());
             if (elements!=null){
                 ArrayList elementsNames= new ArrayList();
                 for (int i=0; i < elements.size(); i++){

@@ -159,12 +159,12 @@ public class SpatialUtil {
     }
     
     
-    static public List getAdminColumnNames(Themas t, Connection conn) throws SQLException {
+    static public List getAdminColumnNames(String adminTable, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
-        String dbtn = t.getAdmin_tabel();
-        if (dbtn==null)
+        
+        if (adminTable==null)
             return null;
-        ResultSet rs = dbmd.getColumns(null, null, dbtn, null);
+        ResultSet rs = dbmd.getColumns(null, null, adminTable, null);
         List columns = null;
         while (rs.next()) {
             String columnName = rs.getString("COLUMN_NAME");
@@ -177,12 +177,12 @@ public class SpatialUtil {
         return columns;
     }
     
-    static public List getSpatialColumnNames(Themas t, Connection conn) throws SQLException {
+    static public List getSpatialColumnNames(String spatialTable, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
-        String dbtn = t.getSpatial_tabel();
-        if (dbtn==null)
+        
+        if (spatialTable==null)
             return null;
-        ResultSet rs = dbmd.getColumns(null, null, dbtn, null);
+        ResultSet rs = dbmd.getColumns(null, null, spatialTable, null);
         List columns = null;
         while (rs.next()) {
             String columnName = rs.getString("COLUMN_NAME");

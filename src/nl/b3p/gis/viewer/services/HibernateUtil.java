@@ -36,6 +36,8 @@ public class HibernateUtil extends HttpServlet {
     public static boolean CHECK_LOGIN_KAARTENBALIE = true;
     public static String ANONYMOUS_USER = "anoniem";
     public static String KAARTENBALIE_CLUSTER = "Extra";
+
+    public static boolean USE_KAARTENBALIE_CLUSTER=true;
     
     /**
      * Initialiseer Hibernate.
@@ -81,7 +83,10 @@ public class HibernateUtil extends HttpServlet {
             if (value!=null && value.equalsIgnoreCase("false"))
                 CHECK_LOGIN_KAARTENBALIE = false;
 
-            
+            value = config.getInitParameter("use_kaartenbalie_cluster");
+            if (value!=null && value.equalsIgnoreCase("false"))
+                USE_KAARTENBALIE_CLUSTER = false;
+                        
         } catch(Exception e) {
             throw new ServletException(e);
         }

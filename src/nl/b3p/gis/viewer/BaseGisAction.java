@@ -186,30 +186,32 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         
         Iterator it = layersFromRoles.iterator();
         int tid = 100000;
-        ArrayList extraThemaList = new ArrayList();
-        // Kijk welke lagen uit de rollen nog niet zijn toegevoegd
-        // en voeg deze alsnog toe via dummy thema en cluster.
-        while (it.hasNext()) {
-            String layer = (String)it.next();
-            if (layersFound.contains(layer))
-                continue;
-            
-            // Layer bestaat nog niet dus aanmaken
-            Themas t = new Themas();
-            t.setId(new Integer(tid++));
-            t.setNaam(user.getLayerTitle(layer));
-            t.setWms_layers_real(layer);
-            t.setWms_legendlayer_real(layer);
-            t.setCluster(c);
-            // voeg extra laag als nieuw thema toe
-            extraThemaList.add(t);
-        }
-        if (extraThemaList.size()>0){
-            ctl.add(c);
-            for (int i=0; i < extraThemaList.size(); i++){
-                checkedThemaList.add(extraThemaList.get(i));
+        if (HibernateUtil.USE_KAARTENBALIE_CLUSTER){
+            ArrayList extraThemaList = new ArrayList();            
+            // Kijk welke lagen uit de rollen nog niet zijn toegevoegd
+            // en voeg deze alsnog toe via dummy thema en cluster.
+            while (it.hasNext()) {
+                String layer = (String)it.next();
+                if (layersFound.contains(layer))
+                    continue;
+
+                // Layer bestaat nog niet dus aanmaken
+                Themas t = new Themas();
+                t.setId(new Integer(tid++));
+                t.setNaam(user.getLayerTitle(layer));
+                t.setWms_layers_real(layer);
+                t.setWms_legendlayer_real(layer);
+                t.setCluster(c);
+                // voeg extra laag als nieuw thema toe
+                extraThemaList.add(t);
             }
-        }        
+            if (extraThemaList.size()>0){
+                ctl.add(c);
+                for (int i=0; i < extraThemaList.size(); i++){
+                    checkedThemaList.add(extraThemaList.get(i));
+                }
+            }
+        }
         
         return checkedThemaList;
     }

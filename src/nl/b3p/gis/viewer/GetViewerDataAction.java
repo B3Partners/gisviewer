@@ -308,14 +308,20 @@ public class GetViewerDataAction extends BaseGisAction {
                 organizationcodekey, organizationcode, "tb1" );
         
         String geselecteerdObject = dynaForm.getString("geselecteerd_object");
-        if (geselecteerdObject==null || geselecteerdObject.length()==0)
+        if (geselecteerdObject==null || geselecteerdObject.length()==0) {
+            log.error("Er is geen analysegebied aangegeven!");
             throw new Exception("Er is geen analysegebied aangegeven!");
+        }
         String[] tokens = geselecteerdObject.split("_");
-        if (tokens.length!=3)
+        if (tokens.length!=3) {
+            log.error("Id van analysegebied verkeerd geformatteerd!");
             throw new Exception("Id van analysegebied verkeerd geformatteerd!");
+        }
         Themas geselecteerdObjectThema = getObjectThema(tokens[1]);
-        if (geselecteerdObjectThema == null)
+        if (geselecteerdObjectThema == null) {
+            log.error("Kan het geselecteerde thema object niet vinden!");
             throw new Exception("Kan het geselecteerde thema object niet vinden!");
+        }
         String analyseGeomId = tokens[2];
         String analyseNaam = getAnalyseNaam(analyseGeomId, geselecteerdObjectThema);
         
@@ -402,6 +408,7 @@ public class GetViewerDataAction extends BaseGisAction {
                 }
                 break;
             default:
+                log.error("Er is geen geldige selectie aangegeven door middel van de radio buttons!");
                 throw new Exception("Er is geen geldige selectie aangegeven door middel van de radio buttons!");
         }
         
@@ -487,16 +494,22 @@ public class GetViewerDataAction extends BaseGisAction {
                 organizationcodekey, organizationcode, "tb1" );
         
         String geselecteerdObject = dynaForm.getString("geselecteerd_object");
-        if (geselecteerdObject==null || geselecteerdObject.length()==0)
+        if (geselecteerdObject==null || geselecteerdObject.length()==0) {
+            log.error("Er is geen analysegebied aangegeven!");
             throw new Exception("Er is geen analysegebied aangegeven!");
+        }
         String[] tokens = geselecteerdObject.split("_");
-        if (tokens.length!=3)
+        if (tokens.length!=3) {
+            log.error("Id van analysegebied verkeerd geformatteerd!");
             throw new Exception("Id van analysegebied verkeerd geformatteerd!");
+        }
         Themas geselecteerdObjectThema = getObjectThema(tokens[1]);
-        if (geselecteerdObjectThema == null)
+        if (geselecteerdObjectThema == null) {
+            log.error("Kan het geselecteerde thema object niet vinden!");
             throw new Exception("Kan het geselecteerde thema object niet vinden!");
+        }
         String analyseGeomId = tokens[2];
-
+        
         //create relation query
         String relationFunction=null;
         int zoo = 0;

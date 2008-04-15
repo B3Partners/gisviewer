@@ -16,7 +16,7 @@
             <form-property name="cc" type="java.lang.String"/>
             <form-property name="bcc" type="java.lang.String"/>
             <form-property name="body" type="java.lang.String"/>
-            <form-property name="mailhost" type="java.lang.String" initial="kmail.b3p.nl"/>
+            <form-property name="mailhost" type="java.lang.String" initial="kmail.b3partners.nl"/>
         </form-bean>
         
         <form-bean name="themaForm" type="org.apache.struts.validator.DynaValidatorForm">

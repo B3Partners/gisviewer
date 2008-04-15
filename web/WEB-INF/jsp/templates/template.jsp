@@ -12,7 +12,7 @@
         <META HTTP-EQUIV="Expires" CONTENT="-1">
         <META HTTP-EQUIV="Cache-Control" CONTENT="max-age=0, no-store">
         
-        <title>POL 2006</title>
+        <title>B3P GIS Viewer</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/etl.css" rel="stylesheet" type="text/css">

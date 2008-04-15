@@ -21,7 +21,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import nl.b3p.gis.viewer.db.Themas;
@@ -116,7 +115,7 @@ public class SpatialUtil {
      */
     static public int getPkDataType(Themas t, Connection conn) throws SQLException {
         String adminPk = t.getAdmin_pk();
-        return getColumnDatatype(t,adminPk,conn);        
+        return getColumnDatatype(t,adminPk,conn);
     }
     
     public static int getColumnDatatype(Themas t, String column, Connection conn) throws SQLException {
@@ -134,7 +133,7 @@ public class SpatialUtil {
         }
         return dt;
     }
-     /**
+    /**
      * DOCUMENT ME!
      *
      * @param t Themas
@@ -251,8 +250,10 @@ public class SpatialUtil {
         }
         
         String tname = t.getNaam();
-        if (themaGeomType == null)
+        if (themaGeomType == null) {
+            log.error("Kan het type geo-object niet vinden: " + tname);
             throw new Exception("Kan het type geo-object niet vinden: " + tname);
+        }
         return themaGeomType;
     }
     
@@ -720,8 +721,8 @@ public class SpatialUtil {
         sq.append("and Within(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
     }
-
-    public static String getAreaQuery(String tableName, String geomColumn, String attributeName, String compareValue) {        
+    
+    public static String getAreaQuery(String tableName, String geomColumn, String attributeName, String compareValue) {
         StringBuffer sq= new StringBuffer();
         sq.append("select Area(");
         sq.append(geomColumn);
@@ -730,10 +731,10 @@ public class SpatialUtil {
         sq.append(attributeName);
         sq.append(" = '");
         sq.append(compareValue);
-        sq.append("';");        
+        sq.append("';");
         return sq.toString();
     }
-
+    
     
     
 }

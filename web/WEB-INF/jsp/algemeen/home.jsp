@@ -34,19 +34,21 @@
                 <html:messages id="message" message="true">
                     <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
                 </html:messages><br/>
-                <h1>Provinciaal Omgevingsplan Limburg (POL 2006)</h1>
+                <h1>B3P GIS Suite Demo</h1>
                 
                 <div class="inleiding">
                     <h2>Introductie</h2>
-                    Het Provinciaal Omgevingsplan Limburg (POL2006) is een plan op hoofdlijnen. 
-                    Het biedt een samenhangend overzicht van de provinciale visie op de ontwikkeling 
-                    van de kwaliteitsregio Limburg, en de ambities, rol en werkwijze op een groot 
-                    aantal beleidsterreinen. Het is zowel Structuurvisie, Streekplan, 
-                    Waterhuishoudingplan, Milieubeleidplan, als Verkeer en vervoerplan, en 
-                    bevat de hoofdlijnen van de fysieke onderdelen van het economische, en 
-                    sociaal-culturele beleid.  POL2006 wordt op een speciale manier op deze 
-                    website aangeboden voorzien van linken naar de alle erin genoemde POL-aanvullingen, 
-                    kaarten en andere documenten.
+                    <p>
+                    Deze B3P GIS Suite demo toont de mogelijkheden van de GIS viewer 
+                    zoals deze binnen de GIS suite gebruikt wordt. De getoonde kaarten 
+                    zijn alleen ten bate van deze demo beschikbaar. Later worden voor 
+                    elk project specifieke kaarten aangeschaft en geconfigureerd.
+                    </p>
+                    <p>
+                    Deze demo staat op een testserver, welke soms wordt herstart. 
+                    Als er even geen contact mogelijk is, dan verzoeken wij u het 
+                    later nog een keer te proberen. 
+                    </p>
                 </div>
                 <%--
                 <h2>Aanmelden voor de B3Partners mailinglijst</h2>

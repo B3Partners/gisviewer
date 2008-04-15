@@ -28,7 +28,7 @@ function resizeViewerIE6() {
 
     document.getElementById('onder_div').style.display = 'none';
     document.getElementById('dataframediv').style.marginBottom = '0px';
-    var totalheight = getAvail('height') - 23;
+    var totalheight = getAvail('height') - 46; //23 afh. van ontwerp
     document.getElementById("content_div").style.height = totalheight + 'px';
     var totalheight = removePx(document.getElementById("content_div").style.height);
     var top = document.getElementById("topmenu").offsetHeight + document.getElementById("onderbalk_viewer").offsetHeight + 13;

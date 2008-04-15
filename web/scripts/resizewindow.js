@@ -25,7 +25,7 @@ function resizeViewer() {
 
     document.getElementById('onder_div').style.display = 'none';
     document.getElementById('dataframediv').style.marginBottom = '0px';
-    var totalheight = getAvail('height') - 17;
+    var totalheight = getAvail('height') - 40; //17 afh. van ontwerp
     var top = document.getElementById('topmenu').offsetHeight + document.getElementById('onderbalk_viewer').offsetHeight;
     var bottom = document.getElementById('dataframediv').offsetHeight + document.getElementById('onderbalk_details').offsetHeight + 9;
     var flashcontentheight = totalheight - top - bottom;

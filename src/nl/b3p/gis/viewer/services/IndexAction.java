@@ -27,6 +27,7 @@ public class IndexAction extends BaseGisAction {
     protected static final String LOGIN = "login";
     protected static final String LOGINERROR = "loginError";
     protected static final String LOGOUT = "logout";
+    protected static final String LIST = "list";
 
     protected Map getActionMethodPropertiesMap() {
         Map map = new HashMap();
@@ -49,6 +50,11 @@ public class IndexAction extends BaseGisAction {
         hibProp.setAlternateForwardName(FAILURE);
         map.put(LOGOUT, hibProp);
         
+        hibProp = new ExtendedMethodProperties(LIST);
+        hibProp.setDefaultForwardName(SUCCESS);
+        hibProp.setAlternateForwardName(FAILURE);
+        map.put(LIST, hibProp);
+
         return map;
     }
     
@@ -64,8 +70,6 @@ public class IndexAction extends BaseGisAction {
      * @throws Exception
      */
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List themalist = getValidThemas(false, null, request);
-        request.setAttribute("themalist", themalist);
         return mapping.findForward(SUCCESS);
     }
     
@@ -87,6 +91,27 @@ public class IndexAction extends BaseGisAction {
         String sesId = session.getId();
         session.invalidate();
         log.info("Logged out from session: " + sesId);
+        
+        addDefaultMessage(mapping, request);
+        return getDefaultForward(mapping, request);
+    }
+    
+    /**
+     * De knop berekent een lijst van thema's en stuurt dan door.
+     *
+     * @param mapping The ActionMapping used to select this instance.
+     * @param dynaForm The DynaValidatorForm bean for this request.
+     * @param request The HTTP Request we are processing.
+     * @param response The HTTP Response we are processing.
+     *
+     * @return an Actionforward object.
+     *
+     * @throws Exception
+     */
+    public ActionForward list(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
+        List themalist = getValidThemas(false, null, request);
+        request.setAttribute("themalist", themalist);
         
         addDefaultMessage(mapping, request);
         return getDefaultForward(mapping, request);

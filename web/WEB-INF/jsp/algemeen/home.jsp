@@ -39,15 +39,15 @@
                 <div class="inleiding">
                     <h2>Introductie</h2>
                     <p>
-                    Deze B3P GIS Suite demo toont de mogelijkheden van de GIS viewer 
-                    zoals deze binnen de GIS suite gebruikt wordt. De getoonde kaarten 
-                    zijn alleen ten bate van deze demo beschikbaar. Later worden voor 
-                    elk project specifieke kaarten aangeschaft en geconfigureerd.
+                        Deze B3P GIS Suite demo toont de mogelijkheden van de GIS viewer 
+                        zoals deze binnen de GIS suite gebruikt wordt. De getoonde kaarten 
+                        zijn alleen ten bate van deze demo beschikbaar. Later worden voor 
+                        elk project specifieke kaarten aangeschaft en geconfigureerd.
                     </p>
                     <p>
-                    Deze demo staat op een testserver, welke soms wordt herstart. 
-                    Als er even geen contact mogelijk is, dan verzoeken wij u het 
-                    later nog een keer te proberen. 
+                        Deze demo staat op een testserver, welke soms wordt herstart. 
+                        Als er even geen contact mogelijk is, dan verzoeken wij u het 
+                        later nog een keer te proberen. 
                     </p>
                 </div>
                 <%--
@@ -91,18 +91,32 @@
                         <ol>
                             <c:forEach var="thema" items="${themalist}">
                                 <c:if test="${thema.analyse_thema}">
+                                    <c:set var="found" value="true"/>
                                     <li>
                                         <html:link page="/viewer.do?id=${thema.id}">${thema.naam}</html:link>
                                     </li>
                                 </c:if>
                             </c:forEach>
+                            <c:if test="${not(found)}">
+                                <li>Er zijn geen voorgeselecteerde thema's gevonden.</li>
+                                <li>U kunt direct naar de <html:link page="/viewer.do">viewer</html:link>.</li>
+                            </c:if>
                         </ol>
                     </c:when>
                     <c:when test="${pageContext.request.remoteUser == null}">
-                        U dient nog in te loggen: <html:link page="/index.do?login=t" module="">inloggen</html:link>
+                        <p>
+                            Klik hier om beschikbare thema's op te vragen:
+                            <ul>
+                                <li><html:link page="/indexlist.do" module="">zonder inloggen</html:link></li>
+                                <li><html:link page="/viewerlist.do" module="">met inloggen</html:link></li>
+                            </ul>
+                        </p>
                     </c:when>
                     <c:otherwise>
-                        Er zijn geen thema's gevonden!
+                        <ol>
+                            <li>Er zijn geen thema's gevonden voor uw inlog!</li>
+                            <li>Haal <html:link page="/indexlist.do" module="">hier</html:link> opnieuw op.</li>
+                        </ol>
                     </c:otherwise>
                 </c:choose>
             </td>

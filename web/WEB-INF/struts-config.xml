@@ -114,13 +114,16 @@
             <forward name="success" path="home"/>
             <forward name="login" path="login"/>
             <forward name="loginError" path="login"/>
-            <forward name="logout" path="/login.do" redirect="true"/>
+            <forward name="logout" path="/index.do" redirect="true"/>
         </action>
+        <action path="/indexlist" forward="/index.do?list=t"/>
         <action path="/login" forward="/index.do?login=t"/>
         <action path="/loginError" forward="/index.do?loginError=t"/>
         <action path="/logout" forward="/index.do?logout=t"/>
         <action path="/help" forward="help"/>
         <action path="/home" forward="home"/>
+        
+        <action path="/viewerlist" forward="/index.do?list=t"/>
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>

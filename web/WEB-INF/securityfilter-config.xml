@@ -10,7 +10,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Index</web-resource-name>
-            <url-pattern>/index.do</url-pattern>
+            <url-pattern>/indexlist.do</url-pattern>
         </web-resource-collection>
     </security-constraint>
 
@@ -20,7 +20,11 @@
             <web-resource-name>Viewer</web-resource-name>
             <url-pattern>/viewer.do</url-pattern>
             <url-pattern>/viewerdata.do</url-pattern>
+            <url-pattern>/viewerlist.do</url-pattern>
         </web-resource-collection>       
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
     </security-constraint>
 
     <!-- /etl* alleen voor themabeheerders -->

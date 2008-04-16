@@ -717,7 +717,7 @@ public class SpatialUtil {
         sq.append(select+" ");
         sq.append("from ");
         sq.append(table1+ " tb1, "+table2+" tb2 where ");
-        sq.append("tb1."+tableIdColumn1+" = "+tableId1+" ");
+        sq.append("tb2."+tableIdColumn1+" = "+tableId1+" ");
         sq.append("and Within(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
     }

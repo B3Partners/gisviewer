@@ -30,9 +30,9 @@
         </fmc:Coordinates>
     </fmc:Container>
     <fmc:Container backgroundcolor="#D2E0EB" left="0" top="7%" height="93%" width="25%">
-        <fmc:Map id="overview" movequality="HIGH" left="0" top="9%" height="47%" width="100%" extent="160000,300000,220000,425000" fullextent="160000,300000,220000,425000">
+        <fmc:Map id="overview"  left="2%" top="0%" height="400" width="200" extent="7663,168896,285051,723673" fullextent="7663,168896,285051,723673">
             <fmc:LayerOverview listento="map1"/>
-            <fmc:LayerImage id="Limburg" imageurl="../images/limburg/limburg_overview.jpg" extent="160000,300000,220000,425000" />
+            <fmc:LayerImage id="Limburg" imageurl="../images/overviewNederland.png" extent="7663,168896,285051,723673" />
         </fmc:Map>
            <fmc:Text left="5%" top="65%" width="95%" height="35%">  
                <string id="text">  

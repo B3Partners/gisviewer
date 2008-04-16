@@ -566,8 +566,12 @@ public class GetViewerDataAction extends BaseGisAction {
         }
         
         if (pks.size()>0){
-            request.setAttribute("thema_items", thema_items);
-            request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
+            ArrayList regels= new ArrayList();
+            ArrayList ti= new ArrayList();
+            regels.add(getThemaObjects(t, pks, thema_items));
+            ti.add(thema_items);
+            request.setAttribute("thema_items_list", ti);
+            request.setAttribute("regels_list", regels);
         }
         return mapping.findForward("admindata");
     }

@@ -339,13 +339,13 @@
         }else{
             layersToAdd="";
         }        
-        var capLayerUrl=layerUrl;
-        if(capLayerUrl.indexOf('?')> 0)
-            capLayerUrl+='&';
+
+        if(layerUrl.indexOf('?')> 0)
+            layerUrl+='&';
         else
-            capLayerUrl+='?';
-        capLayerUrl+="SERVICE=WMS";
-        
+            layerUrl+='?';
+        layerUrl+="SERVICE=WMS";
+        var capLayerUrl=layerUrl;
         var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\"" +
             "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
             "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl + 

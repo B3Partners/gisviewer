@@ -14,8 +14,8 @@
     /*True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
     * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
     */
-    var multipleActiveThemas=false;
-    //de vertraging voor het refreshen van de kaart.
+    var multipleActiveThemas=true;
+        //de vertraging voor het refreshen van de kaart.
     var refreshDelay=1000;
     var nr = 0;
     function getNr() {
@@ -220,8 +220,8 @@
         document.getElementById('treevak').style.display = 'none';
         document.getElementById('layermaindiv').style.display = 'none';
         document.getElementById('infovak').style.display = 'none';
-        document.getElementById('objectvak').style.display = 'none';
-        document.getElementById('analysevak').style.display = 'none';
+        document.getElementById('objectvakViewer').style.display = 'none';
+        document.getElementById('analysevakViewer').style.display = 'none';
         document.getElementById('volgordevak').style.display = 'none';
         if(obj.id == "tab0") {
             document.getElementById('treevak').style.display = 'block';
@@ -229,9 +229,9 @@
         } else if(obj.id == "tab1") {
             document.getElementById('infovak').style.display = 'block';
         } else if(obj.id == "tab2") {
-            document.getElementById('objectvak').style.display = 'block';
+            document.getElementById('objectvakViewer').style.display = 'block';
         } else if(obj.id == "tab3") {
-            document.getElementById('analysevak').style.display = 'block';
+            document.getElementById('analysevakViewer').style.display = 'block';
         } else if(obj.id == "tab4") {
             document.getElementById('volgordevak').style.display = 'block';
         }
@@ -377,13 +377,13 @@
         document.forms[0].xcoord.value = x;
         document.forms[0].ycoord.value = y;
         document.forms[0].scale.value = '';
-        document.forms[0].target = 'objectframe';
+        document.forms[0].target = 'objectframeViewer';
         document.forms[0].submit();
         
         // vul analyse frame
         document.forms[0].objectdata.value = '';
         document.forms[0].analysedata.value = 't';
-        document.forms[0].target = 'analyseframe';
+        document.forms[0].target = 'analyseframeViewer';
         document.forms[0].submit();
     }
 
@@ -575,130 +575,169 @@
         <html:hidden property="scale"/>
     </html:form>
 </div>
-<div class="onderbalk" id="onderbalk_viewer">VIEWER<span><tiles:insert name="loginblock"/></span></div>
-<div id="bovenkant">
-    <div id="map">
-        <div id="flashcontent">
-            <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
-        </div>
-        <script type="text/javascript">
-                var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "653", "393", "8", "#FFFFFF");
-        </script>
-        <!--[if lte IE 6]>
-            <script type="text/javascript">
-            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "652", "393", "8", "#FFFFFF");
-            </script>
-        <![endif]-->
-        <script type="text/javascript">
-                so.write("flashcontent");
-        </script>
-    </div>
-    
-    <div id="rightdiv">
-        <div id="tabjes">
-            <ul id="nav">
-                <script type="text/javascript">
-                var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
-                var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
-                var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
-                var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
-                var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
 
-                if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
-                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 57px;">Thema\'s</a></li>');
-                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 58px;">Legenda</a></li>');
-                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
-                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
-                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
-                } else if(demogebruiker) {                   
-                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
-                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 96px;">Thema\'s</a></li>');
-                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
-                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
-                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
-                } else {
-                    document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="display: none;">Thema\'s</a></li>');
-                    document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 144px;">Zoeker</a></li>');
-                    document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 143px;">Legenda</a></li>');
-                    document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
-                    document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
-                }
-                </script>
-                <!--[if lte IE 6]>
-                    <script type="text/javascript">
-                        if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
-                            document.getElementById('tab3link').style.width = '58px';
-                        } else if(demogebruiker) {
-                            document.getElementById('tab1link').marginRight = '0px';
-                        }
-                    </script>
-                <![endif]-->
-            </ul>
-            
-        </div>
-        <div id="tab_container">
-            <div id="treevak" style="display: none;" class="tabvak">
-                <div id="layermaindiv" style="display: none;"></div>
-            </div>
-            
-            <div id="volgordevak" style="display: none;" class="tabvak">
-                Bepaal de volgorde waarin de kaartlagen getoond worden
-                <form>
-                    <div id="orderLayerBox" class="orderLayerBox"></div>
-                    <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" class="knop" />
-                    <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" class="knop" />
-                    <input type="button" value="Herladen" onclick="refreshMapVolgorde();" class="knop" />
-                    <input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" />
-                </form>
-            </div>
-            
-            <div id="infovak" style="display: none;" class="tabvak">
-                <div id="start_message">
-                    Kies de Info-tool en klik vervolgens op een punt<br/>
-                    op de kaart voor administratieve informatie<br/>
-                    van het object.
-                </div>
-                
-                <div id="algdatavak" style="display: none;">
-                    <b>RD Co&ouml;rdinaten</b><br />
-                    <span id="rdcoords"></span><br /><br />
-                    <b>Adres</b><br />
-                    <span id="kadastraledata"></span>
-                </div>
-                
-                <!-- input fields for search -->
-                <div>
-                    <br>
-                    <b>Zoek naar locatie:</b>
-                    <br>
-                    <input type="text" id="locatieveld" name="locatieveld" size="40"/>
-                    &nbsp;
-                    <input type="button" value=" Ga " onclick="getCoords();" class="knop" />
-                    <br>
-                    <div class="searchResultsClass" id="searchResults"></div>
-                    
-                </div>
-                <!-- end of search -->
-            </div>
-            
-            <div id="objectvak" style="display: none;" class="tabvak_with_iframe">
-                <iframe id="objectframe" name="objectframe" frameborder="0" src="empty_iframe.jsp"></iframe>
-            </div>
-            <div id="analysevak" style="display: none;" class="tabvak_with_iframe">
-                <iframe id="analyseframe" name="analyseframe" frameborder="0" src="empty_iframe.jsp"></iframe>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="onderbalk" id="onderbalk_details">DETAILS <span id="actief_thema">Actieve thema: </span></div>
-<div id="dataframediv">
-    <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
-</div>
+<table width="100%" height="100%">
+    <tr>
+        <td width="100%">
+            <table class="onderbalkTable" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="onderbalkTableLeft">
+                        VIEWER
+                    </td>
+                    <td class="onderbalkTableRight">
+                        <tiles:insert name="loginblock"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%" height="100%">
+            <table width="100%" height="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="100%" height="100%">
+                        <div id="flashcontent">
+                            <font color="red"><strong>For some reason the Flamingo mapviewer can not be shown. Please contact the website administrator.</strong></font>
+                        </div>
+                        <script type="text/javascript">
+                            var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "100%", "100%", "8", "#FFFFFF");
+                            so.write("flashcontent");
+                        </script>
+                    </td>
+                    <td>
+                        <table width="100%" height="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td id="tabjes">
+                                    <ul id="nav">
+                                        <script type="text/javascript">
+                                            var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
+                                            var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
+                                            var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
+                                            var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
+                                            var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
+
+                                            if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
+                                                document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 57px;">Thema\'s</a></li>');
+                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 58px;">Legenda</a></li>');
+                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
+                                                document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
+                                                document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
+                                            } else if(demogebruiker) {                   
+                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
+                                                document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 96px;">Thema\'s</a></li>');
+                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
+                                                document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
+                                                document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
+                                            } else {
+                                                document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="display: none;">Thema\'s</a></li>');
+                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 144px;">Zoeker</a></li>');
+                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 143px;">Legenda</a></li>');
+                                                document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
+                                                document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
+                                            }
+                                        </script>
+                                        <!--[if lte IE 6]>
+                                            <script type="text/javascript">
+                                                if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
+                                                    document.getElementById('tab3link').style.width = '58px';
+                                                } else if(demogebruiker) {
+                                                    document.getElementById('tab1link').marginRight = '0px';
+                                                }
+                                            </script>
+                                        <![endif]-->
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" height="100%">
+                                    <div id="tab_container">
+                                        <div id="treevak" style="display: none;" class="tabvak">
+                                            <div id="layermaindiv" style="display: none;"></div>
+                                        </div>
+                                        
+                                        <div id="volgordevak" style="display: none;" class="tabvak">
+                                            Bepaal de volgorde waarin de kaartlagen getoond worden
+                                            <form>
+                                                <div id="orderLayerBox" class="orderLayerBox"></div>
+                                                <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" class="knop" />
+                                                <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" class="knop" />
+                                                <input type="button" value="Herladen" onclick="refreshMapVolgorde();" class="knop" />
+                                                <input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" />
+                                            </form>
+                                        </div>
+                                        
+                                        <div id="infovak" style="display: none;" class="tabvak">
+                                            <div id="start_message">
+                                                Kies de Info-tool en klik vervolgens op een punt<br/>
+                                                op de kaart voor administratieve informatie<br/>
+                                                van het object.
+                                            </div>
+                                            
+                                            <div id="algdatavak" style="display: none;">
+                                                <b>RD Co&ouml;rdinaten</b><br />
+                                                <span id="rdcoords"></span><br /><br />
+                                                <b>Adres</b><br />
+                                                <span id="kadastraledata"></span>
+                                            </div>
+                                            
+                                            <!-- input fields for search -->
+                                            <div>
+                                                <br>
+                                                <b>Zoek naar locatie:</b>
+                                                <br>
+                                                <input type="text" id="locatieveld" name="locatieveld" size="40"/>
+                                                &nbsp;
+                                                <input type="button" value=" Ga " onclick="getCoords();" class="knop" />
+                                                <br>
+                                                <div class="searchResultsClass" id="searchResults"></div>
+                                            </div>
+                                            <!-- end of search -->
+                                        </div>
+                                        
+                                        <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe">
+                                            <iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
+                                        </div>
+                                        <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe">
+                                            <iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td width="100%">
+            <table class="onderbalkTable" cellpadding="0" cellspacing="0" style="margin-bottom: 3px;">
+                <tr>
+                    <td class="onderbalkTableLeft">
+                        DETAILS
+                    </td>
+                    <td class="onderbalkTableRight">
+                        <span id="actief_thema">Actieve thema: </span>
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="100%">
+                        <div id="dataframediv" class="dataframediv">
+                            <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 
 <script type="text/javascript">
    // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
    var dataframehoogte = '70px';
-   document.getElementById('dataframediv').style.height = dataframehoogte;
+   document.getElementById('dataframediv').style.height = dataframehoogte; 
    document.getElementById('dataframe').style.height = dataframehoogte; 
     
    function getActiveLayerId(cookiestring) {
@@ -809,27 +848,15 @@
         doIdentify(minx,miny,maxx,maxy);
     }
     
-    window.onload = function() {
-        checkLocation();    
-        resizeViewer();
-        setTimeout("activateOnResize()", 2000);
+    resizeOrderLayerBox();    
+    window.onresize = function() {
+        resizeOrderLayerBox();
     }
     
-    var isresizing = false;
-    var iframeloaded = false;
-    function activateOnResize() {
-        window.onresize = function() {
-            if(!isresizing) {
-                isresizing = true;
-                resizeViewer();
-                if(document.getElementById('dataframe').contentWindow.doResize) document.getElementById('dataframe').contentWindow.doResize();
-                setTimeout("setResizingDone()", 2000);
-            }
-        }
-    }
-    
-    function setResizingDone() {
-        isresizing = false;
+    function resizeOrderLayerBox() {
+        var parentHeight = document.getElementById('tab_container').offsetHeight;
+        document.getElementById('orderLayerBox').style.height = (parentHeight * 0.70) + 'px'
+        document.getElementById('layermaindiv').style.height = (parentHeight * 0.90) + 'px'
     }
 </script>
 

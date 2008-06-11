@@ -6,10 +6,13 @@
 
 <tiles-definitions>
     <definition name="template" path="/WEB-INF/jsp/templates/template.jsp"/>
-    
+    <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp"/>
     <!-- algemeen -->
     <definition name="algemeen" extends="template">
         <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
+    </definition>
+    <definition name="algemeenViewer" extends="templateViewer">
+        <put name="menu" value="/WEB-INF/jsp/commons/topmenuViewer.jsp"/>
     </definition>
     <definition name="login" extends="algemeen">
         <put name="content" value="/WEB-INF/jsp/algemeen/login.jsp"/>
@@ -39,7 +42,7 @@
     </definition>
     
     <!-- viewer -->
-    <definition name="viewer" extends="algemeen">
+    <definition name="viewer" extends="algemeenViewer">
         <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>
     </definition>
     <!-- viewer databody-->

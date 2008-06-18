@@ -15,8 +15,8 @@
 
 <table width="100%" height="100%;" cellpadding="0" cellspacing="0">
     <tr>
-        <td width="70%" style="background-image: url(/gisviewer/images/kaartenbalielogo.gif); background-repeat: no-repeat; background-position: 20% 0%; height: 50px;"></td>
-        <td width="50%" align="right" style="padding-top: 23px; padding-right: 30px;">
+        <td width="60%" style="background-image: url(/gisviewer/images/kaartenbalielogo.gif); background-repeat: no-repeat; background-position: 20% 0%; height: 50px;"></td>
+        <td width="40%" align="right" style="padding-top: 23px; padding-right: 30px;">
             <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
             <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
 

@@ -112,6 +112,15 @@
                     flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
                 }
             } 
+        } else {
+            var atlabel = document.getElementById('actief_thema');
+            if (atlabel!=null && label!=null) {
+                if(activeThemaId != null && activeThemaId.length > 0) {
+                    atlabel.innerHTML = 'Actieve thema: Meerdere';
+                } else {
+                    atlabel.innerHTML = 'Actieve thema: Geen';
+                }
+            }
         }
         return activeThemaId;
     }
@@ -577,7 +586,7 @@
 </div>
 
 <table width="100%" height="100%">
-    <tr>
+    <tr id="bovenbalkTr">
         <td width="100%">
             <table class="onderbalkTable" cellpadding="0" cellspacing="0">
                 <tr>
@@ -649,7 +658,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td width="100%" height="100%">
+                                <td>
                                     <div id="tab_container">
                                         <div id="treevak" style="display: none;" class="tabvak">
                                             <div id="layermaindiv" style="display: none;"></div>
@@ -709,7 +718,7 @@
             </table>
         </td>
     </tr>
-    <tr>
+    <tr id="onderstukTr">
         <td width="100%">
             <table class="onderbalkTable" cellpadding="0" cellspacing="0" style="margin-bottom: 3px;">
                 <tr>
@@ -717,7 +726,7 @@
                         DETAILS
                     </td>
                     <td class="onderbalkTableRight">
-                        <span id="actief_thema">Actieve thema: </span>
+                        <span id="actief_thema">Actieve thema</span>
                     </td>
                 </tr>
             </table>
@@ -725,7 +734,7 @@
                 <tr>
                     <td width="100%">
                         <div id="dataframediv" class="dataframediv">
-                            <iframe id="dataframe" name="dataframe" frameborder="0" scrolling="no"></iframe>
+                            <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
                         </div>
                     </td>
                 </tr>
@@ -846,17 +855,6 @@
     function moveAndIdentify(minx,miny,maxx,maxy){
         moveToExtent(minx,miny,maxx,maxy);
         doIdentify(minx,miny,maxx,maxy);
-    }
-    
-    resizeOrderLayerBox();    
-    window.onresize = function() {
-        resizeOrderLayerBox();
-    }
-    
-    function resizeOrderLayerBox() {
-        var parentHeight = document.getElementById('tab_container').offsetHeight;
-        document.getElementById('orderLayerBox').style.height = (parentHeight * 0.70) + 'px'
-        document.getElementById('layermaindiv').style.height = (parentHeight * 0.90) + 'px'
     }
 </script>
 

@@ -1,0 +1,24 @@
+#treevak {
+    width: 292px;
+}
+
+#layermaindiv {
+    width: 276px;
+}
+
+#volgordevak{
+    width: 292px;
+}
+
+#infovak{
+    width: 292px;
+}
+
+a.menulink, a.menulink:visited, a.menulink:active {
+    height: 27px;
+}
+
+a.activemenulink, a.activemenulink:visited, a.activemenulink:active { 
+    margin-left: 0px;
+    height: 27px;
+}

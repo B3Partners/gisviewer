@@ -108,8 +108,8 @@
                 var atlabel = document.getElementById('actief_thema');
                 if (atlabel!=null && label!=null)
                     atlabel.innerHTML = 'Actieve thema: ' + label;
-                if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){
-                    flamingo_map1_onIdentify('',{minx:document.forms[0].xcoord.value, miny:document.forms[0].ycoord.value, maxx:document.forms[0].xcoord.value, maxy:document.forms[0].ycoord.value})
+                if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){                    
+                    flamingo_map1_onIdentify('',{minx:parseFloat(document.forms[0].xcoord.value), miny:parseFloat(document.forms[0].ycoord.value), maxx:parseFloat(document.forms[0].xcoord.value), maxy:parseFloat(document.forms[0].ycoord.value)})
                 }
             } 
         } else {
@@ -177,7 +177,7 @@
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
-                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title) }
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title,true) }
                 if (activeThemaId == item.id)
                     el.checked = true;
 
@@ -790,7 +790,7 @@
     //always call this script after the SWF object script has called the flamingo viewer.
     //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
     function flamingo_map1_onIdentify(movie,extend){
-        //alert(extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
+        //alert("extend: "+extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
         document.getElementById('start_message').style.display = 'none';
         document.getElementById('algdatavak').style.display = 'block';
 

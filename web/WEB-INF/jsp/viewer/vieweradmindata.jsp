@@ -21,6 +21,19 @@
                      "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
     }
+    function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+        // Leeg -> Ja
+        // Nee -> Ja
+        // Ja -> Nee        
+        var oldValue = element.innerHTML; // Nu wordt er gegeken naar wat de waarde is die in de link staat, deze wordt gebruikt, niet attributeValue
+        var newValue = 'Nee';
+        if(oldValue == 'Leeg' || oldValue == 'Nee' || oldValue == 'Nieuw')
+            newValue = 'Ja';
+        JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
+    }
+    function handleSetAttribute(str){
+        document.getElementById(str[0]).innerHTML=str[1];
+    }
     function berekenOppervlakte(element, themaid, kolomnaam,value,eenheid){        
         JMapData.getArea(element.id,themaid,kolomnaam,value,eenheid,handleGetArea);
     }
@@ -102,7 +115,8 @@
                                                                 <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                                                             </c:when>
                                                             <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
-                                                                <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${waarde}"><html:image src="./images/icons/information.png"/> </a>
+                                                                <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}">${fn:split(waarde, '###')[0]}</a>
+                                                                <%--a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${waarde}"><html:image src="./images/icons/information.png"/> </a--%>
                                                             </c:when>
                                                             <c:otherwise>
                                                                 ${waarde}

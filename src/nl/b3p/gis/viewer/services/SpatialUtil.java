@@ -735,6 +735,47 @@ public class SpatialUtil {
         return sq.toString();
     }
     
-    
-    
+    public static String setAttributeValue(Connection conn, String tableName, String keyName, int keyValue, String attributeName, String newValue) throws SQLException  {
+        if (conn == null) {
+            return null;
+        }
+        StringBuffer sq = new StringBuffer();
+        sq.append("update ");
+        sq.append(tableName);
+        sq.append(" set ");
+        sq.append(attributeName);
+        sq.append(" = ? where ");
+        sq.append(keyName);
+        sq.append(" = ? ;");
+
+        boolean orgAutoCommit = conn.getAutoCommit();
+        conn.setAutoCommit(false);
+        PreparedStatement statement = null;
+        try {
+            statement = conn.prepareStatement(sq.toString());
+            statement.setString(1, newValue);
+            statement.setInt(2, keyValue);
+            int r = statement.executeUpdate();
+            if (r != 1) {
+                throw new SQLException("update affects not just one row, but '" + r + "' rows!");
+            }
+            conn.commit();
+        } catch (SQLException ex) {
+            if (conn != null) {
+                conn.rollback();
+            }
+            log.error("rollback, reason: ", ex);
+            return null;
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    log.error("", ex);
+                }
+            }
+        }
+        conn.setAutoCommit(orgAutoCommit);
+        return newValue;
+    }
 }

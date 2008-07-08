@@ -20,6 +20,19 @@
                      "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
     }
+    function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+        // Leeg -> Ja
+        // Nee -> Ja
+        // Ja -> Nee        
+        var oldValue = element.innerHTML; // Nu wordt er gegeken naar wat de waarde is die in de link staat, deze wordt gebruikt, niet attributeValue
+        var newValue = 'Nee';
+        if(oldValue == 'Leeg' || oldValue == 'Nee' || oldValue == 'Nieuw')
+            newValue = 'Ja';
+        JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
+    }
+    function handleSetAttribute(str){
+        document.getElementById(str[0]).innerHTML=str[1];
+    }
     function berekenOppervlakte(element, themaid, kolomnaam,value,eenheid){        
         JMapData.getArea(element.id,themaid,kolomnaam,value,eenheid,handleGetArea);
     }
@@ -59,7 +72,14 @@
                                 -
                             </c:when>
                             <c:when test="${ThemaItem.dataType.id == 4}">
-                                <a class="datalink" id="href${counter.count-1}" href="#" onclick="${regels[0][counter.count - 1]}"><html:image src="./images/icons/information.png"/> </a>
+                                <c:choose>
+                                    <c:when test="${fn:startsWith(fn:split(regels[0][counter.count - 1], '###')[1],'setAttributeValue')}">
+                                        - 
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="datalink" id="href${counter.count-1}" href="#" onclick="${fn:split(regels[0][counter.count - 1], '###')[1]}">${fn:split(regels[0][counter.count - 1], '###')[0]}</a>                                
+                                    </c:otherwise>
+                                </c:choose>
                             </c:when>
                             <c:otherwise>
                                 ${regels[0][counter.count - 1]}

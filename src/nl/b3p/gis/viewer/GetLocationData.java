@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.HibernateUtil;
@@ -24,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 public class GetLocationData {
     
@@ -111,6 +113,85 @@ public class GetLocationData {
                 value+=" m";
             }
             returnValue[1]=value;
+        }
+        return returnValue;
+    }
+    
+     /**
+     *
+     * @param elementId element in html pagina waar nieuwe waarde naar wordt geschreven
+     * @param themaId id van thema waar update betrekking op heeft
+     * @param keyName naam van primary key voor selectie van juiste row
+     * @param keyValue waarde van primary key voor selectie
+     * @param attributeName kolomnaam die veranderd moet worden
+     * @param oldValue oude waarde van de kolom
+     * @param newValue nieuwe waarde van de kolom
+     * @return array van 2 return waarden: 1=elementId, 2=oude of nieuwe waarde met fout indicatie
+     */
+    public String[] setAttributeValue(String elementId, String themaId, String keyName, String keyValue, String attributeName, String oldValue, String newValue) {
+        String[] returnValue = new String[2];
+        Transaction transaction = null;
+        try{            
+            returnValue[0] = elementId;
+            returnValue[1] = oldValue + " (fout)";
+
+            Integer id = FormUtils.StringToInteger(themaId);
+            int keyValueInt = FormUtils.StringToInt(keyValue);
+            if (id == null || keyValueInt == 0) {
+                return returnValue;
+            }
+            Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = sess.beginTransaction();
+            Themas t = (Themas) sess.get(Themas.class, id);
+
+            String connectionType = null;
+            Connection conn = null;
+            if (t.getConnectie() != null) {
+                if (t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
+                   try {
+                        conn = t.getConnectie().getJdbcConnection();
+                    } catch (SQLException ex) {
+                        log.debug("Invalid jdbc connection in thema: ", ex);
+                    }
+                     if (conn == null) {
+                        conn = sess.connection();
+                    }
+                    connectionType = Connecties.TYPE_JDBC;
+                } else if (t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+                    connectionType = Connecties.TYPE_WFS;
+                }
+            } else {
+                connectionType = Connecties.TYPE_JDBC;
+                conn = sess.connection();
+            }
+            if (conn == null || connectionType == null) {
+                return returnValue;
+            }
+
+            //Schrijf met jdbc connectie
+            if (connectionType.equalsIgnoreCase(Connecties.TYPE_JDBC)) {
+                String tableName = t.getSpatial_tabel();
+
+                try {
+                    String retVal = SpatialUtil.setAttributeValue(conn, tableName, keyName, keyValueInt, attributeName, newValue);
+                    returnValue[1] = retVal;
+                } catch (SQLException ex) {
+                    log.error("", ex);
+                } finally {
+                    if (conn != null) {
+                        try {
+                            conn.close();
+                        } catch (SQLException ex) {
+                            log.error("", ex);
+                        }
+                    }
+                }
+            } else if (connectionType.equalsIgnoreCase(Connecties.TYPE_WFS)) {
+                // TODO WFS
+                //Feature f=WfsUtil.getWfsObject(t,attributeName,oldValue);
+            }
+        }catch(Exception e){
+            log.error("",e);
         }
         return returnValue;
     }

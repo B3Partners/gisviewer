@@ -517,6 +517,9 @@
         div.title = name;
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
+        if (parseInt(myImage.height) == 0){
+            div.appendChild(spanEl);
+        }
         div.appendChild(legendimg);
 
         if(!orderLayerBox.hasChildNodes()) {

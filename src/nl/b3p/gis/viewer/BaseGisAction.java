@@ -644,8 +644,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     regel.add(url.toString());
                 } else
                     regel.add("");
-            }else if (td.getDataType().getId()==DataTypen.FUNCTION){
-                
+            }else if (td.getDataType().getId()==DataTypen.FUNCTION){                
                 String keyName = t.getAdmin_pk();
                 Object keyValue = rs.getObject(keyName);
                 String attributeName = td.getKolomnaam();
@@ -805,30 +804,41 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 } else
                     regel.add("");
             }else if (td.getDataType().getId()==DataTypen.FUNCTION){
-                StringBuffer function;
-                if (td.getCommando()!=null)
-                    function = new StringBuffer(td.getCommando());
-                else
-                    function = new StringBuffer();
-                function.append("(this, ");                
-                if (kolomnaam==null || kolomnaam.length()==0)
-                    kolomnaam = t.getAdmin_pk();
-                if (!f.getSchema().hasAttribute(kolomnaam) && kolomnaam!=null){
-                    if (kolomnaam.split(":").length>1){
-                        kolomnaam=kolomnaam.split(":")[1];
+                String keyName = t.getAdmin_pk();
+                if (!f.getSchema().hasAttribute(keyName)){
+                    if (keyName.split(":").length>1)
+                        keyName=keyName.split(":")[1];
+                }
+                Object keyValue = f.getAttribute(keyName);
+                String attributeName = td.getKolomnaam();
+                Object attributeValue = null;
+                
+                if (attributeName==null || attributeName.length()==0) {
+                    attributeName = keyName;
+                    attributeValue = keyValue;
+                } else {
+                    if (!f.getSchema().hasAttribute(attributeName)){
+                        if (attributeName.split(":").length>1){
+                            attributeName=attributeName.split(":")[1];
+                        }
                     }
+                    attributeValue = f.getAttribute(attributeName);
                 }
-                Object value = f.getString(kolomnaam);
-                String queryName= td.getKolomnaam();
-                if (queryName==null){
-                    queryName=t.getAdmin_pk();
-                }
-                if (value!=null) {
+                if (keyValue!=null) {
+                    // De attributeValue ook eerst vooraan erbij zetten om die te kunnen tonen op de admindata pagina - Drie hekjes als scheidingsteken
+                    StringBuffer function = new StringBuffer("");
+                    function.append(attributeValue);
+                    function.append("###" + td.getCommando());
+                    function.append("(this, ");
                     function.append("'"+td.getThema().getId()+"'");
                     function.append(",");
-                    function.append("'"+queryName+"'");
+                    function.append("'"+keyName+"'");
                     function.append(",");
-                    function.append("'"+value+"'");
+                    function.append("'"+keyValue+"'");
+                    function.append(",");
+                    function.append("'"+attributeName+"'");
+                    function.append(",");
+                    function.append("'"+attributeValue+"'");
                     function.append(",");
                     function.append("'"+td.getEenheid()+"'");
                     function.append(")");
@@ -836,7 +846,6 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 }else{
                     regel.add("");
                 }
-                
             }else
                 
             /*

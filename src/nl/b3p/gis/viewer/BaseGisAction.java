@@ -112,6 +112,13 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         String themaid = (String)request.getParameter("themaid");
         return getThema(themaid,request);
     }
+    
+    protected Themas getThema(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, boolean analysethemaid) {
+        String themaid = "";
+        if(analysethemaid) themaid = (String)request.getParameter("analysethemaid");
+        else themaid = (String)request.getParameter("themaid");
+        return getThema(themaid,request);
+    }
     /**
      * Get the thema en doe wat checks
      */

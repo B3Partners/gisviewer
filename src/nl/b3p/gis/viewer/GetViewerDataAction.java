@@ -299,7 +299,8 @@ public class GetViewerDataAction extends BaseGisAction {
      * waarde
      */
     public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Themas t = getThema(mapping, dynaForm, request);
+        // Maakt nu gebruik van het activeanalysethema property door true mee te geven
+        Themas t = getThema(mapping, dynaForm, request, true);
         
         List thema_items = SpatialUtil.getThemaData(t, true);
         

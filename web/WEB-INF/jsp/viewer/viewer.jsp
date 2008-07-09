@@ -141,6 +141,21 @@
         }        
     }
     
+    
+    //  Added
+    var activeAnalyseThemaId = '';
+    function setActiveAnalyseThema(id) {
+        activeAnalyseThemaId = id;
+        return activeAnalyseThemaId;
+    }
+    
+    function setAnalyseData(id) {
+        eraseCookie('activeanalyselayer');
+        createCookie('activeanalyselayer', id, '7');
+        setActiveAnalyseThema(id)
+    }
+    //  /Added
+    
     var layersAan= new Array();
     
     function createLabel(container, item) {
@@ -161,9 +176,18 @@
                     radioControleString += ' checked="checked"';
                 radioControleString += ' onclick="eraseCookie(\'activelayer\');' + 
                     ' createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\');' + 
-                    ' setActiveThema(\'' + item.id + '\', \'' + item.title + '\', true);"';
+                    ' setActiveThema(\'' + item.id + '\', \'' + item.title + '\', true); setAnalyseData(\'' + item.id + '\');"';
                 radioControleString += '>';
                 var el = document.createElement(radioControleString);
+                
+                //  Added
+                var analyseRadioControleString = '<input type="radio" name="selanalysekaartlaag" value="' + item.id + '"';
+                if (analyseThemaId == item.id)
+                    analyseRadioControleString += ' checked="checked"';
+                analyseRadioControleString += ' onclick="setAnalyseData(\'' + item.id + '\');"';
+                analyseRadioControleString += '>';
+                var analyseRadio = document.createElement(analyseRadioControleString);
+                //  /Added                
                 
                 var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
                 if(layerPos!=0)
@@ -177,9 +201,19 @@
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
-                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title,true) }
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title,true); setAnalyseData(item.id); }
                 if (activeThemaId == item.id)
                     el.checked = true;
+                    
+                //  Added
+                var analyseRadio = document.createanalyseRadioement('input');
+                analyseRadio.type = 'radio';
+                analyseRadio.name = 'selanalysekaartlaag';
+                analyseRadio.value = item.id;
+                analyseRadio.onclick = function(){ setAnalyseData(item.id) }
+                if (activeThemaId == item.id)
+                    analyseRadio.checked = true;
+                //  /Added 
 
                 var el2 = document.createElement('input');
                 el2.id = item.id;
@@ -206,7 +240,9 @@
             if(item.analyse=="on" || item.analyse=="active"){
                 if (!multipleActiveThemas){
                     container.appendChild(el);
-                }                
+                } else {
+                    container.appendChild(analyseRadio);
+                }
             }
             
             if(item.wmslayers){
@@ -373,6 +409,7 @@
         document.forms[0].objectdata.value = 't';
         document.forms[0].analysedata.value = '';
         document.forms[0].themaid.value = activeThemaId;
+        document.forms[0].analysethemaid = activeAnalyseThemaId;
         
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
@@ -581,6 +618,7 @@
         <input type="hidden" name="objectdata"/>
         <input type="hidden" name="analysedata"/>
         <html:hidden property="themaid" />
+        <html:hidden property="analysethemaid" />
         <html:hidden property="lagen" />
         <html:hidden property="xcoord" />
         <html:hidden property="ycoord" />
@@ -765,6 +803,9 @@
     var activeLayerIdFromCookie = getActiveLayerId(readCookie('activelayer'));    
     var activeLayerLabelFromCookie = getActiveLayerLabel(readCookie('activelayer'));    
     setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie);
+    
+    var activeAnalyseLayerIdFromCookie = readCookie('activeanalyselayer');     
+    setActiveAnalyseThema(activeAnalyseLayerIdFromCookie);
     
     treeview_create({
             "id": "layermaindiv",

@@ -748,7 +748,7 @@
 
 <script type="text/javascript">
    // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
-   var dataframehoogte = '70px';
+   var dataframehoogte = '200px';
    document.getElementById('dataframediv').style.height = dataframehoogte; 
    document.getElementById('dataframe').style.height = dataframehoogte; 
     

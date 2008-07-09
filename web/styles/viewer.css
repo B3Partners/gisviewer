@@ -224,12 +224,6 @@ a:hover{
     background-color: #DDDDDD;
 }
 
-.admin_data_content_div {
-    overflow: auto;
-    height: 245px;
-    width: 948px;
-}
-
 .admin_data_alternate_tr {
     background-color: #DDDDDD;
 }

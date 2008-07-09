@@ -645,18 +645,33 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 } else
                     regel.add("");
             }else if (td.getDataType().getId()==DataTypen.FUNCTION){
-                StringBuffer function = new StringBuffer(td.getCommando());
-                function.append("(this, ");                
-                String kolomNaam = td.getKolomnaam();
-                if (kolomNaam==null || kolomNaam.length()==0)
-                    kolomNaam = t.getAdmin_pk();
-                Object value = rs.getObject(kolomNaam);
-                if (value!=null) {
+                
+                String keyName = t.getAdmin_pk();
+                Object keyValue = rs.getObject(keyName);
+                String attributeName = td.getKolomnaam();
+                Object attributeValue = null;
+                
+                if (attributeName==null || attributeName.length()==0) {
+                    attributeName = keyName;
+                    attributeValue = keyValue;
+                } else {
+                    attributeValue = rs.getObject(attributeName);
+                }
+                if (keyValue!=null) {
+                    // De attributeValue ook eerst vooraan erbij zetten om die te kunnen tonen op de admindata pagina - Drie hekjes als scheidingsteken
+                    StringBuffer function = new StringBuffer("");
+                    function.append(attributeValue);
+                    function.append("###" + td.getCommando());
+                    function.append("(this, ");
                     function.append("'"+td.getThema().getId()+"'");
                     function.append(",");
-                    function.append("'"+kolomNaam+"'");
+                    function.append("'"+keyName+"'");
                     function.append(",");
-                    function.append("'"+value+"'");
+                    function.append("'"+keyValue+"'");
+                    function.append(",");
+                    function.append("'"+attributeName+"'");
+                    function.append(",");
+                    function.append("'"+attributeValue+"'");
                     function.append(",");
                     function.append("'"+td.getEenheid()+"'");
                     function.append(")");

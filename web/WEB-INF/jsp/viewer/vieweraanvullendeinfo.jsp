@@ -74,7 +74,7 @@
                             <c:when test="${ThemaItem.dataType.id == 4}">
                                 <c:choose>
                                     <c:when test="${fn:startsWith(fn:split(regels[0][counter.count - 1], '###')[1],'setAttributeValue')}">
-                                        - 
+                                        <c:out value="${fn:split(regels[0][counter.count - 1], '###')[0]}"/> 
                                     </c:when>
                                     <c:otherwise>
                                         <a class="datalink" id="href${counter.count-1}" href="#" onclick="${fn:split(regels[0][counter.count - 1], '###')[1]}">${fn:split(regels[0][counter.count - 1], '###')[0]}</a>                                

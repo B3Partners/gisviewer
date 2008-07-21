@@ -396,7 +396,14 @@
             "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl + 
             "\"styles=\""+
             "\" layers=\""+layersToAdd+
-            "\" srs=\"EPSG:28992\" version=\"1.1.1\"/>";
+            "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
+        /* add the highlight layers.
+        Voor de presentatie kunnen we een vaste waarde hier plaatsen. Ligt even aan de tijd. Voorbeeld:
+* <layer id="gemeenten_2006">
+*     <visualisationselected id="gemeenten_2006" colorkey="gm_code" geomname="the_geom" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>
+* </layer>
+        */
+        newLayer+= "</fmc:LayerOGWMS>";
         if (flamingo && layerUrl!=null){            
             flamingo.call('map1','removeLayer','fmcLayer');
             flamingo.call('map1','addLayer',newLayer);

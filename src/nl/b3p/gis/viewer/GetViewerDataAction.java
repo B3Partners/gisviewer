@@ -128,9 +128,7 @@ public class GetViewerDataAction extends BaseGisAction {
      * thema_items
      * regels
      */
-    public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        //TODO: getThema werkt niet meer goed voor de gisviewer omdat het nu een aantal thema's kunnen zijn.
-        //Themas t = getThema(mapping, dynaForm, request);
+    public ActionForward admindata(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {        
         ArrayList themas = getThemas(mapping,dynaForm,request);
         ArrayList regels=new ArrayList();
         ArrayList ti=null;

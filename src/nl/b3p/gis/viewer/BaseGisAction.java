@@ -117,6 +117,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         String themaid = "";
         if(analysethemaid) themaid = (String)request.getParameter("analysethemaid");
         else themaid = (String)request.getParameter("themaid");
+        log.error("THEMAID: " + themaid);
         return getThema(themaid,request);
     }
     /**

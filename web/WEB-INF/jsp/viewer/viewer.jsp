@@ -176,15 +176,15 @@
                     radioControleString += ' checked="checked"';
                 radioControleString += ' onclick="eraseCookie(\'activelayer\');' + 
                     ' createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\');' + 
-                    ' setActiveThema(\'' + item.id + '\', \'' + item.title + '\', true); setAnalyseData(\'' + item.id + '\');"';
+                    ' setActiveThema(\'' + item.id + '\', \'' + item.title + '\', true); setAnalyseData(\'' + item.id + '\'); activateCheckbox(\'' + item.id + '\');"';
                 radioControleString += '>';
                 var el = document.createElement(radioControleString);
                 
                 //  Added
                 var analyseRadioControleString = '<input type="radio" name="selanalysekaartlaag" value="' + item.id + '"';
-                if (analyseThemaId == item.id)
+                if (activeAnalyseThemaId == item.id)
                     analyseRadioControleString += ' checked="checked"';
-                analyseRadioControleString += ' onclick="setAnalyseData(\'' + item.id + '\');"';
+                analyseRadioControleString += ' onclick="setAnalyseData(\'' + item.id + '\'); activateCheckbox(\'' + item.id + '\');"';
                 analyseRadioControleString += '>';
                 var analyseRadio = document.createElement(analyseRadioControleString);
                 //  /Added                
@@ -201,17 +201,17 @@
                 el.type = 'radio';
                 el.name = 'selkaartlaag';
                 el.value = item.id;
-                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title,true); setAnalyseData(item.id); }
+                el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title,true); setAnalyseData(item.id); activateCheckbox(item.id); }
                 if (activeThemaId == item.id)
                     el.checked = true;
                     
                 //  Added
-                var analyseRadio = document.createanalyseRadioement('input');
+                var analyseRadio = document.createElement('input');
                 analyseRadio.type = 'radio';
                 analyseRadio.name = 'selanalysekaartlaag';
                 analyseRadio.value = item.id;
-                analyseRadio.onclick = function(){ setAnalyseData(item.id) }
-                if (activeThemaId == item.id)
+                analyseRadio.onclick = function(){ setAnalyseData(item.id); activateCheckbox(item.id); }
+                if (activeAnalyseThemaId == item.id)
                     analyseRadio.checked = true;
                 //  /Added 
 
@@ -251,6 +251,12 @@
             container.appendChild(document.createTextNode('  '));
             container.appendChild(lnk);
         }
+    }
+    
+    function activateCheckbox(id) {
+        var obj = document.getElementById(id);
+        if(!obj.checked)
+            document.getElementById(id).click();
     }
 
     function switchTab(obj) {
@@ -416,7 +422,7 @@
         document.forms[0].objectdata.value = 't';
         document.forms[0].analysedata.value = '';
         document.forms[0].themaid.value = activeThemaId;
-        document.forms[0].analysethemaid = activeAnalyseThemaId;
+        document.forms[0].analysethemaid.value = activeAnalyseThemaId;
         
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();

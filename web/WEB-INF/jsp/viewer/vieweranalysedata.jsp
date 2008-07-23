@@ -30,6 +30,7 @@
                 <input type="hidden" name="analysewaarde"/>
                 <input type="hidden" name="analyseobject"/>
                 <html:hidden property="themaid" />
+                <html:hidden property="analysethemaid" />
                 <html:hidden property="lagen" />
                 <html:hidden property="xcoord" />
                 <html:hidden property="ycoord" />

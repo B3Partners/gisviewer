@@ -99,7 +99,7 @@
                                         ${plusmin}
                                     </div>
                                 </div>
-                                <div id="ThemaNaamLabel${tStatus.count}" style="margin-top: -1px; display: none; position: absolute; color: #ffd203; background-color: #102f44; border: 2px solid #19619b; padding: 4px; left: 18px;">${themanaam}</div>
+                                <div id="ThemaNaamLabel${tStatus.count}" class="themaLabelMouseOver" style="margin-top: -1px; display: none; position: absolute; padding: 4px; left: 18px;">${themanaam}</div>
                             </th>
                             <th style="width: 50px;" class="table-sortable:numeric" id="volgnr_th" onclick="Table.sort(document.getElementById('data_table${tStatus.count}'), {sorttype:Sort['numeric'], col:1});">
                                 Volgnr

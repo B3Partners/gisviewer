@@ -484,7 +484,7 @@ public class GetViewerDataAction extends BaseGisAction {
      *
      */
     public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Themas t = getThema(mapping, dynaForm, request);
+        Themas t = getThema(mapping, dynaForm, request, true);
         
         List thema_items = SpatialUtil.getThemaData(t, true);
         

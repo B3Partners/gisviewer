@@ -12,6 +12,36 @@
 
 <div class="onderbalk">DATA CONFIG<span><tiles:insert name="loginblock"/></span></div>
 
+<script type="text/javascript">
+    function showHelp(obj) {
+        var helpDiv = obj.nextSibling;
+        showHideDiv(helpDiv);
+        return false;
+    }
+    
+    function showHideDiv(obj) {
+        if(obj.style.display != 'block') {
+            obj.style.display = 'block';
+        } else {
+            obj.style.display = 'none';
+        }
+    }
+</script>
+
+<style type="text/css">
+    .helptekstDiv {
+        position: absolute;
+        margin-left: 40px;
+        margin-top: 4px;
+        display: none;
+        padding: 5px;
+        background-color: #eeeeee;
+        z-index: 99999;
+        color: #19619b;
+        border: 1px solid #19619b;
+    }
+</style>
+
 <html:form action="/configThemaData" focus="${focus}">
     <html:hidden property="action"/>
     <html:hidden property="alt_action"/>
@@ -123,15 +153,15 @@
         </div>
         <div class="maintable" style="margin-top: 5px;">
             <table cellpadding="2" cellspacing="2" border="0">
-                <tr><td><fmt:message key="configthemadata.label"/></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.eenheid"/></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.omschrijving"/></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.basisregel"/></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
-                <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.kolombreedte"/></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.label"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.label.uitleg"/></div></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.eenheid"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.eenheid.uitleg"/></div></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.omschrijving"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.omschrijving.uitleg"/></div></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.basisregel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.basisregel.uitleg"/></div></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
+                <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.voorbeelden.uitleg"/></div></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.kolombreedte"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.kolombreedte.uitleg"/></div></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
                 <tr class="optionalConfigItems">
                     <td>
-                        <fmt:message key="configthemadata.moscow"/>
+                        <fmt:message key="configthemadata.moscow"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.moscow.uitleg"/></div>
                     </td>
                     <td colspan="3">
                         <html:select property="moscowID">
@@ -145,7 +175,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthemadata.waardetype"/>
+                        <fmt:message key="configthemadata.waardetype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.waardetype.uitleg"/></div>
                     </td>
                     <td colspan="3">
                         <html:select property="waardeTypeID">
@@ -159,7 +189,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthemadata.datatype"/>
+                        <fmt:message key="configthemadata.datatype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.datatype.uitleg"/></div>
                     </td>
                     <td colspan="3">
                         <html:select property="dataTypeID">
@@ -171,11 +201,11 @@
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr><td><fmt:message key="configthemadata.commando"/></td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.commando"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.commando.uitleg"/></div></td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
                 <c:choose>
                     <c:when test="${fn:length(listAdminTableColumns)>1}">
                         <tr>
-                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></td>
+                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.${connectieType}.kolomnaam.uitleg"/></div></td>
                             <td colspan="3">
                                 <html:select property="kolomnaam">
                                     <html:option value=""/>
@@ -187,10 +217,10 @@
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthemadata.kolomnaam"/></td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
+                        <tr><td><fmt:message key="configthemadata.kolomnaam"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.kolomnaam.uitleg"/></div></td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
                     </c:otherwise>
                 </c:choose>
-                <tr><td><fmt:message key="configthemadata.dataorder"/></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.dataorder"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.dataorder.uitleg"/></div></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
             </table>
         </div>        
          

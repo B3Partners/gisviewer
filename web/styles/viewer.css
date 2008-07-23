@@ -352,3 +352,16 @@ a:hover{
 #onderbalk_logo {
     display: none;
 }
+
+/* Uitleg op de Config pagina */
+.helptekstDiv {
+    position: absolute;
+    margin-left: 40px;
+    margin-top: 4px;
+    display: none;
+    padding: 5px;
+    background-color: #eeeeee;
+    z-index: 99999;
+    color: #19619b;
+    border: 1px solid #19619b;
+}

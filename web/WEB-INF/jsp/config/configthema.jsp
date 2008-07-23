@@ -19,6 +19,20 @@
             document.getElementById('admin_query_text').value = query;
         }
     }
+    
+    function showHelp(obj) {
+        var helpDiv = obj.nextSibling;
+        showHideDiv(helpDiv);
+        return false;
+    }
+    
+    function showHideDiv(obj) {
+        if(obj.style.display != 'block') {
+            obj.style.display = 'block';
+        } else {
+            obj.style.display = 'none';
+        }
+    }
 </script>
 
 <div class="onderbalk">THEMA CONFIG<span><tiles:insert name="loginblock"/></span></div>
@@ -123,11 +137,13 @@
         
         <div class="maintable">
             <table cellpadding="2" cellspacing="2" border="0">
-                <tr><td><fmt:message key="configthema.naam"/></td><td colspan="3"><html:text property="naam" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthema.metadatalink"/></td><td colspan="3"><html:text property="metadatalink" size="140"/></td></tr>
+                <tr><td>
+                    <fmt:message key="configthema.naam"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.naam.uitleg"/></div>
+                </td><td colspan="3"><html:text property="naam" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthema.metadatalink"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.metadatalink.uitleg"/></div></td><td colspan="3"><html:text property="metadatalink" size="140"/></td></tr>
                 <tr class="optionalConfigItems">
                     <td>
-                        <fmt:message key="configthema.code"/>
+                        <fmt:message key="configthema.code"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.code.uitleg"/></div>
                     </td>
                     <td colspan="3">
                         <html:select property="code">
@@ -139,7 +155,7 @@
                 </tr>
                 <tr class="optionalConfigItems">
                     <td>
-                        <fmt:message key="configthema.moscow"/>
+                        <fmt:message key="configthema.moscow"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.moscow.uitleg"/></div>
                     </td>
                     <td colspan="3">
                         <html:select property="moscowID">
@@ -151,10 +167,10 @@
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr><td><fmt:message key="configthema.belangnr"/></td><td colspan="3"><html:text property="belangnr" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthema.belangnr"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.belangnr.uitleg"/></div></td><td colspan="3"><html:text property="belangnr" size="140"/></td></tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthema.cluser"/>
+                        <fmt:message key="configthema.cluser"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.cluser.uitleg"/></div>
                     </td>
                     <td colspan="3">
                         <html:select property="clusterID">
@@ -166,15 +182,15 @@
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr><td><fmt:message key="configthema.opmerkingen"/></td><td colspan="3"><html:text property="opmerkingen" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthema.locatiethema"/></td><td colspan="3"><html:checkbox property="locatie_thema"/></td></tr>
-                <tr><td><fmt:message key="configthema.analysethema"/></td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
-                <tr><td><fmt:message key="configthema.defaultvisible"/></td><td colspan="3"><html:checkbox property="visible"/></td></tr>
+                <tr><td><fmt:message key="configthema.opmerkingen"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.opmerkingen.uitleg"/></div></td><td colspan="3"><html:text property="opmerkingen" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthema.locatiethema"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.locatiethema.uitleg"/></div></td><td colspan="3"><html:checkbox property="locatie_thema"/></td></tr>
+                <tr><td><fmt:message key="configthema.analysethema"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.analysethema.uitleg"/></div></td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
+                <tr><td><fmt:message key="configthema.defaultvisible"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.defaultvisible.uitleg"/></div></td><td colspan="3"><html:checkbox property="visible"/></td></tr>
                 
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthema.connectie"/>
+                        <fmt:message key="configthema.connectie"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.connectie.uitleg"/></div>
                     </td>
                     <td colspan="3">
                         <html:select property="connectie" onchange="refreshTheLists();">
@@ -196,9 +212,9 @@
                     </c:forEach>                            
                 </c:if>
                 <tr><td colspan="4">&nbsp;</td></tr>
-                <tr><td><fmt:message key="configthema.${connectieType}.admintabelopmerkingen"/></td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthema.${connectieType}.admintabelopmerkingen"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.admintabelopmerkingen.uitleg"/></div></td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
                 <tr>
-                    <td><fmt:message key="configthema.${connectieType}.admintabel"/></td>
+                    <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
                     <td colspan="3">
                         <html:select property="admin_tabel" onchange="refreshTheLists();" styleId="admin_tabel_select">
                             <html:option value=""/>
@@ -211,7 +227,7 @@
                 <c:choose>
                     <c:when test="${fn:length(listAdminTableColumns)>1}">
                         <tr>
-                            <td><fmt:message key="configthema.${connectieType}.adminpk"/></td>
+                            <td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td>
                             <td colspan="3">
                                 <html:select property="admin_pk" onchange="createAdminQ();" styleId="admin_pk_select">
                                     <html:option value=""/>
@@ -223,7 +239,7 @@
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthema.${connectieType}.adminpk"/></td><td colspan="3">
+                        <tr><td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td><td colspan="3">
                                 <select disabled="disabled">
                                     <option>Kies eerst een admintabel</option>
                                 </select>
@@ -231,12 +247,12 @@
                     </c:otherwise>
                 </c:choose>
                 <c:if test="${connectieType=='jdbc'}">
-                    <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
+                    <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminquery.uitleg"/></div></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
                     
                     <tr><td colspan="4">&nbsp;</td></tr>
-                    <tr><td><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen"/></td><td colspan="3"><html:text property="spatial_tabel_opmerkingen" size="140"/></td></tr>
+                    <tr><td><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen.uitleg"/></div></td><td colspan="3"><html:text property="spatial_tabel_opmerkingen" size="140"/></td></tr>
                     <tr>
-                        <td><fmt:message key="configthema.${connectieType}.spatialtabel"/></td>
+                        <td><fmt:message key="configthema.${connectieType}.spatialtabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialtabel.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="spatial_tabel" onchange="refreshTheLists();">
                                 <html:option value=""/>
@@ -249,7 +265,7 @@
                     <c:choose>
                         <c:when test="${fn:length(listSpatialTableColumns)>1}">
                             <tr>
-                                <td><fmt:message key="configthema.${connectieType}.spatialpk"/></td>
+                                <td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td>
                                 <td colspan="3">
                                     <html:select property="spatial_pk">
                                         <html:option value=""/>
@@ -261,7 +277,7 @@
                             </tr>
                         </c:when>
                         <c:otherwise>
-                            <tr><td><fmt:message key="configthema.${connectieType}.spatialpk"/></td><td colspan="3">
+                            <tr><td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td><td colspan="3">
                                     <select disabled="disabled">
                                         <option>Kies eerst een spatialtabel</option>
                                     </select>
@@ -271,7 +287,7 @@
                     <c:choose>
                         <c:when test="${fn:length(listSpatialTableColumns)>1}">
                             <tr>
-                                <td><fmt:message key="configthema.${connectieType}.spatialadminref"/></td>
+                                <td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td>
                                 <td colspan="3">
                                     <html:select property="spatial_admin_ref">
                                         <html:option value=""/>
@@ -283,7 +299,7 @@
                             </tr>
                         </c:when>
                         <c:otherwise>
-                            <tr><td><fmt:message key="configthema.${connectieType}.spatialadminref"/></td><td colspan="3">
+                            <tr><td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td><td colspan="3">
                                     <select disabled="disabled">
                                         <option>Kies eerst een spatialtabel</option>
                                     </select>
@@ -291,7 +307,7 @@
                         </c:otherwise>
                     </c:choose>                
                     <tr>
-                        <td><fmt:message key="configthema.viewgeomtype"/></td>
+                        <td><fmt:message key="configthema.viewgeomtype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.viewgeomtype.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="view_geomtype">
                                 <html:option value=""/>
@@ -306,7 +322,7 @@
                 <c:choose>
                     <c:when test="${fn:length(listLayers)>1}">
                         <tr>
-                            <td><fmt:message key="configthema.wmslayers"/></td>
+                            <td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslayers.uitleg"/></div></td>
                             <td colspan="3">
                                 <html:select property="wms_layers_real">
                                     <html:option value=""/>
@@ -318,13 +334,13 @@
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthema.wmslayers"/></td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
+                        <tr><td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslayers.uitleg"/></div></td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
                     </c:otherwise>
                 </c:choose>
                 <c:choose>
                     <c:when test="${fn:length(listLayers)>1}">
                         <tr>
-                            <td><fmt:message key="configthema.wmsquerylayers"/></td>
+                            <td><fmt:message key="configthema.wmsquerylayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmsquerylayers.uitleg"/></div></td>
                             <td colspan="3">
                                 <html:select property="wms_querylayers_real">
                                     <html:option value=""/>
@@ -336,13 +352,13 @@
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthema.wmsquerylayers"/></td><td colspan="3"><html:text property="wms_querylayers_real" size="140"/></td></tr>
+                        <tr><td><fmt:message key="configthema.wmsquerylayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmsquerylayers.uitleg"/></div></td><td colspan="3"><html:text property="wms_querylayers_real" size="140"/></td></tr>
                     </c:otherwise>
                 </c:choose>
                 <c:choose>
                     <c:when test="${fn:length(listLegendLayers)>1}">
                         <tr>
-                            <td><fmt:message key="configthema.wmslegendlayers"/></td>
+                            <td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslegendlayers.uitleg"/></div></td>
                             <td colspan="3">
                                 <html:select property="wms_legendlayer_real">
                                     <html:option value=""/>
@@ -354,12 +370,12 @@
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthema.wmslegendlayers"/></td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
+                        <tr><td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslegendlayers.uitleg"/></div></td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
                     </c:otherwise>
                 </c:choose>
                 
                 <tr><td colspan="4">&nbsp;</td></tr>
-                <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
+                <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.updatefreqindagen.uitleg"/></div></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
                 
                 <%-- <tr>
                     <td><fmt:message key="configthema.themadata"/>(Verwijderen van Themadata objecten kan alleen via het scherm 'Themadata')</td>

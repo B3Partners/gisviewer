@@ -109,12 +109,12 @@
                         </html:submit>
                     </div> 
                     <div class="knoppen">
-                        <html:submit property="deleteConfirm" accesskey="d" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <html:submit property="delete" accesskey="d" styleClass="knop" onclick="bCancel=true; return confirm('Weet u zeker dat u deze thema data wilt verwijderen?');" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
                             <fmt:message key="button.remove"/>
                         </html:submit>
                     </div> 
                     <div class="knoppen">
-                        <html:submit property="saveConfirm" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <html:submit property="save" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';" onclick="return confirm('Weet u zeker dat u deze thema data wilt opslaan?');">
                             <fmt:message key="button.save"/>
                         </html:submit>
                     </div>                    

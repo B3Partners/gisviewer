@@ -10,6 +10,17 @@
 
 <c:set var="focus" value="naam"/>
 
+<script type="text/javascript">
+    function createAdminQ() {
+        if(document.getElementById('admin_query_text').value == '') {
+            var admin_tabel = document.getElementById('admin_tabel_select').options[document.getElementById('admin_tabel_select').selectedIndex].value;
+            var admin_pk = document.getElementById('admin_pk_select').options[document.getElementById('admin_pk_select').selectedIndex].value;
+            var query = "select * from " + admin_tabel + " where " + admin_pk + " = ?";
+            document.getElementById('admin_query_text').value = query;
+        }
+    }
+</script>
+
 <div class="onderbalk">THEMA CONFIG<span><tiles:insert name="loginblock"/></span></div>
 <html:form action="/configThema" focus="${focus}">
     <html:hidden property="action"/>
@@ -97,12 +108,12 @@
                         </html:submit>
                     </div> 
                     <div class="knoppen">
-                        <html:submit property="deleteConfirm" accesskey="d" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <html:submit property="delete" accesskey="d" styleClass="knop" onclick="bCancel=true; return confirm('Weet u zeker dat u dit thema wilt verwijderen?');" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
                             <fmt:message key="button.remove"/>
                         </html:submit>
                     </div> 
                     <div class="knoppen">
-                        <html:submit property="saveConfirm" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <html:submit property="save" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';" onclick="return confirm('Weet u zeker dat u dit thema wilt opslaan?');">
                             <fmt:message key="button.save"/>
                         </html:submit>
                     </div>
@@ -179,7 +190,7 @@
                 <c:set var="connectieType" value="jdbc"/>
                 <c:if test="${form.map.connectie!=null}">                    
                     <c:forEach var="i" items="${listConnecties}">
-                       <c:if test="${i.id==form.map.connectie && i.type=='wfs'}">
+                        <c:if test="${i.id==form.map.connectie && i.type=='wfs'}">
                             <c:set var="connectieType" value="wfs"/>
                         </c:if>
                     </c:forEach>                            
@@ -189,7 +200,7 @@
                 <tr>
                     <td><fmt:message key="configthema.${connectieType}.admintabel"/></td>
                     <td colspan="3">
-                        <html:select property="admin_tabel" onchange="refreshTheLists();">
+                        <html:select property="admin_tabel" onchange="refreshTheLists();" styleId="admin_tabel_select">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listTables}">
                                 <html:option value="${cuItem}"/>
@@ -202,7 +213,7 @@
                         <tr>
                             <td><fmt:message key="configthema.${connectieType}.adminpk"/></td>
                             <td colspan="3">
-                                <html:select property="admin_pk">
+                                <html:select property="admin_pk" onchange="createAdminQ();" styleId="admin_pk_select">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listAdminTableColumns}">
                                         <html:option value="${cuItem}"/>
@@ -212,12 +223,15 @@
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthema.${connectieType}.adminpk"/></td><td colspan="3"><html:text property="admin_pk" size="140"/></td></tr>
-
+                        <tr><td><fmt:message key="configthema.${connectieType}.adminpk"/></td><td colspan="3">
+                                <select disabled="disabled">
+                                    <option>Kies eerst een admintabel</option>
+                                </select>
+                        </td></tr>
                     </c:otherwise>
                 </c:choose>
                 <c:if test="${connectieType=='jdbc'}">
-                    <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/></td><td colspan="3"><html:text property="admin_query" size="140"/></td></tr>
+                    <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
                     
                     <tr><td colspan="4">&nbsp;</td></tr>
                     <tr><td><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen"/></td><td colspan="3"><html:text property="spatial_tabel_opmerkingen" size="140"/></td></tr>
@@ -247,7 +261,11 @@
                             </tr>
                         </c:when>
                         <c:otherwise>
-                            <tr><td><fmt:message key="configthema.${connectieType}.spatialpk"/></td><td colspan="3"><html:text property="spatial_pk" size="140"/></td></tr>
+                            <tr><td><fmt:message key="configthema.${connectieType}.spatialpk"/></td><td colspan="3">
+                                    <select disabled="disabled">
+                                        <option>Kies eerst een spatialtabel</option>
+                                    </select>
+                            </td></tr>
                         </c:otherwise>
                     </c:choose>
                     <c:choose>
@@ -265,20 +283,24 @@
                             </tr>
                         </c:when>
                         <c:otherwise>
-                            <tr><td><fmt:message key="configthema.${connectieType}.spatialadminref"/></td><td colspan="3"><html:text property="spatial_admin_ref" size="140"/></td></tr>
+                            <tr><td><fmt:message key="configthema.${connectieType}.spatialadminref"/></td><td colspan="3">
+                                    <select disabled="disabled">
+                                        <option>Kies eerst een spatialtabel</option>
+                                    </select>
+                            </td></tr>
                         </c:otherwise>
                     </c:choose>                
-                <tr>
-                    <td><fmt:message key="configthema.viewgeomtype"/></td>
-                    <td colspan="3">
-                        <html:select property="view_geomtype">
-                            <html:option value=""/>
-                            <c:forEach var="cuItem" items="${listValidGeoms}">
-                                <html:option value="${cuItem}"/>
-                            </c:forEach>
-                        </html:select>&nbsp;
-                    </td>
-                </tr>
+                    <tr>
+                        <td><fmt:message key="configthema.viewgeomtype"/></td>
+                        <td colspan="3">
+                            <html:select property="view_geomtype">
+                                <html:option value=""/>
+                                <c:forEach var="cuItem" items="${listValidGeoms}">
+                                    <html:option value="${cuItem}"/>
+                                </c:forEach>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
                 </c:if>
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <c:choose>
@@ -339,7 +361,7 @@
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
                 
-               <%-- <tr>
+                <%-- <tr>
                     <td><fmt:message key="configthema.themadata"/>(Verwijderen van Themadata objecten kan alleen via het scherm 'Themadata')</td>
                     <td>
                                                 

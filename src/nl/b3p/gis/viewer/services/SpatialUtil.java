@@ -99,7 +99,7 @@ public class SpatialUtil {
         hquery += "AND (moscow = 1 OR moscow = 2 OR moscow = 3) ";
         if (locatie)
             hquery += "AND locatie_thema = true ";
-        hquery += "AND code < 3 ORDER BY naam";
+        hquery += "AND code < '3' ORDER BY naam";
         Query q = sess.createQuery(hquery);
         return q.list();
     }

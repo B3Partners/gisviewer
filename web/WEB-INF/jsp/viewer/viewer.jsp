@@ -339,16 +339,17 @@
             if (obj.theItem.wmslayers){
                 if (layerUrl==null){
                     layerUrl="${kburl}"; 
-                    if(layerUrl.indexOf('?')> 0)
-                        layerUrl+='&';
-                    else
-                        layerUrl+='?';
-                        
-                    var organizationCodeKey = obj.theItem.organizationcodekey;   
-                        
-                    if('${organizationcode}' != null && '${organizationcode}' != '' && organizationCodeKey != '') {
-                        layerUrl = layerUrl + organizationCodeKey + "=${organizationcode}";
-                    }
+                    
+                }
+		 var organizationCodeKey = obj.theItem.organizationcodekey;   
+                if('${organizationcode}' != null && '${organizationcode}' != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
+                    if(layerUrl.indexOf(organizationCodeKey)<=0){
+                        if(layerUrl.indexOf('?')> 0)
+                            layerUrl+='&';
+                    	else
+                            layerUrl+='?';
+                        layerUrl = layerUrl + organizationCodeKey + "=${organizationcode}";			
+		    }
                 }
                 allActiveLayers+= ","+obj.theItem.wmslayers;
                 if (!dontRefresh){

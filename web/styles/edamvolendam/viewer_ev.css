@@ -1,7 +1,7 @@
 /* Algemene BODY style */
 body {
     font-size: 8pt; 
-    background: #FFF0C5; 
+    background: #FFAC30; 
     color: #000000; 
     font-family: arial, sans-serif;
     margin: 0px;
@@ -26,7 +26,7 @@ h1{
 }
 
 a, a:visited, a:active {
-    color: #FFF0C4;
+    color: #005685;
     font-weight: bold;
     text-decoration: none;
 }
@@ -45,16 +45,16 @@ a:hover{
 /* Bovenste balk / Menu style */
 #menu_div {
     width: 100%;
-    background-image: url(/gisviewer/images/bovenbalk.gif);
+    background-image: url(/gisviewer/images/ev/bovenmenu.gif);
     background-repeat: repeat-x;
-    height: 50px;
+    height: 75px;
     text-align: center;
 }
 
 /* Onderste balk style */
 #onder_div {
     width: 100%;
-    background-image: url(/gisviewer/images/onderbalk.gif);
+    background-image: url(/gisviewer/images/ev/onderbalk.gif);
     background-repeat: repeat-x;
     height: 50px;
     display: block;
@@ -62,7 +62,7 @@ a:hover{
 
 /* Copyright tekst in onderste balk */
 #copyright {
-    background-image: url(/gisviewer/images/copyright.gif);
+    background-image: none;
     background-repeat: no-repeat;
     width: 120px;
     height: 50px;
@@ -73,7 +73,7 @@ a:hover{
 
 /* Initiatief + B3P logo in onderste balk */
 #initiatief {
-    background-image: url(/gisviewer/images/initiatief.gif);
+    background-image: none;
     background-repeat: no-repeat;
     width: 334px;
     height: 50px;
@@ -90,7 +90,7 @@ a:hover{
     position: absolute;
     left: 50%;
     margin-left: 6px;
-    margin-top: 18px;
+    margin-top: 38px;
 }
 
 .topmenu_viewer {
@@ -109,10 +109,10 @@ a.menulink, a.menulink:visited, a.menulink:active {
     padding-right: 10px;
     height: 21px;
     border: 0px none White;
-    border-left: 1px solid #A0D9FF;
-    border-top: 1px solid #A0D9FF;
-    border-right: 1px solid #102F44;
-    color: #A0D9FF;
+    border-left: 1px solid #fee076;
+    border-top: 1px solid #fee076;
+    border-right: 1px solid #fee076;
+    color: #fee076;
     margin: 0px;
     margin-left: 0px;
     float: right;
@@ -132,8 +132,8 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     border-left: 1px solid White;
     border-top: 1px solid White;
     border-right: 1px solid White;
-    background-color: White;
-    color: #144264;
+    background-color: #fee076;
+    color: White;
     margin: 0px;
     margin-left: 15px;
     float: left;
@@ -146,10 +146,10 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 
 /* Logo op menubalk */
 .menu_boven_logo {
-    background-image: url(/gisviewer/images/kaartenbalielogo.gif);
+    background-image: url(/gisviewer/images/ev/bg_top_ev.gif);
     background-repeat: no-repeat;
-    width: 210px;
-    height: 50px;
+    width: 393px;
+    height: 70px;
     position: absolute;
     left: 50%;
     margin-left: -461px;
@@ -157,7 +157,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 
 /* Content DIV */
 #content_div {
-    background-image: url(/gisviewer/images/maindiv_bg.gif);
+    background-color: White;
     background-repeat: repeat-y;
     width: 948px;
     padding-left: 15px;
@@ -192,12 +192,12 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 
 /* Stijl van de balken (VIEWER, DETAILS, E.D.) */
 .onderbalk {
-    background-color: #606060;
-    color: #FFF0C4;
+    background-color: #FEE076;
+    color: #FEE076;
     font-size: 14px;
     font-weight: bold;
-    background-color: #FFD203;
-    background-image: url(/gisviewer/images/balk_links.gif);
+    background-color: #FEE076;
+    background-image: url(/gisviewer/images/ev/balk_links.gif);
     background-repeat: no-repeat;
     background-position: 0% 0%;
     height: 20px;
@@ -219,7 +219,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 
 /* Stijl van de links op de balken (VIEWER, DETAILS, E.D.) */
 .onderbalk a {
-    color: #FFFFFF;
+    color: rgb(0, 128, 198);
     font-weight: bold;
 }
 
@@ -395,7 +395,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 .topRow, .etlTopRow {
-    background-image: url("../images/patroon_kaartenbalie.gif");
+    background-image: url(/gisviewer/images/ev/patroon_ev.gif);
     background-repeat: repeat;
 }
 
@@ -416,7 +416,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 .row:hover {
-    background-color: #fff0c4;
+    background-color: #FEE076;
 }
 
 .scrolldiv {
@@ -446,20 +446,20 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 .aanvullende_info_alternateTr {
-    background-color: #E7EEF4;
+    background-color: #9BB4C1;
 }
 
 .admin_data_alternate_tr {
-    background-color: #E7EEF4;
+    background-color: #9BB4C1;
 }
 .admin_data_selected_tr {
-    background-color: #fff0c4;
+    background-color: #FEE076;
 }
 
 .themaLabelMouseOver {
-    color: #ffd203;
-    background-color: #102f44;
-    border: 2px solid #19619b; 
+    color: #007FBF;
+    background-color: #FEE076;
+    border: 2px solid #3AA14A; 
 }
 /* EINDE Opmaak admindata */
 
@@ -549,7 +549,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 .etlTopRow {
-    background-image: url("../images/patroon_kaartenbalie.gif");
+    background-image: url(/gisviewer/images/ev/patroon_ev.gif);
     background-repeat: repeat;
 }
 
@@ -567,7 +567,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 
 /* Config design */
 .topbar {
-    background-image: url("../images/patroon_kaartenbalie.gif");
+    background-image: url(/gisviewer/images/ev/patroon_ev.gif);
     background-repeat: repeat;
 }
 
@@ -595,11 +595,11 @@ ul#nav li#tab3 { margin-right: 0px; }
 
 /* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
 #content_style, #content_style h1, #content_style h2, #content_style div, #content_style td, #content_style th, #content_style a, #content_style li {
-    color: #196299;
+    color: rgb(0, 128, 198);
 }
 
 #content_style hr {
-    color: #196299;
+    color: rgb(0, 128, 198);
 }
 
 #content_style {
@@ -613,7 +613,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 #content_style div.inleiding {
-    background-color: #FFF0C5;
+    background-color: #fee076;
     padding: 15px;
     font-weight: bold;
     margin-top: 5px;
@@ -645,7 +645,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 #content_style img {
-    border: 1px solid #196096;
+    border: 1px solid rgb(0, 128, 198);
     padding: 4px;
 }
 
@@ -655,24 +655,24 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 #content_style a:hover {
-    color: #FFD207;
+    
 }
 
 #content_style .presentation_table {
-    border: 1px solid #196096;
+    border: 1px solid rgb(0, 128, 198);
     border-collapse: collapse;
     width: 100%;
 }
 
 #content_style .presentation_table td {
-    border: 1px solid #196096;
+    border: 1px solid rgb(0, 128, 198);
     padding: 5px;
-    background-color: #E7EEF4;
+    background-color: #fee076;
     width: auto;
 }
 
 #content_style .presentation_table th {
-    background-color: #196096;
+    background-color: rgb(0, 128, 198);
     color: White;
     font-weight: bold;
     padding: 5px;

@@ -15,7 +15,9 @@
         <title>Viewer Data</title>
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
-        <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css" >
+        <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css">
+        <!-- <link href="styles/edamvolendam/viewer_ev.css" rel="stylesheet" type="text/css" > -->
+        
         <script type="text/javascript">  
             function checkLocation() {
                 if (top.location == self.location)

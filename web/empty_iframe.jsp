@@ -10,6 +10,8 @@
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/viewer_b3p.css">
+        <link rel="stylesheet" type="text/css" href="styles/viewer_tables.css">
+        <!-- link rel="stylesheet" type="text/css" href="styles/edamvolendam/viewer_ev_clean_overlay.css"> -->
     </head>
     <body class="tabvak_body"></body>
 </html>

@@ -287,7 +287,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 .row:hover {
-    background-color: #19619B;
+    background-color: #606060;
 }
 
 .scrolldiv {
@@ -319,6 +319,10 @@ ul#nav li#tab3 { margin-right: 0px; }
 .aanvullende_info_alternateTr {
     text-align: center;
     background-color: #E7EEF4;
+}
+
+.admindatabody {
+    background-color: White;
 }
 
 .admin_data_content_div {

@@ -1,8 +1,24 @@
 /*
- * ConfigThemaAction.java
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Created on 13 oktober 2007, 19:08
- *
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
 package nl.b3p.gis.viewer;
 
@@ -39,21 +55,23 @@ import org.w3c.dom.Element;
 public class ConfigThemaAction extends ViewerCrudAction {
 
     private static final Log log = LogFactory.getLog(ConfigThemaAction.class);
-    private static final String REFRESHLISTS="refreshLists";
-    
+    private static final String REFRESHLISTS = "refreshLists";
+
     protected Map getActionMethodPropertiesMap() {
-        Map map = super.getActionMethodPropertiesMap();        
+        Map map = super.getActionMethodPropertiesMap();
         ExtendedMethodProperties crudProp = new ExtendedMethodProperties(REFRESHLISTS);
-        crudProp.setDefaultForwardName(SUCCESS);        
-        crudProp.setAlternateForwardName(FAILURE);        
-        map.put(REFRESHLISTS, crudProp);        
+        crudProp.setDefaultForwardName(SUCCESS);
+        crudProp.setAlternateForwardName(FAILURE);
+        map.put(REFRESHLISTS, crudProp);
         return map;
-    }  
-    public ActionForward refreshLists(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-       createLists(dynaForm,request);
-       return mapping.findForward(SUCCESS);
-   
     }
+
+    public ActionForward refreshLists(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        createLists(dynaForm, request);
+        return mapping.findForward(SUCCESS);
+
+    }
+
     protected Themas getThema(DynaValidatorForm form, boolean createNew) {
         Integer id = FormUtils.StringToInteger(form.getString("themaID"));
         Themas t = null;
@@ -84,14 +102,14 @@ public class ConfigThemaAction extends ViewerCrudAction {
 
         request.setAttribute("listValidGeoms", SpatialUtil.VALID_GEOMS);
 
-        Themas t = getThema(dynaForm, false);        
+        Themas t = getThema(dynaForm, false);
         Connection conn = null;
-        Connecties c=null;
-        if (t!=null){
-            c=t.getConnectie();
-        }else{
-            if (FormUtils.nullIfEmpty(dynaForm.getString("connectie"))!=null){
-                c=(Connecties)sess.get(Connecties.class, Integer.parseInt(dynaForm.getString("connectie")));
+        Connecties c = null;
+        if (t != null) {
+            c = t.getConnectie();
+        } else {
+            if (FormUtils.nullIfEmpty(dynaForm.getString("connectie")) != null) {
+                c = (Connecties) sess.get(Connecties.class, Integer.parseInt(dynaForm.getString("connectie")));
             }
         }
         //als de thema geen connectie heeft ingesteld of een JDBC connectie maak dan een lijst vanuit de database.        
@@ -114,50 +132,50 @@ public class ConfigThemaAction extends ViewerCrudAction {
                 }
             }
             request.setAttribute("listTables", tns);
-            String adminTable=null;
-            String spatialTable=null;
+            String adminTable = null;
+            String spatialTable = null;
             if (t != null) {
-                adminTable=t.getAdmin_tabel();
-                spatialTable=t.getSpatial_tabel();
+                adminTable = t.getAdmin_tabel();
+                spatialTable = t.getSpatial_tabel();
             }
-            if (adminTable==null){
-                adminTable=FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel"));
+            if (adminTable == null) {
+                adminTable = FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel"));
             }
-            if (spatialTable==null){
-                spatialTable=FormUtils.nullIfEmpty(dynaForm.getString("spatial_tabel"));
-            }                
-            if (adminTable!=null){
+            if (spatialTable == null) {
+                spatialTable = FormUtils.nullIfEmpty(dynaForm.getString("spatial_tabel"));
+            }
+            if (adminTable != null) {
                 request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(adminTable, conn));
             }
-            if (spatialTable!=null){
+            if (spatialTable != null) {
                 request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(spatialTable, conn));
             }
 
         }//als het een WFS connectie is maak dan een lijst vanuit het WFS request.
-        else if (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {            
+        else if (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             //Zet de features als lijst waaruit geselecteerd kan worden.
             WFS_Capabilities cap = WfsUtil.getCapabilities(c);
             ArrayList tns = WfsUtil.getFeatureNameList(cap);
-            request.setAttribute("listTables", tns);  
-            String adminTable=null;
-            if (t!=null){
-                adminTable=t.getAdmin_tabel();
+            request.setAttribute("listTables", tns);
+            String adminTable = null;
+            if (t != null) {
+                adminTable = t.getAdmin_tabel();
             }
-            if (adminTable==null){
-                adminTable=FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel"));
+            if (adminTable == null) {
+                adminTable = FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel"));
             }
-            if (adminTable!=null){    
-                List elements=WfsUtil.getFeatureElements(c,adminTable);
-                if (elements!=null){
-                    ArrayList elementsNames= new ArrayList();
-                    for (int i=0; i < elements.size(); i++){
-                        Element e = (Element)elements.get(i);
+            if (adminTable != null) {
+                List elements = WfsUtil.getFeatureElements(c, adminTable);
+                if (elements != null) {
+                    ArrayList elementsNames = new ArrayList();
+                    for (int i = 0; i < elements.size(); i++) {
+                        Element e = (Element) elements.get(i);
                         elementsNames.add(e.getAttribute("name"));
                     }
-                    request.setAttribute("listAdminTableColumns",elementsNames);                           
+                    request.setAttribute("listAdminTableColumns", elementsNames);
                 }
             }
-        }       
+        }
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (user != null) {
             List lns = user.getLayerNames(false);
@@ -230,19 +248,19 @@ public class ConfigThemaAction extends ViewerCrudAction {
         }
 
         populateThemasObject(dynaForm, t, request);
-        
+
         sess.saveOrUpdate(t);
         sess.flush();
-        
+
         /* Indien we input bijvoorbeeld herformatteren oid laad het dynaForm met
          * de waardes uit de database.
          */
         sess.refresh(t);
-        
-        
+
+
         populateThemasForm(t, dynaForm, request);
         return super.save(mapping, dynaForm, request, response);
-    }    
+    }
 
     public ActionForward delete(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -317,14 +335,14 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("update_frequentie_in_dagen", FormUtils.IntegerToString(t.getUpdate_frequentie_in_dagen()));
         dynaForm.set("view_geomtype", t.getView_geomtype());
         dynaForm.set("visible", new Boolean(t.isVisible()));
-        
+
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        List themadataobjecten=sess.createQuery("select kolomnaam from ThemaData where thema = :thema").setEntity("thema",t).list();
-        dynaForm.set("themadataobjecten",themadataobjecten.toArray(new String[themadataobjecten.size()]));
+        List themadataobjecten = sess.createQuery("select kolomnaam from ThemaData where thema = :thema").setEntity("thema", t).list();
+        dynaForm.set("themadataobjecten", themadataobjecten.toArray(new String[themadataobjecten.size()]));
     }
 
     private void populateThemasObject(DynaValidatorForm dynaForm, Themas t, HttpServletRequest request) {
-        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();        
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         t.setCode(FormUtils.nullIfEmpty(dynaForm.getString("code")));
         t.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
         t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("metadatalink")));
@@ -333,8 +351,9 @@ public class ConfigThemaAction extends ViewerCrudAction {
             Connecties c = (Connecties) sess.get(Connecties.class, conId);
             t.setConnectie(c);
         }
-        if (dynaForm.getString("belangnr")!=null && dynaForm.getString("belangnr").length()>0)
+        if (dynaForm.getString("belangnr") != null && dynaForm.getString("belangnr").length() > 0) {
             t.setBelangnr(Integer.parseInt(dynaForm.getString("belangnr")));
+        }
         t.setOpmerkingen(FormUtils.nullIfEmpty(dynaForm.getString("opmerkingen")));
         Boolean b = (Boolean) dynaForm.get("analyse_thema");
         t.setAnalyse_thema(b == null ? false : b.booleanValue());

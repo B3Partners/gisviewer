@@ -1,17 +1,29 @@
-/**
- * @(#)Applicaties.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een Applicaties opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class Applicaties {
-    
+
     private int id;
     private String pakket;
     private String module;
@@ -28,12 +40,11 @@ public class Applicaties {
     private boolean crow;
     private String opmerking;
     private Leveranciers leverancier;
-    
-    
+
     /** Creates a new instance of Applicaties */
     public Applicaties() {
     }
-    
+
     /** 
      * Return het ID van de Applicatie.
      *
@@ -44,7 +55,6 @@ public class Applicaties {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van de Applicaties.
      *
@@ -55,7 +65,6 @@ public class Applicaties {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Return het pakket.
      *
@@ -66,7 +75,6 @@ public class Applicaties {
         return pakket;
     }
     // </editor-fold>
-    
     /** 
      * Set het pakket.
      *
@@ -77,7 +85,6 @@ public class Applicaties {
         this.pakket = pakket;
     }
     // </editor-fold>
-    
     /** 
      * Return de module van de Applicatie.
      *
@@ -88,7 +95,6 @@ public class Applicaties {
         return module;
     }
     // </editor-fold>
-    
     /** 
      * Set de module van de Applicatie.
      *
@@ -99,7 +105,6 @@ public class Applicaties {
         this.module = module;
     }
     // </editor-fold>
-    
     /** 
      * Return de beschrijving van deze applicatie.
      *
@@ -110,7 +115,6 @@ public class Applicaties {
         return beschrijving;
     }
     // </editor-fold>
-    
     /** 
      * Set de beschrijving van de Applicatie.
      *
@@ -121,7 +125,6 @@ public class Applicaties {
         this.beschrijving = beschrijving;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of deze Applicatie extern is of niet.
      *
@@ -132,7 +135,6 @@ public class Applicaties {
         return extern;
     }
     // </editor-fold>
-    
     /** 
      * Set deze Applicatie extern. Als de Applicatie extern is zet deze dan true, anders false.
      *
@@ -143,7 +145,6 @@ public class Applicaties {
         this.extern = extern;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of deze Applicatie acceptabel is of niet.
      *
@@ -154,7 +155,6 @@ public class Applicaties {
         return acceptabel;
     }
     // </editor-fold>
-    
     /** 
      * Set deze Applicatie acceptabel. Als de Applicatie acceptabel is zet deze dan true, anders false.
      *
@@ -165,7 +165,6 @@ public class Applicaties {
         this.acceptabel = acceptabel;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of deze Applicatie administratief is of niet.
      *
@@ -176,7 +175,6 @@ public class Applicaties {
         return administratief;
     }
     // </editor-fold>
-    
     /** 
      * Set deze Applicatie administratief. Als de Applicatie administratief is zet deze dan true, anders false.
      *
@@ -187,7 +185,6 @@ public class Applicaties {
         this.administratief = administratief;
     }
     // </editor-fold>
-    
     /** 
      * Return de taal van deze Applicatie.
      *
@@ -198,7 +195,6 @@ public class Applicaties {
         return taal;
     }
     // </editor-fold>
-    
     /** 
      * Set de taal van deze Applicatie.
      *
@@ -209,7 +205,6 @@ public class Applicaties {
         this.taal = taal;
     }
     // </editor-fold>
-    
     /** 
      * Return de Spatial koppeling van deze Applicatie.
      *
@@ -220,7 +215,6 @@ public class Applicaties {
         return spatialKoppeling;
     }
     // </editor-fold>
-    
     /** 
      * Set de spatial koppeling van deze Applicatie.
      *
@@ -231,7 +225,6 @@ public class Applicaties {
         this.spatialKoppeling = spatialKoppeling;
     }
     // </editor-fold>
-    
     /** 
      * Return de database koppeling van deze applicatie.
      *
@@ -242,7 +235,6 @@ public class Applicaties {
         return dbKoppeling;
     }
     // </editor-fold>
-    
     /** 
      * Set de database koppeling van deze Applicatie.
      *
@@ -253,7 +245,6 @@ public class Applicaties {
         this.dbKoppeling = dbKoppeling;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of deze Applicatie webbased is of niet.
      *
@@ -264,7 +255,6 @@ public class Applicaties {
         return webbased;
     }
     // </editor-fold>
-    
     /** 
      * Set deze Applicatie webbased. Als de Applicatie webbased is zet deze dan true, anders false.
      *
@@ -275,7 +265,6 @@ public class Applicaties {
         this.webbased = webbased;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of deze Applicatie gps is of niet.
      *
@@ -286,7 +275,6 @@ public class Applicaties {
         return gps;
     }
     // </editor-fold>
-    
     /** 
      * Set deze Applicatie gps. Als de Applicatie gps is zet deze dan true, anders false.
      *
@@ -297,7 +285,6 @@ public class Applicaties {
         this.gps = gps;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of deze Applicatie crow is of niet.
      *
@@ -308,7 +295,6 @@ public class Applicaties {
         return crow;
     }
     // </editor-fold>
-    
     /** 
      * Set deze Applicatie crow. Als de Applicatie crow is zet deze dan true, anders false.
      *
@@ -319,7 +305,6 @@ public class Applicaties {
         this.crow = crow;
     }
     // </editor-fold>
-    
     /** 
      * Return opmerkingen behorende bij deze Applicatie.
      *
@@ -330,7 +315,6 @@ public class Applicaties {
         return opmerking;
     }
     // </editor-fold>
-    
     /** 
      * Set opmerkingen horende bij deze Applicatie.
      *
@@ -341,7 +325,6 @@ public class Applicaties {
         this.opmerking = opmerking;
     }
     // </editor-fold>
-    
     /** 
      * Return de leverancier horende bij de Applicatie.
      *
@@ -354,7 +337,6 @@ public class Applicaties {
         return leverancier;
     }
     // </editor-fold>
-    
     /** 
      * Set de leverancier van deze Applicatie.
      *
@@ -367,7 +349,6 @@ public class Applicaties {
         this.leverancier = leverancier;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of deze Applicatie geodata is of niet.
      *
@@ -378,7 +359,6 @@ public class Applicaties {
         return geodata;
     }
     // </editor-fold>
-    
     /** 
      * Set deze Applicatie geodata. Als de Applicatie geodata is zet deze dan true, anders false.
      *

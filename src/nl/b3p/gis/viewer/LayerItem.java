@@ -1,45 +1,56 @@
-/**
- * @(#)LayerItem.java
- * @author Roy Braam
- * @version 1.00 2007/11/29
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een LayerItem opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer;
 
 import java.util.ArrayList;
 
 public class LayerItem {
-    
+
     private String name;
-    private boolean checked     = false;
+    private boolean checked = false;
     private boolean clickAction = false;
-    private boolean cluster     = false;
-    private ArrayList childs    = null;
+    private boolean cluster = false;
+    private ArrayList childs = null;
     private ArrayList adminData = null;
     private ArrayList labelData = null;
-    
+
     /** 
      * Creates a new instance of LayerItem.
      */
     // <editor-fold defaultstate="" desc="public LayerItem()">
-    public LayerItem(){}
+    public LayerItem() {
+    }
     // </editor-fold>
-    
     /** 
      * Creates a new instance of LayerItem.
      *
      * @param n String met de naam van dit layer item.
      */
     // <editor-fold defaultstate="" desc="public LayerItem(String n)">
-    public LayerItem(String n){
-        name=n;
+    public LayerItem(String n) {
+        name = n;
     }
     // </editor-fold>
-    
     /** 
      * Creates a new instance of LayerItem.
      *
@@ -57,7 +68,6 @@ public class LayerItem {
         cluster = c;
     }
     // </editor-fold>
-    
     /** 
      * Return de naam van dit layer item.
      *
@@ -68,7 +78,6 @@ public class LayerItem {
         return name;
     }
     // </editor-fold>
-    
     /** 
      * Set de naam van dit layer item.
      *
@@ -79,7 +88,6 @@ public class LayerItem {
         this.name = name;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of dit layer item gechecked is.
      *
@@ -90,7 +98,6 @@ public class LayerItem {
         return checked;
     }
     // </editor-fold>
-    
     /** 
      * Set dit layer item als gechecked. Als dit layer item gechecked is zet deze dan true, anders false.
      *
@@ -101,7 +108,6 @@ public class LayerItem {
         this.checked = checked;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of dit layer item een click action heeft.
      *
@@ -112,7 +118,6 @@ public class LayerItem {
         return clickAction;
     }
     // </editor-fold>
-    
     /** 
      * Set dit layer item met een click action. Als dit layer item een click action heeft zet deze dan true, anders false.
      *
@@ -123,7 +128,6 @@ public class LayerItem {
         this.clickAction = clickAction;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of dit layer item een cluster is.
      *
@@ -139,7 +143,6 @@ public class LayerItem {
         return cluster;
     }
     // </editor-fold>
-    
     /** 
      * Set dit layer item als gechecked. Als dit layer item een cluster is zet deze dan true, anders false.
      *
@@ -155,7 +158,6 @@ public class LayerItem {
         this.cluster = cluster;
     }
     // </editor-fold>
-    
     /** 
      * Return een lijst met kinderen van dit layer item.
      *
@@ -166,7 +168,6 @@ public class LayerItem {
         return childs;
     }
     // </editor-fold>
-    
     /** 
      * Set een lijst met kinderen van dit layer item.
      *
@@ -177,7 +178,6 @@ public class LayerItem {
         this.childs = childs;
     }
     // </editor-fold>
-    
     /** 
      * Voeg een nieuw item toe aan de lijst met childs binnen dit layer item.
      *
@@ -185,13 +185,12 @@ public class LayerItem {
      */
     // <editor-fold defaultstate="" desc="public void addChild(LayerItem li)">        
     public void addChild(LayerItem li) {
-        if (childs==null){
-            childs=new ArrayList();
+        if (childs == null) {
+            childs = new ArrayList();
         }
         childs.add(li);
     }
     // </editor-fold>
-    
     /** 
      * Return een lijst met admin data van dit layer item.
      *
@@ -202,7 +201,6 @@ public class LayerItem {
         return adminData;
     }
     // </editor-fold>
-    
     /** 
      * Set een lijst met admin data van dit layer item.
      *
@@ -213,23 +211,21 @@ public class LayerItem {
         this.adminData = adminData;
     }
     // </editor-fold>
-    
     /** 
      * Voeg nieuwe admin data aan dit layer item toe.
      *
      * @param s String[] met een lijst met admin data voor dit layer item.
      */
     // <editor-fold defaultstate="" desc="public void addAdmindata(String[] s)">
-    public void addAdmindata(String[] s){
-        if (adminData==null){
-            adminData=new ArrayList();
+    public void addAdmindata(String[] s) {
+        if (adminData == null) {
+            adminData = new ArrayList();
         }
-        for (int i=0; i < s.length; i++){
+        for (int i = 0; i < s.length; i++) {
             adminData.add(s[i]);
         }
     }
     // </editor-fold>
-    
     /** 
      * Return de label data van dit layer item.
      *
@@ -240,7 +236,6 @@ public class LayerItem {
         return labelData;
     }
     // </editor-fold>
-    
     /** 
      * Set de label data van dit layer item.
      *
@@ -251,7 +246,6 @@ public class LayerItem {
         this.labelData = labelData;
     }
     // </editor-fold>
-    
     /** 
      * Voeg nieuwe label data aan dit layer item toe.
      *
@@ -259,10 +253,10 @@ public class LayerItem {
      */
     // <editor-fold defaultstate="" desc="public void addLabelData(String s[])">    
     public void addLabelData(String s[]) {
-        if (labelData==null) {
-            labelData=new ArrayList();
+        if (labelData == null) {
+            labelData = new ArrayList();
         }
-        for (int i=0; i < s.length; i++) {
+        for (int i = 0; i < s.length; i++) {
             labelData.add(s[i]);
         }
     }

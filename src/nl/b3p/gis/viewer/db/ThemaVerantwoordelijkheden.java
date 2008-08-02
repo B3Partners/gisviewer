@@ -1,16 +1,29 @@
-/**
- * @(#)ThemaVerantwoordelijkheden.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een ThemaVerantwoordelijkheden opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class ThemaVerantwoordelijkheden {
+
     private int id;
     private Themas thema;
     private Medewerkers medewerker;
@@ -19,7 +32,7 @@ public class ThemaVerantwoordelijkheden {
     private boolean huidige_situatie;
     private boolean gewenste_situatie;
     private String opmerkingen;
-    
+
     /** Creates a new instance of ThemaVerantwoordelijkheden */
     public ThemaVerantwoordelijkheden() {
     }
@@ -34,7 +47,6 @@ public class ThemaVerantwoordelijkheden {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van de thema verantwoordelijkheden.
      *
@@ -45,7 +57,6 @@ public class ThemaVerantwoordelijkheden {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of dit de huidige situatie van de thema verantwoordelijkheden is.
      *
@@ -56,7 +67,6 @@ public class ThemaVerantwoordelijkheden {
         return huidige_situatie;
     }
     // </editor-fold>
-    
     /** 
      * Set de huidige situatie van de thema verantwoordelijkheden. Als dit de huidige situatie van de thema verantwoordelijkheden 
      * is zet deze dan true, anders false.
@@ -68,7 +78,6 @@ public class ThemaVerantwoordelijkheden {
         this.huidige_situatie = huidige_situatie;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of dit de gewenste situatie van de thema verantwoordelijkheden is.
      *
@@ -79,7 +88,6 @@ public class ThemaVerantwoordelijkheden {
         return gewenste_situatie;
     }
     // </editor-fold>
-    
     /** 
      * Set de gewenste situatie van de thema verantwoordelijkheden. Als dit de gewenste situatie van de thema verantwoordelijkheden 
      * is zet deze dan true, anders false.
@@ -91,7 +99,6 @@ public class ThemaVerantwoordelijkheden {
         this.gewenste_situatie = gewenste_situatie;
     }
     // </editor-fold>
-
     /** 
      * Return het thema van de thema verantwoordelijkheden.
      *
@@ -104,7 +111,6 @@ public class ThemaVerantwoordelijkheden {
         return thema;
     }
     // </editor-fold>
-    
     /** 
      * Set het thema van de thema verantwoordelijkheden.
      *
@@ -117,7 +123,6 @@ public class ThemaVerantwoordelijkheden {
         this.thema = thema;
     }
     // </editor-fold>
-
     /** 
      * Return de medewerker horende bij de thema verantwoordelijkheden.
      *
@@ -130,7 +135,6 @@ public class ThemaVerantwoordelijkheden {
         return medewerker;
     }
     // </editor-fold>
-    
     /** 
      * Set de medewerker horende bij de thema verantwoordelijkheden.
      *
@@ -143,7 +147,6 @@ public class ThemaVerantwoordelijkheden {
         this.medewerker = medewerker;
     }
     // </editor-fold>
-    
     /** 
      * Return de rol horende bij de thema verantwoordelijkheden.
      *
@@ -156,7 +159,6 @@ public class ThemaVerantwoordelijkheden {
         return rol;
     }
     // </editor-fold>
-    
     /** 
      * Set de rol horende bij de thema verantwoordelijkheden.
      *
@@ -169,7 +171,6 @@ public class ThemaVerantwoordelijkheden {
         this.rol = rol;
     }
     // </editor-fold>
-
     /** 
      * Return het onderdeel horende bij de thema verantwoordelijkheden.
      *
@@ -182,7 +183,6 @@ public class ThemaVerantwoordelijkheden {
         return onderdeel;
     }
     // </editor-fold>
-    
     /** 
      * Set het onderdeel horende bij de thema verantwoordelijkheden.
      *
@@ -195,7 +195,6 @@ public class ThemaVerantwoordelijkheden {
         this.onderdeel = onderdeel;
     }
     // </editor-fold>
-
     /** 
      * Return opmerkingen horende bij de thema verantwoordelijkheden.
      *
@@ -206,7 +205,6 @@ public class ThemaVerantwoordelijkheden {
         return opmerkingen;
     }
     // </editor-fold>
-    
     /** 
      * Set opmerkingen bij de thema verantwoordelijkheden.
      *

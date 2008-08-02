@@ -1,17 +1,29 @@
-/**
- * @(#)Leveranciers.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een Leveranciers opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class Leveranciers {
-    
+
     private int id;
     private String naam;
     private String pakket;
@@ -22,7 +34,7 @@ public class Leveranciers {
     private String email;
     private boolean info;
     private String opmerkingen;
-    
+
     /** Creates a new instance of Leveranciers */
     public Leveranciers() {
     }
@@ -37,7 +49,6 @@ public class Leveranciers {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van de leverancier.
      *
@@ -48,7 +59,6 @@ public class Leveranciers {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Return de naam van de leverancier.
      *
@@ -59,7 +69,6 @@ public class Leveranciers {
         return naam;
     }
     // </editor-fold>
-    
     /** 
      * Set de naam van de leverancier.
      *
@@ -70,7 +79,6 @@ public class Leveranciers {
         this.naam = naam;
     }
     // </editor-fold>
-    
     /** 
      * Return het pakket.
      *
@@ -81,7 +89,6 @@ public class Leveranciers {
         return pakket;
     }
     // </editor-fold>
-    
     /** 
      * Set het pakket.
      *
@@ -92,8 +99,6 @@ public class Leveranciers {
         this.pakket = pakket;
     }
     // </editor-fold>
-    
-    
     /** 
      * Return het eerste telefoonnummer van de Leverancier.
      *
@@ -104,7 +109,6 @@ public class Leveranciers {
         return telefoon1;
     }
     // </editor-fold>
-    
     /** 
      * Set het eerste telefoonnummer van de Leverancier.
      *
@@ -114,7 +118,7 @@ public class Leveranciers {
     public void setTelefoon1(String telefoon1) {
         this.telefoon1 = telefoon1;
     }
-    
+
     /** 
      * Return het contact van de leverancier.
      *
@@ -125,7 +129,6 @@ public class Leveranciers {
         return contact;
     }
     // </editor-fold>
-    
     /** 
      * Set het contact van de leverancier.
      *
@@ -136,7 +139,6 @@ public class Leveranciers {
         this.contact = contact;
     }
     // </editor-fold>
-    
     /** 
      * Return het tweede telefoonnummer van de Leverancier.
      *
@@ -147,7 +149,6 @@ public class Leveranciers {
         return telefoon2;
     }
     // </editor-fold>
-    
     /** 
      * Set het tweede telefoonnummer van de Leverancier.
      *
@@ -158,7 +159,6 @@ public class Leveranciers {
         this.telefoon2 = telefoon2;
     }
     // </editor-fold>
-    
     /** 
      * Return het derde telefoonnummer van de Leverancier.
      *
@@ -169,7 +169,6 @@ public class Leveranciers {
         return telefoon3;
     }
     // </editor-fold>
-    
     /** 
      * Set het derde telefoonnummer van de Leverancier.
      *
@@ -180,7 +179,6 @@ public class Leveranciers {
         this.telefoon3 = telefoon3;
     }
     // </editor-fold>
-    
     /** 
      * Return het email adres horende bij deze leverancier.
      *
@@ -191,7 +189,6 @@ public class Leveranciers {
         return email;
     }
     // </editor-fold>
-    
     /** 
      * Set het email adres horende bij deze leverancier.
      *
@@ -202,8 +199,6 @@ public class Leveranciers {
         this.email = email;
     }
     // </editor-fold>
-    
-    
     /** 
      * Returns een boolean of deze leverancier informatief is.
      *
@@ -214,7 +209,6 @@ public class Leveranciers {
         return info;
     }
     // </editor-fold>
-    
     /** 
      * Set deze leverancier op informatief. Als deze leverancier ter informatie gebruikt wordt zet deze dan true, anders false.
      *
@@ -225,7 +219,6 @@ public class Leveranciers {
         this.info = info;
     }
     // </editor-fold>
-    
     /** 
      * Return opmerkingen horende bij deze leverancier.
      *
@@ -236,7 +229,6 @@ public class Leveranciers {
         return opmerkingen;
     }
     // </editor-fold>
-    
     /** 
      * Set opmerkingen bij deze leverancier.
      *

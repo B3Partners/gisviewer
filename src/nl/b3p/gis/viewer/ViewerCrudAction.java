@@ -1,13 +1,25 @@
-/**
- * @(#)KaartenbalieCrudAction.java
- * @author R. Braam
- * @version 1.00 2006/09/08
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: a class handling the different actions which come from classes extending this class.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer;
 
 import java.sql.SQLException;
@@ -28,15 +40,15 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class ViewerCrudAction extends CrudAction {
-    
+
     private static Log log = LogFactory.getLog(ViewerCrudAction.class);
-    
+
     protected ActionForward getUnspecifiedAlternateForward(ActionMapping mapping, HttpServletRequest request) {
         return mapping.findForward(FAILURE);
     }
-    
+
     protected String getOrganizationCode(HttpServletRequest request) {
-        GisPrincipal gp = (GisPrincipal)request.getUserPrincipal();
+        GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();
         if (gp != null) {
             ServiceProvider sp = gp.getSp();
             if (sp != null) {
@@ -50,48 +62,48 @@ public class ViewerCrudAction extends CrudAction {
             return null;
         }
     }
-    
+
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         // zet kaartenbalie url
         request.setAttribute("kburl", HibernateUtil.KBURL);
-        
+
         String organizationcode = getOrganizationCode(request);
         if (organizationcode != null && organizationcode.length() > 0) {
             request.setAttribute("organizationcodekey", organizationcode);
             request.setAttribute("organizationcode", organizationcode);
         }
     }
-    
+
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws Exception {
-        
+            throws Exception {
+
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = sess.getTransaction();
         tx.begin();
         ActionForward forward = null;
         String msg = null;
-        
+
         try {
             forward = super.execute(mapping, form, request, response);
             tx.commit();
             return forward;
-        } catch(Exception e) {
+        } catch (Exception e) {
             tx.rollback();
             log.error("Exception occured, rollback", e);
             MessageResources messages = getResources(request);
-            
+
             if (e instanceof org.hibernate.JDBCException) {
                 msg = e.toString();
-                SQLException sqle = ((org.hibernate.JDBCException)e).getSQLException();
+                SQLException sqle = ((org.hibernate.JDBCException) e).getSQLException();
                 msg = msg + ": " + sqle;
                 SQLException nextSqlE = sqle.getNextException();
-                if(nextSqlE != null) {
+                if (nextSqlE != null) {
                     msg = msg + ": " + nextSqlE;
                 }
             } else if (e instanceof java.sql.SQLException) {
                 msg = e.toString();
-                SQLException nextSqlE = ((java.sql.SQLException)e).getNextException();
-                if(nextSqlE != null) {
+                SQLException nextSqlE = ((java.sql.SQLException) e).getNextException();
+                if (nextSqlE != null) {
                     msg = msg + ": " + nextSqlE;
                 }
             } else {
@@ -99,17 +111,17 @@ public class ViewerCrudAction extends CrudAction {
             }
             addAlternateMessage(mapping, request, null, msg);
         }
-        
+
         // Start tweede sessie om tenminste nog de lijsten op te halen
         sess = HibernateUtil.getSessionFactory().getCurrentSession();
         tx = sess.getTransaction();
         tx.begin();
-        
+
         try {
-            prepareMethod((DynaValidatorForm)form, request, LIST, EDIT);
+            prepareMethod((DynaValidatorForm) form, request, LIST, EDIT);
             //throw new Exception("Lorem Ipsum 2");
             tx.commit();
-        } catch(Exception e) {
+        } catch (Exception e) {
             tx.rollback();
             log.error("Exception occured in second session, rollback", e);
             addAlternateMessage(mapping, request, null, e.toString());
@@ -117,5 +129,4 @@ public class ViewerCrudAction extends CrudAction {
         //addAlternateMessage(mapping, request, null, message);
         return getAlternateForward(mapping, request);
     }
-    
 }

@@ -1,17 +1,29 @@
-/**
- * @(#)ThemaData.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een ThemaData opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class ThemaData {
-    
+
     private Integer id;
     private String label;
     private String eenheid;
@@ -26,13 +38,13 @@ public class ThemaData {
     private String commando;
     private String kolomnaam;
     private Integer dataorder;
-    
+
     /**
      * Creates a new instance of ThemaData
      */
     public ThemaData() {
     }
-    
+
     /** 
      * Return het ID van de thema data.
      *
@@ -43,7 +55,6 @@ public class ThemaData {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van de thema data.
      *
@@ -54,7 +65,6 @@ public class ThemaData {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Return het label van de thema data.
      *
@@ -65,7 +75,6 @@ public class ThemaData {
         return label;
     }
     // </editor-fold>
-    
     /** 
      * Set het label van de thema data.
      *
@@ -76,7 +85,6 @@ public class ThemaData {
         this.label = label;
     }
     // </editor-fold>
-    
     /** 
      * Return de eenheid van de thema data.
      *
@@ -87,7 +95,6 @@ public class ThemaData {
         return eenheid;
     }
     // </editor-fold>
-    
     /** 
      * Set de eenheid van de thema data.
      *
@@ -98,7 +105,6 @@ public class ThemaData {
         this.eenheid = eenheid;
     }
     // </editor-fold>
-    
     /** 
      * Return de omschrijving van de thema data.
      *
@@ -109,7 +115,6 @@ public class ThemaData {
         return omschrijving;
     }
     // </editor-fold>
-    
     /** 
      * Set de omschrijving van de thema data.
      *
@@ -120,7 +125,6 @@ public class ThemaData {
         this.omschrijving = omschrijving;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als deze thema data een basisregel is.
      *
@@ -130,7 +134,7 @@ public class ThemaData {
     public boolean isBasisregel() {
         return basisregel;
     }
-    
+
     /** 
      * Set deze thema data als een basisregel. Als deze thema data een basisregel is zet deze dan true, 
      * anders false.
@@ -141,7 +145,7 @@ public class ThemaData {
     public void setBasisregel(boolean basisregel) {
         this.basisregel = basisregel;
     }
-    
+
     /** 
      * Return de voorbeelden van de thema data.
      *
@@ -152,7 +156,6 @@ public class ThemaData {
         return voorbeelden;
     }
     // </editor-fold>
-    
     /** 
      * Set de voorbeelden van de thema data.
      *
@@ -163,7 +166,6 @@ public class ThemaData {
         this.voorbeelden = voorbeelden;
     }
     // </editor-fold>
-    
     /** 
      * Return de kolombreedte van de thema data.
      *
@@ -174,7 +176,6 @@ public class ThemaData {
         return kolombreedte;
     }
     // </editor-fold>
-    
     /** 
      * Set de kolombreedte van de thema data.
      *
@@ -185,7 +186,6 @@ public class ThemaData {
         this.kolombreedte = kolombreedte;
     }
     // </editor-fold>
-    
     /** 
      * Return het thema van de thema data.
      *
@@ -198,7 +198,6 @@ public class ThemaData {
         return thema;
     }
     // </editor-fold>
-    
     /** 
      * Set de thema van de thema data.
      *
@@ -211,7 +210,6 @@ public class ThemaData {
         this.thema = thema;
     }
     // </editor-fold>
-    
     /** 
      * Return de moscow van de thema data.
      *
@@ -224,7 +222,6 @@ public class ThemaData {
         return moscow;
     }
     // </editor-fold>
-    
     /** 
      * Set de moscow van de thema data.
      *
@@ -237,7 +234,6 @@ public class ThemaData {
         this.moscow = moscow;
     }
     // </editor-fold>
-    
     /** 
      * Return het waardeType van de thema data.
      *
@@ -250,7 +246,6 @@ public class ThemaData {
         return waardeType;
     }
     // </editor-fold>
-    
     /** 
      * Set het waardeType van de thema data.
      *
@@ -263,7 +258,6 @@ public class ThemaData {
         this.waardeType = waardeType;
     }
     // </editor-fold>
-    
     /** 
      * Return de kolomnaam van de thema data.
      *
@@ -274,7 +268,6 @@ public class ThemaData {
         return kolomnaam;
     }
     // </editor-fold>
-    
     /** 
      * Set de kolomnaam van de thema data.
      *
@@ -285,7 +278,6 @@ public class ThemaData {
         this.kolomnaam = kolomnaam;
     }
     // </editor-fold>
-    
     /** 
      * Return het dataType van de thema data.
      *
@@ -298,7 +290,6 @@ public class ThemaData {
         return dataType;
     }
     // </editor-fold>
-    
     /** 
      * Set het dataType van de thema data.
      *
@@ -311,7 +302,6 @@ public class ThemaData {
         this.dataType = dataType;
     }
     // </editor-fold>
-    
     /** 
      * Return het commando van de thema data.
      *
@@ -322,7 +312,6 @@ public class ThemaData {
         return commando;
     }
     // </editor-fold>
-    
     /** 
      * Set het commando van de thema data.
      *
@@ -333,7 +322,6 @@ public class ThemaData {
         this.commando = commando;
     }
     // </editor-fold>
-    
     /** 
      * Return de dataorder van de thema data.
      *
@@ -344,7 +332,6 @@ public class ThemaData {
         return dataorder;
     }
     // </editor-fold>
-    
     /** 
      * Set de dataorder van de thema data.
      *

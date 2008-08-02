@@ -1,3 +1,25 @@
+<%--
+B3P Gisviewer is an extension to Flamingo MapComponents making      
+it a complete webbased GIS viewer and configuration tool that    
+works in cooperation with B3P Kaartenbalie.  
+                    
+Copyright 2006, 2007, 2008 B3Partners BV
+
+This file is part of B3P Gisviewer.
+
+B3P Gisviewer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+B3P Gisviewer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
+--%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
@@ -223,7 +245,7 @@
                 <tr><td><fmt:message key="configthemadata.dataorder"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.dataorder.uitleg"/></div></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
             </table>
         </div>        
-         
+        
     </div> 
 </html:form>
 <script language="javascript">
@@ -233,15 +255,15 @@
         var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
         var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
         properties = "toolbar = 0, " + 
-                     "scrollbars = 1, " + 
-                     "location = 0, " + 
-                     "statusbar = 1, " + 
-                     "menubar = 0, " + 
-                     "resizable = 1, " + 
-                     "width = " + screenwidth + ", " + 
-                     "height = " + screenheight + ", " + 
-                     "top = " + popuptop + ", " + 
-                     "left = " + popupleft;
+            "scrollbars = 1, " + 
+            "location = 0, " + 
+            "statusbar = 1, " + 
+            "menubar = 0, " + 
+            "resizable = 1, " + 
+            "width = " + screenwidth + ", " + 
+            "height = " + screenheight + ", " + 
+            "top = " + popuptop + ", " + 
+            "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
     }
 </script>

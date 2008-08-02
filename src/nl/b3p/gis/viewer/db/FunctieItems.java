@@ -1,17 +1,29 @@
-/**
- * @(#)FunctieItems.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een FunctieItems opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class FunctieItems {
-    
+
     private int id;
     private String label;
     private String omschrijving;
@@ -20,7 +32,7 @@ public class FunctieItems {
     private boolean invoer;
     private boolean uitvoer;
     private ThemaFuncties functie;
-    
+
     /** Creates a new instance of FunctieItems */
     public FunctieItems() {
     }
@@ -35,7 +47,6 @@ public class FunctieItems {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van het functieitem.
      *
@@ -46,7 +57,6 @@ public class FunctieItems {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Return het label van het FunctieItem.
      *
@@ -57,7 +67,6 @@ public class FunctieItems {
         return label;
     }
     // </editor-fold>
-    
     /** 
      * Set het label van het FunctieItem.
      *
@@ -68,7 +77,6 @@ public class FunctieItems {
         this.label = label;
     }
     // </editor-fold>
-    
     /** 
      * Return de omschrijving van het FunctieItem.
      *
@@ -79,7 +87,6 @@ public class FunctieItems {
         return omschrijving;
     }
     // </editor-fold>
-    
     /** 
      * Set de omschrijving van het FunctieItem.
      *
@@ -90,7 +97,6 @@ public class FunctieItems {
         this.omschrijving = omschrijving;
     }
     // </editor-fold>
-    
     /** 
      * Return de eenheid van het FunctieItem.
      *
@@ -101,7 +107,6 @@ public class FunctieItems {
         return eenheid;
     }
     // </editor-fold>
-    
     /** 
      * Set de eenheid van het FunctieItem.
      *
@@ -112,7 +117,6 @@ public class FunctieItems {
         this.eenheid = eenheid;
     }
     // </editor-fold>
-    
     /** 
      * Return voorbeelden die gelden voor dit FunctieItem.
      *
@@ -123,7 +127,6 @@ public class FunctieItems {
         return voorbeelden;
     }
     // </editor-fold>
-    
     /** 
      * Set voorbeelden die gelden voor dit FunctieItem.
      *
@@ -134,7 +137,6 @@ public class FunctieItems {
         this.voorbeelden = voorbeelden;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of dit FuntieItem voor invoer is.
      *
@@ -145,7 +147,6 @@ public class FunctieItems {
         return invoer;
     }
     // </editor-fold>
-    
     /** 
      * Set dit FunctieItem op invoer. Als dit FunctieItem voor invoer gebruikt wordt zet deze dan true, anders false.
      *
@@ -156,7 +157,6 @@ public class FunctieItems {
         this.invoer = invoer;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean of dit FuntieItem voor uitvoer is.
      *
@@ -167,7 +167,6 @@ public class FunctieItems {
         return uitvoer;
     }
     // </editor-fold>
-    
     /** 
      * Set dit FunctieItem op uitvoer. Als dit FunctieItem voor uitvoer gebruikt wordt zet deze dan true, anders false.
      *
@@ -178,7 +177,6 @@ public class FunctieItems {
         this.uitvoer = uitvoer;
     }
     // </editor-fold>
-    
     /** 
      * Return de thema functies van dit FunctieItem.
      *
@@ -191,7 +189,6 @@ public class FunctieItems {
         return functie;
     }
     // </editor-fold>
-    
     /** 
      * Set de thema functies van dit FunctieItem.
      *

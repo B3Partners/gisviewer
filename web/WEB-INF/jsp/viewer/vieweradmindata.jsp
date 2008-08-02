@@ -1,3 +1,25 @@
+<%--
+B3P Gisviewer is an extension to Flamingo MapComponents making      
+it a complete webbased GIS viewer and configuration tool that    
+works in cooperation with B3P Kaartenbalie.  
+                    
+Copyright 2006, 2007, 2008 B3Partners BV
+
+This file is part of B3P Gisviewer.
+
+B3P Gisviewer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+B3P Gisviewer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
+--%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
@@ -10,15 +32,15 @@
         var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
         var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
         properties = "toolbar = 0, " + 
-                     "scrollbars = 1, " + 
-                     "location = 0, " + 
-                     "statusbar = 1, " + 
-                     "menubar = 0, " + 
-                     "resizable = 1, " + 
-                     "width = " + screenwidth + ", " + 
-                     "height = " + screenheight + ", " + 
-                     "top = " + popuptop + ", " + 
-                     "left = " + popupleft;
+            "scrollbars = 1, " + 
+            "location = 0, " + 
+            "statusbar = 1, " + 
+            "menubar = 0, " + 
+            "resizable = 1, " + 
+            "width = " + screenwidth + ", " + 
+            "height = " + screenheight + ", " + 
+            "top = " + popuptop + ", " + 
+            "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
     }
     
@@ -37,7 +59,7 @@
         element.onclick = function() {
             setAttributeValue(this, themaid, keyName, keyValue, attributeName, newValue, eenheid);
         }
-        */
+         */
         
         var oldValue = element.innerHTML; // Nu wordt er gegeken naar wat de waarde is die in de link staat, deze wordt gebruikt, niet attributeValue
         var newValue = 'Nee';
@@ -179,7 +201,7 @@
                                                                 <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}">${fn:split(waarde, '###')[0]}</a>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                ${waarde}
+                                                            ${waarde}
                                                             </c:otherwise>
                                                         </c:choose>
                                                         
@@ -199,20 +221,20 @@
         </c:forEach>
         <script language="javascript" type="text/javascript">
             for(i = 1; i < (${nuOfTables} + 1); i++) {        
-                Table.stripe(document.getElementById('data_table' + i), 'admin_data_alternate_tr');
-                Table.sort(document.getElementById('data_table' + i), {sorttype:Sort['numeric'], col:1});
-            }    
+            Table.stripe(document.getElementById('data_table' + i), 'admin_data_alternate_tr');
+            Table.sort(document.getElementById('data_table' + i), {sorttype:Sort['numeric'], col:1});
+        }    
                     
-            var currentObj;
-            var currentObjOldStyle;
-            function colorRow(obj) {
-                if(currentObj) {
-                    currentObj.className = currentObjOldStyle;
-                }
-                currentObj = obj;
-                currentObjOldStyle = obj.className;
-                obj.className = obj.className + ' admin_data_selected_tr';
+        var currentObj;
+        var currentObjOldStyle;
+        function colorRow(obj) {
+            if(currentObj) {
+                currentObj.className = currentObjOldStyle;
             }
+            currentObj = obj;
+            currentObjOldStyle = obj.className;
+            obj.className = obj.className + ' admin_data_selected_tr';
+        }
         </script>
     </c:when>
     <c:otherwise>

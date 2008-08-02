@@ -1,22 +1,34 @@
-/**
- * @(#)OnderdeelMedewerkers.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een OnderdeelMedewerkers opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class OnderdeelMedewerkers {
-    
+
     private int id;
     private Medewerkers medewerker;
     private Onderdeel onderdeel;
     private boolean vertegenwoordiger;
-    
+
     /** Creates a new instance of OnderdeelMedewerkers */
     public OnderdeelMedewerkers() {
     }
@@ -31,7 +43,6 @@ public class OnderdeelMedewerkers {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van het onderdeelmedewerkers.
      *
@@ -42,7 +53,6 @@ public class OnderdeelMedewerkers {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als de medewerker een vertegenwoordiger is.
      *
@@ -53,7 +63,6 @@ public class OnderdeelMedewerkers {
         return vertegenwoordiger;
     }
     // </editor-fold>
-    
     /** 
      * Set de medewerker op vertegenwoordiger voor dit onderdeel. Als de medewerker een vertegenwoordiger is zet deze dan true, 
      * anders false.
@@ -65,7 +74,6 @@ public class OnderdeelMedewerkers {
         this.vertegenwoordiger = vertegenwoordiger;
     }
     // </editor-fold>
-    
     /** 
      * Return de medewerker horende bij dit onderdeel.
      *
@@ -78,7 +86,6 @@ public class OnderdeelMedewerkers {
         return medewerker;
     }
     // </editor-fold>
-    
     /** 
      * Set de medewerker horende bij dit onderdeel.
      *
@@ -91,7 +98,6 @@ public class OnderdeelMedewerkers {
         this.medewerker = medewerker;
     }
     // </editor-fold>
-    
     /** 
      * Return het onderdeel horende bij de medewerker.
      *
@@ -104,7 +110,6 @@ public class OnderdeelMedewerkers {
         return onderdeel;
     }
     // </editor-fold>
-    
     /** 
      * Set het onderdeel horende bij de medewerker.
      *

@@ -1,17 +1,29 @@
-/**
- * @(#)ThemaApplicaties.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een ThemaApplicaties opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class ThemaApplicaties {
-    
+
     private int id;
     private Themas thema;
     private Applicaties applicatie;
@@ -21,7 +33,7 @@ public class ThemaApplicaties {
     private boolean voorkeur;
     private boolean definitief;
     private boolean standaard;
-    
+
     /** Creates a new instance of ThemaApplicaties */
     public ThemaApplicaties() {
     }
@@ -36,7 +48,6 @@ public class ThemaApplicaties {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van de thema applicatie.
      *
@@ -47,7 +58,6 @@ public class ThemaApplicaties {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als deze thema applicatie in gebruik is.
      *
@@ -58,7 +68,6 @@ public class ThemaApplicaties {
         return ingebruik;
     }
     // </editor-fold>
-    
     /** 
      * Set deze thema applicatie in gebruik. Als deze thema applicatie in gebruik is zet deze dan true, 
      * anders false.
@@ -70,7 +79,6 @@ public class ThemaApplicaties {
         this.ingebruik = ingebruik;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als deze thema applicatie administratief is.
      *
@@ -81,7 +89,6 @@ public class ThemaApplicaties {
         return administratief;
     }
     // </editor-fold>
-    
     /** 
      * Set deze thema applicatie administratief. Als deze thema applicatie administratief is zet deze dan true, 
      * anders false.
@@ -93,7 +100,6 @@ public class ThemaApplicaties {
         this.administratief = administratief;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als deze thema applicatie de voorkeur heeft.
      *
@@ -104,7 +110,6 @@ public class ThemaApplicaties {
         return voorkeur;
     }
     // </editor-fold>
-    
     /** 
      * Set de voorkeur voor deze thema applicatie. Als deze thema applicatie de voorkeur heeft zet deze dan true, 
      * anders false.
@@ -116,7 +121,6 @@ public class ThemaApplicaties {
         this.voorkeur = voorkeur;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als deze thema applicatie definitief is.
      *
@@ -127,7 +131,6 @@ public class ThemaApplicaties {
         return definitief;
     }
     // </editor-fold>
-    
     /** 
      * Set deze thema applicatie definitief. Als deze thema applicatie definitief is zet deze dan true, 
      * anders false.
@@ -139,7 +142,6 @@ public class ThemaApplicaties {
         this.definitief = definitief;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als deze thema applicatie standaard is.
      *
@@ -150,7 +152,6 @@ public class ThemaApplicaties {
         return standaard;
     }
     // </editor-fold>
-    
     /** 
      * Set deze thema applicatie standaard. Als deze thema applicatie standaard is zet deze dan true, 
      * anders false.
@@ -162,7 +163,6 @@ public class ThemaApplicaties {
         this.standaard = standaard;
     }
     // </editor-fold>
-    
     /** 
      * Return het thema van de Applicatie.
      *
@@ -175,7 +175,6 @@ public class ThemaApplicaties {
         return thema;
     }
     // </editor-fold>
-    
     /** 
      * Set het thema van de Applicatie.
      *
@@ -188,7 +187,6 @@ public class ThemaApplicaties {
         this.thema = thema;
     }
     // </editor-fold>
-    
     /** 
      * Return de applicatie gekoppeld aan het thema.
      *
@@ -201,7 +199,6 @@ public class ThemaApplicaties {
         return applicatie;
     }
     // </editor-fold>
-    
     /** 
      * Set de applicatie gekoppeld aan het thema.
      *
@@ -214,7 +211,6 @@ public class ThemaApplicaties {
         this.applicatie = applicatie;
     }
     // </editor-fold>
-    
     /** 
      * Returns een boolean als deze thema applicatie geodata heeft.
      *
@@ -225,7 +221,6 @@ public class ThemaApplicaties {
         return geodata;
     }
     // </editor-fold>
-    
     /** 
      * Set deze thema applicatie geodata. Als deze thema applicatie geodata heeft zet deze dan true, 
      * anders false.

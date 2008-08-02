@@ -1,25 +1,32 @@
-/**
- * @(#)Themas.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: een bean klasse die de verschillende properties van een Themas opslaat en weer kan tonen.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Set;
-import javax.transaction.NotSupportedException;
 
 public class Themas implements Comparable {
-    
+
     public static final String THEMAID = "themaid";
-    
     private Integer id;
     private String code;
     private String naam;
@@ -59,11 +66,11 @@ public class Themas implements Comparable {
     private Integer update_frequentie_in_dagen;
     private String view_geomtype;
     private String organizationcodekey;
-    
+
     /** Creates a new instance of Themas */
     public Themas() {
     }
-    
+
     /**
      * Return het ID van het thema.
      *
@@ -74,7 +81,6 @@ public class Themas implements Comparable {
         return id;
     }
     // </editor-fold>
-    
     /**
      * Set het ID van het thema.
      *
@@ -85,7 +91,6 @@ public class Themas implements Comparable {
         this.id = id;
     }
     // </editor-fold>
-    
     /**
      * Return de code van het thema.
      *
@@ -96,7 +101,6 @@ public class Themas implements Comparable {
         return code;
     }
     // </editor-fold>
-    
     /**
      * Set de code van het thema.
      *
@@ -107,7 +111,6 @@ public class Themas implements Comparable {
         this.code = code;
     }
     // </editor-fold>
-    
     /**
      * Return de naam van het thema.
      *
@@ -118,7 +121,6 @@ public class Themas implements Comparable {
         return naam;
     }
     // </editor-fold>
-    
     /**
      * Set de naam van het thema.
      *
@@ -129,7 +131,6 @@ public class Themas implements Comparable {
         this.naam = naam;
     }
     // </editor-fold>
-    
     /**
      * Return het belangnummer van het thema.
      *
@@ -140,7 +141,6 @@ public class Themas implements Comparable {
         return belangnr;
     }
     // </editor-fold>
-    
     /**
      * Set het belangnummer van het thema.
      *
@@ -151,7 +151,6 @@ public class Themas implements Comparable {
         this.belangnr = belangnr;
     }
     // </editor-fold>
-    
     /**
      * Return opmerkingen behorende bij dit thema.
      *
@@ -162,7 +161,6 @@ public class Themas implements Comparable {
         return opmerkingen;
     }
     // </editor-fold>
-    
     /**
      * Set opmerkingen horende bij dit thema.
      *
@@ -173,7 +171,6 @@ public class Themas implements Comparable {
         this.opmerkingen = opmerkingen;
     }
     // </editor-fold>
-    
     /**
      * Returns een boolean of dit een analyse_thema is.
      *
@@ -184,7 +181,6 @@ public class Themas implements Comparable {
         return analyse_thema;
     }
     // </editor-fold>
-    
     /**
      * Set dit thema als een analyse_thema is. Als dit een analyse_thema is zet deze dan true, anders false.
      *
@@ -195,7 +191,6 @@ public class Themas implements Comparable {
         this.analyse_thema = analyse_thema;
     }
     // </editor-fold>
-    
     /**
      * Returns een boolean of dit de locatie_thema is.
      *
@@ -206,7 +201,6 @@ public class Themas implements Comparable {
         return locatie_thema;
     }
     // </editor-fold>
-    
     /**
      * Set dit thema als een locatie_thema is. Als dit een locatie_thema is zet deze dan true, anders false.
      *
@@ -217,15 +211,14 @@ public class Themas implements Comparable {
         this.locatie_thema = locatie_thema;
     }
     // </editor-fold>
-    
     public boolean isVisible() {
         return visible;
     }
-    
+
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-    
+
     /**
      * Return de moscow van dit thema.
      *
@@ -238,7 +231,6 @@ public class Themas implements Comparable {
         return moscow;
     }
     // </editor-fold>
-    
     /**
      * Set de moscow van dit thema.
      *
@@ -251,11 +243,6 @@ public class Themas implements Comparable {
         this.moscow = moscow;
     }
     // </editor-fold>
-    
-    
-    
-    
-    
     /**
      * Return het cluster van dit thema.
      *
@@ -268,7 +255,6 @@ public class Themas implements Comparable {
         return cluster;
     }
     // </editor-fold>
-    
     /**
      * Set het cluster van dit thema.
      *
@@ -281,7 +267,6 @@ public class Themas implements Comparable {
         this.cluster = cluster;
     }
     // </editor-fold>
-    
     /**
      * Return admin tabel opmerkingen van dit thema.
      *
@@ -292,7 +277,6 @@ public class Themas implements Comparable {
         return admin_tabel_opmerkingen;
     }
     // </editor-fold>
-    
     /**
      * Set de admin tabel opmerkingen van dit thema.
      *
@@ -303,7 +287,6 @@ public class Themas implements Comparable {
         this.admin_tabel_opmerkingen = admin_tabel_opmerkingen;
     }
     // </editor-fold>
-    
     /**
      * Return de admin tabel van dit thema.
      *
@@ -314,7 +297,6 @@ public class Themas implements Comparable {
         return admin_tabel;
     }
     // </editor-fold>
-    
     /**
      * Set de admin tabel van dit thema.
      *
@@ -325,7 +307,6 @@ public class Themas implements Comparable {
         this.admin_tabel = admin_tabel;
     }
     // </editor-fold>
-    
     /**
      * Return de admin primary key van dit thema.
      *
@@ -336,7 +317,6 @@ public class Themas implements Comparable {
         return admin_pk;
     }
     // </editor-fold>
-    
     /**
      * Set de admin primary key van dit thema.
      *
@@ -347,7 +327,6 @@ public class Themas implements Comparable {
         this.admin_pk = admin_pk;
     }
     // </editor-fold>
-    
     /**
      * Returns een boolean of de admin primary key complex is.
      *
@@ -358,7 +337,6 @@ public class Themas implements Comparable {
         return admin_pk_complex;
     }
     // </editor-fold>
-    
     /**
      * Set de admin primary key complex status. Als de admin primary key complex is zet deze dan true, anders false.
      *
@@ -369,7 +347,6 @@ public class Themas implements Comparable {
         this.admin_pk_complex = admin_pk_complex;
     }
     // </editor-fold>
-    
     /**
      * Return de admin spatial referentie van dit thema.
      *
@@ -380,7 +357,6 @@ public class Themas implements Comparable {
         return admin_spatial_ref;
     }
     // </editor-fold>
-    
     /**
      * Set de admin spatial referentie van dit thema.
      *
@@ -391,7 +367,6 @@ public class Themas implements Comparable {
         this.admin_spatial_ref = admin_spatial_ref;
     }
     // </editor-fold>
-    
     /**
      * Return de admin query van dit thema.
      *
@@ -402,7 +377,6 @@ public class Themas implements Comparable {
         return admin_query;
     }
     // </editor-fold>
-    
     /**
      * Set de admin query van dit thema.
      *
@@ -413,7 +387,6 @@ public class Themas implements Comparable {
         this.admin_query = admin_query;
     }
     // </editor-fold>
-    
     /**
      * Return de spatial tabel opmerkingen van dit thema.
      *
@@ -424,7 +397,6 @@ public class Themas implements Comparable {
         return spatial_tabel_opmerkingen;
     }
     // </editor-fold>
-    
     /**
      * Set de spatial tabel opmerkingen van dit thema.
      *
@@ -435,7 +407,6 @@ public class Themas implements Comparable {
         this.spatial_tabel_opmerkingen = spatial_tabel_opmerkingen;
     }
     // </editor-fold>
-    
     /**
      * Return de spatial tabel van dit thema.
      *
@@ -446,7 +417,6 @@ public class Themas implements Comparable {
         return spatial_tabel;
     }
     // </editor-fold>
-    
     /**
      * Set de spatial tabel van dit thema.
      *
@@ -457,7 +427,6 @@ public class Themas implements Comparable {
         this.spatial_tabel = spatial_tabel;
     }
     // </editor-fold>
-    
     /**
      * Return de spatial primary key van dit thema.
      *
@@ -468,7 +437,6 @@ public class Themas implements Comparable {
         return spatial_pk;
     }
     // </editor-fold>
-    
     /**
      * Set de spatial primary key van dit thema.
      *
@@ -479,7 +447,6 @@ public class Themas implements Comparable {
         this.spatial_pk = spatial_pk;
     }
     // </editor-fold>
-    
     /**
      * Returns een boolean of de spatial primary key complex is.
      *
@@ -490,7 +457,6 @@ public class Themas implements Comparable {
         return spatial_pk_complex;
     }
     // </editor-fold>
-    
     /**
      * Set de spatial primary key complex status. Als de spatial primary key complex is zet deze dan true, anders false.
      *
@@ -501,7 +467,6 @@ public class Themas implements Comparable {
         this.spatial_pk_complex = spatial_pk_complex;
     }
     // </editor-fold>
-    
     /**
      * Return de spatial admin referentie van dit thema.
      *
@@ -512,7 +477,6 @@ public class Themas implements Comparable {
         return spatial_admin_ref;
     }
     // </editor-fold>
-    
     /**
      * Set de spatial admin referentie van dit thema.
      *
@@ -523,7 +487,6 @@ public class Themas implements Comparable {
         this.spatial_admin_ref = spatial_admin_ref;
     }
     // </editor-fold>
-    
     /**
      * Return de wms url van dit thema.
      *
@@ -534,7 +497,6 @@ public class Themas implements Comparable {
         return wms_url;
     }
     // </editor-fold>
-    
     /**
      * Set de wms url van dit thema.
      *
@@ -545,7 +507,6 @@ public class Themas implements Comparable {
         this.wms_url = wms_url;
     }
     // </editor-fold>
-    
     /**
      * Return de wms layers van dit thema.
      *
@@ -556,7 +517,6 @@ public class Themas implements Comparable {
         return wms_layers;
     }
     // </editor-fold>
-    
     /**
      * Set de wms layers van dit thema.
      *
@@ -567,7 +527,6 @@ public class Themas implements Comparable {
         this.wms_layers = wms_layers;
     }
     // </editor-fold>
-    
     /**
      * Return de wms query layers van dit thema.
      *
@@ -578,7 +537,6 @@ public class Themas implements Comparable {
         return wms_querylayers;
     }
     // </editor-fold>
-    
     /**
      * Set de wms query layers van dit thema.
      *
@@ -589,7 +547,6 @@ public class Themas implements Comparable {
         this.wms_querylayers = wms_querylayers;
     }
     // </editor-fold>
-    
     /**
      * Return de thema data van dit thema.
      *
@@ -602,7 +559,6 @@ public class Themas implements Comparable {
         return themaData;
     }
     // </editor-fold>
-    
     /**
      * Set de thema data van dit thema.
      *
@@ -615,7 +571,6 @@ public class Themas implements Comparable {
         this.themaData = themaData;
     }
     // </editor-fold>
-    
     /**
      * Return de thema verantwoordelijkheden van dit thema.
      *
@@ -628,7 +583,6 @@ public class Themas implements Comparable {
         return themaVerantwoordelijkheden;
     }
     // </editor-fold>
-    
     /**
      * Set de thema verantwoordelijkheden van dit thema.
      *
@@ -641,7 +595,6 @@ public class Themas implements Comparable {
         this.themaVerantwoordelijkheden = themaVerantwoordelijkheden;
     }
     // </editor-fold>
-    
     /**
      * Return de thema applicaties van dit thema.
      *
@@ -654,7 +607,6 @@ public class Themas implements Comparable {
         return themaApplicaties;
     }
     // </editor-fold>
-    
     /**
      * Set de thema applicaties van dit thema.
      *
@@ -667,7 +619,6 @@ public class Themas implements Comparable {
         this.themaApplicaties = themaApplicaties;
     }
     // </editor-fold>
-    
     /**
      * Return de update frequentie in dagen van dit thema.
      *
@@ -678,7 +629,6 @@ public class Themas implements Comparable {
         return update_frequentie_in_dagen;
     }
     // </editor-fold>
-    
     /**
      * Set de update frequentie in dagen van dit thema.
      *
@@ -689,61 +639,62 @@ public class Themas implements Comparable {
         this.update_frequentie_in_dagen = update_frequentie_in_dagen;
     }
     // </editor-fold>
-    
     public String getWms_legendlayer() {
         return wms_legendlayer;
     }
-    
+
     public void setWms_legendlayer(String wms_legendlayer) {
         this.wms_legendlayer = wms_legendlayer;
     }
-    
+
     public String getWms_layers_real() {
         return wms_layers_real;
     }
-    
+
     public void setWms_layers_real(String wms_layers_real) {
         this.wms_layers_real = wms_layers_real;
     }
-    
+
     public String getWms_querylayers_real() {
         return wms_querylayers_real;
     }
-    
+
     public void setWms_querylayers_real(String wms_querylayers_real) {
         this.wms_querylayers_real = wms_querylayers_real;
     }
-    
+
     public String getWms_legendlayer_real() {
         return wms_legendlayer_real;
     }
-    
+
     public void setWms_legendlayer_real(String wms_legendlayer_real) {
         this.wms_legendlayer_real = wms_legendlayer_real;
     }
-    
+
     public String getView_geomtype() {
         return view_geomtype;
     }
+
     public void setView_geomtype(String view_geomtype) {
         this.view_geomtype = view_geomtype;
     }
-    
+
     public int compareTo(Object o) {
-        if (!(o instanceof Themas))
+        if (!(o instanceof Themas)) {
             throw new ClassCastException("A Themas object expected.");
-        
+        }
         int ob = ((Themas) o).getBelangnr();
         int tb = this.getBelangnr();
-        
+
         String on = ((Themas) o).getNaam();
         String tn = this.getNaam();
-        
+
         int verschil = tb - ob;
-        if (verschil!=0 || on==null || tn==null)
+        if (verschil != 0 || on == null || tn == null) {
             return verschil;
+        }
         return tn.compareTo(on);
-    }   
+    }
 
     public String getMetadata_link() {
         return metadata_link;
@@ -756,11 +707,11 @@ public class Themas implements Comparable {
     public Connecties getConnectie() {
         return connectie;
     }
-    
+
     public void setConnectie(Connecties connectie) {
-        this.connectie=connectie;
+        this.connectie = connectie;
     }
-    
+
     public String getOrganizationcodekey() {
         return organizationcodekey;
     }

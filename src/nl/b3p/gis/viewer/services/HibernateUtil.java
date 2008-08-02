@@ -1,15 +1,25 @@
-/**
- * @(#)HibernateUtil.java
- * @author Matthijs Laan
- * @version 1.00 2006/02/28
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: Een klasse die nodig is om de communicatie met Hibernate te initialiseren.
- * Hiervoor worden verschillende instellingen uit een xml ingeladen en in het programma
- * vastgehouden tot de applicatie afgesloten wordt.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.services;
 
 import javax.servlet.ServletConfig;
@@ -21,24 +31,19 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil extends HttpServlet {
-    
+
     private static final Log log = LogFactory.getLog(HibernateUtil.class);
     private static final SessionFactory sessionFactory;
-    
-    public static String ANONIEM_ROL= "anoniem";
+    public static String ANONIEM_ROL = "anoniem";
     public static String GEBRUIKERS_ROL = "gebruiker";
     public static String THEMABEHEERDERS_ROL = "themabeheerder";
     public static String DEMOGEBRUIKERS_ROL = "demogebruiker";
     public static String BEHEERDERS_ROL = "beheerder";
-    
     public static String KBURL = "http://localhost:8084/kaartenbalie/wms/";
-    
     public static boolean CHECK_LOGIN_KAARTENBALIE = true;
     public static String ANONYMOUS_USER = "anoniem";
     public static String KAARTENBALIE_CLUSTER = "Extra";
-
-    public static boolean USE_KAARTENBALIE_CLUSTER=true;
-    
+    public static boolean USE_KAARTENBALIE_CLUSTER = true;
     /**
      * Initialiseer Hibernate.
      * Creeer de SessionFactory vanuit hibernate.cfg.xml.
@@ -47,6 +52,8 @@ public class HibernateUtil extends HttpServlet {
      *
      */
     // <editor-fold defaultstate="" desc="static">
+    
+
     static {
         try {
             Configuration config = new Configuration();
@@ -58,40 +65,41 @@ public class HibernateUtil extends HttpServlet {
         }
     }
     // </editor-fold>
-    
     /** Initializes the servlet.
      */
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        
+
         try {
             String value = config.getInitParameter("kburl");
-            if (value!=null && value.length()>0)
+            if (value != null && value.length() > 0) {
                 KBURL = value;
+            }
             value = config.getInitParameter("anonymous_user");
-            if (value!=null && value.length()>0)
+            if (value != null && value.length() > 0) {
                 ANONYMOUS_USER = value;
-            
+            }
             value = config.getInitParameter("gebruikers_rol");
-            if (value!=null && value.length()>0)
+            if (value != null && value.length() > 0) {
                 GEBRUIKERS_ROL = value;
+            }
             value = config.getInitParameter("themabeheerders_rol");
-            if (value!=null && value.length()>0)
+            if (value != null && value.length() > 0) {
                 THEMABEHEERDERS_ROL = value;
-            
+            }
             value = config.getInitParameter("check_login_kaartenbalie");
-            if (value!=null && value.equalsIgnoreCase("false"))
+            if (value != null && value.equalsIgnoreCase("false")) {
                 CHECK_LOGIN_KAARTENBALIE = false;
-
+            }
             value = config.getInitParameter("use_kaartenbalie_cluster");
-            if (value!=null && value.equalsIgnoreCase("false"))
+            if (value != null && value.equalsIgnoreCase("false")) {
                 USE_KAARTENBALIE_CLUSTER = false;
-                        
-        } catch(Exception e) {
+            }
+        } catch (Exception e) {
             throw new ServletException(e);
         }
     }
-    
+
     /**
      * Returns the SessionFactory of Hibernate.
      *

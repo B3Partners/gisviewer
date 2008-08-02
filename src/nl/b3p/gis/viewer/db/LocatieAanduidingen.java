@@ -1,21 +1,33 @@
-/**
- * @(#)LocatieAanduidingen.java
- * @author Chris van Lith
- * @version 1.00 2007/01/16
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: a class handling the different actions which come from classes extending this class.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.db;
 
 public class LocatieAanduidingen {
-    
+
     private int id;
     private String naam;
     private String omschrijving;
-    
+
     /** Creates a new instance of LocatieAanduidingen */
     public LocatieAanduidingen() {
     }
@@ -30,7 +42,6 @@ public class LocatieAanduidingen {
         return id;
     }
     // </editor-fold>
-    
     /** 
      * Set het ID van de locatieaanduiding.
      *
@@ -41,7 +52,6 @@ public class LocatieAanduidingen {
         this.id = id;
     }
     // </editor-fold>
-    
     /** 
      * Return de naam van de locatieaanduiding.
      *
@@ -52,7 +62,6 @@ public class LocatieAanduidingen {
         return naam;
     }
     // </editor-fold>
-    
     /** 
      * Set de naam van de locatieaanduiding.
      *
@@ -63,7 +72,6 @@ public class LocatieAanduidingen {
         this.naam = naam;
     }
     // </editor-fold>
-    
     /** 
      * Return de omschrijving van de locatieaanduiding.
      *
@@ -74,7 +82,6 @@ public class LocatieAanduidingen {
         return omschrijving;
     }
     // </editor-fold>
-    
     /** 
      * Set de omschrijving van de locatieaanduiding.
      *

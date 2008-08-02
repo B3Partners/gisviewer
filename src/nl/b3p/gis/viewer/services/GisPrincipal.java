@@ -1,7 +1,25 @@
 /*
- * $Id: NbrPrincipal.java 6852 2007-09-24 11:47:11Z Matthijs $
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
+ *
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer.services;
 
 import java.security.Principal;
@@ -23,180 +41,191 @@ import org.apache.commons.logging.LogFactory;
 import org.securityfilter.filter.SecurityRequestWrapper;
 
 public class GisPrincipal implements Principal {
-    
+
     private static final Log log = LogFactory.getLog(GisPrincipal.class);
     public static String ANONYMOUS_PRINCIPAL = "anoniem_principal";
     private static final String CAPABILITIES_QUERYSTRING = "REQUEST=GetCapabilities&VERSION=1.1.1&SERVICE=WMS";
-    
     private String name;
     private Set roles;
     private ServiceProvider sp;
-    
+
     public GisPrincipal(String name, List roles) {
         this.name = name;
         this.roles = new HashSet();
         this.roles.addAll(roles);
     }
-    
+
     public GisPrincipal(String name, ServiceProvider sp) {
         this.name = name;
         this.sp = sp;
-        if(sp==null)
+        if (sp == null) {
             return;
-        
+        }
         this.roles = new HashSet();
         Set sproles = sp.getAllRoles();
-        if(sproles==null || sproles.isEmpty())
+        if (sproles == null || sproles.isEmpty()) {
             return;
-        
+        }
         Iterator it = sproles.iterator();
         while (it.hasNext()) {
             Roles role = (Roles) it.next();
             String sprole = role.getRole();
-            if (sprole!=null && sprole.length()>0)
+            if (sprole != null && sprole.length() > 0) {
                 roles.add(sprole);
+            }
         }
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public boolean isInRole(String role) {
         return roles.contains(role);
     }
-    
+
     public Set getRoles() {
         return roles;
     }
-    
+
     public String toString() {
         return "GisPrincipal[name=" + name + "]";
     }
-    
+
     /* TODO: implement equals/hashCode */
-    
     public ServiceProvider getSp() {
         return sp;
     }
-    
+
     public void setSp(ServiceProvider sp) {
         this.sp = sp;
     }
-    
+
     public List getLayerNames(boolean legendGraphicOnly) {
-        if(sp==null)
+        if (sp == null) {
             return null;
+        }
         Set layers = sp.getAllLayers();
-        if (layers==null  || layers.isEmpty())
+        if (layers == null || layers.isEmpty()) {
             return null;
-        
+        }
         List allLayers = new ArrayList();
         Iterator it = layers.iterator();
         while (it.hasNext()) {
             Layer layer = (Layer) it.next();
             String name = layer.getName();
-            if (name!=null && name.length()>0) {
+            if (name != null && name.length() > 0) {
                 if ((legendGraphicOnly && hasLegendGraphic(layer)) ||
-                        !legendGraphicOnly)
+                        !legendGraphicOnly) {
                     allLayers.add(name);
+                }
             }
         }
-        if (allLayers!=null)
+        if (allLayers != null) {
             Collections.sort(allLayers);
+        }
         return allLayers;
     }
-    
+
     public boolean hasLegendGraphic(Layer l) {
         Set styles = l.getStyles();
-        if (styles==null || styles.isEmpty())
+        if (styles == null || styles.isEmpty()) {
             return false;
+        }
         Iterator it = styles.iterator();
         while (it.hasNext()) {
-            Style style = (Style)it.next();
+            Style style = (Style) it.next();
             Set ldrs = style.getDomainResource();
-            if (ldrs==null || ldrs.isEmpty())
+            if (ldrs == null || ldrs.isEmpty()) {
                 return false;
+            }
             Iterator it2 = ldrs.iterator();
             while (it2.hasNext()) {
-                StyleDomainResource sdr = (StyleDomainResource)it2.next();
-                if ("LegendURL".equalsIgnoreCase(sdr.getDomain()))
+                StyleDomainResource sdr = (StyleDomainResource) it2.next();
+                if ("LegendURL".equalsIgnoreCase(sdr.getDomain())) {
                     return true;
+                }
             }
         }
         return false;
     }
-    
+
     public Layer getLayer(String layerName) {
-        if(sp==null)
+        if (sp == null) {
             return null;
+        }
         Set layers = sp.getAllLayers();
-        if (layers==null  || layers.isEmpty())
+        if (layers == null || layers.isEmpty()) {
             return null;
-        
+        }
         Iterator it = layers.iterator();
         while (it.hasNext()) {
             Layer layer = (Layer) it.next();
             String name = layer.getName();
-            if (name==null || name.length()==0)
+            if (name == null || name.length() == 0) {
                 continue;
-            if (name.equalsIgnoreCase(layerName))
+            }
+            if (name.equalsIgnoreCase(layerName)) {
                 return layer;
+            }
         }
         return null;
     }
-    
+
     public String getLayerTitle(String layerName) {
         Layer layer = getLayer(layerName);
-        if (layer==null)
+        if (layer == null) {
             return null;
+        }
         return layer.getTitle();
     }
-    
+
     public static GisPrincipal getGisPrincipal(HttpServletRequest request) {
         Principal user = request.getUserPrincipal();
-        if (user==null){
+        if (user == null) {
             //als user null is dan proberen een capabilitie op te halen zonder rollen
             WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
             ServiceProvider sp = null;
-            
+
             // Maak een capabilities url voor het ophalen van de Capabilities
             // TODO: Dit kan waarschijnlijk beter worden gedaan in de wmscr.getProvider() methode
             //dus iets van een check op capabilities.
             String url = HibernateUtil.KBURL;
-            if (url.lastIndexOf('?') > 0)
+            if (url.lastIndexOf('?') > 0) {
                 url += "&";
-            else
+            } else {
                 url += "?";
+            }
             url += CAPABILITIES_QUERYSTRING;
-            
+
             log.debug("Trying anonymous login with url: " + url);
-            
+
             try {
                 sp = wmscr.getProvider(url, null, null);
             } catch (Exception ex) {
                 // log.error("", ex);
-                log.debug("Can't log in anonymous: " +  ex.getMessage());
+                log.debug("Can't log in anonymous: " + ex.getMessage());
             }
-            if (sp==null) {
+            if (sp == null) {
                 log.error("No ServiceProvider found, denying login!");
                 return null;
             }
             user = new GisPrincipal(HibernateUtil.ANONYMOUS_USER, sp);
-            
-            if (!(user instanceof GisPrincipal))
+
+            if (!(user instanceof GisPrincipal)) {
                 return null;
-            
+            }
             if (request instanceof SecurityRequestWrapper) {
-                SecurityRequestWrapper srw = (SecurityRequestWrapper)request;
+                SecurityRequestWrapper srw = (SecurityRequestWrapper) request;
                 srw.setUserPrincipal(user);
                 log.debug("Automatic login for user: " + HibernateUtil.ANONYMOUS_USER);
             }
-            
+
         }
-        
-        if (!(user instanceof GisPrincipal))
+
+        if (!(user instanceof GisPrincipal)) {
             return null;
-        return (GisPrincipal)user;
+        }
+        return (GisPrincipal) user;
     }
 }

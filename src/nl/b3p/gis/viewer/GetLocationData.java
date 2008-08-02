@@ -1,12 +1,25 @@
-/**
- * @(#)GetLocationData.java
- * @author Roy Braam
- * @version 1.00 2006/11/30
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer;
 
 import com.vividsolutions.jump.feature.Feature;
@@ -28,96 +41,97 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public class GetLocationData {
-    
+
     private static final Log log = LogFactory.getLog(GetLocationData.class);
-    
-    public GetLocationData() {}
-    
-    
-    public String[] getArea(String elementId,String themaId, String attributeName, String compareValue,String eenheid) throws SQLException{
-        Session sess=HibernateUtil.getSessionFactory().getCurrentSession();
+
+    public GetLocationData() {
+    }
+
+    public String[] getArea(String elementId, String themaId, String attributeName, String compareValue, String eenheid) throws SQLException {
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         sess.beginTransaction();
-        Themas t= (Themas)sess.get(Themas.class,new Integer(themaId));
-        String[] returnValue= new String[2];
-        returnValue[0]=elementId;
-        
-        
+        Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
+        String[] returnValue = new String[2];
+        returnValue[0] = elementId;
+
+
         //Haal op met jdbc connectie
-        double area=0.0;
-        if (t.getConnectie()==null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)){
-            Connection conn=null;
-            if (t.getConnectie()!=null){
-                conn=t.getConnectie().getJdbcConnection();
+        double area = 0.0;
+        if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
+            Connection conn = null;
+            if (t.getConnectie() != null) {
+                conn = t.getConnectie().getJdbcConnection();
             }
-            if (conn==null){
-                conn=sess.connection();
+            if (conn == null) {
+                conn = sess.connection();
             }
-            String geomColumn=SpatialUtil.getTableGeomName(t,conn);
-            String tableName=t.getSpatial_tabel();
-            if (tableName==null)
-                tableName=t.getAdmin_tabel();
-            
+            String geomColumn = SpatialUtil.getTableGeomName(t, conn);
+            String tableName = t.getSpatial_tabel();
+            if (tableName == null) {
+                tableName = t.getAdmin_tabel();
+            }
             try {
-                String q = SpatialUtil.getAreaQuery(tableName,geomColumn,attributeName,compareValue);
+                String q = SpatialUtil.getAreaQuery(tableName, geomColumn, attributeName, compareValue);
                 PreparedStatement statement = conn.prepareStatement(q);
                 try {
                     ResultSet rs = statement.executeQuery();
-                    if(rs.next()){
-                        area =new Double(rs.getString(1)).doubleValue();
+                    if (rs.next()) {
+                        area = new Double(rs.getString(1)).doubleValue();
                     }
                 } finally {
                     statement.close();
                 }
             } catch (SQLException ex) {
                 log.error("", ex);
-                returnValue[1]="Fout (zie log)";
+                returnValue[1] = "Fout (zie log)";
             } finally {
                 sess.close();
             }
-            
+
         }//Haal op met WFS
-        else if (t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+        else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             try {
-                Feature f=WfsUtil.getWfsObject(t,attributeName,compareValue);
-                area=f.getGeometry().getArea();
+                Feature f = WfsUtil.getWfsObject(t, attributeName, compareValue);
+                area = f.getGeometry().getArea();
             } catch (Exception ex) {
-                log.error("",ex);
-                returnValue[1]="Fout (zie log)";
+                log.error("", ex);
+                returnValue[1] = "Fout (zie log)";
             } finally {
                 sess.close();
             }
         }
-        if (eenheid!=null && eenheid.equals("null")){
-            eenheid=null;
+        if (eenheid != null && eenheid.equals("null")) {
+            eenheid = null;
         }
-        int divide=0;
-        if (eenheid!=null){
-            if (eenheid.equalsIgnoreCase("km")){
-                divide=1000000;
-            }else if (eenheid.equalsIgnoreCase("hm")){
-                divide=10000;
+        int divide = 0;
+        if (eenheid != null) {
+            if (eenheid.equalsIgnoreCase("km")) {
+                divide = 1000000;
+            } else if (eenheid.equalsIgnoreCase("hm")) {
+                divide = 10000;
             }
         }
-        if (returnValue[1]==null){
-            if (area>0.0){
-                if (divide>0)
-                    area/=divide;
-                area*=100;
-                area=Math.round(area);
-                area/=100;
+        if (returnValue[1] == null) {
+            if (area > 0.0) {
+                if (divide > 0) {
+                    area /= divide;
+                }
+                area *= 100;
+                area = Math.round(area);
+                area /= 100;
             }
-            String value=new String(""+area);
-            if (eenheid!=null){
-                value+=" "+eenheid;
-            }else{
-                value+=" m";
+            String value = new String("" + area);
+            if (eenheid != null) {
+                value += " " + eenheid;
+            } else {
+                value += " m";
             }
-            returnValue[1]=value;
+            returnValue[1] = value;
         }
         return returnValue;
     }
-    
-     /**
+
+    /**
      *
      * @param elementId element in html pagina waar nieuwe waarde naar wordt geschreven
      * @param themaId id van thema waar update betrekking op heeft
@@ -131,7 +145,7 @@ public class GetLocationData {
     public String[] setAttributeValue(String elementId, String themaId, String keyName, String keyValue, String attributeName, String oldValue, String newValue) {
         String[] returnValue = new String[2];
         Transaction transaction = null;
-        try{            
+        try {
             returnValue[0] = elementId;
             returnValue[1] = oldValue + " (fout)";
 
@@ -148,12 +162,12 @@ public class GetLocationData {
             Connection conn = null;
             if (t.getConnectie() != null) {
                 if (t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
-                   try {
+                    try {
                         conn = t.getConnectie().getJdbcConnection();
                     } catch (SQLException ex) {
                         log.debug("Invalid jdbc connection in thema: ", ex);
                     }
-                     if (conn == null) {
+                    if (conn == null) {
                         conn = sess.connection();
                     }
                     connectionType = Connecties.TYPE_JDBC;
@@ -190,12 +204,12 @@ public class GetLocationData {
                 // TODO WFS
                 //Feature f=WfsUtil.getWfsObject(t,attributeName,oldValue);
             }
-        }catch(Exception e){
-            log.error("",e);
+        } catch (Exception e) {
+            log.error("", e);
         }
         return returnValue;
     }
-    
+
     /**
      * In eerste instantie direct uit jsp via dwr aanroepen, later wrappen voor meer veiligheid
      * @param x_input
@@ -207,7 +221,7 @@ public class GetLocationData {
      * @return
      */
     public String[] getData(String x_input, String y_input, String[] cols, String sptn, double distance, int srid) {
-        
+
         double x, y;
         String rdx, rdy;
         try {
@@ -216,40 +230,41 @@ public class GetLocationData {
             rdx = Long.toString(Math.round(x));
             rdy = Long.toString(Math.round(y));
         } catch (NumberFormatException nfe) {
-            return new String[] {nfe.getMessage()};
+            return new String[]{nfe.getMessage()};
         }
-        
-        if (cols==null || cols.length==0)
-            return new String[] {rdx, rdy, "No cols"};
-        if (sptn==null || sptn.length()==0)
-            return new String[] {rdx, rdy, "No sptn"};
-        
-        if (srid==0)
+
+        if (cols == null || cols.length == 0) {
+            return new String[]{rdx, rdy, "No cols"};
+        }
+        if (sptn == null || sptn.length() == 0) {
+            return new String[]{rdx, rdy, "No sptn"};
+        }
+        if (srid == 0) {
             srid = 28992; // RD-new
-        
+        }
         ArrayList columns = new ArrayList();
-        for (int i=0; i<cols.length; i++) {
+        for (int i = 0; i < cols.length; i++) {
             columns.add(cols[i]);
         }
-        
-        String[] results = new String[cols.length+3];
+
+        String[] results = new String[cols.length + 3];
         results[0] = rdx;
         results[1] = rdy;
         results[2] = "";
-        
+
         SessionFactory sf = HibernateUtil.getSessionFactory();
         Session sess = sf.openSession();
         Connection connection = sess.connection();
-        
+
         try {
             String q = SpatialUtil.closestSelectQuery(columns, sptn, x, y, distance, srid);
             PreparedStatement statement = connection.prepareStatement(q);
             try {
                 ResultSet rs = statement.executeQuery();
-                if(rs.next()) {
+                if (rs.next()) {
                     results[2] = rs.getString("dist");
-                    for (int i=0; i<cols.length; i++) {
-                        results[i+3] = rs.getString(cols[i]);
+                    for (int i = 0; i < cols.length; i++) {
+                        results[i + 3] = rs.getString(cols[i]);
                     }
                 }
             } finally {
@@ -260,40 +275,40 @@ public class GetLocationData {
         } finally {
             sess.close();
         }
-        
+
         return results;
     }
-    
+
     public ArrayList getMapCoords(String waarde, String[] cols, String sptn, double distance, int srid) {
-        
+
         ArrayList coords = new ArrayList();
-        
-        if (cols==null || cols.length==0) {
+
+        if (cols == null || cols.length == 0) {
             MapCoordsBean mbc = new MapCoordsBean();
             mbc.setNaam("No cols");
             coords.add(mbc);
             return coords;
         }
-        
+
         waarde = waarde.replaceAll("\\'", "''");
-        
+
         StringBuffer q = new StringBuffer();
         q.append("select distinct ");
         q.append(cols[0]);
-        for (int i=1; i<cols.length; i++) {
+        for (int i = 1; i < cols.length; i++) {
             q.append(",");
             q.append(cols[i]);
         }
         q.append(", astext(Envelope(tbl.the_geom)) as bbox from ");
         q.append(sptn);
         q.append(" tbl where (");
-        
+
         q.append(" lower(tbl.");
         q.append(cols[0]);
         q.append(") like lower('%");
         q.append(waarde);
         q.append("%')");
-        for (int i=1; i<cols.length; i++) {
+        for (int i = 1; i < cols.length; i++) {
             q.append(" or");
             q.append(" lower(tbl.");
             q.append(cols[i]);
@@ -302,26 +317,26 @@ public class GetLocationData {
             q.append("%')");
         }
         q.append(")");
-        
-        SessionFactory sf       = HibernateUtil.getSessionFactory();
-        Session sess            = sf.openSession();
-        Connection connection   = sess.connection();
-        
+
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session sess = sf.openSession();
+        Connection connection = sess.connection();
+
         try {
             PreparedStatement statement = connection.prepareStatement(q.toString());
             try {
                 ResultSet rs = statement.executeQuery();
                 int loopnum = 0;
-                while(rs.next()&& loopnum<15) {
-                    
+                while (rs.next() && loopnum < 15) {
+
                     //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
                     String bbox = rs.getString("bbox");
                     bbox = bbox.replaceAll("POLYGON\\(\\(", "");
                     bbox = bbox.replaceAll("\\)\\)", "");
                     String[] bboxArray = bbox.split(",");
-                    if (bboxArray==null || bboxArray.length!=5)
+                    if (bboxArray == null || bboxArray.length != 5) {
                         continue;
-                    
+                    }
                     double minx, maxx, miny, maxy;
                     try {
                         minx = Double.parseDouble(bboxArray[0].split(" ")[0]);
@@ -331,19 +346,20 @@ public class GetLocationData {
                     } catch (NumberFormatException nfe) {
                         return null;
                     }
-                    
-                    if (Math.abs(minx - maxx)<1)
+
+                    if (Math.abs(minx - maxx) < 1) {
                         maxx = minx + distance;
-                    if (Math.abs(miny - maxy)<1)
+                    }
+                    if (Math.abs(miny - maxy) < 1) {
                         maxy = miny + distance;
-                    
+                    }
                     StringBuffer naam = new StringBuffer();
                     naam.append(rs.getString(cols[0]));
-                    for (int i=1; i<cols.length; i++) {
+                    for (int i = 1; i < cols.length; i++) {
                         naam.append(", ");
                         naam.append(rs.getString(cols[i]));
                     }
-                    
+
                     MapCoordsBean mbc = new MapCoordsBean();
                     mbc.setNaam(naam.toString());
                     mbc.setMinx(Double.toString(minx));
@@ -361,10 +377,10 @@ public class GetLocationData {
         } finally {
             sess.close();
         }
-        
-        if (!coords.isEmpty())
+
+        if (!coords.isEmpty()) {
             return coords;
+        }
         return null;
     }
-    
 }

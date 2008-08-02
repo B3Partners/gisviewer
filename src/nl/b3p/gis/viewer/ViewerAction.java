@@ -1,13 +1,25 @@
-/**
- * @(#)ViewerAction.java
- * @author Roy Braam
- * @version 1.00 2006/11/29
+/*
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * Purpose: a class handling the different actions which come from classes extending this class.
- *
- * @copyright 2007 All rights reserved. B3Partners
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer;
 
 import java.util.ArrayList;
@@ -29,7 +41,6 @@ import nl.b3p.wms.capabilities.Layer;
 import nl.b3p.wms.capabilities.SrsBoundingBox;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.validator.DynaValidatorForm;
@@ -38,12 +49,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ViewerAction extends BaseGisAction {
-    
+
     private static final Log log = LogFactory.getLog(ViewerAction.class);
-    
     protected static final String LIST = "list";
     protected static final String LOGIN = "login";
-    
+
     /**
      * Return een hashmap die een property koppelt aan een Action.
      *
@@ -52,18 +62,17 @@ public class ViewerAction extends BaseGisAction {
     // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap()">
     protected Map getActionMethodPropertiesMap() {
         Map map = new HashMap();
-        
+
         ExtendedMethodProperties hibProp = null;
-        
+
         hibProp = new ExtendedMethodProperties(LIST);
         hibProp.setDefaultForwardName(LIST);
         hibProp.setAlternateForwardName(FAILURE);
         map.put(LIST, hibProp);
-        
+
         return map;
     }
     // </editor-fold>
-    
     /**
      * De knop berekent een lijst van thema's en stuurt dan door.
      *
@@ -78,15 +87,14 @@ public class ViewerAction extends BaseGisAction {
      */
     // <editor-fold defaultstate="" desc="public ActionForward knop(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)">
     public ActionForward list(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
+
         List themalist = getValidThemas(false, null, request);
         request.setAttribute("themalist", themalist);
-        
+
         addDefaultMessage(mapping, request);
         return getDefaultForward(mapping, request);
     }
     // </editor-fold>
-    
     /**
      *
      * @param mapping The ActionMapping used to select this instance.
@@ -101,189 +109,194 @@ public class ViewerAction extends BaseGisAction {
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //als er geen user principal is (ook geen anoniem) dan forwarden naar de login.
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
-        if (user==null){
+        if (user == null) {
             log.info("Geen user beschikbaar, ook geen anoniem. Forward naar login om te proberen een user te maken met login gegevens.");
             return mapping.findForward(LOGIN);
         }
         createLists(dynaForm, request);
         return mapping.findForward(SUCCESS);
     }
-    
-        
+
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         super.createLists(dynaForm, request);
         List ctl = SpatialUtil.getValidClusters();
         List themalist = getValidThemas(false, ctl, request);
         Map rootClusterMap = getClusterMap(themalist, ctl, null);
-        
+
         Integer actiefThemaId = null;
         Themas actiefThema = SpatialUtil.getThema(request.getParameter("id"));
-        if (actiefThema!=null)
+        if (actiefThema != null) {
             actiefThemaId = actiefThema.getId();
-        
+        }
         request.setAttribute("tree", createJasonObject(rootClusterMap, actiefThemaId));
-        
+
         //stukje voor BBox toevoegen.
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
-        Set bboxen=user.getSp().getTopLayer().getSrsbb();
-        Iterator it=bboxen.iterator();
-       while(it.hasNext()){
-            SrsBoundingBox bbox= (SrsBoundingBox)it.next();
-            if(FormUtils.nullIfEmpty(bbox.getMaxx())!=null && FormUtils.nullIfEmpty(bbox.getMaxy())!=null &&FormUtils.nullIfEmpty(bbox.getMinx())!=null &&FormUtils.nullIfEmpty(bbox.getMiny())!=null){
-                if (bbox.getSrs()!=null && bbox.getSrs().equalsIgnoreCase("epsg:28992")){
-                    request.setAttribute("fullExtent",bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy());
+        Set bboxen = user.getSp().getTopLayer().getSrsbb();
+        Iterator it = bboxen.iterator();
+        while (it.hasNext()) {
+            SrsBoundingBox bbox = (SrsBoundingBox) it.next();
+            if (FormUtils.nullIfEmpty(bbox.getMaxx()) != null && FormUtils.nullIfEmpty(bbox.getMaxy()) != null && FormUtils.nullIfEmpty(bbox.getMinx()) != null && FormUtils.nullIfEmpty(bbox.getMiny()) != null) {
+                if (bbox.getSrs() != null && bbox.getSrs().equalsIgnoreCase("epsg:28992")) {
+                    request.setAttribute("fullExtent", bbox.getMinx() + "," + bbox.getMiny() + "," + bbox.getMaxx() + "," + bbox.getMaxy());
                     break;
                 }
             }
         }
-        String extent=null;
+        String extent = null;
         //Controleer of een extent is meegegeven en of de extent een bbox is van 4 getallen
-        if (request.getParameter("extent")!=null && request.getParameter("extent").split(",").length==4){
-            try{
-                String requestExtent=request.getParameter("extent");
-                int test= Integer.parseInt(requestExtent.split(",")[0]);
-                test= Integer.parseInt(requestExtent.split(",")[1]);
-                test= Integer.parseInt(requestExtent.split(",")[2]);
-                test= Integer.parseInt(requestExtent.split(",")[3]);
-                extent=requestExtent;
-            }catch(NumberFormatException nfe){     
+        if (request.getParameter("extent") != null && request.getParameter("extent").split(",").length == 4) {
+            try {
+                String requestExtent = request.getParameter("extent");
+                int test = Integer.parseInt(requestExtent.split(",")[0]);
+                test = Integer.parseInt(requestExtent.split(",")[1]);
+                test = Integer.parseInt(requestExtent.split(",")[2]);
+                test = Integer.parseInt(requestExtent.split(",")[3]);
+                extent = requestExtent;
+            } catch (NumberFormatException nfe) {
                 log.error("1 of meer van de opgegeven extent coordinaten is geen getal.");
-                extent=null;
+                extent = null;
             }
         }
         //als er geen juiste extent is gevonden en er is een actiefthemaid meegegeven gebruik de bbox van die layer
-        if (extent==null && actiefThema!=null){
-            Layer layer=user.getLayer(actiefThema.getWms_layers_real());
-            if (layer!=null){
-                bboxen=layer.getSrsbb();
-                if (bboxen!=null){
-                    Iterator i=bboxen.iterator();
-                    while(i.hasNext()){
-                        SrsBoundingBox bbox= (SrsBoundingBox)i.next();
-                        if(FormUtils.nullIfEmpty(bbox.getMaxx())!=null && FormUtils.nullIfEmpty(bbox.getMaxy())!=null &&FormUtils.nullIfEmpty(bbox.getMinx())!=null &&FormUtils.nullIfEmpty(bbox.getMiny())!=null){
-                            if (bbox.getSrs()!=null && bbox.getSrs().equalsIgnoreCase("epsg:28992")){
-                                extent=""+bbox.getMinx()+","+bbox.getMiny()+","+bbox.getMaxx()+","+bbox.getMaxy();
+        if (extent == null && actiefThema != null) {
+            Layer layer = user.getLayer(actiefThema.getWms_layers_real());
+            if (layer != null) {
+                bboxen = layer.getSrsbb();
+                if (bboxen != null) {
+                    Iterator i = bboxen.iterator();
+                    while (i.hasNext()) {
+                        SrsBoundingBox bbox = (SrsBoundingBox) i.next();
+                        if (FormUtils.nullIfEmpty(bbox.getMaxx()) != null && FormUtils.nullIfEmpty(bbox.getMaxy()) != null && FormUtils.nullIfEmpty(bbox.getMinx()) != null && FormUtils.nullIfEmpty(bbox.getMiny()) != null) {
+                            if (bbox.getSrs() != null && bbox.getSrs().equalsIgnoreCase("epsg:28992")) {
+                                extent = "" + bbox.getMinx() + "," + bbox.getMiny() + "," + bbox.getMaxx() + "," + bbox.getMaxy();
                                 break;
                             }
-                        }            
+                        }
                     }
                 }
             }
         }
-        if (extent!=null){
-            request.setAttribute("extent",extent);
+        if (extent != null) {
+            request.setAttribute("extent", extent);
         }
-        
+
     }
-    
+
     private Map getClusterMap(List themalist, List clusterlist, Clusters rootCluster) throws JSONException, Exception {
-        if(themalist == null || clusterlist == null)
+        if (themalist == null || clusterlist == null) {
             return null;
-        
+        }
         List childrenList = getThemaList(themalist, rootCluster);
-        
+
         List subclusters = null;
         Iterator it = clusterlist.iterator();
         while (it.hasNext()) {
-            Clusters cluster = (Clusters)it.next();
-            if(rootCluster == cluster.getParent()) {
+            Clusters cluster = (Clusters) it.next();
+            if (rootCluster == cluster.getParent()) {
                 Map clusterMap = getClusterMap(themalist, clusterlist, cluster);
-                if (clusterMap == null || clusterMap.isEmpty())
+                if (clusterMap == null || clusterMap.isEmpty()) {
                     continue;
-                if (subclusters==null)
+                }
+                if (subclusters == null) {
                     subclusters = new ArrayList();
+                }
                 subclusters.add(clusterMap);
             }
         }
-        
-        if ((childrenList==null || childrenList.isEmpty()) && ((subclusters==null || subclusters.isEmpty())))
+
+        if ((childrenList == null || childrenList.isEmpty()) && ((subclusters == null || subclusters.isEmpty()))) {
             return null;
-        
+        }
         Map clusterNode = new HashMap();
         clusterNode.put("subclusters", subclusters);
         clusterNode.put("children", childrenList);
         clusterNode.put("cluster", rootCluster);
-        
+
         return clusterNode;
     }
-    
+
     private List getThemaList(List themalist, Clusters rootCluster) throws JSONException, Exception {
-        if(themalist == null)
+        if (themalist == null) {
             return null;
+        }
         ArrayList children = null;
         Iterator it = themalist.iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Themas thema = (Themas) it.next();
-            if(thema.getCluster() == rootCluster) {
-                if (children==null)
+            if (thema.getCluster() == rootCluster) {
+                if (children == null) {
                     children = new ArrayList();
+                }
                 children.add(thema);
             }
         }
-        if (children!=null)
+        if (children != null) {
             Collections.reverse(children);
+        }
         return children;
     }
-    
+
     protected JSONObject createJasonObject(Map rootClusterMap, Integer actiefThemaId) throws JSONException {
-        if (rootClusterMap==null || rootClusterMap.isEmpty())
+        if (rootClusterMap == null || rootClusterMap.isEmpty()) {
             return null;
-        
-        List clusterMaps = (List)rootClusterMap.get("subclusters");
-        if (clusterMaps==null || clusterMaps.isEmpty())
+        }
+        List clusterMaps = (List) rootClusterMap.get("subclusters");
+        if (clusterMaps == null || clusterMaps.isEmpty()) {
             return null;
-        
+        }
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
         root.put("children", getSubClusters(clusterMaps, null, actiefThemaId));
-        
+
         return root;
     }
-    
+
     private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, Integer actiefThemaId) throws JSONException {
-        if(subclusterMaps == null)
+        if (subclusterMaps == null) {
             return clusterArray;
-        
+        }
         Iterator it = subclusterMaps.iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Map clMap = (Map) it.next();
-            
-            Clusters cluster = (Clusters)clMap.get("cluster");
+
+            Clusters cluster = (Clusters) clMap.get("cluster");
             JSONObject jsonCluster = new JSONObject().put("id",
                     "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
-            
-            List childrenList = (List)clMap.get("children");
+
+            List childrenList = (List) clMap.get("children");
             JSONArray childrenArray = getChildren(childrenList, actiefThemaId);
-            List subsubclusterMaps = (List)clMap.get("subclusters");
+            List subsubclusterMaps = (List) clMap.get("subclusters");
             childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actiefThemaId);
-            jsonCluster.put("children",childrenArray);
-            
-            if (clusterArray==null)
+            jsonCluster.put("children", childrenArray);
+
+            if (clusterArray == null) {
                 clusterArray = new JSONArray();
+            }
             clusterArray.put(jsonCluster);
-            
+
         }
         return clusterArray;
     }
-    
+
     private JSONArray getChildren(List children, Integer actiefThemaId) throws JSONException {
-        if(children == null)
+        if (children == null) {
             return null;
-        
+        }
         JSONArray childrenArray = null;
         Iterator it = children.iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Themas th = (Themas) it.next();
             Integer themaId = th.getId();
             String ttitel = th.getNaam();
             JSONObject jsonCluster = new JSONObject().put("id", themaId).put("type", "child").put("title", ttitel).put("cluster", false);
-            
+
             if (th.getOrganizationcodekey() != null && th.getOrganizationcodekey().length() > 0) {
                 jsonCluster.put("organizationcodekey", th.getOrganizationcodekey().toUpperCase());
             } else {
                 jsonCluster.put("organizationcodekey", "");
             }
-            
-            if (actiefThemaId!=null && themaId!=null && themaId.compareTo(actiefThemaId)==0) {
+
+            if (actiefThemaId != null && themaId != null && themaId.compareTo(actiefThemaId) == 0) {
                 jsonCluster.put("visible", "on");
                 if (th.isAnalyse_thema()) {
                     jsonCluster.put("analyse", "active");
@@ -293,7 +306,7 @@ public class ViewerAction extends BaseGisAction {
             } else {
                 // als een actiefThemaId is doorgegeven, dan negeren we de default
                 // instelling voor aanzetten kaartlagen en zetten allen die kaart aan.
-                if (th.isVisible() && actiefThemaId==null) {
+                if (th.isVisible() && actiefThemaId == null) {
                     jsonCluster.put("visible", "on");
                 } else {
                     jsonCluster.put("visible", "off");
@@ -304,32 +317,26 @@ public class ViewerAction extends BaseGisAction {
                     jsonCluster.put("analyse", "off");
                 }
             }
-            
-            if(th.getWms_layers_real() != null) {
-                jsonCluster
-                        .put("wmslayers", th.getWms_layers_real())
-                        .put("wmsquerylayers", th.getWms_querylayers_real())
-                        .put("wmslegendlayer", th.getWms_legendlayer_real());
+
+            if (th.getWms_layers_real() != null) {
+                jsonCluster.put("wmslayers", th.getWms_layers_real()).put("wmsquerylayers", th.getWms_querylayers_real()).put("wmslegendlayer", th.getWms_legendlayer_real());
             } else {
-                jsonCluster
-                        .put("wmslayers",th.getWms_layers())
-                        .put("wmsquerylayers",th.getWms_querylayers())
-                        .put("wmslegendlayer",th.getWms_legendlayer());
+                jsonCluster.put("wmslayers", th.getWms_layers()).put("wmsquerylayers", th.getWms_querylayers()).put("wmslegendlayer", th.getWms_legendlayer());
             }
-            if (th.getMetadata_link()!=null){
-                String metadatalink=th.getMetadata_link();
-                metadatalink=metadatalink.replaceAll("%id%",""+themaId);
-                jsonCluster.put("metadatalink",metadatalink);
-            }else{
-                jsonCluster.put("metadatalink","#");
+            if (th.getMetadata_link() != null) {
+                String metadatalink = th.getMetadata_link();
+                metadatalink = metadatalink.replaceAll("%id%", "" + themaId);
+                jsonCluster.put("metadatalink", metadatalink);
+            } else {
+                jsonCluster.put("metadatalink", "#");
             }
-            
-            if (childrenArray==null)
+
+            if (childrenArray == null) {
                 childrenArray = new JSONArray();
+            }
             childrenArray.put(jsonCluster);
         }
-        
+
         return childrenArray;
     }
-    
 }

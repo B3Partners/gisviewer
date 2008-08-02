@@ -1,13 +1,25 @@
 /*
- * @(#)ETLOverviewAction.java
- * @author N. de Goeij
- * @version 1.00, 20 augustus 2007
+ * B3P Gisviewer is an extension to Flamingo MapComponents making
+ * it a complete webbased GIS viewer and configuration tool that
+ * works in cooperation with B3P Kaartenbalie.
  *
- * @copyright 2007 B3Partners. All rights reserved.
- * B3Partners PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
+ * Copyright 2006, 2007, 2008 B3Partners BV
+ * 
+ * This file is part of B3P Gisviewer.
+ * 
+ * B3P Gisviewer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * B3P Gisviewer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package nl.b3p.gis.viewer;
 
 import java.sql.Connection;
@@ -36,15 +48,12 @@ import org.hibernate.Session;
 /**
  * ETLOverviewAction definition:
  */
-
 public class ETLOverviewAction extends BaseGisAction {
-    
+
     private static final Log log = LogFactory.getLog(ETLOverviewAction.class);
-    
     private static final String KNOP = "knop";
-    
-    private static final String [] STATUS = new String [] {"NO", "OAO", "OGO", "GO", "VO", "OO"};
-    
+    private static final String[] STATUS = new String[]{"NO", "OAO", "OGO", "GO", "VO", "OO"};
+
     /**
      * Return een hashmap. Deze is verplicht overriden vanwege abstracte klasse BaseHibernateAction.
      *
@@ -53,17 +62,16 @@ public class ETLOverviewAction extends BaseGisAction {
     // <editor-fold defaultstate="" desc="protected Map getActionMethodPropertiesMap() method.">
     protected Map getActionMethodPropertiesMap() {
         Map map = new HashMap();
-        
+
         ExtendedMethodProperties hibProp = null;
         hibProp = new ExtendedMethodProperties(KNOP);
         hibProp.setDefaultForwardName(SUCCESS);
         hibProp.setAlternateForwardName(FAILURE);
         map.put(KNOP, hibProp);
-        
+
         return map;
     }
     // </editor-fold>
-    
     /**
      * Actie die aangeroepen wordt vanuit het Struts frameword als een handeling aangeroepen wordt zonder property.
      *
@@ -83,7 +91,6 @@ public class ETLOverviewAction extends BaseGisAction {
         return mapping.findForward(SUCCESS);
     }
     // </editor-fold>
-    
     /**
      * Methode die zorg draagt voor het vullen en op het request zetten van de overzichtsresultaten
      * van de verschillende Thema afwijkingen die tijdens het laatste ETL proces aan het licht gekomen
@@ -96,19 +103,19 @@ public class ETLOverviewAction extends BaseGisAction {
     private void createOverview(DynaValidatorForm dynaForm, HttpServletRequest request) throws NotSupportedException, SQLException {
         List themalist = getValidThemas(false, null, request);
         ArrayList overview = new ArrayList();
-        if(themalist != null) {
+        if (themalist != null) {
             Iterator it = themalist.iterator();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 Themas t = (Themas) it.next();
                 ArrayList count = getCount(t);
-                if(count != null) {
+                if (count != null) {
                     overview.add(count);
                 }
             }
         }
         request.setAttribute("overview", overview);
     }
-    
+
     /**
      * Een methode die van een bepaald thema bepaald hoeveel hits er van elke status zijn.
      * De verschillende statussen die gebruikt worden zijn:
@@ -140,35 +147,35 @@ public class ETLOverviewAction extends BaseGisAction {
     // <editor-fold defaultstate="" desc="private ArrayList getCount(String thema_naam, String admin_tabel)">
     private ArrayList getCount(Themas t) throws NotSupportedException, SQLException {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection=null;
-        if (t.getConnectie()!=null){            
-            connection=t.getConnectie().getJdbcConnection();
+        Connection connection = null;
+        if (t.getConnectie() != null) {
+            connection = t.getConnectie().getJdbcConnection();
         }
-        if (connection==null)
+        if (connection == null) {
             connection = sess.connection();
-        
+        }
         boolean exists = false;
         try {
             exists = SpatialUtil.isEtlThema(t, connection);
         } catch (SQLException ex) {
-            log.error("",ex);
+            log.error("", ex);
         }
-        if(!exists)
+        if (!exists) {
             return null;
-        
+        }
         String admin_tabel = t.getAdmin_tabel();
-        if (admin_tabel == null)
+        if (admin_tabel == null) {
             return null;
-        
+        }
         String selectQuery = "SELECT COUNT(1) as Total ";
-        for (int i=0; i<6; i++) {
+        for (int i = 0; i < 6; i++) {
             selectQuery += ", (SELECT COUNT(1) FROM " + admin_tabel +
                     " AS subresult WHERE subresult.status_etl = '" +
                     STATUS[i] + "') AS Status_" + STATUS[i] + " ";
         }
         selectQuery += "FROM " + admin_tabel;
-        
-        
+
+
         ArrayList count = new ArrayList();
         count.add(t.getId());
         count.add(t.getNaam());
@@ -176,18 +183,18 @@ public class ETLOverviewAction extends BaseGisAction {
             int total = 0;
             PreparedStatement statement = connection.prepareStatement(selectQuery);
             ResultSet rs = statement.executeQuery();
-            if (rs.next()){
-                for (int i=0; i<6; i++) {
+            if (rs.next()) {
+                for (int i = 0; i < 6; i++) {
                     count.add(new Integer(rs.getInt("Status_" + STATUS[i])));
                 }
                 total = rs.getInt("Total");
                 count.add(new Integer(total));
                 statement.close();
             }
-            
-            Integer amountOGO = (Integer)count.get(3);
-            Integer amountOAO = (Integer)count.get(4);
-            if(total != 0 && amountOGO!=null && amountOAO!=null) {
+
+            Integer amountOGO = (Integer) count.get(3);
+            Integer amountOAO = (Integer) count.get(4);
+            if (total != 0 && amountOGO != null && amountOAO != null) {
                 int percent = ((amountOGO.intValue() + amountOAO.intValue()) * 100) / total;
                 count.add(new Integer(percent));
             } else {
@@ -203,9 +210,8 @@ public class ETLOverviewAction extends BaseGisAction {
                 log.error("", ex);
             }
         }
-        
+
         return count;
     }
     // </editor-fold>
-    
 }

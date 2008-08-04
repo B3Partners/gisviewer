@@ -7,10 +7,21 @@
         Configuration of the flamingo viewer.
 -->
 
-<FLAMINGO xmlns:fmc="fmc" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" commtojava="true" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" xmlns:tpc="tpc" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" commtojava="true" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="11" color="#880000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
+    <!--Stukje voor redlining authentication stukje -->
+    <!--<tpc:Authentication id="authentication">
+            <tpc:Resource name="deegree" url="http://vmlin10.prvutr.nl:8080/deegree"/>
+            <tpc:Role name="superman" flux="cn=WebMailUsers,ou=Notes,ou=GRP,ou=Medewerkers,o=ProvUtrecht"/>
+            <tpc:Role name="spiderman" flux="cn=Atrium,ou=iChain,ou=GRP,ou=Medewerkers,o=ProvUtrecht"/>
+    </tpc:Authentication>-->
+    <!-- de window die de eigenschappen toont. -->
+    <!--<fmc:Window id="editPropertiesWindow" skin="g" top="0" right="right" width="220" height="600" canresize="true" canclose="true" visible="false">
+        <string id="title" en="Properties" nl="Eigenschappen"/>
+        <tpc:EditProperties id="editProperties" top="0" left="0" right="right" bottom="bottom" listento="editMap" visible="false"/>
+    </fmc:Window>-->
     <fmc:MonitorLayer id="monitorl" left="50%" top="50%" width="50%" listento="map1">
         <string id="waiting"  en="Making... [layer] [percentage]%..." nl="Kaart aan het maken..."/>
         <string id="loading"  en="Making... [layer] [percentage]%..." nl="Kaart aan het laden. [percentage]%"/>
@@ -29,15 +40,26 @@
             <string id="xy" nl="X: [x]     Y: [y]" />
         </fmc:Coordinates>
     </fmc:Container>
-    <fmc:Container backgroundcolor="#D2E0EB" left="0" top="7%" height="93%" width="25%">
+    <fmc:Container backgroundcolor="#D2E0EB" left="0" top="7%" height="93%" width="25%">                
         <fmc:Map id="overview"  left="8%" top="0%" height="400" width="200" extent="7663,168896,285051,723673" fullextent="7663,168896,285051,723673">
             <fmc:LayerOverview listento="map1"/>
             <fmc:LayerImage id="Limburg" imageurl="../images/overviewNederland.png" extent="7663,168896,285051,723673" />
-        </fmc:Map>
+        </fmc:Map>        
         <fmc:ZoomerV id="zoomerv" left="0%" top="0" height="200" listento="map1"></fmc:ZoomerV>           
+        <!-- stukje knoppen voor redlining/ editing-->
+        <tpc:EditLegend id="editLegend" left="0" top="400" listento="editMap"/>    
+        <tpc:EditBar id="editBar" left="150" top="400" listento="editMap"/>        
     </fmc:Container>
-    <fmc:Container  borderwidth="1" bordercolor="#606060" left="26%" top="8%" height="92%" width="74%">    
+    <fmc:Container  borderwidth="1" bordercolor="#606060" left="25%" top="7%" height="93%" width="75%">    
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>        
+        <!-- het 'canvas' waar op getekend kan worden-->
+        <tpc:EditMap id="editMap" listento="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom">
+            <tpc:GIS>
+                <tpc:Layer name="redlining" title="Redlining" visible="true" geometrytypes="Point,LineString,Polygon">                    
+                    <tpc:Style fillcolor="0xFF0000" fillopacity="30" strokecolor="0xFF0000" strokeopacity="100"/>
+                </tpc:Layer>
+            </tpc:GIS>
+        </tpc:EditMap>        
         <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extent="1200,30400,28000,62000">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>
         </fmc:Map>                

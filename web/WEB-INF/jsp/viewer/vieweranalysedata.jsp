@@ -54,8 +54,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <html:hidden property="themaid" />
                 <html:hidden property="analysethemaid" />
                 <html:hidden property="lagen" />
-                <html:hidden property="xcoord" />
-                <html:hidden property="ycoord" />
+                <%--html:hidden property="xcoord" />
+                <html:hidden property="ycoord" /--%>
+                <html:hidden property="coords" />
                 
                 <strong> Extra criterium voor actieve thema</strong><br/> 
                 <html:text property="extraCriteria" size="40"/><br/>

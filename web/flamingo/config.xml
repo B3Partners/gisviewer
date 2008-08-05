@@ -33,7 +33,7 @@
             <fmc:ToolZoomout left="30"/>
             <fmc:ToolPan left="60"/>
             <fmc:ToolMeasure left="90"/>
-            <fmc:ToolIdentify left="120"/>
+            <fmc:ToolSuperIdentify left="120"/>
         </fmc:ToolGroup>
         <fmc:Coordinates listento="map1" left="80%" top="20%" decimals="0">
             <style id=".xy" font-family="arial" font-size="11" />

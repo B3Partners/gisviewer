@@ -228,6 +228,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 setActiveThema(item.id, item.title);
             } else if(item.analyse=="active"){
                 setActiveThema(item.id, item.title, true);
+                setActiveAnalyseThema(item.id);
             }
             
             var layerPos = getLayerPosition(item);

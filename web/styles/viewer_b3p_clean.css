@@ -344,6 +344,7 @@ ul#nav li#tab3 { margin-right: 0px; }
     background-color: White;
     color: #175480;
     height: 80%;
+    *height: 60%;
     overflow: auto;
 }
 
@@ -490,4 +491,8 @@ html, body {
 
 #menubalkmenucontent {
     padding-top: 23px; padding-right: 30px;
+}
+
+#mainTopmenuTd {
+    height: 50px;
 }

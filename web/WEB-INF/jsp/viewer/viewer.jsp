@@ -194,10 +194,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         return activeAnalyseThemaId;
     }
     
-    function setAnalyseData(id) {
+    function setAnalyseData(id, title) {
         eraseCookie('activeanalyselayer');
         createCookie('activeanalyselayer', id, '7');
         setActiveAnalyseThema(id)
+        document.getElementById('actief_thema').innerHTML = 'Actieve thema: ' + title;
     }
     //  /Added
     
@@ -229,7 +230,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 var analyseRadioControleString = '<input type="radio" name="selanalysekaartlaag" value="' + item.id + '"';
                 if (activeAnalyseThemaId == item.id)
                     analyseRadioControleString += ' checked="checked"';
-                analyseRadioControleString += ' onclick="setAnalyseData(\'' + item.id + '\'); activateCheckbox(\'' + item.id + '\');"';
+                analyseRadioControleString += ' onclick="setAnalyseData(\'' + item.id + '\', \'' + item.title + '\'); activateCheckbox(\'' + item.id + '\');"';
                 analyseRadioControleString += '>';
                 var analyseRadio = document.createElement(analyseRadioControleString);
                 //  /Added                
@@ -255,7 +256,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 analyseRadio.type = 'radio';
                 analyseRadio.name = 'selanalysekaartlaag';
                 analyseRadio.value = item.id;
-                analyseRadio.onclick = function(){ setAnalyseData(item.id); activateCheckbox(item.id); }
+                analyseRadio.onclick = function(){ setAnalyseData(item.id, item.title); activateCheckbox(item.id); }
                 if (activeAnalyseThemaId == item.id)
                     analyseRadio.checked = true;
                 //  /Added 

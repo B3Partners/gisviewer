@@ -304,9 +304,7 @@ public class ViewerAction extends BaseGisAction {
                     jsonCluster.put("analyse", "off");
                 }
             } else {
-                // als een actiefThemaId is doorgegeven, dan negeren we de default
-                // instelling voor aanzetten kaartlagen en zetten allen die kaart aan.
-                if (th.isVisible() && actiefThemaId == null) {
+                if (th.isVisible()) {
                     jsonCluster.put("visible", "on");
                 } else {
                     jsonCluster.put("visible", "off");

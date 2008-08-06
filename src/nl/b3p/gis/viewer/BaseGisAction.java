@@ -704,8 +704,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     regel.add(function.toString());
                 }else{
                     regel.add("");
-                }
-                
+                }                
             } else
                 
             /*

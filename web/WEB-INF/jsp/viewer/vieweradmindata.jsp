@@ -25,6 +25,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/admindataFunctions.js"/>"></script>
 <script type="text/javascript">
     function popUp(URL, naam) {
         var screenwidth = 600;
@@ -42,40 +43,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             "top = " + popuptop + ", " + 
             "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
-    }
-    
-    function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
-        // Leeg -> Ja
-        // Nee -> Ja
-        // Ja -> Nee
-        
-        /*
-        // Deze methode maakt gebruik van attributeValue, maar moet dus de onclick weer aanpassen, onderstaande methode maakt gebruik van inhoud van de link, dat is m.i. makkelijker        
-        var newValue = 'Nee';
-        if(attributeValue == 'Leeg' || attributeValue == 'Nee' || attributeValue == 'Nieuw')
-            newValue = 'Ja';
-        JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
-        
-        element.onclick = function() {
-            setAttributeValue(this, themaid, keyName, keyValue, attributeName, newValue, eenheid);
-        }
-         */
-        
-        var oldValue = element.innerHTML; // Nu wordt er gegeken naar wat de waarde is die in de link staat, deze wordt gebruikt, niet attributeValue
-        var newValue = 'Nee';
-        if(oldValue == 'Leeg' || oldValue == 'Nee' || oldValue == 'Nieuw')
-            newValue = 'Ja';
-        JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
-    }
-    function handleSetAttribute(str){
-        document.getElementById(str[0]).innerHTML=str[1];
-    }
-    
-    function berekenOppervlakte(element, themaid, kolomnaam,value,eenheid){        
-        JMapData.getArea(element.id,themaid,kolomnaam,value,eenheid,handleGetArea);
-    }
-    function handleGetArea(str){
-        document.getElementById(str[0]).innerHTML=str[1];
     }
     function toggleList(nr) {
         var obj = document.getElementById('admin_data_content_div' + nr);

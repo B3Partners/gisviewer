@@ -34,6 +34,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="onderbalk">DATA CONFIG<span><tiles:insert name="loginblock"/></span></div>
 
+<script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript">
     function showHelp(obj) {
         var helpDiv = obj.nextSibling;
@@ -41,26 +42,50 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         return false;
     }
     
+    var prevOpened = null;
     function showHideDiv(obj) {
-        if(obj.style.display != 'block') {
-            obj.style.display = 'block';
-        } else {
-            obj.style.display = 'none';
+        var iObj = document.getElementById('iframeBehindHelp');
+        if(prevOpened != null) {
+            prevOpened.style.display = 'none';
+            iObj.style.display = 'none';
         }
+        if(prevOpened != obj) {
+            prevOpened = obj;
+            if(obj.style.display != 'block') {
+                obj.style.display = 'block';
+                var objPos = findPos(obj);
+                iObj.style.width = obj.offsetWidth + 'px';
+                iObj.style.height = obj.offsetHeight + 'px';
+                iObj.style.left = objPos[0] + 'px';
+                iObj.style.top = objPos[1] + 'px';
+                iObj.style.display = 'block';
+            } else {
+                obj.style.display = 'none';
+            }
+        }
+    }
+    
+    function hoverRow(obj) {
+        obj.className += ' regel_over';
+    }
+    
+    var pattern = new RegExp("\\bregel_over\\b");
+    function hoverRowOut(obj) {
+        obj.className = obj.className.replace(pattern, '');
     }
 </script>
 
 <style type="text/css">
     .helptekstDiv {
-        position: absolute;
-        margin-left: 40px;
-        margin-top: 4px;
-        display: none;
-        padding: 5px;
-        background-color: #eeeeee;
-        z-index: 99999;
-        color: #19619b;
-        border: 1px solid #19619b;
+    position: absolute;
+    margin-left: 40px;
+    margin-top: 4px;
+    display: none;
+    padding: 5px;
+    background-color: #eeeeee;
+    z-index: 99999;
+    color: #19619b;
+    border: 1px solid #19619b;
     }
 </style>
 
@@ -100,37 +125,28 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:if test="${!empty listThemaData}">
             <div class="topbar">
                 <div class="bar_regel"> 
-                    <div class="bar_item" style="width: 180px">Volgorde</div>
-                    <div class="bar_item" style="width: 200px"><fmt:message key="configthemadata.label"/></div>
-                    <div class="bar_item" style="width: 200px"><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></div>
-                    <div class="bar_item" style="width: 290px"><fmt:message key="configthemadata.basisregel"/></div>
+                    <div class="bar_item" style="width: 180px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['numeric'], col:0});">Volgorde</div>
+                    <div class="bar_item" style="width: 200px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['default'], col:1});"><fmt:message key="configthemadata.label"/></div>
+                    <div class="bar_item" style="width: 200px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['default'], col:2});"><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></div>
+                    <div class="bar_item" style="width: 290px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['default'], col:3});"><fmt:message key="configthemadata.basisregel"/></div>
                 </div>
             </div>
             <div class="scroll">
-                <c:forEach var="ci" varStatus="status" items="${listThemaData}">
-                    <c:choose>
-                        <c:when test="${ci.id != mainid}">
-                            <c:set var="class" value="regel_odd"/>
-                            <c:if test="${status.index % 2 == 0}">
-                                <c:set var="class" value="regel_even"/>
-                                <c:set var="classover" value="regel_over"/>
-                            </c:if>
-                        </c:when>
-                        <c:otherwise>
-                            <c:set var="class" value="regel_selected"/>
-                            <c:set var="classover" value="regel_over"/>
-                        </c:otherwise>
-                    </c:choose>								
-                    <c:url var="link" value="/configThemaData.do?edit=submit&themaDataID=${ci.id}"/>
-                    <div class="${class}" onmouseover="this.className='${classover}';" onmouseout="this.className='${class}';" onclick="javascript: window.location.href='${link}';">
-                        <div class="c_item" style="width: 180px;"><c:out value="${ci.dataorder}"/></div>
-                        <div class="c_item" style="width: 200px;"><c:out value="${ci.label}"/></div>
-                        <div class="c_item" style="width: 200px;"><c:out value="${ci.kolomnaam}"/></div>
-                        <div class="c_item" style="width: 273px; border: 0px none White;">
-                            <c:if test="${ci.basisregel}">Ja</c:if>
-                        </div>
-                    </div>
-                </c:forEach>
+                <table style="width: 100%;" cellpadding="0" cellspacing="0" id="themadatatable" class="table-autosort table-stripeclass:regel_even">
+                    <tbody>
+                        <c:forEach var="ci" varStatus="status" items="${listThemaData}">
+                            <c:url var="link" value="/configThemaData.do?edit=submit&themaDataID=${ci.id}"/>
+                            <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
+                                <td class="c_item" style="width: 180px;"><c:out value="${ci.dataorder}"/></td>
+                                <td class="c_item" style="width: 200px;"><c:out value="${ci.label}"/></td>
+                                <td class="c_item" style="width: 200px;"><c:out value="${ci.kolomnaam}"/></td>
+                                <td class="c_item" style="width: 273px; border: 0px none White;">
+                                    <c:if test="${ci.basisregel}">Ja</c:if>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             </div>
         </c:if>
     </div>
@@ -248,6 +264,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         
     </div> 
 </html:form>
+<iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0"
+        style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
 <script language="javascript">
     function popUp(URL, naam) {
         var screenwidth = 1024;
@@ -265,5 +283,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             "top = " + popuptop + ", " + 
             "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+    }
+    
+    Table.stripe(document.getElementById('themadatatable'), 'regel_even');
+    Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['numeric'], col:0});
+    if(document.getElementById('regel_selected')) {
+        document.getElementById('regel_selected').className = 'regel_selected';
     }
 </script>

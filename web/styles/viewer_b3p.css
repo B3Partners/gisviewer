@@ -576,6 +576,7 @@ ul#nav li#tab3 { margin-right: 0px; }
     font-weight: bold;
     color: White;
     padding-left: 4px;
+    cursor: pointer;
 }
 
 .c_item {

@@ -361,7 +361,7 @@ a:hover{
     display: none;
     padding: 5px;
     background-color: #eeeeee;
-    z-index: 99999;
+    z-index: 200;
     color: #19619b;
     border: 1px solid #19619b;
 }

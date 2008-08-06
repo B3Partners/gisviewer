@@ -30,6 +30,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
 
+<script type="text/javascript" src="<html:rewrite page="/scripts/jquery.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/jquery-ui-sortable.js"/>"></script>
+
 <script>
     //Wel of niet cookies
     var useCookies=true;
@@ -37,7 +40,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
     */
     var multipleActiveThemas=true;
-        //de vertraging voor het refreshen van de kaart.
+    
+    /*
+    * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis
+    * de kaart wordt na het slepen automatisch herladen na x aantal (instellen door layerDelay) seconden
+    * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
+    * 
+    * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag
+    */
+    var useSortableFunction=true;
+    var layerDelay = 5000; // instellen in ms, dus 5000 voor 5 seconden
+    
+    //de vertraging voor het refreshen van de kaart.
     var refreshDelay=1000;
     var nr = 0;
     function getNr() {
@@ -204,10 +218,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     
     var layersAan= new Array();
     
+    var activeAnalyseThemaTitle = '';
     function createLabel(container, item) {
         if(item.cluster) {
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
         } else {        
+            var analyseRadioChecked = false;
             if(item.analyse=="on"){
                 setActiveThema(item.id, item.title);
             } else if(item.analyse=="active"){
@@ -228,15 +244,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 
                 //  Added
                 var analyseRadioControleString = '<input type="radio" name="selanalysekaartlaag" value="' + item.id + '"';
-                if (activeAnalyseThemaId == item.id)
+                if (activeAnalyseThemaId == item.id) {
                     analyseRadioControleString += ' checked="checked"';
+                    activeAnalyseThemaTitle = item.title;
+                    analyseRadioChecked = true;
+                }
                 analyseRadioControleString += ' onclick="setAnalyseData(\'' + item.id + '\', \'' + item.title + '\'); activateCheckbox(\'' + item.id + '\');"';
                 analyseRadioControleString += '>';
                 var analyseRadio = document.createElement(analyseRadioControleString);
                 //  /Added                
                 
                 var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-                if(layerPos!=0)
+                if(layerPos!=0 || analyseRadioChecked)
                     checkboxControleString += ' checked="checked"';
                 checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')"'; 
                 checkboxControleString += '>';
@@ -257,8 +276,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 analyseRadio.name = 'selanalysekaartlaag';
                 analyseRadio.value = item.id;
                 analyseRadio.onclick = function(){ setAnalyseData(item.id, item.title); activateCheckbox(item.id); }
-                if (activeAnalyseThemaId == item.id)
+                if (activeAnalyseThemaId == item.id) {
                     analyseRadio.checked = true;
+                    activeAnalyseThemaTitle = item.title;
+                    analyseRadioChecked = true;
+                }
                 //  /Added 
 
                 var el2 = document.createElement('input');
@@ -266,7 +288,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 el2.type = 'checkbox';
                 el2.value = item.id;
                 el2.onclick = function(){checkboxClick(this, false, item.title);}
-                if(layerPos!=0)
+                if(layerPos!=0 || analyseRadioChecked)
                     el2.checked = true;
             }
             
@@ -768,56 +790,61 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td id="tab_container_td">
                                     <div id="tab_container">
-                                        <div id="treevak" style="display: none;" class="tabvak">
-                                            <div id="layermaindiv" style="display: none;"></div>
-                                        </div>
-                                        
-                                        <div id="volgordevak" style="display: none;" class="tabvak">
-                                            Bepaal de volgorde waarin de kaartlagen getoond worden
-                                            <form>
-                                                <div id="orderLayerBox" class="orderLayerBox"></div>
-                                                <input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" class="knop" />
-                                                <input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" class="knop" />
-                                                <input type="button" value="Herladen" onclick="refreshMapVolgorde();" class="knop" />
-                                                <input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" />
-                                            </form>
-                                        </div>
-                                        
-                                        <div id="infovak" style="display: none;" class="tabvak">
-                                            <div id="start_message">
-                                                Kies de Info-tool en klik vervolgens op een punt<br/>
-                                                op de kaart voor administratieve informatie<br/>
-                                                van het object.
+                                        <div id="tabcontainervakscroll">
+                                            <div id="treevak" style="display: none;" class="tabvak">
+                                                <div id="layermaindiv" style="display: none;"></div>
+                                            </div>
+                                            <div id="volgordevak" style="display: none;" class="tabvak">
+                                                Bepaal de volgorde waarin de kaartlagen getoond worden
+                                                <form id="volgordeForm">
+                                                    <div id="orderLayerBox" class="orderLayerBox"></div>
+                                                    <script type="text/javascript">
+                                                        if(!useSortableFunction) {
+                                                            document.write('<input type="button" value="Omhoog" onclick="javascript: moveSelectedUp()" class="knop" />');
+                                                            document.write('<input type="button" value="Omlaag" onclick="javascript: moveSelectedDown()" class="knop" />');
+                                                            document.write('<input type="button" value="Herladen" onclick="refreshMapVolgorde();" class="knop" />');
+                                                        }
+                                                    </script>
+                                                    <input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" />
+                                                </form>
                                             </div>
                                             
-                                            <div id="algdatavak" style="display: none;">
-                                                <b>RD Co&ouml;rdinaten</b><br />
-                                                <span id="rdcoords"></span><br /><br />
-                                                <b>Adres</b><br />
-                                                <span id="kadastraledata"></span>
+                                            <div id="infovak" style="display: none;" class="tabvak">
+                                                <div id="start_message">
+                                                    Kies de Info-tool en klik vervolgens op een punt<br/>
+                                                    op de kaart voor administratieve informatie<br/>
+                                                    van het object.
+                                                </div>
+                                                
+                                                <div id="algdatavak" style="display: none;">
+                                                    <b>RD Co&ouml;rdinaten</b><br />
+                                                    <span id="rdcoords"></span><br /><br />
+                                                    <b>Adres</b><br />
+                                                    <span id="kadastraledata"></span>
+                                                </div>
+                                                
+                                                <!-- input fields for search -->
+                                                <div>
+                                                    <br>
+                                                    <b>Zoek naar locatie:</b>
+                                                    <br>
+                                                    <input type="text" id="locatieveld" name="locatieveld" size="40"/>
+                                                    &nbsp;
+                                                    <input type="button" value=" Ga " onclick="getCoords();" class="knop" />
+                                                    <br>
+                                                    <div class="searchResultsClass" id="searchResults"></div>
+                                                </div>
+                                                <!-- end of search -->
                                             </div>
                                             
-                                            <!-- input fields for search -->
-                                            <div>
-                                                <br>
-                                                <b>Zoek naar locatie:</b>
-                                                <br>
-                                                <input type="text" id="locatieveld" name="locatieveld" size="40"/>
-                                                &nbsp;
-                                                <input type="button" value=" Ga " onclick="getCoords();" class="knop" />
-                                                <br>
-                                                <div class="searchResultsClass" id="searchResults"></div>
+                                            <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe">
+                                                <iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
                                             </div>
-                                            <!-- end of search -->
-                                        </div>
-                                        
-                                        <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe">
-                                            <iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
-                                        </div>
-                                        <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe">
-                                            <iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
+                                            <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe">
+                                                <iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -858,7 +885,33 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
    var dataframehoogte = '200px';
    document.getElementById('dataframediv').style.height = dataframehoogte; 
    document.getElementById('dataframe').style.height = dataframehoogte; 
-    
+   
+   function resizeTabVak(resized) {
+       var plusValue = 0;
+       if(!resized) plusValue = 3;
+       document.getElementById('tabcontainervakscroll').style.height = (document.getElementById('tab_container_td').offsetHeight + plusValue) + 'px';
+       document.getElementById('tabcontainervakscroll').style.width = document.getElementById('tab_container_td').offsetWidth + 'px';
+       var vakHeight = document.getElementById('tabcontainervakscroll').offsetHeight - 6;
+       document.getElementById('volgordeForm').style.height = (vakHeight - 30) + 'px';
+       document.getElementById('volgordevak').style.height = vakHeight + 'px';
+       document.getElementById('infovak').style.height = vakHeight + 'px';
+       document.getElementById('treevak').style.height = (vakHeight + 3) + 'px';
+   }
+   if(navigator.userAgent.indexOf("Firefox")!= -1) {
+       document.getElementById('layermaindiv').style.overflow = 'visible';
+       document.getElementById('treevak').style.overflow = 'visible';
+       document.getElementById('volgordevak').style.overflow = 'visible';
+       document.getElementById('tabcontainervakscroll').style.overflow = 'auto';
+       document.getElementById('tabcontainervakscroll').style.backgroundColor = '#183C56';
+       resizeTabVak(false);
+       
+       window.onresize = function() {  
+           document.getElementById('tabcontainervakscroll').style.height = '1px';
+           document.getElementById('tabcontainervakscroll').style.width = '1px';
+           resizeTabVak(true);
+       }
+   }
+
    function getActiveLayerId(cookiestring) {
         if(!cookiestring) return null;
         var items = cookiestring.split('##');
@@ -981,6 +1034,29 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     function moveAndIdentify(minx,miny,maxx,maxy){
         moveToExtent(minx,miny,maxx,maxy);
         doIdentify(minx,miny,maxx,maxy);
+    }
+    
+    if(useSortableFunction) {
+        $("#orderLayerBox").sortable({
+            stop:function(){
+                setTimerForReload();
+            },
+            start:function(){
+                clearTimerForReload();
+            }
+        });
+    }
+    var reloadTimer;
+    function setTimerForReload() {
+        reloadTimer = setTimeout("refreshMapVolgorde()", layerDelay);
+    }
+
+    function clearTimerForReload() {
+        clearTimeout(reloadTimer);
+    }
+    
+    if(activeAnalyseThemaTitle != '') {
+        document.getElementById('actief_thema').innerHTML = 'Actieve thema: ' + activeAnalyseThemaTitle
     }
 </script>
 

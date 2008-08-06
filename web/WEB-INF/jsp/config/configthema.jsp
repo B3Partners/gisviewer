@@ -32,6 +32,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <c:set var="focus" value="naam"/>
 
+<script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript">
     function createAdminQ() {
         if(document.getElementById('admin_query_text').value == '') {
@@ -48,12 +49,47 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         return false;
     }
     
+    var prevOpened = null;
     function showHideDiv(obj) {
-        if(obj.style.display != 'block') {
-            obj.style.display = 'block';
-        } else {
-            obj.style.display = 'none';
+        var iObj = document.getElementById('iframeBehindHelp');
+        if(prevOpened != null) {
+            prevOpened.style.display = 'none';
+            iObj.style.display = 'none';
         }
+        if(prevOpened != obj) {
+            prevOpened = obj;
+            if(obj.style.display != 'block') {
+                obj.style.display = 'block';
+                var objPos = findPos(obj);
+                iObj.style.width = obj.offsetWidth + 'px';
+                iObj.style.height = obj.offsetHeight + 'px';
+                iObj.style.left = objPos[0] + 'px';
+                iObj.style.top = objPos[1] + 'px';
+                iObj.style.display = 'block';
+            } else {
+                obj.style.display = 'none';
+            }
+        }
+    }
+    
+    function findPos(obj) {
+	var curleft = curtop = 0;
+	if (obj.offsetParent) {
+            do {
+                curleft += obj.offsetLeft;
+                curtop += obj.offsetTop;
+            } while (obj = obj.offsetParent);
+        }
+	return [curleft,curtop];
+    }
+    
+    function hoverRow(obj) {
+        obj.className += ' regel_over';
+    }
+    
+    var pattern = new RegExp("\\bregel_over\\b");
+    function hoverRowOut(obj) {
+        obj.className = obj.className.replace(pattern, '');
     }
 </script>
 
@@ -77,43 +113,34 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:if test="${!empty allThemas}">
             <div class="topbar">
                 <div class="bar_regel"> 
-                    <div class="bar_item" style="width: 40px;">Nr</div>
-                    <div class="bar_item" style="width: 358px;">Naam</div>
-                    <div class="bar_item" style="width: 30px;">Code</div>
-                    <div class="bar_item" style="width: 180px;">Admin Tabel</div>
-                    <div class="bar_item" style="width: 180px;">Spatial Tabel</div>
-                    <div class="bar_item" style="width: 68px;">Data</div>
+                    <div class="bar_item" style="width: 40px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});">Nr</div>
+                    <div class="bar_item" style="width: 358px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:1});">Naam</div>
+                    <div class="bar_item" style="width: 30px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:2});">Code</div>
+                    <div class="bar_item" style="width: 180px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:3});">Admin Tabel</div>
+                    <div class="bar_item" style="width: 180px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:4});">Spatial Tabel</div>
+                    <div class="bar_item" style="width: 68px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:5});">Data</div>
                 </div>
             </div>
             <div class="scroll">
-                <c:forEach var="ci" varStatus="status" items="${allThemas}">
-                    <c:choose>
-                        <c:when test="${ci.id != mainid}">
-                            <c:set var="class" value="regel_odd"/>
-                            <c:if test="${status.index % 2 == 0}">
-                                <c:set var="class" value="regel_even"/>
-                                <c:set var="classover" value="regel_over"/>
-                            </c:if>
-                        </c:when>
-                        <c:otherwise>
-                            <c:set var="class" value="regel_selected"/>
-                            <c:set var="classover" value="regel_over"/>
-                        </c:otherwise>
-                    </c:choose>								
-                    <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}"/>
-                    <div class="${class}" onmouseover="this.className='${classover}';" onmouseout="this.className='${class}';" onclick="javascript: window.location.href='${link}';">                            
-                        <div class="c_item" style="width: 40px;"><c:out value="${ci.belangnr}"/>&nbsp;</div>
-                        <div class="c_item" style="width: 358px;"><c:out value="${ci.naam}"/>&nbsp;</div>
-                        <div class="c_item" style="width: 30px;"><c:out value="${ci.code}"/>&nbsp;</div>
-                        <div class="c_item" style="width: 180px;"><c:out value="${ci.admin_tabel}"/>&nbsp;</div>
-                        <div class="c_item" style="width: 180px;"><c:out value="${ci.spatial_tabel}"/>&nbsp;</div>
-                        <div class="c_item" style="width: 51px; border-right: 0px none White;">
-                            <c:if test="${ci.code!='3'}">
-                                &nbsp;<html:link page="/configThemaData.do?edit=submit&themaID=${ci.id}">TD</html:link>&nbsp;
-                            </c:if>
-                        </div>
-                    </div>
-                </c:forEach>
+                <table style="width: 100%;" cellpadding="0" cellspacing="0" id="themalisttable" class="table-autosort table-stripeclass:regel_even">
+                    <tbody>
+                        <c:forEach var="ci" varStatus="status" items="${allThemas}">						
+                            <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}"/>
+                            <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
+                                <td class="c_item" style="width: 40px;"><c:out value="${ci.belangnr}"/>&nbsp;</td>
+                                <td class="c_item" style="width: 358px;"><c:out value="${ci.naam}"/>&nbsp;</td>
+                                <td class="c_item" style="width: 30px;"><c:out value="${ci.code}"/>&nbsp;</td>
+                                <td class="c_item" style="width: 180px;"><c:out value="${ci.admin_tabel}"/>&nbsp;</td>
+                                <td class="c_item" style="width: 180px;"><c:out value="${ci.spatial_tabel}"/>&nbsp;</td>
+                                <td class="c_item" style="width: 51px; border-right: 0px none White;">
+                                    <c:if test="${ci.code!='3'}">
+                                        &nbsp;<html:link page="/configThemaData.do?edit=submit&themaID=${ci.id}">TD</html:link>&nbsp;
+                                    </c:if>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             </div>
         </c:if>
     </div>
@@ -434,12 +461,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 
             </table>
         </div>
-        
     </div>
 </html:form>
+<iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0"
+        style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
 <script type="text/javascript">
     function refreshTheLists(){
         document.forms[0].refreshLists.value="do";
         document.forms[0].submit();
     }        
+    Table.stripe(document.getElementById('themalisttable'), 'regel_even');
+    Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});
+    if(document.getElementById('regel_selected')) {
+        document.getElementById('regel_selected').className = 'regel_selected';
+    }
 </script>

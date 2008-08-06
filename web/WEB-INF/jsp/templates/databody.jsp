@@ -40,6 +40,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css">
         <!-- <link href="styles/edamvolendam/viewer_ev.css" rel="stylesheet" type="text/css" > -->
         
+        <!--[if lte IE 6]>
+            <style type="text/css">
+                .admindatabody {
+                    width: 98%;
+                }
+            </style>
+        <![endif]-->
+        
         <script type="text/javascript">  
             function checkLocation() {
                 if (top.location == self.location)

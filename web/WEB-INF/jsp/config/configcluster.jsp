@@ -34,6 +34,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="onderbalk">CLUSTER CONFIG<span><tiles:insert name="loginblock"/></span></div>
 
+<script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
+<script type="text/javascript">
+    function hoverRow(obj) {
+        obj.className += ' regel_over';
+    }
+    
+    var pattern = new RegExp("\\bregel_over\\b");
+    function hoverRowOut(obj) {
+        obj.className = obj.className.replace(pattern, '');
+    }
+</script>
+
 <html:form action="/configCluster" focus="${focus}">
     <html:hidden property="action"/>
     <html:hidden property="alt_action"/>
@@ -43,30 +55,23 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:if test="${!empty allClusters}">
             <div class="topbar">
                 <div class="bar_regel"> 
-                    <div class="bar_item" style="width: 250px;">Naam</div>
-                    <div class="bar_item" style="width: 634px;">Ouder</div>
+                    <div class="bar_item" style="width: 250px;" onclick="Table.sort(document.getElementById('clustertable'), {sorttype:Sort['default'], col:0});">Naam</div>
+                    <div class="bar_item" style="width: 634px;" onclick="Table.sort(document.getElementById('clustertable'), {sorttype:Sort['default'], col:1});">Ouder</div>
                 </div>
             </div>
             <div class="scroll">
                 <c:forEach var="ci" varStatus="status" items="${allClusters}">
-                    <c:choose>
-                        <c:when test="${ci.id != mainid}">
-                            <c:set var="class" value="regel_odd"/>
-                            <c:if test="${status.index % 2 == 0}">
-                                <c:set var="class" value="regel_even"/>
-                                <c:set var="classover" value="regel_over"/>
-                            </c:if>
-                        </c:when>
-                        <c:otherwise>
-                            <c:set var="class" value="regel_selected"/>
-                            <c:set var="classover" value="regel_over"/>
-                        </c:otherwise>
-                    </c:choose>								
-                    <c:url var="link" value="/configCluster.do?edit=submit&clusterID=${ci.id}"/>
-                    <div class="${class}" onmouseover="this.className='${classover}';" onmouseout="this.className='${class}';" onclick="javascript: window.location.href='${link}';">
-                        <div class="c_item" style="width: 250px;"><c:out value="${ci.naam}"/></div>
-                        <div class="c_item" style="width: 617px; border: 0px none White;"><c:out value="${ci.parent.naam}"/></div>
-                    </div>
+                    <table style="width: 100%;" cellpadding="0" cellspacing="0" id="clustertable" class="table-autosort table-stripeclass:regel_even">
+                        <tbody>
+                            <c:forEach var="ci" varStatus="status" items="${allClusters}">						
+                                <c:url var="link" value="/configCluster.do?edit=submit&clusterID=${ci.id}"/>
+                                <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
+                                    <td class="c_item" style="width: 250px;"><c:out value="${ci.naam}"/></td>
+                                    <td class="c_item" style="width: 617px; border: 0px none White;"><c:out value="${ci.parent.naam}"/></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
                 </c:forEach>
             </div>
         </c:if>
@@ -149,3 +154,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div> 
     </div>
 </html:form>
+<script language="javascript">
+    Table.stripe(document.getElementById('clustertable'), 'regel_even');
+    Table.sort(document.getElementById('clustertable'), {sorttype:Sort['default'], col:0});
+    if(document.getElementById('regel_selected')) {
+        document.getElementById('regel_selected').className = 'regel_selected';
+    }
+</script>

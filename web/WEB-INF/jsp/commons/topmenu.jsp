@@ -77,7 +77,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:if test="${requestJSP eq 'index.do'}">
             <c:set var="stijlklasse" value="activemenulink" />
         </c:if>
-        <html:link page="/index.do" styleClass="${stijlklasse}" module="">&#155; Home</html:link>
+        <html:link page="/indexlist.do" styleClass="${stijlklasse}" module="">&#155; Home</html:link>
     </div>
 </div>
 <div class="menu_boven_logo"></div>

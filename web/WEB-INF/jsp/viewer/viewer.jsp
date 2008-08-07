@@ -772,7 +772,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                 document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
                                                 document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
                                                 document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
-                                            } else if(demogebruiker) {                   
+                                            } else if(false) {                   
                                                 document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
                                                 document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 96px;">Thema\'s</a></li>');
                                                 document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
@@ -869,7 +869,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <table class="onderbalkTable" cellpadding="0" cellspacing="0" style="margin-bottom: 3px;">
                 <tr>
                     <td class="onderbalkTableLeft">
-                        DETAILS
+                        INFORMATIE
                     </td>
                     <td class="onderbalkTableRight">
                         <span id="actief_thema">Actieve thema</span>
@@ -880,7 +880,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td width="100%">
                         <div id="dataframediv" class="dataframediv">
-                            <iframe id="dataframe" name="dataframe" frameborder="0"></iframe>
+                            <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>
                         </div>
                     </td>
                 </tr>

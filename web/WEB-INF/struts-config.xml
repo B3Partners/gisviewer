@@ -141,6 +141,7 @@
             <forward name="analyseobject" path="vieweranalyseobject"/>
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
         </action>
+        <action path="/viewerwelkom" forward="viewerwelkom"/>
         
         <action path="/etl" type="nl.b3p.gis.viewer.ETLOverviewAction">
             <forward name="success" path="etlhome"/>

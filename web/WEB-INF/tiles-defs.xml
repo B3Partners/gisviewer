@@ -53,6 +53,9 @@
     <definition name="viewermetadata" extends="databody">
         <put name="content" value="/WEB-INF/jsp/viewer/viewermetadata.jsp"/>
     </definition>
+    <definition name="viewerwelkom" extends="databody">
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerwelkom.jsp"/>
+    </definition>
     <definition name="tab" path="/WEB-INF/jsp/templates/tab.jsp"/>
     <!-- viewer tab-->
     <definition name="viewerdata" extends="tab">

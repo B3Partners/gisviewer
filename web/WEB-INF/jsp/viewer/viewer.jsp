@@ -460,12 +460,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         }else{
             layersToAdd="";
         }        
-
-        if(layerUrl.indexOf('?')> 0)
-            layerUrl+='&';
-        else
-            layerUrl+='?';
-        layerUrl+="SERVICE=WMS";
+        if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
+            if(layerUrl.indexOf('?')> 0)
+                layerUrl+='&';
+            else
+                layerUrl+='?';
+            layerUrl+="SERVICE=WMS";
+        }
         var capLayerUrl=layerUrl;
         var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"fmcLayer\" timeout=\"30\"" +
             "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
@@ -478,13 +479,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         */
         var layersArray= layersToAdd.split(",");
         for (var i=0; i < layersArray.length; i++){
-            newLayer+='<layer id="'+layersArray[i]+'">';
-            newLayer+='<visualisationselected id="';
-            newLayer+=layersArray[i]+'" ';
-            newLayer+='colorkey="id" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>'
-            newLayer+='</layer>';
+            if (layersArray[i].length> 0){
+                newLayer+='<layer id="'+layersArray[i]+'">';
+                newLayer+='<visualisationselected id="';
+                newLayer+=layersArray[i]+'" ';
+                newLayer+='colorkey="id" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>'
+                newLayer+='</layer>';
+            }
         }
-        newLayer+= "</fmc:LayerOGWMS>";
+        newLayer+= "</fmc:LayerOGWMS>";        
         if (flamingo && layerUrl!=null){            
             flamingo.call('map1','removeLayer','fmcLayer');
             flamingo.call('map1','addLayer',newLayer);

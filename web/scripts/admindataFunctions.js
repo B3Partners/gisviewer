@@ -38,6 +38,7 @@
 /**set attributevalue
  * change the value
  */
+var flamingo= parent.flamingo;
 function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
         // Leeg -> Ja
         // Nee -> Ja
@@ -70,5 +71,19 @@ function handleGetArea(str){
  * Highlight the clicked object.
  */
 function highlight(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
-    alert("do the highlight");
+    flamingo.call('map1_fmcLayer','setRecordedValues','demo_gemeenten_2006',attributeName,trim(attributeValue,' '));
+}
+
+function trim(str, chars) {
+    return ltrim(rtrim(str, chars), chars);
+}
+
+function ltrim(str, chars) {
+    chars = chars || "\\s";
+    return str.replace(new RegExp("^[" + chars + "]+", "g"), "");
+}
+
+function rtrim(str, chars) {
+    chars = chars || "\\s";
+    return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
 }

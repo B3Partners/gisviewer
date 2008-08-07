@@ -467,18 +467,23 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             layerUrl+='?';
         layerUrl+="SERVICE=WMS";
         var capLayerUrl=layerUrl;
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"OG2\" timeout=\"30\"" +
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"fmcLayer\" timeout=\"30\"" +
             "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
             "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl + 
             "\"styles=\""+
             "\" layers=\""+layersToAdd+
+            "\" color_layers=\""+layersToAdd+
             "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
-        /* add the highlight layers.
-        Voor de presentatie kunnen we een vaste waarde hier plaatsen. Ligt even aan de tijd. Voorbeeld:
-* <layer id="gemeenten_2006">
-*     <visualisationselected id="gemeenten_2006" colorkey="gm_code" geomname="the_geom" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>
-* </layer>
+        /* add the highlight layer properties.       
         */
+        var layersArray= layersToAdd.split(",");
+        for (var i=0; i < layersArray.length; i++){
+            newLayer+='<layer id="'+layersArray[i]+'">';
+            newLayer+='<visualisationselected id="';
+            newLayer+=layersArray[i]+'" ';
+            newLayer+='colorkey="id" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>'
+            newLayer+='</layer>';
+        }
         newLayer+= "</fmc:LayerOGWMS>";
         if (flamingo && layerUrl!=null){            
             flamingo.call('map1','removeLayer','fmcLayer');

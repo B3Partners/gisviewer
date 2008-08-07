@@ -816,7 +816,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                             document.write('<input type="button" value="Herladen" onclick="refreshMapVolgorde();" class="knop" />');
                                                         }
                                                     </script>
-                                                    <input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" />
+                                                    <%--input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" /--%>
                                                 </form>
                                             </div>
                                             

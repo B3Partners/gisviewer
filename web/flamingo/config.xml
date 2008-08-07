@@ -34,6 +34,9 @@
             <fmc:ToolPan left="60"/>
             <fmc:ToolMeasure left="90"/>
             <fmc:ToolSuperIdentify left="120"/>
+            <fmc:ButtonFull left="150" listento="map1"/> 
+            <fmc:ButtonPrev left="180" listento="map1"/>
+            <fmc:ButtonNext left="210" listento="map1"/>
         </fmc:ToolGroup>
         <fmc:Coordinates listento="map1" left="80%" top="20%" decimals="0">
             <style id=".xy" font-family="arial" font-size="11" />
@@ -60,7 +63,7 @@
                 </tpc:Layer>
             </tpc:GIS>
         </tpc:EditMap>        
-        <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extent="1200,30400,28000,62000">
+        <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extenthistory="10" extent="1200,30400,28000,62000">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>
         </fmc:Map>                
     </fmc:Container>

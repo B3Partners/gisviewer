@@ -503,9 +503,18 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         if (connection==null)
             connection=sess.connection();
         try {
+            String statementString="select * from "+analyseGeomTabel+
+                    " where "+analyseGeomIdColumn+" = ";
+            String newAnalyseGeomId="\'"+analyseGeomId+"\'";
+            try{
+                int intGeomId=Integer.parseInt(analyseGeomId);
+                newAnalyseGeomId=""+intGeomId;
+            }catch(Exception e){
+            }
+            statementString+=newAnalyseGeomId;
+            log.info(statementString);
             PreparedStatement statement =
-                    connection.prepareStatement("select * from "+analyseGeomTabel+
-                    " where "+analyseGeomIdColumn+" = "+analyseGeomId);
+                    connection.prepareStatement(statementString);
             PreparedStatement statement2 =
                     connection.prepareStatement("select kolomnaam from thema_data where thema = "+
                     themaid+" order by dataorder");

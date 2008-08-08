@@ -439,12 +439,23 @@ public class GetViewerDataAction extends BaseGisAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         if (stype != null) {
             String query = null;
+            String columnName=geselecteerdObjectThema.getSpatial_admin_ref();
+            if (columnName==null || columnName.length()<=0){
+                columnName=geselecteerdObjectThema.getSpatial_pk();
+            }
+            if (columnName==null || columnName.length()<=0){
+                columnName=geselecteerdObjectThema.getAdmin_pk();
+            }
+            if (columnName==null || columnName.length()<=0){
+                columnName="id";
+            }
             if("POINT".equalsIgnoreCase(stype)) {
+                
                 query = SpatialUtil.withinQuery(
                         sfunction,
                         t.getSpatial_tabel(),
                         geselecteerdObjectThema.getSpatial_tabel(),
-                        t.getSpatial_admin_ref(),
+                        columnName,
                         analyseGeomId,
                         extraWhere);
             } else if("LINESTRING".equalsIgnoreCase(stype)) {
@@ -452,17 +463,19 @@ public class GetViewerDataAction extends BaseGisAction {
                         sfunction,
                         t.getSpatial_tabel(),
                         geselecteerdObjectThema.getSpatial_tabel(),
+                        columnName,
                         analyseGeomId,
                         sfactor,
                         extraWhere);
             } else if("POLYGON".equalsIgnoreCase(stype)) {
                 query = SpatialUtil.intersectionArea(
                         sfunction,
-                        t.getSpatial_tabel(),
+                        t.getSpatial_tabel(),                        
                         geselecteerdObjectThema.getSpatial_tabel(),
+                        columnName,
                         analyseGeomId,
                         sfactor,
-                        extraWhere);
+                        extraWhere);                
             }
             
             log.debug(query);
@@ -549,15 +562,29 @@ public class GetViewerDataAction extends BaseGisAction {
             relationFunction="Intersects";
         else
             log.error("Deze analyse/zoek_optie is niet geimplementeerd!");
-        
+        String columnName=geselecteerdObjectThema.getSpatial_admin_ref();
+        if (columnName==null || columnName.length()<=0){
+            columnName=geselecteerdObjectThema.getSpatial_pk();
+        }
+        if (columnName==null || columnName.length()<=0){
+            columnName=geselecteerdObjectThema.getAdmin_pk();
+        }
+        if (columnName==null || columnName.length()<=0){
+            columnName="id";
+        }
         String query= SpatialUtil.hasRelationQuery(
                 t.getSpatial_tabel(), //tb1
+                "the_geom",
                 geselecteerdObjectThema.getSpatial_tabel(), //tb2
+                "the_geom",
                 relationFunction,
                 t.getSpatial_admin_ref(),
+                columnName,
                 analyseGeomId,
                 extraWhere);
         
+        //return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId, extraCriteriaString);
+        log.info(query);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
         if (t.getConnectie()!=null){

@@ -585,8 +585,8 @@ public class SpatialUtil {
      *
      */
     // <editor-fold defaultstate="" desc="public static String intersectionArea(String operator,String tb1, String tb2, String id,int divide, String extraCriteria)">
-    public static String intersectionArea(String operator,String tb1, String tb2, String id, int divide, String extraCriteria) {
-        return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide, extraCriteria);
+    public static String intersectionArea(String operator,String tb1, String tb2, String id2, String id, int divide, String extraCriteria) {
+        return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom",id2,id,divide, extraCriteria);
     }
     // </editor-fold>
     
@@ -612,7 +612,14 @@ public class SpatialUtil {
         StringBuffer sq = new StringBuffer();
         sq.append("select ("+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+"))))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
-        sq.append("where tb2."+idColumnName+" = "+id+" ");
+        sq.append("where tb2."+idColumnName+" = ");
+        String sqlId="\'"+id+"\'";
+        try{
+            int intId=Integer.parseInt(id);
+            sqlId=""+intId;            
+        }catch (Exception e){            
+        }
+        sq.append(sqlId+" ");  
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
@@ -635,8 +642,8 @@ public class SpatialUtil {
      *
      */
     // <editor-fold defaultstate="" desc="static public String intersectionLength(String operator,String tb1,String tb2,String id,int divide, String extraCriteria)">
-    static public String intersectionLength(String operator, String tb1, String tb2, String id, int divide, String extraCriteria){
-        return intersectionLength(operator,tb1,"the_geom",tb2,"the_geom","id",id,divide, extraCriteria);
+    static public String intersectionLength(String operator, String tb1, String tb2, String id2, String id, int divide, String extraCriteria){
+        return intersectionLength(operator,tb1,"the_geom",tb2,"the_geom",id2,id,divide, extraCriteria);
     }
     // </editor-fold>
     
@@ -662,7 +669,14 @@ public class SpatialUtil {
         StringBuffer sq = new StringBuffer();
         sq.append("select "+operator+"(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
-        sq.append("where tb2."+idColumnName+" = "+id+" ");
+        sq.append("where tb2."+idColumnName+" = ");
+        String sqlId="\'"+id+"\'";
+        try{
+            int intId=Integer.parseInt(id);
+            sqlId=""+intId;            
+        }catch (Exception e){            
+        }
+        sq.append(sqlId+" ");        
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
@@ -716,7 +730,14 @@ public class SpatialUtil {
         StringBuffer sq= new StringBuffer();
         sq.append("select tb1."+saf+" ");
         sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
-        sq.append("where tb2."+idColumnName+" = "+analyseObjectId+" ");
+        sq.append("where tb2."+idColumnName+" = ");
+        String sqlAnalyseObjectId="\'"+analyseObjectId+"\'";
+        try{
+            int inObjectId=Integer.parseInt(analyseObjectId);
+            sqlAnalyseObjectId=""+inObjectId;            
+        }catch (Exception e){            
+        }
+        sq.append(sqlAnalyseObjectId+" ");
         sq.append("and "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+") ");
         sq.append(extraCriteriaString + " limit 50");
         return sq.toString();

@@ -801,7 +801,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <tr>
                                 <td id="tab_container_td">
                                     <div id="tab_container">
-                                        <div id="tabcontainervakscroll">
+                                        <script type="text/javascript">
+                                            if(navigator.userAgent.indexOf("Firefox")!= -1) {
+                                                document.write('<div id="tabcontainervakscroll">');
+                                            }
+                                        </script>
                                             <div id="treevak" style="display: none;" class="tabvak">
                                                 <div id="layermaindiv" style="display: none;"></div>
                                             </div>
@@ -854,7 +858,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                             <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe">
                                                 <iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
                                             </div>
-                                        </div>
+                                        <script type="text/javascript">
+                                            if(navigator.userAgent.indexOf("Firefox")!= -1) {
+                                                document.write('</div>');
+                                            }
+                                        </script>
                                     </div>
                                 </td>
                             </tr>

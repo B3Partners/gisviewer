@@ -205,7 +205,21 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </script>
     </c:when>
     <c:otherwise>
-        Er is geen admin data gevonden!
+        <div id="content_style">
+    <table class="kolomtabel">
+        <tr>
+            <td valign="top">
+                <div class="inleiding">
+                    <h2>Er is geen informatie gevonden.</h2>
+                    <p>
+                        Mogelijk is er op de door u gezochte plaats geen informatie beschikbaar. 
+                        Of uw selectie criteria leveren niks op.
+                    </p>
+                </div>
+           </td>           
+        </tr>
+    </table>
+</div>
     </c:otherwise>
 </c:choose>
 

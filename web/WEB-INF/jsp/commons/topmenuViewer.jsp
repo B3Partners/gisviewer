@@ -37,8 +37,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <table width="100%" height="100%;" cellpadding="0" cellspacing="0">
     <tr>
-        <td width="60%" id="menubalklogoboven"></td>
-        <td width="40%" align="right" id="menubalkmenucontent">
+        <td width="40%" id="menubalklogoboven"></td>
+        <td width="60%" align="right" id="menubalkmenucontent">
             <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
             <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
             

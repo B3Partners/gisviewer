@@ -60,19 +60,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </div>
             </div>
             <div class="scroll">
-                <c:forEach var="ci" varStatus="status" items="${allClusters}">
-                    <table style="width: 100%;" cellpadding="0" cellspacing="0" id="clustertable" class="table-autosort table-stripeclass:regel_even">
-                        <tbody>
-                            <c:forEach var="ci" varStatus="status" items="${allClusters}">						
-                                <c:url var="link" value="/configCluster.do?edit=submit&clusterID=${ci.id}"/>
-                                <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
-                                    <td class="c_item" style="width: 250px;"><c:out value="${ci.naam}"/></td>
-                                    <td class="c_item" style="width: 617px; border: 0px none White;"><c:out value="${ci.parent.naam}"/></td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </c:forEach>
+                <table style="width: 100%;" cellpadding="0" cellspacing="0" id="clustertable" class="table-autosort table-stripeclass:regel_even">
+                    <tbody>
+                        <c:forEach var="ci" varStatus="status" items="${allClusters}">						
+                            <c:url var="link" value="/configCluster.do?edit=submit&clusterID=${ci.id}"/>
+                            <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
+                                <td class="c_item" style="width: 250px;"><c:out value="${ci.naam}"/></td>
+                                <td class="c_item" style="width: 617px; border: 0px none White;"><c:out value="${ci.parent.naam}"/></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             </div>
         </c:if>
     </div>

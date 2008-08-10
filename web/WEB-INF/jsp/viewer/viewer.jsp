@@ -638,8 +638,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         legendimg.src = myImage.src;
         legendimg.onerror=myImage.onerror;        
         legendimg.style.border = '0px none White';
-        if(myImage.height != '0') legendimg.alt = name;
-        if(myImage.height != '0') legendimg.title = name;
+        if(parseInt(myImage.height) > 2) legendimg.alt = name;
+        if(parseInt(myImage.height) > 2) legendimg.title = name;
         
 
         var spanEl = document.createElement("span");
@@ -653,7 +653,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         div.title = name;
         div.className="orderLayerClass";
         div.onclick=function(){selectLayer(this);};
-        if (parseInt(myImage.height) == 0){
+        if (parseInt(myImage.height) < 3){
             div.appendChild(spanEl);
         }
         div.appendChild(legendimg);

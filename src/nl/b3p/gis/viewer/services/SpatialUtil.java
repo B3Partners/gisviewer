@@ -359,25 +359,42 @@ public class SpatialUtil {
      * @param srid int
      *
      * @return String
-     *
+     * @deprecated Use maxdistance(kolom,tabel,geomcolumn, x, y, distance,srid)
      */
     // <editor-fold defaultstate="" desc="static public String maxDistanceQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
     static public String maxDistanceQuery(String kolom, String tabel, double x, double y, double distance, int srid) {
+        return maxDistanceQuery(kolom,tabel,"the_geom",x,y,distance,srid);
+    }    
+    // </editor-fold>
+    /**
+     * DOCUMENT ME!
+     *
+     * @param kolom String
+     * @param tabel String
+     * @param geomKolom String
+     * @param x double
+     * @param y double
+     * @param distance double
+     * @param srid int
+     *
+     * @return String
+     *
+     */
+    // <editor-fold defaultstate="" desc="static public String maxDistanceQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
+    static public String maxDistanceQuery(String kolom, String tabel, String geomKolom, double x, double y, double distance, int srid) {
         StringBuffer sq = new StringBuffer();
-        sq.append("select ");
+        sq.append("select \"");
         sq.append(kolom);
-        sq.append(" from ");
+        sq.append("\" from \"");
         sq.append(tabel);
-        sq.append(" tbl where ");
+        sq.append("\" tbl where ");
         sq.append(" distance( ");
-        sq.append(" tbl.the_geom, ");
+        sq.append(" tbl."+geomKolom+", ");
         sq.append(createClickGeom(x, y, srid));
         sq.append(") < ");
         sq.append(distance);
         return sq.toString();
     }
-    // </editor-fold>
-    
     /**
      * DOCUMENT ME!
      *
@@ -388,19 +405,38 @@ public class SpatialUtil {
      * @param srid int
      *
      * @return String
-     *
+     * @deprecated use intersectQuery(String kolom, String tabel, String geomColunn,double x, double y, int srid)
      */
     // <editor-fold defaultstate="" desc="static public String intersectQuery(String kolom, String tabel, double x, double y, int srid)">
     static public String intersectQuery(String kolom, String tabel, double x, double y, int srid) {
+        return intersectQuery(kolom,tabel,"the_geom",x,y,srid);
+    }
+    // </editor-fold>
+    
+    /**
+     * DOCUMENT ME!
+     *
+     * @param kolom String
+     * @param tabel String
+     * @param geomKolom String
+     * @param x double
+     * @param y double
+     * @param srid int
+     *
+     * @return String
+     *
+     */
+    // <editor-fold defaultstate="" desc="static public String intersectQuery(String kolom, String tabel, double x, double y, int srid)">
+    static public String intersectQuery(String kolom, String tabel, String geomKolom,double x, double y, int srid) {
         StringBuffer sq = new StringBuffer();
-        sq.append("select ");
+        sq.append("select \"");
         sq.append(kolom);
-        sq.append(" from ");
+        sq.append("\" from \"");
         sq.append(tabel);
-        sq.append(" tbl where ");
+        sq.append("\" tbl where ");
         sq.append(" Intersects( ");
         sq.append(createClickGeom(x, y, srid));
-        sq.append(", tbl.the_geom");
+        sq.append(", tbl."+geomKolom);
         sq.append(") = true ");
         return sq.toString();
     }
@@ -427,14 +463,40 @@ public class SpatialUtil {
         return InfoSelectQuery(kolom, tabel, coords, distance, srid, null, null);
     }
     // </editor-fold>
-    
+    /**
+     * 
+     * @param kolom
+     * @param tabel
+     * @param coords
+     * @param distance
+     * @param srid
+     * @param organizationcodekey
+     * @param organizationcode
+     * @return infoselect query
+     * @deprecated use InfoSelectQuery(String kolom, String tabel, String geomKolom, double[] coords, double distance, int srid, String organizationcodekey, String organizationcode)
+     */
     static public String InfoSelectQuery(String kolom, String tabel, double[] coords, double distance, int srid, String organizationcodekey, String organizationcode) {
+        return InfoSelectQuery(kolom,tabel,"the_geom",coords,distance,srid,organizationcodekey,organizationcode);    
+    }
+    /**
+     * 
+     * @param kolom
+     * @param tabel
+     * @param geomKolom
+     * @param coords
+     * @param distance
+     * @param srid
+     * @param organizationcodekey
+     * @param organizationcode
+     * @return infoselect query
+     */
+    static public String InfoSelectQuery(String kolom, String tabel, String geomKolom, double[] coords, double distance, int srid, String organizationcodekey, String organizationcode) {
         StringBuffer sq = new StringBuffer();
-        sq.append("select ");
+        sq.append("select \"");
         sq.append(kolom);
-        sq.append(" from ");
+        sq.append("\" from \"");
         sq.append(tabel);
-        sq.append(" tbl where ");
+        sq.append("\" tbl where ");
         
         if (organizationcode != null){
             sq.append("tbl." + organizationcodekey + " = '" + organizationcode + "'");
@@ -443,21 +505,21 @@ public class SpatialUtil {
         
         sq.append("(");
         if (coords.length==2){
-            sq.append("(Dimension(tbl.the_geom) < 2) ");
+            sq.append("(Dimension(tbl."+geomKolom+") < 2) ");
             sq.append("and ");
-            sq.append("(Distance(tbl.the_geom, ");
+            sq.append("(Distance(tbl."+geomKolom+", ");
             sq.append(createClickGeom(coords, srid));
             sq.append(") < ");
             sq.append(distance);
             sq.append(")");
             sq.append(") or (");
         }
-        sq.append("(Dimension(tbl.the_geom) = 2)");
+        sq.append("(Dimension(tbl."+geomKolom+") = 2)");
         sq.append(" and ");
         sq.append("(Intersects(");
         sq.append(createClickGeom(coords, srid));
-        sq.append(", tbl.the_geom) = true)");
-        sq.append(") order by Distance(tbl.the_geom, ");
+        sq.append(", tbl."+geomKolom+") = true)");
+        sq.append(") order by Distance(tbl."+geomKolom+", ");
         sq.append(createClickGeom(coords, srid));
         sq.append(") LIMIT 500");
         
@@ -478,10 +540,25 @@ public class SpatialUtil {
      * @param srid int
      *
      * @return String
-     *
+     * @deprecated use closestSelectQuery(ArrayList cols, String tabel, String geomKolom, double x, double y, double distance, int srid)
      */
     // <editor-fold defaultstate="" desc="static public String closestSelectQuery(ArrayList cols, String tabel, double x, double y, double distance, int srid)">
     static public String closestSelectQuery(ArrayList cols, String tabel, double x, double y, double distance, int srid) {
+        return closestSelectQuery(cols,tabel,"the_geom",x,y,distance,srid);
+    }
+    // </editor-fold>
+    /**
+     * 
+     * @param cols
+     * @param tabel
+     * @param geomKolom
+     * @param x
+     * @param y
+     * @param distance
+     * @param srid
+     * @return
+     */
+    static public String closestSelectQuery(ArrayList cols, String tabel, String geomKolom, double x, double y, double distance, int srid) {
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
         Iterator it = cols.iterator();
@@ -490,22 +567,20 @@ public class SpatialUtil {
             sq.append(it.next());
             sq.append(", ");
         }
-        sq.append("(Distance(tbl.the_geom, ");
+        sq.append("(Distance(tbl."+geomKolom+", ");
         sq.append(createClickGeom(x, y, srid));
         sq.append(")) as dist ");
-        sq.append("from ");
+        sq.append("from \"");
         sq.append(tabel);
-        sq.append(" tbl where ");
+        sq.append("\" tbl where ");
         sq.append(" distance( ");
-        sq.append(" tbl.the_geom, ");
+        sq.append(" tbl."+geomKolom+", ");
         sq.append(createClickGeom(x, y, srid));
         sq.append(") < ");
         sq.append(distance);
         sq.append(" order by dist limit 1");
         return sq.toString();
     }
-    // </editor-fold>
-    
     /**
      * DOCUMENT ME!
      *
@@ -514,14 +589,24 @@ public class SpatialUtil {
      * @param param String
      *
      * @return String
-     *
+     * @deprecated use postalcodeRDCoordinates(String tabel, String geomKolom, String searchparam, String param)
      */
     // <editor-fold defaultstate="" desc="static public String postalcodeRDCoordinates(String tabel, String searchparam, String param)">
     static public String postalcodeRDCoordinates(String tabel, String searchparam, String param) {
-        return "select distinct " + searchparam + " as naam, astext(tbl.the_geom) as pointsresult from " +
-                tabel + " tbl where lower(tbl." + searchparam + ") = lower('" + param + "')";
+        return postalcodeRDCoordinates(tabel,"the_geom",searchparam,param);
     }
     // </editor-fold>
+    /** 
+     * @param tabel
+     * @param geomKolom
+     * @param searchparam
+     * @param param
+     * @return
+     */
+    static public String postalcodeRDCoordinates(String tabel, String geomKolom, String searchparam, String param) {
+        return "select distinct " + searchparam + " as naam, astext(tbl."+geomKolom+") as pointsresult from " +
+                tabel + " tbl where lower(tbl." + searchparam + ") = lower('" + param + "')";
+    }
     
     /**
      * DOCUMENT ME!
@@ -531,14 +616,24 @@ public class SpatialUtil {
      * @param param String
      *
      * @return String
-     *
+     * @deprecated use cityRDCoordinates(String tabel, String geomKolom,String searchparam, String param)
      */
     // <editor-fold defaultstate="" desc="static public String cityRDCoordinates(String tabel, String searchparam, String param)">
     static public String cityRDCoordinates(String tabel, String searchparam, String param) {
-        return "select distinct " + searchparam + " as naam, astext(centroid(tbl.the_geom)) as pointsresult from " +
-                tabel + " tbl where lower(tbl." + searchparam + ") like lower('%" + param + "%')";
+        return cityRDCoordinates(tabel,"the_geom",searchparam,param);
     }
     // </editor-fold>
+    /**
+     * @param tabel
+     * @param geomKolom
+     * @param searchparam
+     * @param param
+     * @return
+     */
+    static public String cityRDCoordinates(String tabel, String geomKolom,String searchparam, String param) {
+        return "select distinct " + searchparam + " as naam, astext(centroid(tbl."+geomKolom+")) as pointsresult from " +
+                tabel + " tbl where lower(tbl." + searchparam + ") like lower('%" + param + "%')";
+    }
     
     /**
      * DOCUMENT ME!
@@ -549,11 +644,23 @@ public class SpatialUtil {
      * @param n_nr String
      *
      * @return String
-     *
+     * @deprecated use 
      */
     // <editor-fold defaultstate="" desc="static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr)">
     static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr) {
-        return  "select " + searchparam + " as naam, astext(hecto.the_geom) as pointsresult from " + tabel + " hecto where (" +
+        return wolHMRDCoordinates(tabel,"the_geom",searchparam,hm,n_nr);
+    }
+    // </editor-fold>
+    /**
+     * @param tabel
+     * @param geomKolom
+     * @param searchparam
+     * @param hm
+     * @param n_nr
+     * @return
+     */
+    static public String wolHMRDCoordinates(String tabel, String geomKolom, String searchparam, String hm, String n_nr) {
+        return  "select " + searchparam + " as naam, astext(hecto."+geomKolom+") as pointsresult from " + tabel + " hecto where (" +
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")*" +
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")) = " +
                 "(select min("+
@@ -570,7 +677,6 @@ public class SpatialUtil {
          * AND hecto.n_nr = 'N261'
          */
     }
-    // </editor-fold>
     
     /**
      * DOCUMENT ME!
@@ -582,7 +688,7 @@ public class SpatialUtil {
      * @param extraCriteria String
      *
      * @return String
-     *
+     * @deprecated use intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2, String idColumnName, String id, int divide, String extraCriteria)
      */
     // <editor-fold defaultstate="" desc="public static String intersectionArea(String operator,String tb1, String tb2, String id,int divide, String extraCriteria)">
     public static String intersectionArea(String operator,String tb1, String tb2, String id2, String id, int divide, String extraCriteria) {
@@ -611,7 +717,7 @@ public class SpatialUtil {
             String idColumnName, String id, int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select ("+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+"))))/"+divide+" as result ");
-        sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
+        sq.append("from \""+tb1+"\" tb1, \""+tb2+"\" tb2 ");
         sq.append("where tb2."+idColumnName+" = ");
         String sqlId="\'"+id+"\'";
         try{
@@ -639,7 +745,7 @@ public class SpatialUtil {
      * @param extraCriteria String
      *
      * @return String
-     *
+     * @deprecated intersectionLength(String operator, String tb1, String geomColumn1, String tb2, String geomColumn2, String idColumnName, String id, int divide, String extraCriteria)
      */
     // <editor-fold defaultstate="" desc="static public String intersectionLength(String operator,String tb1,String tb2,String id,int divide, String extraCriteria)">
     static public String intersectionLength(String operator, String tb1, String tb2, String id2, String id, int divide, String extraCriteria){
@@ -668,7 +774,7 @@ public class SpatialUtil {
             String idColumnName, String id, int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
         sq.append("select "+operator+"(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
-        sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
+        sq.append("from \""+tb1+"\" tb1, \""+tb2+"\" tb2 ");
         sq.append("where tb2."+idColumnName+" = ");
         String sqlId="\'"+id+"\'";
         try{
@@ -700,7 +806,7 @@ public class SpatialUtil {
      * @param extraCriteriaString String
      *
      * @return String
-     *
+     * @deprecated use hasRelationQuery(String tb1, String geomColumn1, String tb2, String geomColumn2, String relationFunction, String saf, String idColumnName, String analyseObjectId, String extraCriteriaString)
      */
     // <editor-fold defaultstate="" desc="static public String hasRelationQuery(String tb1,String tb2, String relationFunction,String saf, String analyseObjectId, String extraCriteriaString)">
     static public String hasRelationQuery(String tb1, String tb2, String relationFunction, String saf, String analyseObjectId, String extraCriteriaString){
@@ -729,7 +835,7 @@ public class SpatialUtil {
             String relationFunction, String saf, String idColumnName, String analyseObjectId, String extraCriteriaString){
         StringBuffer sq= new StringBuffer();
         sq.append("select tb1."+saf+" ");
-        sq.append("from "+tb1+" tb1, "+tb2+" tb2 ");
+        sq.append("from \""+tb1+"\" tb1, \""+tb2+"\" tb2 ");
         sq.append("where tb2."+idColumnName+" = ");
         String sqlAnalyseObjectId="\'"+analyseObjectId+"\'";
         try{
@@ -754,7 +860,7 @@ public class SpatialUtil {
      * @param extraCriteria String
      *
      * @return String
-     *
+     * @deprecated use withinQuery(String select, String table1, String geomColumn1, String table2, String geomColumn2, String tableIdColumn1, String tableId1, String extraCriteria)
      */
     static public String withinQuery(String select, String table1, String table2, String tableIdColumn1,
             String tableId1, String extraCriteria){
@@ -780,8 +886,8 @@ public class SpatialUtil {
         StringBuffer sq = new StringBuffer();
         sq.append("select ");
         sq.append(select+" ");
-        sq.append("from ");
-        sq.append(table1+ " tb1, "+table2+" tb2 where ");
+        sq.append("from \"");
+        sq.append(table1+ "\" tb1, \""+table2+"\" tb2 where ");
         sq.append("tb2."+tableIdColumn1+" = "+tableId1+" ");
         sq.append("and Within(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
         return sq.toString();
@@ -791,8 +897,8 @@ public class SpatialUtil {
         StringBuffer sq= new StringBuffer();
         sq.append("select Area(");
         sq.append(geomColumn);
-        sq.append(") from ");
-        sq.append(tableName+" tb where tb.");
+        sq.append(") from \"");
+        sq.append(tableName+"\" tb where tb.");
         sq.append(attributeName);
         sq.append(" = '");
         sq.append(compareValue);
@@ -805,13 +911,13 @@ public class SpatialUtil {
             return null;
         }
         StringBuffer sq = new StringBuffer();
-        sq.append("update ");
+        sq.append("update \"");
         sq.append(tableName);
-        sq.append(" set ");
+        sq.append("\" set \"");
         sq.append(attributeName);
-        sq.append(" = ? where ");
+        sq.append("\" = ? where \"");
         sq.append(keyName);
-        sq.append(" = ? ;");
+        sq.append("\" = ? ;");
 
         boolean orgAutoCommit = conn.getAutoCommit();
         conn.setAutoCommit(false);

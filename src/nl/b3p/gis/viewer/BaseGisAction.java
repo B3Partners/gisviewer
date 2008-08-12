@@ -407,12 +407,13 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         try {
             String organizationcodekey = t.getOrganizationcodekey();
             String organizationcode = getOrganizationCode(request);
+            String geomColumnName=SpatialUtil.getTableGeomName(t, connection);
             String q = null;
             if (organizationcodekey != null && organizationcodekey.length() > 0 && 
                     organizationcode != null && organizationcode.length() > 0){
-                q = SpatialUtil.InfoSelectQuery(saf, sptn, coords, distance, srid, organizationcodekey, organizationcode);   
+                q = SpatialUtil.InfoSelectQuery(saf, sptn,geomColumnName, coords, distance, srid, organizationcodekey, organizationcode);   
             }else{
-                q = SpatialUtil.InfoSelectQuery(saf, sptn, coords, distance, srid);
+                q = SpatialUtil.InfoSelectQuery(saf, sptn,geomColumnName, coords, distance, srid);
             } 
             
             PreparedStatement statement = connection.prepareStatement(q);
@@ -555,13 +556,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      * @param columns String[]
      */
     // <editor-fold defaultstate="" desc="private void executeQuery(String query, Session sess, StringBuffer result, String[] columns)">
-    protected void executeQuery(String query, Session sess, StringBuffer result, String[] columns, Themas t) throws NotSupportedException, SQLException{
-        Connection connection = null;
-        if (t.getConnectie()!=null){            
-            connection=t.getConnectie().getJdbcConnection();
-        }
-        if (connection==null)
-            connection=sess.connection();
+    protected void executeQuery(String query, Session sess, StringBuffer result, String[] columns, Connection connection) throws NotSupportedException, SQLException{        
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             try {

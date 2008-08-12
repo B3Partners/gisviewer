@@ -219,63 +219,76 @@ public class GetLocationData {
      * @param distance
      * @param srid
      * @return
+     * 
+     * TODO: ook een WFS thema moet mogelijk worden.
      */
-    public String[] getData(String x_input, String y_input, String[] cols, String sptn, double distance, int srid) {
-
-        double x, y;
-        String rdx, rdy;
-        try {
-            x = Double.parseDouble(x_input);
-            y = Double.parseDouble(y_input);
-            rdx = Long.toString(Math.round(x));
-            rdy = Long.toString(Math.round(y));
-        } catch (NumberFormatException nfe) {
-            return new String[]{nfe.getMessage()};
-        }
-
-        if (cols == null || cols.length == 0) {
-            return new String[]{rdx, rdy, "No cols"};
-        }
-        if (sptn == null || sptn.length() == 0) {
-            return new String[]{rdx, rdy, "No sptn"};
-        }
-        if (srid == 0) {
-            srid = 28992; // RD-new
-        }
-        ArrayList columns = new ArrayList();
-        for (int i = 0; i < cols.length; i++) {
-            columns.add(cols[i]);
-        }
-
+    public String[] getData(String x_input, String y_input, String[] cols, int themaId, double distance, int srid) throws SQLException {
         String[] results = new String[cols.length + 3];
-        results[0] = rdx;
-        results[1] = rdy;
-        results[2] = "";
-
-        SessionFactory sf = HibernateUtil.getSessionFactory();
-        Session sess = sf.openSession();
-        Connection connection = sess.connection();
-
         try {
-            String q = SpatialUtil.closestSelectQuery(columns, sptn, x, y, distance, srid);
-            PreparedStatement statement = connection.prepareStatement(q);
+            double x, y;
+            String rdx, rdy;
             try {
-                ResultSet rs = statement.executeQuery();
-                if (rs.next()) {
-                    results[2] = rs.getString("dist");
-                    for (int i = 0; i < cols.length; i++) {
-                        results[i + 3] = rs.getString(cols[i]);
-                    }
-                }
-            } finally {
-                statement.close();
+                x = Double.parseDouble(x_input);
+                y = Double.parseDouble(y_input);
+                rdx = Long.toString(Math.round(x));
+                rdy = Long.toString(Math.round(y));
+            } catch (NumberFormatException nfe) {
+                return new String[]{nfe.getMessage()};
             }
-        } catch (SQLException ex) {
-            log.error("", ex);
-        } finally {
-            sess.close();
-        }
 
+            if (cols == null || cols.length == 0) {
+                return new String[]{rdx, rdy, "No cols"};
+            }
+            /*if (sptn == null || sptn.length() == 0) {
+                return new String[]{rdx, rdy, "No sptn"};
+            }*/
+            if (srid == 0) {
+                srid = 28992; // RD-new
+            }
+            ArrayList columns = new ArrayList();
+            for (int i = 0; i < cols.length; i++) {
+                columns.add(cols[i]);
+            }
+
+            results[0] = rdx;
+            results[1] = rdy;
+            results[2] = "";
+
+            Session sess = HibernateUtil.getSessionFactory().openSession();
+            Themas t= (Themas) sess.get(Themas.class, new Integer(themaId));
+            Connection connection = null;
+            if (t.getConnectie()!=null){            
+                connection=t.getConnectie().getJdbcConnection();
+            }
+            if (connection==null)
+                connection=sess.connection();            
+            try {
+                String geomColumn = SpatialUtil.getTableGeomName(t, connection);
+                String sptn= t.getSpatial_tabel();
+                if (sptn==null){
+                    sptn=t.getAdmin_tabel();
+                }
+                String q = SpatialUtil.closestSelectQuery(columns, sptn, geomColumn, x, y, distance, srid);
+                PreparedStatement statement = connection.prepareStatement(q);
+                try {
+                    ResultSet rs = statement.executeQuery();
+                    if (rs.next()) {
+                        results[2] = rs.getString("dist");
+                        for (int i = 0; i < cols.length; i++) {
+                            results[i + 3] = rs.getString(cols[i]);
+                        }
+                    }
+                } finally {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                log.error("", ex);
+            } finally {
+                sess.close();
+            }
+        } catch (Exception e) {
+            log.error("", e);
+        }
         return results;
     }
 
@@ -337,7 +350,7 @@ public class GetLocationData {
                     if (bboxArray == null || bboxArray.length != 5) {
                         continue;
                     }
-                    double minx, maxx, miny, maxy;
+                    double minx,  maxx,  miny,  maxy;
                     try {
                         minx = Double.parseDouble(bboxArray[0].split(" ")[0]);
                         maxx = Double.parseDouble(bboxArray[2].split(" ")[0]);

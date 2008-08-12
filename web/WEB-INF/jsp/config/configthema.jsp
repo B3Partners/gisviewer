@@ -38,7 +38,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         if(document.getElementById('admin_query_text').value == '') {
             var admin_tabel = document.getElementById('admin_tabel_select').options[document.getElementById('admin_tabel_select').selectedIndex].value;
             var admin_pk = document.getElementById('admin_pk_select').options[document.getElementById('admin_pk_select').selectedIndex].value;
-            var query = "select * from " + admin_tabel + " where " + admin_pk + " = ?";
+            var query = 'select * from "' + admin_tabel + '" where "' + admin_pk + '" = ?';
             document.getElementById('admin_query_text').value = query;
         }
     }

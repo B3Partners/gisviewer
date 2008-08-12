@@ -438,6 +438,13 @@ public class GetViewerDataAction extends BaseGisAction {
         StringBuffer result = new StringBuffer("");
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         if (stype != null) {
+            Connection connection = null;
+            if (t.getConnectie()!=null){            
+                connection=t.getConnectie().getJdbcConnection();
+            }
+            if (connection==null)
+                connection=sess.connection();
+            
             String query = null;
             String columnName=geselecteerdObjectThema.getSpatial_admin_ref();
             if (columnName==null || columnName.length()<=0){
@@ -449,20 +456,33 @@ public class GetViewerDataAction extends BaseGisAction {
             if (columnName==null || columnName.length()<=0){
                 columnName="id";
             }
-            if("POINT".equalsIgnoreCase(stype)) {
-                
+            String geomTable1=t.getSpatial_tabel();
+            if (geomTable1==null || geomTable1.length()==0){
+                geomTable1=t.getAdmin_tabel();
+            }
+            String geomTable2=geselecteerdObjectThema.getSpatial_tabel();
+            if (geomTable2==null || geomTable2.length()==0){
+                geomTable2=geselecteerdObjectThema.getAdmin_tabel();
+            }
+            String geomName1=SpatialUtil.getTableGeomName(t,connection);
+            String geomName2=SpatialUtil.getTableGeomName(geselecteerdObjectThema,connection);
+            if("POINT".equalsIgnoreCase(stype)) {                
                 query = SpatialUtil.withinQuery(
                         sfunction,
-                        t.getSpatial_tabel(),
-                        geselecteerdObjectThema.getSpatial_tabel(),
+                        geomTable1,
+                        geomName1,
+                        geomTable2,
+                        geomName1,
                         columnName,
                         analyseGeomId,
                         extraWhere);
             } else if("LINESTRING".equalsIgnoreCase(stype)) {
                 query = SpatialUtil.intersectionLength(
                         sfunction,
-                        t.getSpatial_tabel(),
-                        geselecteerdObjectThema.getSpatial_tabel(),
+                        geomTable1,
+                        geomName1,
+                        geomTable2,
+                        geomName2,
                         columnName,
                         analyseGeomId,
                         sfactor,
@@ -470,14 +490,15 @@ public class GetViewerDataAction extends BaseGisAction {
             } else if("POLYGON".equalsIgnoreCase(stype)) {
                 query = SpatialUtil.intersectionArea(
                         sfunction,
-                        t.getSpatial_tabel(),                        
-                        geselecteerdObjectThema.getSpatial_tabel(),
+                        geomTable1,   
+                        geomName1,
+                        geomTable2,
+                        geomName2,
                         columnName,
                         analyseGeomId,
                         sfactor,
                         extraWhere);                
             }
-            
             log.debug(query);
             result.append("<b>" + sdesc + " " + t.getNaam());
             
@@ -487,7 +508,7 @@ public class GetViewerDataAction extends BaseGisAction {
             }
             result.append(": ");
             
-            executeQuery(query, sess, result, scolumns, t);
+            executeQuery(query, sess, result, scolumns, connection);
             result.append("</b>");
         } else {
             result.append("<b>Niet mogelijk met dit thema-geometry-type<br/></b>");

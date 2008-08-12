@@ -57,14 +57,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     function getNr() {
         return nr++;
     }
-
+    /*
+     *Het id van het thema dat wordt gebruikt om de dichtsbij zijnde adres te tonen.
+     */
+    var adresThemaId=undefined;
     var allActiveLayers="";
     var layerUrl=null;
     function doAjaxRequest(point_x, point_y) {
-        var infoArray = new Array();
-        infoArray[0] = "gm_naam";
-        infoArray[1] = "bu_naam";
-        JMapData.getData(point_x, point_y, infoArray, "wijk_2006_cbs", 100, 28992, handleGetData);
+        if (adresThemaId!=undefined){
+            var infoArray = new Array();
+            infoArray[0] = "gm_naam";
+            infoArray[1] = "bu_naam";
+            JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
+        }
     }
 
     function handleGetData(str) {

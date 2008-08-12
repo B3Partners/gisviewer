@@ -157,12 +157,15 @@ public class SpatialUtil {
      * @return int
      *
      */
-    static public String getTableGeomName(Themas t, Connection conn) throws SQLException{
-        DatabaseMetaData dbmd =conn.getMetaData();
+    static public String getTableGeomName(Themas t, Connection conn) throws SQLException{        
         String table= t.getSpatial_tabel();
         if (table==null){
             table=t.getAdmin_tabel();
-        }
+        }        
+        return getTableGeomName(table,conn);
+    }
+    static public String getTableGeomName(String table,Connection conn) throws SQLException{
+        DatabaseMetaData dbmd =conn.getMetaData();
         ResultSet rs = dbmd.getColumns(null,null,table,null);
         while (rs.next()){
             String typenaam=rs.getString("TYPE_NAME");
@@ -453,7 +456,7 @@ public class SpatialUtil {
      * @param srid int
      *
      * @return String
-     *
+     * @deprecated uses deprecated function. use: InfoSelectQuery(String kolom, String tabel, String geomKolom, double[] coords, double distance, int srid)
      */
     // <editor-fold defaultstate="" desc="static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
     // <editor-fold defaultstate="" desc="static public String InfoSelectQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
@@ -463,6 +466,13 @@ public class SpatialUtil {
         return InfoSelectQuery(kolom, tabel, coords, distance, srid, null, null);
     }
     // </editor-fold>
+    
+    static public String InfoSelectQuery(String kolom, String tabel, String geomKolom, double[] coords, double distance, int srid) {
+        // Als thema punten of lijnen dan afstand
+        // Als thema polygon dan Intersects
+        return InfoSelectQuery(kolom, tabel, geomKolom,coords, distance, srid, null, null);
+    }
+    
     /**
      * 
      * @param kolom

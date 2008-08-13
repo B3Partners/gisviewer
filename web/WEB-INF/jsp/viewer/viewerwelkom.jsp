@@ -27,9 +27,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <tr>
             <td valign="top">
                 <div class="inleiding">
-                    <h2>B3P GIS Suite Demo</h2>
+                    <h2>B3P GIS Suite</h2>
                     <p>
-                        Deze B3P GIS Suite demo toont de mogelijkheden van de GIS viewer. 
+                        Deze B3P GIS Suite toont de mogelijkheden van de GIS viewer. 
                         Op deze plaats vindt u later korte informatie en uitleg over
                         het active thema van de kaart. Ook kunnen hier een logo en andere
                         lay-out elementen van de opdrachtgever verwerkt worden.

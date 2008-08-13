@@ -574,15 +574,36 @@ function getCoordsCallbackFunction(values){
 function addLayerToVolgorde(name, id, legendURL) {      
     var myImage = new Image();
     myImage.name = name;
-    myImage.onerror=new Function("this.style.height='0'; this.style.width='0';");   
+    myImage.id=id;    
+    myImage.onerror=imageOnerror;   
     myImage.onload=imageOnload;
     myImage.src = legendURL;   
-    myImage.id=id;
-    
-    
+     
+}
+function imageOnerror(){
+    this.style.height='0'; 
+    this.style.width='0';
+    this.height=0;
+    this.width=0;
+    var spanEl = document.createElement("span");
+    spanEl.innerHTML = ' ' + this.name + '<br />';
+    spanEl.style.color = 'Black';
+    spanEl.style.fontWeight = 'bold';
+
+    var div = document.createElement("div");
+    div.name=this.id;
+    div.id=this.id;
+    div.title = this.name;
+    div.className="orderLayerClass";
+    div.onclick=function(){selectLayer(this);};
+    div.appendChild(spanEl);    
+    if(!orderLayerBox.hasChildNodes()) {
+        orderLayerBox.appendChild(div);
+    } else {
+        orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
+    }
 }
 function imageOnload(){
-    //alert("imageOnload");
     var legendimg = document.createElement("img");
     legendimg.src = this.src;
     legendimg.onerror=this.onerror;        
@@ -618,7 +639,7 @@ function imageOnload(){
     }
 }
 
-function removeLayerFromVolgorde(name, id) {
+function removeLayerFromVolgorde(name, id) {    
     var orderLayers=orderLayerBox.childNodes;
     orderLayerBox.removeChild(document.getElementById(id));
 }

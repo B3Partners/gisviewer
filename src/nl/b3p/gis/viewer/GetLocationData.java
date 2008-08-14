@@ -28,6 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Themas;
@@ -43,7 +44,7 @@ import org.hibernate.Transaction;
 public class GetLocationData {
 
     private static final Log log = LogFactory.getLog(GetLocationData.class);
-
+    private static int maxSearchResults=25;
     public GetLocationData() {
     }
 
@@ -240,7 +241,7 @@ public class GetLocationData {
                 return new String[]{rdx, rdy, "No cols"};
             }
             /*if (sptn == null || sptn.length() == 0) {
-                return new String[]{rdx, rdy, "No sptn"};
+            return new String[]{rdx, rdy, "No sptn"};
             }*/
             if (srid == 0) {
                 srid = 28992; // RD-new
@@ -255,18 +256,19 @@ public class GetLocationData {
             results[2] = "";
 
             Session sess = HibernateUtil.getSessionFactory().openSession();
-            Themas t= (Themas) sess.get(Themas.class, new Integer(themaId));
+            Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
             Connection connection = null;
-            if (t.getConnectie()!=null){            
-                connection=t.getConnectie().getJdbcConnection();
+            if (t.getConnectie() != null) {
+                connection = t.getConnectie().getJdbcConnection();
             }
-            if (connection==null)
-                connection=sess.connection();            
+            if (connection == null) {
+                connection = sess.connection();
+            }
             try {
                 String geomColumn = SpatialUtil.getTableGeomName(t, connection);
-                String sptn= t.getSpatial_tabel();
-                if (sptn==null){
-                    sptn=t.getAdmin_tabel();
+                String sptn = t.getSpatial_tabel();
+                if (sptn == null) {
+                    sptn = t.getAdmin_tabel();
                 }
                 String q = SpatialUtil.closestSelectQuery(columns, sptn, geomColumn, x, y, distance, srid);
                 PreparedStatement statement = connection.prepareStatement(q);
@@ -292,108 +294,139 @@ public class GetLocationData {
         return results;
     }
 
-    public ArrayList getMapCoords(String waarde, String[] cols, String sptn, double distance, int srid) {
-
+    public ArrayList getMapCoords(String waarde, String[] colomns, int[] themaIds, double distance, int srid) {
         ArrayList coords = new ArrayList();
-
-        if (cols == null || cols.length == 0) {
+        if (colomns.length != themaIds.length) {
+            log.error("Aantal kolommen en themas is niet gelijk");
             MapCoordsBean mbc = new MapCoordsBean();
-            mbc.setNaam("No cols");
+            mbc.setNaam("Zoeker is verkeerd geconfigureerd");
             coords.add(mbc);
             return coords;
         }
-
         waarde = waarde.replaceAll("\\'", "''");
-
-        StringBuffer q = new StringBuffer();
-        q.append("select distinct ");
-        q.append(cols[0]);
-        for (int i = 1; i < cols.length; i++) {
-            q.append(",");
-            q.append(cols[i]);
-        }
-        q.append(", astext(Envelope(tbl.the_geom)) as bbox from ");
-        q.append(sptn);
-        q.append(" tbl where (");
-
-        q.append(" lower(tbl.");
-        q.append(cols[0]);
-        q.append(") like lower('%");
-        q.append(waarde);
-        q.append("%')");
-        for (int i = 1; i < cols.length; i++) {
-            q.append(" or");
-            q.append(" lower(tbl.");
-            q.append(cols[i]);
-            q.append(") like lower('%");
-            q.append(waarde);
-            q.append("%')");
-        }
-        q.append(")");
-
-        SessionFactory sf = HibernateUtil.getSessionFactory();
-        Session sess = sf.openSession();
-        Connection connection = sess.connection();
-
+        Session sess = null;
         try {
-            PreparedStatement statement = connection.prepareStatement(q.toString());
-            try {
-                ResultSet rs = statement.executeQuery();
-                int loopnum = 0;
-                while (rs.next() && loopnum < 15) {
-
-                    //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
-                    String bbox = rs.getString("bbox");
-                    bbox = bbox.replaceAll("POLYGON\\(\\(", "");
-                    bbox = bbox.replaceAll("\\)\\)", "");
-                    String[] bboxArray = bbox.split(",");
-                    if (bboxArray == null || bboxArray.length != 5) {
-                        continue;
-                    }
-                    double minx,  maxx,  miny,  maxy;
-                    try {
-                        minx = Double.parseDouble(bboxArray[0].split(" ")[0]);
-                        maxx = Double.parseDouble(bboxArray[2].split(" ")[0]);
-                        miny = Double.parseDouble(bboxArray[0].split(" ")[1]);
-                        maxy = Double.parseDouble(bboxArray[2].split(" ")[1]);
-                    } catch (NumberFormatException nfe) {
-                        return null;
-                    }
-
-                    if (Math.abs(minx - maxx) < 1) {
-                        maxx = minx + distance;
-                    }
-                    if (Math.abs(miny - maxy) < 1) {
-                        maxy = miny + distance;
-                    }
-                    StringBuffer naam = new StringBuffer();
-                    naam.append(rs.getString(cols[0]));
-                    for (int i = 1; i < cols.length; i++) {
-                        naam.append(", ");
-                        naam.append(rs.getString(cols[i]));
-                    }
-
+            sess = HibernateUtil.getSessionFactory().openSession();
+            for (int ti = 0; ti < themaIds.length; ti++) {
+                String[] cols = colomns[ti].split(",");
+                if (cols == null || cols.length == 0) {
                     MapCoordsBean mbc = new MapCoordsBean();
-                    mbc.setNaam(naam.toString());
-                    mbc.setMinx(Double.toString(minx));
-                    mbc.setMiny(Double.toString(miny));
-                    mbc.setMaxx(Double.toString(maxx));
-                    mbc.setMaxy(Double.toString(maxy));
+                    mbc.setNaam("No cols");
                     coords.add(mbc);
-                    loopnum++;
+                    return coords;
                 }
-            } finally {
-                statement.close();
-            }
-        } catch (SQLException ex) {
-            log.error("", ex);
-        } finally {
-            sess.close();
-        }
+                Connection connection = null;
+                try {
+                    Themas t = (Themas) sess.get(Themas.class, new Integer(themaIds[ti]));
+                    if (t.getConnectie() != null) {
+                        connection = t.getConnectie().getJdbcConnection();
+                    }
+                    if (connection == null) {
+                        connection = sess.connection();
+                    }
+                    String sptn = t.getSpatial_tabel();
+                    String geomcolomn = SpatialUtil.getTableGeomName(t, connection);
+                    if (sptn == null || sptn.length() == 0) {
+                        sptn = t.getAdmin_tabel();
+                    }
+                    StringBuffer q = new StringBuffer();
+                    q.append("select distinct ");
+                    
+                    for (int i = 0; i < cols.length; i++) {
+                        if (cols[i]!=null && cols[i].length()>0){
+                            if (i!=0)
+                                q.append(",");
+                            q.append("\""+cols[i]+"\"");
+                        }
+                    }
+                    q.append(", astext(Envelope(tbl.");
+                    q.append(geomcolomn);
+                    q.append(")) as bbox from \"");
+                    q.append(sptn);
+                    q.append("\" tbl where (");
+                    for (int i = 0; i < cols.length; i++) {
+                        if (i!=0)
+                            q.append(" or");
+                        q.append(" lower(tbl.");
+                        q.append("\""+cols[i]+"\"");
+                        q.append(") like lower('%");
+                        q.append(waarde);
+                        q.append("%')");
+                    }
+                    if (maxSearchResults>0){
+                        q.append(") LIMIT ");                    
+                        q.append(maxSearchResults);
+                    }
+                    PreparedStatement statement = connection.prepareStatement(q.toString());
+                    try {
+                        ResultSet rs = statement.executeQuery();
+                        //int loopnum = 0;
+                        while (rs.next() && coords.size()<=maxSearchResults) {
 
+                            //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
+                            String bbox = rs.getString("bbox");
+                            bbox = bbox.replaceAll("POLYGON\\(\\(", "");
+                            bbox = bbox.replaceAll("\\)\\)", "");
+                            String[] bboxArray = bbox.split(",");
+                            if (bboxArray == null || bboxArray.length != 5) {
+                                continue;
+                            }
+                            double minx, maxx, miny, maxy;
+                            try {
+                                minx = Double.parseDouble(bboxArray[0].split(" ")[0]);
+                                maxx = Double.parseDouble(bboxArray[2].split(" ")[0]);
+                                miny = Double.parseDouble(bboxArray[0].split(" ")[1]);
+                                maxy = Double.parseDouble(bboxArray[2].split(" ")[1]);
+                            } catch (NumberFormatException nfe) {
+                                return null;
+                            }
+
+                            if (Math.abs(minx - maxx) < 1) {
+                                maxx = minx + distance;
+                            }
+                            if (Math.abs(miny - maxy) < 1) {
+                                maxy = miny + distance;
+                            }
+                            StringBuffer naam = new StringBuffer();
+                            for (int i = 0; i < cols.length; i++) {
+                                if (rs.getString(cols[i]) != null) {
+                                    if (i != 0) {
+                                        naam.append(",");
+                                    }
+                                    naam.append(rs.getString(cols[i]));
+                                }
+                            }
+                            MapCoordsBean mbc = new MapCoordsBean();
+                            mbc.setNaam(naam.toString());
+                            mbc.setMinx(Double.toString(minx));
+                            mbc.setMiny(Double.toString(miny));
+                            mbc.setMaxx(Double.toString(maxx));
+                            mbc.setMaxy(Double.toString(maxy));
+                            coords.add(mbc);
+                        }
+                    } finally {
+                        statement.close();
+                    }
+                } catch (SQLException ex) {
+                    log.error("", ex);
+                } finally {
+                    try {
+                        if (connection != null) {
+                            connection.close();
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        } finally {
+            if (sess != null) {
+                sess.close();
+            }
+        }
         if (!coords.isEmpty()) {
             return coords;
         }
         return null;
     }
+    //}catch(Exception )
 }

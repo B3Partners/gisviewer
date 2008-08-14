@@ -50,10 +50,33 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     //de vertraging voor het refreshen van de kaart.
     var refreshDelay=1000;
     var nr = 0;
+    
     /*
      *Het id van het thema dat wordt gebruikt om de dichtsbij zijnde adres te tonen.
      */
-    var adresThemaId=undefined;
+    var adresThemaId=7;
+    /*
+     * De kolommen van het thema dat moet worden getoond als er een identify wordt gedaan.
+     */
+    var infoArray = new Array();
+    infoArray[0] = "straatnaam";
+    infoArray[1] = "huisnr";
+    
+    /*
+     * Geef hier de thema nummers op waarop gezocht moet kunnen worden.
+     */
+    var zoekThemaIds = new Array();
+    zoekThemaIds[0]=7;
+    zoekThemaIds[1]=9;
+    /*
+     * Geef hier per thema op op welke kolommen gezocht moet worden. Moet het voor een thema op meerdere kolommen
+     * geeft dan de kolommen gescheiden door een komma. Let wel op. De distinct zoekopdracht wordt over
+     * beide kolommen gedaan en de bbox van de geom. Wil je dit niet geef dan meerdere malen het zelfde thema 
+     * op met elke keer een andere kolom.
+     */
+    var zoekKolommen = new Array();
+    zoekKolommen[0]= "straatnaam,naambedrijf";
+    zoekKolommen[1]= "PNR";
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>

@@ -8,10 +8,7 @@ var activeAnalyseThemaTitle = '';
 var checkboxArray = new Array();
 var timeouts=0;
 function doAjaxRequest(point_x, point_y) {
-    if (adresThemaId!=undefined){
-        var infoArray = new Array();
-        infoArray[0] = "gm_naam";
-        infoArray[1] = "bu_naam";
+    if (adresThemaId!=undefined){        
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
     }
 }
@@ -538,13 +535,11 @@ function eraseCookie(name) {
 }
 
 function getCoords() {
-    var waarde = document.getElementById("locatieveld").value;
-    document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
-        
-    var infoArray = new Array();
-    infoArray[0] = "gm_naam";
-    infoArray[1] = "bu_naam";
-    JMapData.getMapCoords(waarde, infoArray, "wijk_2006_cbs", 1000, 28992, getCoordsCallbackFunction);
+    if (zoekThemaIds.length>0){
+      var waarde = document.getElementById("locatieveld").value;
+      document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
+      JMapData.getMapCoords(waarde, zoekKolommen, zoekThemaIds, 1000, 28992, getCoordsCallbackFunction);
+    }
 }
 
 function getCoordsCallbackFunction(values){
@@ -553,11 +548,11 @@ function getCoordsCallbackFunction(values){
     if (values!=null && values.length > 0) {
         if (values.length > 1){
             var displayLength = values.length;
-            if (displayLength<6) {
+            if (displayLength<25) {
                 sResult = "<br><b>Meerdere resultaten gevonden:<b><ol>";
             } else {
-                displayLength = 6;
-                sResult = "<br><b>Er worden slechts 6 resultaten weergegeven:<b><ol>";
+                displayLenght=25;
+                sResult = "<br><b>Meer dan 25 resultaten gevonden. Er worden slechts 25 resultaten weergegeven:<b><ol>";
             }
             for (var i =0; i < displayLength; i++){
                 sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a></li>";

@@ -392,7 +392,7 @@ public class SpatialUtil {
         sq.append(tabel);
         sq.append("\" tbl where ");
         sq.append(" distance( ");
-        sq.append(" tbl."+geomKolom+", ");
+        sq.append(" tbl.\""+geomKolom+"\", ");
         sq.append(createClickGeom(x, y, srid));
         sq.append(") < ");
         sq.append(distance);
@@ -439,8 +439,8 @@ public class SpatialUtil {
         sq.append("\" tbl where ");
         sq.append(" Intersects( ");
         sq.append(createClickGeom(x, y, srid));
-        sq.append(", tbl."+geomKolom);
-        sq.append(") = true ");
+        sq.append(", tbl.\""+geomKolom);
+        sq.append("\") = true ");
         return sq.toString();
     }
     // </editor-fold>
@@ -509,15 +509,15 @@ public class SpatialUtil {
         sq.append("\" tbl where ");
         
         if (organizationcode != null){
-            sq.append("tbl." + organizationcodekey + " = '" + organizationcode + "'");
+            sq.append("tbl.\"" + organizationcodekey + "\" = '" + organizationcode + "'");
             sq.append(" and ");
         }
         
         sq.append("(");
         if (coords.length==2){
-            sq.append("(Dimension(tbl."+geomKolom+") < 2) ");
+            sq.append("(Dimension(tbl.\""+geomKolom+"\") < 2) ");
             sq.append("and ");
-            sq.append("(Distance(tbl."+geomKolom+", ");
+            sq.append("(Distance(tbl.\""+geomKolom+"\", ");
             sq.append(createClickGeom(coords, srid));
             sq.append(") < ");
             sq.append(distance);
@@ -526,7 +526,7 @@ public class SpatialUtil {
         }
         sq.append("Intersects(");
         sq.append(createClickGeom(coords, srid));
-        sq.append(", tbl."+geomKolom+") = true");
+        sq.append(", tbl.\""+geomKolom+"\") = true");
         sq.append(") order by Distance(tbl."+geomKolom+", ");
         sq.append(createClickGeom(coords, srid));
         sq.append(") LIMIT 500");
@@ -571,18 +571,18 @@ public class SpatialUtil {
         sq.append("select ");
         Iterator it = cols.iterator();
         while (it.hasNext()) {
-            sq.append("tbl.");
+            sq.append("tbl.\"");
             sq.append(it.next());
-            sq.append(", ");
+            sq.append("\", ");
         }
-        sq.append("(Distance(tbl."+geomKolom+", ");
+        sq.append("(Distance(tbl.\""+geomKolom+"\", ");
         sq.append(createClickGeom(x, y, srid));
         sq.append(")) as dist ");
         sq.append("from \"");
         sq.append(tabel);
         sq.append("\" tbl where ");
         sq.append(" distance( ");
-        sq.append(" tbl."+geomKolom+", ");
+        sq.append(" tbl.\""+geomKolom+"\", ");
         sq.append(createClickGeom(x, y, srid));
         sq.append(") < ");
         sq.append(distance);
@@ -724,9 +724,9 @@ public class SpatialUtil {
     static public String intersectionArea(String operator,String tb1,String geomColumn1,String tb2, String geomColumn2,
             String idColumnName, String id, int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
-        sq.append("select ("+operator+"(area(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+"))))/"+divide+" as result ");
+        sq.append("select ("+operator+"(area(Intersection(tb1.\""+geomColumn1+"\",tb2.\""+geomColumn2+"\"))))/"+divide+" as result ");
         sq.append("from \""+tb1+"\" tb1, \""+tb2+"\" tb2 ");
-        sq.append("where tb2."+idColumnName+" = ");
+        sq.append("where tb2.\""+idColumnName+"\" = ");
         String sqlId="\'"+id+"\'";
         try{
             int intId=Integer.parseInt(id);
@@ -737,7 +737,7 @@ public class SpatialUtil {
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
-        sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
+        sq.append("and intersects(tb1.\""+geomColumn1+"\",tb2.\""+geomColumn2+"\")" + extraCriteria);
         return sq.toString();
     }
     // </editor-fold>
@@ -781,9 +781,9 @@ public class SpatialUtil {
     static public String intersectionLength(String operator, String tb1, String geomColumn1, String tb2, String geomColumn2,
             String idColumnName, String id, int divide, String extraCriteria){
         StringBuffer sq = new StringBuffer();
-        sq.append("select "+operator+"(length(Intersection(tb1."+geomColumn1+",tb2."+geomColumn2+")))/"+divide+" as result ");
+        sq.append("select "+operator+"(length(Intersection(tb1.\""+geomColumn1+"\",tb2."+geomColumn2+")))/"+divide+" as result ");
         sq.append("from \""+tb1+"\" tb1, \""+tb2+"\" tb2 ");
-        sq.append("where tb2."+idColumnName+" = ");
+        sq.append("where tb2.\""+idColumnName+"\" = ");
         String sqlId="\'"+id+"\'";
         try{
             int intId=Integer.parseInt(id);
@@ -794,7 +794,7 @@ public class SpatialUtil {
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
-        sq.append("and intersects(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
+        sq.append("and intersects(tb1.\""+geomColumn1+"\",tb2.\""+geomColumn2+"\")" + extraCriteria);
         return sq.toString();
     }
     // </editor-fold>
@@ -842,9 +842,9 @@ public class SpatialUtil {
     static public String hasRelationQuery(String tb1, String geomColumn1, String tb2, String geomColumn2,
             String relationFunction, String saf, String idColumnName, String analyseObjectId, String extraCriteriaString){
         StringBuffer sq= new StringBuffer();
-        sq.append("select tb1."+saf+" ");
+        sq.append("select tb1.\""+saf+"\" ");
         sq.append("from \""+tb1+"\" tb1, \""+tb2+"\" tb2 ");
-        sq.append("where tb2."+idColumnName+" = ");
+        sq.append("where tb2.\""+idColumnName+"\" = ");
         String sqlAnalyseObjectId="\'"+analyseObjectId+"\'";
         try{
             int inObjectId=Integer.parseInt(analyseObjectId);
@@ -852,7 +852,7 @@ public class SpatialUtil {
         }catch (Exception e){            
         }
         sq.append(sqlAnalyseObjectId+" ");
-        sq.append("and "+relationFunction+"(tb1."+geomColumn1+", tb2."+geomColumn2+") ");
+        sq.append("and "+relationFunction+"(tb1.\""+geomColumn1+"\", tb2.\""+geomColumn2+"\") ");
         sq.append(extraCriteriaString + " limit 50");
         return sq.toString();
     }
@@ -896,19 +896,19 @@ public class SpatialUtil {
         sq.append(select+" ");
         sq.append("from \"");
         sq.append(table1+ "\" tb1, \""+table2+"\" tb2 where ");
-        sq.append("tb2."+tableIdColumn1+" = "+tableId1+" ");
-        sq.append("and Within(tb1."+geomColumn1+",tb2."+geomColumn2+")" + extraCriteria);
+        sq.append("tb2.\""+tableIdColumn1+"\" = "+tableId1+" ");
+        sq.append("and Within(tb1.\""+geomColumn1+"\",tb2.\""+geomColumn2+"\")" + extraCriteria);
         return sq.toString();
     }
     
     public static String getAreaQuery(String tableName, String geomColumn, String attributeName, String compareValue) {
         StringBuffer sq= new StringBuffer();
-        sq.append("select Area(");
+        sq.append("select Area(\"");
         sq.append(geomColumn);
-        sq.append(") from \"");
-        sq.append(tableName+"\" tb where tb.");
+        sq.append("\") from \"");
+        sq.append(tableName+"\" tb where tb.\"");
         sq.append(attributeName);
-        sq.append(" = '");
+        sq.append("\" = '");
         sq.append(compareValue);
         sq.append("';");
         return sq.toString();

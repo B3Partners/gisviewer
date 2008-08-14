@@ -524,11 +524,9 @@ public class SpatialUtil {
             sq.append(")");
             sq.append(") or (");
         }
-        sq.append("(Dimension(tbl."+geomKolom+") = 2)");
-        sq.append(" and ");
-        sq.append("(Intersects(");
+        sq.append("Intersects(");
         sq.append(createClickGeom(coords, srid));
-        sq.append(", tbl."+geomKolom+") = true)");
+        sq.append(", tbl."+geomKolom+") = true");
         sq.append(") order by Distance(tbl."+geomKolom+", ");
         sq.append(createClickGeom(coords, srid));
         sq.append(") LIMIT 500");

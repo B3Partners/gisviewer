@@ -908,13 +908,21 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      *Compare 2 thema datalists voor het tonen in de admindata. (dus niet volledige vergelijking maar alleen op label en basisregel)
      */
     public boolean compareThemaDataLists(List list1, List list2) {
+        int basisRegelTeller1=0;
+        int basisRegelTeller2=0;
         for (int i1=0; i1 < list1.size(); i1++){
             ThemaData td1 = (ThemaData)list1.get(i1);
-            if (td1.isBasisregel() && td1.getLabel()!=null){
+            if (td1.isBasisregel()){
+                basisRegelTeller1++;
+            }
+            if (td1.isBasisregel() && td1.getLabel()!=null){                
                 boolean bevatGelijke=false;
                 for (int i2=0; i2 < list2.size(); i2++){
                     ThemaData td2 = (ThemaData)list2.get(i2);                
-                    if (td1.isBasisregel()==td2.isBasisregel() && td1.getLabel().equalsIgnoreCase(td2.getLabel())){
+                    if (td2.isBasisregel()){
+                        basisRegelTeller2++;
+                    }
+                    if (td2.isBasisregel() && td1.getLabel().equalsIgnoreCase(td2.getLabel())){
                         bevatGelijke=true;
                         break;
                     }
@@ -924,6 +932,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 }
             }
         }
-        return true;
+        if (basisRegelTeller1==basisRegelTeller2)
+            return true;    
+        else
+            return false;
     }
 }

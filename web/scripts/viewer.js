@@ -619,42 +619,6 @@ function imageOnload(){
       document.getElementById(this.id).appendChild(legendimg);
     }
 }
-/*function imageOnload2(){    
-    var legendimg = document.createElement("img");
-    legendimg.src = this.src;
-    legendimg.onerror=this.onerror;        
-    legendimg.style.border = '0px none White';
-    
-    if(parseInt(this.height) > 5){
-        legendimg.alt = this.name;  
-    } 
-    if(parseInt(this.height) > 5){
-        legendimg.title = this.name;  
-    }        
-
-    var spanEl = document.createElement("span");
-    spanEl.innerHTML = ' ' + this.name + '<br />';
-    spanEl.style.color = 'Black';
-    spanEl.style.fontWeight = 'bold';
-
-    var div = document.createElement("div");
-    div.name=this.id;
-    div.id=this.id;
-    div.title = this.name;
-    div.className="orderLayerClass";
-    div.onclick=function(){selectLayer(this);};
-    if (parseInt(this.height) <= 5){
-        div.appendChild(spanEl);
-    }else{
-        div.appendChild(legendimg);
-    }
-    if(!orderLayerBox.hasChildNodes()) {
-        orderLayerBox.appendChild(div);
-    } else {
-        orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
-    }    
-}*/
-
 function removeLayerFromVolgorde(name, id) {    
     var orderLayers=orderLayerBox.childNodes;
     orderLayerBox.removeChild(document.getElementById(id));

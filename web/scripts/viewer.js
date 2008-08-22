@@ -328,12 +328,17 @@ function checkboxClick(obj, dontRefresh, obj_name) {
             addActiveThema(obj.value);
         }
         if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
-        var legendURL=""+kburl;
-        if(legendURL.indexOf('?')> 0)
-            legendURL+='&';
-        else
-            legendURL+='?';
-        legendURL +='SERVICE=WMS&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;            
+        var legendURL="";
+        if (obj.theItem.wmslegendlayer!=undefined){
+          legendURL+=kburl;
+          if(legendURL.indexOf('?')> 0)
+              legendURL+='&';
+          else
+              legendURL+='?';
+          legendURL +='SERVICE=WMS&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;            
+        }else{
+            legendURL=undefined;
+        }
         addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers, legendURL);
             
         if(checkboxArray.length > 0) {
@@ -566,39 +571,55 @@ function getCoordsCallbackFunction(values){
     searchResults.innerHTML=sResult;
 }
 
-function addLayerToVolgorde(name, id, legendURL) {      
+function addLayerToVolgorde(name, id, legendURL) {        
     var myImage = new Image();
     myImage.name = name;
     myImage.id=id;    
     myImage.onerror=imageOnerror;   
     myImage.onload=imageOnload;
-    myImage.src = legendURL;   
-     
-}
-function imageOnerror(){
-    this.style.height='0'; 
-    this.style.width='0';
-    this.height=0;
-    this.width=0;
+    
     var spanEl = document.createElement("span");
-    spanEl.innerHTML = ' ' + this.name + '<br />';
+    spanEl.innerHTML = ' ' + name + '<br />';
     spanEl.style.color = 'Black';
     spanEl.style.fontWeight = 'bold';
 
     var div = document.createElement("div");
-    div.name=this.id;
-    div.id=this.id;
-    div.title = this.name;
-    div.className="orderLayerClass";
-    div.onclick=function(){selectLayer(this);};
+    div.name=id;
+    div.id=id;
+    div.title =name;
+    div.className="orderLayerClass";    
     div.appendChild(spanEl);    
     if(!orderLayerBox.hasChildNodes()) {
         orderLayerBox.appendChild(div);
     } else {
         orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
     }
+    if (legendURL==undefined){
+      myImage.onerror();
+    }else{
+      myImage.src = legendURL;   
+    }     
+    div.onclick=function(){selectLayer(this);};
 }
-function imageOnload(){
+function imageOnerror(){
+    this.style.height='0'; 
+    this.style.width='0';
+    this.height=0;
+    this.width=0;
+    
+}
+function imageOnload(){ 
+    if (parseInt(this.height) > 5){    
+      var legendimg = document.createElement("img");
+      legendimg.src = this.src;
+      legendimg.onerror=this.onerror;        
+      legendimg.style.border = '0px none White';
+      legendimg.alt = this.name;  
+      legendimg.title = this.name;  
+      document.getElementById(this.id).appendChild(legendimg);
+    }
+}
+/*function imageOnload2(){    
     var legendimg = document.createElement("img");
     legendimg.src = this.src;
     legendimg.onerror=this.onerror;        
@@ -631,8 +652,8 @@ function imageOnload(){
         orderLayerBox.appendChild(div);
     } else {
         orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
-    }
-}
+    }    
+}*/
 
 function removeLayerFromVolgorde(name, id) {    
     var orderLayers=orderLayerBox.childNodes;

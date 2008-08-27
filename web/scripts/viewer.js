@@ -27,10 +27,10 @@ function handleGetAdminData(coords) {
     if (!multipleActiveThemas){
         checkedThemaIds = activeAnalyseThemaId;
     } else {
-        checkedThemaIds = getCheckedLayerIds();
+        checkedThemaIds = getArrayAsString();
     }
     if(checkedThemaIds == null || checkedThemaIds == '') {
-        alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
+        //alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
         return;
     }        
 
@@ -41,7 +41,7 @@ function handleGetAdminData(coords) {
     if (!multipleActiveThemas){
         document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
-        document.forms[0].themaid.value = getCheckedLayerIds();
+        document.forms[0].themaid.value = getArrayAsString();
     }
     document.forms[0].lagen.value='';
     //document.forms[0].xcoord.value=x;
@@ -101,11 +101,6 @@ function getLayerPosition(item) {
     if (item.analyse=="active")
         return -1; 
     return 0;
-}
-
-function getCheckedLayerIds(){
-    // todo haal lijst net ids op die aangevinkt zijn
-    return null;
 }
 
 function setActiveThema(id, label, overrule) {
@@ -399,12 +394,10 @@ function loadObjectInfo(coords) {
     // vul object frame
     document.forms[0].admindata.value = '';
     document.forms[0].metadata.value = '';
-    document.forms[0].objectdata.value = 't';
-    document.forms[0].analysedata.value = '';
     if (!multipleActiveThemas){
         document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
-        document.forms[0].themaid.value = getCheckedLayerIds();
+        document.forms[0].themaid.value = getArrayAsString();
     }
 
     document.forms[0].analysethemaid.value = activeAnalyseThemaId;
@@ -429,6 +422,10 @@ function loadObjectInfo(coords) {
     }
     document.forms[0].coords.value=coordsVal;
     document.forms[0].scale.value = '';
+    
+    // vul adressen/locatie
+    document.forms[0].objectdata.value = 't';
+    document.forms[0].analysedata.value = '';    
     document.forms[0].target = 'objectframeViewer';
     document.forms[0].submit();
         

@@ -810,49 +810,51 @@ public class GetViewerDataAction extends BaseGisAction {
             int dt = SpatialUtil.getPkDataType( t, connection);
             
             String taq = t.getAdmin_query();
-            Iterator it = pks.iterator();
             for (int i=1; i<=pks.size(); i++) {
                 PreparedStatement statement = connection.prepareStatement(taq);
+                Object pkObject = pks.get(i-1);
+                if (pkObject==null)
+                    continue;
                 switch (dt) {
                     case java.sql.Types.SMALLINT:
-                        statement.setShort(1, ((Short)pks.get(i-1)).shortValue());
+                        statement.setShort(1, ((Short)pkObject).shortValue());
                         break;
                     case java.sql.Types.INTEGER:
-                        statement.setInt(1, ((Integer)pks.get(i-1)).intValue());
+                        statement.setInt(1, ((Integer)pkObject).intValue());
                         break;
                     case java.sql.Types.BIGINT:
-                        statement.setLong(1, ((Long)pks.get(i-1)).longValue());
+                        statement.setLong(1, ((Long)pkObject).longValue());
                         break;
                     case java.sql.Types.BIT:
-                        statement.setBoolean(1, ((Boolean)pks.get(i-1)).booleanValue());
+                        statement.setBoolean(1, ((Boolean)pkObject).booleanValue());
                         break;
                     case java.sql.Types.DATE:
-                        statement.setDate(1, (Date)pks.get(i-1));
+                        statement.setDate(1, (Date)pkObject);
                         break;
                     case java.sql.Types.DECIMAL:
                     case java.sql.Types.NUMERIC:
-                        statement.setBigDecimal(1, (BigDecimal)pks.get(i-1));
+                        statement.setBigDecimal(1, (BigDecimal)pkObject);
                         break;
                     case java.sql.Types.REAL:
-                        statement.setFloat(1, ((Float)pks.get(i-1)).floatValue());
+                        statement.setFloat(1, ((Float)pkObject).floatValue());
                         break;
                     case java.sql.Types.FLOAT:
                     case java.sql.Types.DOUBLE:
-                        statement.setDouble(1, ((Double)pks.get(i-1)).doubleValue());
+                        statement.setDouble(1, ((Double)pkObject).doubleValue());
                         break;
                     case java.sql.Types.TIME:
-                        statement.setTime(1, (Time)pks.get(i-1));
+                        statement.setTime(1, (Time)pkObject);
                         break;
                     case java.sql.Types.TIMESTAMP:
-                        statement.setTimestamp(1, (Timestamp)pks.get(i-1));
+                        statement.setTimestamp(1, (Timestamp)pkObject);
                         break;
                     case java.sql.Types.TINYINT:
-                        statement.setByte(1, ((Byte)pks.get(i-1)).byteValue());
+                        statement.setByte(1, ((Byte)pkObject).byteValue());
                         break;
                     case java.sql.Types.CHAR:
                     case java.sql.Types.LONGVARCHAR:
                     case java.sql.Types.VARCHAR:
-                        statement.setString(1, (String)pks.get(i-1));
+                        statement.setString(1, (String)pkObject);
                         break;
                     case java.sql.Types.NULL:
                     default:

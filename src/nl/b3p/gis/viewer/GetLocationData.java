@@ -4,19 +4,19 @@
  * works in cooperation with B3P Kaartenbalie.
  *
  * Copyright 2006, 2007, 2008 B3Partners BV
- * 
+ *
  * This file is part of B3P Gisviewer.
- * 
+ *
  * B3P Gisviewer is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * B3P Gisviewer is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -42,20 +42,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public class GetLocationData {
-
+    
     private static final Log log = LogFactory.getLog(GetLocationData.class);
     private static int maxSearchResults=25;
     public GetLocationData() {
     }
-
+    
     public String[] getArea(String elementId, String themaId, String attributeName, String compareValue, String eenheid) throws SQLException {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         sess.beginTransaction();
         Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
         String[] returnValue = new String[2];
         returnValue[0] = elementId;
-
-
+        
+        
         //Haal op met jdbc connectie
         double area = 0.0;
         if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
@@ -88,7 +88,7 @@ public class GetLocationData {
             } finally {
                 sess.close();
             }
-
+            
         }//Haal op met WFS
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             try {
@@ -131,7 +131,7 @@ public class GetLocationData {
         }
         return returnValue;
     }
-
+    
     /**
      *
      * @param elementId element in html pagina waar nieuwe waarde naar wordt geschreven
@@ -149,7 +149,7 @@ public class GetLocationData {
         try {
             returnValue[0] = elementId;
             returnValue[1] = oldValue + " (fout)";
-
+            
             Integer id = FormUtils.StringToInteger(themaId);
             int keyValueInt = FormUtils.StringToInt(keyValue);
             if (id == null || keyValueInt == 0) {
@@ -158,7 +158,7 @@ public class GetLocationData {
             Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = sess.beginTransaction();
             Themas t = (Themas) sess.get(Themas.class, id);
-
+            
             String connectionType = null;
             Connection conn = null;
             if (t.getConnectie() != null) {
@@ -182,11 +182,11 @@ public class GetLocationData {
             if (conn == null || connectionType == null) {
                 return returnValue;
             }
-
+            
             //Schrijf met jdbc connectie
             if (connectionType.equalsIgnoreCase(Connecties.TYPE_JDBC)) {
                 String tableName = t.getSpatial_tabel();
-
+                
                 try {
                     String retVal = SpatialUtil.setAttributeValue(conn, tableName, keyName, keyValueInt, attributeName, newValue);
                     returnValue[1] = retVal;
@@ -210,7 +210,7 @@ public class GetLocationData {
         }
         return returnValue;
     }
-
+    
     /**
      * In eerste instantie direct uit jsp via dwr aanroepen, later wrappen voor meer veiligheid
      * @param x_input
@@ -220,7 +220,7 @@ public class GetLocationData {
      * @param distance
      * @param srid
      * @return
-     * 
+     *
      * TODO: ook een WFS thema moet mogelijk worden.
      */
     public String[] getData(String x_input, String y_input, String[] cols, int themaId, double distance, int srid) throws SQLException {
@@ -236,7 +236,7 @@ public class GetLocationData {
             } catch (NumberFormatException nfe) {
                 return new String[]{nfe.getMessage()};
             }
-
+            
             if (cols == null || cols.length == 0) {
                 return new String[]{rdx, rdy, "No cols"};
             }
@@ -250,11 +250,11 @@ public class GetLocationData {
             for (int i = 0; i < cols.length; i++) {
                 columns.add(cols[i]);
             }
-
+            
             results[0] = rdx;
             results[1] = rdy;
             results[2] = "";
-
+            
             Session sess = HibernateUtil.getSessionFactory().openSession();
             Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
             Connection connection = null;
@@ -293,7 +293,7 @@ public class GetLocationData {
         }
         return results;
     }
-
+    
     public ArrayList getMapCoords(String waarde, String[] colomns, int[] themaIds, double distance, int srid) {
         ArrayList coords = new ArrayList();
         if (colomns.length != themaIds.length) {
@@ -318,6 +318,12 @@ public class GetLocationData {
                 Connection connection = null;
                 try {
                     Themas t = (Themas) sess.get(Themas.class, new Integer(themaIds[ti]));
+                    if (t==null) {
+                        MapCoordsBean mbc = new MapCoordsBean();
+                        mbc.setNaam("Ongeldig thema met id: " + themaIds[ti] + " geconfigureerd");
+                        coords.add(mbc);
+                        return coords;
+                    }
                     if (t.getConnectie() != null) {
                         connection = t.getConnectie().getJdbcConnection();
                     }
@@ -354,7 +360,7 @@ public class GetLocationData {
                         q.append("%')");
                     }
                     if (maxSearchResults>0){
-                        q.append(") LIMIT ");                    
+                        q.append(") LIMIT ");
                         q.append(maxSearchResults);
                     }
                     PreparedStatement statement = connection.prepareStatement(q.toString());
@@ -362,7 +368,7 @@ public class GetLocationData {
                         ResultSet rs = statement.executeQuery();
                         //int loopnum = 0;
                         while (rs.next() && coords.size()<=maxSearchResults) {
-
+                            
                             //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
                             String bbox = rs.getString("bbox");
                             bbox = bbox.replaceAll("POLYGON\\(\\(", "");
@@ -380,7 +386,7 @@ public class GetLocationData {
                             } catch (NumberFormatException nfe) {
                                 return null;
                             }
-
+                            
                             if (Math.abs(minx - maxx) < 1) {
                                 maxx = minx + distance;
                             }

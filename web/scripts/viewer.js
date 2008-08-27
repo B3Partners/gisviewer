@@ -1,12 +1,14 @@
 var allActiveLayers="";
 var layerUrl=null;
 var cookieArray = readCookie('checkedLayers');
-var activeThemaId = '';
+
 var activeAnalyseThemaId = '';
-var layersAan= new Array();    
 var activeAnalyseThemaTitle = '';
+
+var layersAan= new Array();    
 var checkboxArray = new Array();
 var timeouts=0;
+
 function doAjaxRequest(point_x, point_y) {
     if (adresThemaId!=undefined){        
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
@@ -21,15 +23,26 @@ function handleGetData(str) {
 }
 
 function handleGetAdminData(coords) {
-    if(activeThemaId == null || activeThemaId == '') {
+	var checkedThemaIds;
+        if (!multipleActiveThemas){
+        	checkedThemaIds = activeAnalyseThemaId;
+        } else {
+        	checkedThemaIds = getCheckedLayerIds();
+        }
+    if(checkedThemaIds == null || checkedThemaIds == '') {
         alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
         return;
     }        
+        }
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = '';
     document.forms[0].analysedata.value = '';
-    document.forms[0].themaid.value = activeThemaId;
+        if (!multipleActiveThemas){
+    document.forms[0].themaid.value = activeAnalyseThemaId;
+        } else {
+    document.forms[0].themaid.value = getCheckedLayerIds();
+        }
     document.forms[0].lagen.value='';
     //document.forms[0].xcoord.value=x;
     //document.forms[0].ycoord.value=y;
@@ -89,17 +102,21 @@ function getLayerPosition(item) {
     return 0;
 }
 
+function getCheckedLayerIds(){
+// todo haal lijst net ids op die aangevinkt zijn
+return null;
+}
+
 function setActiveThema(id, label, overrule) {
-    if(!multipleActiveThemas){
         var atlabel;
-        if (activeThemaId==null || activeThemaId.length == 0 || overrule){
-            activeThemaId = id;
+        if (activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0 || overrule){
+            activeAnalyseThemaId = id;
+            activeAnalyseThemaTitle = label;
+
             atlabel = document.getElementById('actief_thema');
             if (atlabel!=null && label!=null)
                 atlabel.innerHTML = 'Actieve thema: ' + label;
-            /*if (document.forms[0] && document.forms[0].xcoord && document.forms[0].ycoord && document.forms[0].xcoord.value.length > 0 && document.forms[0].ycoord.value.length > 0){                    
-                    flamingo_map1_onIdentify('',{minx:parseFloat(document.forms[0].xcoord.value), miny:parseFloat(document.forms[0].ycoord.value), maxx:parseFloat(document.forms[0].xcoord.value), maxy:parseFloat(document.forms[0].ycoord.value)})
-                }*/
+
             if (document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0){  
                 var tokens= document.forms[0].coords.value.split(",");
                 var minx = parseFloat(tokens[0]);
@@ -116,45 +133,23 @@ function setActiveThema(id, label, overrule) {
                 flamingo_map1_onIdentify('',{minx:minx, miny:miny, maxx:maxx, maxy:maxy})
             }
         } 
-    } else {
-        atlabel = document.getElementById('actief_thema');
-        if (atlabel!=null && label!=null) {
-            if(activeThemaId != null && activeThemaId.length > 0) {
-                atlabel.innerHTML = 'Actieve thema: Meerdere';
-            } else {
-                atlabel.innerHTML = 'Actieve thema: Geen';
-            }
-        }
-    }
-    return activeThemaId;
-}
-function addActiveThema(id){
-    if(activeThemaId==null ||activeThemaId.length==0){
-        activeThemaId=id;
-    }else{
-        activeThemaId+=","+id
-    }
-}
-function removeActiveThema(id){
-    if (activeThemaId){
-        if (activeThemaId.indexOf(","+id) >= 0){
-            activeThemaId=activeThemaId.replace(","+id,"");
-        }else if (activeThemaId.indexOf(id)>= 0){
-            activeThemaId=activeThemaId.replace(id,"");
-        }
-    }        
-}
-
-function setActiveAnalyseThema(id) {
-    activeAnalyseThemaId = id;
     return activeAnalyseThemaId;
 }
     
-function setAnalyseData(id, title) {
-    eraseCookie('activeanalyselayer');
-    createCookie('activeanalyselayer', id, '7');
-    setActiveAnalyseThema(id)
-    document.getElementById('actief_thema').innerHTML = 'Actieve thema: ' + title;
+function radioClick(obj) {
+		eraseCookie('activelayer'); 
+		createCookie('activelayer', obj.theItem.id + '##' + obj.theItem.title, '7'); 
+		setActiveThema(obj.theItem.id, obj.theItem.title, true); 
+	activateCheckbox(obj.theItem.id);
+}
+
+function isActiveItem(item) {
+        if(item.analyse=="on"){
+            setActiveThema(item.id, item.title);
+        } else if(item.analyse=="active"){
+            setActiveThema(item.id, item.title, true);
+        }
+        return (activeAnalyseThemaId == item.id);
 }
 
 function createLabel(container, item) {
@@ -162,43 +157,24 @@ function createLabel(container, item) {
         container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
     } else {        
         var analyseRadioChecked = false;
-        if(item.analyse=="on"){
-            setActiveThema(item.id, item.title);
-        } else if(item.analyse=="active"){
-            setActiveThema(item.id, item.title, true);
-            setActiveAnalyseThema(item.id);
-        }
             
         var layerPos = getLayerPosition(item);
         var el;
-        var analyseRadio;
         var el2;
         if (navigator.appName=="Microsoft Internet Explorer") {
             var radioControleString = '<input type="radio" name="selkaartlaag" value="' + item.id + '"';
-            if (activeThemaId == item.id)
+            if (isActiveItem(item) {
                 radioControleString += ' checked="checked"';
-            radioControleString += ' onclick="eraseCookie(\'activelayer\');' + 
-                ' createCookie(\'activelayer\', \'' + item.id + '##' + item.title + '\', \'7\');' + 
-                ' setActiveThema(\'' + item.id + '\', \'' + item.title + '\', true); setAnalyseData(\'' + item.id + '\'); activateCheckbox(\'' + item.id + '\');"';
-            radioControleString += '>';
-            el = document.createElement(radioControleString);
-                
-            //  Added
-            var analyseRadioControleString = '<input type="radio" name="selanalysekaartlaag" value="' + item.id + '"';
-            if (activeAnalyseThemaId == item.id) {
-                analyseRadioControleString += ' checked="checked"';
-                activeAnalyseThemaTitle = item.title;
                 analyseRadioChecked = true;
             }
-            analyseRadioControleString += ' onclick="setAnalyseData(\'' + item.id + '\', \'' + item.title + '\'); activateCheckbox(\'' + item.id + '\');"';
-            analyseRadioControleString += '>';
-            analyseRadio = document.createElement(analyseRadioControleString);
-            //  /Added                
+            radioControleString += ' onclick="radioClick(this);"';
+            radioControleString += '>';
+            el = document.createElement(radioControleString);
                 
             var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
             if(layerPos!=0 || analyseRadioChecked)
                 checkboxControleString += ' checked="checked"';
-            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false, \'' + item.title + '\')"'; 
+            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"'; 
             checkboxControleString += '>';
             el2 = document.createElement(checkboxControleString);
                 
@@ -207,28 +183,17 @@ function createLabel(container, item) {
             el.type = 'radio';
             el.name = 'selkaartlaag';
             el.value = item.id;
-            el.onclick = function(){eraseCookie('activelayer'); createCookie('activelayer', item.id + '##' + item.title, '7'); setActiveThema(item.id, item.title,true); setAnalyseData(item.id); activateCheckbox(item.id); }
-            if (activeThemaId == item.id)
+            el.onclick = function(){radioClick(this);  }
+            if (isActiveItem(item) {
                 el.checked = true;
-                    
-            //  Added
-            analyseRadio = document.createElement('input');
-            analyseRadio.type = 'radio';
-            analyseRadio.name = 'selanalysekaartlaag';
-            analyseRadio.value = item.id;
-            analyseRadio.onclick = function(){ setAnalyseData(item.id, item.title); activateCheckbox(item.id); }
-            if (activeAnalyseThemaId == item.id) {
-                analyseRadio.checked = true;
-                activeAnalyseThemaTitle = item.title;
                 analyseRadioChecked = true;
             }
-            //  /Added 
 
             el2 = document.createElement('input');
             el2.id = item.id;
             el2.type = 'checkbox';
             el2.value = item.id;
-            el2.onclick = function(){checkboxClick(this, false, item.title);}
+            el2.onclick = function(){checkboxClick(this, false);}
             if(layerPos!=0 || analyseRadioChecked)
                 el2.checked = true;
         }
@@ -246,16 +211,12 @@ function createLabel(container, item) {
         if (item.metadatalink && item.metadatalink.length > 1)
             lnk.onclick = function(){popUp(item.metadatalink, "metadata")}; 
             
-        if(item.analyse=="on" || item.analyse=="active"){
-            if (!multipleActiveThemas){
-                container.appendChild(el);
-            } else {
-                container.appendChild(analyseRadio);
-            }
-        }
             
         if(item.wmslayers){
-            container.appendChild(el2);
+        	if(item.analyse=="on" || item.analyse=="active"){
+        		container.appendChild(el);
+        	}
+            	container.appendChild(el2);
         }
         container.appendChild(document.createTextNode('  '));
         container.appendChild(lnk);
@@ -322,11 +283,8 @@ function isInCheckboxArray(id) {
     return false;
 }
 
-function checkboxClick(obj, dontRefresh, obj_name) {
+function checkboxClick(obj, dontRefresh) {
     if(obj.checked) {
-        if (multipleActiveThemas && (obj.theItem.analyse=="on" || obj.theItem.analyse=="active")){
-            addActiveThema(obj.value);
-        }
         if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
         var legendURL="";
         if (obj.theItem.wmslegendlayer!=undefined){
@@ -339,7 +297,7 @@ function checkboxClick(obj, dontRefresh, obj_name) {
         }else{
             legendURL=undefined;
         }
-        addLayerToVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers, legendURL);
+        addLayerToVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers, legendURL);
             
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
@@ -370,11 +328,8 @@ function checkboxClick(obj, dontRefresh, obj_name) {
             }
         }
     } else {
-        if (multipleActiveThemas){
-            removeActiveThema(obj.value);
-        }
         deleteFromArray(obj);
-        removeLayerFromVolgorde(obj_name, obj.value + '##' + obj.theItem.wmslayers);
+        removeLayerFromVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers);
         if (obj.theItem.wmslayers){
             allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
             refreshLayerWithDelay();
@@ -444,7 +399,12 @@ function loadObjectInfo(coords) {
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = 't';
     document.forms[0].analysedata.value = '';
-    document.forms[0].themaid.value = activeThemaId;
+            if (!multipleActiveThemas){
+        document.forms[0].themaid.value = activeAnalyseThemaId;
+            } else {
+        document.forms[0].themaid.value = getCheckedLayerIds();
+            }
+
     document.forms[0].analysethemaid.value = activeAnalyseThemaId;
         
     if(checkboxArray.length > 0) {
@@ -702,9 +662,6 @@ var activeLayerIdFromCookie = getActiveLayerId(readCookie('activelayer'));
 var activeLayerLabelFromCookie = getActiveLayerLabel(readCookie('activelayer'));    
 setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie);
     
-var activeAnalyseLayerIdFromCookie = readCookie('activeanalyselayer');     
-setActiveAnalyseThema(activeAnalyseLayerIdFromCookie);
-    
 var activeTab = readCookie('activetab');
 if(activeTab != null) {
     switchTab(document.getElementById(activeTab));
@@ -760,7 +717,7 @@ function flamingo_map1_onInit(){
             newLayersAan = layersAan;
         }
         for (var i=0; i < newLayersAan.length; i++){
-            checkboxClick(newLayersAan[i],true,newLayersAan[i].theItem.title);
+            checkboxClick(newLayersAan[i],true);
         }        
         if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
             moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);

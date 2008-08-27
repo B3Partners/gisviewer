@@ -138,7 +138,6 @@ function setActiveThema(id, label, overrule) {
 }
     
 function radioClick(obj) {
-    alert("item id: " + obj.theItem.id);
     eraseCookie('activelayer'); 
     createCookie('activelayer', obj.theItem.id + '##' + obj.theItem.title, '7'); 
     setActiveThema(obj.theItem.id, obj.theItem.title, true); 
@@ -200,6 +199,7 @@ function createLabel(container, item) {
                 el2.checked = true;
         }
             
+        el.theItem=item;
         el2.theItem=item;
             
         if (layerPos<0)
@@ -471,12 +471,13 @@ function deleteFromArray(obj) {
 
 function createCookie(name,value,days) {
     if(useCookies){
+        var expires;
         if (days) {
             var date = new Date();
             date.setTime(date.getTime()+(days*24*60*60*1000));
-            var expires = "; expires="+date.toGMTString();
+            expires = "; expires="+date.toGMTString();
         }
-        else var expires = "";
+        else expires = "";
         document.cookie = name+"="+value+expires+"; path=/";
     }
 }
@@ -608,7 +609,6 @@ function deleteAllLayers() {
 function parseVolgordeBox() {
     var cookieString = "";
     var layersString = "";
-    var firstTime = true;
     for(var i = 0; i < orderLayerBox.childNodes.length; i++) {
         cookieString = "," + splitValue(orderLayerBox.childNodes[i].id)[0] + cookieString;
         layersString = "," + splitValue(orderLayerBox.childNodes[i].id)[1] + layersString;

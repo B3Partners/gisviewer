@@ -25,6 +25,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type="text/javascript" src='dwr/engine.js'></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 <script type="text/javascript">
     var kburl="${kburl}";
     var organizationcode="${organizationcode}";
@@ -47,6 +48,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var demogebruikerPopup = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
     if(demogebruikerPopup) usePopup=true;
 
+	/*
+     * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
+     * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen
+     */
+    var loggedInUser = readCookie('loggedInUser');
+    if(loggedInUser != null) {
+        if(loggedInUser != '<c:out value="${pageContext.request.remoteUser}"/>') {
+            eraseCookie('activelayer');
+            eraseCookie('activetab');
+            eraseCookie('checkedLayers');
+        }
+    }
+    createCookie('loggedInUser', '<c:out value="${pageContext.request.remoteUser}"/>', '7');
+	
     /*
      * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis
      * de kaart wordt na het slepen automatisch herladen na x aantal (instellen door layerDelay) seconden

@@ -33,6 +33,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             }
 
             function submitdata() {
+                if(usePopup) {
+                    if(dataframepopupHandle == null || dataframepopupHandle.closed) dataframepopupHandle = popUpData('dataframepopup', '900', '500');
+                    document.forms[0].target = 'dataframepopup';
+                }
                 if(document.getElementById('objectoptie').checked) {
                     // Geef object
                     document.forms[0].analyseobject.value = "t";

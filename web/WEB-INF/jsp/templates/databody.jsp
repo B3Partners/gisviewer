@@ -56,7 +56,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </script>
     </head>
     <%-- TODO combineren met <body class="meta_data_body"> --%>
-    <body onload="checkLocation()" class="admindatabody">
+    <body class="admindatabody">
         <tiles:insert attribute="content" />
         <tiles:insert definition="googleAnalytics"/>        
     </body>

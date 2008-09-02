@@ -55,7 +55,13 @@ function handleGetAdminData(coords) {
     }
     document.forms[0].coords.value=coordsVal;
     document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
-    document.forms[0].target = 'dataframe';
+    if(usePopup) {
+        // open popup when not opened en submit form to popup
+        if(dataframepopupHandle == null || dataframepopupHandle.closed) dataframepopupHandle = popUpData('dataframepopup', '900', '500');
+        document.forms[0].target = 'dataframepopup';
+    } else {
+        document.forms[0].target = 'dataframe';
+    }
     document.forms[0].submit();
 }
 
@@ -79,7 +85,25 @@ function popUp(URL, naam) {
         "height = " + screenheight + ", " + 
         "top = " + popuptop + ", " + 
         "left = " + popupleft;
-    eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+    return eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+}
+
+function popUpData(naam, width, height) {
+    var screenwidth = width;
+    var screenheight = height;
+    var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+    var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+    properties = "toolbar = 0, " + 
+        "scrollbars = 1, " + 
+        "location = 0, " + 
+        "statusbar = 1, " + 
+        "menubar = 0, " + 
+        "resizable = 1, " + 
+        "width = " + screenwidth + ", " + 
+        "height = " + screenheight + ", " + 
+        "top = " + popuptop + ", " + 
+        "left = " + popupleft;
+    return window.open('', naam, properties);
 }
 
 // 0 = niet in cookie en niet visible, 
@@ -621,10 +645,8 @@ function splitValue(val) {
     return val.split('##');
 }
 
-function resizeTabVak(resized) {
-    var plusValue = 0;
-    if(!resized) plusValue = 3;
-    document.getElementById('tabcontainervakscroll').style.height = (document.getElementById('tab_container_td').offsetHeight + plusValue) + 'px';
+function resizeTabVak() {
+    document.getElementById('tabcontainervakscroll').style.height = document.getElementById('tab_container_td').offsetHeight + 'px';
     document.getElementById('tabcontainervakscroll').style.width = document.getElementById('tab_container_td').offsetWidth + 'px';
     var vakHeight = document.getElementById('tabcontainervakscroll').offsetHeight - 6;
     document.getElementById('volgordeForm').style.height = (vakHeight - 30) + 'px';
@@ -632,19 +654,13 @@ function resizeTabVak(resized) {
     document.getElementById('infovak').style.height = vakHeight + 'px';
     document.getElementById('treevak').style.height = (vakHeight + 3) + 'px';
 }
-if(navigator.userAgent.indexOf("Firefox")!= -1) {
+
+function setFirefoxCSS() {
     document.getElementById('layermaindiv').style.overflow = 'visible';
     document.getElementById('treevak').style.overflow = 'visible';
     document.getElementById('volgordevak').style.overflow = 'visible';
     document.getElementById('tabcontainervakscroll').style.overflow = 'auto';
     document.getElementById('tabcontainervakscroll').style.backgroundColor = '#183C56';
-    resizeTabVak(false);
-       
-    window.onresize = function() {  
-        document.getElementById('tabcontainervakscroll').style.height = '1px';
-        document.getElementById('tabcontainervakscroll').style.width = '1px';
-        resizeTabVak(true);
-    }
 }
 
 function getActiveLayerId(cookiestring) {

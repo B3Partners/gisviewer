@@ -32,10 +32,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var bbox='${extent}';
     //Wel of niet cookies
     var useCookies=true;
-    /*True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
+    /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
      * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
      */
     var multipleActiveThemas=true;
+    
+    /* True als de admin- of metadata in een popup wordt getoond
+     * False als deze onder de kaart moet worden getoond
+     * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond
+     */
+    var usePopup=true;
+    var dataframepopupHandle = null;
 
     /*
      * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis
@@ -275,10 +282,24 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </table>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
-   // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
-   var dataframehoogte = '200px';
-   document.getElementById('dataframediv').style.height = dataframehoogte; 
-   document.getElementById('dataframe').style.height = dataframehoogte; 
+   if(usePopup) {
+        document.getElementById('onderstukTr').style.display = 'none';
+   } else {
+       // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
+       var dataframehoogte = '200px';
+       document.getElementById('dataframediv').style.height = dataframehoogte; 
+       document.getElementById('dataframe').style.height = dataframehoogte; 
+   }
+   
+   if(navigator.userAgent.indexOf("Firefox")!= -1) {
+        setFirefoxCSS();
+        resizeTabVak();
+        window.onresize = function() {  
+            document.getElementById('tabcontainervakscroll').style.height = '1px';
+            document.getElementById('tabcontainervakscroll').style.width = '1px';
+            resizeTabVak();
+        }
+    }
    
    treeview_create({
     "id": "layermaindiv",

@@ -191,7 +191,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             Table.stripe(document.getElementById('data_table' + i), 'admin_data_alternate_tr');
             Table.sort(document.getElementById('data_table' + i), {sorttype:Sort['numeric'], col:1});
         }    
-                    
+             
+        if(opener.usePopup) {
+            for(i = 2; i < (${nuOfTables} + 1); i++) { 
+                toggleList(i);
+            }
+        }
+
         var currentObj;
         var currentObjOldStyle;
         function colorRow(obj) {

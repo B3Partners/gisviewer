@@ -43,6 +43,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      */
     var usePopup=true;
     var dataframepopupHandle = null;
+    
+    var demogebruikerPopup = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
+    if(demogebruikerPopup) usePopup=true;
 
     /*
      * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis

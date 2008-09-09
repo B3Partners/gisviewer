@@ -400,7 +400,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 .topRow th, .etlTopRow td {
-    color: White;
+    color: Black;
     font-weight: bold;
     padding-top: 2px;
     padding-left: 3px;
@@ -409,6 +409,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 .row {
     color: Black;
     font-weight: normal;
+    background-color: White;
 }
 
 .row td {
@@ -450,7 +451,7 @@ ul#nav li#tab3 { margin-right: 0px; }
 }
 
 .admin_data_alternate_tr {
-    background-color: #E7EEF4;
+    background-color: #D2E0EB;
 }
 .admin_data_selected_tr {
     background-color: #fff0c4;
@@ -546,18 +547,6 @@ ul#nav li#tab3 { margin-right: 0px; }
 
 #etl_overview_table a {
     color: #196299;
-}
-
-.etlTopRow {
-    background-image: url("../images/patroon_kaartenbalie.gif");
-    background-repeat: repeat;
-}
-
-.etlTopRow td {
-    color: White;
-    font-weight: bold;
-    padding-top: 2px;
-    padding-left: 3px;
 }
 
 .etlRowList:hover {

@@ -39,6 +39,9 @@
  * change the value
  */
 var flamingo= parent.flamingo;
+if(opener) {
+  flamingo= opener.flamingo;
+}
 function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
         // Leeg -> Ja
         // Nee -> Ja

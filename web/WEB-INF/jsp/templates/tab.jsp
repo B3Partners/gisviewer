@@ -40,10 +40,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css" >
         <!-- <link rel="stylesheet" type="text/css" href="styles/edamvolendam/viewer_ev_clean_overlay.css"> -->
         <script type="text/javascript">  
+            var usePopup = false;
+            if(opener) {
+                usePopup = opener.usePopup;
+            }
             function checkLocation() {
-                if (top.location == self.location)
-                    top.location = '<html:rewrite page="/index.do"/>';
-                };
+               if(!usePopup) {
+                    if (top.location == self.location) {
+                        top.location = '<html:rewrite page="/index.do"/>';
+                    }
+                }
+            }
         </script>
     </head>
     <body onload="checkLocation()" class="tabvak_body">

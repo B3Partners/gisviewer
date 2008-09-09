@@ -41,6 +41,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link rel="stylesheet" type="text/css" href="styles/viewer_b3p_clean.css">
         <link rel="stylesheet" type="text/css" href="styles/viewer_b3p_clean_overlay.css">
         
+        
+         <!-- Onderstaande stylesheet vervangen door styles/viewer_b3p_clean_ie6.css bij gebruik van B3Partners design -->
         <!-- Onderstaande stylesheet vervangen door styles/edamvolendam/viewer_ev_clean_ie6.css bij gebruik van Edam-Volendam design -->
         <!--[if lte IE 6]>
             <link rel="stylesheet" type="text/css" href="styles/viewer_b3p_clean_ie6.css">   

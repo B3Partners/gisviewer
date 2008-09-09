@@ -72,10 +72,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:if>
             </c:forEach>
             
-            <div class="topRow" style="width: 100%; clear: both; margin-bottom: 5px; border-bottom: 1px solid Black; background-repeat: repeat-x;">
+            <div class="topRow" style="width: 100%; clear: both; margin-bottom: 5px; border-bottom: 1px solid #EAEEF2; background-repeat: repeat-x;">
                 <table id="admindata_table${tStatus.count}" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                     <thead>
-                        <tr class="topRow" style="height: 20px; background-repeat: repeat-x;">
+                        <tr class="topRow" style="height: 20px;">
                             <th style="width: 15px; cursor: pointer;" onclick="toggleList(${tStatus.count})" onmouseover="document.getElementById('ThemaNaamLabel${tStatus.count}').style.display = 'block';" onmouseout="document.getElementById('ThemaNaamLabel${tStatus.count}').style.display = 'none';">
                                 <div style="background-color: white; padding: 0px; margin-top: 3px; height: 10px; width: 10px; border: 1px solid black;">
                                     <c:set var="plusmin" value="+" />
@@ -192,7 +192,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             Table.sort(document.getElementById('data_table' + i), {sorttype:Sort['numeric'], col:1});
         }    
              
-        if(opener.usePopup) {
+        if(opener && opener.usePopup) {
             for(i = 2; i < (${nuOfTables} + 1); i++) { 
                 toggleList(i);
             }

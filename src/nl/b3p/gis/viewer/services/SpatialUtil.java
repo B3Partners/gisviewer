@@ -853,7 +853,7 @@ public class SpatialUtil {
         }
         sq.append(sqlAnalyseObjectId+" ");
         sq.append("and "+relationFunction+"(tb1.\""+geomColumn1+"\", tb2.\""+geomColumn2+"\") ");
-        sq.append(extraCriteriaString + " limit 50");
+        sq.append(extraCriteriaString + " limit 300");
         return sq.toString();
     }
     

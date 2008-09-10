@@ -504,8 +504,8 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         if (connection==null)
             connection=sess.connection();
         try {
-            String statementString="select * from "+analyseGeomTabel+
-                    " where "+analyseGeomIdColumn+" = ";
+            String statementString="select * from \""+analyseGeomTabel+
+                    "\" where "+analyseGeomIdColumn+" = ";
             String newAnalyseGeomId="\'"+analyseGeomId+"\'";
             try{
                 int intGeomId=Integer.parseInt(analyseGeomId);

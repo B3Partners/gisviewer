@@ -593,19 +593,6 @@ public class GetViewerDataAction extends BaseGisAction {
         if (columnName==null || columnName.length()<=0){
             columnName="id";
         }
-        String query= SpatialUtil.hasRelationQuery(
-                t.getSpatial_tabel(), //tb1
-                "the_geom",
-                geselecteerdObjectThema.getSpatial_tabel(), //tb2
-                "the_geom",
-                relationFunction,
-                t.getSpatial_admin_ref(),
-                columnName,
-                analyseGeomId,
-                extraWhere);
-        
-        //return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId, extraCriteriaString);
-        log.info(query);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
         if (t.getConnectie()!=null){
@@ -614,6 +601,21 @@ public class GetViewerDataAction extends BaseGisAction {
         if (connection==null)
             connection=sess.connection();
         
+        String geom1=SpatialUtil.getTableGeomName(t,connection);        
+        String geom2=SpatialUtil.getTableGeomName(geselecteerdObjectThema,connection);        
+        String query= SpatialUtil.hasRelationQuery(
+                t.getSpatial_tabel(), //tb1
+                geom1,
+                geselecteerdObjectThema.getSpatial_tabel(), //tb2
+                geom2,
+                relationFunction,
+                t.getSpatial_admin_ref(),
+                columnName,
+                analyseGeomId,
+                extraWhere);
+        
+        //return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId, extraCriteriaString);
+        log.info(query);        
         ArrayList pks = new ArrayList();
         try {
             PreparedStatement statement = connection.prepareStatement(query);

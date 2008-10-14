@@ -336,7 +336,7 @@ public class GetLocationData {
                         sptn = t.getAdmin_tabel();
                     }
                     StringBuffer q = new StringBuffer();
-                    q.append("select distinct ");
+                    q.append("select ");
                     
                     for (int i = 0; i < cols.length; i++) {
                         if (cols[i]!=null && cols[i].length()>0){
@@ -345,9 +345,9 @@ public class GetLocationData {
                             q.append("\""+cols[i]+"\"");
                         }
                     }
-                    q.append(", astext(Envelope(tbl.");
+                    q.append(", astext(Envelope(collect(tbl.");
                     q.append(geomcolomn);
-                    q.append(")) as bbox from \"");
+                    q.append("))) as bbox from \"");
                     q.append(sptn);
                     q.append("\" tbl where (");
                     for (int i = 0; i < cols.length; i++) {
@@ -359,10 +359,19 @@ public class GetLocationData {
                         q.append(waarde);
                         q.append("%')");
                     }
+                    q.append(") group by ");
+                    for (int i = 0; i < cols.length; i++) {
+                        if (cols[i]!=null && cols[i].length()>0){
+                            if (i!=0)
+                                q.append(",");
+                            q.append("\""+cols[i]+"\"");
+                        }
+                    }
                     if (maxSearchResults>0){
-                        q.append(") LIMIT ");
+                        q.append(" LIMIT ");
                         q.append(maxSearchResults);
                     }
+                    log.debug(q.toString());
                     PreparedStatement statement = connection.prepareStatement(q.toString());
                     try {
                         ResultSet rs = statement.executeQuery();

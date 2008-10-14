@@ -295,6 +295,9 @@ public class GetLocationData {
     }
     
     public ArrayList getMapCoords(String waarde, String[] colomns, int[] themaIds, double distance, int srid) {
+        double distance2=0.0;
+        if (distance > 0)
+            distance2=distance/2;
         ArrayList coords = new ArrayList();
         if (colomns.length != themaIds.length) {
             log.error("Aantal kolommen en themas is niet gelijk");
@@ -377,30 +380,50 @@ public class GetLocationData {
                         ResultSet rs = statement.executeQuery();
                         //int loopnum = 0;
                         while (rs.next() && coords.size()<=maxSearchResults) {
-                            
-                            //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
-                            String bbox = rs.getString("bbox");
-                            bbox = bbox.replaceAll("POLYGON\\(\\(", "");
-                            bbox = bbox.replaceAll("\\)\\)", "");
-                            String[] bboxArray = bbox.split(",");
-                            if (bboxArray == null || bboxArray.length != 5) {
-                                continue;
-                            }
                             double minx, maxx, miny, maxy;
-                            try {
-                                minx = Double.parseDouble(bboxArray[0].split(" ")[0]);
-                                maxx = Double.parseDouble(bboxArray[2].split(" ")[0]);
-                                miny = Double.parseDouble(bboxArray[0].split(" ")[1]);
-                                maxy = Double.parseDouble(bboxArray[2].split(" ")[1]);
-                            } catch (NumberFormatException nfe) {
-                                return null;
+                            String bbox = rs.getString("bbox");
+                            if (bbox.trim().toLowerCase().startsWith("polygon")){
+                                //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
+                                
+                                bbox = bbox.replaceAll("POLYGON\\(\\(", "");
+                                bbox = bbox.replaceAll("\\)\\)", "");
+                                String[] bboxArray = bbox.split(",");
+                                if (bboxArray == null || bboxArray.length != 5) {
+                                    log.error("Kan geen coordinaten uit WKT geometry halen");
+                                    continue;
+                                }                            
+                                try {
+                                    minx = Double.parseDouble(bboxArray[0].split(" ")[0]);
+                                    maxx = Double.parseDouble(bboxArray[2].split(" ")[0]);
+                                    miny = Double.parseDouble(bboxArray[0].split(" ")[1]);
+                                    maxy = Double.parseDouble(bboxArray[2].split(" ")[1]);
+                                } catch (NumberFormatException nfe) {
+                                    log.error("Kan geen coordinaten uit WKT geometry POLYGON halen");
+                                    continue;
+                                }
+                            }else{//its a point
+                                bbox= bbox.replaceAll("POINT\\(","");
+                                bbox= bbox.replaceAll("\\)","");
+                                String[] bboxArray=bbox.split(" ");
+                                 try {
+                                    minx = Double.parseDouble(bboxArray[0]);
+                                    maxx = Double.parseDouble(bboxArray[0]);
+                                    miny = Double.parseDouble(bboxArray[1]);
+                                    maxy = Double.parseDouble(bboxArray[1]);
+                                } catch (NumberFormatException nfe) {
+                                    log.error("Kan geen coordinaten uit WKT geometry POINT halen");
+                                    continue;
+                                }                                
                             }
-                            
                             if (Math.abs(minx - maxx) < 1) {
-                                maxx = minx + distance;
+                                //maxx = minx + distance;
+                                minx-=distance2;
+                                maxx+=distance2;
                             }
                             if (Math.abs(miny - maxy) < 1) {
-                                maxy = miny + distance;
+                                //maxy = miny + distance;
+                                maxy+=distance2;
+                                miny-=distance2;
                             }
                             StringBuffer naam = new StringBuffer();
                             for (int i = 0; i < cols.length; i++) {

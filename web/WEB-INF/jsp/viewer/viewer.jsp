@@ -80,18 +80,28 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      *Het id van het thema dat wordt gebruikt om de dichtsbij zijnde adres te tonen.
      */
     var adresThemaId=88;
+    //*/edamvolendam:
+    // var adresThemaId=7;
+     
     /*
      * De kolommen van het thema dat moet worden getoond als er een identify wordt gedaan.
      */
     var infoArray = new Array();
     infoArray[0] = "bu_naam";
-    infoArray[1] = "gm_naam";
+    infoArray[1] = "gm_naam";    
+    //edamvolendam: 
+    //infoArray[0] = "straatnaam";
+    //infoArray[1] = "huisnr";
     
     /*
      * Geef hier de thema nummers op waarop gezocht moet kunnen worden.
      */
     var zoekThemaIds = new Array();
     zoekThemaIds[0]=88;
+    //edamvolendam: 
+    //zoekThemaIds[0]=7;
+    //zoekThemaIds[1]=9;
+     
     /*
      * Geef hier per thema op op welke kolommen gezocht moet worden. Moet het voor een thema op meerdere kolommen
      * geeft dan de kolommen gescheiden door een komma. Let wel op. De distinct zoekopdracht wordt over
@@ -100,6 +110,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      */
     var zoekKolommen = new Array();
     zoekKolommen[0]= "bu_naam,gm_naam";
+    /*edam volendam
+     * zoekKolommen[0]="straatnaam,naambedrijf";
+     * zoekKolommen[1]="AdresOpgemaakt";
+     */
+/*
+ * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
+ * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
+ */
+    var minBboxZoeken=1000;
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>

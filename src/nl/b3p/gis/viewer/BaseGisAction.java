@@ -373,7 +373,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             if (s!=null){
                 scale= Double.parseDouble(s);
                 //af ronden op 1 decimaal
-                scale=Math.round(scale*10)/10;
+                
             }
         } catch (NumberFormatException nfe){
             scale=0.0;
@@ -382,6 +382,10 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         double distance=10.0;
         if (scale> 0.0){
             distance=scale*(distance);
+            distance=Math.round(distance*1000)/1000;
+            if (distance < 1.0){
+                distance =1.0;                
+            }
         } else{
             distance = 10.0;
         }

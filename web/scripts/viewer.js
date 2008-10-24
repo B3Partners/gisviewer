@@ -490,11 +490,24 @@ function deleteFromArray(obj) {
     createCookie('checkedLayers', arrayString, '7');
 }
 
-function getCoords() {
+/*Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden. 
+ **/
+function getCoords(zoekveldId) {
     if (zoekThemaIds.length>0){
-        var waarde = document.getElementById("locatieveld").value;
         document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
-        JMapData.getMapCoords(waarde, zoekKolommen, zoekThemaIds, 1000, 28992, getCoordsCallbackFunction);
+        var waarde=null;
+        var zoekK=null;
+        var zoekT=null;
+        if (zoekveldId!=undefined){
+            waarde = document.getElementById("locatieveld_"+zoekveldId).value;
+            zoekK=zoekKolommen[zoekveldId];
+            zoekT=zoekThemaIds[zoekveldId];
+        }else{
+            waarde = document.getElementById("locatieveld").value;
+            zoekK=zoekKolommen;
+            zoekT=zoekThemaIds;
+        }
+        JMapData.getMapCoords(waarde, zoekK, zoekT, 1000, 28992, getCoordsCallbackFunction);    
     }
 }
 

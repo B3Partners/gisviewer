@@ -114,6 +114,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * zoekKolommen[0]="straatnaam,naambedrijf";
      * zoekKolommen[1]="AdresOpgemaakt";
      */
+    /* Zet aparteZoekvelden op true als je per zoekthema een apart zoek invoer veld wil.
+     * Met naamZoekvelden[<index>] kan je de eventueel een naam aangeven die boven het zoekveld moet komen.
+     **/
+    var aparteZoekvelden= false;
+    var naamZoekvelden= new Array();
+    naamZoekvelden[0]="Adressen";
+    naamZoekvelden[1]="Bedrijven";
 /*
  * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
  * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
@@ -262,11 +269,30 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                 <!-- input fields for search -->
                                                 <div>
                                                     <br>
-                                                    <b>Zoek naar locatie:</b>
-                                                    <br>
-                                                    <input type="text" id="locatieveld" name="locatieveld" size="40"/>
-                                                    &nbsp;
-                                                    <input type="button" value=" Ga " onclick="getCoords();" class="knop" />
+                                                    <script type="text/javascript">
+                                                        if (aparteZoekvelden){                                                            
+                                                            for (var i=0; i < zoekThemaIds.length; i++){
+                                                                var naamZoekveld="Zoek op locatie:";
+                                                                if (naamZoekvelden[i]!=undefined){
+                                                                    naamZoekveld=naamZoekvelden[i];
+                                                                }else{
+                                                                    naamZoekveld=zoekKolommen[i];
+                                                                }
+                                                                document.write('<b>'+naamZoekveld+':</b>');
+                                                                document.write('<br>');                                                            
+                                                                document.write('<input type="text" id="locatieveld_'+i+'" name="locatieveld_'+i+'" size="40"/>');                                                            
+                                                                document.write('&nbsp;');
+                                                                document.write('<input type="button" value=" Zoek " onclick="getCoords('+i+');" class="knop" />');
+                                                            }
+                                                        }else{
+                                                            document.write('<b>Zoek naar locatie:</b>');
+                                                            document.write('<br>');                                                            
+                                                            document.write('<input type="text" id="locatieveld" name="locatieveld" size="40"/>');                                                            
+                                                            document.write('&nbsp;');
+                                                            document.write('<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />');
+                                                        }
+                                                    </script>  
+                                                    
                                                     <br>
                                                     <div class="searchResultsClass" id="searchResults"></div>
                                                 </div>

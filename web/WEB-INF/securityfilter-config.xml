@@ -59,7 +59,7 @@
       <cookie-auth-token-config>
           <set-cookies>true</set-cookies>
           <accept-cookie>false</accept-cookie>
-          <secret-key>de176b8440c9f602de176b8440c9f602</secret-key>
+          <secret-key>CF1019A4CAA3B7A7ECE638EB6DF0D4EF</secret-key>
           <extra-hash-string>sXzzsrig09520uie10as:l&lt;x:lZa</extra-hash-string>
           <cookie-paths>/kaartenbalie</cookie-paths>
           <cookie-expire>3600</cookie-expire>

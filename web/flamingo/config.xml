@@ -29,7 +29,7 @@
     <fmc:Container backgroundcolor="#D2E0EB" left="0" top="0" height="10%" width="100%">
         <fmc:Scalebar left="260" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="148" height="65" left="0" top="0%">
-            <fmc:ToolZoomin id="toolZoom"/>
+            <fmc:ToolZoomin id="toolZoomin"/>
             <fmc:ToolZoomout id="toolZoomout" left="30"/>
             <fmc:ToolPan id="toolPan" left="60"/>
             <fmc:ToolMeasure id="toolMeasure" left="90"/>

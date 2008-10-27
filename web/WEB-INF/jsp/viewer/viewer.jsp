@@ -27,6 +27,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 <script type="text/javascript">
+    var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
+    var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
+    var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
+    var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
+    var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;    
+    
     var kburl="${kburl}";
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
@@ -45,10 +51,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var usePopup=true;
     var dataframepopupHandle = null;
     
-    var demogebruikerPopup = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
-    if(demogebruikerPopup) usePopup=true;
-
-	/*
+    if(demogebruiker) usePopup=true;
+    
+    
+    /*
      * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
      * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen
      */
@@ -135,8 +141,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="<html:rewrite page="/scripts/jquery.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/jquery-ui-sortable.js"/>"></script>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/viewer_pre.js"/>"></script>
-
 <script type="text/javascript" src="<html:rewrite page="/scripts/niftycube.js"/>"></script>
 <div style="display: none;">
     <html:form action="/viewerdata">
@@ -188,12 +192,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <td id="tabjes">
                                     <ul id="nav">
                                         <script type="text/javascript">
-                                            var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
-                                            var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
-                                            var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
-                                            var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
-                                            var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
-
                                             if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
                                                 document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 57px;">Thema\'s</a></li>');
                                                 document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 58px;">Legenda</a></li>');
@@ -344,6 +342,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </tr>
 </table>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
+<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>
 <script type="text/javascript">
    if(usePopup) {
         document.getElementById('onderstukTr').style.display = 'none';
@@ -377,7 +376,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     "saveExpandedState": true,
     "saveScrollState": true,
     "expandAll": false
-});
+    });
 </script>
 
-<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>

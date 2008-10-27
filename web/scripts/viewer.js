@@ -779,3 +779,15 @@ function clearTimerForReload() {
 if(activeAnalyseThemaTitle != '') {
     document.getElementById('actief_thema').innerHTML = 'Actieve thema: ' + activeAnalyseThemaTitle
 }
+
+/*functie controleerd of het component is geladen. Zo niet dan wordt het oninit event afgevangen en daarin
+ *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de visibility wel worden geset.
+ **/
+function setFmcComponentVisible(id,visible){  
+    if (flamingo.callMethod('flamingo','exists',id)==true){
+        eval("flamingo.callMethod('"+id+"','setVisible',"+visible+");");
+    }
+    else{        
+        eval("flamingo_"+id+"_onInit= function(){setFmcToolVisibile('"+id+"',"+visible+");};");
+    }
+}

@@ -382,7 +382,23 @@ public class GetLocationData {
                         while (rs.next() && coords.size()<=maxSearchResults) {
                             double minx, maxx, miny, maxy;
                             String bbox = rs.getString("bbox");
-                            if (bbox.trim().toLowerCase().startsWith("polygon")){
+                            if (bbox==null){
+                                StringBuffer errorMessage = new StringBuffer();
+                                errorMessage.append("Er wordt geen BBOX gegeven door de database voor record met ");
+                                for (int i = 0; i < cols.length; i++) {
+                                    if (rs.getString(cols[i]) != null) {                                        
+                                        if (i != 0) {
+                                            errorMessage.append(",");
+                                        }
+                                        errorMessage.append(cols[i]);
+                                        errorMessage.append("=");
+                                        errorMessage.append(rs.getString(cols[i]));
+                                    }
+                                }
+                                log.error(errorMessage.toString());
+                                continue;
+                            }
+                            else if (bbox.trim().toLowerCase().startsWith("polygon")){
                                 //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
                                 
                                 bbox = bbox.replaceAll("POLYGON\\(\\(", "");

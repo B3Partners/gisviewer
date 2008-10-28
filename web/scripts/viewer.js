@@ -784,7 +784,7 @@ if(activeAnalyseThemaTitle != '') {
  *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de functie wel worden aangeroepen.
  **/
 function callFlamingoComponent(id,func,value){  
-    if (flamingo.callMethod('flamingo','exists',id)==true){
+    if (typeof flamingo.callMethod == 'function' && flamingo.callMethod('flamingo','exists',id)==true){
         eval("setTimeout(\"flamingo.callMethod('"+id+"','"+func+"',"+value+")\",10);");
     }
     else{        

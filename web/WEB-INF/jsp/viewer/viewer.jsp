@@ -376,6 +376,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     "saveExpandedState": true,
     "saveScrollState": true,
     "expandAll": false
-    });
+    });    
+    
 </script>
 

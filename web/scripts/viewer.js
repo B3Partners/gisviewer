@@ -781,13 +781,13 @@ if(activeAnalyseThemaTitle != '') {
 }
 
 /*functie controleerd of het component is geladen. Zo niet dan wordt het oninit event afgevangen en daarin
- *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de visibility wel worden geset.
+ *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de functie wel worden aangeroepen.
  **/
-function setFmcComponentVisible(id,visible){  
+function callFlamingoComponent(id,func,value){  
     if (flamingo.callMethod('flamingo','exists',id)==true){
-        eval("flamingo.callMethod('"+id+"','setVisible',"+visible+");");
+        eval("setTimeout(\"flamingo.callMethod('"+id+"','"+func+"',"+value+")\",10);");
     }
     else{        
-        eval("flamingo_"+id+"_onInit= function(){setFmcToolVisibile('"+id+"',"+visible+");};");
+        eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
     }
 }

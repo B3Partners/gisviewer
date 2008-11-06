@@ -306,6 +306,14 @@ function isInCheckboxArray(id) {
 
 function checkboxClick(obj, dontRefresh) {
     if(obj.checked) {
+        var backgroundLayer=false;
+        //TODO: ipv onderstaande for loop kijken of het obj.item.backgroundlayer true is;
+        for (var i=0; i < backgroundLayers.length; i++){
+            if (backgroundLayers[i]==obj.theItem.id){
+                backgroundLayer=true;
+                break;
+            }
+        }
         if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
         var legendURL="";
         if (obj.theItem.wmslegendlayer!=undefined){
@@ -318,7 +326,7 @@ function checkboxClick(obj, dontRefresh) {
         }else{
             legendURL=undefined;
         }
-        addLayerToVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers, legendURL);
+        addLayerToVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers, legendURL, backgroundLayer);
             
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
@@ -342,8 +350,13 @@ function checkboxClick(obj, dontRefresh) {
                         layerUrl+='?';
                     layerUrl = layerUrl + organizationCodeKey + "="+organizationcode;			
                 }
+            }           
+            if(backgroundLayer){
+              allActiveLayers= ","+obj.theItem.wmslayers+allActiveLayers;
             }
-            allActiveLayers+= ","+obj.theItem.wmslayers;
+            else{
+              allActiveLayers+= ","+obj.theItem.wmslayers;
+            }
             if (!dontRefresh){
                 refreshLayerWithDelay();
             }
@@ -560,7 +573,7 @@ function getCoordsCallbackFunction(values){
     searchResults.innerHTML=sResult;
 }
 
-function addLayerToVolgorde(name, id, legendURL) {        
+function addLayerToVolgorde(name, id, legendURL,backgroundLayer) {        
     var myImage = new Image();
     myImage.name = name;
     myImage.id=id;    
@@ -578,9 +591,9 @@ function addLayerToVolgorde(name, id, legendURL) {
     div.title =name;
     div.className="orderLayerClass";    
     div.appendChild(spanEl);    
-    if(!orderLayerBox.hasChildNodes()) {
+    if(!orderLayerBox.hasChildNodes() || backgroundLayer) {
         orderLayerBox.appendChild(div);
-    } else {
+    } else {        
         orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
     }
     if (legendURL==undefined){

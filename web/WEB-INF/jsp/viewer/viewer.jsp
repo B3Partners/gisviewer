@@ -83,54 +83,55 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var refreshDelay=1000;
     var nr = 0;
     
+    //TODO: Configureerbaar maken via configuratie paginas. Het thema moet als achtergrond kunnen worden ingesteld.
+    var backgroundLayers= new Array();
+    backgroundLayers[1]=6;
+    
+    /****************************************************************************
+    Zoeker instellingen
+    ******************************************************************************/
     /*
      *Het id van het thema dat wordt gebruikt om de dichtsbij zijnde adres te tonen.
      */
     var adresThemaId=88;
-    
-     
     /*
      * De kolommen van het thema dat moet worden getoond als er een identify wordt gedaan.
      */
     var infoArray = new Array();
     infoArray[0] = "bu_naam";
-    infoArray[1] = "gm_naam";    
-    
+    infoArray[1] = "gm_naam"; 
     /*
      * Geef hier de thema nummers op waarop gezocht moet kunnen worden.
      */
     var zoekThemaIds = new Array();
     zoekThemaIds[0]=88;
-     
     /*
      * Geef hier per thema op op welke kolommen gezocht moet worden. Moet het voor een thema op meerdere kolommen
      * geeft dan de kolommen gescheiden door een komma (Zonder spaties rond de komma!).
      */
     var zoekKolommen = new Array();
     zoekKolommen[0]= "bu_naam,gm_naam";
-     
     /* Zet aparteZoekThemas op true als je per zoekthema een apart zoek invoer selectie wil. (selectie box wordt zichtbaar)
      * Met aparteZoekThemas[<index>] kan je de eventueel een naam aangeven die boven het zoekveld moet komen.
      **/
     var aparteZoekThemas= true;
     var naamZoekThemas= new Array();
     naamZoekThemas[0]="Buurt"
-    
     /*Zet aparte zoek velden per thema     
      **/
     var aparteZoekVelden= new Array();
     aparteZoekVelden[0]=true;   
-    
+    /*Naam van de aparte zoekvelden*/
     var naamZoekVelden= new Array();
     naamZoekVelden[0]="Buurtnaam,Gemeentenaam"
-/*
- * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
- * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
- */
+    /*
+     * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
+     * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
+     */
     var minBboxZoeken=1000;
     
     //Instellingen voor edam volendam
-    /*adresThemaId=7;
+    adresThemaId=7;
     
     infoArray[0] = "straatnaam";
     infoArray[1] = "huisnr";
@@ -148,7 +149,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     aparteZoekVelden[1]=true;
     
     naamZoekVelden[0]="Straatnaam,Bedrijfsnaam"
-    naamZoekVelden[1]="Adres";*/
+    naamZoekVelden[1]="Adres";
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>

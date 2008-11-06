@@ -445,7 +445,7 @@ function loadObjectInfo(coords) {
         coordsVal+=coords[i];
     }
     document.forms[0].coords.value=coordsVal;
-    document.forms[0].scale.value = '';
+    document.forms[0].scale.value ='';
     
     // vul adressen/locatie
     document.forms[0].objectdata.value = 't';
@@ -750,11 +750,13 @@ function setFullExtent(minx,miny,maxx,maxy){
 }
 function doIdentify(minx,miny,maxx,maxy){
     flamingo.callMethod("map1","identify", {minx:minx, miny:miny, maxx:maxx, maxy:maxy});
-    // TODO: Ook nog graag tool op Identify zetten, maar hoe?
+    flamingo.callMethod("toolGroup","setTool","identify");
 }
 function moveAndIdentify(minx,miny,maxx,maxy){
     moveToExtent(minx,miny,maxx,maxy);
-    doIdentify(minx,miny,maxx,maxy);
+    var centerX=(minx+maxx)/2;
+    var centerY=(miny+maxy)/2;
+    doIdentify(centerX,centerY,centerX,centerY);
 }
     
 if(useSortableFunction) {

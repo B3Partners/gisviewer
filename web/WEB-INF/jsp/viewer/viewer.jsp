@@ -32,7 +32,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
     var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
     var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;    
-    
+       
     var kburl="${kburl}";
     var themaTree=${tree};
     var organizationcode="${organizationcode}";
@@ -87,8 +87,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      *Het id van het thema dat wordt gebruikt om de dichtsbij zijnde adres te tonen.
      */
     var adresThemaId=88;
-    //*/edamvolendam:
-    // var adresThemaId=7;
+    
      
     /*
      * De kolommen van het thema dat moet worden getoond als er een identify wordt gedaan.
@@ -96,43 +95,60 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var infoArray = new Array();
     infoArray[0] = "bu_naam";
     infoArray[1] = "gm_naam";    
-    //edamvolendam: 
-    //infoArray[0] = "straatnaam";
-    //infoArray[1] = "huisnr";
     
     /*
      * Geef hier de thema nummers op waarop gezocht moet kunnen worden.
      */
     var zoekThemaIds = new Array();
     zoekThemaIds[0]=88;
-    //edamvolendam: 
-    //zoekThemaIds[0]=7;
-    //zoekThemaIds[1]=9;
      
     /*
      * Geef hier per thema op op welke kolommen gezocht moet worden. Moet het voor een thema op meerdere kolommen
-     * geeft dan de kolommen gescheiden door een komma. Let wel op. De distinct zoekopdracht wordt over
-     * beide kolommen gedaan en de bbox van de geom. Wil je dit niet geef dan meerdere malen het zelfde thema 
-     * op met elke keer een andere kolom.
+     * geeft dan de kolommen gescheiden door een komma (Zonder spaties rond de komma!).
      */
     var zoekKolommen = new Array();
     zoekKolommen[0]= "bu_naam,gm_naam";
-    /*edam volendam
-     * zoekKolommen[0]="straatnaam,naambedrijf";
-     * zoekKolommen[1]="AdresOpgemaakt";
-     */
-    /* Zet aparteZoekvelden op true als je per zoekthema een apart zoek invoer veld wil.
-     * Met naamZoekvelden[<index>] kan je de eventueel een naam aangeven die boven het zoekveld moet komen.
+     
+    /* Zet aparteZoekThemas op true als je per zoekthema een apart zoek invoer selectie wil. (selectie box wordt zichtbaar)
+     * Met aparteZoekThemas[<index>] kan je de eventueel een naam aangeven die boven het zoekveld moet komen.
      **/
-    var aparteZoekvelden= false;
-    var naamZoekvelden= new Array();
-    naamZoekvelden[0]="Adressen";
-    naamZoekvelden[1]="Bedrijven";
+    var aparteZoekThemas= true;
+    var naamZoekThemas= new Array();
+    naamZoekThemas[0]="Buurt"
+    
+    /*Zet aparte zoek velden per thema     
+     **/
+    var aparteZoekVelden= new Array();
+    aparteZoekVelden[0]=true;   
+    
+    var naamZoekVelden= new Array();
+    naamZoekVelden[0]="Buurtnaam,Gemeentenaam"
 /*
  * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
  * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
  */
     var minBboxZoeken=1000;
+    
+    //Instellingen voor edam volendam
+    adresThemaId=7;
+    
+    infoArray[0] = "straatnaam";
+    infoArray[1] = "huisnr";
+    
+    zoekThemaIds[0]=7;
+    zoekThemaIds[1]=9;
+    
+    zoekKolommen[0]="straatnaam,naambedrijf";
+    zoekKolommen[1]="AdresOpgemaakt";
+    
+    naamZoekThemas[0]="Bedrijven";
+    naamZoekThemas[1]="Percelen";
+    
+    aparteZoekVelden[0]=true;
+    aparteZoekVelden[1]=true;
+    
+    naamZoekVelden[0]="Straatnaam,Bedrijfsnaam"
+    naamZoekVelden[1]="Adres";
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
@@ -269,24 +285,28 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                 <div>
                                                     <br>
                                                     <script type="text/javascript">
-                                                        if (aparteZoekvelden){                                                            
-                                                            for (var i=0; i < zoekThemaIds.length; i++){
-                                                                var naamZoekveld="Zoek op locatie:";
-                                                                if (naamZoekvelden[i]!=undefined){
-                                                                    naamZoekveld=naamZoekvelden[i];
-                                                                }else{
-                                                                    naamZoekveld=zoekKolommen[i];
-                                                                }
-                                                                document.write('<b>'+naamZoekveld+':</b>');
-                                                                document.write('<br>');                                                            
-                                                                document.write('<input type="text" id="locatieveld_'+i+'" name="locatieveld_'+i+'" size="40"/>');                                                            
-                                                                document.write('&nbsp;');
-                                                                document.write('<input type="button" value=" Zoek " onclick="getCoords('+i+');" class="knop" />');
+                                                        if (aparteZoekThemas){      
+                                                            if (zoekThemaIds.length > 1){
+                                                                document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
+                                                                document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
                                                             }
+                                                            for (var i=0; i < zoekThemaIds.length; i++){
+                                                                var naamZoekThema="Zoek op locatie:";
+                                                                if (naamZoekThemas[i]!=undefined){
+                                                                    naamZoekThema=naamZoekThemas[i];
+                                                                }else{
+                                                                    naamZoekThema=zoekKolommen[i];
+                                                                }                                                                      
+                                                                document.write('<OPTION value="'+i+'">'+naamZoekThema+'</OPTION>');                                                                
+                                                            }
+                                                            if (zoekThemaIds.length > 1){
+                                                                document.write('</SELECT>');
+                                                            }
+                                                            document.write('<DIV id="searchInputFieldsContainer">&nbsp;</DIV>')
                                                         }else{
                                                             document.write('<b>Zoek naar locatie:</b>');
                                                             document.write('<br>');                                                            
-                                                            document.write('<input type="text" id="locatieveld" name="locatieveld" size="40"/>');                                                            
+                                                            document.write('<input type="text" id="searchField" name="locatieveld" size="40"/>');                                                            
                                                             document.write('&nbsp;');
                                                             document.write('<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />');
                                                         }

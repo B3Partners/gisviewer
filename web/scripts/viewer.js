@@ -492,23 +492,38 @@ function deleteFromArray(obj) {
 
 /*Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden. 
  **/
-function getCoords(zoekveldId) {
-    if (zoekThemaIds.length>0){
-        document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
-        var waarde=null;
-        var zoekK=null;
-        var zoekT=null;
-        if (zoekveldId!=undefined){
-            waarde = document.getElementById("locatieveld_"+zoekveldId).value;
-            zoekK=zoekKolommen[zoekveldId];
-            zoekT=zoekThemaIds[zoekveldId];
-        }else{
-            waarde = document.getElementById("locatieveld").value;
-            zoekK=zoekKolommen;
-            zoekT=zoekThemaIds;
-        }
-        JMapData.getMapCoords(waarde, zoekK, zoekT, 1000, 28992, getCoordsCallbackFunction);    
+function getCoords() {    
+    if (zoekThemaIds.length <= 0){
+        return;
     }
+    document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
+    var waarde=null;
+    var zoekK=null;
+    var zoekT=null;    
+    if (aparteZoekThemas){           
+      var searchFieldFound=true;
+      waarde=new Array();
+      for(var i=0; searchFieldFound; i++){
+          var searchField=document.getElementById("searchField_"+i);
+          if (searchField){
+              waarde[i]=searchField.value;
+              if (zoekK==null)
+                  zoekK="";
+              else
+                  zoekK+=",";              
+              zoekK+=searchField.name; 
+          }else{
+              searchFieldFound=false;
+          }
+      }
+      zoekT=zoekThemaIds[currentSearchSelectId];      
+    }
+    else{
+        waarde = document.getElementById("searchField").value;
+        zoekK=zoekKolommen;
+        zoekT=zoekThemaIds;
+    }
+    JMapData.getMapCoords(waarde, zoekK, zoekT, 1000, 28992, getCoordsCallbackFunction);
 }
 
 function getCoordsCallbackFunction(values){
@@ -538,7 +553,7 @@ function getCoordsCallbackFunction(values){
             }
             sResult += "</ol>";
         } else {
-            sResult = "<br><b>Locatie gevonden:<br>" + values[0].naam + "<b>";
+            sResult = "<br><b>Locatie gevonden:<br>" + values[0].naam + "<b>";            
             moveAndIdentify(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
         }
     }
@@ -754,8 +769,8 @@ function doIdentify(minx,miny,maxx,maxy){
 }
 function moveAndIdentify(minx,miny,maxx,maxy){
     moveToExtent(minx,miny,maxx,maxy);
-    var centerX=(minx+maxx)/2;
-    var centerY=(miny+maxy)/2;
+    var centerX=Number(Number(Number(minx)+Number(maxx))/2);
+    var centerY=Number(Number(Number(miny)+Number(maxy))/2);    
     doIdentify(centerX,centerY,centerX,centerY);
 }
     
@@ -793,8 +808,39 @@ function callFlamingoComponent(id,func,value){
         eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
     }
 }
+var currentSearchSelectId;
+function searchSelectChanged(element){    
+    var container=document.getElementById("searchInputFieldsContainer");
+    if (currentSearchSelectId == element.value){
+        return;
+    }else if(element.value==""){
+        container.innerHTML="";
+        return;
+    }
+    currentSearchSelectId=element.value;    
+    var s="";
+    var i=0;
+    if (aparteZoekVelden[currentSearchSelectId]){
+        var zoekVelden=zoekKolommen[currentSearchSelectId].split(','); 
+        var naamVelden=new Array();
+        if (naamZoekVelden)
+            naamVelden=naamZoekVelden[currentSearchSelectId].split(',');
+        for (i=0; i < zoekVelden.length; i++){
+          var naamZoekVeld=zoekVelden[i];
+          if (naamVelden[i]){
+              naamZoekVeld=naamVelden[i];
+          }
+          s+='<b>'+naamZoekVeld+':</b><br/>';
+          s+='<input type="text" id="searchField_'+i+'" name="'+zoekVelden[i]+'" size="40"/><br/>'
+        }
+    }else{
+        s+='<input type="text" id="searchField_'+i+'" name="'+zoekKolommen[currentSearchSelectId]+'" size="40"/>';
+    }   
+    s+='<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />';    
+    container.innerHTML=s;
+}
 /**
- *Functie
+ *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
  **/
 function searchThemaValue(themaList,themaId,val){
     for (var i in themaList){

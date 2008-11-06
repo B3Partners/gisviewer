@@ -294,7 +294,7 @@ public class GetLocationData {
         return results;
     }
     
-    public ArrayList getMapCoords(String waarde, String[] colomns, int[] themaIds, double distance, int srid) {
+    public ArrayList getMapCoords(String[] waarden, String[] colomns, int[] themaIds, double distance, int srid) {
         double distance2=0.0;
         if (distance > 0)
             distance2=distance/2;
@@ -306,17 +306,28 @@ public class GetLocationData {
             coords.add(mbc);
             return coords;
         }
-        waarde = waarde.replaceAll("\\'", "''");
+        String waarde=null;
+        if (waarden.length==1)
+            waarde = waarden[0].replaceAll("\\'", "''");
+        
         Session sess = null;
         try {
             sess = HibernateUtil.getSessionFactory().openSession();
             for (int ti = 0; ti < themaIds.length; ti++) {
-                String[] cols = colomns[ti].split(",");
+                String[] cols = colomns[ti].split(",");                
                 if (cols == null || cols.length == 0) {
                     MapCoordsBean mbc = new MapCoordsBean();
                     mbc.setNaam("No cols");
                     coords.add(mbc);
                     return coords;
+                }                
+                if (waarde==null){                    
+                    if (waarden.length != cols.length){
+                        MapCoordsBean mbc = new MapCoordsBean();
+                        mbc.setNaam("Number of values missing!");
+                        coords.add(mbc);
+                        return coords;
+                    }
                 }
                 Connection connection = null;
                 try {
@@ -353,15 +364,30 @@ public class GetLocationData {
                     q.append("))) as bbox from \"");
                     q.append(sptn);
                     q.append("\" tbl where (");
+                    StringBuffer whereS= new StringBuffer();
                     for (int i = 0; i < cols.length; i++) {
-                        if (i!=0)
-                            q.append(" or");
-                        q.append(" lower(tbl.");
-                        q.append("\""+cols[i]+"\"");
-                        q.append(") like lower('%");
-                        q.append(waarde);
-                        q.append("%')");
+                        if (waarde!=null){
+                            if (i!=0)
+                                whereS.append(" or");
+                            whereS.append(" lower(tbl.");
+                            whereS.append("\""+cols[i]+"\"");
+                            whereS.append(") like lower('%");
+                            whereS.append(waarde);
+                            whereS.append("%')");
+                        }else{
+                            if (waarden[i].length()>0){
+                                if (whereS.length()>0){
+                                    whereS.append(" AND");
+                                }
+                                whereS.append(" lower(tbl.");
+                                whereS.append("\""+cols[i]+"\"");
+                                whereS.append(") like lower('%");
+                                whereS.append(waarden[i]);
+                                whereS.append("%')");
+                            }
+                        }                        
                     }
+                    q.append(whereS.toString());
                     q.append(") group by ");
                     for (int i = 0; i < cols.length; i++) {
                         if (cols[i]!=null && cols[i].length()>0){

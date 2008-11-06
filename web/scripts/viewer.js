@@ -217,7 +217,9 @@ function createLabel(container, item) {
             if(layerPos!=0 || analyseRadioChecked)
                 el2.checked = true;
         }
-            
+        if (analyseRadioChecked && layerPos==0){
+            layersAan.push(el2);
+        }    
         el.theItem=item;
         el2.theItem=item;
             

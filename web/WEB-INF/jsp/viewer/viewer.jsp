@@ -131,7 +131,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var minBboxZoeken=1000;
     
     //Instellingen voor edam volendam
-    adresThemaId=7;
+    /*adresThemaId=7;
     
     infoArray[0] = "straatnaam";
     infoArray[1] = "huisnr";
@@ -149,7 +149,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     aparteZoekVelden[1]=true;
     
     naamZoekVelden[0]="Straatnaam,Bedrijfsnaam"
-    naamZoekVelden[1]="Adres";
+    naamZoekVelden[1]="Adres";*/
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>

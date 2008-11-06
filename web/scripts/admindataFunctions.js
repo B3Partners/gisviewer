@@ -74,7 +74,16 @@ function handleGetArea(str){
  * Highlight the clicked object.
  */
 function highlight(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
-    flamingo.call('map1_fmcLayer','setRecordedValues','demo_gemeenten_2006',attributeName,trim(attributeValue,' '));
+    var wmsLayer;
+    if (window.themaTree){
+        var tt=window.themaTree;
+        wmsLayer=searchThemaValue(tt,themaid,"wmslayers");  
+    }else{
+        var tt=window.opener.themaTree;
+        wmsLayer=window.opener.searchThemaValue(tt,themaid,"wmslayers");
+    }    
+    
+    flamingo.call('map1_fmcLayer','setRecordedValues',wmsLayer,attributeName,trim(attributeValue,' '));
 }
 
 function trim(str, chars) {

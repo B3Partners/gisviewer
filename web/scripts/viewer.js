@@ -791,3 +791,23 @@ function callFlamingoComponent(id,func,value){
         eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
     }
 }
+/**
+ *Functie
+ **/
+function searchThemaValue(themaList,themaId,val){
+    for (var i in themaList){
+        //alert(" key: "+i + " value: "+themaList[i]);
+        if (i=="id" && themaList[i]==themaId){  
+          return themaList[val];
+        }
+        if (i=="children"){
+            for (var ichild in themaList[i]){
+                var returnValue=searchThemaValue(themaList[i][ichild],themaId,val);
+                if (returnValue!=undefined && returnValue!=null){
+                    return returnValue;
+                }
+                
+            }            
+        }
+    }
+}

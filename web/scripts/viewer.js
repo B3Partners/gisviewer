@@ -850,9 +850,45 @@ function searchSelectChanged(element){
         }
     }else{
         s+='<input type="text" id="searchField_'+i+'" name="'+zoekKolommen[currentSearchSelectId]+'" size="40"/>';
-    }   
+    }
     s+='<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />';    
     container.innerHTML=s;
+    var searchFieldFound=true;
+    //add a onkeyup event to the created input fields
+    for(i=0; searchFieldFound; i++){
+        var searchField=document.getElementById("searchField_"+i);
+        if (searchField){
+          searchField.onkeyup=function(ev){getCoordsOnEnterKey(ev);};
+        }else{
+            searchFieldFound=false;
+        }
+    }
+}
+
+function getCoordsOnEnterKey(ev){
+  var sourceEvent;
+  if(ev)			//Moz
+  {
+          sourceEvent= ev.target;
+  }
+
+  if(window.event)	//IE
+  {
+          sourceEvent=window.event.srcElement;
+  }
+  var keycode;
+  if(ev)			//Moz
+  {
+          keycode= ev.keyCode;
+  }
+  if(window.event)	//IE
+  {
+          keycode = window.event.keyCode;
+  }
+  if (keycode==13){
+      getCoords();
+  }
+  
 }
 /**
  *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.

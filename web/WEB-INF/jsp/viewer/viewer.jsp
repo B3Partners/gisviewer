@@ -285,34 +285,35 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                 <!-- input fields for search -->
                                                 <div>
                                                     <br>
-                                                    <script type="text/javascript">
-                                                        if (aparteZoekThemas){      
-                                                            if (zoekThemaIds.length > 1){
-                                                                document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
-                                                                document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
+                                                    <form id="zoekform">
+                                                        <script type="text/javascript">
+                                                            if (aparteZoekThemas){      
+                                                                if (zoekThemaIds.length >= 1){
+                                                                    document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
+                                                                    document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
+                                                                }
+                                                                for (var i=0; i < zoekThemaIds.length; i++){
+                                                                    var naamZoekThema="Zoek op locatie:";
+                                                                    if (naamZoekThemas[i]!=undefined){
+                                                                        naamZoekThema=naamZoekThemas[i];
+                                                                    }else{
+                                                                        naamZoekThema=zoekKolommen[i];
+                                                                    }                                                                      
+                                                                    document.write('<OPTION value="'+i+'">'+naamZoekThema+'</OPTION>');                                                                
+                                                                }
+                                                                if (zoekThemaIds.length >= 1){
+                                                                    document.write('</SELECT>');
+                                                                }
+                                                                document.write('<DIV id="searchInputFieldsContainer">&nbsp;</DIV>')
+                                                            }else{
+                                                                document.write('<b>Zoek naar locatie:</b>');
+                                                                document.write('<br>');                                                            
+                                                                document.write('<input type="text" id="searchField" name="locatieveld" size="40"/>');                                                            
+                                                                document.write('&nbsp;');
+                                                                document.write('<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />');
                                                             }
-                                                            for (var i=0; i < zoekThemaIds.length; i++){
-                                                                var naamZoekThema="Zoek op locatie:";
-                                                                if (naamZoekThemas[i]!=undefined){
-                                                                    naamZoekThema=naamZoekThemas[i];
-                                                                }else{
-                                                                    naamZoekThema=zoekKolommen[i];
-                                                                }                                                                      
-                                                                document.write('<OPTION value="'+i+'">'+naamZoekThema+'</OPTION>');                                                                
-                                                            }
-                                                            if (zoekThemaIds.length > 1){
-                                                                document.write('</SELECT>');
-                                                            }
-                                                            document.write('<DIV id="searchInputFieldsContainer">&nbsp;</DIV>')
-                                                        }else{
-                                                            document.write('<b>Zoek naar locatie:</b>');
-                                                            document.write('<br>');                                                            
-                                                            document.write('<input type="text" id="searchField" name="locatieveld" size="40"/>');                                                            
-                                                            document.write('&nbsp;');
-                                                            document.write('<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />');
-                                                        }
-                                                    </script>  
-                                                    
+                                                        </script>  
+                                                    </form>
                                                     <br>
                                                     <div class="searchResultsClass" id="searchResults"></div>
                                                 </div>

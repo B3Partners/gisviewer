@@ -70,23 +70,23 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 -
                             </c:when>
                             <c:when test="${ThemaItem.dataType.id == 3}">
-                                <html:image src="./images/icons/world_link.png" onclick="popUp('${regels[0][counter.count - 1]}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
+                                <html:image src="./images/icons/world_link.png" onclick="popUp('${regels[0].values[counter.count - 1]}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                             </c:when>
-                            <c:when test="${regels[0][counter.count - 1] eq ''}">
+                            <c:when test="${regels[0].values[counter.count - 1] eq ''}">
                                 -
                             </c:when>
                             <c:when test="${ThemaItem.dataType.id == 4}">
                                 <c:choose>
-                                    <c:when test="${fn:startsWith(fn:split(regels[0][counter.count - 1], '###')[1],'setAttributeValue')}">
-                                        <c:out value="${fn:split(regels[0][counter.count - 1], '###')[0]}"/> 
+                                    <c:when test="${fn:startsWith(fn:split(regels[0].values[counter.count - 1], '###')[1],'setAttributeValue')}">
+                                        <c:out value="${fn:split(regels[0].values[counter.count - 1], '###')[0]}"/> 
                                     </c:when>
                                     <c:otherwise>
-                                        <a class="datalink" id="href${counter.count-1}" href="#" onclick="${fn:split(regels[0][counter.count - 1], '###')[1]}">${fn:split(regels[0][counter.count - 1], '###')[0]}</a>                                
+                                        <a class="datalink" id="href${counter.count-1}" href="#" onclick="${fn:split(regels[0].values[counter.count - 1], '###')[1]}">${fn:split(regels[0][counter.count - 1], '###')[0]}</a>                                
                                     </c:otherwise>
                                 </c:choose>
                             </c:when>
                             <c:otherwise>
-                                ${regels[0][counter.count - 1]}
+                                ${regels[0].values[counter.count - 1]}
                             </c:otherwise>
                         </c:choose>
                     </td>

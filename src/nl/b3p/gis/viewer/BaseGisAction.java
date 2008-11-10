@@ -611,9 +611,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      *
      * @see Themas
      */
-    protected List getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
-        ArrayList regel = new ArrayList();
-        
+    protected AdminDataRowBean getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
+        //ArrayList regel = new ArrayList();
+        AdminDataRowBean regel = new AdminDataRowBean();
         Iterator it = thema_items.iterator();
         while(it.hasNext()) {
             ThemaData td = (ThemaData) it.next();
@@ -629,7 +629,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * en aan de arraylist regel toegevoegd te worden.
              */
             if (td.getDataType().getId() == DataTypen.DATA && td.getKolomnaam() != null && !td.getKolomnaam().equals("")) {
-                regel.add(rs.getObject(td.getKolomnaam()));
+                regel.addValue(rs.getObject(td.getKolomnaam()));
                 
             /*
              * In het tweede geval dient de informatie in de thema data als link naar een andere
@@ -662,7 +662,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     }
                 }
                 
-                regel.add(url.toString());
+                regel.addValue(url.toString());
                 
             /*
              * De laatste mogelijkheid betreft een query. Vanuit de themadata wordt nu een
@@ -676,9 +676,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 Object value = rs.getObject(kolomNaam);
                 if (value!=null) {
                     url.append(value.toString().trim());
-                    regel.add(url.toString());
+                    regel.addValue(url.toString());
                 } else
-                    regel.add("");
+                    regel.addValue("");
             }else if (td.getDataType().getId()==DataTypen.FUNCTION){                
                 String keyName = t.getAdmin_pk();
                 Object keyValue = rs.getObject(keyName);
@@ -709,9 +709,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     function.append(",");
                     function.append("'"+td.getEenheid()+"'");
                     function.append(")");
-                    regel.add(function.toString());
+                    regel.addValue(function.toString());
                 }else{
-                    regel.add("");
+                    regel.addValue("");
                 }                
             } else
                 
@@ -719,7 +719,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * Indien een datatype aan geen van de voorwaarden voldoet wordt er een
              * lege regel aan de regel arraylist toegevoegd.
              */
-                regel.add("");
+                regel.addValue("");
         }
         return regel;
     }
@@ -737,8 +737,8 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      *
      * @see Themas
      */
-    protected List getRegel(Feature f, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
-        ArrayList regel = new ArrayList();
+    protected AdminDataRowBean getRegel(Feature f, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
+        AdminDataRowBean regel = new AdminDataRowBean();
         
         Iterator it = thema_items.iterator();
         while(it.hasNext()) {
@@ -755,7 +755,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 }
             }
             if (!f.getSchema().hasAttribute(kolomnaam)&& kolomnaam!=null){
-                regel.add("");
+                regel.addValue("");
             }
             /*
              * Controleer om welk datatype dit themadata object om draait.
@@ -770,7 +770,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              */
             else if (td.getDataType().getId() == DataTypen.DATA && kolomnaam != null && !kolomnaam.equals("")) {
                           
-                regel.add(f.getString(kolomnaam));
+                regel.addValue(f.getString(kolomnaam));
                 
             /*
              * In het tweede geval dient de informatie in de thema data als link naar een andere
@@ -811,7 +811,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     }
                 }
                 
-                regel.add(url.toString());
+                regel.addValue(url.toString());
                 
             /*
              * De laatste mogelijkheid betreft een query. Vanuit de themadata wordt nu een
@@ -834,9 +834,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 Object value = f.getString(kolomnaam);
                 if (value!=null) {
                     url.append(value.toString().trim());
-                    regel.add(url.toString());
+                    regel.addValue(url.toString());
                 } else
-                    regel.add("");
+                    regel.addValue("");
             }else if (td.getDataType().getId()==DataTypen.FUNCTION){
                 String keyName = t.getAdmin_pk();
                 if (!f.getSchema().hasAttribute(keyName)){
@@ -876,9 +876,9 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     function.append(",");
                     function.append("'"+td.getEenheid()+"'");
                     function.append(")");
-                    regel.add(function.toString());
+                    regel.addValue(function.toString());
                 }else{
-                    regel.add("");
+                    regel.addValue("");
                 }
             }else
                 
@@ -886,7 +886,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * Indien een datatype aan geen van de voorwaarden voldoet wordt er een
              * lege regel aan de regel arraylist toegevoegd.
              */
-                regel.add("");
+                regel.addValue("");
         }
         return regel;
     }

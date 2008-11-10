@@ -32,7 +32,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <table>
                 <c:forEach var="regel" items="${thema_object_data[2]}">
                     <tr>
-                        <c:forEach var="item" items="${regel}" end="1">
+                        <c:forEach var="item" items="${regel.values}" end="1">
                             <td>
                                 ${item}
                             </td>

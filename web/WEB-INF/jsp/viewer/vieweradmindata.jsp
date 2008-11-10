@@ -136,7 +136,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                         ${counter.count}
                                     </td>
                                     <c:set var="totale_breedte_onder" value="65" />
-                                    <c:forEach var="waarde" items="${regel}" varStatus="kolom">
+                                    <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
                                         <c:if test="${thema_items[kolom.count - 1] != null}">
                                             <c:choose>
                                                 <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">

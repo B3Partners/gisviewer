@@ -28,6 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Themas;
@@ -37,24 +38,24 @@ import nl.b3p.gis.viewer.services.WfsUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public class GetLocationData {
-
+    
     private static final Log log = LogFactory.getLog(GetLocationData.class);
-    private static int maxSearchResults = 25;
-
+    private static int maxSearchResults=25;
     public GetLocationData() {
     }
-
+    
     public String[] getArea(String elementId, String themaId, String attributeName, String compareValue, String eenheid) throws SQLException {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         sess.beginTransaction();
         Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
         String[] returnValue = new String[2];
         returnValue[0] = elementId;
-
-
+        
+        
         //Haal op met jdbc connectie
         double area = 0.0;
         if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
@@ -87,7 +88,7 @@ public class GetLocationData {
             } finally {
                 sess.close();
             }
-
+            
         }//Haal op met WFS
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             try {
@@ -130,7 +131,7 @@ public class GetLocationData {
         }
         return returnValue;
     }
-
+    
     /**
      *
      * @param elementId element in html pagina waar nieuwe waarde naar wordt geschreven
@@ -148,7 +149,7 @@ public class GetLocationData {
         try {
             returnValue[0] = elementId;
             returnValue[1] = oldValue + " (fout)";
-
+            
             Integer id = FormUtils.StringToInteger(themaId);
             int keyValueInt = FormUtils.StringToInt(keyValue);
             if (id == null || keyValueInt == 0) {
@@ -157,7 +158,7 @@ public class GetLocationData {
             Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = sess.beginTransaction();
             Themas t = (Themas) sess.get(Themas.class, id);
-
+            
             String connectionType = null;
             Connection conn = null;
             if (t.getConnectie() != null) {
@@ -181,11 +182,11 @@ public class GetLocationData {
             if (conn == null || connectionType == null) {
                 return returnValue;
             }
-
+            
             //Schrijf met jdbc connectie
             if (connectionType.equalsIgnoreCase(Connecties.TYPE_JDBC)) {
                 String tableName = t.getSpatial_tabel();
-
+                
                 try {
                     String retVal = SpatialUtil.setAttributeValue(conn, tableName, keyName, keyValueInt, attributeName, newValue);
                     returnValue[1] = retVal;
@@ -209,7 +210,7 @@ public class GetLocationData {
         }
         return returnValue;
     }
-
+    
     /**
      * In eerste instantie direct uit jsp via dwr aanroepen, later wrappen voor meer veiligheid
      * @param x_input
@@ -235,7 +236,7 @@ public class GetLocationData {
             } catch (NumberFormatException nfe) {
                 return new String[]{nfe.getMessage()};
             }
-
+            
             if (cols == null || cols.length == 0) {
                 return new String[]{rdx, rdy, "No cols"};
             }
@@ -249,11 +250,11 @@ public class GetLocationData {
             for (int i = 0; i < cols.length; i++) {
                 columns.add(cols[i]);
             }
-
+            
             results[0] = rdx;
             results[1] = rdy;
             results[2] = "";
-
+            
             Session sess = HibernateUtil.getSessionFactory().openSession();
             Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
             Connection connection = null;
@@ -292,12 +293,11 @@ public class GetLocationData {
         }
         return results;
     }
-
+    
     public ArrayList getMapCoords(String[] waarden, String[] colomns, int[] themaIds, double distance, int srid) {
-        double distance2 = 0.0;
-        if (distance > 0) {
-            distance2 = distance / 2;
-        }
+        double distance2=0.0;
+        if (distance > 0)
+            distance2=distance/2;
         ArrayList coords = new ArrayList();
         if (colomns.length != themaIds.length) {
             log.error("Aantal kolommen en themas is niet gelijk");
@@ -306,23 +306,23 @@ public class GetLocationData {
             coords.add(mbc);
             return coords;
         }
-        String waarde = null;
-        if (waarden.length == 1) {
+        String waarde=null;
+        if (waarden.length==1)
             waarde = waarden[0].replaceAll("\\'", "''");
-        }
+        
         Session sess = null;
         try {
             sess = HibernateUtil.getSessionFactory().openSession();
             for (int ti = 0; ti < themaIds.length; ti++) {
-                String[] cols = colomns[ti].split(",");
+                String[] cols = colomns[ti].split(",");                
                 if (cols == null || cols.length == 0) {
                     MapCoordsBean mbc = new MapCoordsBean();
                     mbc.setNaam("No cols");
                     coords.add(mbc);
                     return coords;
-                }
-                if (waarde == null) {
-                    if (waarden.length != cols.length) {
+                }                
+                if (waarde==null){                    
+                    if (waarden.length != cols.length){
                         MapCoordsBean mbc = new MapCoordsBean();
                         mbc.setNaam("Number of values missing!");
                         coords.add(mbc);
@@ -332,7 +332,7 @@ public class GetLocationData {
                 Connection connection = null;
                 try {
                     Themas t = (Themas) sess.get(Themas.class, new Integer(themaIds[ti]));
-                    if (t == null) {
+                    if (t==null) {
                         MapCoordsBean mbc = new MapCoordsBean();
                         mbc.setNaam("Ongeldig thema met id: " + themaIds[ti] + " geconfigureerd");
                         coords.add(mbc);
@@ -351,13 +351,12 @@ public class GetLocationData {
                     }
                     StringBuffer q = new StringBuffer();
                     q.append("select ");
-
+                    
                     for (int i = 0; i < cols.length; i++) {
-                        if (cols[i] != null && cols[i].length() > 0) {
-                            if (i != 0) {
+                        if (cols[i]!=null && cols[i].length()>0){
+                            if (i!=0)
                                 q.append(",");
-                            }
-                            q.append("\"" + cols[i] + "\"");
+                            q.append("\""+cols[i]+"\"");
                         }
                     }
                     q.append(", astext(Envelope(collect(tbl.");
@@ -365,41 +364,39 @@ public class GetLocationData {
                     q.append("))) as bbox from \"");
                     q.append(sptn);
                     q.append("\" tbl where (");
-                    StringBuffer whereS = new StringBuffer();
+                    StringBuffer whereS= new StringBuffer();
                     for (int i = 0; i < cols.length; i++) {
-                        if (waarde != null) {
-                            if (i != 0) {
+                        if (waarde!=null){
+                            if (i!=0)
                                 whereS.append(" or");
-                            }
-                            whereS.append(" lower(CAST(tb1.");
-                            whereS.append("\"" + cols[i] + "\" AS VARCHAR)");
+                            whereS.append(" lower(CAST(tbl.");
+                            whereS.append("\""+cols[i]+"\" AS VARCHAR)");
                             whereS.append(") like lower('%");
                             whereS.append(waarde);
                             whereS.append("%')");
-                        } else {
-                            if (waarden[i].length() > 0) {
-                                if (whereS.length() > 0) {
+                        }else{
+                            if (waarden[i].length()>0){
+                                if (whereS.length()>0){
                                     whereS.append(" AND");
                                 }
-                                whereS.append(" lower(CAST(tb1.");
-                                whereS.append("\"" + cols[i] + "\" AS VARCHAR)");
+                                whereS.append(" lower(CAST(tbl.");
+                                whereS.append("\""+cols[i]+"\" AS VARCHAR)");
                                 whereS.append(") like lower('%");
                                 whereS.append(waarden[i]);
                                 whereS.append("%')");
                             }
-                        }
+                        }                        
                     }
                     q.append(whereS.toString());
                     q.append(") group by ");
                     for (int i = 0; i < cols.length; i++) {
-                        if (cols[i] != null && cols[i].length() > 0) {
-                            if (i != 0) {
+                        if (cols[i]!=null && cols[i].length()>0){
+                            if (i!=0)
                                 q.append(",");
-                            }
-                            q.append("\"" + cols[i] + "\"");
+                            q.append("\""+cols[i]+"\"");
                         }
                     }
-                    if (maxSearchResults > 0) {
+                    if (maxSearchResults>0){
                         q.append(" LIMIT ");
                         q.append(maxSearchResults);
                     }
@@ -408,14 +405,14 @@ public class GetLocationData {
                     try {
                         ResultSet rs = statement.executeQuery();
                         //int loopnum = 0;
-                        while (rs.next() && coords.size() <= maxSearchResults) {
+                        while (rs.next() && coords.size()<=maxSearchResults) {
                             double minx, maxx, miny, maxy;
                             String bbox = rs.getString("bbox");
-                            if (bbox == null) {
+                            if (bbox==null){
                                 StringBuffer errorMessage = new StringBuffer();
                                 errorMessage.append("Er wordt geen BBOX gegeven door de database voor record met ");
                                 for (int i = 0; i < cols.length; i++) {
-                                    if (rs.getString(cols[i]) != null) {
+                                    if (rs.getString(cols[i]) != null) {                                        
                                         if (i != 0) {
                                             errorMessage.append(",");
                                         }
@@ -426,16 +423,17 @@ public class GetLocationData {
                                 }
                                 log.error(errorMessage.toString());
                                 continue;
-                            } else if (bbox.trim().toLowerCase().startsWith("polygon")) {
+                            }
+                            else if (bbox.trim().toLowerCase().startsWith("polygon")){
                                 //bbox: POLYGON((223700 524300,223700 526567.125,225934.25 526567.125,225934.25 524300,223700 524300))
-
+                                
                                 bbox = bbox.replaceAll("POLYGON\\(\\(", "");
                                 bbox = bbox.replaceAll("\\)\\)", "");
                                 String[] bboxArray = bbox.split(",");
                                 if (bboxArray == null || bboxArray.length != 5) {
                                     log.error("Kan geen coordinaten uit WKT geometry halen");
                                     continue;
-                                }
+                                }                            
                                 try {
                                     minx = Double.parseDouble(bboxArray[0].split(" ")[0]);
                                     maxx = Double.parseDouble(bboxArray[2].split(" ")[0]);
@@ -445,11 +443,11 @@ public class GetLocationData {
                                     log.error("Kan geen coordinaten uit WKT geometry POLYGON halen");
                                     continue;
                                 }
-                            } else {//its a point
-                                bbox = bbox.replaceAll("POINT\\(", "");
-                                bbox = bbox.replaceAll("\\)", "");
-                                String[] bboxArray = bbox.split(" ");
-                                try {
+                            }else{//its a point
+                                bbox= bbox.replaceAll("POINT\\(","");
+                                bbox= bbox.replaceAll("\\)","");
+                                String[] bboxArray=bbox.split(" ");
+                                 try {
                                     minx = Double.parseDouble(bboxArray[0]);
                                     maxx = Double.parseDouble(bboxArray[0]);
                                     miny = Double.parseDouble(bboxArray[1]);
@@ -457,17 +455,17 @@ public class GetLocationData {
                                 } catch (NumberFormatException nfe) {
                                     log.error("Kan geen coordinaten uit WKT geometry POINT halen");
                                     continue;
-                                }
+                                }                                
                             }
                             if (Math.abs(minx - maxx) < 1) {
                                 //maxx = minx + distance;
-                                minx -= distance2;
-                                maxx += distance2;
+                                minx-=distance2;
+                                maxx+=distance2;
                             }
                             if (Math.abs(miny - maxy) < 1) {
                                 //maxy = miny + distance;
-                                maxy += distance2;
-                                miny -= distance2;
+                                maxy+=distance2;
+                                miny-=distance2;
                             }
                             StringBuffer naam = new StringBuffer();
                             for (int i = 0; i < cols.length; i++) {

@@ -44,17 +44,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             var usePopup = false;
             if(opener) {
                 usePopup = opener.usePopup;
-            }
-            function checkLocation() {
-               if(!usePopup) {
-                    if (top.location == self.location) {
-                        top.location = '<html:rewrite page="/index.do"/>';
-                    }
-                }
-            }
+            }            
         </script>
     </head>
-    <body onload="checkLocation()" class="admindatabody">
+    <body class="admindatabody">
         <tiles:insert attribute="content" />
         <tiles:insert definition="googleAnalytics"/>        
     </body>

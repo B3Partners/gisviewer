@@ -49,7 +49,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * False als deze onder de kaart moet worden getoond
      * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond
      */
-    var usePopup=true;
+    var usePopup=false;
     var dataframepopupHandle = null;
     
     if(demogebruiker) usePopup=true;
@@ -269,7 +269,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                 </form>
                                             </div>
                                             
-                                            <div id="infovak" style="display: none;" class="tabvak">
+                                            <div id="infovak" style="display: none; overflow: auto;" class="tabvak">
                                                 <div id="start_message">
                                                     Kies de Info-tool en klik vervolgens op een punt<br/>
                                                     op de kaart voor administratieve informatie<br/>

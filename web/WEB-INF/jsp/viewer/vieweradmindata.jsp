@@ -45,7 +45,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
     }
     function toggleList(nr) {
-        var obj = document.getElementById('admin_data_content_div' + nr);
+        var obj = document.getElementById('fullTable' + nr);
         var plusmin = document.getElementById('plusMin' + nr);
         if(obj.style.display == 'block') {
             plusmin.innerHTML = '+';
@@ -72,24 +72,32 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:if>
             </c:forEach>
             
-            <div class="topRow" style="width: 100%; clear: both; margin-bottom: 5px; border-bottom: 1px solid #EAEEF2; background-repeat: repeat-x;">
+            <div class="topRow" style="margin-bottom: 0px; cursor: pointer; width: 100%; height: 25px; clear: both; font-weight: bold; background-repeat: repeat;" onclick="toggleList(${tStatus.count})">
+                <div style="margin-left: 5px; margin-top: 3px;">
+                    <div style="background-color: white; padding: 0px; margin-top: 1px; height: 10px; width: 10px; border: 1px solid black; margin-right: 5px;">
+                        <c:set var="plusmin" value="+" />
+                        <c:set var="margins" value="2" />
+                        <c:if test="${tStatus.count == 1}">
+                            <c:set var="plusmin" value="-" />
+                            <c:set var="margins" value="4" />
+                        </c:if>
+                        <div id="plusMin${tStatus.count}" style="margin-left: ${margins}px; margin-top: -${margins}px;">
+                            ${plusmin}
+                        </div>
+                    </div>
+                    ${themanaam}
+                </div>
+            </div>
+
+            <c:set var="display" value="none" />
+            <c:if test="${tStatus.count == 1}">
+                <c:set var="display" value="block" />
+            </c:if>
+
+            <div class="topRow" style="width: 100%; clear: both; margin-bottom: 5px; border-bottom: 1px solid #EAEEF2; background-repeat: repeat-x; display: ${display};" id="fullTable${tStatus.count}">
                 <table id="admindata_table${tStatus.count}" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                     <thead>
                         <tr class="topRow" style="height: 20px;">
-                            <th style="width: 15px; cursor: pointer;" onclick="toggleList(${tStatus.count})" onmouseover="document.getElementById('ThemaNaamLabel${tStatus.count}').style.display = 'block';" onmouseout="document.getElementById('ThemaNaamLabel${tStatus.count}').style.display = 'none';">
-                                <div style="background-color: white; padding: 0px; margin-top: 3px; height: 10px; width: 10px; border: 1px solid black;">
-                                    <c:set var="plusmin" value="+" />
-                                    <c:set var="margins" value="2" />
-                                    <c:if test="${tStatus.count == 1}">
-                                        <c:set var="plusmin" value="-" />
-                                        <c:set var="margins" value="4" />
-                                    </c:if>
-                                    <div id="plusMin${tStatus.count}" style="margin-left: ${margins}px; margin-top: -${margins}px;">
-                                        ${plusmin}
-                                    </div>
-                                </div>
-                                <div id="ThemaNaamLabel${tStatus.count}" class="themaLabelMouseOver" style="margin-top: -1px; display: none; position: absolute; padding: 4px; left: 18px;">${themanaam}</div>
-                            </th>
                             <th style="width: 50px;" class="table-sortable:numeric" id="volgnr_th" onclick="Table.sort(document.getElementById('data_table${tStatus.count}'), {sorttype:Sort['numeric'], col:1});">
                                 Volgnr
                             </th>
@@ -118,10 +126,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </thead>
                 </table>
                 <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
-                <c:set var="display" value="none" />
-                <c:if test="${tStatus.count == 1}">
-                    <c:set var="display" value="block" />
-                </c:if>
                 <div id="admin_data_content_div${tStatus.count}" style="display: ${display};">
                     <table id="data_table${tStatus.count}" class="table-autosort table-stripeclass:admin_data_alternate_tr" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                         <tbody>
@@ -129,9 +133,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <c:forEach var="regel" items="${regels}" varStatus="counter">
                                 <c:set var="last_id" value="" />
                                 <tr class="row" onclick="colorRow(this);">
-                                    <td style="width: 15px;">
-                                        &nbsp;
-                                    </td>
                                     <td style="width: 50px;" valign="top">
                                         ${counter.count}
                                     </td>

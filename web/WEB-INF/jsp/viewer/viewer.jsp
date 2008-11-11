@@ -202,6 +202,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <script type="text/javascript">
                             var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "100%", "100%", "8", "#FFFFFF");
                             so.write("flashcontent");
+                            var flamingo = document.getElementById("flamingo");                            
                         </script>
                     </td>
                     <td>
@@ -363,8 +364,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </td>
     </tr>
 </table>
+<script type="text/javascript" src="<html:rewrite page="/scripts/FMCController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
-<script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script>
+<!--script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script-->
 <script type="text/javascript">
    if(usePopup) {
         document.getElementById('onderstukTr').style.display = 'none';

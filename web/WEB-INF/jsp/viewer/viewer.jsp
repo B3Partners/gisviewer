@@ -288,6 +288,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                     <script type="text/javascript">
                                                         if (aparteZoekThemas){      
                                                             if (zoekThemaIds.length >= 1){
+                                                                document.write('<b>Zoek op:</b><br>')
                                                                 document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
                                                                 document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
                                                             }

@@ -829,6 +829,7 @@ function searchSelectChanged(element){
     if (currentSearchSelectId == element.value){
         return;
     }else if(element.value==""){
+        currentSearchSelectId="";
         container.innerHTML="";
         return;
     }

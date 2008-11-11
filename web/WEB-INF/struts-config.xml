@@ -73,6 +73,7 @@
             <form-property name="eenheid" type="java.lang.String"/>
             <form-property name="omschrijving" type="java.lang.String"/>
             <form-property name="themaID" type="java.lang.String"/>
+            <form-property name="uitgebreid" type="java.lang.Boolean"/>
             <form-property name="basisregel" type="java.lang.Boolean"/>
             <form-property name="voorbeelden" type="java.lang.String"/>
             <form-property name="kolombreedte" type="java.lang.String"/>

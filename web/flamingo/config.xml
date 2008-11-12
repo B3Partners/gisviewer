@@ -38,7 +38,7 @@
             <fmc:ButtonPrev id="toolPrevExtent" left="180" listento="map1"/>
             <fmc:ButtonNext id="toolNextExtent" left="210" listento="map1"/>
         </fmc:ToolGroup>
-        <fmc:Coordinates listento="map1" left="80%" top="20%" decimals="0">
+        <fmc:Coordinates id="coordinates" listento="map1" left="80%" top="20%" decimals="0">
             <style id=".xy" font-family="arial" font-size="11" />
             <string id="xy" nl="X: [x]     Y: [y]" />
         </fmc:Coordinates>

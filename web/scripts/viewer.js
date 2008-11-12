@@ -9,8 +9,14 @@ var layersAan= new Array();
 var checkboxArray = new Array();
 var timeouts=0;
 
-var fmcController = new FMCController(flamingo,'flamingo','fmcController');
-
+var fmcController = new FMCController(flamingo,'fmcController');
+/* voobeelden:
+fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
+fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
+fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
+fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
+fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));
+*/
 function doAjaxRequest(point_x, point_y) {
     if (adresThemaId!=undefined){        
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
@@ -925,20 +931,3 @@ function searchThemaValue(themaList,themaId,val){
         }
     }
 }
-/*Instellingen voor barneveld
- 
-  function flamingo_containerMain_onInit(){
-    callFlamingoComponent("containerLeft",'setVisible',false);
-    flamingo.callMethod('containerMain', 'setLeft','0');
-    flamingo.callMethod('containerMain', 'setWidth','100%');
-    flamingo.callMethod('containerMain', 'resize');
-}  
-if (demogebruiker){
-    alert("doe coordinates false");
-    callFlamingoComponent("coordinates",'setVisible',);
-}**/
-fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
-fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
-fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
-fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
-//fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));

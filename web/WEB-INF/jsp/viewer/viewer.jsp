@@ -366,7 +366,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </table>
 <script type="text/javascript" src="<html:rewrite page="/scripts/FMCController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
-<!--script language="JavaScript" type="text/javascript" src="<html:rewrite page="/scripts/enableJsFlamingo.js"/>"></script-->
 <script type="text/javascript">
    if(usePopup) {
         document.getElementById('onderstukTr').style.display = 'none';

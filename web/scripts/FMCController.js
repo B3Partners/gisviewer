@@ -20,22 +20,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 */
-function FMCController(fmcObject,flamingoId,name){
+function FMCController(fmcObject,name){
   this.queues = new Array();  
-  this.fmc=fmcObject;
-  this.flamingoId=flamingoId;
+  this.fmc=fmcObject;  
   this.name=name;
+  this.busy=false;  
 }
-/*function callFlamingoComponent(id,func,value){  
-    if (typeof flamingo.callMethod == 'function' && flamingo.callMethod('flamingo','exists',id)==true){
-        eval("setTimeout(\"flamingo.callMethod('"+id+"','"+func+"',"+value+")\",10);");
-    }
-    else{        
-        eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
-    }
-}*/
-FMCController.prototype.callCommand =function (fmcCall){       
-    if (typeof this.fmc.callMethod == 'function' && this.fmc.callMethod(this.flamingoId,'exists',fmcCall.id)==true){
+/*Use this function to call a flamingo function with javascript.
+ **/
+FMCController.prototype.callCommand =function (fmcCall){
+    if (typeof this.fmc.callMethod == 'function' && this.fmc.callMethod(this.fmc.id,'exists',fmcCall.id)==true){
         if (fmcCall.params.length==0){
             eval("setTimeout(\"flamingo.callMethod('"+fmcCall.id+"','"+fmcCall.method+"')\",10);");
         }else{
@@ -52,17 +46,21 @@ FMCController.prototype.callCommand =function (fmcCall){
           eval("setTimeout(\"flamingo.callMethod('"+fmcCall.id+"','"+fmcCall.method+"'"+value+")\",10);");
         }        
     }else{
-        this.addToQueue(fmcCall);        
-        eval(""+this.fmc.id+"_"+fmcCall.id+"_onInit = function(){"+this.name+".checkQueue('"+fmcCall.id+"');};");
+        this.addToQueue(fmcCall);
     }
 }
+/*This function adds a call to the queue. It is used when a component not (yet) is loaded
+ **/
 FMCController.prototype.addToQueue = function(fmcCall){
     if (this.queues[fmcCall.id]==undefined || this.queues[fmcCall.id]==null){
-        this.queues[fmcCall.id]= new Array();        
+        this.queues[fmcCall.id]= new Array();  
+        eval(""+this.fmc.id+"_"+fmcCall.id+"_onInit = function(){"+this.name+".executeQueue('"+fmcCall.id+"');};");        
     }
     this.queues[fmcCall.id].push(fmcCall);
 }
-FMCController.prototype.checkQueue = function(id){
+/*Executes the queue of a given component id.
+ **/
+FMCController.prototype.executeQueue = function(id){
     if (this.queues[id]==undefined || this.queues[id]==null || this.queues[id].length==0){
         return;
     }
@@ -72,7 +70,9 @@ FMCController.prototype.checkQueue = function(id){
     }
 }
 
-/*Clas FlamingoCall*/
+/*Class FlamingoCall
+ *Used to store the method call
+ **/
 function FlamingoCall(id,method,params){
     this.id = id;
     this.method = method;
@@ -85,6 +85,8 @@ function FlamingoCall(id,method,params){
         this.params.push(params);
     }
 }
+/*Returns the type of a object.
+ **/
 function typeOf(value) {
     var s = typeof value;
     if (s === 'object') {

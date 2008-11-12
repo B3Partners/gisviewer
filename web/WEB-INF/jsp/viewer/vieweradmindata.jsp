@@ -126,7 +126,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </thead>
                 </table>
                 <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
-                <div id="admin_data_content_div${tStatus.count}" style="display: ${display};">
+                <div id="admin_data_content_div${tStatus.count}">
                     <table id="data_table${tStatus.count}" class="table-autosort table-stripeclass:admin_data_alternate_tr" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                         <tbody>
                             <c:set value="0" var="nuOfRegels" />

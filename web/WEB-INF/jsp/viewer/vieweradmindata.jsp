@@ -69,6 +69,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
                 <c:if test="${ThemaItem.thema.naam != themanaam}">
                     <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
+                    <c:set var="themaId" value="${ThemaItem.thema.id}"/>
                 </c:if>
             </c:forEach>
             
@@ -85,7 +86,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             ${plusmin}
                         </div>
                     </div>
-                    ${themanaam}
+                    ${themanaam}                                         
+                    <a href="#" onclick="data2csv${tStatus.count}.submit()">Exporteer naar csv</a>                    
+                    <form action="services/Data2CSV" name="data2csv${tStatus.count}" id="data2csv${tStatus.count}" target="_blank">
+                        <input name="themaId" type="hidden" value="${themaId}"/>
+                        <input name="objectIds" type="hidden" value=""/>
+                    </form>            
+                    
                 </div>
             </div>
 
@@ -137,6 +144,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                         ${counter.count}
                                     </td>
                                     <c:set var="totale_breedte_onder" value="65" />
+                                    <script>
+                                        if (document.data2csv${tStatus.count}.objectIds.value.length > 0){
+                                            document.data2csv${tStatus.count}.objectIds.value+=",";
+                                        }
+                                        document.data2csv${tStatus.count}.objectIds.value+="${regel.primairyKey}";
+                                    </script>
                                     <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
                                         <c:if test="${thema_items[kolom.count - 1] != null}">
                                             <c:choose>

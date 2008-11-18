@@ -614,6 +614,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
     protected AdminDataRowBean getRegel(ResultSet rs, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
         //ArrayList regel = new ArrayList();
         AdminDataRowBean regel = new AdminDataRowBean();
+        regel.setPrimairyKey(rs.getObject(t.getAdmin_pk()));
         Iterator it = thema_items.iterator();
         while(it.hasNext()) {
             ThemaData td = (ThemaData) it.next();
@@ -739,7 +740,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      */
     protected AdminDataRowBean getRegel(Feature f, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException  {
         AdminDataRowBean regel = new AdminDataRowBean();
-        
+        regel.setPrimairyKey(f.getAttribute(t.getAdmin_pk()));
         Iterator it = thema_items.iterator();
         while(it.hasNext()) {
             ThemaData td = (ThemaData) it.next();

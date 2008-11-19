@@ -50,6 +50,10 @@ public class Data2CSV extends HttpServlet {
         try {
             String themaId= request.getParameter("themaId");
             String objectIds= request.getParameter("objectIds");
+            String seperator= request.getParameter("seperator");
+            if (seperator==null || seperator.length()<=0){
+                seperator=",";
+            }
             String[] pks=null;
             if (objectIds!=null){
                 pks=objectIds.split(",");
@@ -122,7 +126,8 @@ public class Data2CSV extends HttpServlet {
         while(it.hasNext()){                
             ThemaData td= (ThemaData)it.next();     
             if(td.getKolomnaam()!=null){
-                columns.add(td.getKolomnaam());
+                if (!columns.contains(td.getKolomnaam()))
+                    columns.add(td.getKolomnaam());
             }                
         }
         String[] s=new String[columns.size()];

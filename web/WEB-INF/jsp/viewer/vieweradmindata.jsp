@@ -105,7 +105,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <table id="admindata_table${tStatus.count}" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                     <thead>
                         <tr class="topRow" style="height: 20px;">
-                            <th style="width: 50px;" class="table-sortable:numeric" id="volgnr_th" onclick="Table.sort(document.getElementById('data_table${tStatus.count}'), {sorttype:Sort['numeric'], col:1});">
+                            <th style="width: 50px;" class="table-sortable:numeric" id="volgnr_th" onclick="Table.sort(document.getElementById('data_table${tStatus.count}'), {sorttype:Sort['numeric'], col:0});">
                                 Volgnr
                             </th>
                             <c:set var="totale_breedte" value="50" />
@@ -122,7 +122,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <c:set var="totale_breedte" value="${totale_breedte + breedte}" />
                                 <c:set var="kol_id" value=" id=\"header_kolom_item${topRowStatus.count}\"" />
                                 <c:set var="noOfKolommen" value="${topRowStatus.count}" />
-                                <th style="width: ${breedte}px;"${kol_id} class="table-sortable:default" onclick="Table.sort(document.getElementById('data_table${tStatus.count}'), {sorttype:Sort['default'], col:${topRowStatus.count + 1}});">
+                                <th style="width: ${breedte}px;"${kol_id} class="table-sortable:default" onclick="Table.sort(document.getElementById('data_table${tStatus.count}'), {sorttype:Sort['default'], col:${topRowStatus.count}});">
                                     ${ThemaItem.label}
                                 </th>
                                 <c:if test="${ThemaItem.thema.naam != themanaam}">
@@ -203,7 +203,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script language="javascript" type="text/javascript">
             for(i = 1; i < (${nuOfTables} + 1); i++) {        
             Table.stripe(document.getElementById('data_table' + i), 'admin_data_alternate_tr');
-            Table.sort(document.getElementById('data_table' + i), {sorttype:Sort['numeric'], col:1});
+            Table.sort(document.getElementById('data_table' + i), {sorttype:Sort['numeric'], col:0});
         }    
              
         if(opener && opener.usePopup) {

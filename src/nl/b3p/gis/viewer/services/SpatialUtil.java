@@ -4,19 +4,19 @@
  * works in cooperation with B3P Kaartenbalie.
  *
  * Copyright 2006, 2007, 2008 B3Partners BV
- * 
+ *
  * This file is part of B3P Gisviewer.
- * 
+ *
  * B3P Gisviewer is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * B3P Gisviewer is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -45,19 +45,19 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 public class SpatialUtil {
-    
+
     private static final Log log = LogFactory.getLog(SpatialUtil.class);
-    
+
     public static final String MULTIPOINT="multipoint";
     public static final String MULTILINESTRING="multilinestring";
     public static final String MULTIPOLYGON="multipolygon";
-    
+
     public  static final List VALID_GEOMS = Arrays.asList(new String[] {
         MULTIPOINT,
         MULTILINESTRING,
         MULTIPOLYGON
     });
-    
+
     public static final List INTERNAL_TABLES = Arrays.asList(new String[] {
         "applicaties",
         "clusters",
@@ -79,14 +79,14 @@ public class SpatialUtil {
         "workshop_medewerkers",
         "workshops"
     });
-    
+
     public static List getValidClusters() {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String hquery = "FROM Clusters WHERE id != 9";
         Query q = sess.createQuery(hquery);
         return q.list();
     }
-    
+
     /**
      * Haal een Thema op uit de database door middel van het meegegeven thema id.
      *
@@ -101,13 +101,13 @@ public class SpatialUtil {
         if (themaid==null || themaid.length()==0) {
             return null;
         }
-        
+
         Integer id = new Integer(themaid);
         Themas t = (Themas)sess.get(Themas.class, id);
         return t;
     }
-    
-    
+
+
     public static List getValidThemas(boolean locatie) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String hquery = "FROM Themas WHERE cluster != 9 ";
@@ -118,7 +118,7 @@ public class SpatialUtil {
         Query q = sess.createQuery(hquery);
         return q.list();
     }
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -132,7 +132,7 @@ public class SpatialUtil {
         String adminPk = t.getAdmin_pk();
         return getColumnDatatype(t,adminPk,conn);
     }
-    
+
     public static int getColumnDatatype(Themas t, String column, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
         String dbtn = t.getAdmin_tabel();
@@ -157,11 +157,11 @@ public class SpatialUtil {
      * @return int
      *
      */
-    static public String getTableGeomName(Themas t, Connection conn) throws SQLException{        
+    static public String getTableGeomName(Themas t, Connection conn) throws SQLException{
         String table= t.getSpatial_tabel();
         if (table==null){
             table=t.getAdmin_tabel();
-        }        
+        }
         return getTableGeomName(table,conn);
     }
     static public String getTableGeomName(String table,Connection conn) throws SQLException{
@@ -174,11 +174,11 @@ public class SpatialUtil {
         }
         return null;
     }
-    
-    
+
+
     static public List getAdminColumnNames(String adminTable, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
-        
+
         if (adminTable==null)
             return null;
         ResultSet rs = dbmd.getColumns(null, null, adminTable, null);
@@ -193,10 +193,10 @@ public class SpatialUtil {
             Collections.sort(columns);
         return columns;
     }
-    
+
     static public List getSpatialColumnNames(String spatialTable, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
-        
+
         if (spatialTable==null)
             return null;
         ResultSet rs = dbmd.getColumns(null, null, spatialTable, null);
@@ -211,7 +211,7 @@ public class SpatialUtil {
             Collections.sort(columns);
         return columns;
     }
-    
+
     static public List getTableNames(Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
         String[] types = new String[] {"TABLE", "VIEW"};
@@ -229,7 +229,7 @@ public class SpatialUtil {
             Collections.sort(tables);
         return tables;
     }
-    
+
     static public boolean isEtlThema(Themas t, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
         String dbtn = t.getAdmin_tabel();
@@ -241,11 +241,13 @@ public class SpatialUtil {
         }
         return false;
     }
-    
+
     static public String getThemaGeomType(Themas t, Connection conn) throws Exception {
         String themaGeomType = null;
         String themaGeomTabel = t.getSpatial_tabel();
-        
+        if(themaGeomTabel==null){
+	        themaGeomTabel= t.getAdmin_tabel();
+        }
         String q = "select * from geometry_columns gc where gc.f_table_name = '" + themaGeomTabel + "'";
         try {
             PreparedStatement statement = conn.prepareStatement(q);
@@ -266,7 +268,7 @@ public class SpatialUtil {
                 log.error("", ex);
             }
         }
-        
+
         String tname = t.getNaam();
         if (themaGeomType == null) {
             log.error("Kan het type geo-object niet vinden: " + tname);
@@ -287,7 +289,7 @@ public class SpatialUtil {
         coords[1]=y;
         return createClickGeom(coords,srid);
     }
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -301,7 +303,7 @@ public class SpatialUtil {
     static public String createClickGeom(double[] coords, int srid) {
         StringBuffer sq = new StringBuffer();
         sq.append(" GeomFromText ( ");
-        if (coords.length==2){            
+        if (coords.length==2){
             sq.append("'POINT(");
             sq.append(coords[0]);
             sq.append(" ");
@@ -316,7 +318,7 @@ public class SpatialUtil {
                 }
                 sq.append(coords[i]);
                 sq.append(" ");
-                sq.append(coords[i+1]);               
+                sq.append(coords[i+1]);
             }
             sq.append("))'");
         }
@@ -326,7 +328,7 @@ public class SpatialUtil {
         return sq.toString();
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -350,7 +352,7 @@ public class SpatialUtil {
         return q.list();
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -367,7 +369,7 @@ public class SpatialUtil {
     // <editor-fold defaultstate="" desc="static public String maxDistanceQuery(String kolom, String tabel, double x, double y, double distance, int srid)">
     static public String maxDistanceQuery(String kolom, String tabel, double x, double y, double distance, int srid) {
         return maxDistanceQuery(kolom,tabel,"the_geom",x,y,distance,srid);
-    }    
+    }
     // </editor-fold>
     /**
      * DOCUMENT ME!
@@ -415,7 +417,7 @@ public class SpatialUtil {
         return intersectQuery(kolom,tabel,"the_geom",x,y,srid);
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -444,7 +446,7 @@ public class SpatialUtil {
         return sq.toString();
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -466,15 +468,15 @@ public class SpatialUtil {
         return InfoSelectQuery(kolom, tabel, coords, distance, srid, null, null);
     }
     // </editor-fold>
-    
+
     static public String InfoSelectQuery(String kolom, String tabel, String geomKolom, double[] coords, double distance, int srid) {
         // Als thema punten of lijnen dan afstand
         // Als thema polygon dan Intersects
         return InfoSelectQuery(kolom, tabel, geomKolom,coords, distance, srid, null, null);
     }
-    
+
     /**
-     * 
+     *
      * @param kolom
      * @param tabel
      * @param coords
@@ -486,10 +488,10 @@ public class SpatialUtil {
      * @deprecated use InfoSelectQuery(String kolom, String tabel, String geomKolom, double[] coords, double distance, int srid, String organizationcodekey, String organizationcode)
      */
     static public String InfoSelectQuery(String kolom, String tabel, double[] coords, double distance, int srid, String organizationcodekey, String organizationcode) {
-        return InfoSelectQuery(kolom,tabel,"the_geom",coords,distance,srid,organizationcodekey,organizationcode);    
+        return InfoSelectQuery(kolom,tabel,"the_geom",coords,distance,srid,organizationcodekey,organizationcode);
     }
     /**
-     * 
+     *
      * @param kolom
      * @param tabel
      * @param geomKolom
@@ -507,12 +509,12 @@ public class SpatialUtil {
         sq.append("\" from \"");
         sq.append(tabel);
         sq.append("\" tbl where ");
-        
+
         if (organizationcode != null){
             sq.append("tbl.\"" + organizationcodekey + "\" = '" + organizationcode + "'");
             sq.append(" and ");
         }
-        
+
         sq.append("(");
         if (coords.length==2){
             sq.append("(Dimension(tbl.\""+geomKolom+"\") < 2) ");
@@ -530,13 +532,13 @@ public class SpatialUtil {
         sq.append(") order by Distance(tbl."+geomKolom+", ");
         sq.append(createClickGeom(coords, srid));
         sq.append(") LIMIT 500");
-        
+
         log.debug("InfoSelectQuery: " + sq.toString());
-        
+
         return sq.toString();
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -556,7 +558,7 @@ public class SpatialUtil {
     }
     // </editor-fold>
     /**
-     * 
+     *
      * @param cols
      * @param tabel
      * @param geomKolom
@@ -604,7 +606,7 @@ public class SpatialUtil {
         return postalcodeRDCoordinates(tabel,"the_geom",searchparam,param);
     }
     // </editor-fold>
-    /** 
+    /**
      * @param tabel
      * @param geomKolom
      * @param searchparam
@@ -615,7 +617,7 @@ public class SpatialUtil {
         return "select distinct " + searchparam + " as naam, astext(tbl."+geomKolom+") as pointsresult from " +
                 tabel + " tbl where lower(tbl." + searchparam + ") = lower('" + param + "')";
     }
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -642,7 +644,7 @@ public class SpatialUtil {
         return "select distinct " + searchparam + " as naam, astext(centroid(tbl."+geomKolom+")) as pointsresult from " +
                 tabel + " tbl where lower(tbl." + searchparam + ") like lower('%" + param + "%')";
     }
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -652,7 +654,7 @@ public class SpatialUtil {
      * @param n_nr String
      *
      * @return String
-     * @deprecated use 
+     * @deprecated use
      */
     // <editor-fold defaultstate="" desc="static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr)">
     static public String wolHMRDCoordinates(String tabel, String searchparam, String hm, String n_nr) {
@@ -676,7 +678,7 @@ public class SpatialUtil {
                 "(CAST(hecto." + searchparam + " AS FLOAT) - " + hm + ")) " +
                 "from " + tabel + " hecto where lower(hecto.n_nr) = lower('" + n_nr + "') ) " +
                 "AND lower(hecto.n_nr) = lower('" + n_nr + "')";
-        
+
         /* Example query:
          * select astext(hecto.the_geom) from verv_nwb_hmn_p hecto where
          * ((CAST(hecto.hm AS FLOAT) - 10.2)*(CAST(hecto.hm AS FLOAT) - 10.2)) =
@@ -685,7 +687,7 @@ public class SpatialUtil {
          * AND hecto.n_nr = 'N261'
          */
     }
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -703,7 +705,7 @@ public class SpatialUtil {
         return intersectionArea(operator,tb1,"the_geom",tb2,"the_geom",id2,id,divide, extraCriteria);
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -730,10 +732,10 @@ public class SpatialUtil {
         String sqlId="\'"+id+"\'";
         try{
             int intId=Integer.parseInt(id);
-            sqlId=""+intId;            
-        }catch (Exception e){            
+            sqlId=""+intId;
+        }catch (Exception e){
         }
-        sq.append(sqlId+" ");  
+        sq.append(sqlId+" ");
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
@@ -741,7 +743,7 @@ public class SpatialUtil {
         return sq.toString();
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -760,7 +762,7 @@ public class SpatialUtil {
         return intersectionLength(operator,tb1,"the_geom",tb2,"the_geom",id2,id,divide, extraCriteria);
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -787,10 +789,10 @@ public class SpatialUtil {
         String sqlId="\'"+id+"\'";
         try{
             int intId=Integer.parseInt(id);
-            sqlId=""+intId;            
-        }catch (Exception e){            
+            sqlId=""+intId;
+        }catch (Exception e){
         }
-        sq.append(sqlId+" ");        
+        sq.append(sqlId+" ");
         /*Voor optimalizatie van de query een where statement toevoegen
          *bij testen verkleinde de tijd een 4 voud
          */
@@ -798,7 +800,7 @@ public class SpatialUtil {
         return sq.toString();
     }
     // </editor-fold>
-    
+
     /**
      *Maakt een query string die alle objecten selecteerd uit tb1 waarvan het object een relatie heeft volgens de meegegeven relatie
      *met het geo object van tb2
@@ -822,7 +824,7 @@ public class SpatialUtil {
         return hasRelationQuery(tb1,"the_geom",tb2,"the_geom",relationFunction,saf,"id",analyseObjectId, extraCriteriaString);
     }
     // </editor-fold>
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -848,15 +850,15 @@ public class SpatialUtil {
         String sqlAnalyseObjectId="\'"+analyseObjectId+"\'";
         try{
             int inObjectId=Integer.parseInt(analyseObjectId);
-            sqlAnalyseObjectId=""+inObjectId;            
-        }catch (Exception e){            
+            sqlAnalyseObjectId=""+inObjectId;
+        }catch (Exception e){
         }
         sq.append(sqlAnalyseObjectId+" ");
         sq.append("and "+relationFunction+"(tb1.\""+geomColumn1+"\", tb2.\""+geomColumn2+"\") ");
         sq.append(extraCriteriaString + " limit 300");
         return sq.toString();
     }
-    
+
     /**
      * DOCUMENT ME!
      *
@@ -874,7 +876,7 @@ public class SpatialUtil {
             String tableId1, String extraCriteria){
         return withinQuery(select,table1,"the_geom",table2,"the_geom",tableIdColumn1,tableId1, extraCriteria);
     }
-    
+
     /**
      *
      * @param select String
@@ -900,7 +902,7 @@ public class SpatialUtil {
         sq.append("and Within(tb1.\""+geomColumn1+"\",tb2.\""+geomColumn2+"\")" + extraCriteria);
         return sq.toString();
     }
-    
+
     public static String getAreaQuery(String tableName, String geomColumn, String attributeName, String compareValue) {
         StringBuffer sq= new StringBuffer();
         sq.append("select Area(\"");
@@ -913,7 +915,7 @@ public class SpatialUtil {
         sq.append("';");
         return sq.toString();
     }
-    
+
     public static String setAttributeValue(Connection conn, String tableName, String keyName, int keyValue, String attributeName, String newValue) throws SQLException  {
         if (conn == null) {
             return null;

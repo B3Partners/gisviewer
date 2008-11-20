@@ -365,3 +365,7 @@ a:hover{
     color: #19619b;
     border: 1px solid #19619b;
 }
+
+.exportMapClass{
+    cursor: pointer;
+}

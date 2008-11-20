@@ -184,6 +184,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <td class="onderbalkTableLeft">
                         VIEWER
                     </td>
+                    <td>
+                        <div class="exportMapClass" onclick="exportMap()">Export Kaart</div>
+                    </td>
                     <td class="onderbalkTableRight">
                         <tiles:insert name="loginblock"/>
                     </td>

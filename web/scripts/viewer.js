@@ -931,3 +931,20 @@ function searchThemaValue(themaList,themaId,val){
         }
     }
 }
+var lastGetMapRequest="";
+function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
+    if(requestObject && requestObject.url){
+        if (requestObject.requesttype=="GetMap"){
+            //if (requestObject.url.toLowerCase().indexOf("getmap")){
+                lastGetMapRequest=requestObject.url;
+            //}
+        }
+    }
+}
+function exportMap(){
+    if (lastGetMapRequest.length==0){
+        alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
+        return;
+    }
+    window.open(lastGetMapRequest);
+}

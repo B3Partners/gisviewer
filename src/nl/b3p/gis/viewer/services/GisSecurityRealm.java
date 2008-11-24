@@ -109,7 +109,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
             }
         }
         log.debug("login: " + username);
-        return new GisPrincipal(username, sp);
+        return new GisPrincipal(username, password,sp);
     }
 
     public Principal authenticate(String username, String password) {

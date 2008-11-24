@@ -46,6 +46,7 @@ public class GisPrincipal implements Principal {
     public static String ANONYMOUS_PRINCIPAL = "anoniem_principal";
     private static final String CAPABILITIES_QUERYSTRING = "REQUEST=GetCapabilities&VERSION=1.1.1&SERVICE=WMS";
     private String name;
+    private String password;
     private Set roles;
     private ServiceProvider sp;
 
@@ -55,8 +56,9 @@ public class GisPrincipal implements Principal {
         this.roles.addAll(roles);
     }
 
-    public GisPrincipal(String name, ServiceProvider sp) {
+    public GisPrincipal(String name, String password, ServiceProvider sp) {
         this.name = name;
+        this.password=password;
         this.sp = sp;
         if (sp == null) {
             return;
@@ -79,7 +81,9 @@ public class GisPrincipal implements Principal {
     public String getName() {
         return name;
     }
-
+    public String getPassword(){
+        return password;
+    }
     public boolean isInRole(String role) {
         return roles.contains(role);
     }
@@ -210,7 +214,7 @@ public class GisPrincipal implements Principal {
                 log.error("No ServiceProvider found, denying login!");
                 return null;
             }
-            user = new GisPrincipal(HibernateUtil.ANONYMOUS_USER, sp);
+            user = new GisPrincipal(HibernateUtil.ANONYMOUS_USER, null,sp);
 
             if (!(user instanceof GisPrincipal)) {
                 return null;

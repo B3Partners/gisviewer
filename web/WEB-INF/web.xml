@@ -71,6 +71,10 @@
         <servlet-name>Data2CSV</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.Data2CSV</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateMapPDF</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.CreateMapPDF</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
@@ -94,6 +98,10 @@
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateMapPDF</servlet-name>
+        <url-pattern>/services/CreateMapPDF</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -931,6 +931,7 @@ function searchThemaValue(themaList,themaId,val){
         }
     }
 }
+var exportMapWindow;
 var lastGetMapRequest="";
 function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
     if(requestObject && requestObject.url){
@@ -941,10 +942,18 @@ function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
         }
     }
 }
-function exportMap(){
+function exportMap(){    
     if (lastGetMapRequest.length==0){
         alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
         return;
     }
-    window.open(lastGetMapRequest);
+    if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
+        exportMapWindow=window.open("createmappdf.do");    
+        exportMapWindow.focus();
+    }else{    
+        exportMapWindow.setMapImageSrc(lastGetMapRequest);
+    }
+    
+    
+    
 }

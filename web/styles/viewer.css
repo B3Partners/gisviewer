@@ -365,7 +365,10 @@ a:hover{
     color: #19619b;
     border: 1px solid #19619b;
 }
-
-.exportMapClass{
+#exportMapClass{
     cursor: pointer;
+}
+
+.createMapPDFBody{
+    margin: 10px;
 }

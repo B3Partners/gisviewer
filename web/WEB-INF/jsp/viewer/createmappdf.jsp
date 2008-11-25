@@ -1,17 +1,21 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
+
+<script type="text/javascript" src="scripts/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="scripts/dragdrop-min.js"></script>
+<script type="text/javascript" src="scripts/slider-min.js"></script>
+
 <div class="createMapPDFBody">
-    <h1><fmt:message key="createmappdf"/></h1>
-<form action="services/CreateMapPDF" name="createMapPdf" id="createMapPdf" target="_blank">
+    <h1><fmt:message key="createmappdf"/></h1><br />
+    <form action="services/CreateMapPDF" name="createMapPdf" id="createMapPdf" target="_blank">
     <table>
         <tr>
-            <td>
+            <td valign="top">
                 <fmt:message key="createmappdf.preview"/>
             </td>
             <td>
                 <div id="imageContainer">        
-                    <img id="mapImage" alt="Preview">                        
-                    </img>
+                    <img id="mapImage" alt="Preview"></img>
                 </div>
                 <input type="hidden" name="mapUrl" id="mapUrl"/>
             </td>            
@@ -26,7 +30,38 @@
         </tr>
         <tr>
             <td><fmt:message key="createmappdf.imageSize"/></td>
-            <td><input type="text" name="imageSize" id="imageSize" value="2048"/>(een waarde tussen de 1 en 2048)</td>
+            <td>
+                <div id="sliderbg" style="background-image: url(images/bg-h.gif); cursor: pointer; width: 309px;">
+                    <div id="sliderthumb"><img src="images/thumb-n.gif" alt="sliderhandle"></div>
+                </div>
+                <div style="margin-left: 10px;">
+                    <input type="hidden" size="4" style="border: 0px none;" name="imageSize" id="imageSize" value="2048" onchange="changeVal(this);" />
+                </div>
+                <script type="text/javascript">
+                    var slider;
+                    slider = YAHOO.widget.Slider.getHorizSlider("sliderbg", "sliderthumb", 0, 300);
+                    slider.setValue(300);
+                    slider.getRealValue = function() {
+                        return Math.round(this.getValue() * (2048/300));
+                    }
+                    slider.subscribe("change", function(offsetFromStart) {
+                        var fld = document.getElementById("imageSize");
+                        var actualValue = slider.getRealValue();
+                        fld.value = actualValue;
+
+                    });
+
+                    function changeVal(obj) {
+                        var strValue = obj.value;
+                        var fValue = parseFloat(strValue);
+                        if(!isNaN(fValue)) {
+                            if(fValue >= 0 && fValue <= 2048) {
+                                slider.setValue(Math.round(fValue / 10.24), false);
+                            }
+                        }
+                    }
+                </script>
+            </td>
         </tr>
         <tr>
             <td><fmt:message key="createmappdf.landscape"/></td>
@@ -59,6 +94,7 @@
         </tr>
     </table>    
 </form>
+<br />
 </div>
 <script type="text/javascript">            
     function setMapImageSrc(url){

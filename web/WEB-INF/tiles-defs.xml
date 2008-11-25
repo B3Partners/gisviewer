@@ -75,7 +75,7 @@
     <definition name="vieweraanvullendeinfo" extends="popup">
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>
     </definition>    
-    <definition name="createmappdf" extends="popup">
+    <definition name="createmappdf" extends="algemeen">
         <put name="content" value="/WEB-INF/jsp/viewer/createmappdf.jsp"/>
     </definition>
     <!-- config -->   

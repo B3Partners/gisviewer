@@ -185,8 +185,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         VIEWER
                     </td>
                     <td class="onderbalkTableRight">
-                        <a href="#" onclick="exportMap(); return false;">Exporteer kaart</a> - 
-                        <tiles:insert name="loginblock"/>
+                        <div style="float: right;">
+                            <tiles:insert name="loginblock"/>
+                        </div>
+                        <div style="margin-right: 85px; float: right;">
+                            <a href="#" onclick="exportMap(); return false;">Exporteer kaart</a>
+                        </div>
                     </td>
                 </tr>
             </table>

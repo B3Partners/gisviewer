@@ -25,42 +25,19 @@
             <td><input type="text" name="title" id="title"></td>
         </tr>
         <tr>
-            <td><fmt:message key="createmappdf.remark"/></td>
-            <td><input type="textarea" name="remark"/></td>
+            <td valign="top"><fmt:message key="createmappdf.remark"/></td>
+            <td><textarea name="remark" cols="40" rows="4"></textarea></td>
         </tr>
         <tr>
             <td><fmt:message key="createmappdf.imageSize"/></td>
             <td>
+                <div style="padding-top: 5px; margin-right: 4px;">laag</div>
                 <div id="sliderbg" style="background-image: url(images/bg-h.gif); cursor: pointer; width: 309px;">
                     <div id="sliderthumb"><img src="images/thumb-n.gif" alt="sliderhandle"></div>
                 </div>
-                <div style="margin-left: 10px;">
-                    <input type="hidden" size="4" style="border: 0px none;" name="imageSize" id="imageSize" value="2048" onchange="changeVal(this);" />
-                </div>
-                <script type="text/javascript">
-                    var slider;
-                    slider = YAHOO.widget.Slider.getHorizSlider("sliderbg", "sliderthumb", 0, 300);
-                    slider.setValue(300);
-                    slider.getRealValue = function() {
-                        return Math.round(this.getValue() * (2048/300));
-                    }
-                    slider.subscribe("change", function(offsetFromStart) {
-                        var fld = document.getElementById("imageSize");
-                        var actualValue = slider.getRealValue();
-                        fld.value = actualValue;
-
-                    });
-
-                    function changeVal(obj) {
-                        var strValue = obj.value;
-                        var fValue = parseFloat(strValue);
-                        if(!isNaN(fValue)) {
-                            if(fValue >= 0 && fValue <= 2048) {
-                                slider.setValue(Math.round(fValue / 10.24), false);
-                            }
-                        }
-                    }
-                </script>
+                <div style="padding-top: 5px; margin-left: 12px;">hoog</div>
+                <input type="hidden" size="4" style="border: 0px none;" name="imageSize" id="imageSize" value="2048" onchange="changeVal(this);" />
+                <script type="text/javascript" src="scripts/slider.js"></script>
             </td>
         </tr>
         <tr>

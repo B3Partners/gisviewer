@@ -957,3 +957,10 @@ function exportMap(){
     
     
 }
+function hideLeftContainer(){
+    fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
+    fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
+    fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
+    fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
+
+}

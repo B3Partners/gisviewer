@@ -22,6 +22,11 @@
  */
 package nl.b3p.gis.viewer;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -130,6 +135,10 @@ public class ViewerAction extends BaseGisAction {
         }
         request.setAttribute("tree", createJasonObject(rootClusterMap, actiefThemaId));
 
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 28992);
+        Polygon extentBbox = null;
+        Polygon fullExtentBbox = null;
+
         //stukje voor BBox toevoegen.
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         Set bboxen = user.getSp().getTopLayer().getSrsbb();
@@ -139,6 +148,17 @@ public class ViewerAction extends BaseGisAction {
             if (FormUtils.nullIfEmpty(bbox.getMaxx()) != null && FormUtils.nullIfEmpty(bbox.getMaxy()) != null && FormUtils.nullIfEmpty(bbox.getMinx()) != null && FormUtils.nullIfEmpty(bbox.getMiny()) != null) {
                 if (bbox.getSrs() != null && bbox.getSrs().equalsIgnoreCase("epsg:28992")) {
                     request.setAttribute("fullExtent", bbox.getMinx() + "," + bbox.getMiny() + "," + bbox.getMaxx() + "," + bbox.getMaxy());
+                    try {
+                        Coordinate[] ca = getCoordinateArray(
+                                Double.parseDouble(bbox.getMinx()),
+                                Double.parseDouble(bbox.getMiny()),
+                                Double.parseDouble(bbox.getMaxx()),
+                                Double.parseDouble(bbox.getMaxy()));
+                        LinearRing lr = geometryFactory.createLinearRing(ca);
+                        fullExtentBbox = geometryFactory.createPolygon(lr, null);
+                    } catch (NumberFormatException nfe) {
+                        log.error("BBOX fullextent wrong format: " + request.getAttribute("fullExtent"));
+                    }
                     break;
                 }
             }
@@ -170,6 +190,17 @@ public class ViewerAction extends BaseGisAction {
                         if (FormUtils.nullIfEmpty(bbox.getMaxx()) != null && FormUtils.nullIfEmpty(bbox.getMaxy()) != null && FormUtils.nullIfEmpty(bbox.getMinx()) != null && FormUtils.nullIfEmpty(bbox.getMiny()) != null) {
                             if (bbox.getSrs() != null && bbox.getSrs().equalsIgnoreCase("epsg:28992")) {
                                 extent = "" + bbox.getMinx() + "," + bbox.getMiny() + "," + bbox.getMaxx() + "," + bbox.getMaxy();
+                                try {
+                                    Coordinate[] ca = getCoordinateArray(
+                                            Double.parseDouble(bbox.getMinx()),
+                                            Double.parseDouble(bbox.getMiny()),
+                                            Double.parseDouble(bbox.getMaxx()),
+                                            Double.parseDouble(bbox.getMaxy()));
+                                    LinearRing lr = geometryFactory.createLinearRing(ca);
+                                    extentBbox = geometryFactory.createPolygon(lr, null);
+                                } catch (NumberFormatException nfe) {
+                                    log.error("BBOX extent wrong format: " + extent);
+                                }
                                 break;
                             }
                         }
@@ -177,10 +208,30 @@ public class ViewerAction extends BaseGisAction {
                 }
             }
         }
+
         if (extent != null) {
+            if (fullExtentBbox != null && extentBbox != null) {
+                Polygon ip = (Polygon) fullExtentBbox.intersection(extentBbox);
+                if (!ip.isEmpty()) {
+                    Coordinate[] ca = ip.getCoordinates();
+                    if (ca.length == 5) {
+                        extent = "" + ca[0].x + "," + ca[0].y + "," + ca[2].x + "," + ca[2].y;
+                    }
+                }
+            }
             request.setAttribute("extent", extent);
         }
 
+    }
+
+    private Coordinate[] getCoordinateArray(double minx, double miny, double maxx, double maxy) {
+        Coordinate[] ca = new Coordinate[5];
+        ca[0] = new Coordinate(minx, miny);
+        ca[1] = new Coordinate(minx, maxy);
+        ca[2] = new Coordinate(maxx, maxy);
+        ca[3] = new Coordinate(maxx, miny);
+        ca[4] = new Coordinate(minx, miny);
+        return ca;
     }
 
     private Map getClusterMap(List themalist, List clusterlist, Clusters rootCluster) throws JSONException, Exception {

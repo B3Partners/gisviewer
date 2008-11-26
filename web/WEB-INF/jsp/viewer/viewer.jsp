@@ -222,18 +222,21 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                 document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
                                                 document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
                                                 document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
+                                                document.write('<li id="tab5" onmouseover="switchTab(this);"><a href="#" id="tab5link" style="display: none;">Informatie</a></li>');
                                             } else if(false) {                   
                                                 document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
                                                 document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 96px;">Thema\'s</a></li>');
                                                 document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
                                                 document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
                                                 document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
+                                                document.write('<li id="tab5" onmouseover="switchTab(this);"><a href="#" id="tab5link" style="display: none;">Informatie</a></li>');
                                             } else {
                                                 document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="display: none;">Thema\'s</a></li>');
-                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 144px;">Zoeker</a></li>');
-                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 143px;">Legenda</a></li>');
+                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
+                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
                                                 document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
                                                 document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
+                                                document.write('<li id="tab5" onmouseover="switchTab(this);"><a href="#" id="tab5link" style="width: 96px;">Informatie</a></li>');
                                             }
                                         </script>
                                         <!--[if lte IE 6]>
@@ -330,6 +333,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                             </div>
                                             <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe">
                                                 <iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
+                                            </div>
+                                            <div id="beschrijvingvak" style="display: none;" class="tabvak">
+                                                Hier volgt een beschrijving van het thema.
                                             </div>
                                         <script type="text/javascript">
                                             if(navigator.userAgent.indexOf("Firefox")!= -1) {

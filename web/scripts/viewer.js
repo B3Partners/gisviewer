@@ -167,8 +167,10 @@ function setActiveThema(id, label, overrule) {
 function radioClick(obj) {
     eraseCookie('activelayer'); 
     createCookie('activelayer', obj.theItem.id + '##' + obj.theItem.title, '7'); 
+    var oldActiveThemaId = activeAnalyseThemaId;
     setActiveThema(obj.theItem.id, obj.theItem.title, true); 
     activateCheckbox(obj.theItem.id);
+    deActivateCheckbox(oldActiveThemaId);
 }
 
 function isActiveItem(item) {
@@ -193,7 +195,9 @@ function createLabel(container, item) {
             var radioControleString = '<input type="radio" name="selkaartlaag" value="' + item.id + '"';
             if (isActiveItem(item)) {
                 radioControleString += ' checked="checked"';
-                analyseRadioChecked = true;
+                if (item.analyse=="active") {
+                    analyseRadioChecked = true;
+                }
             }
             radioControleString += ' onclick="radioClick(this);"';
             radioControleString += '>';
@@ -214,7 +218,9 @@ function createLabel(container, item) {
             el.onclick = function(){radioClick(this);  }
             if (isActiveItem(item)) {
                 el.checked = true;
-                analyseRadioChecked = true;
+                if (item.analyse=="active") {
+                    analyseRadioChecked = true;
+                }
             }
 
             el2 = document.createElement('input');
@@ -260,6 +266,14 @@ function activateCheckbox(id) {
         document.getElementById(id).click();
 }
 
+function deActivateCheckbox(id) {
+    if (id==null)
+	return;
+    var obj = document.getElementById(id);
+    if(obj!=null && obj.checked)
+        document.getElementById(id).click();
+}
+
 function switchTab(obj) {
     eraseCookie('activetab');
     createCookie('activetab', obj.id, '7');
@@ -268,6 +282,7 @@ function switchTab(obj) {
     document.getElementById('tab2').className = '';
     document.getElementById('tab3').className = '';
     document.getElementById('tab4').className = '';
+    document.getElementById('tab5').className = '';
     obj.className="activelink";
     document.getElementById('treevak').style.display = 'none';
     document.getElementById('layermaindiv').style.display = 'none';
@@ -275,6 +290,7 @@ function switchTab(obj) {
     document.getElementById('objectvakViewer').style.display = 'none';
     document.getElementById('analysevakViewer').style.display = 'none';
     document.getElementById('volgordevak').style.display = 'none';
+    document.getElementById('beschrijvingvak').style.display = 'none';
     if(obj.id == "tab0") {
         document.getElementById('treevak').style.display = 'block';
         document.getElementById('layermaindiv').style.display = 'block';
@@ -286,6 +302,8 @@ function switchTab(obj) {
         document.getElementById('analysevakViewer').style.display = 'block';
     } else if(obj.id == "tab4") {
         document.getElementById('volgordevak').style.display = 'block';
+    } else if(obj.id == "tab5") {
+        document.getElementById('beschrijvingvak').style.display = 'block';
     }
 }
   
@@ -708,6 +726,8 @@ setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie);
 var activeTab = readCookie('activetab');
 if(activeTab != null) {
     switchTab(document.getElementById(activeTab));
+} else if (demogebruiker) {
+    switchTab(document.getElementById('tab5'));
 } else {
     switchTab(document.getElementById('tab1'));
 }

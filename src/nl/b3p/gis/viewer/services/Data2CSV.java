@@ -45,7 +45,7 @@ public class Data2CSV extends HttpServlet {
     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-         String themaId= request.getParameter("themaId");
+        String themaId= request.getParameter("themaId");
         String objectIds= request.getParameter("objectIds");
         String seperator= request.getParameter("seperator");
         if (seperator==null || seperator.length()!=1){
@@ -56,11 +56,15 @@ public class Data2CSV extends HttpServlet {
         CsvOutputStream cos= new CsvOutputStream(new OutputStreamWriter(out),sep,false);
         Transaction tx = HibernateUtil.getSessionFactory().getCurrentSession().beginTransaction();
         try {
+            Themas thema=SpatialUtil.getThema(themaId);
+            response.setContentType("text/csv");
+            response.setHeader(FileUploadBase.CONTENT_DISPOSITION, "attachment; filename=\""+thema.getNaam()+".csv\";");
+
             String[] pks=null;
             if (objectIds!=null){
                 pks=objectIds.split(",");
             }
-            Themas thema=SpatialUtil.getThema(themaId);
+            
             GisPrincipal user = GisPrincipal.getGisPrincipal(request);
             if (user==null){
                 writeErrorMessage(response,out,"Kan de data niet ophalen omdat u niet bent ingelogd.");
@@ -96,8 +100,6 @@ public class Data2CSV extends HttpServlet {
                 String[] row = (String[])data.get(i);
                 cos.writeRecord(row);
             }
-            response.setContentType("text/csv");
-            response.setHeader(FileUploadBase.CONTENT_DISPOSITION, "attachment; filename=\""+thema.getNaam()+".csv\";");
         } finally {
             if (cos!=null)
                 cos.close();

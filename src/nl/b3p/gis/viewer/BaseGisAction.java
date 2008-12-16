@@ -685,33 +685,36 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 Object keyValue = rs.getObject(keyName);
                 String attributeName = td.getKolomnaam();
                 Object attributeValue = null;
-                
+
+                String attributeValue2 = "";
                 if (attributeName==null || attributeName.length()==0) {
                     attributeName = keyName;
                     attributeValue = keyValue;
                 } else {
                     attributeValue = rs.getObject(attributeName);
                 }
+                attributeValue2 = attributeValue.toString();
                 if (keyValue!=null) {
                     // De attributeValue ook eerst vooraan erbij zetten om die te kunnen tonen op de admindata pagina - Drie hekjes als scheidingsteken
+                    // Een aantal waardes worden ge-escaped zodat er geen JavaScript fouten optreden
                     StringBuffer function = new StringBuffer("");
                     function.append(attributeValue);
                     function.append("###" + td.getCommando());
                     function.append("(this, ");
                     function.append("'"+td.getThema().getId()+"'");
                     function.append(",");
-                    function.append("'"+keyName+"'");
+                    function.append("'"+keyName.replaceAll("'", "\\\\'")+"'");
                     function.append(",");
                     function.append("'"+keyValue+"'");
                     function.append(",");
-                    function.append("'"+attributeName+"'");
+                    function.append("'"+attributeName.replaceAll("'", "\\\\'")+"'");
                     function.append(",");
-                    function.append("'"+attributeValue+"'");
+                    function.append("'"+attributeValue2.replaceAll("'", "\\\\'")+"'");
                     function.append(",");
                     function.append("'"+td.getEenheid()+"'");
                     function.append(")");
                     regel.addValue(function.toString());
-                }else{
+                } else {
                     regel.addValue("");
                 }                
             } else
@@ -724,6 +727,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         }
         return regel;
     }
+
     /**
      * Zelfde als getRegel met Resultset maar nu met Feature
      *

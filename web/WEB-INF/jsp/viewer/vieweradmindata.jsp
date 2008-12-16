@@ -179,7 +179,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                                 <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                                                             </c:when>
                                                             <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
-                                                                <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}">${fn:split(waarde, '###')[0]}</a>
+                                                                <c:choose>
+                                                                    <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
+                                                                        <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}">${fn:split(waarde, '###')[0]}</a>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        -
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </c:when>
                                                             <c:otherwise>
                                                             ${waarde}
@@ -223,6 +230,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             obj.className = obj.className + ' admin_data_selected_tr';
         }
         </script>
+
+        <!-- Wordt gebruikt om eventuele opmerkingen te bewerken -->
+        <div id="opmerkingenedit" style="display: none; position: absolute; text-align: right;">
+            <textarea id="opmText" cols="60" rows="3"></textarea><br />
+            <input type="button" value="Ok" id="opmOkButton" />
+            <input type="button" value="Cancel" id="opmCancelButton" />
+        </div>
     </c:when>
     <c:otherwise>
         <div id="content_style">
@@ -242,4 +256,3 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </div>
     </c:otherwise>
 </c:choose>
-

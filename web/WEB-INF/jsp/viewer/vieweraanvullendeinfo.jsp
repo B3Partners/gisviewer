@@ -77,11 +77,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </c:when>
                             <c:when test="${ThemaItem.dataType.id == 4}">
                                 <c:choose>
-                                    <c:when test="${fn:startsWith(fn:split(regels[0].values[counter.count - 1], '###')[1],'setAttributeValue')}">
-                                        <c:out value="${fn:split(regels[0].values[counter.count - 1], '###')[0]}"/> 
+                                    <c:when test="${fn:length(fn:split(regels[0].values[counter.count - 1], '###')) > 1}">
+                                        <c:choose>
+                                            <c:when test="${fn:startsWith(fn:split(regels[0].values[counter.count - 1], '###')[1],'setAttributeValue')}">
+                                                <c:out value="${fn:split(regels[0].values[counter.count - 1], '###')[0]}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(regels[0].values[counter.count - 1], '###')[1]}">${fn:split(regels[0].values[counter.count - 1], '###')[0]}</a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                     <c:otherwise>
-                                        <a class="datalink" id="href${counter.count-1}" href="#" onclick="${fn:split(regels[0].values[counter.count - 1], '###')[1]}">${fn:split(regels[0][counter.count - 1], '###')[0]}</a>                                
+                                        -
                                     </c:otherwise>
                                 </c:choose>
                             </c:when>
@@ -93,6 +100,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
             </c:forEach>
         </table>
+        <!-- Wordt gebruikt om eventuele opmerkingen te bewerken -->
+        <div id="opmerkingenedit" style="display: none; position: absolute; text-align: right;">
+            <textarea id="opmText" cols="60" rows="3"></textarea><br />
+            <input type="button" value="Ok" id="opmOkButton" />
+            <input type="button" value="Cancel" id="opmCancelButton" />
+        </div>
     </c:when>
     <c:otherwise>
         Er is geen admin data gevonden!

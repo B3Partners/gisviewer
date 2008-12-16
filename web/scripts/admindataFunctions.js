@@ -52,12 +52,67 @@ function setAttributeValue(element, themaid, keyName, keyValue, attributeName, a
             newValue = 'Ja';
         JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
 }
+
+var currentThemaid, currentKeyName, currentKeyValue, currentAttributeName, currentEenheid;
+var isOpen = false;
+var currentEl;
+function setAttributeText(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+        if(isOpen) {
+            currentEl.style.display = 'block';
+        }
+        isOpen = true;
+        currentEl = element;
+        currentThemaid = themaid;
+        currentKeyName = keyName;
+        currentKeyValue = keyValue;
+        currentAttributeName = attributeName;
+        currentEenheid = eenheid;
+        var opmerkingenedit = document.getElementById('opmerkingenedit');
+        var pos = findPos(element);
+        opmerkingenedit.style.left = pos[0]-1 + 'px';
+        opmerkingenedit.style.top = pos[1]-1 + 'px';
+        opmerkingenedit.style.display = 'block';
+        element.style.display = 'none';
+        document.getElementById('opmText').value = attributeValue;
+        document.getElementById('opmOkButton').onclick = function() {
+            JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, document.getElementById('opmText').value, handleSetText);
+        }
+        document.getElementById('opmCancelButton').onclick = function() {
+            document.getElementById('opmerkingenedit').style.display = 'none';
+            element.style.display = 'block';
+            isOpen = false;
+        }
+}
+
+function findPos(obj) {
+	var curleft = curtop = 0;
+	if (obj.offsetParent) {
+        do {
+			curleft += obj.offsetLeft;
+			curtop += obj.offsetTop;
+		} while (obj = obj.offsetParent);
+    }
+	return [curleft,curtop];
+}
+
+
 /**
  * handle the returned value
  */
 function handleSetAttribute(str){
     document.getElementById(str[0]).innerHTML=str[1];
 }
+
+function handleSetText(str) {
+    document.getElementById('opmerkingenedit').style.display = 'none';
+    document.getElementById(str[0]).innerHTML=str[1];
+    document.getElementById(str[0]).onclick = function() {
+        setAttributeText(this, currentThemaid, currentKeyName, currentKeyValue, currentAttributeName, str[1], currentEenheid);
+    }
+    document.getElementById(str[0]).style.display = 'block';
+    isOpen = false;
+}
+
 /**
  *Calculate the Area of the object.
  */

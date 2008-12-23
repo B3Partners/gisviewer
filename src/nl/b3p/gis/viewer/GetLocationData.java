@@ -349,6 +349,7 @@ public class GetLocationData {
                     if (sptn == null || sptn.length() == 0) {
                         sptn = t.getAdmin_tabel();
                     }
+                    //maak de query voor het ophalen van de objecten die voldoen aan de zoekopdracht
                     StringBuffer q = new StringBuffer();
                     q.append("select ");
                     
@@ -366,6 +367,7 @@ public class GetLocationData {
                     q.append("\" tbl where (");
                     StringBuffer whereS= new StringBuffer();
                     for (int i = 0; i < cols.length; i++) {
+                        //als er maar 1 waarde is dan op alle thema attributen de zelfde criteria los laten met een OR er tussen
                         if (waarde!=null){
                             if (i!=0)
                                 whereS.append(" or");
@@ -388,14 +390,20 @@ public class GetLocationData {
                         }                        
                     }
                     q.append(whereS.toString());
-                    q.append(") group by ");
+                    q.append(")");
+                    StringBuffer qc=new StringBuffer();
                     for (int i = 0; i < cols.length; i++) {
                         if (cols[i]!=null && cols[i].length()>0){
                             if (i!=0)
-                                q.append(",");
-                            q.append("\""+cols[i]+"\"");
+                                qc.append(",");
+                            qc.append("\""+cols[i]+"\"");
                         }
                     }
+                    q.append(" group by ");
+                    q.append(qc);
+                    q.append(" order by ");
+                    q.append(qc);
+
                     if (maxSearchResults>0){
                         q.append(" LIMIT ");
                         q.append(maxSearchResults);

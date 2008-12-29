@@ -43,6 +43,48 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             "left = " + popupleft;
         eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
     }   
+    var mapRequest;
+    if (window.opener){
+        if (window.opener.lastGetMapRequest){
+            mapRequest=window.opener.lastGetMapRequest;
+        }else if(window.opener.opener && window.opener.opener.lastGetMapRequest){
+            mapRequest=window.opener.opener.lastGetMapRequest;
+        }else if(window.opener.parent && window.opener.parent.lastGetMapRequest){
+            mapRequest=window.opener.parent.lastGetMapRequest;
+        }
+
+    }else{
+        mapRequest=lastGetMapRequest;
+    }
+    mapRequest=removeParam(mapRequest,"bbox");
+    mapRequest=removeParam(mapRequest,"width");
+    mapRequest=removeParam(mapRequest,"height");
+    if (mapRequest.lastIndexOf("?")!=mapRequest.length-1 && mapRequest.lastIndexOf("&")!=mapRequest.length-1){
+        if (mapRequest.indexOf("?")>0){
+            mapRequest+="&";
+        }else{
+            mapRequest+="?";
+        }
+    }
+    //max map image height
+    var maxMapImageWidth=300;
+    //max map image width
+    var maxMapImageHeight=300;
+    //De ruimte om het object heen dat ook moet worden getoond in het kaartje.
+    var mapSpaceAround=200;
+    function removeParam(url,param){
+        var newUrl;
+        var paramBeginIndex=url.toLowerCase().indexOf(param+"=", 0);
+        if (paramBeginIndex == -1)
+            return url;
+        var paramEndIndex=url.toLowerCase().indexOf('?',paramBeginIndex);
+        if (paramEndIndex==-1){
+            paramEndIndex=url.length-1;
+        }        
+        newUrl=url.substring(0,paramBeginIndex);
+        newUrl+=url.substring(paramEndIndex);
+        return newUrl;
+    }
 </script>
 
 <c:choose>
@@ -100,6 +142,50 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
             </c:forEach>
         </table>
+        <!-- Wordt een plaatje getoond van het object -->
+        <c:if test="${envelops[0]!=null and not empty envelops[0]}">
+            <div class="aanvullendeInfoKaartContainer">
+                <image id="aanvullendeKaart"></image>
+            </div>
+                <script>
+                    var minx,maxx,miny,maxy,ax,ay;
+                    minx=<c:out value="${envelops[0][0]}"/>;
+                    miny=<c:out value="${envelops[0][1]}"/>;
+                    maxx=<c:out value="${envelops[0][2]}"/>;
+                    maxy=<c:out value="${envelops[0][3]}"/>;
+
+                    minx=Number(minx)-mapSpaceAround;
+                    miny=Number(miny)-mapSpaceAround;
+                    maxx=Number(maxx)+mapSpaceAround;
+                    maxy=Number(maxy)+mapSpaceAround;
+                    var ax=maxx-minx;
+                    var ay=maxy-miny;
+
+                    var xfactor=ax/maxMapImageWidth;
+                    var yfactor=ay/maxMapImageHeight;
+                    var width;
+                    var height;
+                    if (xfactor > yfactor){
+                        width=ax/xfactor;
+                        height=ay/xfactor;
+                    }else{
+                        width=ax/yfactor;
+                        height=ay/yfactor;
+                    }
+                    var newMapRequest=""+mapRequest;
+                    newMapRequest+="bbox="+minx+","+miny+","+maxx+","+maxy+"&";
+                    newMapRequest+="height="+height+"&";
+                    newMapRequest+="width="+width+"&";
+                    var imagetag="<image src='"+newMapRequest+"'";
+                    if (xfactor > yfactor){
+                        imagetag+=" width='"+width;
+                    }else{
+                        imagetag+=" height='"+height;
+                    }
+                    imagetag+="' alt='"+newMapRequest+"'/>";
+                    document.write(imagetag);
+                </script>            
+        </c:if>
         <!-- Wordt gebruikt om eventuele opmerkingen te bewerken -->
         <div id="opmerkingenedit" style="display: none; position: absolute; text-align: right;">
             <textarea id="opmText" cols="60" rows="3"></textarea><br />
@@ -111,3 +197,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         Er is geen admin data gevonden!
     </c:otherwise>
 </c:choose>
+

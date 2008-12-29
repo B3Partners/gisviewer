@@ -201,6 +201,7 @@ a:hover{
 
 #aanvullende_info_table {
     border: 0px none White;
+    float: left;
     margin-top: 10px;
     margin-left: 10px;
 }
@@ -223,7 +224,11 @@ a:hover{
 .aanvullende_info_alternateTr {
     background-color: #DDDDDD;
 }
-
+.aanvullendeInfoKaartContainer{
+    float: left;
+    margin: 10px;
+    clear: none;
+}
 .admin_data_alternate_tr {
     background-color: #DDDDDD;
 }

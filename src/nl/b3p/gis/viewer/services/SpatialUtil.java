@@ -916,6 +916,18 @@ public class SpatialUtil {
         return sq.toString();
     }
 
+    public static String getEnvelopeQuery(String tableName, String geomColumn, String attributeName, String compareValue) {
+        StringBuffer sq= new StringBuffer();
+        sq.append("select asText(ENVELOPE(\"");
+        sq.append(geomColumn);
+        sq.append("\")) from \"");
+        sq.append(tableName+"\" tb where tb.\"");
+        sq.append(attributeName);
+        sq.append("\" = '");
+        sq.append(compareValue);
+        sq.append("';");
+        return sq.toString();
+    }
     public static String setAttributeValue(Connection conn, String tableName, String keyName, int keyValue, String attributeName, String newValue) throws SQLException  {
         if (conn == null) {
             return null;
@@ -958,5 +970,48 @@ public class SpatialUtil {
         }
         conn.setAutoCommit(orgAutoCommit);
         return newValue;
+    }
+    /**
+     * @param envelope the wkt envelope
+     * @return double[4] or null.{minx,miny,maxx,maxy}
+     */
+    public static double[] wktEnvelope2bbox(String envelope){
+        double[] bbox = new double[4];
+        if (envelope==null){
+            return null;
+        }
+        else if (envelope.trim().toLowerCase().startsWith("polygon")){
+            envelope = envelope.replaceAll("POLYGON\\(\\(", "");
+            envelope = envelope.replaceAll("\\)\\)", "");
+            String[] bboxArray = envelope.split(",");
+            if (bboxArray == null || bboxArray.length != 5) {
+                log.error("Kan geen coordinaten uit WKT geometry halen");
+                return null;
+            }
+            try {
+                bbox[0] = Double.parseDouble(bboxArray[0].split(" ")[0]);
+                bbox[2] = Double.parseDouble(bboxArray[2].split(" ")[0]);
+                bbox[1] = Double.parseDouble(bboxArray[0].split(" ")[1]);
+                bbox[3] = Double.parseDouble(bboxArray[2].split(" ")[1]);
+            } catch (NumberFormatException nfe) {
+                log.error("Kan geen coordinaten uit WKT geometry POLYGON halen");
+                return null;
+            }
+        }else{//its a point
+            envelope= envelope.replaceAll("POINT\\(","");
+            envelope= envelope.replaceAll("\\)","");
+            String[] bboxArray=envelope.split(" ");
+             try {
+
+                bbox[0] = Double.parseDouble(bboxArray[0]);
+                bbox[2] = Double.parseDouble(bboxArray[0]);
+                bbox[1] = Double.parseDouble(bboxArray[1]);
+                bbox[3] = Double.parseDouble(bboxArray[1]);
+            } catch (NumberFormatException nfe) {
+                log.error("Kan geen coordinaten uit WKT geometry POINT halen");
+                return null;
+            }
+        }
+        return bbox;
     }
 }

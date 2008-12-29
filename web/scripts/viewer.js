@@ -957,7 +957,7 @@ function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
     if(requestObject && requestObject.url){
         if (requestObject.requesttype=="GetMap"){
             //if (requestObject.url.toLowerCase().indexOf("getmap")){
-                lastGetMapRequest=requestObject.url;
+                lastGetMapRequest=requestObject.url;                
             //}
         }
     }

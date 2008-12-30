@@ -130,13 +130,17 @@ function handleGetArea(str){
  */
 function highlight(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
     var wmsLayer;
+    var tt;
     if (window.themaTree){
-        var tt=window.themaTree;
+        tt=window.themaTree;
         wmsLayer=searchThemaValue(tt,themaid,"wmslayers");  
-    }else{
-        var tt=window.opener.themaTree;
+    }else if (window.opener){
+        tt=window.opener.themaTree;
         wmsLayer=window.opener.searchThemaValue(tt,themaid,"wmslayers");
-    }    
+    }else if(window.parent.themaTree){
+        tt=window.parent.themaTree
+        wmsLayer=window.parent.searchThemaValue(tt,themaid,"wmslayers");
+    }
     
     flamingo.call('map1_fmcLayer','setRecordedValues',wmsLayer,attributeName,trim(attributeValue,' '));
 }

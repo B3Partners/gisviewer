@@ -293,51 +293,56 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             connection=sess.connection();
         
         int dt = SpatialUtil.getPkDataType( t, connection);
-        String adminPk = t.getAdmin_pk();
-        switch (dt) {
-            case java.sql.Types.SMALLINT:
-                pks.add(new Short(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.INTEGER:
-                pks.add(new Integer(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.BIGINT:
-                pks.add(new Long(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.BIT:
-                pks.add(new Boolean(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.DATE:
-//                pks.add(new Date(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.DECIMAL:
-            case java.sql.Types.NUMERIC:
-                pks.add(new BigDecimal(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.REAL:
-                pks.add(new Float(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.FLOAT:
-            case java.sql.Types.DOUBLE:
-                pks.add(new Double(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.TIME:
-//                pks.add(new Time(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.TIMESTAMP:
-//                pks.add(new Timestamp(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.TINYINT:
-                pks.add(new Byte(request.getParameter(adminPk)));
-                break;
-            case java.sql.Types.CHAR:
-            case java.sql.Types.LONGVARCHAR:
-            case java.sql.Types.VARCHAR:
-                pks.add(request.getParameter(adminPk));
-                break;
-            case java.sql.Types.NULL:
-            default:
-                return null;
+        String adminPk=t.getAdmin_pk();
+        String adminIds = request.getParameter(adminPk);
+        String[] adminIdsArr = adminIds.split(",");
+        for(int i = 0; i < adminIdsArr.length; i++) {
+            String adminId = adminIdsArr[i];
+            switch (dt) {
+                case java.sql.Types.SMALLINT:
+                    pks.add(new Short(adminId));
+                    break;
+                case java.sql.Types.INTEGER:
+                    pks.add(new Integer(adminId));
+                    break;
+                case java.sql.Types.BIGINT:
+                    pks.add(new Long(adminId));
+                    break;
+                case java.sql.Types.BIT:
+                    pks.add(new Boolean(adminId));
+                    break;
+                case java.sql.Types.DATE:
+    //                pks.add(new Date(adminId));
+                    break;
+                case java.sql.Types.DECIMAL:
+                case java.sql.Types.NUMERIC:
+                    pks.add(new BigDecimal(adminId));
+                    break;
+                case java.sql.Types.REAL:
+                    pks.add(new Float(adminId));
+                    break;
+                case java.sql.Types.FLOAT:
+                case java.sql.Types.DOUBLE:
+                    pks.add(new Double(adminId));
+                    break;
+                case java.sql.Types.TIME:
+    //                pks.add(new Time(adminId));
+                    break;
+                case java.sql.Types.TIMESTAMP:
+    //                pks.add(new Timestamp(adminId));
+                    break;
+                case java.sql.Types.TINYINT:
+                    pks.add(new Byte(adminId));
+                    break;
+                case java.sql.Types.CHAR:
+                case java.sql.Types.LONGVARCHAR:
+                case java.sql.Types.VARCHAR:
+                    pks.add(adminId);
+                    break;
+                case java.sql.Types.NULL:
+                default:
+                    return null;
+            }
         }
         return pks;
     }

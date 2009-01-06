@@ -221,12 +221,11 @@ public class GetViewerDataAction extends BaseGisAction {
      * regels
      */
     public ActionForward aanvullendeinfo(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        Themas t = getThema(mapping, dynaForm, request);
         boolean addKaart = false;
         if (FormUtils.nullIfEmpty(request.getParameter("addKaart")) != null) {
             addKaart = true;
         }
+        Themas t = getThema(mapping, dynaForm, request);
         List thema_items = SpatialUtil.getThemaData(t, false);
         request.setAttribute("thema_items", thema_items);
         if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {

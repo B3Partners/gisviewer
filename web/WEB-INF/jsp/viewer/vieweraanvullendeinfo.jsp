@@ -71,7 +71,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     //max map image width
     var maxMapImageHeight=300;
     //De ruimte om het object heen dat ook moet worden getoond in het kaartje.
-    var mapSpaceAround=200;
+    var mapSpaceAround=10;
     function removeParam(url,param){
         var newUrl;
         var paramBeginIndex=url.toLowerCase().indexOf(param+"=", 0);
@@ -89,103 +89,112 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <c:choose>
     <c:when test="${not empty thema_items and not empty regels}">
-        <table id="aanvullende_info_table">
-            <tr class="topRow">
-                <th colspan="2" class="aanvullende_info_td">
-                    Aanvullende informatie
-                </th>
-            </tr>
-            <c:forEach var="ThemaItem" items="${thema_items}" varStatus="counter">
-                <c:choose>
-                    <c:when test="${counter.count % 2 == 0}">
-                        <c:set var="altTr" value=""/>
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="altTr" value="aanvullende_info_alternateTr"/>
-                    </c:otherwise>
-                </c:choose>
-                <tr class="${altTr}">
-                    <th class="aanvullende_info_th">${ThemaItem.label}</th>
-                    <td class="aanvullende_info_td">
-                        <c:choose>
-                            <c:when test="${ThemaItem.dataType.id == 2}">
-                                -
-                            </c:when>
-                            <c:when test="${regels[0].values[counter.count - 1] eq ''}">
-                                -
-                            </c:when>
-                            <c:when test="${ThemaItem.dataType.id == 3}">
-                                <html:image src="./images/icons/world_link.png" onclick="popUp('${regels[0].values[counter.count - 1]}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
-                            </c:when>
-                            <c:when test="${ThemaItem.dataType.id == 4}">
-                                <c:choose>
-                                    <c:when test="${fn:length(fn:split(regels[0].values[counter.count - 1], '###')) > 1}">
-                                        <c:choose>
-                                            <c:when test="${fn:startsWith(fn:split(regels[0].values[counter.count - 1], '###')[1],'setAttributeValue')}">
-                                                <c:out value="${fn:split(regels[0].values[counter.count - 1], '###')[0]}"/>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(regels[0].values[counter.count - 1], '###')[1]}">${fn:split(regels[0].values[counter.count - 1], '###')[0]}</a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:when>
-                                    <c:otherwise>
-                                        -
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:when>
-                            <c:otherwise>
-                                ${regels[0].values[counter.count - 1]}
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                </tr>
+        <table id="aanvullende_info_master_table">
+            <c:forEach var="regel" items="${regels}" varStatus="regelCounter">
+                    <tr style="page-break-after: always;">
+                        <td valign="top">
+                            <table class="aanvullende_info_table">
+                                <tr class="topRow">
+                                    <th colspan="2" class="aanvullende_info_td">
+                                        Aanvullende informatie
+                                    </th>
+                                </tr>
+                                <c:forEach var="ThemaItem" items="${thema_items}" varStatus="counter">
+                                    <c:choose>
+                                        <c:when test="${counter.count % 2 == 0}">
+                                            <c:set var="altTr" value=""/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="altTr" value="aanvullende_info_alternateTr"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <tr class="${altTr}">
+                                        <th class="aanvullende_info_th">${ThemaItem.label}</th>
+                                        <td class="aanvullende_info_td">
+                                            <c:choose>
+                                                <c:when test="${ThemaItem.dataType.id == 2}">
+                                                    -
+                                                </c:when>
+                                                <c:when test="${regel.values[counter.count - 1] eq ''}">
+                                                    -
+                                                </c:when>
+                                                <c:when test="${ThemaItem.dataType.id == 3}">
+                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${regel.values[counter.count - 1]}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
+                                                </c:when>
+                                                <c:when test="${ThemaItem.dataType.id == 4}">
+                                                    <c:choose>
+                                                        <c:when test="${fn:length(fn:split(regel.values[counter.count - 1], '###')) > 1}">
+                                                            <c:choose>
+                                                                <c:when test="${fn:startsWith(fn:split(regel.values[counter.count - 1], '###')[1],'setAttributeValue')}">
+                                                                    <c:out value="${fn:split(regel.values[counter.count - 1], '###')[0]}"/>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(regel.values[counter.count - 1], '###')[1]}">${fn:split(regel.values[counter.count - 1], '###')[0]}</a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            -
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${regel.values[counter.count - 1]}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </td>
+                       <td valign="top">
+                            <!-- Wordt een plaatje getoond van het object -->
+                            <c:if test="${envelops[0]!=null and not empty envelops[0]}">
+                                <div class="aanvullendeInfoKaartContainer">
+                                    <script>
+                                        var minx,maxx,miny,maxy,ax,ay;
+                                        minx=<c:out value="${envelops[regelCounter.count-1][0]}"/>;
+                                        miny=<c:out value="${envelops[regelCounter.count-1][1]}"/>;
+                                        maxx=<c:out value="${envelops[regelCounter.count-1][2]}"/>;
+                                        maxy=<c:out value="${envelops[regelCounter.count-1][3]}"/>;
+
+                                        minx=Number(minx)-mapSpaceAround;
+                                        miny=Number(miny)-mapSpaceAround;
+                                        maxx=Number(maxx)+mapSpaceAround;
+                                        maxy=Number(maxy)+mapSpaceAround;
+                                        var ax=maxx-minx;
+                                        var ay=maxy-miny;
+
+                                        var xfactor=ax/maxMapImageWidth;
+                                        var yfactor=ay/maxMapImageHeight;
+                                        var width;
+                                        var height;
+                                        if (xfactor > yfactor){
+                                            width=ax/xfactor;
+                                            height=ay/xfactor;
+                                        }else{
+                                            width=ax/yfactor;
+                                            height=ay/yfactor;
+                                        }
+                                        var newMapRequest=""+mapRequest;
+                                        newMapRequest+="bbox="+minx+","+miny+","+maxx+","+maxy+"&";
+                                        newMapRequest+="height="+height+"&";
+                                        newMapRequest+="width="+width+"&";
+                                        var imagetag="<img src='"+newMapRequest+"'";
+                                        if (xfactor > yfactor){
+                                            imagetag+=" width='"+width;
+                                        }else{
+                                            imagetag+=" height='"+height;
+                                        }
+                                        imagetag+="' alt='"+newMapRequest+"'/>";
+                                        document.write(imagetag);
+                                    </script>
+                                </div>
+                            </c:if>
+                       </td>
+                   </tr>
             </c:forEach>
         </table>
-        <!-- Wordt een plaatje getoond van het object -->
-        <c:if test="${envelops[0]!=null and not empty envelops[0]}">
-            <div class="aanvullendeInfoKaartContainer">
-                <image id="aanvullendeKaart"></image>
-            </div>
-                <script>
-                    var minx,maxx,miny,maxy,ax,ay;
-                    minx=<c:out value="${envelops[0][0]}"/>;
-                    miny=<c:out value="${envelops[0][1]}"/>;
-                    maxx=<c:out value="${envelops[0][2]}"/>;
-                    maxy=<c:out value="${envelops[0][3]}"/>;
-
-                    minx=Number(minx)-mapSpaceAround;
-                    miny=Number(miny)-mapSpaceAround;
-                    maxx=Number(maxx)+mapSpaceAround;
-                    maxy=Number(maxy)+mapSpaceAround;
-                    var ax=maxx-minx;
-                    var ay=maxy-miny;
-
-                    var xfactor=ax/maxMapImageWidth;
-                    var yfactor=ay/maxMapImageHeight;
-                    var width;
-                    var height;
-                    if (xfactor > yfactor){
-                        width=ax/xfactor;
-                        height=ay/xfactor;
-                    }else{
-                        width=ax/yfactor;
-                        height=ay/yfactor;
-                    }
-                    var newMapRequest=""+mapRequest;
-                    newMapRequest+="bbox="+minx+","+miny+","+maxx+","+maxy+"&";
-                    newMapRequest+="height="+height+"&";
-                    newMapRequest+="width="+width+"&";
-                    var imagetag="<image src='"+newMapRequest+"'";
-                    if (xfactor > yfactor){
-                        imagetag+=" width='"+width;
-                    }else{
-                        imagetag+=" height='"+height;
-                    }
-                    imagetag+="' alt='"+newMapRequest+"'/>";
-                    document.write(imagetag);
-                </script>            
-        </c:if>
         <!-- Wordt gebruikt om eventuele opmerkingen te bewerken -->
         <div id="opmerkingenedit" style="display: none; position: absolute; text-align: right;">
             <textarea id="opmText" cols="60" rows="3"></textarea><br />

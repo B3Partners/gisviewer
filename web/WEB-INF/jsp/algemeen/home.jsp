@@ -119,7 +119,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                     </li>
                                 </c:if>
                             </c:forEach>
-                            <c:if test="${not(found)}">
+                            <c:if test="${not found}">
                                 <li>Er zijn geen voorgeselecteerde thema's gevonden.</li>
                                 <li>U kunt direct naar de <html:link page="/viewer.do">viewer</html:link>.</li>
                             </c:if>

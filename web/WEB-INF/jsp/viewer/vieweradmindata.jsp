@@ -59,6 +59,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             plusmin.style.marginTop = '-4px';
         }
     }
+    var usePopup = true;
 </script>
 <c:choose>
     <c:when test="${not empty thema_items_list and not empty regels_list}">
@@ -70,6 +71,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:if test="${ThemaItem.thema.naam != themanaam}">
                     <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
                     <c:set var="themaId" value="${ThemaItem.thema.id}"/>
+                    <c:set var="adminPk" value="${ThemaItem.thema.admin_pk}"/>
                 </c:if>
             </c:forEach>
 
@@ -88,11 +90,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </div>
                     ${themanaam}
                     <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()">Exporteer naar csv</a>
+                    <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()">Exporteer naar infobox</a>
                     <form action="services/Data2CSV" name="data2csv${tStatus.count}" id="data2csv${tStatus.count}" target="_blank" method="post">
                         <input name="themaId" type="hidden" value="${themaId}"/>
                         <input name="objectIds" type="hidden" value=""/>
                     </form>
-
+                    <form action="viewerdata.do?aanvullendeinfo=t" name="data2info${tStatus.count}" id="data2info${tStatus.count}" target="_blank" method="post">
+                        <input name="themaid" type="hidden" value="${themaId}"/>
+                        <input name="${adminPk}" type="hidden" value=""/>
+                        <input name="addKaart" type="hidden" value="j"/>
+                    </form>
                 </div>
             </div>
 
@@ -142,7 +149,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                     if (document.data2csv${tStatus.count}.objectIds.value.length > 0){
                                         document.data2csv${tStatus.count}.objectIds.value+=",";
                                     }
+                                    if (document.data2info${tStatus.count}.${adminPk}.value.length > 0){
+                                        document.data2info${tStatus.count}.${adminPk}.value+=",";
+                                    }
                                     document.data2csv${tStatus.count}.objectIds.value+="${regel.primairyKey}";
+                                    document.data2info${tStatus.count}.${adminPk}.value+="${regel.primairyKey}";
                                 </script>
                                 <c:if test="${counter.count < 501}">
                                     <c:set var="last_id" value="" />
@@ -211,6 +222,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:set value="${tStatus.count}" var="nuOfTables" />
             <script>
                 document.getElementById('ahref_data2csv${tStatus.count}').style.visibility="visible";
+                document.getElementById('ahref_data2info${tStatus.count}').style.visibility="visible";
             </script>
         </c:forEach>
         <script language="javascript" type="text/javascript">

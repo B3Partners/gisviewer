@@ -107,7 +107,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
         Connecties c = null;
         if (t != null) {
             c = t.getConnectie();
-        } else {
+        }
+        if(c == null) {
             if (FormUtils.nullIfEmpty(dynaForm.getString("connectie")) != null) {
                 c = (Connecties) sess.get(Connecties.class, Integer.parseInt(dynaForm.getString("connectie")));
             }

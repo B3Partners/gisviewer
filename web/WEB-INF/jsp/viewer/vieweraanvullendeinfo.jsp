@@ -122,20 +122,35 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                     <html:image src="./images/icons/world_link.png" onclick="popUp('${regel.values[counter.count - 1]}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                                                 </c:when>
                                                 <c:when test="${ThemaItem.dataType.id == 4}">
+                                                    <c:set var="valar" value="${fn:split(regel.values[counter.count - 1], '###')}" />
+                                                    <c:set var="funct" value="${valar[0]}" />
+                                                    <c:if test="${fn:length(valar) > 1}">
+                                                        <c:set var="funct" value="${valar[1]}" />
+                                                    </c:if>
                                                     <c:choose>
-                                                        <c:when test="${fn:length(fn:split(regel.values[counter.count - 1], '###')) > 1}">
+                                                        <c:when test="${fn:startsWith(funct,'setAttributeValue')}}">
                                                             <c:choose>
-                                                                <c:when test="${fn:startsWith(fn:split(regel.values[counter.count - 1], '###')[1],'setAttributeValue')}">
-                                                                    <c:out value="${fn:split(regel.values[counter.count - 1], '###')[0]}"/>
+                                                                <c:when test="${fn:length(valar) > 1}">
+                                                                    <c:out value="${valar[0]}"/>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(regel.values[counter.count - 1], '###')[1]}">${fn:split(regel.values[counter.count - 1], '###')[0]}</a>
+                                                                    -
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:when>
-                                                        <c:otherwise>
-                                                            -
-                                                        </c:otherwise>
+                                                        <c:when test="${fn:startsWith(funct,'setAttributeText')}">
+                                                            <c:choose>
+                                                                <c:when test="${fn:length(valar) > 1}">
+                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="return ${valar[1]}">${valar[0]}</a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="return ${valar[0]}"><em>leeg</em></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:when>
+                                                        <c:when test="${fn:length(valar) > 1}">
+                                                            <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${valar[1]}">${valar[0]}</a>
+                                                        </c:when>
                                                     </c:choose>
                                                 </c:when>
                                                 <c:otherwise>

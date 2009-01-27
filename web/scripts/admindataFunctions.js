@@ -72,6 +72,7 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
         opmerkingenedit.style.left = pos[0]-1 + 'px';
         opmerkingenedit.style.top = pos[1]-1 + 'px';
         opmerkingenedit.style.display = 'block';
+        document.getElementById('opmText').focus();
         element.style.display = 'none';
         document.getElementById('opmText').value = attributeValue;
         document.getElementById('opmOkButton').onclick = function() {
@@ -82,6 +83,7 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
             element.style.display = 'block';
             isOpen = false;
         }
+        return false;
 }
 
 function findPos(obj) {

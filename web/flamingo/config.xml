@@ -57,7 +57,7 @@
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>        
         <!-- het 'canvas' waar op getekend kan worden-->
         <tpc:EditMap id="editMap" listento="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom">
-            <tpc:GIS>
+            <tpc:GIS id="gis">
                 <tpc:Layer name="redlining" title="Redlining" visible="true" geometrytypes="Point,LineString,Polygon">                    
                     <tpc:Style fillcolor="0xFF0000" fillopacity="30" strokecolor="0xFF0000" strokeopacity="100"/>
                 </tpc:Layer>

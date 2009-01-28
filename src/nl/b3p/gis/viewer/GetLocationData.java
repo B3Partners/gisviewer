@@ -22,7 +22,10 @@
  */
 package nl.b3p.gis.viewer;
 
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jump.feature.Feature;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,25 +40,35 @@ import nl.b3p.gis.viewer.services.SpatialUtil;
 import nl.b3p.gis.viewer.services.WfsUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+//import org.geotools.data.wfs.v1_1_0.WFSFeatureSource;
+import org.geotools.data.FeatureSource;
+import org.geotools.data.wfs.WFSDataStore;
+import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.factory.GeoTools;
+import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.simple.SimpleFeatureImpl;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory;
 
 public class GetLocationData {
-    
+
     private static final Log log = LogFactory.getLog(GetLocationData.class);
-    private static int maxSearchResults=25;
+    private static int maxSearchResults = 25;
+
     public GetLocationData() {
     }
-    
+
     public String[] getArea(String elementId, String themaId, String attributeName, String compareValue, String eenheid) throws SQLException {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         sess.beginTransaction();
         Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
         String[] returnValue = new String[2];
         returnValue[0] = elementId;
-        
-        
+
+
         //Haal op met jdbc connectie
         double area = 0.0;
         if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
@@ -88,7 +101,7 @@ public class GetLocationData {
             } finally {
                 sess.close();
             }
-            
+
         }//Haal op met WFS
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             try {
@@ -131,7 +144,7 @@ public class GetLocationData {
         }
         return returnValue;
     }
-    
+
     /**
      *
      * @param elementId element in html pagina waar nieuwe waarde naar wordt geschreven
@@ -149,7 +162,7 @@ public class GetLocationData {
         try {
             returnValue[0] = elementId;
             returnValue[1] = oldValue + " (fout)";
-            
+
             Integer id = FormUtils.StringToInteger(themaId);
             int keyValueInt = FormUtils.StringToInt(keyValue);
             if (id == null || keyValueInt == 0) {
@@ -158,7 +171,7 @@ public class GetLocationData {
             Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = sess.beginTransaction();
             Themas t = (Themas) sess.get(Themas.class, id);
-            
+
             String connectionType = null;
             Connection conn = null;
             if (t.getConnectie() != null) {
@@ -182,11 +195,11 @@ public class GetLocationData {
             if (conn == null || connectionType == null) {
                 return returnValue;
             }
-            
+
             //Schrijf met jdbc connectie
             if (connectionType.equalsIgnoreCase(Connecties.TYPE_JDBC)) {
                 String tableName = t.getSpatial_tabel();
-                
+
                 try {
                     String retVal = SpatialUtil.setAttributeValue(conn, tableName, keyName, keyValueInt, attributeName, newValue);
                     returnValue[1] = retVal;
@@ -210,7 +223,7 @@ public class GetLocationData {
         }
         return returnValue;
     }
-    
+
     /**
      * In eerste instantie direct uit jsp via dwr aanroepen, later wrappen voor meer veiligheid
      * @param x_input
@@ -236,7 +249,7 @@ public class GetLocationData {
             } catch (NumberFormatException nfe) {
                 return new String[]{nfe.getMessage()};
             }
-            
+
             if (cols == null || cols.length == 0) {
                 return new String[]{rdx, rdy, "No cols"};
             }
@@ -250,11 +263,11 @@ public class GetLocationData {
             for (int i = 0; i < cols.length; i++) {
                 columns.add(cols[i]);
             }
-            
+
             results[0] = rdx;
             results[1] = rdy;
             results[2] = "";
-            
+
             Session sess = HibernateUtil.getSessionFactory().openSession();
             Themas t = (Themas) sess.get(Themas.class, new Integer(themaId));
             Connection connection = null;
@@ -293,202 +306,324 @@ public class GetLocationData {
         }
         return results;
     }
-    
-    public ArrayList getMapCoords(String[] waarden, String[] colomns, int[] themaIds, double distance, int srid) {
-        double distance2=0.0;
-        if (distance > 0)
-            distance2=distance/2;
-        ArrayList coords = new ArrayList();
+
+    /**
+     * Functie die door DWR ajax wordt gebruikt om bbox coordinaten op te halen met een aantal criterium.
+     * @param waarden De waarde waar aan een object moet voldoen.
+     * @param columns De kolommen waar de waarden mee vergeleken moeten worden.
+     * @param themaIds de ids van de themas waar op gezocht moet worden
+     * @param distance Als de bbox een punt is of kleiner dan 1 bij 1 dan wordt de bbox vergroot met de distance
+     */
+    public ArrayList getMapCoords(String[] waarden, String[] colomns, int[] themaIds, double distance) {
+        double distance2 = 0.0;
+        if (distance > 0) {
+            distance2 = distance / 2;
+        }
+        ArrayList allcoords = new ArrayList();
         if (colomns.length != themaIds.length) {
             log.error("Aantal kolommen en themas is niet gelijk");
             MapCoordsBean mbc = new MapCoordsBean();
             mbc.setNaam("Zoeker is verkeerd geconfigureerd");
-            coords.add(mbc);
-            return coords;
+            allcoords.add(mbc);
+            return allcoords;
         }
-        String waarde=null;
-        if (waarden.length==1)
-            waarde = waarden[0].replaceAll("\\'", "''");
-        
+
         Session sess = null;
         try {
             sess = HibernateUtil.getSessionFactory().openSession();
+            //controleer of alle benodigde data is meegegeven voor het zoeken op een thema.
             for (int ti = 0; ti < themaIds.length; ti++) {
-                String[] cols = colomns[ti].split(",");                
+                //controleer of er kolommen zijn om op te zoeken voor het thema.
+                String[] cols = colomns[ti].split(",");
                 if (cols == null || cols.length == 0) {
                     MapCoordsBean mbc = new MapCoordsBean();
                     mbc.setNaam("No cols");
-                    coords.add(mbc);
-                    return coords;
-                }                
-                if (waarde==null){                    
-                    if (waarden.length != cols.length){
+                    allcoords.add(mbc);
+                    return allcoords;
+                }
+                //als waarden.length > 1 dan zijn er meerdere waardes en moeten er dus evenveel kolommen meegegeven zijn.
+                if (waarden.length > 1) {
+                    if (waarden.length != cols.length) {
                         MapCoordsBean mbc = new MapCoordsBean();
                         mbc.setNaam("Number of values missing!");
-                        coords.add(mbc);
-                        return coords;
+                        allcoords.add(mbc);
+                        return allcoords;
                     }
+                }                
+                Themas t = (Themas) sess.get(Themas.class, new Integer(themaIds[ti]));
+                //controleer of thema bestaat
+                if (t == null) {
+                    MapCoordsBean mbc = new MapCoordsBean();
+                    mbc.setNaam("Ongeldig thema met id: " + themaIds[ti] + " geconfigureerd");
+                    allcoords.add(mbc);
+                    return allcoords;
                 }
-                Connection connection = null;
-                try {
-                    Themas t = (Themas) sess.get(Themas.class, new Integer(themaIds[ti]));
-                    if (t==null) {
-                        MapCoordsBean mbc = new MapCoordsBean();
-                        mbc.setNaam("Ongeldig thema met id: " + themaIds[ti] + " geconfigureerd");
-                        coords.add(mbc);
-                        return coords;
-                    }
-                    if (t.getConnectie() != null) {
-                        connection = t.getConnectie().getJdbcConnection();
-                    }
-                    if (connection == null) {
-                        connection = sess.connection();
-                    }
-                    String sptn = t.getSpatial_tabel();
-                    String geomcolomn = SpatialUtil.getTableGeomName(t, connection);
-                    if (sptn == null || sptn.length() == 0) {
-                        sptn = t.getAdmin_tabel();
-                    }
-                    //maak de query voor het ophalen van de objecten die voldoen aan de zoekopdracht
-                    StringBuffer q = new StringBuffer();
-                    q.append("select ");
-                    
-                    for (int i = 0; i < cols.length; i++) {
-                        if (cols[i]!=null && cols[i].length()>0){
-                            if (i!=0)
-                                q.append(",");
-                            q.append("\""+cols[i]+"\"");
-                        }
-                    }
-                    q.append(", astext(Envelope(collect(tbl.");
-                    q.append(geomcolomn);
-                    q.append("))) as bbox from \"");
-                    q.append(sptn);
-                    q.append("\" tbl where (");
-                    StringBuffer whereS= new StringBuffer();
-                    for (int i = 0; i < cols.length; i++) {
-                        //als er maar 1 waarde is dan op alle thema attributen de zelfde criteria los laten met een OR er tussen
-                        if (waarde!=null){
-                            if (i!=0)
-                                whereS.append(" or");
-                            whereS.append(" lower(CAST(tbl.");
-                            whereS.append("\""+cols[i]+"\" AS VARCHAR)");
-                            whereS.append(") like lower('%");
-                            whereS.append(waarde);
-                            whereS.append("%')");
-                        }else{
-                            if (waarden[i].length()>0){
-                                if (whereS.length()>0){
-                                    whereS.append(" AND");
-                                }
-                                whereS.append(" lower(CAST(tbl.");
-                                whereS.append("\""+cols[i]+"\" AS VARCHAR)");
-                                whereS.append(") like lower('%");
-                                whereS.append(waarden[i]);
-                                whereS.append("%')");
-                            }
-                        }                        
-                    }
-                    q.append(whereS.toString());
-                    q.append(")");
-                    StringBuffer qc=new StringBuffer();
-                    for (int i = 0; i < cols.length; i++) {
-                        if (cols[i]!=null && cols[i].length()>0){
-                            if (i!=0)
-                                qc.append(",");
-                            qc.append("\""+cols[i]+"\"");
-                        }
-                    }
-                    q.append(" group by ");
-                    q.append(qc);
-                    q.append(" order by ");
-                    q.append(qc);
+                //maak thema connectie
+                if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
+                    allcoords.addAll(getMapCoordsJdbcThema(t,sess,cols,waarden,distance2));
+                }
+                else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+                    allcoords.addAll(getMapCoordsWfsThema(t,sess,cols,waarden,distance2));
+                }
 
-                    if (maxSearchResults>0){
-                        q.append(" LIMIT ");
-                        q.append(maxSearchResults);
-                    }
-                    log.debug(q.toString());
-                    PreparedStatement statement = connection.prepareStatement(q.toString());
-                    try {
-                        ResultSet rs = statement.executeQuery();
-                        //int loopnum = 0;
-                        while (rs.next() && coords.size()<=maxSearchResults) {
-                            double minx, maxx, miny, maxy;
-                            String envelope = rs.getString("bbox");
-                            if (envelope==null){
-                                StringBuffer errorMessage = new StringBuffer();
-                                errorMessage.append("Er wordt geen BBOX gegeven door de database voor record met ");
-                                for (int i = 0; i < cols.length; i++) {
-                                    if (rs.getString(cols[i]) != null) {                                        
-                                        if (i != 0) {
-                                            errorMessage.append(",");
-                                        }
-                                        errorMessage.append(cols[i]);
-                                        errorMessage.append("=");
-                                        errorMessage.append(rs.getString(cols[i]));
-                                    }
-                                }
-                                log.error(errorMessage.toString());
-                                continue;
-                            }
-                            else{
-                                double[] bbox=SpatialUtil.wktEnvelope2bbox(envelope);
-                                minx=bbox[0];
-                                miny=bbox[1];
-                                maxx=bbox[2];
-                                maxy=bbox[3];
-                            }
-                            if (Math.abs(minx - maxx) < 1) {
-                                //maxx = minx + distance;
-                                minx-=distance2;
-                                maxx+=distance2;
-                            }
-                            if (Math.abs(miny - maxy) < 1) {
-                                //maxy = miny + distance;
-                                maxy+=distance2;
-                                miny-=distance2;
-                            }
-                            StringBuffer naam = new StringBuffer();
-                            for (int i = 0; i < cols.length; i++) {
-                                if (rs.getString(cols[i]) != null) {
-                                    if (i != 0) {
-                                        naam.append(",");
-                                    }
-                                    naam.append(rs.getString(cols[i]));
-                                }
-                            }
-                            MapCoordsBean mbc = new MapCoordsBean();
-                            mbc.setNaam(naam.toString());
-                            mbc.setMinx(Double.toString(minx));
-                            mbc.setMiny(Double.toString(miny));
-                            mbc.setMaxx(Double.toString(maxx));
-                            mbc.setMaxy(Double.toString(maxy));
-                            coords.add(mbc);
-                        }
-                    } finally {
-                        statement.close();
-                    }
-                } catch (SQLException ex) {
-                    log.error("", ex);
-                } finally {
-                    try {
-                        if (connection != null) {
-                            connection.close();
-                        }
-                    } catch (Exception e) {
-                    }
-                }
             }
         } finally {
             if (sess != null) {
                 sess.close();
             }
         }
-        if (!coords.isEmpty()) {
-            return coords;
+        if (allcoords.size()>0) {
+            return allcoords;
         }
         return null;
     }
     //}catch(Exception )
+
+    private ArrayList getMapCoordsJdbcThema(Themas t, Session sess,String[] cols,String[] waarden,double distance2) {
+        ArrayList coords = new ArrayList();
+        Connection connection = null;
+        try {
+            if (t.getConnectie() != null) {
+                connection = t.getConnectie().getJdbcConnection();
+            }
+            if (connection == null) {
+                connection = sess.connection();
+            }
+            String sptn = t.getSpatial_tabel();
+            String geomcolomn = SpatialUtil.getTableGeomName(t, connection);
+            if (sptn == null || sptn.length() == 0) {
+                sptn = t.getAdmin_tabel();
+            }
+            //maak de query voor het ophalen van de objecten die voldoen aan de zoekopdracht
+            StringBuffer q = new StringBuffer();
+            q.append("select ");
+
+            for (int i = 0; i < cols.length; i++) {
+                if (cols[i] != null && cols[i].length() > 0) {
+                    if (i != 0) {
+                        q.append(",");
+                    }
+                    q.append("\"" + cols[i] + "\"");
+                }
+            }
+            q.append(", astext(Envelope(collect(tbl.");
+            q.append(geomcolomn);
+            q.append("))) as bbox from \"");
+            q.append(sptn);
+            q.append("\" tbl where (");
+            StringBuffer whereS = new StringBuffer();
+            for (int i = 0; i < cols.length; i++) {
+                //als er maar 1 waarde is dan op alle thema attributen de zelfde criteria los laten met een OR er tussen
+                if (waarden.length == 1) {
+                    if (i != 0) {
+                        whereS.append(" or");
+                    }
+                    whereS.append(" lower(CAST(tbl.");
+                    whereS.append("\"" + cols[i] + "\" AS VARCHAR)");
+                    whereS.append(") like lower('%");
+                    whereS.append(waarden[0].replaceAll("\\'", "''"));
+                    whereS.append("%')");
+                } else {
+                    if (waarden[i].length() > 0) {
+                        if (whereS.length() > 0) {
+                            whereS.append(" AND");
+                        }
+                        whereS.append(" lower(CAST(tbl.");
+                        whereS.append("\"" + cols[i] + "\" AS VARCHAR)");
+                        whereS.append(") like lower('%");
+                        whereS.append(waarden[i].replaceAll("\\'", "''"));
+                        whereS.append("%')");
+                    }
+                }
+            }
+            q.append(whereS.toString());
+            q.append(")");
+            StringBuffer qc = new StringBuffer();
+            for (int i = 0; i < cols.length; i++) {
+                if (cols[i] != null && cols[i].length() > 0) {
+                    if (i != 0) {
+                        qc.append(",");
+                    }
+                    qc.append("\"" + cols[i] + "\"");
+                }
+            }
+            q.append(" group by ");
+            q.append(qc);
+            q.append(" order by ");
+            q.append(qc);
+
+            if (maxSearchResults > 0) {
+                q.append(" LIMIT ");
+                q.append(maxSearchResults);
+            }
+            log.debug(q.toString());
+            PreparedStatement statement = connection.prepareStatement(q.toString());
+            try {
+                ResultSet rs = statement.executeQuery();
+                //int loopnum = 0;
+                while (rs.next() && coords.size() <= maxSearchResults) {
+                    double minx, maxx, miny, maxy;
+                    String envelope = rs.getString("bbox");
+                    if (envelope == null) {
+                        StringBuffer errorMessage = new StringBuffer();
+                        errorMessage.append("Er wordt geen BBOX gegeven door de database voor record met ");
+                        for (int i = 0; i < cols.length; i++) {
+                            if (rs.getString(cols[i]) != null) {
+                                if (i != 0) {
+                                    errorMessage.append(",");
+                                }
+                                errorMessage.append(cols[i]);
+                                errorMessage.append("=");
+                                errorMessage.append(rs.getString(cols[i]));
+                            }
+                        }
+                        log.error(errorMessage.toString());
+                        continue;
+                    } else {
+                        double[] bbox = SpatialUtil.wktEnvelope2bbox(envelope);
+                        minx = bbox[0];
+                        miny = bbox[1];
+                        maxx = bbox[2];
+                        maxy = bbox[3];
+                    }
+                    if (Math.abs(minx - maxx) < 1) {
+                        //maxx = minx + distance;
+                        minx -= distance2;
+                        maxx += distance2;
+                    }
+                    if (Math.abs(miny - maxy) < 1) {
+                        //maxy = miny + distance;
+                        maxy += distance2;
+                        miny -= distance2;
+                    }
+                    StringBuffer naam = new StringBuffer();
+                    for (int i = 0; i < cols.length; i++) {
+                        if (rs.getString(cols[i]) != null) {
+                            if (i != 0) {
+                                naam.append(",");
+                            }
+                            naam.append(rs.getString(cols[i]));
+                        }
+                    }
+                    MapCoordsBean mbc = new MapCoordsBean();
+                    mbc.setNaam(naam.toString());
+                    mbc.setMinx(Double.toString(minx));
+                    mbc.setMiny(Double.toString(miny));
+                    mbc.setMaxx(Double.toString(maxx));
+                    mbc.setMaxy(Double.toString(maxy));
+                    coords.add(mbc);
+                }
+            } finally {
+                statement.close();
+            }
+
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return coords;
+
+    }
+
+    private ArrayList getMapCoordsWfsThema(Themas t, Session sess,String[] cols,String[] waarden,double distance2){
+        ArrayList coords= new ArrayList();
+        WFSDataStore ds=null;
+        FeatureSource fs=null;
+        FeatureCollection fc=null;
+        FeatureIterator fi=null;
+        try{
+            String ft=null;
+            if(t.getConnectie() != null){
+                ds=t.getConnectie().getDatastore();                
+                if (ds!=null){
+                    ds.setMaxFeatures(maxSearchResults);
+                    String version=ds.getServiceVersion();
+                    ft= "app:"+t.getAdmin_tabel().substring(t.getAdmin_tabel().indexOf("}")+1,t.getAdmin_tabel().length());
+                    if (version.equals("1.0.0")){
+                        fs=(org.geotools.data.wfs.v1_0_0.WFSFeatureSource)ds.getFeatureSource(ft);
+                    }else{
+                        fs=(org.geotools.data.wfs.v1_1_0.WFSFeatureSource)ds.getFeatureSource(ft);
+                    }
+                }
+            }
+            if (fs==null){
+                throw new IOException("Kan geen FeatureSource worden gemaakt");
+            }
+            FilterFactory ff = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
+            List orFilters= new ArrayList();
+            List andFilters= new ArrayList();
+            for (int i=0; i < cols.length; i++){                
+                if (waarden.length == 1){
+                    Filter colFilter= ff.equal(ff.property(cols[i]), ff.literal(waarden[0]),false);
+                    orFilters.add(colFilter);
+                }else if (waarden[i]!=null && waarden[i].length()>0){
+                    Filter colFilter= ff.equal(ff.property(cols[i]), ff.literal(waarden[i]),false);
+                    andFilters.add(colFilter);
+                }
+            }
+            Filter mainFilter=null;
+            if (orFilters.size()>0){
+                if (orFilters.size()==1){
+                    mainFilter=(Filter)orFilters.get(0);
+                }else{
+                    mainFilter=ff.or(orFilters);
+                }
+            }else if (andFilters.size()>0){
+                if(andFilters.size()==1){
+                    mainFilter=(Filter)andFilters.get(0);
+                }else{
+                    mainFilter=ff.and(andFilters);
+                }
+            }
+            if (mainFilter!=null){
+                fc=fs.getFeatures(mainFilter);
+            }else{
+                fc=fs.getFeatures();
+            }
+            fi=fc.features();            
+            while(fi.hasNext()){
+                org.opengis.feature.simple.SimpleFeature feature=(SimpleFeatureImpl) fi.next();
+                if (feature.getDefaultGeometry()!=null){
+                    StringBuffer naam = new StringBuffer();
+                    for (int i = 0; i < cols.length; i++) {
+                        if (feature.getAttribute(cols[i]) != null) {
+                            if (i != 0) {
+                                naam.append(" ");
+                            }
+                            naam.append(feature.getAttribute(cols[i]));
+                        }
+                    }
+                    Envelope env=((Geometry)feature.getDefaultGeometry()).getEnvelopeInternal();
+                    MapCoordsBean mbc = new MapCoordsBean();
+                    mbc.setNaam(naam.toString());
+                    mbc.setMinx(Double.toString(env.getMinX()));
+                    mbc.setMiny(Double.toString(env.getMinY()));
+                    mbc.setMaxx(Double.toString(env.getMaxX()));
+                    mbc.setMaxy(Double.toString(env.getMaxY()));
+                    coords.add(mbc);
+                }
+            }
+
+        }catch(IOException ioe){
+            ds=null;
+            log.error("Fout bij maken DataStore",ioe);
+            MapCoordsBean mbc = new MapCoordsBean();
+            mbc.setNaam("Fout bij ophalen van WFSthema: " + t.getId() + ") "+t.getNaam());
+            coords.add(mbc);
+        }finally{
+            if (fc!=null && fi!=null){
+                fc.close(fi);
+            }
+            if (ds!=null){
+                ds.dispose();
+            }
+        }
+        return coords;
+    }
 }

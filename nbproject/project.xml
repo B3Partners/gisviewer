@@ -63,6 +63,14 @@
                     <file>${libs.B3pItextLib.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
+                <library>
+                    <file>${libs.B3pGeotoolsCommonLib2.5.2.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library>
+                    <file>${libs.B3pGeotoolsOgcLib2.5.2.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>

@@ -22,8 +22,15 @@
  */
 package nl.b3p.gis.viewer.db;
 
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import org.geotools.data.DataStore;
+import org.geotools.data.DataStoreFinder;
+import org.geotools.data.wfs.WFSDataStore;
+import org.geotools.data.wfs.WFSDataStoreFactory;
 
 /**
  *
@@ -132,6 +139,20 @@ public class Connecties {
         } else {
             return null;
         }
+    }
+    public WFSDataStore getDatastore() throws IOException{
+        Map params = new HashMap();
+        if (getType().equalsIgnoreCase(TYPE_WFS)){
+            params.put(WFSDataStoreFactory.URL.key, getConnectie_url()+"?Request=GetCapabilities&Service=WFS");
 
+            if (getGebruikersnaam()!=null){
+                params.put(WFSDataStoreFactory.URL.key,getGebruikersnaam());
+            }
+            if (getWachtwoord()!=null){
+                params.put(WFSDataStoreFactory.PASSWORD.key,getWachtwoord());
+            }
+            return (WFSDataStore) DataStoreFinder.getDataStore(params);
+        }
+        return null;
     }
 }

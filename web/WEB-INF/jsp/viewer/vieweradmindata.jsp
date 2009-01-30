@@ -60,6 +60,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         }
     }
     var usePopup = true;
+    var maxExtraInfo=100;
 </script>
 <c:choose>
     <c:when test="${not empty thema_items_list and not empty regels_list}">
@@ -149,11 +150,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                     if (document.data2csv${tStatus.count}.objectIds.value.length > 0){
                                         document.data2csv${tStatus.count}.objectIds.value+=",";
                                     }
-                                    if (document.data2info${tStatus.count}.${adminPk}.value.length > 0){
-                                        document.data2info${tStatus.count}.${adminPk}.value+=",";
-                                    }
                                     document.data2csv${tStatus.count}.objectIds.value+="${regel.primairyKey}";
-                                    document.data2info${tStatus.count}.${adminPk}.value+="${regel.primairyKey}";
+                                    if (${counter.count} < maxExtraInfo+1){
+                                        if (document.data2info${tStatus.count}.${adminPk}.value.length > 0){
+                                            document.data2info${tStatus.count}.${adminPk}.value+=",";
+                                        }
+                                        document.data2info${tStatus.count}.${adminPk}.value+="${regel.primairyKey}";
+                                    }
                                 </script>
                                 <c:if test="${counter.count < 501}">
                                     <c:set var="last_id" value="" />

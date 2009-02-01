@@ -35,7 +35,6 @@ import nl.b3p.wms.capabilities.Roles;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import nl.b3p.wms.capabilities.Style;
 import nl.b3p.wms.capabilities.StyleDomainResource;
-import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.securityfilter.filter.SecurityRequestWrapper;
@@ -43,10 +42,10 @@ import org.securityfilter.filter.SecurityRequestWrapper;
 public class GisPrincipal implements Principal {
 
     private static final Log log = LogFactory.getLog(GisPrincipal.class);
-    public static String ANONYMOUS_PRINCIPAL = "anoniem_principal";
-    private static final String CAPABILITIES_QUERYSTRING = "REQUEST=GetCapabilities&VERSION=1.1.1&SERVICE=WMS";
     private String name;
     private String password;
+    /*TODO ipv code misschien hele kaartenbalie url??? */
+    private String code;
     private Set roles;
     private ServiceProvider sp;
 
@@ -56,9 +55,10 @@ public class GisPrincipal implements Principal {
         this.roles.addAll(roles);
     }
 
-    public GisPrincipal(String name, String password, ServiceProvider sp) {
+    public GisPrincipal(String name, String password, String code, ServiceProvider sp) {
         this.name = name;
-        this.password=password;
+        this.password = password;
+        this.code = code;
         this.sp = sp;
         if (sp == null) {
             return;
@@ -81,9 +81,19 @@ public class GisPrincipal implements Principal {
     public String getName() {
         return name;
     }
-    public String getPassword(){
+
+    public String getPassword() {
         return password;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public boolean isInRole(String role) {
         return roles.contains(role);
     }
@@ -186,39 +196,18 @@ public class GisPrincipal implements Principal {
 
     public static GisPrincipal getGisPrincipal(HttpServletRequest request) {
         Principal user = request.getUserPrincipal();
+        if (!(user instanceof GisPrincipal)) {
+            return null;
+        }
         if (user == null) {
-            //als user null is dan proberen een capabilitie op te halen zonder rollen
-            WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
-            ServiceProvider sp = null;
-
-            // Maak een capabilities url voor het ophalen van de Capabilities
-            // TODO: Dit kan waarschijnlijk beter worden gedaan in de wmscr.getProvider() methode
-            //dus iets van een check op capabilities.
-            String url = HibernateUtil.KBURL;
-            if (url.lastIndexOf('?') > 0) {
-                url += "&";
+            // Eventueel fake Principal aanmaken
+            if (!HibernateUtil.isCheckLoginKaartenbalie()) {
+                user = GisSecurityRealm.authenticateFake(HibernateUtil.ANONYMOUS_USER);
             } else {
-                url += "?";
+                String url = GisSecurityRealm.createCapabilitiesURL(null);
+                user = GisSecurityRealm.authenticateHttp(url, HibernateUtil.ANONYMOUS_USER, null, null);
             }
-            url += CAPABILITIES_QUERYSTRING;
 
-            log.debug("Trying anonymous login with url: " + url);
-
-            try {
-                sp = wmscr.getProvider(url, null, null);
-            } catch (Exception ex) {
-                // log.error("", ex);
-                log.debug("Can't log in anonymous: " + ex.getMessage());
-            }
-            if (sp == null) {
-                log.error("No ServiceProvider found, denying login!");
-                return null;
-            }
-            user = new GisPrincipal(HibernateUtil.ANONYMOUS_USER, null,sp);
-
-            if (!(user instanceof GisPrincipal)) {
-                return null;
-            }
             if (request instanceof SecurityRequestWrapper) {
                 SecurityRequestWrapper srw = (SecurityRequestWrapper) request;
                 srw.setUserPrincipal(user);
@@ -227,9 +216,6 @@ public class GisPrincipal implements Principal {
 
         }
 
-        if (!(user instanceof GisPrincipal)) {
-            return null;
-        }
         return (GisPrincipal) user;
     }
 }

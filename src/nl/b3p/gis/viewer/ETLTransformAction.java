@@ -136,7 +136,7 @@ public class ETLTransformAction extends BaseGisAction {
         request.setAttribute("themaName", t.getNaam());
         request.setAttribute("themaid", themaid);
         request.setAttribute("layerToAdd", t.getWms_layers_real());
-        request.setAttribute("kburl", HibernateUtil.KBURL);
+        request.setAttribute("kburl",HibernateUtil.getKbUrl());
         return mapping.findForward(SUCCESS);
     }
     // </editor-fold>

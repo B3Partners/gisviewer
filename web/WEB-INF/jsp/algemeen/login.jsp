@@ -32,6 +32,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <table>
                 <tr><td>Gebruikersnaam:</td><td><input type="text" name="j_username" size="36"></td></tr>
                 <tr><td>Wachtwoord:</td><td><input type="password" name="j_password" size="36"></td></tr>
+                <tr><td colspan="2">Of</td></tr>
+                <tr><td>Code:</td><td><input type="text" name="j_code" size="36"></td></tr>
                 <tr><td><input type="Submit" value="Login"></td></tr>
             </table>
         </div>

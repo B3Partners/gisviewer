@@ -22,18 +22,24 @@
  */
 package nl.b3p.gis.viewer.services;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.BaseGisAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
 import org.apache.struts.validator.DynaValidatorForm;
+import org.securityfilter.filter.SecurityFilter;
+import org.securityfilter.filter.SecurityRequestWrapper;
 
 /**
  * Deze Action haalt alle analyse thema's op.
@@ -41,6 +47,7 @@ import org.apache.struts.validator.DynaValidatorForm;
 public class IndexAction extends BaseGisAction {
 
     private static final Log log = LogFactory.getLog(IndexAction.class);
+    protected static final String URL_AUTH = "code";
     protected static final String LOGIN = "login";
     protected static final String LOGINERROR = "loginError";
     protected static final String LOGOUT = "logout";
@@ -90,7 +97,52 @@ public class IndexAction extends BaseGisAction {
         return mapping.findForward(SUCCESS);
     }
 
+    private String findCodeinUrl(String url) throws MalformedURLException {
+
+        String code = null;
+        URL ourl = new URL(url);
+
+        String qparams = ourl.getQuery();
+        int pos = qparams.indexOf(URL_AUTH);
+        if (pos >= 0 && qparams.length() > pos + URL_AUTH.length() + 1) {
+            code = qparams.substring(pos + URL_AUTH.length() + 1);
+            pos = code.indexOf('&');
+            if (pos>=0) {
+                code = code.substring(0, pos);
+            }
+        }
+        return code;
+    }
+
     public ActionForward login(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        if (request instanceof SecurityRequestWrapper) {
+
+            SecurityRequestWrapper srw = (SecurityRequestWrapper) request;
+            String savedURL = SecurityFilter.getContinueToURL(request);
+            String code = findCodeinUrl(savedURL);
+
+            Principal user = null;
+            // Eventueel fake Principal aanmaken
+            if (!HibernateUtil.isCheckLoginKaartenbalie()) {
+                user = GisSecurityRealm.authenticateFake(HibernateUtil.ANONYMOUS_USER);
+            } else {
+                String url = GisSecurityRealm.createCapabilitiesURL(code);
+                user = GisSecurityRealm.authenticateHttp(url, HibernateUtil.ANONYMOUS_USER, null, code);
+            }
+
+            if (user != null) {
+                // invalidate old session if the user was already authenticated, and they logged in as a different user
+                if (request.getUserPrincipal() != null && false == request.getUserPrincipal().equals(user)) {
+                    request.getSession().invalidate();
+                }
+                srw.setUserPrincipal(user);
+                log.debug("Automatic login for user: " + HibernateUtil.ANONYMOUS_USER);
+                // This is the url that the user was initially accessing before being prompted for login.
+                response.sendRedirect(response.encodeRedirectURL(savedURL));
+                return null;
+            }
+        }
 
         addDefaultMessage(mapping, request);
         return getDefaultForward(mapping, request);

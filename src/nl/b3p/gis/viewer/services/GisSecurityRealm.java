@@ -25,7 +25,6 @@ package nl.b3p.gis.viewer.services;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import nl.b3p.commons.security.XmlSecurityDatabase;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
@@ -40,6 +39,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
     private static final Log log = LogFactory.getLog(GisSecurityRealm.class);
     private static final String FORM_USERNAME = "j_username";
     private static final String FORM_PASSWORD = "j_password";
+    private static final String FORM_CODE = "j_code";
     private static final String CAPABILITIES_QUERYSTRING = "REQUEST=GetCapabilities&VERSION=1.1.1&SERVICE=WMS";
 
     public Principal authenticate(SecurityRequestWrapper request) {
@@ -47,21 +47,14 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
 
         String username = request.getParameter(FORM_USERNAME);
         String password = request.getParameter(FORM_PASSWORD);
-        HttpSession sess = request.getSession();
+        String code = request.getParameter(FORM_CODE);
 
         // Eventueel fake Principal aanmaken
-        if (!HibernateUtil.CHECK_LOGIN_KAARTENBALIE) {
-            return authenticateFake(username);        // Haal rechten van user op
+        if (!HibernateUtil.isCheckLoginKaartenbalie()) {
+            return authenticateFake(username);
         }
-        String url = HibernateUtil.KBURL;
-        if (url.lastIndexOf('?') == url.length() - 1) {
-            url += CAPABILITIES_QUERYSTRING;
-        } else if (url.lastIndexOf('&') == url.length() - 1) {
-            url += CAPABILITIES_QUERYSTRING;
-        } else {
-            url += "?" + CAPABILITIES_QUERYSTRING;
-        }
-        return authenticateHttp(url, username, password);
+        String url = createCapabilitiesURL(code);
+        return authenticateHttp(url, username, password, code);
     }
 
     public Principal getAuthenticatedPrincipal(String username) {
@@ -79,7 +72,22 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         return inRole;
     }
 
-    protected GisPrincipal authenticateFake(String username) {
+    protected static String createCapabilitiesURL(String code) {
+        String url = HibernateUtil.createPersonalKbUrl(code);
+        if (url.indexOf('?') == -1) {
+            url += "?";
+        }
+        if (url.indexOf('?') == url.length() - 1) {
+            url += CAPABILITIES_QUERYSTRING;
+        } else if (url.lastIndexOf('&') == url.length() - 1) {
+            url += CAPABILITIES_QUERYSTRING;
+        } else {
+            url += "&" + CAPABILITIES_QUERYSTRING;
+        }
+        return url;
+    }
+
+    protected static GisPrincipal authenticateFake(String username) {
 
         List roles = new ArrayList();
         roles.add(HibernateUtil.GEBRUIKERS_ROL);
@@ -88,7 +96,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         return new GisPrincipal(username, roles);
     }
 
-    protected GisPrincipal authenticateHttp(String location, String username, String password) {
+    protected static GisPrincipal authenticateHttp(String location, String username, String password, String code) {
         WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
         ServiceProvider sp = null;
         try {
@@ -108,11 +116,20 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
                 return null;
             }
         }
+        if (username==null || username.length()==0) {
+            username = HibernateUtil.ANONYMOUS_USER;
+        }
         log.debug("login: " + username);
-        return new GisPrincipal(username, password,sp);
+        return new GisPrincipal(username, password, code, sp);
     }
 
     public Principal authenticate(String username, String password) {
-        return null;
+
+        // Eventueel fake Principal aanmaken
+        if (!HibernateUtil.isCheckLoginKaartenbalie()) {
+            return authenticateFake(username);
+        }
+        String url = createCapabilitiesURL(null);
+        return authenticateHttp(url, username, password, null);
     }
 }

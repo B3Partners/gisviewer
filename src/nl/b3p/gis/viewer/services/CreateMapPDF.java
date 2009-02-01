@@ -37,18 +37,16 @@ import org.apache.commons.logging.LogFactory;
  * @author Roy
  */
 public class CreateMapPDF extends HttpServlet {
+
     private static final int RTIMEOUT = 20000;
     private static final String host = AuthScope.ANY_HOST; // "localhost";
     private static final int port = AuthScope.ANY_PORT;
-    
     private static final Log log = LogFactory.getLog(CreateMapPDF.class);
-    private static final String METADATA_TITLE = "Kaart export B3p Gisviewer";
-    private static final String METADATA_AUTHOR = "B3p Gisviewer";
+    private static final String METADATA_TITLE = "Kaartexport B3P Gisviewer";
+    private static final String METADATA_AUTHOR = "B3P Gisviewer";
     private static final String OUTPUT_PDF = "PDF";
-    private static final String OUTPUT_HTML = "HTML";
     private static final String OUTPUT_RTF = "RTF";
-
-    private static final int MAXSIZE=2048;
+    private static final int MAXSIZE = 2048;
 
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -70,80 +68,81 @@ public class CreateMapPDF extends HttpServlet {
         String pageSize = FormUtils.nullIfEmpty(request.getParameter("pageSize"));
         boolean landscape = new Boolean(request.getParameter("landscape")).booleanValue();
         String outputType = FormUtils.nullIfEmpty(request.getParameter("outputType"));
-        int imageSize=0;
-        if (FormUtils.nullIfEmpty(request.getParameter("imageSize"))!=null){
-            try{
-                imageSize= Integer.parseInt(FormUtils.nullIfEmpty(request.getParameter("imageSize")));
-            }catch(NumberFormatException nfe){
-                imageSize=0;
+        int imageSize = 0;
+        if (FormUtils.nullIfEmpty(request.getParameter("imageSize")) != null) {
+            try {
+                imageSize = Integer.parseInt(FormUtils.nullIfEmpty(request.getParameter("imageSize")));
+            } catch (NumberFormatException nfe) {
+                imageSize = 0;
             }
         }
         //return error als mapUrl null is.
         if (mapUrl == null || mapUrl.length() == 0) {
             throw new ServletException("Geen kaart om te plaatsen in de pdf.");
         }
-        OGCRequest ogcr= new OGCRequest(mapUrl);
+        OGCRequest ogcr = new OGCRequest(mapUrl);
         Document doc = null;
         try {
             DocWriter dw = null;
             doc = createDocument(pageSize, landscape);
-            String filename=title;
+            String filename = title;
             //Maak writer set response headers en maak de filenaam.
             if (outputType.equalsIgnoreCase(OUTPUT_PDF)) {
                 dw = PdfWriter.getInstance(doc, response.getOutputStream());
-                response.setContentType("application/pdf");    
-                filename+=".pdf";
+                response.setContentType("application/pdf");
+                filename += ".pdf";
             } else if (outputType.equalsIgnoreCase(OUTPUT_RTF)) {
                 dw = RtfWriter2.getInstance(doc, response.getOutputStream());
                 response.setContentType("application/rtf");
-                filename+=".rtf";
+                filename += ".rtf";
             } else {
                 dw = HtmlWriter.getInstance(doc, response.getOutputStream());
                 response.setContentType("text/html");
-                filename+=".html";
+                filename += ".html";
             }
             response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\";");
-            
+
             doc.open();
             setDocumentMetadata(doc);
             //set title
             Paragraph titleParagraph = new Paragraph(title);
             titleParagraph.setAlignment(Paragraph.ALIGN_CENTER);
-            doc.add(titleParagraph); 
+            doc.add(titleParagraph);
             /*
-             Vergroot het plaatje naar de imagesize die mee gegeven is.
-             als die waarde leeg is doe dan de MAXSIZE waarde.
+            Vergroot het plaatje naar de imagesize die mee gegeven is.
+            als die waarde leeg is doe dan de MAXSIZE waarde.
              */
-            int width=0;
-            int height=0;
-            width=Integer.parseInt(ogcr.getParameter(ogcr.WMS_PARAM_WIDTH));
-            height=Integer.parseInt(ogcr.getParameter(ogcr.WMS_PARAM_HEIGHT));
-            if (imageSize==0)
-                imageSize=MAXSIZE;
-            float factor=0;
-            if (width >= height){
-                factor= new Float(imageSize).floatValue()/width;
-            }else{
-                factor= new Float(imageSize).floatValue()/height;
+            int width = 0;
+            int height = 0;
+            width = Integer.parseInt(ogcr.getParameter(ogcr.WMS_PARAM_WIDTH));
+            height = Integer.parseInt(ogcr.getParameter(ogcr.WMS_PARAM_HEIGHT));
+            if (imageSize == 0) {
+                imageSize = MAXSIZE;
             }
-            width= new Double(Math.floor(width*factor)).intValue();
-            height= new Double(Math.floor(height*factor)).intValue();
-            ogcr.addOrReplaceParameter(ogcr.WMS_PARAM_WIDTH, ""+width);
-            ogcr.addOrReplaceParameter(ogcr.WMS_PARAM_HEIGHT, ""+height);
+            float factor = 0;
+            if (width >= height) {
+                factor = new Float(imageSize).floatValue() / width;
+            } else {
+                factor = new Float(imageSize).floatValue() / height;
+            }
+            width = new Double(Math.floor(width * factor)).intValue();
+            height = new Double(Math.floor(height * factor)).intValue();
+            ogcr.addOrReplaceParameter(ogcr.WMS_PARAM_WIDTH, "" + width);
+            ogcr.addOrReplaceParameter(ogcr.WMS_PARAM_HEIGHT, "" + height);
             try {
-                String url=ogcr.getUrl();
-                Image map=getImage(url, request);
+                String url = ogcr.getUrl();
+                Image map = getImage(url, request);
                 map.setAlignment(Image.ALIGN_CENTER);
                 /*zorg er voor dat het plaatje binnen de marging van het document komt.
                  */
-                float imageWidth=doc.getPageSize().getWidth()-doc.leftMargin()-doc.rightMargin();
-                float imageHeight=doc.getPageSize().getHeight()-doc.topMargin()-doc.bottomMargin();
+                float imageWidth = doc.getPageSize().getWidth() - doc.leftMargin() - doc.rightMargin();
+                float imageHeight = doc.getPageSize().getHeight() - doc.topMargin() - doc.bottomMargin();
                 //als pagina gedraaid is en er is een opmerking gegeven maak het plaatje minder hoog
                 //zodat er ruimte is voor de opmerking
-                if (landscape && remark!=null){
-                    imageWidth=imageWidth-100;
-                } 
-                map.scaleToFit(imageWidth,imageHeight);
+                if (landscape && remark != null) {
+                    imageWidth = imageWidth - 100;
+                }
+                map.scaleToFit(imageWidth, imageHeight);
                 doc.add(map);
             } catch (Exception ex) {
                 log.error("Kan kaart image niet toevoegen.", ex);
@@ -173,31 +172,42 @@ public class CreateMapPDF extends HttpServlet {
         }
         return doc;
     }
-    
-    private Image getImage(String mapUrl,HttpServletRequest request) throws IOException, Exception{
-        Image image=null;
+
+    private Image getImage(String mapUrl, HttpServletRequest request) throws IOException, Exception {
+        String username = null;
+        String password = null;
         if (request.getUserPrincipal() instanceof GisPrincipal) {
             GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();
-            HttpClient client = new HttpClient();
-            client.getParams().setAuthenticationPreemptive(true);
-            client.getHttpConnectionManager().getParams().setConnectionTimeout(RTIMEOUT);
+            username = gp.getName();
+            password = gp.getPassword();
+        }
 
-            Credentials defaultcreds = new UsernamePasswordCredentials(gp.getName(),gp.getPassword());
+        HttpClient client = new HttpClient();
+        client.getHttpConnectionManager().
+                getParams().setConnectionTimeout(RTIMEOUT);
+
+        if (username != null && password != null) {
+            client.getParams().setAuthenticationPreemptive(true);
+            Credentials defaultcreds = new UsernamePasswordCredentials(username, password);
             AuthScope authScope = new AuthScope(host, port);
             client.getState().setCredentials(authScope, defaultcreds);
+        }
 
-            GetMethod method = new GetMethod(mapUrl);
+        // Create a method instance.
+        GetMethod method = new GetMethod(mapUrl);
+        try {
             int statusCode = client.executeMethod(method);
             if (statusCode != HttpStatus.SC_OK) {
                 log.error("Host: " + mapUrl + " error: " + method.getStatusLine().getReasonPhrase());
                 throw new Exception("Host: " + mapUrl + " error: " + method.getStatusLine().getReasonPhrase());
             }
-            image= Image.getInstance(method.getResponseBody());
-        }else{
-            image = Image.getInstance(new URL(mapUrl));
+            return Image.getInstance(method.getResponseBody());
+        } finally {
+            // Release the connection.
+            method.releaseConnection();
         }
-        return image;
     }
+
     /**
      *Voeg de metadata toe aan het document. 
      */

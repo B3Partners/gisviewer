@@ -64,9 +64,6 @@ public class ViewerCrudAction extends CrudAction {
     }
 
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
-        // zet kaartenbalie url
-        request.setAttribute("kburl", HibernateUtil.KBURL);
-
         String organizationcode = getOrganizationCode(request);
         if (organizationcode != null && organizationcode.length() > 0) {
             request.setAttribute("organizationcodekey", organizationcode);

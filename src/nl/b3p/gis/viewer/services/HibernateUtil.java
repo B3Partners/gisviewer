@@ -39,20 +39,11 @@ public class HibernateUtil extends HttpServlet {
     public static String THEMABEHEERDERS_ROL = "themabeheerder";
     public static String DEMOGEBRUIKERS_ROL = "demogebruiker";
     public static String BEHEERDERS_ROL = "beheerder";
-    public static String KBURL = "http://localhost:8084/kaartenbalie/wms/";
-    public static boolean CHECK_LOGIN_KAARTENBALIE = true;
     public static String ANONYMOUS_USER = "anoniem";
-    public static String KAARTENBALIE_CLUSTER = "Extra";
-    public static boolean USE_KAARTENBALIE_CLUSTER = true;
-    /**
-     * Initialiseer Hibernate.
-     * Creeer de SessionFactory vanuit hibernate.cfg.xml.
-     *
-     * Gebruik ImprovedNamingStrategy. Let op, deze staat ook in build.xml bij hbm2ddl.
-     *
-     */
-    // <editor-fold defaultstate="" desc="static">
-    
+    private static String kburl = null;
+    private static boolean checkLoginKaartenbalie = true;
+    private static String kaartenbalieCluster = "Extra";
+    private static boolean useKaartenbalieCluster = true;
 
     static {
         try {
@@ -64,7 +55,60 @@ public class HibernateUtil extends HttpServlet {
             throw new ExceptionInInitializerError(ex);
         }
     }
-    // </editor-fold>
+
+    /**
+     * http://www.kaartenbalie.nl/kaartenbalie/wms/0c462abe62b69b2f05d1e72862f251f6
+     * kburl: http://www.kaartenbalie.nl/kaartenbalie/wms/
+     * code:  0c462abe62b69b2f05d1e72862f251f6
+     *
+     * Code kan alleen worden toegevoegd indien de kaartenbalie url eindigt
+     * op een /. In alle andere gevallen wordt aangenomen dat er geen personal
+     * url van gemaakt kan worden.
+     *
+     * @param code
+     * @return
+     */
+    public static String createPersonalKbUrl(String code) {
+        String url = getKbUrl();
+        url = url.trim();
+        if ((code != null) && (url.lastIndexOf('/') == url.length() - 1)) {
+            url += code;
+        }
+        return url;
+    }
+
+    public static String getKbUrl() {
+        return kburl;
+    }
+
+    public static void setKbUrl(String aKburl) {
+        kburl = aKburl;
+    }
+
+    public static boolean isCheckLoginKaartenbalie() {
+        return checkLoginKaartenbalie;
+    }
+
+    public static void setCheckLoginKaartenbalie(boolean aCheckLoginKaartenbalie) {
+        checkLoginKaartenbalie = aCheckLoginKaartenbalie;
+    }
+
+    public static String getKaartenbalieCluster() {
+        return kaartenbalieCluster;
+    }
+
+    public static void setKaartenbalieCluster(String aKaartenbalieCluster) {
+        kaartenbalieCluster = aKaartenbalieCluster;
+    }
+
+    public static boolean isUseKaartenbalieCluster() {
+        return useKaartenbalieCluster;
+    }
+
+    public static void setUseKaartenbalieCluster(boolean aUseKaartenbalieCluster) {
+        useKaartenbalieCluster = aUseKaartenbalieCluster;
+    }
+
     /** Initializes the servlet.
      */
     public void init(ServletConfig config) throws ServletException {
@@ -73,7 +117,15 @@ public class HibernateUtil extends HttpServlet {
         try {
             String value = config.getInitParameter("kburl");
             if (value != null && value.length() > 0) {
-                KBURL = value;
+                kburl = value;
+            }
+            value = config.getInitParameter("check_login_kaartenbalie");
+            if (value != null && value.equalsIgnoreCase("false")) {
+                checkLoginKaartenbalie = false;
+            }
+            value = config.getInitParameter("use_kaartenbalie_cluster");
+            if (value != null && value.equalsIgnoreCase("false")) {
+                useKaartenbalieCluster = false;
             }
             value = config.getInitParameter("anonymous_user");
             if (value != null && value.length() > 0) {
@@ -86,14 +138,6 @@ public class HibernateUtil extends HttpServlet {
             value = config.getInitParameter("themabeheerders_rol");
             if (value != null && value.length() > 0) {
                 THEMABEHEERDERS_ROL = value;
-            }
-            value = config.getInitParameter("check_login_kaartenbalie");
-            if (value != null && value.equalsIgnoreCase("false")) {
-                CHECK_LOGIN_KAARTENBALIE = false;
-            }
-            value = config.getInitParameter("use_kaartenbalie_cluster");
-            if (value != null && value.equalsIgnoreCase("false")) {
-                USE_KAARTENBALIE_CLUSTER = false;
             }
         } catch (Exception e) {
             throw new ServletException(e);

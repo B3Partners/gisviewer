@@ -115,7 +115,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <c:if test="${thema.analyse_thema}">
                                     <c:set var="found" value="true"/>
                                     <li>
-                                        <html:link page="/viewer.do?id=${thema.id}">${thema.naam}</html:link>
+                                        <html:link page="/viewer.do?id=${thema.id}&code=${kbcode}">${thema.naam}</html:link>
                                     </li>
                                 </c:if>
                             </c:forEach>

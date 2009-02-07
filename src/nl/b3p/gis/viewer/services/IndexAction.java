@@ -99,16 +99,21 @@ public class IndexAction extends BaseGisAction {
 
     private String findCodeinUrl(String url) throws MalformedURLException {
 
+        if (url == null) {
+            return null;
+        }
         String code = null;
         URL ourl = new URL(url);
 
         String qparams = ourl.getQuery();
-        int pos = qparams.indexOf(URL_AUTH);
-        if (pos >= 0 && qparams.length() > pos + URL_AUTH.length() + 1) {
-            code = qparams.substring(pos + URL_AUTH.length() + 1);
-            pos = code.indexOf('&');
-            if (pos>=0) {
-                code = code.substring(0, pos);
+        if (qparams != null && qparams.length() != 0) {
+            int pos = qparams.indexOf(URL_AUTH);
+            if (pos >= 0 && qparams.length() > pos + URL_AUTH.length() + 1) {
+                code = qparams.substring(pos + URL_AUTH.length() + 1);
+                pos = code.indexOf('&');
+                if (pos >= 0) {
+                    code = code.substring(0, pos);
+                }
             }
         }
         return code;

@@ -69,6 +69,9 @@ public class HibernateUtil extends HttpServlet {
      * @return
      */
     public static String createPersonalKbUrl(String code) {
+        if (code!=null && code.startsWith("http://")) {
+            return code;
+        }
         String url = getKbUrl();
         url = url.trim();
         if ((code != null) && (url.lastIndexOf('/') == url.length() - 1)) {

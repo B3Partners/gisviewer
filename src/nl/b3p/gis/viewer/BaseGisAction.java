@@ -79,6 +79,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         }
         // zet kaartenbalie url
         request.setAttribute("kburl", HibernateUtil.createPersonalKbUrl(code));
+        request.setAttribute("kbcode", code);
 
         String organizationcode = getOrganizationCode(request);
         if (organizationcode != null && organizationcode.length() > 0) {

@@ -28,12 +28,12 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-     <servlet>
+    <servlet>
         <servlet-name>aconfig</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://www.kaartenbalie.nl/kaartenbalie/wms/</param-value>            
+            <param-value>http://www.kaartenbalie.nl/kaartenbalie/wms/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -50,7 +50,7 @@
         </init-param>
         <load-on-startup>3</load-on-startup>
     </servlet>
-   <servlet>
+    <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
         <init-param>
@@ -75,26 +75,59 @@
         <servlet-name>CreateMapPDF</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.CreateMapPDF</servlet-class>
     </servlet>
+    <servlet>
+        <description>fetches document in background to hide actual location of document</description>
+        <servlet-name>DocFetcher</servlet-name>
+        <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
+        <init-param>
+            <param-name>locationPrefix</param-name>
+            <param-value>http://localhost:8084/gisviewer</param-value>
+        </init-param>
+        <init-param>
+            <param-name>directoryKeepDepth</param-name>
+            <param-value>1</param-value>
+        </init-param>
+        <init-param>
+            <param-name>fetchMethod</param-name>
+            <param-value>HTTP</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <description>adds credentials and redirects to cyclomedia</description>
+        <servlet-name>CycloramaFetcher</servlet-name>
+        <servlet-class>nl.b3p.gis.utils.CycloramaFetcherServlet</servlet-class>
+        <init-param>
+            <param-name>accountId</param-name>
+            <param-value>2194</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cyclomediaUrl</param-name>
+            <param-value>http://live.cyclomedia.nl/cycloscopeliteview/cycloviewui.asp?</param-value>
+        </init-param>
+        <init-param>
+            <param-name>privateBase64Key</param-name>
+            <param-value>MIIBPAIBAAJBAKjeVutOmj3gQAv5tRCEvCmDr8qCMCiavtJGFekZ6X9kO3i2Gsq+\n4zS+c2/hPgquiJMVJ+9O+nlFYnQy7btrtxsCAwEAAQJBAIXDgWRpYgKLhRA3X7bS\n/d2Ao5otIAq58VfNDoQT84LlUCYxmsJMrFox9ybqoQDQj68LuaaLiAjzQI5DS60z\nm3ECIQDW8ykzf4SDpC6mA1ofn9fnnnfdv9JA1xvkNhYy4FC/cwIhAMkeRlss89UW\nt4hNVpcLl4owhKZByVXbA5GYdbYJF++5AiEAkib5/8MXxi6PbV/gGpqjwiBU3lk8\nS8w3cb947pTpMpMCIQC/EWoZ+Mz15o0aiw72lOa1PH7pTJqwXFA5pDRAasc40QIg\nPbiSX7GYGWggb20XFCPHEf6MHwfH/EZYIXCYxz7K6DM=\n</param-value>
+        </init-param>
+    </servlet>
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>dwr-invoker</servlet-name>
-        <display-name>DWR Servlet</display-name>
         <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
         <init-param>
             <param-name>debug</param-name>
             <param-value>true</param-value>
         </init-param>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>dwr-invoker</servlet-name>
         <url-pattern>/dwr/*</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
@@ -102,6 +135,14 @@
     <servlet-mapping>
         <servlet-name>CreateMapPDF</servlet-name>
         <url-pattern>/services/CreateMapPDF</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DocFetcher</servlet-name>
+        <url-pattern>/docfetcher</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CycloramaFetcher</servlet-name>
+        <url-pattern>/cycloramafetcher</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -115,4 +156,4 @@
         <error-code>403</error-code>
         <location>/loginError.do</location>
     </error-page>
-    </web-app>
+</web-app>

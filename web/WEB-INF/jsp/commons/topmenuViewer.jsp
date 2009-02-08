@@ -23,12 +23,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script>
-    function printpage() {
-        window.print(); 
-    }
-</script>
-
 <c:if test="${pageContext.request.remoteUser != null}">
     <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
         <c:set var="beheerder" value="true"/>
@@ -68,8 +62,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:otherwise>
             </c:choose>
             
-            <html:link href="javascript: printpage();" styleClass="menulink" module="">&#155; Print kaart</html:link>
-            
+            <%-- html:link href="javascript: printpage();" styleClass="menulink" module="">&#155; Print kaart </html:link --%>
+            <html:link href="javascript: exportMap();" styleClass="menulink" module="">&#155; Exporteer kaart</html:link>
+
             <c:set var="stijlklasse" value="menulink" />
             <c:if test="${requestJSP eq 'viewer.do'}">
                 <c:set var="stijlklasse" value="activemenulink" />

@@ -973,9 +973,6 @@ function exportMap(){
     }else{    
         exportMapWindow.setMapImageSrc(lastGetMapRequest);
     }
-    
-    
-    
 }
 function hideLeftContainer(){
     fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));

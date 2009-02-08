@@ -26,6 +26,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import nl.b3p.commons.security.XmlSecurityDatabase;
+import nl.b3p.commons.services.FormUtils;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import nl.b3p.wms.capabilities.WMSCapabilitiesReader;
 import org.apache.commons.logging.Log;
@@ -45,9 +46,9 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
     public Principal authenticate(SecurityRequestWrapper request) {
 
 
-        String username = request.getParameter(FORM_USERNAME);
-        String password = request.getParameter(FORM_PASSWORD);
-        String code = request.getParameter(FORM_CODE);
+        String username = FormUtils.nullIfEmpty(request.getParameter(FORM_USERNAME));
+        String password = FormUtils.nullIfEmpty(request.getParameter(FORM_PASSWORD));
+        String code = FormUtils.nullIfEmpty(request.getParameter(FORM_CODE));
 
         // Eventueel fake Principal aanmaken
         if (!HibernateUtil.isCheckLoginKaartenbalie()) {

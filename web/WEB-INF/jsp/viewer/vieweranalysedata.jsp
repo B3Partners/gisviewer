@@ -34,7 +34,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
             function submitdata() {
                 if(parent.usePopup) {
-                    if(parent.dataframepopupHandle == null || parent.dataframepopupHandle.closed) parent.dataframepopupHandle = parent.popUpData('dataframepopup', '900', '500');
+                    if(parent.dataframepopupHandle == null || parent.dataframepopupHandle.closed) parent.dataframepopupHandle = parent.popUpData('dataframepopup', '800', '300');
                     document.forms[0].target = 'dataframepopup';
                 }
                 if(document.getElementById('objectoptie').checked) {

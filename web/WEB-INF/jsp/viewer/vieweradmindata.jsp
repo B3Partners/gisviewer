@@ -144,6 +144,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <div id="admin_data_content_div${tStatus.count}">
                     <table id="data_table${tStatus.count}" class="table-autosort table-stripeclass:admin_data_alternate_tr" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                         <tbody>
+                            <c:set var="refreshURL" value="" />
                             <c:set value="0" var="nuOfRegels" />
                             <c:forEach var="regel" items="${regels}" varStatus="counter">
                                 <script>
@@ -165,7 +166,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                             ${counter.count}
                                         </td>
                                         <c:set var="totale_breedte_onder" value="65" />
-
+                                    		<c:set value="0" var="nuOfColumns" />
                                         <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
                                             <c:if test="${thema_items[kolom.count - 1] != null}">
                                                 <c:choose>
@@ -189,30 +190,32 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                         <c:otherwise>
                                                             <c:choose>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
+                                                                		<c:set var="refreshURL" value="${waarde}" />
                                                                     <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
                                                                 </c:when>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
+                                                                		<c:set var="refreshURL" value="${waarde}" />
                                                                     <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
                                                                 </c:when>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
-                                                                <c:choose>
+                                                                	<c:choose>
                                                                     <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
                                                                         <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}">${fn:split(waarde, '###')[0]}</a>
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         -
                                                                     </c:otherwise>
-                                                                </c:choose>
-                                                            </c:when>
-                                                            <c:otherwise>
+                                                                	</c:choose>
+                                                            		</c:when>
+                                                            		<c:otherwise>
                                                                 ${waarde}
                                                                 </c:otherwise>
                                                             </c:choose>
-
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
                                             </c:if>
+                                            <c:set value="${kolom.count}" var="nuOfColumns" />
                                         </c:forEach>
                                     </tr>
                                     <c:set value="${counter.count}" var="nuOfRegels" />
@@ -250,7 +253,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 currentObjOldStyle = obj.className;
                 obj.className = obj.className + ' admin_data_selected_tr';
             }
-        </script>
+            
+             <c:if test="${nuOfTables == 1 && nuOfColumns == 1}">
+                // Doe een window.location als er maar 1 cel en 1 kolom is en dit is een URL
+                window.location = ${refreshURL};
+            </c:if>
+       </script>
 
         <!-- Wordt gebruikt om eventuele opmerkingen te bewerken -->
         <div id="opmerkingenedit" style="display: none; position: absolute; text-align: right;">
@@ -275,5 +283,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
             </table>
         </div>
+        <script type="text/javascript">
+            function closeWindow() {
+                window.close();
+            }
+
+            // Timeout in milliseconden
+            var timeout = 2000;
+            window.setTimeout(closeWindow, timeout);
+        </script>
     </c:otherwise>
 </c:choose>

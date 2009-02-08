@@ -33,7 +33,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://www.kaartenbalie.nl/kaartenbalie/wms/</param-value>
+            <param-value>http://www.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>

@@ -564,7 +564,7 @@ function getCoords() {
         zoekK=zoekKolommen;
         zoekT=zoekThemaIds;
     }
-    JMapData.getMapCoords(waarde, zoekK, zoekT, 1000, 28992, getCoordsCallbackFunction);
+    JMapData.getMapCoords(waarde, zoekK, zoekT, 1000, getCoordsCallbackFunction);
 }
 
 function getCoordsCallbackFunction(values){

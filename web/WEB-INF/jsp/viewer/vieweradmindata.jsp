@@ -256,7 +256,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             
              <c:if test="${nuOfRegels == 1 && nuOfColumns == 1}">
                 // Doe een window.location als er maar 1 cel en 1 kolom is en dit is een URL
-                window.location = ${refreshURL};
+                window.location = '${refreshURL}';
             </c:if>
        </script>
 

@@ -28,6 +28,12 @@
  */
 package nl.b3p.gis.viewer.services;
 
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -975,43 +981,32 @@ public class SpatialUtil {
      * @param envelope the wkt envelope
      * @return double[4] or null.{minx,miny,maxx,maxy}
      */
-    public static double[] wktEnvelope2bbox(String envelope){
+    public static double[] wktEnvelope2bbox(String wkt, int srid){
         double[] bbox = new double[4];
-        if (envelope==null){
+        if (wkt==null){
             return null;
         }
-        else if (envelope.trim().toLowerCase().startsWith("polygon")){
-            envelope = envelope.replaceAll("POLYGON\\(\\(", "");
-            envelope = envelope.replaceAll("\\)\\)", "");
-            String[] bboxArray = envelope.split(",");
-            if (bboxArray == null || bboxArray.length != 5) {
-                log.error("Kan geen coordinaten uit WKT geometry halen");
+        else{
+            Geometry geom=geometrieFromText(wkt, srid);
+            if (geom==null){
                 return null;
             }
-            try {
-                bbox[0] = Double.parseDouble(bboxArray[0].split(" ")[0]);
-                bbox[2] = Double.parseDouble(bboxArray[2].split(" ")[0]);
-                bbox[1] = Double.parseDouble(bboxArray[0].split(" ")[1]);
-                bbox[3] = Double.parseDouble(bboxArray[2].split(" ")[1]);
-            } catch (NumberFormatException nfe) {
-                log.error("Kan geen coordinaten uit WKT geometry POLYGON halen");
-                return null;
-            }
-        }else{//its a point
-            envelope= envelope.replaceAll("POINT\\(","");
-            envelope= envelope.replaceAll("\\)","");
-            String[] bboxArray=envelope.split(" ");
-             try {
-
-                bbox[0] = Double.parseDouble(bboxArray[0]);
-                bbox[2] = Double.parseDouble(bboxArray[0]);
-                bbox[1] = Double.parseDouble(bboxArray[1]);
-                bbox[3] = Double.parseDouble(bboxArray[1]);
-            } catch (NumberFormatException nfe) {
-                log.error("Kan geen coordinaten uit WKT geometry POINT halen");
-                return null;
-            }
+            Envelope env=geom.getEnvelopeInternal();
+            bbox[0]=env.getMinX();
+            bbox[1]=env.getMinY();
+            bbox[2]=env.getMaxX();
+            bbox[3]=env.getMaxY();
+            return bbox;
         }
-        return bbox;
+    }
+    public static Geometry geometrieFromText(String wktgeom,int srid){
+        WKTReader wktreader = new WKTReader(new GeometryFactory(new PrecisionModel(), srid));
+        try {
+            Geometry geom =wktreader.read(wktgeom);
+            return geom;
+        } catch (ParseException p) {
+            log.error("Can't create geomtry from wkt: "+wktgeom,p);
+        }
+        return null;
     }
 }

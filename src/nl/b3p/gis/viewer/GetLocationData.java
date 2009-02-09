@@ -464,7 +464,8 @@ public class GetLocationData {
                 while (rs.next() && coords.size() <= maxSearchResults) {
                     double minx, maxx, miny, maxy;
                     String envelope = rs.getString("bbox");
-                    if (envelope == null) {
+                    double[] bbox = SpatialUtil.wktEnvelope2bbox(envelope,28992);
+                    if (bbox == null) {
                         StringBuffer errorMessage = new StringBuffer();
                         errorMessage.append("Er wordt geen BBOX gegeven door de database voor record met ");
                         for (int i = 0; i < cols.length; i++) {
@@ -480,7 +481,6 @@ public class GetLocationData {
                         log.error(errorMessage.toString());
                         continue;
                     } else {
-                        double[] bbox = SpatialUtil.wktEnvelope2bbox(envelope);
                         minx = bbox[0];
                         miny = bbox[1];
                         maxx = bbox[2];

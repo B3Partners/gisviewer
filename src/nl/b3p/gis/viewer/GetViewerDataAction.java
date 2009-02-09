@@ -950,7 +950,7 @@ public class GetViewerDataAction extends BaseGisAction {
         } catch (SQLException se) {
             log.error("getFeatureEnvelope error ", se);
         } 
-        return SpatialUtil.wktEnvelope2bbox(envelope);
+        return SpatialUtil.wktEnvelope2bbox(envelope,28992);
     }
 
 

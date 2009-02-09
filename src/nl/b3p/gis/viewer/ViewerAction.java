@@ -23,6 +23,7 @@
 package nl.b3p.gis.viewer;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
@@ -208,14 +209,14 @@ public class ViewerAction extends BaseGisAction {
                 }
             }
         }
-
+        //Maak de extent niet groter dan de fullExtent.
         if (extent != null) {
             if (fullExtentBbox != null && extentBbox != null) {
                 Polygon ip = (Polygon) fullExtentBbox.intersection(extentBbox);
                 if (!ip.isEmpty()) {
-                    Coordinate[] ca = ip.getCoordinates();
-                    if (ca.length == 5) {
-                        extent = "" + ca[0].x + "," + ca[0].y + "," + ca[2].x + "," + ca[2].y;
+                    Envelope env=ip.getEnvelopeInternal();
+                    if (env !=null) {
+                        extent = "" + env.getMinX() + "," + env.getMinY() + "," + env.getMaxX() + "," + env.getMaxY();
                     }
                 }
             }

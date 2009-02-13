@@ -25,9 +25,16 @@ function doAjaxRequest(point_x, point_y) {
 
 function handleGetData(str) {
     var rd = "X: " + str[0] + "<br />" + "Y: " + str[1];
-    var adres = str[3] + ", " + str[4]; // + " (afstand: " + str[2] + " m.)"
+    var adres;
+    if (str[3]!=null && str[4]!=null){
+        adres = str[3] + ", " + str[4]; // + " (afstand: " + str[2] + " m.)"
+    }
     document.getElementById('rdcoords').innerHTML = rd;
-    document.getElementById('kadastraledata').innerHTML = adres;
+    if (adres!=undefined){
+        document.getElementById('kadastraledata').innerHTML = adres;
+    }else{
+        document.getElementById('kadastraledata').innerHTML = "Geen adres gevonden";
+    }
 }
 
 function handleGetAdminData(coords) {

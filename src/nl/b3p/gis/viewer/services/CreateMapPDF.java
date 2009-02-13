@@ -7,16 +7,22 @@ package nl.b3p.gis.viewer.services;
 import com.lowagie.text.DocWriter;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.html.HtmlWriter;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
 import java.io.IOException;
-import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,8 +53,13 @@ public class CreateMapPDF extends HttpServlet {
     private static final String OUTPUT_PDF = "PDF";
     private static final String OUTPUT_RTF = "RTF";
     private static final int MAXSIZE = 2048;
-
-    /** 
+    private static String logoPath=null;
+    private static String extraImagePath=null;
+    private static String disclaimer=null;
+    private static SimpleDateFormat sdf = null;
+    private static float footerHeight=25;
+    private static boolean addFooter=true;
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -57,9 +68,6 @@ public class CreateMapPDF extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String title = FormUtils.nullIfEmpty(request.getParameter("title"));
-        if (title == null) {
-            title = "Export kaart";
-        }
         /**
          * Haal alle form properties op.
          */
@@ -67,7 +75,10 @@ public class CreateMapPDF extends HttpServlet {
         String mapUrl = FormUtils.nullIfEmpty(request.getParameter("mapUrl"));
         String pageSize = FormUtils.nullIfEmpty(request.getParameter("pageSize"));
         boolean landscape = new Boolean(request.getParameter("landscape")).booleanValue();
-        String outputType = FormUtils.nullIfEmpty(request.getParameter("outputType"));
+        String outputType = OUTPUT_PDF;
+        if(FormUtils.nullIfEmpty(request.getParameter("outputType"))!=null){
+            outputType=FormUtils.nullIfEmpty(request.getParameter("outputType"));
+        }
         int imageSize = 0;
         if (FormUtils.nullIfEmpty(request.getParameter("imageSize")) != null) {
             try {
@@ -86,6 +97,9 @@ public class CreateMapPDF extends HttpServlet {
             DocWriter dw = null;
             doc = createDocument(pageSize, landscape);
             String filename = title;
+            if (filename==null){
+                filename="kaartexport";
+            }
             //Maak writer set response headers en maak de filenaam.
             if (outputType.equalsIgnoreCase(OUTPUT_PDF)) {
                 dw = PdfWriter.getInstance(doc, response.getOutputStream());
@@ -105,9 +119,11 @@ public class CreateMapPDF extends HttpServlet {
             doc.open();
             setDocumentMetadata(doc);
             //set title
-            Paragraph titleParagraph = new Paragraph(title);
-            titleParagraph.setAlignment(Paragraph.ALIGN_CENTER);
-            doc.add(titleParagraph);
+            if (title!=null){
+                Paragraph titleParagraph = new Paragraph(title);
+                titleParagraph.setAlignment(Paragraph.ALIGN_CENTER);
+                doc.add(titleParagraph);
+            }
             /*
             Vergroot het plaatje naar de imagesize die mee gegeven is.
             als die waarde leeg is doe dan de MAXSIZE waarde.
@@ -129,18 +145,24 @@ public class CreateMapPDF extends HttpServlet {
             height = new Double(Math.floor(height * factor)).intValue();
             ogcr.addOrReplaceParameter(ogcr.WMS_PARAM_WIDTH, "" + width);
             ogcr.addOrReplaceParameter(ogcr.WMS_PARAM_HEIGHT, "" + height);
+            /*zorg er voor dat het plaatje binnen de marging van het document komt.
+             */
+            float imageWidth = doc.getPageSize().getWidth() - doc.leftMargin() - doc.rightMargin();
+            float imageHeight = doc.getPageSize().getHeight() - doc.topMargin() - doc.bottomMargin();
             try {
                 String url = ogcr.getUrl();
                 Image map = getImage(url, request);
                 map.setAlignment(Image.ALIGN_CENTER);
-                /*zorg er voor dat het plaatje binnen de marging van het document komt.
-                 */
-                float imageWidth = doc.getPageSize().getWidth() - doc.leftMargin() - doc.rightMargin();
-                float imageHeight = doc.getPageSize().getHeight() - doc.topMargin() - doc.bottomMargin();
                 //als pagina gedraaid is en er is een opmerking gegeven maak het plaatje minder hoog
                 //zodat er ruimte is voor de opmerking
                 if (landscape && remark != null) {
-                    imageWidth = imageWidth - 100;
+                    imageWidth -= 100;
+                }
+                if (landscape && addFooter){
+                    imageWidth -= 100;
+                }
+                if (landscape && title!=null){
+                    imageWidth -= 50;
                 }
                 map.scaleToFit(imageWidth, imageHeight);
                 doc.add(map);
@@ -148,9 +170,23 @@ public class CreateMapPDF extends HttpServlet {
                 log.error("Kan kaart image niet toevoegen.", ex);
                 doc.add(new Phrase("Kan kaart image niet toevoegen."));
             }
+            if (addFooter){
+                Element footer =createfooter(doc,outputType);
+                //als het een table is dan goed uitlijnen
+                if (footer instanceof PdfPTable){
+                    PdfPTable table=(PdfPTable)footer;
+                    table.setTotalWidth(new float[]{80,imageWidth-107,25});
+                    table.setLockedWidth(true);
+                    doc.add(table);
+                }else{
+                    doc.add(footer);
+                }
+            }
+
             if (remark != null) {
                 doc.add(new Phrase(remark));
             }
+
         } catch (DocumentException de) {
             log.error("Fout bij het maken van een document. Reden: ", de);
             throw new ServletException(de);
@@ -159,6 +195,29 @@ public class CreateMapPDF extends HttpServlet {
         }
     }
 
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        try {
+            if (config.getInitParameter("logoPath") != null) {
+                logoPath = getServletContext().getRealPath(config.getInitParameter("logoPath"));
+            }
+            if (config.getInitParameter("extraImagePath") != null) {
+                extraImagePath = getServletContext().getRealPath(config.getInitParameter("extraImagePath"));
+            }
+            if (config.getInitParameter("disclaimer") != null) {
+                disclaimer = config.getInitParameter("disclaimer");
+            }
+            if (config.getInitParameter("addFooter") != null) {
+                addFooter = "true".equalsIgnoreCase(config.getInitParameter("addFooter"));
+            }
+            sdf=(SimpleDateFormat) SimpleDateFormat.getDateInstance();
+            sdf.applyPattern("dd-MMMM-yyyy");
+
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
+    }
     public Document createDocument(String pageSize, boolean landscape) {
         Rectangle ps = PageSize.A4;
         if (pageSize != null) {
@@ -171,6 +230,58 @@ public class CreateMapPDF extends HttpServlet {
             doc = new Document(ps);
         }
         return doc;
+    }
+
+    private Element createfooter(Document doc,String outputType){
+        Image logo=null;
+        Image extraImage=null;
+        if (logoPath!=null){
+            try{
+                logo = Image.getInstance(logoPath);
+            }catch(Exception e){
+                log.error("Fout bij ophalen export logo: ",e);
+            }
+        }
+        if (extraImagePath!=null){
+            try{
+                extraImage= Image.getInstance(extraImagePath);
+            }catch(Exception e){
+                log.error("Fout bij ophalen van de noord pijl: ",e);
+            }
+        }
+        if (outputType.equalsIgnoreCase(OUTPUT_PDF)) {
+            PdfPTable mainTable= new PdfPTable(3);
+            if (logo!=null){
+                PdfPCell logoCell= new PdfPCell();
+                logoCell.setFixedHeight(footerHeight);
+                logoCell.setImage(logo);
+                mainTable.addCell(logoCell);
+            }
+            Font font=new Font(Font.TIMES_ROMAN, 8,Font.BOLD);
+            PdfPTable nestedTable=new PdfPTable(1);
+            PdfPCell dateCell = new PdfPCell(new Phrase(sdf.format(new Date()),font));
+            dateCell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            nestedTable.addCell(dateCell);
+            if (disclaimer!=null){
+                PdfPCell disc = new PdfPCell(new Phrase(disclaimer,font));
+                disc.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                nestedTable.addCell(disc);
+            }
+            PdfPCell cell;
+			cell = new PdfPCell(nestedTable);
+            cell.setBorder(Rectangle.NO_BORDER);
+            mainTable.addCell(cell);
+            if (extraImage!=null){
+                PdfPCell extraCell= new PdfPCell();
+                extraCell.setFixedHeight(footerHeight);
+                extraCell.setImage(extraImage);
+                mainTable.addCell(extraCell);
+            }
+            return mainTable;
+        }else if (logo!=null){
+            return logo;
+        }
+        return null;
     }
 
     private Image getImage(String mapUrl, HttpServletRequest request) throws IOException, Exception {
@@ -209,7 +320,7 @@ public class CreateMapPDF extends HttpServlet {
     }
 
     /**
-     *Voeg de metadata toe aan het document. 
+     *Voeg de metadata toe aan het document.
      */
     private void setDocumentMetadata(Document doc) {
         doc.addTitle(METADATA_TITLE);
@@ -217,7 +328,7 @@ public class CreateMapPDF extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -227,7 +338,7 @@ public class CreateMapPDF extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -237,7 +348,7 @@ public class CreateMapPDF extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      */
     public String getServletInfo() {

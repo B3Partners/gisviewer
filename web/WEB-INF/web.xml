@@ -74,6 +74,22 @@
     <servlet>
         <servlet-name>CreateMapPDF</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.CreateMapPDF</servlet-class>
+        <init-param>
+            <param-name>addFooter</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>logoPath</param-name>
+            <param-value>/images/barneveld/bg_top_bv.gif</param-value>
+        </init-param>
+        <init-param>
+            <param-name>extraImagePath</param-name>
+            <param-value>/images/barneveld/noordpijl.png</param-value>
+        </init-param>
+        <init-param>
+            <param-name>disclaimer</param-name>
+            <param-value>- Aan deze afdruk kunnen geen rechten worden ontleend -</param-value>
+        </init-param>
     </servlet>
     <servlet>
         <description>fetches document in background to hide actual location of document</description>

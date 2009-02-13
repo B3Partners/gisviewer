@@ -27,7 +27,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import org.geotools.data.DataStore;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
@@ -37,7 +38,7 @@ import org.geotools.data.wfs.WFSDataStoreFactory;
  * @author Roy Braam
  */
 public class Connecties {
-
+    private static final Log log = LogFactory.getLog(Connecties.class);
     public static final String TYPE_JDBC = "jdbc";
     public static final String TYPE_WFS = "wfs";
     public static final String DIALECT_POSTGRESQL = "postgresql";
@@ -128,12 +129,17 @@ public class Connecties {
 
     public java.sql.Connection getJdbcConnection() throws SQLException {
         if (getType().equalsIgnoreCase(TYPE_JDBC)) {
-            if (getDialect().equalsIgnoreCase(DIALECT_POSTGRESQL)) {
-                DriverManager.registerDriver(new org.postgresql.Driver());
-            } else if (getDialect().equalsIgnoreCase(DIALECT_MYSQL)) {
-                DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            } else {
-                return null;
+            try{
+                if (getDialect().equalsIgnoreCase(DIALECT_POSTGRESQL)) {
+                    Class.forName("org.postgresql.Driver");
+                } else if (getDialect().equalsIgnoreCase(DIALECT_MYSQL)) {
+                    Class.forName("com.mysql.jdbc.Driver");
+                } else {
+                    return null;
+                }
+            }
+            catch(ClassNotFoundException cfe){
+                log.error("Kan db driver niet laden ",cfe);
             }
             return DriverManager.getConnection(this.getConnectie_url(), getGebruikersnaam(), getWachtwoord());
         } else {

@@ -766,6 +766,23 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         return regel;
     }
 
+    private String convertAttributeName(String rawName, Feature f) {
+        if (rawName == null || rawName.trim().length() == 0) {
+            return null;
+        }
+        String attName = rawName.trim();
+        if (f.getSchema().hasAttribute(attName)) {
+            return attName;
+        }
+        if (attName.split(":").length > 1) {
+            attName = attName.split(":")[1];
+        }
+        if (f.getSchema().hasAttribute(attName)) {
+            return attName;
+        }
+        return null;
+    }
+
     /**
      * Zelfde als getRegel met Resultset maar nu met Feature
      *
@@ -782,7 +799,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
      */
     protected AdminDataRowBean getRegel(Feature f, Themas t, List thema_items) throws SQLException, UnsupportedEncodingException {
         AdminDataRowBean regel = new AdminDataRowBean();
-        regel.setPrimairyKey(f.getAttribute(t.getAdmin_pk()));
+
+        String adminPk = convertAttributeName(t.getAdmin_pk(), f);
+        if (adminPk != null) {
+            regel.setPrimairyKey(f.getAttribute(adminPk));
+        }
         Iterator it = thema_items.iterator();
         while (it.hasNext()) {
             ThemaData td = (ThemaData) it.next();
@@ -791,15 +812,8 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * zoniet kan het zijn dat er een prefix ns in staat. Die moet er dan van afgehaald worden. 
              * Als het dan nog steeds niet bestaat: een lege toevoegen.
              */
-            String kolomnaam = td.getKolomnaam();
-            if (!f.getSchema().hasAttribute(kolomnaam) && kolomnaam != null) {
-                if (kolomnaam.split(":").length > 1) {
-                    kolomnaam = kolomnaam.split(":")[1];
-                }
-            }
-            if (!f.getSchema().hasAttribute(kolomnaam) && kolomnaam != null) {
-                regel.addValue("");
-            } /*
+            String kolomnaam = convertAttributeName(td.getKolomnaam(), f);
+            /*
              * Controleer om welk datatype dit themadata object om draait.
              * Binnen het Datatype zijn er drie mogelijkheden, namelijk echt data,
              * een URL of een Query.
@@ -809,7 +823,8 @@ public abstract class BaseGisAction extends BaseHibernateAction {
              * In het eerste geval, wanneer het gaat om data, betreft dit de kolomnaam.
              * Als deze kolomnaam ingevuld staat hoeft deze alleen opgehaald te worden
              * en aan de arraylist regel toegevoegd te worden.
-             */ else if (td.getDataType().getId() == DataTypen.DATA && kolomnaam != null && !kolomnaam.equals("")) {
+             */
+            if (td.getDataType().getId() == DataTypen.DATA && kolomnaam != null) {
 
                 regel.addValue(f.getString(kolomnaam));
 
@@ -829,18 +844,15 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 url.append("=");
                 url.append(t.getId());
 
-                String adminPk = t.getAdmin_pk();
-                if (!f.getSchema().hasAttribute(adminPk) && adminPk != null) {
-                    if (adminPk.split(":").length > 1) {
-                        adminPk = adminPk.split(":")[1];
+                Object value = null;
+                if (adminPk != null) {
+                    value = f.getString(adminPk);
+                    if (value != null) {
+                        url.append("&");
+                        url.append(adminPk);
+                        url.append("=");
+                        url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
                     }
-                }
-                Object value = f.getString(adminPk);
-                if (value != null) {
-                    url.append("&");
-                    url.append(adminPk);
-                    url.append("=");
-                    url.append(URLEncoder.encode(value.toString().trim(), "utf-8"));
                 }
 
                 if (kolomnaam != null && kolomnaam.length() > 0 && !kolomnaam.equalsIgnoreCase(adminPk)) {
@@ -867,15 +879,10 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     url = new StringBuffer();
                 }
 
-                if (kolomnaam == null || kolomnaam.length() == 0) {
-                    kolomnaam = t.getAdmin_pk();
+                Object value = null;
+                if (kolomnaam!=null) {
+                    value = f.getString(kolomnaam);
                 }
-                if (!f.getSchema().hasAttribute(kolomnaam) && kolomnaam != null) {
-                    if (kolomnaam.split(":").length > 1) {
-                        kolomnaam = kolomnaam.split(":")[1];
-                    }
-                }
-                Object value = f.getString(kolomnaam);
                 if (value != null) {
                     url.append(value.toString().trim());
                     regel.addValue(url.toString());
@@ -883,28 +890,20 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     regel.addValue("");
                 }
             } else if (td.getDataType().getId() == DataTypen.FUNCTION) {
-                String keyName = t.getAdmin_pk();
-                if (!f.getSchema().hasAttribute(keyName)) {
-                    if (keyName.split(":").length > 1) {
-                        keyName = keyName.split(":")[1];
-                    }
-                }
-                Object keyValue = f.getAttribute(keyName);
-                String attributeName = td.getKolomnaam();
-                Object attributeValue = null;
-
-                if (attributeName == null || attributeName.length() == 0) {
-                    attributeName = keyName;
-                    attributeValue = keyValue;
-                } else {
-                    if (!f.getSchema().hasAttribute(attributeName)) {
-                        if (attributeName.split(":").length > 1) {
-                            attributeName = attributeName.split(":")[1];
-                        }
-                    }
-                    attributeValue = f.getAttribute(attributeName);
+                Object keyValue = null;
+                if (adminPk != null) {
+                    keyValue = f.getAttribute(adminPk);
                 }
                 if (keyValue != null) {
+                    String attributeName = kolomnaam;
+                    Object attributeValue = null;
+                    if (attributeName != null) {
+                        attributeValue = f.getAttribute(attributeName);
+                    } else {
+                        attributeName = adminPk;
+                        attributeValue = keyValue;
+                     }
+
                     // De attributeValue ook eerst vooraan erbij zetten om die te kunnen tonen op de admindata pagina - Drie hekjes als scheidingsteken
                     StringBuffer function = new StringBuffer("");
                     function.append(attributeValue);
@@ -912,7 +911,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     function.append("(this, ");
                     function.append("'" + td.getThema().getId() + "'");
                     function.append(",");
-                    function.append("'" + keyName + "'");
+                    function.append("'" + adminPk + "'");
                     function.append(",");
                     function.append("'" + keyValue + "'");
                     function.append(",");

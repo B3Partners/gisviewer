@@ -22,8 +22,6 @@
  */
 package nl.b3p.gis.viewer;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jump.feature.Feature;
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,6 +31,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import nl.b3p.commons.services.FormUtils;
+import nl.b3p.geotools.filter.FilterFactoryImpl2;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.HibernateUtil;
@@ -43,15 +42,13 @@ import org.apache.commons.logging.LogFactory;
 //import org.geotools.data.wfs.v1_1_0.WFSFeatureSource;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.wfs.WFSDataStore;
-import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
-import org.geotools.feature.simple.SimpleFeatureImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory;
+import org.opengis.geometry.BoundingBox;
 
 public class GetLocationData {
 
@@ -555,15 +552,15 @@ public class GetLocationData {
             if (fs==null){
                 throw new IOException("Kan geen FeatureSource worden gemaakt");
             }
-            FilterFactory ff = CommonFactoryFinder.getFilterFactory(GeoTools.getDefaultHints());
+            FilterFactoryImpl2 ff2 = new FilterFactoryImpl2(null);
             List orFilters= new ArrayList();
             List andFilters= new ArrayList();
-            for (int i=0; i < cols.length; i++){                
+            for (int i=0; i < cols.length; i++){
                 if (waarden.length == 1){
-                    Filter colFilter= ff.equal(ff.property(cols[i]), ff.literal(waarden[0]),false);
+                    Filter colFilter= ff2.like(ff2.property(cols[i]),ff2.literal("*"+waarden[0]+"*"),false);//(ff.property(cols[i]), ff.literal(waarden[0]),false);
                     orFilters.add(colFilter);
                 }else if (waarden[i]!=null && waarden[i].length()>0){
-                    Filter colFilter= ff.equal(ff.property(cols[i]), ff.literal(waarden[i]),false);
+                    Filter colFilter= ff2.like(ff2.property(cols[i]), ff2.literal("*"+waarden[i]+"*"),false);
                     andFilters.add(colFilter);
                 }
             }
@@ -572,13 +569,13 @@ public class GetLocationData {
                 if (orFilters.size()==1){
                     mainFilter=(Filter)orFilters.get(0);
                 }else{
-                    mainFilter=ff.or(orFilters);
+                    mainFilter=ff2.or(orFilters);
                 }
             }else if (andFilters.size()>0){
                 if(andFilters.size()==1){
                     mainFilter=(Filter)andFilters.get(0);
                 }else{
-                    mainFilter=ff.and(andFilters);
+                    mainFilter=ff2.and(andFilters);
                 }
             }
             if (mainFilter!=null){
@@ -588,18 +585,18 @@ public class GetLocationData {
             }
             fi=fc.features();            
             while(fi.hasNext()){
-                org.opengis.feature.simple.SimpleFeature feature=(SimpleFeatureImpl) fi.next();
-                if (feature.getDefaultGeometry()!=null){
+                org.opengis.feature.simple.SimpleFeature feature= (SimpleFeature) fi.next();
+                if (feature.getDefaultGeometryProperty()!=null){
                     StringBuffer naam = new StringBuffer();
                     for (int i = 0; i < cols.length; i++) {
-                        if (feature.getAttribute(cols[i]) != null) {
+                        if (feature.getProperty(cols[i]) != null && feature.getProperty(cols[i]).getValue()!=null) {
                             if (i != 0) {
                                 naam.append(" ");
                             }
-                            naam.append(feature.getAttribute(cols[i]));
+                            naam.append(feature.getProperty(cols[i]).getValue());
                         }
                     }
-                    Envelope env=((Geometry)feature.getDefaultGeometry()).getEnvelopeInternal();
+                    BoundingBox env=feature.getDefaultGeometryProperty().getBounds();
                     MapCoordsBean mbc = new MapCoordsBean();
                     mbc.setNaam(naam.toString());
                     mbc.setMinx(Double.toString(env.getMinX()));

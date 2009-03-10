@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -91,6 +92,16 @@ public class SpatialUtil {
         String hquery = "FROM Clusters WHERE id != 9";
         Query q = sess.createQuery(hquery);
         return q.list();
+    }
+
+    public static Clusters getDefaultCluster() {
+        Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+        String hquery = "FROM Clusters WHERE default_cluster = true";
+        Query q = sess.createQuery(hquery);
+        List cl = q.list();
+        if (cl!=null && cl.size()>0)
+            return (Clusters)cl.get(0);
+        return null;
     }
 
     /**
@@ -986,7 +997,7 @@ public class SpatialUtil {
         if (wkt==null){
             return null;
         }
-        else{
+        else{            
             Geometry geom=geometrieFromText(wkt, srid);
             if (geom==null){
                 return null;

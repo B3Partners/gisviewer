@@ -79,6 +79,7 @@ public class ViewerAction extends BaseGisAction {
         return map;
     }
     // </editor-fold>
+
     /**
      * De knop berekent een lijst van thema's en stuurt dan door.
      *
@@ -101,6 +102,7 @@ public class ViewerAction extends BaseGisAction {
         return getDefaultForward(mapping, request);
     }
     // </editor-fold>
+
     /**
      *
      * @param mapping The ActionMapping used to select this instance.
@@ -214,8 +216,8 @@ public class ViewerAction extends BaseGisAction {
             if (fullExtentBbox != null && extentBbox != null) {
                 Polygon ip = (Polygon) fullExtentBbox.intersection(extentBbox);
                 if (!ip.isEmpty()) {
-                    Envelope env=ip.getEnvelopeInternal();
-                    if (env !=null) {
+                    Envelope env = ip.getEnvelopeInternal();
+                    if (env != null) {
                         extent = "" + env.getMinX() + "," + env.getMinY() + "," + env.getMaxX() + "," + env.getMaxY();
                     }
                 }
@@ -312,8 +314,36 @@ public class ViewerAction extends BaseGisAction {
             Map clMap = (Map) it.next();
 
             Clusters cluster = (Clusters) clMap.get("cluster");
-            JSONObject jsonCluster = new JSONObject().put("id",
-                    "c" + cluster.getId()).put("type", "child").put("title", cluster.getNaam()).put("cluster", true);
+            JSONObject jsonCluster = new JSONObject();
+            jsonCluster.put("id", "c" + cluster.getId());
+            jsonCluster.put("type", "child");
+            jsonCluster.put("title", cluster.getNaam());
+            jsonCluster.put("cluster", true);
+            if (cluster.isDefault_cluster()) {
+                jsonCluster.put("default_cluster", "on");
+            } else {
+                jsonCluster.put("default_cluster", "off");
+            }
+            if (cluster.isHide_legend()) {
+                jsonCluster.put("hide_legend", "on");
+            } else {
+                jsonCluster.put("hide_legend", "off");
+            }
+            if (cluster.isHide_tree()) {
+                jsonCluster.put("hide_tree", "on");
+            } else {
+                jsonCluster.put("hide_tree", "off");
+            }
+            if (cluster.isBackground_cluster()) {
+                jsonCluster.put("background_cluster", "on");
+            } else {
+                jsonCluster.put("background_cluster", "off");
+            }
+            if (cluster.isExtra_level()) {
+                jsonCluster.put("extra_level", "on");
+            } else {
+                jsonCluster.put("extra_level", "off");
+            }
 
             List childrenList = (List) clMap.get("children");
             JSONArray childrenArray = getChildren(childrenList, actiefThemaId);

@@ -63,6 +63,11 @@
             <form-property name="naam" type="java.lang.String"/>
             <form-property name="omschrijving" type="java.lang.String"/>
             <form-property name="parentID" type="java.lang.String"/>
+            <form-property name="default_cluster" type="java.lang.Boolean"/>
+            <form-property name="hide_legend" type="java.lang.Boolean"/>
+            <form-property name="hide_tree" type="java.lang.Boolean"/>
+            <form-property name="background_cluster" type="java.lang.Boolean"/>
+            <form-property name="extra_level" type="java.lang.Boolean"/>
         </form-bean>
         
         <form-bean name="themaDataForm" type="org.apache.struts.validator.DynaValidatorForm">

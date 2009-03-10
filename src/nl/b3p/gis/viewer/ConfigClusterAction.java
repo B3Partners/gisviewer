@@ -160,6 +160,11 @@ public class ConfigClusterAction extends ViewerCrudAction {
         dynaForm.set("clusterID", Integer.toString(c.getId()));
         dynaForm.set("naam", c.getNaam());
         dynaForm.set("omschrijving", c.getOmschrijving());
+        dynaForm.set("default_cluster", new Boolean(c.isDefault_cluster()));
+        dynaForm.set("hide_legend", new Boolean(c.isHide_legend()));
+        dynaForm.set("hide_tree", new Boolean(c.isHide_tree()));
+        dynaForm.set("background_cluster", new Boolean(c.isBackground_cluster()));
+        dynaForm.set("extra_level", new Boolean(c.isExtra_level()));
         String val = "";
         if (c.getParent() != null) {
             val = Integer.toString(c.getParent().getId());
@@ -171,15 +176,28 @@ public class ConfigClusterAction extends ViewerCrudAction {
 
         c.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
         c.setOmschrijving(FormUtils.nullIfEmpty(dynaForm.getString("omschrijving")));
+        Boolean b = (Boolean) dynaForm.get("default_cluster");
+        c.setDefault_cluster(b == null ? false : b.booleanValue());
+        b = (Boolean) dynaForm.get("hide_legend");
+        c.setHide_legend(b == null ? false : b.booleanValue());
+        b = (Boolean) dynaForm.get("hide_tree");
+        c.setHide_tree(b == null ? false : b.booleanValue());
+        b = (Boolean) dynaForm.get("background_cluster");
+        c.setBackground_cluster(b == null ? false : b.booleanValue());
+        b = (Boolean) dynaForm.get("extra_level");
+        c.setExtra_level(b == null ? false : b.booleanValue());
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        int mId = 0;
-        try {
-            mId = Integer.parseInt(dynaForm.getString("parentID"));
-        } catch (NumberFormatException ex) {
-            log.error("Illegal parent id", ex);
+        String parentID = FormUtils.nullIfEmpty(dynaForm.getString("parentID"));
+        if (parentID != null) {
+            int mId = 0;
+            try {
+                mId = Integer.parseInt(dynaForm.getString("parentID"));
+            } catch (NumberFormatException ex) {
+                log.error("Illegal parent id", ex);
+            }
+            Clusters m = (Clusters) sess.get(Clusters.class, new Integer(mId));
+            c.setParent(m);
         }
-        Clusters m = (Clusters) sess.get(Clusters.class, new Integer(mId));
-        c.setParent(m);
     }
 }

@@ -101,6 +101,46 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
                 <tr>
                     <td>
+                        <html:checkbox property="default_cluster"/>
+                    </td>
+                    <td colspan="3">
+                        Cluster voor ongeconfigureerde kaartlagen
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <html:checkbox property="hide_legend"/>
+                    </td>
+                    <td colspan="3">
+                        Cluster onzichtbaar in de legenda
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <html:checkbox property="hide_tree"/>
+                    </td>
+                    <td colspan="3">
+                        Cluster onzichtbaar in de boomstructuur
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <html:checkbox property="background_cluster"/>
+                    </td>
+                    <td colspan="3">
+                        Cluster met achtergrond kaartlagen
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <html:checkbox property="extra_level"/>
+                    </td>
+                    <td colspan="3">
+                        Cluster voor uitgebreide toegang
+                    </td>
+                </tr>
+              <tr>
+                    <td>
                         Ouder Cluster:
                     </td>
                     <td colspan="3">

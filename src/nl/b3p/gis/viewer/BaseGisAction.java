@@ -218,16 +218,20 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         if (ctl == null) {
             return checkedThemaList;
         }
+
         // als alleen configureerde layers getoond mogen worden,
         // dan hier stoppen
         if (!HibernateUtil.isUseKaartenbalieCluster()) {
             return checkedThemaList;
         }
 
-        //maak alvast een cluster aan voor als er kaarten worden gevonden die geen thema hebben.
-        Clusters c = new Clusters();
-        c.setNaam(HibernateUtil.getKaartenbalieCluster());
-        c.setParent(null);
+        //zoek of maak een cluster aan voor als er kaarten worden gevonden die geen thema hebben.
+        Clusters c = SpatialUtil.getDefaultCluster();
+        if (c == null) {
+            c = new Clusters();
+            c.setNaam(HibernateUtil.getKaartenbalieCluster());
+            c.setParent(null);
+        }
 
         Iterator it = layersFromRoles.iterator();
         int tid = 100000;
@@ -880,7 +884,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 }
 
                 Object value = null;
-                if (kolomnaam!=null) {
+                if (kolomnaam != null) {
                     value = f.getString(kolomnaam);
                 }
                 if (value != null) {
@@ -902,7 +906,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                     } else {
                         attributeName = adminPk;
                         attributeValue = keyValue;
-                     }
+                    }
 
                     // De attributeValue ook eerst vooraan erbij zetten om die te kunnen tonen op de admindata pagina - Drie hekjes als scheidingsteken
                     StringBuffer function = new StringBuffer("");

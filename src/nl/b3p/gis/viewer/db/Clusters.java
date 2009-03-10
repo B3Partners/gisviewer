@@ -29,6 +29,11 @@ public class Clusters {
     private int id;
     private String naam;
     private String omschrijving;
+    private boolean default_cluster;
+    private boolean hide_legend;
+    private boolean hide_tree;
+    private boolean background_cluster;
+    private boolean extra_level;
     private Clusters parent;
     private Set children;
     private Set themas;
@@ -163,6 +168,76 @@ public class Clusters {
     // <editor-fold defaultstate="" desc="public void setParent(Clusters parent)">
     public void setParent(Clusters parent) {
         this.parent = parent;
+    }
+
+    /**
+     * @return the default_cluster
+     */
+    public boolean isDefault_cluster() {
+        return default_cluster;
+    }
+
+    /**
+     * @param default_cluster the default_cluster to set
+     */
+    public void setDefault_cluster(boolean default_cluster) {
+        this.default_cluster = default_cluster;
+    }
+
+    /**
+     * @return the hide_legend
+     */
+    public boolean isHide_legend() {
+        return hide_legend;
+    }
+
+    /**
+     * @param hide_legend the hide_legend to set
+     */
+    public void setHide_legend(boolean hide_legend) {
+        this.hide_legend = hide_legend;
+    }
+
+    /**
+     * @return the hide_tree
+     */
+    public boolean isHide_tree() {
+        return hide_tree;
+    }
+
+    /**
+     * @param hide_tree the hide_tree to set
+     */
+    public void setHide_tree(boolean hide_tree) {
+        this.hide_tree = hide_tree;
+    }
+
+    /**
+     * @return the background_cluster
+     */
+    public boolean isBackground_cluster() {
+        return background_cluster;
+    }
+
+    /**
+     * @param background_cluster the background_cluster to set
+     */
+    public void setBackground_cluster(boolean background_cluster) {
+        this.background_cluster = background_cluster;
+    }
+
+    /**
+     * @return the extra_level
+     */
+    public boolean isExtra_level() {
+        return extra_level;
+    }
+
+    /**
+     * @param extra_level the extra_level to set
+     */
+    public void setExtra_level(boolean extra_level) {
+        this.extra_level = extra_level;
     }
     // </editor-fold>
 }

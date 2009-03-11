@@ -103,7 +103,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         try {
             sp = wmscr.getProvider(location, username, password);
         } catch (Exception ex) {
-            log.error("", ex);
+            log.error(ex.getLocalizedMessage());
         }
 
         if (sp == null) {

@@ -276,18 +276,19 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
                 conn = sess.connection();
             }
             attributes = SpatialUtil.getAdminColumnNames(t.getAdmin_tabel(), conn);
-            //als het attribuut van het type geometry is moet hij niet worden gebruikt
-            for (int i = 0; i < attributes.size(); i++) {
-                String attr = (String) attributes.get(i);
-                int type = SpatialUtil.getColumnDatatype(t, attr, conn);
-                if (type == java.sql.Types.OTHER) {
-                    /*if (attributes==null){
-                    attributes=new ArrayList();
-                    attributes.add(attr);
-                    }*/
-                    attributes.remove(attr);
+            if (attributes != null && attributes.size() != 0) {
+                //als het attribuut van het type geometry is moet hij niet worden gebruikt
+                for (int i = 0; i < attributes.size(); i++) {
+                    String attr = (String) attributes.get(i);
+                    int type = SpatialUtil.getColumnDatatype(t, attr, conn);
+                    if (type == java.sql.Types.OTHER) {
+                        /*if (attributes==null){
+                        attributes=new ArrayList();
+                        attributes.add(attr);
+                        }*/
+                        attributes.remove(attr);
+                    }
                 }
-
             }
 
         } else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {

@@ -237,9 +237,9 @@ public class GetViewerDataAction extends BaseGisAction {
         }//Haal op met WFS
         else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
             request.setAttribute("regels", getThemaWfsObjectsWithId(t, thema_items, request));
-            if (addKaart) {
-                throw new NotSupportedException("Het tonen van een kaart bij een WFS thema wordt nog niet ondersteund");
-            }
+//            if (addKaart) {
+//                throw new NotSupportedException("Het tonen van een kaart bij een WFS thema wordt nog niet ondersteund");
+//            }
         }
         return mapping.findForward("aanvullendeinfo");
     }

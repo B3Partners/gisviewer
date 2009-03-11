@@ -185,11 +185,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                         var width;
                                         var height;
                                         if (xfactor > yfactor){
-                                            width=ax/xfactor;
-                                            height=ay/xfactor;
+                                            width=Math.floor(ax/xfactor);
+                                            height=Math.floor(ay/xfactor);
                                         }else{
-                                            width=ax/yfactor;
-                                            height=ay/yfactor;
+                                            width=Math.floor(ax/yfactor);
+                                            height=Math.floor(ay/yfactor);
                                         }
                                         var newMapRequest=""+mapRequest;
                                         newMapRequest+="bbox="+minx+","+miny+","+maxx+","+maxy+"&";

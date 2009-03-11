@@ -89,7 +89,7 @@ public class SpatialUtil {
 
     public static List getValidClusters() {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        String hquery = "FROM Clusters WHERE id != 9";
+        String hquery = "FROM Clusters WHERE default_cluster = false";
         Query q = sess.createQuery(hquery);
         return q.list();
     }

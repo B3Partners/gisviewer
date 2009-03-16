@@ -189,19 +189,24 @@ function isActiveItem(item) {
     return (activeAnalyseThemaId == item.id);
 }
 
+var prevRadioButton = null;
 function createLabel(container, item) {
     if(item.cluster) {
         container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
-    } else {        
+    } else {
         var analyseRadioChecked = false;
-            
+
         var layerPos = getLayerPosition(item);
         var el;
         var el2;
         if (navigator.appName=="Microsoft Internet Explorer") {
-            var radioControleString = '<input type="radio" name="selkaartlaag" value="' + item.id + '"';
+            var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
             if (isActiveItem(item)) {
+                if(item.analyse=="active" && prevRadioButton != null){
+                    document.getElementById(prevRadioButton).checked = false;
+                }
                 radioControleString += ' checked="checked"';
+                prevRadioButton = 'radio' + item.id;
                 if (item.analyse=="active") {
                     analyseRadioChecked = true;
                 }
@@ -209,22 +214,27 @@ function createLabel(container, item) {
             radioControleString += ' onclick="radioClick(this);"';
             radioControleString += '>';
             el = document.createElement(radioControleString);
-                
+
             var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-            if(layerPos!=0 || analyseRadioChecked)
+            if(layerPos!=0 || analyseRadioChecked )
                 checkboxControleString += ' checked="checked"';
-            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"'; 
+            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
             checkboxControleString += '>';
             el2 = document.createElement(checkboxControleString);
-                
+
         } else {
             el = document.createElement('input');
             el.type = 'radio';
             el.name = 'selkaartlaag';
             el.value = item.id;
+            el.id = 'radio' + item.id;
             el.onclick = function(){radioClick(this);  }
             if (isActiveItem(item)) {
+                if(item.analyse=="active" && prevRadioButton != null){
+                    document.getElementById(prevRadioButton).checked = false;
+                }
                 el.checked = true;
+                prevRadioButton = 'radio' + item.id;
                 if (item.analyse=="active") {
                     analyseRadioChecked = true;
                 }
@@ -235,27 +245,27 @@ function createLabel(container, item) {
             el2.type = 'checkbox';
             el2.value = item.id;
             el2.onclick = function(){checkboxClick(this, false);}
-            if(layerPos!=0 || analyseRadioChecked)
+            if(layerPos!=0 || analyseRadioChecked )
                 el2.checked = true;
         }
         if (analyseRadioChecked && layerPos==0){
             layersAan.push(el2);
-        }    
+        }
         el.theItem=item;
         el2.theItem=item;
-            
+
         if (layerPos<0)
             layersAan.unshift(el2);
         else if (layerPos>0)
             layersAan.push(el2);
-            
+
         var lnk = document.createElement('a');
         lnk.innerHTML = item.title ? item.title : item.id;
         lnk.href = '#';
         if (item.metadatalink && item.metadatalink.length > 1)
-            lnk.onclick = function(){popUp(item.metadatalink, "metadata")}; 
-            
-            
+            lnk.onclick = function(){popUp(item.metadatalink, "metadata")};
+
+
         if(item.wmslayers){
             if(item.analyse=="on" || item.analyse=="active"){
                 container.appendChild(el);
@@ -987,3 +997,22 @@ function hideLeftContainer(){
     fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
 }
+
+
+function resizeVolgordeVakIE() {
+    var tdHeight = document.getElementById('tab_container_td').offsetHeight;
+    document.getElementById('volgordevak').style.height = (tdHeight-10) + 'px';
+    document.getElementById('volgordeForm').style.height = (tdHeight-30) + 'px';
+    document.getElementById('orderLayerBox').style.height = (tdHeight-80) + 'px';
+}
+function checkIE() {
+    if(navigator.userAgent.indexOf("MSIE")!= -1) {
+        resizeVolgordeVakIE();
+        window.onresize = function() {
+            resizeVolgordeVakIE();
+        }
+    }
+}
+var oldonload2=window.onload;
+if(typeof(oldonload2)=='function') window.onload=function(){oldonload2();checkIE();};
+else window.onload=function(){checkIE();};

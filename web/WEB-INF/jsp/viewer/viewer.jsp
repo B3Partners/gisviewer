@@ -185,6 +185,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         VIEWER
                     </td>
                     <td class="onderbalkTableRight">
+                        <div style="float: left;"><span id="actief_thema">Actieve thema</span></div>
                         <div style="float: right;">
                             <tiles:insert name="loginblock"/>
                         </div>
@@ -356,7 +357,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         INFORMATIE
                     </td>
                     <td class="onderbalkTableRight">
-                        <span id="actief_thema">Actieve thema</span>
+                        
                     </td>
                 </tr>
             </table>

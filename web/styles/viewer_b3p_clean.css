@@ -352,6 +352,8 @@ ul#nav li#tab3 { margin-right: 0px; }
     cursor: pointer;
     background-color: White;
     color: #175480;
+    overflow: hidden;
+    width: 270px;
 }
 .orderLayerClassSelected{
     background-color: #bbbbbb;

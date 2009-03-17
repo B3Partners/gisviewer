@@ -214,7 +214,10 @@ function createLabel(container, item) {
             var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
             if (isActiveItem(item)) {
                 if(item.analyse=="active" && prevRadioButton != null){
-                    document.getElementById(prevRadioButton).checked = false;
+                    var rc = document.getElementById(prevRadioButton);
+                    if (rc!=undefined && rc!=null) {
+                        rc.checked = false;
+                    }
                 }
                 radioControleString += ' checked="checked"';
                 prevRadioButton = 'radio' + item.id;

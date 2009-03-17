@@ -1,5 +1,5 @@
 var allActiveLayers="";
-var layerUrl=null;
+var layerUrl=""+kburl;
 var cookieArray = readCookie('checkedLayers');
 
 var activeAnalyseThemaId = '';
@@ -16,7 +16,7 @@ fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
 fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
 fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
 fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));
-*/
+ */
 function doAjaxRequest(point_x, point_y) {
     if (adresThemaId!=undefined){        
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
@@ -36,6 +36,7 @@ function handleGetData(str) {
         document.getElementById('kadastraledata').innerHTML = "Geen adres gevonden";
     }
 }
+
 
 function handleGetAdminData(coords) {
     var checkedThemaIds;
@@ -72,7 +73,7 @@ function handleGetAdminData(coords) {
     document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
     if(usePopup) {
         // open popup when not opened en submit form to popup
-        if(dataframepopupHandle == null || dataframepopupHandle.closed) dataframepopupHandle = popUpData('dataframepopup', '900', '500');
+        if(dataframepopupHandle == null || dataframepopupHandle.closed) dataframepopupHandle = popUpData('dataframepopup', '680', '225');
         document.forms[0].target = 'dataframepopup';
     } else {
         document.forms[0].target = 'dataframe';
@@ -91,15 +92,15 @@ function popUp(URL, naam) {
     var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
     var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
     properties = "toolbar = 0, " + 
-        "scrollbars = 1, " + 
-        "location = 0, " + 
-        "statusbar = 1, " + 
-        "menubar = 0, " + 
-        "resizable = 1, " + 
-        "width = " + screenwidth + ", " + 
-        "height = " + screenheight + ", " + 
-        "top = " + popuptop + ", " + 
-        "left = " + popupleft;
+    "scrollbars = 1, " +
+    "location = 0, " +
+    "statusbar = 1, " +
+    "menubar = 0, " +
+    "resizable = 1, " +
+    "width = " + screenwidth + ", " +
+    "height = " + screenheight + ", " +
+    "top = " + popuptop + ", " +
+    "left = " + popupleft;
     return eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
 }
 
@@ -109,15 +110,15 @@ function popUpData(naam, width, height) {
     var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
     var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
     properties = "toolbar = 0, " + 
-        "scrollbars = 1, " + 
-        "location = 0, " + 
-        "statusbar = 1, " + 
-        "menubar = 0, " + 
-        "resizable = 1, " + 
-        "width = " + screenwidth + ", " + 
-        "height = " + screenheight + ", " + 
-        "top = " + popuptop + ", " + 
-        "left = " + popupleft;
+    "scrollbars = 1, " +
+    "location = 0, " +
+    "statusbar = 1, " +
+    "menubar = 0, " +
+    "resizable = 1, " +
+    "width = " + screenwidth + ", " +
+    "height = " + screenheight + ", " +
+    "top = " + popuptop + ", " +
+    "left = " + popupleft;
     return window.open('', naam, properties);
 }
 
@@ -165,22 +166,32 @@ function setActiveThema(id, label, overrule) {
                 maxx=minx;
                 maxy=miny;
             }
-            flamingo_map1_onIdentify('',{minx:minx, miny:miny, maxx:maxx, maxy:maxy})
+            flamingo_map1_onIdentify('',{
+                minx:minx,
+                miny:miny,
+                maxx:maxx,
+                maxy:maxy
+            })
         }
     } 
     return activeAnalyseThemaId;
 }
     
 function radioClick(obj) {
-    eraseCookie('activelayer'); 
-    createCookie('activelayer', obj.theItem.id + '##' + obj.theItem.title, '7'); 
+    eraseCookie('activelayer');
     var oldActiveThemaId = activeAnalyseThemaId;
-    setActiveThema(obj.theItem.id, obj.theItem.title, true); 
-    activateCheckbox(obj.theItem.id);
-    deActivateCheckbox(oldActiveThemaId);
+    if (obj!=undefined && obj.theItem!=undefined) {
+        createCookie('activelayer', obj.theItem.id + '##' + obj.theItem.title, '7');
+        setActiveThema(obj.theItem.id, obj.theItem.title, true);
+        activateCheckbox(obj.theItem.id);
+        deActivateCheckbox(oldActiveThemaId);
+    }
 }
 
 function isActiveItem(item) {
+    if (item==undefined) {
+        return false;
+    }
     if(item.analyse=="on"){
         setActiveThema(item.id, item.title);
     } else if(item.analyse=="active"){
@@ -189,13 +200,12 @@ function isActiveItem(item) {
     return (activeAnalyseThemaId == item.id);
 }
 
-var prevRadioButton = null;
 function createLabel(container, item) {
     if(item.cluster) {
         container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
-    } else {
+    } else {        
         var analyseRadioChecked = false;
-
+            
         var layerPos = getLayerPosition(item);
         var el;
         var el2;
@@ -214,14 +224,14 @@ function createLabel(container, item) {
             radioControleString += ' onclick="radioClick(this);"';
             radioControleString += '>';
             el = document.createElement(radioControleString);
-
+                
             var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
             if(layerPos!=0 || analyseRadioChecked )
                 checkboxControleString += ' checked="checked"';
-            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
+            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"'; 
             checkboxControleString += '>';
             el2 = document.createElement(checkboxControleString);
-
+                
         } else {
             el = document.createElement('input');
             el.type = 'radio';
@@ -244,28 +254,32 @@ function createLabel(container, item) {
             el2.id = item.id;
             el2.type = 'checkbox';
             el2.value = item.id;
-            el2.onclick = function(){checkboxClick(this, false);}
+            el2.onclick = function(){
+                checkboxClick(this, false);
+            }
             if(layerPos!=0 || analyseRadioChecked )
                 el2.checked = true;
         }
         if (analyseRadioChecked && layerPos==0){
             layersAan.push(el2);
-        }
+        }    
         el.theItem=item;
         el2.theItem=item;
-
+            
         if (layerPos<0)
             layersAan.unshift(el2);
         else if (layerPos>0)
             layersAan.push(el2);
-
+            
         var lnk = document.createElement('a');
         lnk.innerHTML = item.title ? item.title : item.id;
         lnk.href = '#';
         if (item.metadatalink && item.metadatalink.length > 1)
-            lnk.onclick = function(){popUp(item.metadatalink, "metadata")};
-
-
+            lnk.onclick = function(){
+                popUp(item.metadatalink, "metadata")
+                };
+            
+            
         if(item.wmslayers){
             if(item.analyse=="on" || item.analyse=="active"){
                 container.appendChild(el);
@@ -279,19 +293,21 @@ function createLabel(container, item) {
     
 function activateCheckbox(id) {
     var obj = document.getElementById(id);
-    if(!obj.checked)
+    if(obj!=undefined && obj!=null && !obj.checked)
         document.getElementById(id).click();
 }
 
 function deActivateCheckbox(id) {
-    if (id==null)
-	return;
+    if (id==undefined || id==null)
+        return;
     var obj = document.getElementById(id);
-    if(obj!=null && obj.checked)
+    if(obj!=undefined && obj!=null && obj.checked)
         document.getElementById(id).click();
 }
 
 function switchTab(obj) {
+    if (obj==undefined || obj==null)
+        return;
     eraseCookie('activetab');
     createCookie('activetab', obj.id, '7');
     document.getElementById('tab0').className = '';
@@ -340,7 +356,8 @@ function readCookieArrayIntoCheckboxArray() {
 }
 
 function isInCheckboxArray(id) {
-    if(checkboxArray == null) return false;
+    if(checkboxArray == null)
+        return false;
     for(i = 0; i < checkboxArray.length; i++) {
         if(checkboxArray[i] == id) {
             return true;
@@ -350,6 +367,8 @@ function isInCheckboxArray(id) {
 }
 
 function checkboxClick(obj, dontRefresh) {
+    if (obj==undefined || obj==null)
+        return;
     if(obj.checked) {
         var backgroundLayer=false;
         //TODO: ipv onderstaande for loop kijken of het obj.item.backgroundlayer true is;
@@ -397,10 +416,10 @@ function checkboxClick(obj, dontRefresh) {
                 }
             }           
             if(backgroundLayer){
-              allActiveLayers= ","+obj.theItem.wmslayers+allActiveLayers;
+                allActiveLayers= ","+obj.theItem.wmslayers+allActiveLayers;
             }
             else{
-              allActiveLayers+= ","+obj.theItem.wmslayers;
+                allActiveLayers+= ","+obj.theItem.wmslayers;
             }
             if (!dontRefresh){
                 refreshLayerWithDelay();
@@ -433,43 +452,45 @@ function doRefreshLayer(){
         
 }
 function refreshLayer(){
-    var layersToAdd;
-    if (allActiveLayers.length>0){
-        layersToAdd= allActiveLayers.substring(1);
-    }else{
-        layersToAdd="";
-    }        
-    if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
-        if(layerUrl.indexOf('?')> 0)
-            layerUrl+='&';
-        else
-            layerUrl+='?';
-        layerUrl+="SERVICE=WMS";
-    }
-    var capLayerUrl=layerUrl;
-    var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"fmcLayer\" timeout=\"30\"" +
+    if (layerUrl!=undefined && layerUrl!=null) {
+        var layersToAdd;
+        if (allActiveLayers.length>0){
+            layersToAdd= allActiveLayers.substring(1);
+        }else{
+            layersToAdd="";
+        }
+        if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
+            if(layerUrl.indexOf('?')> 0)
+                layerUrl+='&';
+            else
+                layerUrl+='?';
+            layerUrl+="SERVICE=WMS";
+        }
+        var capLayerUrl=layerUrl;
+        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"fmcLayer\" timeout=\"30\"" +
         "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
         "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl + 
         "\"styles=\""+
         "\" layers=\""+layersToAdd+
         "\" color_layers=\""+layersToAdd+
         "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
-    /* add the highlight layer properties.       
-     */
-    var layersArray= layersToAdd.split(",");
-    for (var i=0; i < layersArray.length; i++){
-        if (layersArray[i].length> 0){
-            newLayer+='<layer id="'+layersArray[i]+'">';
-            newLayer+='<visualisationselected id="';
-            newLayer+=layersArray[i]+'" ';
-            newLayer+='colorkey="id" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>'
-            newLayer+='</layer>';
+        /** add the highlight layer properties.
+         */
+        var layersArray= layersToAdd.split(",");
+        for (var i=0; i < layersArray.length; i++){
+            if (layersArray[i].length> 0){
+                newLayer+='<layer id="'+layersArray[i]+'">';
+                newLayer+='<visualisationselected id="';
+                newLayer+=layersArray[i]+'" ';
+                newLayer+='colorkey="id" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>'
+                newLayer+='</layer>';
+            }
         }
-    }
-    newLayer+= "</fmc:LayerOGWMS>";        
-    if (flamingo && layerUrl!=null){            
-        flamingo.call('map1','removeLayer','fmcLayer');
-        flamingo.call('map1','addLayer',newLayer);
+        newLayer+= "</fmc:LayerOGWMS>";
+        if (flamingo && layerUrl!=undefined && layerUrl!=null){
+            flamingo.call('map1','removeLayer','fmcLayer');
+            flamingo.call('map1','addLayer',newLayer);
+        }
     }
 }
 function loadObjectInfo(coords) {
@@ -559,22 +580,22 @@ function getCoords() {
     var zoekK=null;
     var zoekT=null;    
     if (aparteZoekThemas){           
-      var searchFieldFound=true;
-      waarde=new Array();
-      for(var i=0; searchFieldFound; i++){
-          var searchField=document.getElementById("searchField_"+i);
-          if (searchField){
-              waarde[i]=searchField.value;
-              if (zoekK==null)
-                  zoekK="";
-              else
-                  zoekK+=",";              
-              zoekK+=searchField.name; 
-          }else{
-              searchFieldFound=false;
-          }
-      }
-      zoekT=zoekThemaIds[currentSearchSelectId];      
+        var searchFieldFound=true;
+        waarde=new Array();
+        for(var i=0; searchFieldFound; i++){
+            var searchField=document.getElementById("searchField_"+i);
+            if (searchField){
+                waarde[i]=searchField.value;
+                if (zoekK==null)
+                    zoekK="";
+                else
+                    zoekK+=",";              
+                zoekK+=searchField.name; 
+            }else{
+                searchFieldFound=false;
+            }
+        }
+        zoekT=zoekThemaIds[currentSearchSelectId];      
     }
     else{
         waarde = document.getElementById("searchField").value;
@@ -590,21 +611,21 @@ function getCoordsCallbackFunction(values){
     if (values!=null && values.length > 0) {
         for (var i=0; i < values.length; i++){            
             if (Number(values[i].maxx-values[i].minx) < minBboxZoeken){
-              var addX=Number((minBboxZoeken-(values[i].maxx-values[i].minx))/2);
-              var addY=Number((minBboxZoeken-(values[i].maxy-values[i].miny))/2);
-              values[i].minx=Number(values[i].minx-addX);
-              values[i].maxx=Number(Number(values[i].maxx)+Number(addX));
-              values[i].miny=Number(values[i].miny-addY);
-              values[i].maxy=Number(Number(values[i].maxy)+Number(addY));		
-          }
+                var addX=Number((minBboxZoeken-(values[i].maxx-values[i].minx))/2);
+                var addY=Number((minBboxZoeken-(values[i].maxy-values[i].miny))/2);
+                values[i].minx=Number(values[i].minx-addX);
+                values[i].maxx=Number(Number(values[i].maxx)+Number(addX));
+                values[i].miny=Number(values[i].miny-addY);
+                values[i].maxy=Number(Number(values[i].maxy)+Number(addY));		
+            }
         }
         if (values.length > 1){
             var displayLength = values.length;
-            if (displayLength<25) {
+            if (displayLength<5000) {
                 sResult = "<br><b>Meerdere resultaten gevonden:<b><ol>";
             } else {
-                displayLenght=25;
-                sResult = "<br><b>Meer dan 25 resultaten gevonden. Er worden slechts 25 resultaten weergegeven:<b><ol>";
+                displayLenght=5000;
+                sResult = "<br><b>Meer dan 5000 resultaten gevonden. Er worden slechts 5000 resultaten weergegeven:<b><ol>";
             }
             for (i =0; i < displayLength; i++){                
                 sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a></li>";
@@ -644,9 +665,14 @@ function addLayerToVolgorde(name, id, legendURL,backgroundLayer) {
     if (legendURL==undefined){
         myImage.onerror();
     }else{
-        myImage.src = legendURL;   
+        myImage.src = legendURL;
     }     
-    div.onclick=function(){selectLayer(this);};
+    div.onclick=function(){
+        selectLayer(this);
+    };
+    if (backgroundLayer && demogebruiker){
+        div.style.display="none";
+    }
 }
 function imageOnerror(){
     this.style.height='0'; 
@@ -666,9 +692,11 @@ function imageOnload(){
         document.getElementById(this.id).appendChild(legendimg);
     }
 }
-function removeLayerFromVolgorde(name, id) {    
-    var orderLayers=orderLayerBox.childNodes;
-    orderLayerBox.removeChild(document.getElementById(id));
+function removeLayerFromVolgorde(name, id) {
+    var remel = document.getElementById(id);
+    if (remel!=undefined && remel!=null) {
+        orderLayerBox.removeChild(remel);
+    }
 }
 
 function refreshMapVolgorde() {
@@ -723,7 +751,14 @@ function setFirefoxCSS() {
     document.getElementById('treevak').style.overflow = 'visible';
     document.getElementById('volgordevak').style.overflow = 'visible';
     document.getElementById('tabcontainervakscroll').style.overflow = 'auto';
-    document.getElementById('tabcontainervakscroll').style.backgroundColor = '#183C56';
+    document.getElementById('tabcontainervakscroll').style.backgroundColor = '#DBE9E9';
+}
+
+function resizeVolgordeVakIE() {
+    var tdHeight = document.getElementById('tab_container_td').offsetHeight;
+    document.getElementById('volgordevak').style.height = (tdHeight-10) + 'px';
+    document.getElementById('volgordeForm').style.height = (tdHeight-30) + 'px';
+    document.getElementById('orderLayerBox').style.height = (tdHeight-80) + 'px';
 }
 
 function getActiveLayerId(cookiestring) {
@@ -815,22 +850,48 @@ function flamingo_map1_onInit(){
             setFullExtent(12000,304000,280000,620000);
         }
         refreshLayer();
+        //bij init van fmcLayer (als fmcLayer is aangemaakt. Dan de cyclorama default uit zetten.
+        //Dit dus maar 1 keer doen (bij ophalen van de pagina) daarna functie overschrijven.
+        flamingo_map1_fmcLayer_onInit= function(){           
+            flamingo.call('map1_fmcLayer','setLayerProperty','bvld_cyclorama','visible',false);
+            flamingo.call('map1','update', 0 , true);
+            flamingo_fmcLayer_onInit= function(){
+                return
+            };
+        };
+        
+
     }
 }
 function moveToExtent(minx,miny,maxx,maxy){
-    flamingo.callMethod("map1", "moveToExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy}, 0);
+    flamingo.callMethod("map1", "moveToExtent", {
+        minx:minx,
+        miny:miny,
+        maxx:maxx,
+        maxy:maxy
+    }, 0);
 }
 function setFullExtent(minx,miny,maxx,maxy){
-    flamingo.callMethod("map1","setFullExtent", {minx:minx, miny:miny, maxx:maxx, maxy:maxy});
+    flamingo.callMethod("map1","setFullExtent", {
+        minx:minx,
+        miny:miny,
+        maxx:maxx,
+        maxy:maxy
+    });
 }
 function doIdentify(minx,miny,maxx,maxy){
-    flamingo.callMethod("map1","identify", {minx:minx, miny:miny, maxx:maxx, maxy:maxy});
+    flamingo.callMethod("map1","identify", {
+        minx:minx,
+        miny:miny,
+        maxx:maxx,
+        maxy:maxy
+    });
     flamingo.callMethod("toolGroup","setTool","identify");
 }
 function moveAndIdentify(minx,miny,maxx,maxy){
     moveToExtent(minx,miny,maxx,maxy);
     var centerX=Number(Number(Number(minx)+Number(maxx))/2);
-    var centerY=Number(Number(Number(miny)+Number(maxy))/2);    
+    var centerY=Number(Number(Number(miny)+Number(maxy))/2);     
     doIdentify(centerX,centerY,centerX,centerY);
 }
     
@@ -890,12 +951,12 @@ function searchSelectChanged(element){
         if (naamZoekVelden)
             naamVelden=naamZoekVelden[currentSearchSelectId].split(',');
         for (i=0; i < zoekVelden.length; i++){
-          var naamZoekVeld=zoekVelden[i];
-          if (naamVelden[i]){
-              naamZoekVeld=naamVelden[i];
-          }
-          s+='<b>'+naamZoekVeld+':</b><br/>';
-          s+='<input type="text" id="searchField_'+i+'" name="'+zoekVelden[i]+'" size="40"/><br/>'
+            var naamZoekVeld=zoekVelden[i];
+            if (naamVelden[i]){
+                naamZoekVeld=naamVelden[i];
+            }
+            s+='<b>'+naamZoekVeld+':</b><br/>';
+            s+='<input type="text" id="searchField_'+i+'" name="'+zoekVelden[i]+'" size="40"/><br/>'
         }
     }else{
         s+='<input type="text" id="searchField_'+i+'" name="'+zoekKolommen[currentSearchSelectId]+'" size="40"/>';
@@ -907,7 +968,9 @@ function searchSelectChanged(element){
     for(i=0; searchFieldFound; i++){
         var searchField=document.getElementById("searchField_"+i);
         if (searchField){
-          searchField.onkeyup=function(ev){getCoordsOnEnterKey(ev);};
+            searchField.onkeyup=function(ev){
+                getCoordsOnEnterKey(ev);
+            };
         }else{
             searchFieldFound=false;
         }
@@ -915,37 +978,37 @@ function searchSelectChanged(element){
 }
 
 function getCoordsOnEnterKey(ev){
-  var sourceEvent;
-  if(ev)			//Moz
-  {
-          sourceEvent= ev.target;
-  }
+    var sourceEvent;
+    if(ev)			//Moz
+    {
+        sourceEvent= ev.target;
+    }
 
-  if(window.event)	//IE
-  {
-          sourceEvent=window.event.srcElement;
-  }
-  var keycode;
-  if(ev)			//Moz
-  {
-          keycode= ev.keyCode;
-  }
-  if(window.event)	//IE
-  {
-          keycode = window.event.keyCode;
-  }
-  if (keycode==13){
-      getCoords();
-  }
+    if(window.event)	//IE
+    {
+        sourceEvent=window.event.srcElement;
+    }
+    var keycode;
+    if(ev)			//Moz
+    {
+        keycode= ev.keyCode;
+    }
+    if(window.event)	//IE
+    {
+        keycode = window.event.keyCode;
+    }
+    if (keycode==13){
+        getCoords();
+    }
   
 }
 /*Get de flash movie*/
 function getMovie(movieName) {   
-   if (navigator.appName.indexOf("Microsoft") != -1) {
-            return window[movieName];
-   }else {
-      return document[movieName];
-   }
+    if (navigator.appName.indexOf("Microsoft") != -1) {
+        return window[movieName];
+    }else {
+        return document[movieName];
+    }
 }
 
 /**
@@ -955,7 +1018,7 @@ function searchThemaValue(themaList,themaId,val){
     for (var i in themaList){
         //alert(" key: "+i + " value: "+themaList[i]);
         if (i=="id" && themaList[i]==themaId){  
-          return themaList[val];
+            return themaList[val];
         }
         if (i=="children"){
             for (var ichild in themaList[i]){
@@ -968,14 +1031,15 @@ function searchThemaValue(themaList,themaId,val){
         }
     }
 }
+
 var exportMapWindow;
 var lastGetMapRequest="";
 function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
     if(requestObject && requestObject.url){
         if (requestObject.requesttype=="GetMap"){
             //if (requestObject.url.toLowerCase().indexOf("getmap")){
-                lastGetMapRequest=requestObject.url;                
-            //}
+            lastGetMapRequest=requestObject.url;
+        //}
         }
     }
 }
@@ -991,28 +1055,16 @@ function exportMap(){
         exportMapWindow.setMapImageSrc(lastGetMapRequest);
     }
 }
-function hideLeftContainer(){
+
+/*Instellingen voor barneveld
+ **/
+function barneveldSettings() {
     fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
-}
 
-
-function resizeVolgordeVakIE() {
-    var tdHeight = document.getElementById('tab_container_td').offsetHeight;
-    document.getElementById('volgordevak').style.height = (tdHeight-10) + 'px';
-    document.getElementById('volgordeForm').style.height = (tdHeight-30) + 'px';
-    document.getElementById('orderLayerBox').style.height = (tdHeight-80) + 'px';
-}
-function checkIE() {
-    if(navigator.userAgent.indexOf("MSIE")!= -1) {
-        resizeVolgordeVakIE();
-        window.onresize = function() {
-            resizeVolgordeVakIE();
-        }
+    if (demogebruiker){
+        fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));
     }
 }
-var oldonload2=window.onload;
-if(typeof(oldonload2)=='function') window.onload=function(){oldonload2();checkIE();};
-else window.onload=function(){checkIE();};

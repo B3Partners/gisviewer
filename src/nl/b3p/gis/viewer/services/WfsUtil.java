@@ -122,7 +122,9 @@ public class WfsUtil {
             newCoords[1]=coords[1];
             newCoords[2]=coords[4];
             newCoords[3]=coords[5];
-        } else {
+            coords=newCoords;
+        }
+        if (coords.length!=4) {
             throw new Exception("Polygons not supported! If polygon got 5 xy-coords a bbox will be created with the 1st and 3th coord");
         }
         OgcWfsClient.addBboxFilter(gf,getGeometryAttributeName(t),coords, ft);        

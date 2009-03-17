@@ -200,6 +200,7 @@ function isActiveItem(item) {
     return (activeAnalyseThemaId == item.id);
 }
 
+var prevRadioButton = null;
 function createLabel(container, item) {
     if(item.cluster) {
         container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
@@ -859,8 +860,6 @@ function flamingo_map1_onInit(){
                 return
             };
         };
-        
-
     }
 }
 function moveToExtent(minx,miny,maxx,maxy){

@@ -1,4 +1,5 @@
 var allActiveLayers="";
+var allActiveBackgroundLayers="";
 var layerUrl=""+kburl;
 var cookieArray = readCookie('checkedLayers');
 
@@ -374,14 +375,6 @@ function checkboxClick(obj, dontRefresh) {
     if (obj==undefined || obj==null)
         return;
     if(obj.checked) {
-        var backgroundLayer=false;
-        //TODO: ipv onderstaande for loop kijken of het obj.item.backgroundlayer true is;
-        for (var i=0; i < backgroundLayers.length; i++){
-            if (backgroundLayers[i]==obj.theItem.id){
-                backgroundLayer=true;
-                break;
-            }
-        }
         if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
         var legendURL="";
         if (obj.theItem.wmslegendlayer!=undefined){
@@ -394,7 +387,7 @@ function checkboxClick(obj, dontRefresh) {
         }else{
             legendURL=undefined;
         }
-        addLayerToVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers, legendURL, backgroundLayer);
+        addLayerToVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers, legendURL, obj.theItem.hide_legend);
             
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
@@ -419,8 +412,8 @@ function checkboxClick(obj, dontRefresh) {
                     layerUrl = layerUrl + organizationCodeKey + "="+organizationcode;			
                 }
             }           
-            if(backgroundLayer){
-                allActiveLayers= ","+obj.theItem.wmslayers+allActiveLayers;
+            if(obj.theItem.background){
+                allActiveBackgroundLayers+=","+obj.theItem.wmslayers;
             }
             else{
                 allActiveLayers+= ","+obj.theItem.wmslayers;
@@ -434,6 +427,7 @@ function checkboxClick(obj, dontRefresh) {
         removeLayerFromVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers);
         if (obj.theItem.wmslayers){
             allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
+            allActiveBackgroundLayers=allActiveBackgroundLayers.replace(","+obj.theItem.wmslayers,"");
             refreshLayerWithDelay();
         }
     }
@@ -458,10 +452,17 @@ function doRefreshLayer(){
 function refreshLayer(){
     if (layerUrl!=undefined && layerUrl!=null) {
         var layersToAdd;
-        if (allActiveLayers.length>0){
-            layersToAdd= allActiveLayers.substring(1);
+        if (allActiveBackgroundLayers.length>0){
+            //omdat de eerste positie een , is
+            layersToAdd= allActiveBackgroundLayers.substring(1);
         }else{
             layersToAdd="";
+        }
+        if (layersToAdd.length>0 && allActiveLayers.length>0){
+            layersToAdd+=allActiveLayers;
+        }else if (allActiveLayers.length>0){
+            //omdat de eerste positie een , is
+            layersToAdd+=allActiveLayers.substring(1);
         }
         if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
             if(layerUrl.indexOf('?')> 0)
@@ -643,7 +644,7 @@ function getCoordsCallbackFunction(values){
     searchResults.innerHTML=sResult;
 }
 
-function addLayerToVolgorde(name, id, legendURL,backgroundLayer) {        
+function addLayerToVolgorde(name, id, legendURL,hide_legend) {
     var myImage = new Image();
     myImage.name = name;
     myImage.id=id;    
@@ -661,7 +662,7 @@ function addLayerToVolgorde(name, id, legendURL,backgroundLayer) {
     div.title =name;
     div.className="orderLayerClass";    
     div.appendChild(spanEl);    
-    if(!orderLayerBox.hasChildNodes() || backgroundLayer) {
+    if(!orderLayerBox.hasChildNodes() || hide_legend) {
         orderLayerBox.appendChild(div);
     } else {        
         orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
@@ -674,7 +675,7 @@ function addLayerToVolgorde(name, id, legendURL,backgroundLayer) {
     div.onclick=function(){
         selectLayer(this);
     };
-    if (backgroundLayer && demogebruiker){
+    if (hide_legend && demogebruiker){
         div.style.display="none";
     }
 }
@@ -715,6 +716,7 @@ function deleteAllLayers() {
         orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
     }
     allActiveLayers = "";
+    allActiveBackgroundLayers="";
     cookieArray = "";
     eraseCookie('checkedLayers');
     createCookie('checkedLayers', cookieArray, '7');
@@ -853,16 +855,7 @@ function flamingo_map1_onInit(){
         else {                   
             setFullExtent(12000,304000,280000,620000);
         }
-        refreshLayer();
-        //bij init van fmcLayer (als fmcLayer is aangemaakt. Dan de cyclorama default uit zetten.
-        //Dit dus maar 1 keer doen (bij ophalen van de pagina) daarna functie overschrijven.
-        flamingo_map1_fmcLayer_onInit= function(){           
-            flamingo.call('map1_fmcLayer','setLayerProperty','bvld_cyclorama','visible',false);
-            flamingo.call('map1','update', 0 , true);
-            flamingo_fmcLayer_onInit= function(){
-                return
-            };
-        };
+        refreshLayer();        
     }
 }
 function moveToExtent(minx,miny,maxx,maxy){

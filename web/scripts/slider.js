@@ -5,10 +5,14 @@ slider.getRealValue = function() {
     return Math.round(this.getValue() * (2048/300));
 }
 slider.subscribe("change", function(offsetFromStart) {
-    var fld = document.getElementById("imageSize");
-    var actualValue = slider.getRealValue();
-    fld.value = actualValue;
-
+    if (!firstCall || !setDefaultImageSizeFromMap){
+        var fld = document.getElementById("imageSize");
+        var actualValue = slider.getRealValue();
+        fld.value = actualValue;
+    }else{
+        changeVal(document.getElementById("imageSize"));
+        firstCall=false;
+    }
 });
 
 function changeVal(obj) {

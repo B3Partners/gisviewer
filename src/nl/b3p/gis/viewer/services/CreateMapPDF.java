@@ -22,6 +22,7 @@ import com.lowagie.text.rtf.RtfWriter2;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -211,8 +212,7 @@ public class CreateMapPDF extends HttpServlet {
             if (config.getInitParameter("addFooter") != null) {
                 addFooter = "true".equalsIgnoreCase(config.getInitParameter("addFooter"));
             }
-            sdf=(SimpleDateFormat) SimpleDateFormat.getDateInstance();
-            sdf.applyPattern("dd-MMMM-yyyy");
+            sdf=new SimpleDateFormat("dd-MMMM-yyyy",new Locale("NL"));
 
         } catch (Exception e) {
             throw new ServletException(e);

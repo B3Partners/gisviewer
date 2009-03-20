@@ -319,31 +319,7 @@ public class ViewerAction extends BaseGisAction {
             jsonCluster.put("type", "child");
             jsonCluster.put("title", cluster.getNaam());
             jsonCluster.put("cluster", true);
-            if (cluster.isDefault_cluster()) {
-                jsonCluster.put("default_cluster", "on");
-            } else {
-                jsonCluster.put("default_cluster", "off");
-            }
-            if (cluster.isHide_legend()) {
-                jsonCluster.put("hide_legend", "on");
-            } else {
-                jsonCluster.put("hide_legend", "off");
-            }
-            if (cluster.isHide_tree()) {
-                jsonCluster.put("hide_tree", "on");
-            } else {
-                jsonCluster.put("hide_tree", "off");
-            }
-            if (cluster.isBackground_cluster()) {
-                jsonCluster.put("background_cluster", "on");
-            } else {
-                jsonCluster.put("background_cluster", "off");
-            }
-            if (cluster.isExtra_level()) {
-                jsonCluster.put("extra_level", "on");
-            } else {
-                jsonCluster.put("extra_level", "off");
-            }
+            setExtraClusterProperties(jsonCluster,cluster);
 
             List childrenList = (List) clMap.get("children");
             JSONArray childrenArray = getChildren(childrenList, actiefThemaId);
@@ -397,6 +373,9 @@ public class ViewerAction extends BaseGisAction {
                     jsonCluster.put("analyse", "off");
                 }
             }
+            /*Set some cluster properties that are used by the thema.*/
+            Clusters cluster = th.getCluster();
+            setExtraClusterProperties(jsonCluster,cluster);
 
             if (th.getWms_layers_real() != null) {
                 jsonCluster.put("wmslayers", th.getWms_layers_real()).put("wmsquerylayers", th.getWms_querylayers_real()).put("wmslegendlayer", th.getWms_legendlayer_real());
@@ -418,5 +397,32 @@ public class ViewerAction extends BaseGisAction {
         }
 
         return childrenArray;
+    }
+    private void setExtraClusterProperties(JSONObject jsonCluster, Clusters cluster) throws JSONException {
+        if (cluster.isDefault_cluster()) {
+            jsonCluster.put("default_cluster", true);
+        } else {
+            jsonCluster.put("default_cluster", false);
+        }
+        if (cluster.isHide_legend()) {
+            jsonCluster.put("hide_legend", true);
+        } else {
+            jsonCluster.put("hide_legend", false);
+        }
+        if (cluster.isHide_tree()) {
+            jsonCluster.put("hide_tree", true);
+        } else {
+            jsonCluster.put("hide_tree", false);
+        }
+        if (cluster.isBackground_cluster()) {
+            jsonCluster.put("background", true);
+        } else {
+            jsonCluster.put("background", false);
+        }
+        if (cluster.isExtra_level()) {
+            jsonCluster.put("extra_level", true);
+        } else {
+            jsonCluster.put("extra_level", false);
+        }
     }
 }

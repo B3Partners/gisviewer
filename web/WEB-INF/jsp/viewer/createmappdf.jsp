@@ -1,6 +1,8 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
-
+<script type="text/javascript">
+    var setDefaultImageSizeFromMap=true;
+</script>
 <script type="text/javascript" src="scripts/yahoo-dom-event.js"></script>
 <script type="text/javascript" src="scripts/dragdrop-min.js"></script>
 <script type="text/javascript" src="scripts/slider-min.js"></script>
@@ -41,6 +43,12 @@
             </td>
         </tr>
         <tr>
+            <td></td>
+            <td>
+                Als u de kwaliteit van de kaart veranderd kan het uiterlijk van de kaart veranderen.
+            </td>
+        </tr>
+        <tr>
             <td><fmt:message key="createmappdf.landscape"/></td>
             <td>
                 <input type="radio" name="landscape" value="false" checked>Staand</input>
@@ -73,13 +81,4 @@
 </form>
 <br />
 </div>
-<script type="text/javascript">            
-    function setMapImageSrc(url){
-        document.getElementById("mapImage").src=url;
-        document.getElementById("mapUrl").value=url;        
-    }
-    //doe bij de eerste keer laden:
-    if (window.opener){
-        setMapImageSrc(window.opener.lastGetMapRequest);
-    }
-</script>
+<script type="text/javascript" src="scripts/createmappdf.js"></script>

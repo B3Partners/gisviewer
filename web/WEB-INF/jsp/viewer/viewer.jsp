@@ -83,10 +83,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var refreshDelay=1000;
     var nr = 0;
     
-    //TODO: Configureerbaar maken via configuratie paginas. Het thema moet als achtergrond kunnen worden ingesteld.
-    var backgroundLayers= new Array();
-    backgroundLayers[1]=6;
-    
     /****************************************************************************
     Zoeker instellingen
     ******************************************************************************/

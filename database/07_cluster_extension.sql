@@ -7,7 +7,7 @@ ALTER TABLE clusters ALTER COLUMN hide_tree SET DEFAULT false;
 ALTER TABLE clusters ADD COLUMN background_cluster boolean;
 ALTER TABLE clusters ALTER COLUMN background_cluster SET DEFAULT false;
 ALTER TABLE clusters ADD COLUMN extra_level boolean;
-ALTER TABLE clusters ALTER COLUMN extra_level SET DEFAULT false
+ALTER TABLE clusters ALTER COLUMN extra_level SET DEFAULT false;
 
 update clusters set default_cluster = false;
 update clusters set hide_legend = false;

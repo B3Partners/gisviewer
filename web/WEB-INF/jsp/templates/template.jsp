@@ -54,7 +54,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="scripts/resizewindow.js"></script>
         <![endif]-->
         <!--[if !IE]>--><script type="text/javascript" src="scripts/resizewindow.js"></script><!--<![endif]-->
-        
+        <script language="JavaScript" type="text/JavaScript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/etltransform.js"></script>
         <script type="text/javascript">  
             function checkLocation() {

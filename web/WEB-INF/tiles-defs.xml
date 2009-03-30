@@ -91,6 +91,10 @@
     <definition name="configthemadata" extends="config">
         <put name="content" value="/WEB-INF/jsp/config/configthemadata.jsp"/>
     </definition>
+    <definition name="configconnectie" extends="config">
+        <put name="content" value="/WEB-INF/jsp/config/configconnecties.jsp"/>
+    </definition>
+
     
     
     <!-- tiles met herbruikbare onderdelen die in de content pagina's kunnen worden ge-insert  -->

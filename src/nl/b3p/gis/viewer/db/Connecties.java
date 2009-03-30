@@ -43,7 +43,7 @@ public class Connecties {
     public static final String TYPE_WFS = "wfs";
     public static final String DIALECT_POSTGRESQL = "postgresql";
     public static final String DIALECT_MYSQL = "mysql";
-    private int id;
+    private Integer id;
     private String naam;
     private String connectie_url;
     private String gebruikersnaam;
@@ -55,11 +55,11 @@ public class Connecties {
     public Connecties() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -69,7 +69,15 @@
             <form-property name="background_cluster" type="java.lang.Boolean"/>
             <form-property name="extra_level" type="java.lang.Boolean"/>
         </form-bean>
-        
+        <form-bean name="connectieForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            <form-property name="id" type="java.lang.String"/>
+            <form-property name="naam" type="java.lang.String"/>
+            <form-property name="url" type="java.lang.String"/>
+            <form-property name="gebruikersnaam" type="java.lang.String"/>
+            <form-property name="wachtwoord" type="java.lang.String"/>
+        </form-bean>
         <form-bean name="themaDataForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
@@ -167,7 +175,11 @@
         <action path="/configCluster" type="nl.b3p.gis.viewer.ConfigClusterAction" name="clusterForm" scope="request" validate="false">
             <forward name="success" path="configcluster"/>
             <forward name="failure" path="configcluster"/>
-        </action> 
+        </action>
+        <action path="/configConnectie" type="nl.b3p.gis.viewer.ConfigConnectieAction" name="connectieForm" scope="request" validate="false">
+            <forward name="success" path="configconnectie"/>
+            <forward name="failure" path="configconnectie"/>
+        </action>
         <action path="/configThemaData" type="nl.b3p.gis.viewer.ConfigThemaDataAction" name="themaDataForm" scope="request" validate="false">
             <forward name="success" path="configthemadata"/>
             <forward name="failure" path="configthemadata"/>            

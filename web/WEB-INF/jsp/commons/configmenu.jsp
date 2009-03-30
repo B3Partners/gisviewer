@@ -25,21 +25,24 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
 <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
 
-<c:set var="links" value='<a class="*" href="configThemaData.do">&#155; Thema Data</a>%<a class="*" href="configCluster.do">&#155; Cluster</a>%<a class="*" href="configThema.do">&#155; Thema</a>%<a class="*" href="index.do">&#155; Home</a>' />
+<c:set var="links" value='<a class="*" href="configConnectie.do">&#155; Connectie</a>%<a class="*" href="configThemaData.do">&#155; Thema Data</a>%<a class="*" href="configCluster.do">&#155; Cluster</a>%<a class="*" href="configThema.do">&#155; Thema</a>%<a class="*" href="index.do">&#155; Home</a>' />
 
 <div class="topmenu">
     <c:set var="lnkArray" value="${fn:split(links, '%')}" />
     
     <c:if test="${requestJSP eq 'index.do'}">
-        <c:set var="activelink" value="4" />
+        <c:set var="activelink" value="5" />
     </c:if>
     <c:if test="${requestJSP eq 'configThema.do'}">
-        <c:set var="activelink" value="3" />
+        <c:set var="activelink" value="4" />
     </c:if>
     <c:if test="${requestJSP eq 'configCluster.do'}">
-        <c:set var="activelink" value="2" />
+        <c:set var="activelink" value="3" />
     </c:if>
     <c:if test="${requestJSP eq 'configThemaData.do'}">
+        <c:set var="activelink" value="2" />
+    </c:if>
+    <c:if test="${requestJSP eq 'configConnectie.do'}">
         <c:set var="activelink" value="1" />
     </c:if>
     

@@ -1,0 +1,343 @@
+<?xml version="1.0"?>
+<!--
+B3P Gisviewer is an extension to Flamingo MapComponents making      
+it a complete webbased GIS viewer and configuration tool that    
+works in cooperation with B3P Kaartenbalie.  
+                    
+Copyright 2006, 2007, 2008 B3Partners BV
+
+This file is part of B3P Gisviewer.
+
+B3P Gisviewer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+B3P Gisviewer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="nl.b3p.gis.viewer.db.Applicaties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">applicaties_id_seq</param>
+            </generator>
+        </id>
+        <property name="pakket"/>
+        <property name="module"/>
+        <property name="beschrijving"/>
+        <property name="extern" not-null="true"/>
+        <property name="acceptabel" not-null="true"/>
+        <property name="administratief" not-null="true"/>
+        <property name="geodata" not-null="true"/>
+        <property name="taal"/>
+        <property name="spatialKoppeling"/>
+        <property name="dbKoppeling"/>
+        <property name="webbased" not-null="true"/>
+        <property name="gps" not-null="true"/>
+        <property name="crow" not-null="true"/>
+        <property name="opmerking"/>
+        <many-to-one lazy="false" name="leverancier"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Clusters">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">clusters_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+        <property name="default_cluster" not-null="true"/>
+        <property name="hide_legend" not-null="true"/>
+        <property name="hide_tree" not-null="true"/>
+        <property name="background_cluster" not-null="true"/>
+        <property name="extra_level" not-null="true"/>
+        <many-to-one name="parent" column="parent"/>
+        <set name="children" inverse="true" cascade="all-delete-orphan">
+            <key column="parent"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.Clusters"/>
+        </set>
+        <set name="themas" cascade="all-delete-orphan">
+            <key column="clusters"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.Themas"/>
+        </set>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Connecties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">connecties_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+        <property name="connectie_url"/>
+        <property name="gebruikersnaam"/>
+        <property name="wachtwoord"/>        
+    </class>
+    <class name="nl.b3p.gis.viewer.db.DataTypen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">data_typen_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.FunctieItems">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">functie_items_id_seq</param>
+            </generator>
+        </id>
+        <property name="label"/>
+        <property name="omschrijving"/>
+        <property name="eenheid"/>
+        <property name="voorbeelden"/>
+        <property name="invoer" not-null="true"/>
+        <property name="uitvoer" not-null="true"/>
+        <many-to-one name="functie"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Leveranciers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">leveranciers_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+        <property name="pakket"/>
+        <property name="telefoon1"/>
+        <property name="contact"/>
+        <property name="telefoon2"/>
+        <property name="telefoon3"/>
+        <property name="email"/>
+        <property name="info" not-null="true"/>
+        <property name="opmerkingen"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.LocatieAanduidingen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">locatie_aanduidingen_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Medewerkers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">medewerkers_id_seq</param>
+            </generator>
+        </id>
+        <property name="Achternaam"/>
+        <property name="Voornaam"/>
+        <property name="telefoon"/>
+        <property name="Functie"/>
+        <property name="Locatie"/>
+        <property name="email"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Moscow">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">moscow_id_seq</param>
+            </generator>
+        </id>
+        <property name="code"/>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Onderdeel">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">onderdeel_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+        <property name="locatie"/>
+        <property name="regio" not-null="true"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.OnderdeelMedewerkers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">onderdeel_medewerkers_id_seq</param>
+            </generator>
+        </id>
+        <many-to-one name="medewerker"/>
+        <many-to-one name="onderdeel"/>
+        <property name="vertegenwoordiger" not-null="true"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Rollen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">rollen_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.ThemaApplicaties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">thema_applicaties_id_seq</param>
+            </generator>
+        </id>
+        <many-to-one name="thema"/>
+        <many-to-one lazy="false" name="applicatie"/>
+        <property name="ingebruik" not-null="true"/>
+        <property name="geodata" not-null="true"/>
+        <property name="administratief" not-null="true"/>
+        <property name="voorkeur" not-null="true"/>
+        <property name="definitief" not-null="true"/>
+        <property name="standaard" not-null="true"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.ThemaFuncties">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">thema_functies_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+        <property name="omschrijving"/>
+        <many-to-one name="thema"/>
+        <many-to-one name="applicatie" lazy="false"/>
+        <property name="protocol"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.ThemaData">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">thema_data_id_seq</param>
+            </generator>
+        </id>
+        <property name="label"/>
+        <property name="eenheid"/>
+        <property name="omschrijving"/>
+        <property name="basisregel" not-null="true"/>
+        <property name="voorbeelden"/>
+        <property name="kolombreedte" not-null="true"/>
+        <many-to-one name="thema" lazy="false" />
+        <many-to-one name="moscow" lazy="false" />
+        <many-to-one name="waardeType" lazy="false" />
+        <many-to-one name="dataType" lazy="false" />
+        <property name="commando"/>
+        <property name="kolomnaam"/>
+        <property name="dataorder"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.ThemaVerantwoordelijkheden">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">thema_verantwoordelijkh_id_seq</param>
+            </generator>
+        </id>
+        <many-to-one name="thema"/>
+        <many-to-one name="medewerker" lazy="false"/>
+        <many-to-one name="onderdeel" lazy="false"/>
+        <many-to-one name="rol" lazy="false"/>
+        <property name="huidige_situatie" not-null="true"/>
+        <property name="gewenste_situatie" not-null="true"/>
+        <property name="opmerkingen"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Themas">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">themas_id_seq</param>
+            </generator>
+        </id>
+        <property name="code"/>
+        <property name="naam"/>
+        <property name="metadata_link"/>
+        <many-to-one name="connectie" lazy="false"/>
+        <many-to-one name="moscow" lazy="false"/>
+        <property name="belangnr" not-null="true"/>
+        <many-to-one name="cluster" lazy="false">
+            <column name="clusters" not-null="true"/>
+        </many-to-one>
+        <property name="opmerkingen"/>
+        <property name="analyse_thema" not-null="true"/>
+        <property name="locatie_thema" not-null="true"/>
+        <property name="visible" not-null="true"/>
+        <property name="admin_tabel_opmerkingen"/>
+        <property name="admin_tabel"/>
+        <property name="admin_pk"/>
+        <property name="admin_pk_complex" not-null="true"/>
+        <property name="admin_spatial_ref"/>
+        <property name="admin_query"/>
+        <property name="spatial_tabel_opmerkingen"/>
+        <property name="spatial_tabel"/>
+        <property name="spatial_pk"/>
+        <property name="spatial_pk_complex" not-null="true"/>
+        <property name="spatial_admin_ref"/>
+        <property name="wms_url"/>
+        <property name="wms_layers"/>
+        <property name="wms_layers_real"/>
+        <property name="wms_legendlayer"/>
+        <property name="wms_legendlayer_real"/>
+        <property name="wms_querylayers"/>
+        <property name="wms_querylayers_real"/>
+        <property name="update_frequentie_in_dagen"/>
+        <property name="view_geomtype"/>
+        <property name="organizationcodekey"/>
+        <set name="themaData" lazy="false" cascade="all-delete-orphan" order-by="dataorder, basisregel desc, label">
+            <key column="thema"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.ThemaData"/>
+        </set>
+        <set name="themaVerantwoordelijkheden" lazy="false" cascade="all-delete-orphan" order-by="rol, huidige_situatie desc">
+            <key column="thema"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.ThemaVerantwoordelijkheden"/>
+        </set>
+        <set name="themaApplicaties" lazy="false" cascade="all-delete-orphan" order-by="definitief desc, voorkeur desc">
+            <key column="thema"/>
+            <one-to-many class="nl.b3p.gis.viewer.db.ThemaApplicaties"/>
+        </set>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.WaardeTypen">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">waarde_typen_id_seq</param>
+            </generator>
+        </id>
+        <property name="naam"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.WorkshopMedewerkers">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">workshop_medewerkers_id_seq</param>
+            </generator>
+        </id>
+        <many-to-one name="workshop"/>
+        <many-to-one name="medewerker"/>
+        <property name="aanwezig" not-null="true"/>
+    </class>
+    <class name="nl.b3p.gis.viewer.db.Workshops">
+        <id name="id" type="int">
+            <column name="id" not-null="true"/>
+            <generator class="sequence">
+                <param name="sequence">workshops_id_seq</param>
+            </generator>
+        </id>
+        <property name="volgnr" not-null="true"/>
+        <property name="naam"/>
+    </class>
+</hibernate-mapping>

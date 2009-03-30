@@ -136,14 +136,15 @@ public class ViewerAction extends BaseGisAction {
         if (actiefThema != null) {
             actiefThemaId = actiefThema.getId();
         }
-        request.setAttribute("tree", createJasonObject(rootClusterMap, actiefThemaId));
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        request.setAttribute("tree", createJasonObject(rootClusterMap, actiefThemaId, user));
 
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 28992);
         Polygon extentBbox = null;
         Polygon fullExtentBbox = null;
 
         //stukje voor BBox toevoegen.
-        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        
         Set bboxen = user.getSp().getTopLayer().getSrsbb();
         Iterator it = bboxen.iterator();
         while (it.hasNext()) {
@@ -291,7 +292,7 @@ public class ViewerAction extends BaseGisAction {
         return children;
     }
 
-    protected JSONObject createJasonObject(Map rootClusterMap, Integer actiefThemaId) throws JSONException {
+    protected JSONObject createJasonObject(Map rootClusterMap, Integer actiefThemaId,GisPrincipal user) throws JSONException {
         if (rootClusterMap == null || rootClusterMap.isEmpty()) {
             return null;
         }
@@ -300,12 +301,12 @@ public class ViewerAction extends BaseGisAction {
             return null;
         }
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
-        root.put("children", getSubClusters(clusterMaps, null, actiefThemaId));
+        root.put("children", getSubClusters(clusterMaps, null, actiefThemaId,user));
 
         return root;
     }
 
-    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, Integer actiefThemaId) throws JSONException {
+    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, Integer actiefThemaId,GisPrincipal user) throws JSONException {
         if (subclusterMaps == null) {
             return clusterArray;
         }
@@ -322,9 +323,9 @@ public class ViewerAction extends BaseGisAction {
             setExtraClusterProperties(jsonCluster,cluster);
 
             List childrenList = (List) clMap.get("children");
-            JSONArray childrenArray = getChildren(childrenList, actiefThemaId);
+            JSONArray childrenArray = getChildren(childrenList, actiefThemaId,user);
             List subsubclusterMaps = (List) clMap.get("subclusters");
-            childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actiefThemaId);
+            childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actiefThemaId,user);
             jsonCluster.put("children", childrenArray);
 
             if (clusterArray == null) {
@@ -336,7 +337,7 @@ public class ViewerAction extends BaseGisAction {
         return clusterArray;
     }
 
-    private JSONArray getChildren(List children, Integer actiefThemaId) throws JSONException {
+    private JSONArray getChildren(List children, Integer actiefThemaId,GisPrincipal user) throws JSONException {
         if (children == null) {
             return null;
         }
@@ -378,9 +379,15 @@ public class ViewerAction extends BaseGisAction {
             setExtraClusterProperties(jsonCluster,cluster);
 
             if (th.getWms_layers_real() != null) {
-                jsonCluster.put("wmslayers", th.getWms_layers_real()).put("wmsquerylayers", th.getWms_querylayers_real()).put("wmslegendlayer", th.getWms_legendlayer_real());
+                jsonCluster.put("wmslayers", th.getWms_layers_real()).put("wmsquerylayers", th.getWms_querylayers_real());
+                if (th.getWms_legendlayer_real()!=null){
+                    jsonCluster.put("legendurl",user.getLegendGraphicUrl(user.getLayer(th.getWms_legendlayer_real())));
+                }
             } else {
-                jsonCluster.put("wmslayers", th.getWms_layers()).put("wmsquerylayers", th.getWms_querylayers()).put("wmslegendlayer", th.getWms_legendlayer());
+                jsonCluster.put("wmslayers", th.getWms_layers()).put("wmsquerylayers", th.getWms_querylayers());
+                if (th.getWms_legendlayer()!=null){
+                    jsonCluster.put("legendurl",user.getLegendGraphicUrl(user.getLayer(th.getWms_legendlayer())));
+                }
             }
             if (th.getMetadata_link() != null) {
                 String metadatalink = th.getMetadata_link();

@@ -377,7 +377,12 @@ function checkboxClick(obj, dontRefresh) {
     if(obj.checked) {
         if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
         var legendURL="";
-        if (obj.theItem.wmslegendlayer!=undefined){
+        if (obj.theItem.legendurl!=undefined){
+            legendURL=obj.theItem.legendurl;
+        }else{
+            legendURL=undefined;
+        }
+        /*if (obj.theItem.wmslegendlayer!=undefined){
             legendURL+=kburl;
             if(legendURL.indexOf('?')> 0)
                 legendURL+='&';
@@ -386,7 +391,7 @@ function checkboxClick(obj, dontRefresh) {
             legendURL +='SERVICE=WMS&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;            
         }else{
             legendURL=undefined;
-        }
+        }*/
         addLayerToVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers, legendURL, obj.theItem.hide_legend);
             
         if(checkboxArray.length > 0) {
@@ -757,7 +762,7 @@ function setFirefoxCSS() {
     document.getElementById('treevak').style.overflow = 'visible';
     document.getElementById('volgordevak').style.overflow = 'visible';
     document.getElementById('tabcontainervakscroll').style.overflow = 'auto';
-    document.getElementById('tabcontainervakscroll').style.backgroundColor = '#DBE9E9';
+    document.getElementById('tabcontainervakscroll').style.backgroundColor = '#183C56';
 }
 
 function resizeVolgordeVakIE() {

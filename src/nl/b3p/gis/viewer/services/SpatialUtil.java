@@ -84,7 +84,11 @@ public class SpatialUtil {
         "themas",
         "waarde_typen",
         "workshop_medewerkers",
-        "workshops"
+        "workshops",
+        "connecties",
+        "geometry_columns",
+        "spatial_ref_sys",
+        "etl_proces"
     });
 
     public static List getValidClusters() {

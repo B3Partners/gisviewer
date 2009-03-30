@@ -142,7 +142,7 @@ public class GisPrincipal implements Principal {
     }
 
     public boolean hasLegendGraphic(Layer l) {
-        Set styles = l.getStyles();
+        /*Set styles = l.getStyles();
         if (styles == null || styles.isEmpty()) {
             return false;
         }
@@ -161,7 +161,31 @@ public class GisPrincipal implements Principal {
                 }
             }
         }
-        return false;
+        return false;*/
+        return getLegendGraphicUrl(l)!=null;
+    }
+    
+    public String getLegendGraphicUrl(Layer l) {
+        Set styles = l.getStyles();
+        if (styles == null || styles.isEmpty()) {
+            return null;
+        }
+        Iterator it = styles.iterator();
+        while (it.hasNext()) {
+            Style style = (Style) it.next();
+            Set ldrs = style.getDomainResource();
+            if (ldrs == null || ldrs.isEmpty()) {
+                return null;
+            }
+            Iterator it2 = ldrs.iterator();
+            while (it2.hasNext()) {
+                StyleDomainResource sdr = (StyleDomainResource) it2.next();
+                if ("LegendURL".equalsIgnoreCase(sdr.getDomain())) {
+                    return sdr.getUrl();
+                }
+            }
+        }
+        return null;
     }
 
     public Layer getLayer(String layerName) {

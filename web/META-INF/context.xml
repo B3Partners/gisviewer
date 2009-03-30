@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/gisviewer">
   <!-- context voor tomcat 5.5 -->
-  <Resource driverClassName="org.postgresql.Driver" maxActive="100" maxIdle="30" maxWait="5000" name="jdbc/gisviewer" password="***REMOVED***" type="javax.sql.DataSource" url="jdbc:postgresql://x5.b3p.nl:5432/b3p_gis" username="postgres" validationQuery="select now();"/>
+  <Resource driverClassName="org.postgresql.Driver" maxActive="100" maxIdle="30" maxWait="5000" name="jdbc/gisviewer" password="***REMOVED***" type="javax.sql.DataSource" url="jdbc:postgresql://localhost:5432/gisviewer" username="postgres" validationQuery="select now();"/>
   <!-- context voor tomcat 5.0 op x5
  	<Resource auth="Container" name="jdbc/gisviewer" type="javax.sql.DataSource"/>
 	<ResourceParams name="jdbc/gisviewer">

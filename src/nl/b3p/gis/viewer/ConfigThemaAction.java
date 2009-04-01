@@ -113,14 +113,10 @@ public class ConfigThemaAction extends ViewerCrudAction {
                 c = (Connecties) sess.get(Connecties.class, Integer.parseInt(dynaForm.getString("connectie")));
             }
         }
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         //als de thema geen connectie heeft ingesteld of een JDBC connectie maak dan een lijst vanuit de database.        
-        if (c == null || (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {
-            if (c != null) {
-                conn = c.getJdbcConnection();
-            }
-            if (conn == null) {
-                conn = sess.connection();
-            }
+        if (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
+            conn = c.getJdbcConnection();
             List tns = SpatialUtil.getTableNames(conn);
             if (t != null) {
                 String sptn = t.getAdmin_tabel();
@@ -153,7 +149,10 @@ public class ConfigThemaAction extends ViewerCrudAction {
             }
 
         }//als het een WFS connectie is maak dan een lijst vanuit het WFS request.
-        else if (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+        else if (c == null || (c!=null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS))) {
+            if (c==null){
+                c=user.getKbWfsConnectie();
+            }
             //Zet de features als lijst waaruit geselecteerd kan worden.
             WFS_Capabilities cap = WfsUtil.getCapabilities(c);
             ArrayList tns = WfsUtil.getFeatureNameList(cap);
@@ -177,7 +176,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
                 }
             }
         }
-        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
+        
         if (user != null) {
             List lns = user.getLayerNames(false);
             if (t != null) {

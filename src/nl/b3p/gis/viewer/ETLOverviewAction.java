@@ -147,12 +147,9 @@ public class ETLOverviewAction extends BaseGisAction {
     // <editor-fold defaultstate="" desc="private ArrayList getCount(String thema_naam, String admin_tabel)">
     private ArrayList getCount(Themas t) throws NotSupportedException, SQLException {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = null;
-        if (t.getConnectie() != null) {
-            connection = t.getConnectie().getJdbcConnection();
-        }
-        if (connection == null) {
-            connection = sess.connection();
+        Connection connection = SpatialUtil.getJDBCConnection(t);
+        if (connection==null) {
+            throw new NotSupportedException("Kan geen JDBC connectie ophalen van thema. Wfs wordt niet ondersteund.");
         }
         boolean exists = false;
         try {

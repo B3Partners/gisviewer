@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import nl.b3p.gis.viewer.db.Clusters;
+import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Themas;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -1023,5 +1024,21 @@ public class SpatialUtil {
             log.error("Can't create geomtry from wkt: "+wktgeom,p);
         }
         return null;
+    }
+
+    public static boolean validJDBCConnection(Themas t){
+        return t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC);
+
+    }
+    public static Connection getJDBCConnection(Themas t){
+        if (!validJDBCConnection(t))
+            return null;
+        try{
+            return t.getConnectie().getJdbcConnection();
+        }catch(Exception e){
+            log.error("Error creating jdbc connection",e);
+            return null;
+        }
+
     }
 }

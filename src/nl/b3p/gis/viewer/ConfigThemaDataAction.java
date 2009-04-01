@@ -147,18 +147,13 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         request.setAttribute("listThemaData", q.setParameter("themaID", t.getId()).list());
 
         String connectieType = Connecties.TYPE_JDBC;
-        if (t.getConnectie() == null || (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {
-            Connection conn = null;
-            if (t.getConnectie() != null) {
-                conn = t.getConnectie().getJdbcConnection();
-            }
-            if (conn == null) {
-                conn = sess.connection();
-            }
+        if (SpatialUtil.validJDBCConnection(t)) {
+            Connection conn =SpatialUtil.getJDBCConnection(t);
             request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t.getAdmin_tabel(), conn));
-        } else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+        } else if (WfsUtil.validWfsConnection(t)) {
             connectieType = Connecties.TYPE_WFS;
-            List elements = WfsUtil.getFeatureElements(t.getConnectie(), t.getAdmin_tabel());
+            Connecties conn = WfsUtil.getWfsConnection(t,request);
+            List elements = WfsUtil.getFeatureElements(conn, t.getAdmin_tabel());
             if (elements != null) {
                 ArrayList elementsNames = new ArrayList();
                 for (int i = 0; i < elements.size(); i++) {
@@ -267,14 +262,8 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         Themas t = getThema(dynaForm, false);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         List attributes = null;
-        if (t.getConnectie() == null || (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC))) {
-            Connection conn = null;
-            if (t.getConnectie() != null) {
-                conn = t.getConnectie().getJdbcConnection();
-            }
-            if (conn == null) {
-                conn = sess.connection();
-            }
+        if (SpatialUtil.validJDBCConnection(t)){
+            Connection conn = SpatialUtil.getJDBCConnection(t);
             attributes = SpatialUtil.getAdminColumnNames(t.getAdmin_tabel(), conn);
             if (attributes != null && attributes.size() != 0) {
                 //als het attribuut van het type geometry is moet hij niet worden gebruikt
@@ -291,9 +280,10 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
                 }
             }
 
-        } else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+        } else if (WfsUtil.validWfsConnection(t)) {
             //connectieType=Connecties.TYPE_WFS;
-            List elements = WfsUtil.getFeatureElements(t.getConnectie(), t.getAdmin_tabel());
+            Connecties conn = WfsUtil.getWfsConnection(t,request);
+            List elements = WfsUtil.getFeatureElements(conn, t.getAdmin_tabel());
             if (elements != null) {
                 ArrayList elementsNames = new ArrayList();
                 for (int i = 0; i < elements.size(); i++) {

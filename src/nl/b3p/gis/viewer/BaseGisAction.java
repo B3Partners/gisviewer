@@ -315,13 +315,12 @@ public abstract class BaseGisAction extends BaseHibernateAction {
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        if (t.getConnectie() != null) {
+        if (SpatialUtil.validJDBCConnection(t)) {
             connection = t.getConnectie().getJdbcConnection();
+        }else{
+            log.error("Thema heeft geen JDBC connectie: "+t.getNaam(),new UnsupportedOperationException("Can not create a JDBC connection, this function is only supported for JDBC connections"));
+            return null;
         }
-        if (connection == null) {
-            connection = sess.connection();
-        }
-
         int dt = SpatialUtil.getPkDataType(t, connection);
         String adminPk = t.getAdmin_pk();
         String adminIds = request.getParameter(adminPk);
@@ -439,13 +438,12 @@ public abstract class BaseGisAction extends BaseHibernateAction {
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        if (t.getConnectie() != null) {
+        if (SpatialUtil.validJDBCConnection(t)) {
             connection = t.getConnectie().getJdbcConnection();
+        }else{
+            log.error("Thema heeft geen JDBC connectie: "+t.getNaam(),new UnsupportedOperationException("Can not create a JDBC connection, this function is only supported for JDBC connections"));
+            return null;
         }
-        if (connection == null) {
-            connection = sess.connection();
-        }
-
         try {
             String organizationcodekey = t.getOrganizationcodekey();
             String organizationcode = getOrganizationCode(request);
@@ -512,11 +510,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        if (thema.getConnectie() != null) {
+        if (SpatialUtil.validJDBCConnection(thema)) {
             connection = thema.getConnectie().getJdbcConnection();
-        }
-        if (connection == null) {
-            connection = sess.connection();
+        }else{
+            log.error("Thema heeft geen JDBC connectie: "+thema.getNaam(),new UnsupportedOperationException("Can not create a JDBC connection, this function is only supported for JDBC connections"));
+            return null;
         }
         return SpatialUtil.getThemaGeomType(thema, connection);
     }
@@ -541,11 +539,11 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         String analyseNaam = t.getNaam();
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         Connection connection = null;
-        if (t.getConnectie() != null) {
+        if (SpatialUtil.validJDBCConnection(t)) {
             connection = t.getConnectie().getJdbcConnection();
-        }
-        if (connection == null) {
-            connection = sess.connection();
+        }else{
+            log.error("Thema heeft geen JDBC connectie: "+t.getNaam(),new UnsupportedOperationException("Can not create a JDBC connection, this function is only supported for JDBC connections"));
+            return null;
         }
         try {
             String statementString = "select * from \"" + analyseGeomTabel +

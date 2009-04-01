@@ -191,15 +191,13 @@ public class ETLTransformAction extends BaseGisAction {
         if (t == null) {
             return null;
         }
+        if(SpatialUtil.validJDBCConnection(t)){
+            log.error("Thema heeft geen JDBC connectie. Andere connecties worden niet ondersteund.");
+            return null;
+        }
         ArrayList regels = new ArrayList();
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = null;
-        if (t.getConnectie() != null) {
-            connection = t.getConnectie().getJdbcConnection();
-        }
-        if (connection == null) {
-            connection = sess.connection();
-        }
+        Connection connection = t.getConnectie().getJdbcConnection();
         String taq = "select * from " + t.getSpatial_tabel() + " where status_etl = ? and etl_proces_id = (select max(etl_proces_id) from " + t.getSpatial_tabel() + ")";
 
         try {
@@ -241,19 +239,16 @@ public class ETLTransformAction extends BaseGisAction {
         Iterator it = themalist.iterator();
         while (it.hasNext()) {
             Themas t = (Themas) it.next();
-            if (t.getConnectie() != null) {
+            if (SpatialUtil.validJDBCConnection(t)){
                 connection = t.getConnectie().getJdbcConnection();
-            }
-            if (connection == null) {
-                connection = sess.connection();
-            }
-            boolean etlExists = false;
-            try {
-                etlExists = SpatialUtil.isEtlThema(t, connection);
-            } catch (SQLException sqle) {
-            }
-            if (!etlExists) {
-                newThemalist.remove(t);
+                boolean etlExists = false;
+                try {
+                    etlExists = SpatialUtil.isEtlThema(t, connection);
+                } catch (SQLException sqle) {
+                }
+                if (!etlExists) {
+                    newThemalist.remove(t);
+                }
             }
         }
         try {

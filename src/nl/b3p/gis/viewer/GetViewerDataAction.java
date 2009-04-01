@@ -172,7 +172,7 @@ public class GetViewerDataAction extends BaseGisAction {
                 }
                 //haal op met JDBC connectie
                 List l = null;
-                if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
+                if (SpatialUtil.validJDBCConnection(t)) {
                     List pks = null;
                     pks = findPks(t, mapping, dynaForm, request);
                     if (themadatanummer == regels.size()) {
@@ -181,7 +181,7 @@ public class GetViewerDataAction extends BaseGisAction {
                     l = getThemaObjects(t, pks, thema_items);
 
                 }//Haal op met WFS
-                else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+                else if (WfsUtil.validWfsConnection(t)) {
                     if (themadatanummer == regels.size()) {
                         regels.add(new ArrayList());
                     }
@@ -228,14 +228,14 @@ public class GetViewerDataAction extends BaseGisAction {
         Themas t = getThema(mapping, dynaForm, request);
         List thema_items = SpatialUtil.getThemaData(t, false);
         request.setAttribute("thema_items", thema_items);
-        if (t.getConnectie() == null || t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
+        if (SpatialUtil.validJDBCConnection(t)) {
             List pks = getPks(t, dynaForm, request);
             request.setAttribute("regels", getThemaObjects(t, pks, thema_items));
             if (addKaart) {
                 request.setAttribute("envelops",getThemaEnvelops(t,pks));
             }
         }//Haal op met WFS
-        else if (t.getConnectie() != null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)) {
+        else if (WfsUtil.validWfsConnection(t)) {
             request.setAttribute("regels", getThemaWfsObjectsWithId(t, thema_items, request));
 //            if (addKaart) {
 //                throw new NotSupportedException("Het tonen van een kaart bij een WFS thema wordt nog niet ondersteund");
@@ -329,7 +329,11 @@ public class GetViewerDataAction extends BaseGisAction {
     public ActionForward analysewaarde(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Maakt nu gebruik van het activeanalysethema property door true mee te geven
         Themas t = getThema(mapping, dynaForm, request, true);
-
+        if (!SpatialUtil.validJDBCConnection(t)){
+            log.error("Thema heeft geen JDBC connectie. Andere connecties worden niet ondersteund");
+            request.setAttribute("waarde", "Thema heeft geen JDBC connectie. Andere connecties worden niet ondersteund");
+            return mapping.findForward("analyseobject");
+        }
         List thema_items = SpatialUtil.getThemaData(t, true);
 
         String organizationcodekey = t.getOrganizationcodekey();
@@ -446,14 +450,7 @@ public class GetViewerDataAction extends BaseGisAction {
         StringBuffer result = new StringBuffer("");
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         if (stype != null) {
-            Connection connection = null;
-            if (t.getConnectie() != null) {
-                connection = t.getConnectie().getJdbcConnection();
-            }
-            if (connection == null) {
-                connection = sess.connection();
-            }
-
+            Connection connection = t.getConnectie().getJdbcConnection();
             String query = null;
             String columnName = geselecteerdObjectThema.getSpatial_admin_ref();
             if (columnName == null || columnName.length() <= 0) {
@@ -549,7 +546,11 @@ public class GetViewerDataAction extends BaseGisAction {
      */
     public ActionForward analyseobject(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Themas t = getThema(mapping, dynaForm, request, true);
-
+        if (!SpatialUtil.validJDBCConnection(t)){
+            log.error("Thema heeft geen JDBC connectie. Andere connecties worden niet ondersteund");
+            request.setAttribute("waarde", "Thema heeft geen JDBC connectie. Andere connecties worden niet ondersteund");
+            return mapping.findForward("analyseobject");
+        }
         List thema_items = SpatialUtil.getThemaData(t, true);
 
         String organizationcodekey = t.getOrganizationcodekey();
@@ -603,13 +604,7 @@ public class GetViewerDataAction extends BaseGisAction {
             columnName = "id";
         }
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = null;
-        if (t.getConnectie() != null) {
-            connection = t.getConnectie().getJdbcConnection();
-        }
-        if (connection == null) {
-            connection = sess.connection();
-        }
+        Connection connection = t.getConnectie().getJdbcConnection();
 
         String geom1 = SpatialUtil.getTableGeomName(t, connection);
         String geom2 = SpatialUtil.getTableGeomName(geselecteerdObjectThema, connection);
@@ -764,7 +759,7 @@ public class GetViewerDataAction extends BaseGisAction {
             distance = 10.0;
         }
         ArrayList regels = new ArrayList();
-        ArrayList features = WfsUtil.getWFSObjects(t, coords, distance);
+        ArrayList features = WfsUtil.getWFSObjects(t, coords, distance,request);
         for (int i = 0; i < features.size(); i++) {
             Feature f = (Feature) features.get(i);
             regels.add(getRegel(f, t, thema_items));
@@ -788,7 +783,7 @@ public class GetViewerDataAction extends BaseGisAction {
             return null;
         }
         ArrayList regels = new ArrayList();
-        ArrayList features = WfsUtil.getWFSObjects(t, adminPk, id);
+        ArrayList features = WfsUtil.getWFSObjects(t, adminPk, id,request);
         for (int i = 0; i < features.size(); i++) {
             Feature f = (Feature) features.get(i);
             regels.add(getRegel(f, t, thema_items));
@@ -818,21 +813,16 @@ public class GetViewerDataAction extends BaseGisAction {
         if (thema_items == null || thema_items.isEmpty()) {
             return null;
         }
-
+        if (!SpatialUtil.validJDBCConnection(t)){
+            log.error("Deze functie kan je alleen aanroepen met JDBC connecties");
+            return null;
+        }
         ArrayList regels = new ArrayList();
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        Connection connection = null;
-        if (t.getConnectie() != null) {
-            connection = t.getConnectie().getJdbcConnection();
-        }
-        if (connection == null) {
-            connection = sess.connection();
-        }
+        Connection connection = t.getConnectie().getJdbcConnection();        
         try {
-
             int dt = SpatialUtil.getPkDataType(t, connection);
-
             String taq = t.getAdmin_query();
             for (int i = 1; i <= pks.size(); i++) {
                 PreparedStatement statement = connection.prepareStatement(taq);
@@ -921,16 +911,14 @@ public class GetViewerDataAction extends BaseGisAction {
      * @return de envelop van alle gevonden features bij elkaar
      */
     public double[] getThemaEnvelope(Themas t, String attributeName, String attributeValue) {
+        if (!SpatialUtil.validJDBCConnection(t)){
+            log.error("Deze functie kan je alleen aanroepen met themas die een JDBC connectie hebben");
+            return null;
+        }
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String envelope = null;
         try {
-            Connection conn = null;
-            if (t.getConnectie() != null) {
-                conn = t.getConnectie().getJdbcConnection();
-            }
-            if (conn == null) {
-                conn = sess.connection();
-            }
+            Connection conn = t.getConnectie().getJdbcConnection();            
             String geomColumn = SpatialUtil.getTableGeomName(t, conn);
             String tableName = t.getSpatial_tabel();
             if (tableName == null) {

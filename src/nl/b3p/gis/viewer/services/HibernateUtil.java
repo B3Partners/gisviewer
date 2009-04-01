@@ -25,6 +25,7 @@ package nl.b3p.gis.viewer.services;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import nl.b3p.gis.viewer.db.Connecties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
@@ -44,6 +45,7 @@ public class HibernateUtil extends HttpServlet {
     private static boolean checkLoginKaartenbalie = true;
     private static String kaartenbalieCluster = "Extra";
     private static boolean useKaartenbalieCluster = true;
+    public static String kbWfsConnectieNaam="Kaartenbalie WFS";
 
     static {
         try {
@@ -111,7 +113,6 @@ public class HibernateUtil extends HttpServlet {
     public static void setUseKaartenbalieCluster(boolean aUseKaartenbalieCluster) {
         useKaartenbalieCluster = aUseKaartenbalieCluster;
     }
-
     /** Initializes the servlet.
      */
     public void init(ServletConfig config) throws ServletException {
@@ -120,7 +121,7 @@ public class HibernateUtil extends HttpServlet {
         try {
             String value = config.getInitParameter("kburl");
             if (value != null && value.length() > 0) {
-                kburl = value;
+                kburl = value;                
             }
             value = config.getInitParameter("check_login_kaartenbalie");
             if (value != null && value.equalsIgnoreCase("false")) {

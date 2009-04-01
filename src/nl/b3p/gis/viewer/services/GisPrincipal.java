@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.wms.capabilities.Layer;
 import nl.b3p.wms.capabilities.Roles;
 import nl.b3p.wms.capabilities.ServiceProvider;
@@ -48,6 +49,7 @@ public class GisPrincipal implements Principal {
     private String code;
     private Set roles;
     private ServiceProvider sp;
+    private Connecties kbWfsConnectie;
 
     public GisPrincipal(String name, List roles) {
         this.name = name;
@@ -60,6 +62,12 @@ public class GisPrincipal implements Principal {
         this.password = password;
         this.code = code;
         this.sp = sp;
+        //create wfs connectie object.
+        kbWfsConnectie = new Connecties();
+        kbWfsConnectie.setConnectie_url(HibernateUtil.getKbUrl());
+        kbWfsConnectie.setNaam(HibernateUtil.kbWfsConnectieNaam);
+        kbWfsConnectie.setGebruikersnaam(name);
+        kbWfsConnectie.setWachtwoord(password);
         if (sp == null) {
             return;
         }
@@ -241,5 +249,19 @@ public class GisPrincipal implements Principal {
         }
 
         return (GisPrincipal) user;
+    }
+
+    /**
+     * @return the kbWfsConnectie
+     */
+    public Connecties getKbWfsConnectie() {
+        return kbWfsConnectie;
+    }
+
+    /**
+     * @param kbWfsConnectie the kbWfsConnectie to set
+     */
+    public void setKbWfsConnectie(Connecties kbWfsConnectie) {
+        this.kbWfsConnectie = kbWfsConnectie;
     }
 }

@@ -26,6 +26,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import javax.servlet.http.HttpServletRequest;
 import nl.b3p.gis.readers.B3pGMLReader;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.Themas;
@@ -72,7 +73,7 @@ public class WfsUtil {
    static public ArrayList getFeatureElements(Connecties c,String adminTable) throws Exception{
         ArrayList returnvalue=null;
         if (c!=null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
-            OGCRequest or = new OGCRequest(c.getConnectie_url());            
+            OGCRequest or = createOGCRequest(c);
             if (adminTable==null || adminTable.length()<1)
                 return null;
             or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,adminTable);
@@ -93,15 +94,17 @@ public class WfsUtil {
     
     static public WFS_Capabilities getCapabilities(Connecties c) throws Exception{
         if (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
-            return OgcWfsClient.getCapabilities(new OGCRequest(c.getConnectie_url()));
+            OGCRequest or = createOGCRequest(c);
+            return OgcWfsClient.getCapabilities(or);
         }else
             return null;
     }
     
-    public static ArrayList getWFSObjects(Themas t, double[] coords, double distance) throws Exception {
-        if(t==null || t.getConnectie()==null || !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS))
+    public static ArrayList getWFSObjects(Themas t, double[] coords, double distance,HttpServletRequest request) throws Exception {
+        Connecties conn =getWfsConnection(t,request);
+        if (conn==null)
             return null;
-        OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
+        OGCRequest or = createOGCRequest(conn);
         or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());                
         GetFeature gf = OgcWfsClient.getGetFeatureRequest(or);
         //beide nodig voor het maken van een bbox wfs query
@@ -127,24 +130,26 @@ public class WfsUtil {
         if (coords.length!=4) {
             throw new Exception("Polygons not supported! If polygon got 5 xy-coords a bbox will be created with the 1st and 3th coord");
         }
-        OgcWfsClient.addBboxFilter(gf,getGeometryAttributeName(t),coords, ft);        
+        OgcWfsClient.addBboxFilter(gf,getGeometryAttributeName(t,request),coords, ft);
         return OgcWfsClient.getFeatureElements(gf,or);
     }
     
-    public static ArrayList getWFSObjects(Themas t, String key, String value) throws Exception {
-        if(t==null || t.getConnectie()==null || !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS))
+    public static ArrayList getWFSObjects(Themas t, String key, String value,HttpServletRequest request) throws Exception {
+        Connecties conn =getWfsConnection(t,request);
+        if (conn==null)
             return null;
-        OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
+        OGCRequest or = createOGCRequest(conn);
         or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());        
         GetFeature gf = OgcWfsClient.getGetFeatureRequest(or);        
         OgcWfsClient.addPropertyIsEqualToFilter(gf,key,value);        
         return OgcWfsClient.getFeatureElements(gf,or);
     }
     
-    public static com.vividsolutions.jump.feature.Feature getWfsObject(Themas t, String attributeName, String compareValue) throws Exception{
-        if(t==null || t.getConnectie()==null || !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS))
+    public static com.vividsolutions.jump.feature.Feature getWfsObject(Themas t, String attributeName, String compareValue,HttpServletRequest request) throws Exception{
+        Connecties conn =getWfsConnection(t,request);
+        if (conn==null)
             return null;
-        OGCRequest or = new OGCRequest(t.getConnectie().getConnectie_url());
+        OGCRequest or = createOGCRequest(conn);
         or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());
         GetFeature gf = OgcWfsClient.getGetFeatureRequest(or);        
         OgcWfsClient.addPropertyIsEqualToFilter(gf,attributeName,compareValue);
@@ -156,8 +161,11 @@ public class WfsUtil {
         
     }
     
-    public static String getGeometryAttributeName(Themas t) throws Exception{
-        ArrayList elements = getFeatureElements(t.getConnectie(),t.getAdmin_tabel());
+    public static String getGeometryAttributeName(Themas t,HttpServletRequest request) throws Exception{
+        Connecties conn =getWfsConnection(t,request);
+        if (conn==null)
+            return null;
+        ArrayList elements = getFeatureElements(conn,t.getAdmin_tabel());
         for (int i=0; i < elements.size(); i++){
             Element e = (Element)elements.get(i);
             if (e.getAttribute("type")!=null && e.getAttribute("type").equalsIgnoreCase(OGCRequest.WFS_OBJECT_GEOMETRYTYPE)){
@@ -167,7 +175,7 @@ public class WfsUtil {
         return null;
     }
     
-    public static nl.b3p.xml.ogc.v100.Filter createFilterV100(Themas t, double x, double y, double distance, nl.b3p.xml.wfs.v100.capabilities.FeatureType feature) throws Exception{
+    public static nl.b3p.xml.ogc.v100.Filter createFilterV100(Themas t, double x, double y, double distance, nl.b3p.xml.wfs.v100.capabilities.FeatureType feature,HttpServletRequest request) throws Exception{
         double lowerX,lowerY,upperX,upperY;
         double distance2=distance/2;
         lowerX=x-distance2;
@@ -176,7 +184,7 @@ public class WfsUtil {
         upperY=y+distance2; 
         StringBuffer sb = new StringBuffer();
         sb.append("<Filter><BBOX><PropertyName>");
-        sb.append(getGeometryAttributeName(t));
+        sb.append(getGeometryAttributeName(t,request));
         sb.append("</PropertyName>");
         sb.append("<gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml#");
         sb.append(28992);
@@ -189,7 +197,7 @@ public class WfsUtil {
         return (nl.b3p.xml.ogc.v100.Filter)Unmarshaller.unmarshal(nl.b3p.xml.ogc.v100.Filter.class, new StringReader(sb.toString()));
         
     }
-    public static nl.b3p.xml.ogc.v110.Filter createFilterV110(Themas t, double x, double y, double distance, nl.b3p.xml.wfs.v110.FeatureType feature) throws Exception{
+    public static nl.b3p.xml.ogc.v110.Filter createFilterV110(Themas t, double x, double y, double distance, nl.b3p.xml.wfs.v110.FeatureType feature,HttpServletRequest request) throws Exception{
         double lowerX,lowerY,upperX,upperY;
         double distance2=distance/2;
         lowerX=x-distance2;
@@ -198,7 +206,7 @@ public class WfsUtil {
         upperY=y+distance2; 
         StringBuffer sb = new StringBuffer();
         sb.append("<Filter><Within><PropertyName>");
-        sb.append(getGeometryAttributeName(t));        
+        sb.append(getGeometryAttributeName(t,request));
         //sb.append("app:geom");
         sb.append("</PropertyName>");
         sb.append("<gml:Envelope srsName=\"http://www.opengis.net/gml/srs/epsg.xml#");
@@ -211,5 +219,31 @@ public class WfsUtil {
         sb.append("</Within></Filter>");
         return (nl.b3p.xml.ogc.v110.Filter)Unmarshaller.unmarshal(nl.b3p.xml.ogc.v110.Filter.class, new StringReader(sb.toString()));
     }
-    
+
+    public static OGCRequest createOGCRequest(Connecties conn){
+        OGCRequest or = new OGCRequest(conn.getConnectie_url());
+        or.setUsername(conn.getGebruikersnaam());
+        or.setPassword(conn.getWachtwoord());
+        return or;
+    }
+
+    public static boolean validWfsConnection(Themas t){
+        if(t==null || (t.getConnectie()!=null && !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)))
+            return false;
+        else
+            return true;
+    }
+    public static Connecties getWfsConnection(Themas t,HttpServletRequest request){
+        if (!validWfsConnection(t))
+            return null;
+        Connecties conn = t.getConnectie();
+        if (conn==null){
+            if (request.getUserPrincipal() instanceof GisPrincipal) {
+                GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();                
+                conn= gp.getKbWfsConnectie();
+            }
+        }
+        return conn;
+    }
+
 }

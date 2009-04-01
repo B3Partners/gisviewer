@@ -74,17 +74,15 @@ public class Data2CSV extends HttpServlet {
                 return;
             }
             Connection conn=null;
-            if (thema.getConnectie()!=null && thema.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
+            if (WfsUtil.validWfsConnection(thema)){
                 throw new ServletException("Connection type "+Connecties.TYPE_WFS+" not supported");
-            }else if (thema.getConnectie()!=null && thema.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC)){
+            }else if (SpatialUtil.validJDBCConnection(thema)){
                 try {
                     conn = thema.getConnectie().getJdbcConnection();
                 } catch (SQLException ex) {
                     writeErrorMessage(response, out,"Kan geen verbinding maken met datasource. Reden: "+ex.getMessage());
                     return;
                 }
-            }else{
-                conn= HibernateUtil.getSessionFactory().getCurrentSession().connection();
             }
             List data=null;
             try {

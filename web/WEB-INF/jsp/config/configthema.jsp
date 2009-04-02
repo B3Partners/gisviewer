@@ -242,7 +242,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <fmt:message key="configthema.connectie"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.connectie.uitleg"/></div>
                     </td>
                     <td colspan="3">
-                        <html:select property="connectie" onchange="refreshTheLists();">
+                        <html:select property="connectie" onchange="refreshTheLists(this);">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listConnecties}">
                                 <html:option value="${cuItem.id}">
@@ -252,11 +252,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <c:set var="connectieType" value="jdbc"/>
+                <c:set var="connectieType" value="wfs"/>
                 <c:if test="${form.map.connectie!=null}">                    
                     <c:forEach var="i" items="${listConnecties}">
-                        <c:if test="${i.id==form.map.connectie && i.type=='wfs'}">
-                            <c:set var="connectieType" value="wfs"/>
+                        <c:if test="${i.id==form.map.connectie && i.type=='jdbc'}">
+                            <c:set var="connectieType" value="jdbc"/>
                         </c:if>
                     </c:forEach>                            
                 </c:if>
@@ -265,7 +265,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
                     <td colspan="3">
-                        <html:select property="admin_tabel" onchange="refreshTheLists();" styleId="admin_tabel_select">
+                        <html:select property="admin_tabel" onchange="refreshTheLists(this);" styleId="admin_tabel_select">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listTables}">
                                 <html:option value="${cuItem}"/>
@@ -303,7 +303,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tr>
                         <td><fmt:message key="configthema.${connectieType}.spatialtabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialtabel.uitleg"/></div></td>
                         <td colspan="3">
-                            <html:select property="spatial_tabel" onchange="refreshTheLists();">
+                            <html:select property="spatial_tabel" onchange="refreshTheLists(this);">
                                 <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listTables}">
                                     <html:option value="${cuItem}"/>

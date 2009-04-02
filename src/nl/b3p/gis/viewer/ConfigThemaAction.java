@@ -105,12 +105,12 @@ public class ConfigThemaAction extends ViewerCrudAction {
         Themas t = getThema(dynaForm, false);
         Connection conn = null;
         Connecties c = null;
-        if (t != null) {
-            c = t.getConnectie();
+        if (FormUtils.nullIfEmpty(dynaForm.getString("connectie")) != null) {
+            c = (Connecties) sess.get(Connecties.class, Integer.parseInt(dynaForm.getString("connectie")));
         }
-        if(c == null) {
-            if (FormUtils.nullIfEmpty(dynaForm.getString("connectie")) != null) {
-                c = (Connecties) sess.get(Connecties.class, Integer.parseInt(dynaForm.getString("connectie")));
+        if (c == null) {
+            if (t != null) {
+                c = t.getConnectie();
             }
         }
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);

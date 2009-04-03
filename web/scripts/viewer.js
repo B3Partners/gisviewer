@@ -246,7 +246,10 @@ function createLabel(container, item) {
             el.onclick = function(){radioClick(this);  }
             if (isActiveItem(item)) {
                 if(item.analyse=="active" && prevRadioButton != null){
-                    document.getElementById(prevRadioButton).checked = false;
+                    var rc = document.getElementById(prevRadioButton);
+                    if (rc!=undefined && rc!=null) {
+                        rc.checked = false;
+                    }
                 }
                 el.checked = true;
                 prevRadioButton = 'radio' + item.id;

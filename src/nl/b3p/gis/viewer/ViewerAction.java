@@ -130,14 +130,29 @@ public class ViewerAction extends BaseGisAction {
         List ctl = SpatialUtil.getValidClusters();
         List themalist = getValidThemas(false, ctl, request);
         Map rootClusterMap = getClusterMap(themalist, ctl, null);
-
-        Integer actiefThemaId = null;
-        Themas actiefThema = SpatialUtil.getThema(request.getParameter("id"));
-        if (actiefThema != null) {
-            actiefThemaId = actiefThema.getId();
+        List actieveThemas = null;
+        if (FormUtils.nullIfEmpty(request.getParameter("id"))!=null){
+            actieveThemas = new ArrayList();
+            String[] ids=request.getParameter("id").split(",");
+            for (int i =0; i < ids.length; i++){
+                try{
+                    int id= Integer.parseInt(ids[i]);
+                    actieveThemas.add(id);
+                }catch (NumberFormatException nfe){
+                    log.error("Id geen integer. ",nfe);
+                }                
+            }
+            if (actieveThemas.size()==0){
+                actieveThemas=null;
+            }
         }
+        String firstActiefThemaId = null;
+        if (actieveThemas!=null)
+            firstActiefThemaId=""+actieveThemas.get(0);
+        Themas actiefThema = SpatialUtil.getThema(firstActiefThemaId);
+        
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
-        request.setAttribute("tree", createJasonObject(rootClusterMap, actiefThemaId, user));
+        request.setAttribute("tree", createJasonObject(rootClusterMap, actieveThemas, user));
 
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 28992);
         Polygon extentBbox = null;
@@ -292,7 +307,7 @@ public class ViewerAction extends BaseGisAction {
         return children;
     }
 
-    protected JSONObject createJasonObject(Map rootClusterMap, Integer actiefThemaId,GisPrincipal user) throws JSONException {
+    protected JSONObject createJasonObject(Map rootClusterMap, List actieveThemas,GisPrincipal user) throws JSONException {
         if (rootClusterMap == null || rootClusterMap.isEmpty()) {
             return null;
         }
@@ -301,12 +316,12 @@ public class ViewerAction extends BaseGisAction {
             return null;
         }
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
-        root.put("children", getSubClusters(clusterMaps, null, actiefThemaId,user));
+        root.put("children", getSubClusters(clusterMaps, null, actieveThemas,user));
 
         return root;
     }
 
-    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, Integer actiefThemaId,GisPrincipal user) throws JSONException {
+    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, List actieveThemas,GisPrincipal user) throws JSONException {
         if (subclusterMaps == null) {
             return clusterArray;
         }
@@ -323,9 +338,9 @@ public class ViewerAction extends BaseGisAction {
             setExtraClusterProperties(jsonCluster,cluster);
 
             List childrenList = (List) clMap.get("children");
-            JSONArray childrenArray = getChildren(childrenList, actiefThemaId,user);
+            JSONArray childrenArray = getChildren(childrenList, actieveThemas,user);
             List subsubclusterMaps = (List) clMap.get("subclusters");
-            childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actiefThemaId,user);
+            childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actieveThemas,user);
             jsonCluster.put("children", childrenArray);
 
             if (clusterArray == null) {
@@ -337,7 +352,7 @@ public class ViewerAction extends BaseGisAction {
         return clusterArray;
     }
 
-    private JSONArray getChildren(List children, Integer actiefThemaId,GisPrincipal user) throws JSONException {
+    private JSONArray getChildren(List children, List actieveThemas,GisPrincipal user) throws JSONException {
         if (children == null) {
             return null;
         }
@@ -355,14 +370,15 @@ public class ViewerAction extends BaseGisAction {
                 jsonCluster.put("organizationcodekey", "");
             }
 
-            if (actiefThemaId != null && themaId != null && themaId.compareTo(actiefThemaId) == 0) {
+            if (actieveThemas != null && themaId != null && actieveThemas.contains(themaId)) {
                 jsonCluster.put("visible", "on");
                 if (th.isAnalyse_thema()) {
                     jsonCluster.put("analyse", "active");
                 } else {
                     jsonCluster.put("analyse", "off");
                 }
-            } else {
+            }
+            else {
                 if (th.isVisible()) {
                     jsonCluster.put("visible", "on");
                 } else {

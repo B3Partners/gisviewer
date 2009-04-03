@@ -31,15 +31,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <c:set var="delete" value="${action == 'delete'}"/>
 
 <c:set var="focus" value="naam"/>
-
+<script type="text/javascript" src='dwr/engine.js'></script>
+<script type="text/javascript" src='dwr/util.js'></script>
+<script type="text/javascript" src='dwr/interface/JConfigListsUtil.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript">
     function createAdminQ() {
-        if(document.getElementById('admin_query_text').value == '') {
-            var admin_tabel = document.getElementById('admin_tabel_select').options[document.getElementById('admin_tabel_select').selectedIndex].value;
-            var admin_pk = document.getElementById('admin_pk_select').options[document.getElementById('admin_pk_select').selectedIndex].value;
-            var query = 'select * from "' + admin_tabel + '" where "' + admin_pk + '" = ?';
-            document.getElementById('admin_query_text').value = query;
+        if (document.getElementById('admin_query_text')!=undefined){
+            if(document.getElementById('admin_query_text').value == '') {
+                var admin_tabel = document.getElementById('admin_tabel_select').options[document.getElementById('admin_tabel_select').selectedIndex].value;
+                var admin_pk = document.getElementById('admin_pk_select').options[document.getElementById('admin_pk_select').selectedIndex].value;
+                var query = 'select * from "' + admin_tabel + '" where "' + admin_pk + '" = ?';
+                document.getElementById('admin_query_text').value = query;
+            }
         }
     }
     
@@ -90,6 +94,51 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var pattern = new RegExp("\\bregel_over\\b");
     function hoverRowOut(obj) {
         obj.className = obj.className.replace(pattern, '');
+    }
+    function refreshFeatureList(element){
+        currentConnectionType=connectionTypes[element.value];
+        JConfigListsUtil.getPossibleFeaturesById(element.value,handleFeatureList);
+    }
+    function handleFeatureList(list){
+        if (currentConnectionType=="jdbc"){
+            document.getElementById('jdbcRows').className="tbodyshow";
+        }else{
+            document.getElementById('jdbcRows').className="tbodyhide";
+        }
+        dwr.util.removeAllOptions('admin_tabel_select');
+        dwr.util.removeAllOptions('spatial_tabel_select');
+        dwr.util.removeAllOptions('admin_pk_select');
+        dwr.util.removeAllOptions('spatial_pk_select');
+        dwr.util.removeAllOptions('spatial_adminref_select');
+        dwr.util.addOptions("admin_tabel_select",[""]);
+        dwr.util.addOptions("spatial_tabel_select",[""]);
+        dwr.util.addOptions("admin_tabel_select",list);
+        dwr.util.addOptions("spatial_tabel_select",list);
+    }
+    function refreshAdminAttributeList(element){
+        var connid=document.getElementById('connectie_select').value;
+        JConfigListsUtil.getPossibleAttributesById(connid,element.value,handleAdminAttributeList);
+    }
+    function handleAdminAttributeList(list){
+        dwr.util.removeAllOptions('admin_pk_select');
+        dwr.util.addOptions("admin_pk_select",[""]);
+        dwr.util.addOptions("admin_pk_select",list);
+    }
+    function refreshSpatialAttributeList(element){
+        var connid=document.getElementById('connectie_select').value;
+        JConfigListsUtil.getPossibleAttributesById(connid,element.value,handleSpatialAttributeList);
+    }
+    function handleSpatialAttributeList(list){
+        dwr.util.removeAllOptions('spatial_pk_select');
+        dwr.util.addOptions('spatial_pk_select',[""]);
+        dwr.util.addOptions('spatial_pk_select',list);
+        dwr.util.removeAllOptions('spatial_adminref_select');
+        dwr.util.addOptions('spatial_adminref_select',[""]);
+        dwr.util.addOptions('spatial_adminref_select',list);
+    }
+    function refreshTheLists(){
+        document.forms[0].refreshLists.value="do";
+        document.forms[0].submit();
     }
 </script>
 
@@ -242,7 +291,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <fmt:message key="configthema.connectie"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.connectie.uitleg"/></div>
                     </td>
                     <td colspan="3">
-                        <html:select property="connectie" onchange="refreshTheLists(this);">
+                        <html:select property="connectie" onchange="refreshFeatureList(this);" styleId='connectie_select'>
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listConnecties}">
                                 <html:option value="${cuItem.id}">
@@ -265,37 +314,40 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
                     <td colspan="3">
-                        <html:select property="admin_tabel" onchange="refreshTheLists(this);" styleId="admin_tabel_select">
+                        <html:select property="admin_tabel" onchange="refreshAdminAttributeList(this);" styleId="admin_tabel_select">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listTables}">
                                 <html:option value="${cuItem}"/>
                             </c:forEach>
                         </html:select>&nbsp;
                     </td>
-                </tr>                
-                <c:choose>
-                    <c:when test="${fn:length(listAdminTableColumns)>1}">
-                        <tr>
-                            <td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td>
-                            <td colspan="3">
-                                <html:select property="admin_pk" onchange="createAdminQ();" styleId="admin_pk_select">
-                                    <html:option value=""/>
+                </tr>
+                <tr>
+                    <td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td>
+                    <td colspan="3">
+                        <html:select property="admin_pk" onchange="createAdminQ();" styleId="admin_pk_select">
+                            <html:option value=""/>
+                            <c:choose>
+                                <c:when test="${fn:length(listAdminTableColumns)>1}">
                                     <c:forEach var="cuItem" items="${listAdminTableColumns}">
                                         <html:option value="${cuItem}"/>
                                     </c:forEach>
-                                </html:select>&nbsp;
-                            </td>
-                        </tr>
+                                </c:when>
+                                <c:otherwise>
+                                    <html:option value="Kies eerst een admintabel" />
+                                </c:otherwise>
+                             </c:choose>
+                        </html:select>&nbsp;
+                    </td>
+                </tr>
+                <c:choose>
+                    <c:when test="${connectieType=='jdbc'}">
+                        <TBODY id="jdbcRows" class="tbodyshow">
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td><td colspan="3">
-                                <select disabled="disabled">
-                                    <option>Kies eerst een admintabel</option>
-                                </select>
-                        </td></tr>
+                        <TBODY id="jdbcRows" class="tbodyhide">
                     </c:otherwise>
                 </c:choose>
-                <c:if test="${connectieType=='jdbc'}">
                     <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminquery.uitleg"/></div></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
                     
                     <tr><td colspan="4">&nbsp;</td></tr>
@@ -303,7 +355,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tr>
                         <td><fmt:message key="configthema.${connectieType}.spatialtabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialtabel.uitleg"/></div></td>
                         <td colspan="3">
-                            <html:select property="spatial_tabel" onchange="refreshTheLists(this);">
+                            <html:select property="spatial_tabel" onchange="refreshSpatialAttributeList(this);" styleId="spatial_tabel_select">
                                 <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listTables}">
                                     <html:option value="${cuItem}"/>
@@ -311,50 +363,42 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
-                    <c:choose>
-                        <c:when test="${fn:length(listSpatialTableColumns)>1}">
-                            <tr>
-                                <td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td>
-                                <td colspan="3">
-                                    <html:select property="spatial_pk">
-                                        <html:option value=""/>
+                    <tr>
+                        <td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td>
+                        <td colspan="3">
+                            <html:select property="spatial_pk" styleId="spatial_pk_select">
+                                <html:option value=""/>
+                                <c:choose>
+                                    <c:when test="${fn:length(listSpatialTableColumns)>1}">
                                         <c:forEach var="cuItem" items="${listSpatialTableColumns}">
                                             <html:option value="${cuItem}"/>
                                         </c:forEach>
-                                    </html:select>&nbsp;
-                                </td>
-                            </tr>
-                        </c:when>
-                        <c:otherwise>
-                            <tr><td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td><td colspan="3">
-                                    <select disabled="disabled">
-                                        <option>Kies eerst een spatialtabel</option>
-                                    </select>
-                            </td></tr>
-                        </c:otherwise>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${fn:length(listSpatialTableColumns)>1}">
-                            <tr>
-                                <td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td>
-                                <td colspan="3">
-                                    <html:select property="spatial_admin_ref">
-                                        <html:option value=""/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <html:option value="Kies eerst een spatialtabel"/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td>
+                        <td colspan="3">
+                            <html:select property="spatial_admin_ref" styleId="spatial_adminref_select">
+                                <html:option value=""/>
+                                <c:choose>
+                                    <c:when test="${fn:length(listSpatialTableColumns)>1}">
                                         <c:forEach var="cuItem" items="${listSpatialTableColumns}">
                                             <html:option value="${cuItem}"/>
                                         </c:forEach>
-                                    </html:select>&nbsp;
-                                </td>
-                            </tr>
-                        </c:when>
-                        <c:otherwise>
-                            <tr><td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td><td colspan="3">
-                                    <select disabled="disabled">
-                                        <option>Kies eerst een spatialtabel</option>
-                                    </select>
-                            </td></tr>
-                        </c:otherwise>
-                    </c:choose>                
+                                    </c:when>
+                                    <c:otherwise>
+                                        <html:option value="Kies eerst een spatialtabel"/>
+                                    </c:otherwise>
+                                 </c:choose>
+                            </html:select>&nbsp;
+                        </td>
+                    </tr>
                     <tr>
                         <td><fmt:message key="configthema.viewgeomtype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.viewgeomtype.uitleg"/></div></td>
                         <td colspan="3">
@@ -366,7 +410,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
-                </c:if>
+                </TBODY>
                 <tr><td colspan="4">&nbsp;</td></tr>
                 <c:choose>
                     <c:when test="${fn:length(listLayers)>1}">
@@ -465,14 +509,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </html:form>
 <iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0"
         style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
-<script type="text/javascript">
-    function refreshTheLists(){
-        document.forms[0].refreshLists.value="do";
-        document.forms[0].submit();
-    }        
+<script type="text/javascript">    
     Table.stripe(document.getElementById('themalisttable'), 'regel_even');
     Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});
     if(document.getElementById('regel_selected')) {
         document.getElementById('regel_selected').className = 'regel_selected';
     }
+    var pageConnectionType="${connectieType}";
+    var currentConnectionType="${connectieType}";
+    var connectionTypes=new Array();
+    <c:forEach var="cuItem" items="${listConnecties}">
+        connectionTypes["${cuItem.id}"]="${cuItem.type}";
+    </c:forEach>
 </script>

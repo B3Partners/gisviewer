@@ -149,7 +149,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         String connectieType = Connecties.TYPE_JDBC;
         if (SpatialUtil.validJDBCConnection(t)) {
             Connection conn =SpatialUtil.getJDBCConnection(t);
-            request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(t.getAdmin_tabel(), conn));
+            request.setAttribute("listAdminTableColumns", SpatialUtil.getColumnNames(t.getAdmin_tabel(), conn));
         } else if (WfsUtil.validWfsConnection(t)) {
             connectieType = Connecties.TYPE_WFS;
             Connecties conn = WfsUtil.getWfsConnection(t,request);
@@ -264,7 +264,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         List attributes = null;
         if (SpatialUtil.validJDBCConnection(t)){
             Connection conn = SpatialUtil.getJDBCConnection(t);
-            attributes = SpatialUtil.getAdminColumnNames(t.getAdmin_tabel(), conn);
+            attributes = SpatialUtil.getColumnNames(t.getAdmin_tabel(), conn);
             if (attributes != null && attributes.size() != 0) {
                 //als het attribuut van het type geometry is moet hij niet worden gebruikt
                 for (int i = 0; i < attributes.size(); i++) {

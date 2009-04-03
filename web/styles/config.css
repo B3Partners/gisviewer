@@ -139,4 +139,5 @@ border-right: solid 1px #1C6CA7;
 .optionalConfigItems{
 display: none;
 }
-
+.tbodyshow {display: block; display: table-row-group;}
+.tbodyhide {display: none;}

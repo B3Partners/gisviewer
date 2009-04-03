@@ -23,7 +23,6 @@
 package nl.b3p.gis.viewer;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -37,8 +36,6 @@ import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
-import nl.b3p.gis.viewer.services.WfsUtil;
-import nl.b3p.xml.wfs.WFS_Capabilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionErrors;
@@ -46,7 +43,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.DynaValidatorForm;
 import org.hibernate.Session;
-import org.w3c.dom.Element;
 
 /**
  *
@@ -99,84 +95,50 @@ public class ConfigThemaAction extends ViewerCrudAction {
         request.setAttribute("allThemas", sess.createQuery("from Themas order by belangnr").list());
         request.setAttribute("allClusters", sess.createQuery("from Clusters where id<>9 order by naam").list());
         request.setAttribute("listMoscow", sess.createQuery("from Moscow order by id").list());
-
+        request.setAttribute("listConnecties", sess.createQuery("from Connecties").list());
         request.setAttribute("listValidGeoms", SpatialUtil.VALID_GEOMS);
 
         Themas t = getThema(dynaForm, false);
-        Connection conn = null;
         Connecties c = null;
+        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         if (FormUtils.nullIfEmpty(dynaForm.getString("connectie")) != null) {
             c = (Connecties) sess.get(Connecties.class, Integer.parseInt(dynaForm.getString("connectie")));
         }
-        if (c == null) {
-            if (t != null) {
-                c = t.getConnectie();
+        if (c==null){
+            c= user.getKbWfsConnectie();
+        }
+        //maak lijsten die iets te maken hebben met de admin/spatial_data
+        List tns = ConfigListsUtil.getPossibleFeatures(c);
+        if (t != null) {
+            String sptn = t.getAdmin_tabel();
+            if (sptn != null && !tns.contains(sptn)) {
+                tns.add(sptn);
+            }
+            String atn = t.getSpatial_tabel();
+            if (atn != null && !tns.contains(atn)) {
+                tns.add(atn);
             }
         }
-        GisPrincipal user = GisPrincipal.getGisPrincipal(request);
-        //als de thema geen connectie heeft ingesteld of een JDBC connectie maak dan een lijst vanuit de database.        
-        if (c != null && c.getType().equalsIgnoreCase(Connecties.TYPE_JDBC)) {
-            conn = c.getJdbcConnection();
-            List tns = SpatialUtil.getTableNames(conn);
-            if (t != null) {
-                String sptn = t.getAdmin_tabel();
-                if (sptn != null && !tns.contains(sptn)) {
-                    tns.add(sptn);
-                }
-                String atn = t.getSpatial_tabel();
-                if (atn != null && !tns.contains(atn)) {
-                    tns.add(atn);
-                }
-            }
-            request.setAttribute("listTables", tns);
-            String adminTable = null;
-            String spatialTable = null;
-            if (t != null) {
-                adminTable = t.getAdmin_tabel();
-                spatialTable = t.getSpatial_tabel();
-            }
-            if (adminTable == null) {
-                adminTable = FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel"));
-            }
-            if (spatialTable == null) {
-                spatialTable = FormUtils.nullIfEmpty(dynaForm.getString("spatial_tabel"));
-            }
-            if (adminTable != null) {
-                request.setAttribute("listAdminTableColumns", SpatialUtil.getAdminColumnNames(adminTable, conn));
-            }
-            if (spatialTable != null) {
-                request.setAttribute("listSpatialTableColumns", SpatialUtil.getSpatialColumnNames(spatialTable, conn));
-            }
+        request.setAttribute("listTables", tns);
 
-        }//als het een WFS connectie is maak dan een lijst vanuit het WFS request.
-        else if (c == null || (c!=null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS))) {
-            if (c==null){
-                c=user.getKbWfsConnectie();
-            }
-            //Zet de features als lijst waaruit geselecteerd kan worden.
-            WFS_Capabilities cap = WfsUtil.getCapabilities(c);
-            ArrayList tns = WfsUtil.getFeatureNameList(cap);
-            request.setAttribute("listTables", tns);
-            String adminTable = null;
-            if (t != null) {
-                adminTable = t.getAdmin_tabel();
-            }
-            if (adminTable == null) {
-                adminTable = FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel"));
-            }
-            if (adminTable != null) {
-                List elements = WfsUtil.getFeatureElements(c, adminTable);
-                if (elements != null) {
-                    ArrayList elementsNames = new ArrayList();
-                    for (int i = 0; i < elements.size(); i++) {
-                        Element e = (Element) elements.get(i);
-                        elementsNames.add(e.getAttribute("name"));
-                    }
-                    request.setAttribute("listAdminTableColumns", elementsNames);
-                }
-            }
+        String adminTable = null;
+        String spatialTable = null;
+        adminTable = FormUtils.nullIfEmpty(dynaForm.getString("admin_tabel"));
+        spatialTable = FormUtils.nullIfEmpty(dynaForm.getString("spatial_tabel"));
+        if (adminTable == null && t != null) {
+            adminTable = t.getAdmin_tabel();
         }
-        
+        if (spatialTable==null && t!=null){
+            spatialTable = t.getSpatial_tabel();
+        }
+        if (adminTable != null) {
+            List atc = ConfigListsUtil.getPossibleAttributes(c,adminTable);
+            request.setAttribute("listAdminTableColumns", atc);
+        }
+        if (spatialTable != null) {
+            List stc = ConfigListsUtil.getPossibleAttributes(c,spatialTable);
+            request.setAttribute("listSpatialTableColumns", stc);
+        }
         if (user != null) {
             List lns = user.getLayerNames(false);
             if (t != null) {
@@ -198,9 +160,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
                 }
             }
             request.setAttribute("listLegendLayers", llns);
-        }
-        List connecties = sess.createQuery("from Connecties").list();
-        request.setAttribute("listConnecties", connecties);
+        }        
     }
 
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {

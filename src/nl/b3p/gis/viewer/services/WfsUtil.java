@@ -228,22 +228,33 @@ public class WfsUtil {
     }
 
     public static boolean validWfsConnection(Themas t){
-        if(t==null || (t.getConnectie()!=null && !t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_WFS)))
+        if (t==null)
+            return false;
+        return validWfsConnection(t.getConnectie());
+    }
+    public static Connecties getWfsConnection(Themas t,HttpServletRequest request){
+        Connecties c=null;
+        if (t!=null){
+            c=t.getConnectie();
+        }
+        return getWfsConnection(c, request);
+    }
+    public static boolean validWfsConnection(Connecties c){
+        if(c!=null && !c.getType().equalsIgnoreCase(Connecties.TYPE_WFS))
             return false;
         else
             return true;
     }
-    public static Connecties getWfsConnection(Themas t,HttpServletRequest request){
-        if (!validWfsConnection(t))
+    public static Connecties getWfsConnection(Connecties c,HttpServletRequest request){
+        if (!validWfsConnection(c))
             return null;
-        Connecties conn = t.getConnectie();
-        if (conn==null){
+        if (c==null){
             if (request.getUserPrincipal() instanceof GisPrincipal) {
                 GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();                
-                conn= gp.getKbWfsConnectie();
+                c= gp.getKbWfsConnectie();
             }
         }
-        return conn;
+        return c;
     }
 
 }

@@ -198,30 +198,12 @@ public class SpatialUtil {
     }
 
 
-    static public List getAdminColumnNames(String adminTable, Connection conn) throws SQLException {
+    static public List getColumnNames(String adminTable, Connection conn) throws SQLException {
         DatabaseMetaData dbmd = conn.getMetaData();
 
         if (adminTable==null)
             return null;
         ResultSet rs = dbmd.getColumns(null, null, adminTable, null);
-        List columns = null;
-        while (rs.next()) {
-            String columnName = rs.getString("COLUMN_NAME");
-            if (columns==null)
-                columns = new ArrayList();
-            columns.add(columnName);
-        }
-        if (columns!=null)
-            Collections.sort(columns);
-        return columns;
-    }
-
-    static public List getSpatialColumnNames(String spatialTable, Connection conn) throws SQLException {
-        DatabaseMetaData dbmd = conn.getMetaData();
-
-        if (spatialTable==null)
-            return null;
-        ResultSet rs = dbmd.getColumns(null, null, spatialTable, null);
         List columns = null;
         while (rs.next()) {
             String columnName = rs.getString("COLUMN_NAME");
@@ -1027,14 +1009,19 @@ public class SpatialUtil {
     }
 
     public static boolean validJDBCConnection(Themas t){
-        return t.getConnectie()!=null && t.getConnectie().getType().equalsIgnoreCase(Connecties.TYPE_JDBC);
-
+        return validJDBCConnection(t.getConnectie());
     }
     public static Connection getJDBCConnection(Themas t){
-        if (!validJDBCConnection(t))
+        return getJDBCConnection(t.getConnectie());
+    }
+    public static boolean validJDBCConnection(Connecties c){
+        return c!=null && c.getType().equalsIgnoreCase(Connecties.TYPE_JDBC);
+    }
+    public static Connection getJDBCConnection(Connecties c){
+        if (!validJDBCConnection(c))
             return null;
         try{
-            return t.getConnectie().getJdbcConnection();
+            return c.getJdbcConnection();
         }catch(Exception e){
             log.error("Error creating jdbc connection",e);
             return null;

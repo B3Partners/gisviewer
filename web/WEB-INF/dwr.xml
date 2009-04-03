@@ -7,5 +7,10 @@
             <param name="class" value="nl.b3p.gis.viewer.GetLocationData"/>
         </create>
         <convert converter="bean" match="nl.b3p.gis.viewer.MapCoordsBean"/>
+        <create creator="new" javascript="JConfigListsUtil">
+            <param name="class" value="nl.b3p.gis.viewer.ConfigListsUtil"/>
+            <include method="getPossibleFeaturesById"/>
+            <include method="getPossibleAttributesById"/>
+        </create>
     </allow>
 </dwr>

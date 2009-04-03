@@ -493,7 +493,6 @@ function refreshLayer(){
         }
         newLayer+="\" color_layers=\""+layersToAdd+
         "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
-    alert(newLayer);
         /** add the highlight layer properties.
          */
         var layersArray= layersToAdd.split(",");

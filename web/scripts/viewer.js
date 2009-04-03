@@ -1,5 +1,6 @@
 var allActiveLayers="";
 var allActiveBackgroundLayers="";
+var allQueryLayers="";
 var layerUrl=""+kburl;
 var cookieArray = readCookie('checkedLayers');
 
@@ -404,12 +405,10 @@ function checkboxClick(obj, dontRefresh) {
         } else {
             eraseCookie('checkedLayers');
         }
-            
+        if (layerUrl==null){
+            layerUrl=""+kburl;
+        }
         if (obj.theItem.wmslayers){
-            if (layerUrl==null){
-                layerUrl=""+kburl; 
-                    
-            }
             var organizationCodeKey = obj.theItem.organizationcodekey;   
             if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
                 if(layerUrl.indexOf(organizationCodeKey)<=0){
@@ -430,12 +429,16 @@ function checkboxClick(obj, dontRefresh) {
                 refreshLayerWithDelay();
             }
         }
+        if (obj.theItem.wmsquerylayers){
+            allQueryLayers+=","+obj.theItem.wmsquerylayers
+        }
     } else {
         deleteFromArray(obj);
         removeLayerFromVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers);
         if (obj.theItem.wmslayers){
             allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
             allActiveBackgroundLayers=allActiveBackgroundLayers.replace(","+obj.theItem.wmslayers,"");
+            allQueryLayers=allQueryLayers.replace(","+obj.theItem.wmsquerylayers,"");
             refreshLayerWithDelay();
         }
     }
@@ -484,9 +487,13 @@ function refreshLayer(){
         "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
         "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl + 
         "\"styles=\""+
-        "\" layers=\""+layersToAdd+
-        "\" color_layers=\""+layersToAdd+
+        "\" layers=\""+layersToAdd;
+        if (allQueryLayers.length > 1){
+            newLayer+="\" query_layers=\""+allQueryLayers.substring(1);
+        }
+        newLayer+="\" color_layers=\""+layersToAdd+
         "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
+    alert(newLayer);
         /** add the highlight layer properties.
          */
         var layersArray= layersToAdd.split(",");
@@ -827,6 +834,10 @@ function flamingo_map1_onIdentify(movie,extend){
     handleGetAdminData(coords);
     doAjaxRequest(xp,yp);
     loadObjectInfo(coords);
+}
+
+function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLayers,totalLayers){
+    alert(data);
 }
 readCookieArrayIntoCheckboxArray();
 var doOnInit= new Boolean("true");

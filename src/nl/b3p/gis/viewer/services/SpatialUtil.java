@@ -1009,9 +1009,15 @@ public class SpatialUtil {
     }
 
     public static boolean validJDBCConnection(Themas t){
+        if (t==null){
+            return false;
+        }
         return validJDBCConnection(t.getConnectie());
     }
     public static Connection getJDBCConnection(Themas t){
+        if (t==null){
+            return null;
+        }
         return getJDBCConnection(t.getConnectie());
     }
     public static boolean validJDBCConnection(Connecties c){

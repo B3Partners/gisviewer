@@ -395,12 +395,18 @@ public class ViewerAction extends BaseGisAction {
             setExtraClusterProperties(jsonCluster,cluster);
 
             if (th.getWms_layers_real() != null) {
-                jsonCluster.put("wmslayers", th.getWms_layers_real()).put("wmsquerylayers", th.getWms_querylayers_real());
+                jsonCluster.put("wmslayers", th.getWms_layers_real());
+                if (th.getWms_legendlayer_real()!=null && th.getAdmin_tabel()==null){
+                    jsonCluster.put("wmsquerylayers", th.getWms_querylayers_real());
+                }
                 if (th.getWms_legendlayer_real()!=null){
                     jsonCluster.put("legendurl",user.getLegendGraphicUrl(user.getLayer(th.getWms_legendlayer_real())));
                 }
             } else {
-                jsonCluster.put("wmslayers", th.getWms_layers()).put("wmsquerylayers", th.getWms_querylayers());
+                jsonCluster.put("wmslayers", th.getWms_layers());
+                if (th.getWms_querylayers()!=null && th.getAdmin_tabel()==null){
+                    jsonCluster.put("wmsquerylayers", th.getWms_querylayers());
+                }
                 if (th.getWms_legendlayer()!=null){
                     jsonCluster.put("legendurl",user.getLegendGraphicUrl(user.getLayer(th.getWms_legendlayer())));
                 }

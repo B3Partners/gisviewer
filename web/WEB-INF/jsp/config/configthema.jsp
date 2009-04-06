@@ -188,7 +188,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </td>
                     <td colspan="3">
                         <html:select property="connectie" onchange="refreshFeatureList(this);" styleId='connectie_select'>
-                            <html:option value=""/>
+                            <html:option value="">Kaartenbalie Wfs</html:option>
                             <c:forEach var="cuItem" items="${listConnecties}">
                                 <html:option value="${cuItem.id}">
                                     <c:out value="${cuItem.naam}"/>

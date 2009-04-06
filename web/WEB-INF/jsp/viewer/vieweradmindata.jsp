@@ -27,6 +27,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/admindataFunctions.js"/>"></script>
 <script type="text/javascript">
+    var doClose=true;
     function popUp(URL, naam) {
         var screenwidth = 600;
         var screenheight = 500;
@@ -283,14 +284,94 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
             </table>
         </div>
-        <script type="text/javascript">
+        <script type="text/javascript">            
             function closeWindow() {
-                window.close();
+                if (doClose)
+                    window.close();
             }
 
             // Timeout in milliseconden
-            var timeout = 2000;
+            var timeout = 5000;
             window.setTimeout(closeWindow, timeout);
+
         </script>
     </c:otherwise>
 </c:choose>
+<div id="getFeatureInfo">
+</div>
+<script type="text/javascript">
+    /*var getFeatureInfoPrefix="getFeatureInfo";
+    if (parent!=undefined){
+        if (parent.getFeatureInfoData() !=null){
+            writeFeatureInfoData();
+            parent.setFeatureInfoData(null);
+        }
+    }    */
+    /*function writeFeatureInfoData(obj){
+        var tableData=""
+        for (layer in obj){
+            tableData+="<div class=\"topRow\" style=\"width: 100%; clear: both; margin-bottom: 5px; border-bottom: 1px solid #EAEEF2; background-repeat: repeat-x;\" id=\""+getFeatureInfoPrefix+layer+"\">";
+            tableData+= layer;
+            tableData+= "<table>";
+            tableData+=     "<thead>";
+            tableData+=         "<tr class=\"topRow\" style=\"height: 20px;\">";            
+            for (attribute in obj[layer][0]){
+                tableData+=         "<th style=\"width: 50px;\" class=\"table-sortable:numeric\" id=\"volgnr_th\" >";
+                tableData+=         attribute;
+                tableData+=         "</th>";
+
+            }
+            tableData+=         "</tr>";
+            tableData+=     "</thead>";
+            tableData+=     "<tbody>";
+            for (feature in obj[layer]){
+                tableData+=     "<tr class=\"row\" onclick=\"colorRow(this);\">";
+                for (attribute in obj[layer][feature]){
+                    tableData+=     "<td>";
+                    tableData+=         obj[layer][feature][attribute];
+                    tableData+=     "</td>";
+                }
+                tableData+=     "</tr>";
+            }
+            tableData+=     "</tbody>";
+            tableData+= "</table>";
+            //tableData+= "</div>";
+            tableData+="</div>";
+        }
+        //alert(tableData);
+        document.write(tableData);
+    }*/
+    function writeFeatureInfoData(obj){
+        doClose=false;
+        if (document.getElementById("content_style")!=undefined){
+            document.getElementById("content_style").style.display="none";
+        }
+        var tableData="";
+        for (layer in obj){
+            tableData+="<table class=\"aanvullende_info_table\" >";
+            tableData+="    <tr class=\"topRow\">";
+            tableData+="        <th colspan=\"2\" class=\"aanvullende_info_td\">";
+            tableData+=layer;
+            tableData+="        </th>";
+            tableData+="    </tr>";
+            for (feature in obj[layer]){
+                var tellerAtt=0;
+                for (attribute in obj[layer][feature]){
+                    if (tellerAtt%2==0){
+                        tableData+="    <tr>"
+                    }else{
+                        tableData+="    <tr class=\"aanvullende_info_alternateTr\">"
+                    }
+                    tellerAtt++;
+                    tableData+="        <td>"+attribute+"</td>"
+                    tableData+="        <td>"+obj[layer][feature][attribute]+"</td>"
+                    tableData+="    </tr>";
+                }
+                tableData+="    <tr><td> </td><td> </td></tr>";
+            }
+            tableData+="</table>";
+        }
+        document.getElementById('getFeatureInfo').innerHTML=tableData;
+        //document.write(tableData);
+    }
+</script>

@@ -146,10 +146,10 @@ public class ViewerAction extends BaseGisAction {
                 actieveThemas=null;
             }
         }
-        String firstActiefThemaId = null;
+        String lastActiefThemaId = null;
         if (actieveThemas!=null)
-            firstActiefThemaId=""+actieveThemas.get(0);
-        Themas actiefThema = SpatialUtil.getThema(firstActiefThemaId);
+            lastActiefThemaId=""+actieveThemas.get(actieveThemas.size()-1);
+        Themas actiefThema = SpatialUtil.getThema(lastActiefThemaId);
         
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
         request.setAttribute("tree", createJasonObject(rootClusterMap, actieveThemas, user));

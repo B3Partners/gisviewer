@@ -299,14 +299,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </c:choose>
 <div id="getFeatureInfo">
 </div>
-<script type="text/javascript">
-    /*var getFeatureInfoPrefix="getFeatureInfo";
-    if (parent!=undefined){
-        if (parent.getFeatureInfoData() !=null){
-            writeFeatureInfoData();
-            parent.setFeatureInfoData(null);
-        }
-    }    */
+<script type="text/javascript">    
     /*function writeFeatureInfoData(obj){
         var tableData=""
         for (layer in obj){

@@ -174,6 +174,9 @@ public class GisPrincipal implements Principal {
     }
     
     public String getLegendGraphicUrl(Layer l) {
+        if (l==null){
+            return null;
+        }
         Set styles = l.getStyles();
         if (styles == null || styles.isEmpty()) {
             return null;

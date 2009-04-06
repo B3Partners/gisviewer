@@ -44,6 +44,7 @@ import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
 import nl.b3p.gis.viewer.struts.BaseHibernateAction;
+import nl.b3p.wms.capabilities.Layer;
 import nl.b3p.wms.capabilities.ServiceProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -245,14 +246,26 @@ public abstract class BaseGisAction extends BaseHibernateAction {
             }
 
             // Layer bestaat nog niet dus aanmaken
-            Themas t = new Themas();
-            t.setId(new Integer(tid++));
-            t.setNaam(user.getLayerTitle(layer));
-            t.setWms_layers_real(layer);
-            t.setWms_legendlayer_real(layer);
-            t.setCluster(c);
-            // voeg extra laag als nieuw thema toe
-            extraThemaList.add(t);
+            Layer l= user.getLayer(layer);
+            if (l!=null){
+                Themas t = new Themas();
+                t.setNaam(l.getTitle());
+                t.setId(new Integer(tid++));
+                //l.getLayers()
+                String legendUrl=user.getLegendGraphicUrl(l);
+                if(legendUrl!=null){
+                    t.setWms_legendlayer_real(legendUrl);
+                }else{
+                    t.setWms_legendlayer_real(layer);
+                }
+                if ("1".equalsIgnoreCase(l.getQueryable())){
+                    t.setWms_querylayers_real(layer);
+                }
+                t.setWms_layers_real(layer);
+                t.setCluster(c);
+                // voeg extra laag als nieuw thema toe
+                extraThemaList.add(t);
+            }
         }
         if (extraThemaList.size() > 0) {
             ctl.add(c);

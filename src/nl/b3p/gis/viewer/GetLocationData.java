@@ -265,7 +265,8 @@ public class GetLocationData {
             if (SpatialUtil.validJDBCConnection(t)) {
                 connection = t.getConnectie().getJdbcConnection();
             }else{
-                log.error("Thema heeft geen JDBC connectie: "+t.getNaam(),new UnsupportedOperationException("Only JDBC connection are supported by this method."));
+                if (t!=null)
+                    log.error("Thema heeft geen JDBC connectie: "+t.getNaam(),new UnsupportedOperationException("Only JDBC connection are supported by this method."));
                 return results;
             }
             try {

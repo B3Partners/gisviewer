@@ -77,12 +77,12 @@ public class WfsUtil {
             if (adminTable==null || adminTable.length()<1)
                 return null;
             or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,adminTable);
-            NodeList nl= OgcWfsClient.getDescribeFeatureElements(OgcWfsClient.getDescribeFeatureType(or));
+            ArrayList nl= OgcWfsClient.getDescribeFeatureElements(OgcWfsClient.getDescribeFeatureType(or));
             if (nl!=null){
-                for (int i=0; i < nl.getLength(); i++){
+                for (int i=0; i < nl.size(); i++){
                     if (returnvalue==null)
                         returnvalue=new ArrayList();
-                    Element e=(Element)nl.item(i);
+                    Element e=(Element)nl.get(i);
                     returnvalue.add(e);
                 }
             }

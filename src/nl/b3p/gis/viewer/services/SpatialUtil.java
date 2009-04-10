@@ -67,25 +67,10 @@ public class SpatialUtil {
     });
 
     public static final List INTERNAL_TABLES = Arrays.asList(new String[] {
-        "applicaties",
-        "clusters",
         "data_typen",
-        "functie_items",
-        "leveranciers",
-        "locatie_aanduidingen",
-        "medewerkers",
-        "moscow",
-        "onderdeel",
-        "onderdeel_medewerkers",
-        "rollen",
-        "thema_applicaties",
         "thema_data",
-        "thema_functies",
-        "thema_verantwoordelijkheden",
         "themas",
         "waarde_typen",
-        "workshop_medewerkers",
-        "workshops",
         "connecties",
         "geometry_columns",
         "spatial_ref_sys",
@@ -132,11 +117,10 @@ public class SpatialUtil {
 
     public static List getValidThemas(boolean locatie) {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        String hquery = "FROM Themas WHERE cluster != 9 ";
-        hquery += "AND (moscow = 1 OR moscow = 2 OR moscow = 3) ";
+        String hquery = "FROM Themas ";
         if (locatie)
             hquery += "AND locatie_thema = true ";
-        hquery += "AND code < '3' ORDER BY belangnr DESC";
+        hquery += "ORDER BY belangnr DESC";
         Query q = sess.createQuery(hquery);
         return q.list();
     }

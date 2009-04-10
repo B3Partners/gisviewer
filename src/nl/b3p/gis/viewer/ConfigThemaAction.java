@@ -31,7 +31,6 @@ import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Connecties;
-import nl.b3p.gis.viewer.db.Moscow;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
@@ -94,7 +93,6 @@ public class ConfigThemaAction extends ViewerCrudAction {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         request.setAttribute("allThemas", sess.createQuery("from Themas order by belangnr").list());
         request.setAttribute("allClusters", sess.createQuery("from Clusters where id<>9 order by naam").list());
-        request.setAttribute("listMoscow", sess.createQuery("from Moscow order by id").list());
         request.setAttribute("listConnecties", sess.createQuery("from Connecties").list());
         request.setAttribute("listValidGeoms", SpatialUtil.VALID_GEOMS);
 
@@ -259,11 +257,6 @@ public class ConfigThemaAction extends ViewerCrudAction {
             val = Integer.toString(t.getConnectie().getId());
         }
         dynaForm.set("connectie", val);
-        val = "";
-        if (t.getMoscow() != null) {
-            val = Integer.toString(t.getMoscow().getId());
-        }
-        dynaForm.set("moscowID", val);
         dynaForm.set("belangnr", FormUtils.IntToString(t.getBelangnr()));
         val = "";
         if (t.getCluster() != null) {
@@ -347,19 +340,12 @@ public class ConfigThemaAction extends ViewerCrudAction {
         b = (Boolean) dynaForm.get("visible");
         t.setVisible(b == null ? false : b.booleanValue());
 
-        int mId = 0, cId = 0;
-        try {
-            mId = Integer.parseInt(dynaForm.getString("moscowID"));
-        } catch (NumberFormatException ex) {
-            log.error("Illegal Moscow type id", ex);
-        }
+        int cId = 0;
         try {
             cId = Integer.parseInt(dynaForm.getString("clusterID"));
         } catch (NumberFormatException ex) {
             log.error("Illegal Cluster id", ex);
         }
-        Moscow m = (Moscow) sess.get(Moscow.class, new Integer(mId));
-        t.setMoscow(m);
         Clusters c = (Clusters) sess.get(Clusters.class, new Integer(cId));
         t.setCluster(c);
     }

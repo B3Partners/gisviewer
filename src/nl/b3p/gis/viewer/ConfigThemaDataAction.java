@@ -32,7 +32,6 @@ import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.gis.viewer.db.DataTypen;
-import nl.b3p.gis.viewer.db.Moscow;
 import nl.b3p.gis.viewer.db.ThemaData;
 import nl.b3p.gis.viewer.db.Themas;
 import nl.b3p.gis.viewer.db.WaardeTypen;
@@ -127,7 +126,6 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         super.createLists(dynaForm, request);
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         request.setAttribute("listThemas", sess.createQuery("from Themas where code in ('1', '2') order by belangnr").list());
-        request.setAttribute("listMoscow", sess.createQuery("from Moscow order by id").list());
         request.setAttribute("listWaardeTypen", sess.createQuery("from WaardeTypen order by naam").list());
         request.setAttribute("listDataTypen", sess.createQuery("from DataTypen order by naam").list());
         Themas t = null;
@@ -392,11 +390,6 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         dynaForm.set("voorbeelden", td.getVoorbeelden());
         dynaForm.set("kolombreedte", FormUtils.IntToString(td.getKolombreedte()));
         val = "";
-        if (td.getMoscow() != null) {
-            val = Integer.toString(td.getMoscow().getId());
-        }
-        dynaForm.set("moscowID", val);
-        val = "";
         if (td.getWaardeType() != null) {
             val = Integer.toString(td.getWaardeType().getId());
         }
@@ -429,12 +422,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         td.setVoorbeelden(FormUtils.nullIfEmpty(dynaForm.getString("voorbeelden")));
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
-        int mId = 0, tId = 0, dId = 0, wId = 0;
-        try {
-            mId = Integer.parseInt(dynaForm.getString("moscowID"));
-        } catch (NumberFormatException ex) {
-            log.error("Illegal Moscow type id", ex);
-        }
+        int tId = 0, dId = 0, wId = 0;
         try {
             tId = Integer.parseInt(dynaForm.getString("themaID"));
         } catch (NumberFormatException ex) {
@@ -450,8 +438,6 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
         } catch (NumberFormatException ex) {
             log.error("Illegal waardeTypeID", ex);
         }
-        Moscow m = (Moscow) sess.get(Moscow.class, new Integer(mId));
-        td.setMoscow(m);
         Themas t = (Themas) sess.get(Themas.class, new Integer(tId));
         td.setThema(t);
         DataTypen d = (DataTypen) sess.get(DataTypen.class, new Integer(dId));

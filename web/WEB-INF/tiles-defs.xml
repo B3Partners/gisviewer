@@ -26,6 +26,9 @@
     <definition name="home" extends="algemeen">
         <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>
     </definition>
+    <definition name="messages" extends="algemeen">
+        <put name="content" value="/WEB-INF/jsp/algemeen/messages.jsp"/>
+    </definition>
     
     <!-- etl -->   
     <definition name="etl" extends="template">

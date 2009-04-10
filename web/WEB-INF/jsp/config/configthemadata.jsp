@@ -198,20 +198,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr><td><fmt:message key="configthemadata.uitgebreid"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.uitgebreid.uitleg"/></div></td><td colspan="3"><html:checkbox property="uitgebreid"/></td></tr>
                 <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.voorbeelden.uitleg"/></div></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
                 <tr><td><fmt:message key="configthemadata.kolombreedte"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.kolombreedte.uitleg"/></div></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
-                <tr class="optionalConfigItems">
-                    <td>
-                        <fmt:message key="configthemadata.moscow"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.moscow.uitleg"/></div>
-                    </td>
-                    <td colspan="3">
-                        <html:select property="moscowID">
-                            <c:forEach var="cuItem" items="${listMoscow}">
-                                <html:option value="${cuItem.id}">
-                                    <c:out value="${cuItem.naam}"/>
-                                </html:option>
-                            </c:forEach>
-                        </html:select>&nbsp;
-                    </td>
-                </tr>
                 <tr>
                     <td>
                         <fmt:message key="configthemadata.waardetype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.waardetype.uitleg"/></div>

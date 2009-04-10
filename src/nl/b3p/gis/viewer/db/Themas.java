@@ -31,7 +31,6 @@ public class Themas implements Comparable {
     private String code;
     private String naam;
     private String metadata_link;
-    private Moscow moscow;
     private int belangnr;
     private Clusters cluster;
     private String opmerkingen;
@@ -219,30 +218,6 @@ public class Themas implements Comparable {
         this.visible = visible;
     }
 
-    /**
-     * Return de moscow van dit thema.
-     *
-     * @return Moscow met de moscow van dit thema.
-     *
-     * @see Moscow
-     */
-    // <editor-fold defaultstate="" desc="public Moscow getMoscow()">
-    public Moscow getMoscow() {
-        return moscow;
-    }
-    // </editor-fold>
-    /**
-     * Set de moscow van dit thema.
-     *
-     * @param moscow Moscow met de moscow van dit thema.
-     *
-     * @see Moscow
-     */
-    // <editor-fold defaultstate="" desc="public void setMoscow(Moscow moscow)">
-    public void setMoscow(Moscow moscow) {
-        this.moscow = moscow;
-    }
-    // </editor-fold>
     /**
      * Return het cluster van dit thema.
      *

@@ -32,7 +32,6 @@ public class ThemaData {
     private boolean basisregel;
     private String voorbeelden;
     private int kolombreedte;
-    private Moscow moscow;
     private WaardeTypen waardeType;
     private DataTypen dataType;
     private String commando;
@@ -208,30 +207,6 @@ public class ThemaData {
     // <editor-fold defaultstate="" desc="public void setThema(Themas thema)">
     public void setThema(Themas thema) {
         this.thema = thema;
-    }
-    // </editor-fold>
-    /** 
-     * Return de moscow van de thema data.
-     *
-     * @return Moscow met de moscow van de thema data.
-     *
-     * @see Moscow
-     */
-    // <editor-fold defaultstate="" desc="public Moscow getMoscow()">
-    public Moscow getMoscow() {
-        return moscow;
-    }
-    // </editor-fold>
-    /** 
-     * Set de moscow van de thema data.
-     *
-     * @param moscow Moscow met de moscow van de thema data.
-     *
-     * @see Moscow
-     */
-    // <editor-fold defaultstate="" desc="public void setMoscow(Moscow moscow)">
-    public void setMoscow(Moscow moscow) {
-        this.moscow = moscow;
     }
     // </editor-fold>
     /** 

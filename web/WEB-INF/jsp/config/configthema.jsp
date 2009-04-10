@@ -147,20 +147,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr class="optionalConfigItems">
-                    <td>
-                        <fmt:message key="configthema.moscow"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.moscow.uitleg"/></div>
-                    </td>
-                    <td colspan="3">
-                        <html:select property="moscowID" styleClass="configSelect">
-                            <c:forEach var="cuItem" items="${listMoscow}">
-                                <html:option value="${cuItem.id}">
-                                    <c:out value="${cuItem.naam}"/>
-                                </html:option>
-                            </c:forEach>
-                        </html:select>&nbsp;
-                    </td>
-                </tr>
                 <tr><td><fmt:message key="configthema.belangnr"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.belangnr.uitleg"/></div></td><td colspan="3"><html:text property="belangnr" size="140"/></td></tr>
                 <tr>
                     <td>

@@ -27,7 +27,6 @@
             <form-property name="naam" type="java.lang.String"/>
             <form-property name="metadatalink" type="java.lang.String"/>
             <form-property name="connectie" type="java.lang.String"/>
-            <form-property name="moscowID" type="java.lang.String"/>
             <form-property name="belangnr" type="java.lang.String"/>
             <form-property name="clusterID" type="java.lang.String"/>
             <form-property name="opmerkingen" type="java.lang.String"/>
@@ -90,7 +89,6 @@
             <form-property name="basisregel" type="java.lang.Boolean"/>
             <form-property name="voorbeelden" type="java.lang.String"/>
             <form-property name="kolombreedte" type="java.lang.String"/>
-            <form-property name="moscowID" type="java.lang.String"/>
             <form-property name="waardeTypeID" type="java.lang.String"/>
             <form-property name="dataTypeID" type="java.lang.String"/>
             <form-property name="commando" type="java.lang.String"/>
@@ -128,6 +126,7 @@
     <action-mappings>
         <action path="/index" type="nl.b3p.gis.viewer.services.IndexAction">
             <forward name="success" path="home"/>
+            <forward name="failure" path="messages"/>
             <forward name="login" path="login"/>
             <forward name="loginError" path="login"/>
             <forward name="logout" path="/index.do" redirect="true"/>

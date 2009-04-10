@@ -123,10 +123,7 @@ public class GisPrincipal implements Principal {
         this.sp = sp;
     }
 
-    public List getLayerNames(boolean legendGraphicOnly){
-        return getLayerNames(legendGraphicOnly,false);
-    }
-    public List getLayerNames(boolean legendGraphicOnly,boolean withTitle) {
+    public List getLayerNames(boolean legendGraphicOnly) {
         if (sp == null) {
             return null;
         }
@@ -141,10 +138,7 @@ public class GisPrincipal implements Principal {
             String name = layer.getName();
             if (name != null && name.length() > 0) {
                 if ((legendGraphicOnly && hasLegendGraphic(layer)) ||
-                        !legendGraphicOnly) {
-                    if(withTitle && layer.getTitle()!=null){
-                        name+=" ("+layer.getTitle()+")";
-                    }
+                        !legendGraphicOnly) {                    
                     allLayers.add(name);                    
                 }
             }
@@ -154,28 +148,32 @@ public class GisPrincipal implements Principal {
         }
         return allLayers;
     }
-
-    public boolean hasLegendGraphic(Layer l) {
-        /*Set styles = l.getStyles();
-        if (styles == null || styles.isEmpty()) {
-            return false;
+    public List getLayers(boolean legendGraphicOnly,boolean nameOnly){
+        if (sp == null) {
+            return null;
         }
-        Iterator it = styles.iterator();
+        Set layers = sp.getAllLayers();
+        if (layers == null || layers.isEmpty()) {
+            return null;
+        }
+        List allLayers = new ArrayList();
+        Iterator it = layers.iterator();
         while (it.hasNext()) {
-            Style style = (Style) it.next();
-            Set ldrs = style.getDomainResource();
-            if (ldrs == null || ldrs.isEmpty()) {
-                return false;
-            }
-            Iterator it2 = ldrs.iterator();
-            while (it2.hasNext()) {
-                StyleDomainResource sdr = (StyleDomainResource) it2.next();
-                if ("LegendURL".equalsIgnoreCase(sdr.getDomain())) {
-                    return true;
+            Layer layer = (Layer) it.next();
+            if ((legendGraphicOnly && hasLegendGraphic(layer)) ||
+                        !legendGraphicOnly) {
+                if ((nameOnly && layer.getName()!=null) ||
+                        !nameOnly){
+                    allLayers.add(layer);
                 }
             }
         }
-        return false;*/
+
+        Collections.sort(allLayers);
+        return allLayers;
+    }
+
+    public boolean hasLegendGraphic(Layer l) {        
         return getLegendGraphicUrl(l)!=null;
     }
     

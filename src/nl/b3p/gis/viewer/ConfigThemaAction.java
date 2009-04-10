@@ -140,8 +140,8 @@ public class ConfigThemaAction extends ViewerCrudAction {
             request.setAttribute("listSpatialTableColumns", stc);
         }
         if (user != null) {
-            List lns = user.getLayerNames(false,true);
-            if (t != null) {
+            List lns = user.getLayers(false,true);
+            /*if (t != null) {
                 String wlr = t.getWms_layers_real();
                 if (wlr != null && !lns.contains(wlr)) {
                     lns.add(wlr);
@@ -150,15 +150,15 @@ public class ConfigThemaAction extends ViewerCrudAction {
                 if (wqr != null && !lns.contains(wqr)) {
                     lns.add(wqr);
                 }
-            }
+            }*/
             request.setAttribute("listLayers", lns);
-            List llns = user.getLayerNames(true,true);
-            if (t != null) {
+            List llns = user.getLayers(true,true);
+            /*if (t != null) {
                 String wllr = t.getWms_legendlayer_real();
                 if (wllr != null && !lns.contains(wllr)) {
                     lns.add(wllr);
                 }
-            }
+            }*/
             request.setAttribute("listLegendLayers", llns);
         }        
     }

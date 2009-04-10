@@ -316,7 +316,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <html:select property="wms_layers_real" styleClass="configSelect">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listLayers}">
-                                        <html:option value="${cuItem}"/>
+                                        <html:option value="${cuItem.name}">${cuItem}</html:option>
                                     </c:forEach>
                                 </html:select>&nbsp;
                             </td>
@@ -338,7 +338,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <html:select property="wms_querylayers_real" styleId="wms_querylayers_real" disabled="${queryDisabled}" styleClass="configSelect">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listLayers}">
-                                        <html:option value="${cuItem}"/>
+                                        <html:option value="${cuItem.name}">${cuItem}</html:option>
                                     </c:forEach>
                                 </html:select>&nbsp;
                             </td>
@@ -356,7 +356,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <html:select property="wms_legendlayer_real" styleClass="configSelect">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listLegendLayers}">
-                                        <html:option value="${cuItem}"/>
+                                        <html:option value="${cuItem.name}">${cuItem}</html:option>
                                     </c:forEach>
                                 </html:select>&nbsp;
                             </td>

@@ -331,7 +331,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <tr>
                             <td><fmt:message key="configthema.wmsquerylayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmsquerylayers.uitleg"/></div></td>
                             <td colspan="3">
-                                <html:select property="wms_querylayers_real">
+                                <c:set var="queryDisabled" value="true"/>
+                                <c:if test="${form.map.admin_tabel ==null}">
+                                    <c:set var="queryDisabled" value="false"/>
+                                </c:if>
+                                <html:select property="wms_querylayers_real" styleId="wms_querylayers_real" disabled="${queryDisabled}">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listLayers}">
                                         <html:option value="${cuItem}"/>

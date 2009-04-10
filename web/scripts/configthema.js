@@ -80,6 +80,12 @@ function handleFeatureList(list){
 function refreshAdminAttributeList(element){
     var connid=document.getElementById('connectie_select').value;
     JConfigListsUtil.getPossibleAttributesById(connid,element.value,handleAdminAttributeList);
+    if (element.value!=undefined && element.value.length > 0){
+        document.getElementById("wms_querylayers_real").disabled=true;
+        document.getElementById("wms_querylayers_real").value="";
+    }else{
+        document.getElementById("wms_querylayers_real").disabled=false;
+    }
 }
 function handleAdminAttributeList(list){
     dwr.util.removeAllOptions('admin_pk_select');

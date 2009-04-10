@@ -396,6 +396,7 @@ public class ViewerAction extends BaseGisAction {
 
             if (th.getWms_layers_real() != null) {
                 jsonCluster.put("wmslayers", th.getWms_layers_real());
+                //if admintable is set then don't add the queryLayer
                 if (th.getWms_legendlayer_real()!=null && th.getAdmin_tabel()==null){
                     jsonCluster.put("wmsquerylayers", th.getWms_querylayers_real());
                 }
@@ -404,6 +405,7 @@ public class ViewerAction extends BaseGisAction {
                 }
             } else {
                 jsonCluster.put("wmslayers", th.getWms_layers());
+                //if admintable is set then don't add the queryLayer
                 if (th.getWms_querylayers()!=null && th.getAdmin_tabel()==null){
                     jsonCluster.put("wmsquerylayers", th.getWms_querylayers());
                 }

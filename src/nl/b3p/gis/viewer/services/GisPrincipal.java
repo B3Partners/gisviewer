@@ -123,7 +123,10 @@ public class GisPrincipal implements Principal {
         this.sp = sp;
     }
 
-    public List getLayerNames(boolean legendGraphicOnly) {
+    public List getLayerNames(boolean legendGraphicOnly){
+        return getLayerNames(legendGraphicOnly,false);
+    }
+    public List getLayerNames(boolean legendGraphicOnly,boolean withTitle) {
         if (sp == null) {
             return null;
         }
@@ -139,7 +142,10 @@ public class GisPrincipal implements Principal {
             if (name != null && name.length() > 0) {
                 if ((legendGraphicOnly && hasLegendGraphic(layer)) ||
                         !legendGraphicOnly) {
-                    allLayers.add(name);
+                    if(withTitle && layer.getTitle()!=null){
+                        name+=" ("+layer.getTitle()+")";
+                    }
+                    allLayers.add(name);                    
                 }
             }
         }

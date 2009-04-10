@@ -272,7 +272,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <many-to-one name="cluster" lazy="false">
             <column name="clusters" not-null="true"/>
         </many-to-one>
-        <property name="opmerkingen"/>
+        <property name="opmerkingen" type="text"/>
         <property name="analyse_thema" not-null="true"/>
         <property name="locatie_thema" not-null="true"/>
         <property name="visible" not-null="true"/>
@@ -281,8 +281,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <property name="admin_pk"/>
         <property name="admin_pk_complex" not-null="true"/>
         <property name="admin_spatial_ref"/>
-        <property name="admin_query"/>
-        <property name="spatial_tabel_opmerkingen"/>
+        <property name="admin_query" type="text"/>
+        <property name="spatial_tabel_opmerkingen" type="text"/>
         <property name="spatial_tabel"/>
         <property name="spatial_pk"/>
         <property name="spatial_pk_complex" not-null="true"/>

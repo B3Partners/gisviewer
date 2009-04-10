@@ -140,7 +140,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <fmt:message key="configthema.code"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.code.uitleg"/></div>
                     </td>
                     <td colspan="3">
-                        <html:select property="code">
+                        <html:select property="code" styleClass="configSelect">
                             <html:option value="1">Oorspronkelijk Thema (1)</html:option>
                             <html:option value="2">Nieuw Thema (2)</html:option>
                             <html:option value="3">Thema niet meer in gebruik (3)</html:option>
@@ -152,7 +152,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <fmt:message key="configthema.moscow"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.moscow.uitleg"/></div>
                     </td>
                     <td colspan="3">
-                        <html:select property="moscowID">
+                        <html:select property="moscowID" styleClass="configSelect">
                             <c:forEach var="cuItem" items="${listMoscow}">
                                 <html:option value="${cuItem.id}">
                                     <c:out value="${cuItem.naam}"/>
@@ -167,7 +167,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <fmt:message key="configthema.cluser"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.cluser.uitleg"/></div>
                     </td>
                     <td colspan="3">
-                        <html:select property="clusterID">
+                        <html:select property="clusterID" styleClass="configSelect">
                             <c:forEach var="cuItem" items="${allClusters}">
                                 <html:option value="${cuItem.id}">
                                     <c:out value="${cuItem.naam}"/>
@@ -187,7 +187,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <fmt:message key="configthema.connectie"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.connectie.uitleg"/></div>
                     </td>
                     <td colspan="3">
-                        <html:select property="connectie" onchange="refreshFeatureList(this);" styleId='connectie_select'>
+                        <html:select property="connectie" onchange="refreshFeatureList(this);" styleId='connectie_select' styleClass="configSelect">
                             <html:option value="">Kaartenbalie Wfs</html:option>
                             <c:forEach var="cuItem" items="${listConnecties}">
                                 <html:option value="${cuItem.id}">
@@ -210,7 +210,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
                     <td colspan="3">
-                        <html:select property="admin_tabel" onchange="refreshAdminAttributeList(this);" styleId="admin_tabel_select">
+                        <html:select property="admin_tabel" onchange="refreshAdminAttributeList(this);" styleId="admin_tabel_select" styleClass="configSelect">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listTables}">
                                 <html:option value="${cuItem}"/>
@@ -221,7 +221,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td>
                     <td colspan="3">
-                        <html:select property="admin_pk" onchange="createAdminQ();" styleId="admin_pk_select">
+                        <html:select property="admin_pk" onchange="createAdminQ();" styleId="admin_pk_select" styleClass="configSelect">
                             <html:option value=""/>
                             <c:choose>
                                 <c:when test="${fn:length(listAdminTableColumns)>1}">
@@ -251,7 +251,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tr>
                         <td><fmt:message key="configthema.${connectieType}.spatialtabel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialtabel.uitleg"/></div></td>
                         <td colspan="3">
-                            <html:select property="spatial_tabel" onchange="refreshSpatialAttributeList(this);" styleId="spatial_tabel_select">
+                            <html:select property="spatial_tabel" onchange="refreshSpatialAttributeList(this);" styleId="spatial_tabel_select" styleClass="configSelect">
                                 <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listTables}">
                                     <html:option value="${cuItem}"/>
@@ -262,7 +262,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tr>
                         <td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td>
                         <td colspan="3">
-                            <html:select property="spatial_pk" styleId="spatial_pk_select">
+                            <html:select property="spatial_pk" styleId="spatial_pk_select" styleClass="configSelect">
                                 <html:option value=""/>
                                 <c:choose>
                                     <c:when test="${fn:length(listSpatialTableColumns)>1}">
@@ -280,7 +280,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tr>
                         <td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td>
                         <td colspan="3">
-                            <html:select property="spatial_admin_ref" styleId="spatial_adminref_select">
+                            <html:select property="spatial_admin_ref" styleId="spatial_adminref_select" styleClass="configSelect">
                                 <html:option value=""/>
                                 <c:choose>
                                     <c:when test="${fn:length(listSpatialTableColumns)>1}">
@@ -298,7 +298,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tr>
                         <td><fmt:message key="configthema.viewgeomtype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.viewgeomtype.uitleg"/></div></td>
                         <td colspan="3">
-                            <html:select property="view_geomtype">
+                            <html:select property="view_geomtype" styleClass="configSelect">
                                 <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listValidGeoms}">
                                     <html:option value="${cuItem}"/>
@@ -313,7 +313,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <tr>
                             <td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslayers.uitleg"/></div></td>
                             <td colspan="3">
-                                <html:select property="wms_layers_real">
+                                <html:select property="wms_layers_real" styleClass="configSelect">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listLayers}">
                                         <html:option value="${cuItem}"/>
@@ -335,7 +335,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <c:if test="${form.map.admin_tabel ==null}">
                                     <c:set var="queryDisabled" value="false"/>
                                 </c:if>
-                                <html:select property="wms_querylayers_real" styleId="wms_querylayers_real" disabled="${queryDisabled}">
+                                <html:select property="wms_querylayers_real" styleId="wms_querylayers_real" disabled="${queryDisabled}" styleClass="configSelect">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listLayers}">
                                         <html:option value="${cuItem}"/>
@@ -353,7 +353,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <tr>
                             <td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslegendlayers.uitleg"/></div></td>
                             <td colspan="3">
-                                <html:select property="wms_legendlayer_real">
+                                <html:select property="wms_legendlayer_real" styleClass="configSelect">
                                     <html:option value=""/>
                                     <c:forEach var="cuItem" items="${listLegendLayers}">
                                         <html:option value="${cuItem}"/>

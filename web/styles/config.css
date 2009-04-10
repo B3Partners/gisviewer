@@ -141,3 +141,6 @@ display: none;
 }
 .tbodyshow {display: block; display: table-row-group;}
 .tbodyhide {display: none;}
+.configSelect{
+    width: 50%;
+}

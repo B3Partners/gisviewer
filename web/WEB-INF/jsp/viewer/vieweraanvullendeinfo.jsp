@@ -54,7 +54,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         }
 
     }else{
-        mapRequest=lastGetMapRequest;
+        mapRequest=window.parent.lastGetMapRequest;
     }
     mapRequest=removeParam(mapRequest,"bbox");
     mapRequest=removeParam(mapRequest,"width");

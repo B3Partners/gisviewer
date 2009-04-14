@@ -119,7 +119,7 @@ public class SpatialUtil {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String hquery = "FROM Themas ";
         if (locatie)
-            hquery += "AND locatie_thema = true ";
+            hquery += "WHERE locatie_thema = true ";
         hquery += "ORDER BY belangnr DESC";
         Query q = sess.createQuery(hquery);
         return q.list();

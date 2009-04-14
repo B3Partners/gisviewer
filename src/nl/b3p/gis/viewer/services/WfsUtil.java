@@ -96,7 +96,9 @@ public class WfsUtil {
         if (conn==null)
             return null;
         OGCRequest or = createOGCRequest(conn);
-        or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());                
+        or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,t.getAdmin_tabel());
+        //er wordt alleen nog maar 1.0.0 ondersteund door jump
+        or.addOrReplaceParameter(OGCRequest.VERSION,OGCConstants.WFS_VERSION_100);
         GetFeature gf = OgcWfsClient.getGetFeatureRequest(or);
         //beide nodig voor het maken van een bbox wfs query
         WFS_Capabilities cap= OgcWfsClient.getCapabilities(or);

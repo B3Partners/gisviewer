@@ -759,7 +759,7 @@ public class GetViewerDataAction extends BaseGisAction {
             distance = 10.0;
         }
         ArrayList regels = new ArrayList();
-        ArrayList features = WfsUtil.getWFSObjects(t, coords, distance,request);
+        ArrayList features = WfsUtil.getWFSObjects(t, coords, "EPSG:28992",distance,request);
         for (int i = 0; i < features.size(); i++) {
             Feature f = (Feature) features.get(i);
             regels.add(getRegel(f, t, thema_items));

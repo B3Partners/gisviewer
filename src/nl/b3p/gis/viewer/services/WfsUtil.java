@@ -71,25 +71,16 @@ public class WfsUtil {
     }
     
    static public ArrayList getFeatureElements(Connecties c,String adminTable) throws Exception{
-        ArrayList returnvalue=null;
         if (c!=null && c.getType().equalsIgnoreCase(Connecties.TYPE_WFS)){
             OGCRequest or = createOGCRequest(c);
             if (adminTable==null || adminTable.length()<1)
                 return null;
             or.addOrReplaceParameter(OGCRequest.WFS_PARAM_TYPENAME,adminTable);
             ArrayList nl= OgcWfsClient.getDescribeFeatureElements(OgcWfsClient.getDescribeFeatureType(or));
-            if (nl!=null){
-                for (int i=0; i < nl.size(); i++){
-                    if (returnvalue==null)
-                        returnvalue=new ArrayList();
-                    Element e=(Element)nl.get(i);
-                    returnvalue.add(e);
-                }
-            }
+            return nl;
         } else{
             return null;
         }
-        return returnvalue;
     }
     
     static public WFS_Capabilities getCapabilities(Connecties c) throws Exception{
@@ -100,7 +91,7 @@ public class WfsUtil {
             return null;
     }
     
-    public static ArrayList getWFSObjects(Themas t, double[] coords, double distance,HttpServletRequest request) throws Exception {
+    public static ArrayList getWFSObjects(Themas t, double[] coords, String srsName, double distance,HttpServletRequest request) throws Exception {
         Connecties conn =getWfsConnection(t,request);
         if (conn==null)
             return null;
@@ -130,7 +121,7 @@ public class WfsUtil {
         if (coords.length!=4) {
             throw new Exception("Polygons not supported! If polygon got 5 xy-coords a bbox will be created with the 1st and 3th coord");
         }
-        OgcWfsClient.addBboxFilter(gf,getGeometryAttributeName(t,request),coords, ft);
+        OgcWfsClient.addBboxFilter(gf,getGeometryAttributeName(t,request),coords,srsName, ft);
         return OgcWfsClient.getFeatureElements(gf,or);
     }
     
@@ -168,7 +159,8 @@ public class WfsUtil {
         ArrayList elements = getFeatureElements(conn,t.getAdmin_tabel());
         for (int i=0; i < elements.size(); i++){
             Element e = (Element)elements.get(i);
-            if (e.getAttribute("type")!=null && e.getAttribute("type").equalsIgnoreCase(OGCRequest.WFS_OBJECT_GEOMETRYTYPE)){
+            String type=e.getAttribute("type");
+            if (type!=null && type.toLowerCase().startsWith("gml:")){
                 return e.getAttribute("name");
             }
         }

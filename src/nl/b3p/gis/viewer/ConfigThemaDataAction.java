@@ -308,8 +308,12 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
                     ThemaData td = new ThemaData();
                     td.setBasisregel(false);
                     td.setDataType((DataTypen) sess.get(DataTypen.class, DataTypen.DATA));
-                    td.setKolomnaam(themadataobject);
-                    td.setLabel(themadataobject);
+                    String netteNaam=themadataobject;
+                    if (netteNaam.indexOf("{")>=0 && netteNaam.indexOf("}")>=0){
+                        netteNaam=netteNaam.substring(netteNaam.indexOf("}")+1);
+                    }
+                    td.setLabel(netteNaam);
+                    td.setKolomnaam(themadataobject);                    
                     td.setThema(t);
                     td.setWaardeType((WaardeTypen) sess.get(WaardeTypen.class, WaardeTypen.STRING));
                     sess.saveOrUpdate(td);

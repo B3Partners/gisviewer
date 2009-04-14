@@ -83,7 +83,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <property name="voorbeelden"/>
         <property name="kolombreedte" not-null="true"/>
         <many-to-one name="thema" lazy="false" />
-        <many-to-one name="moscow" lazy="false" />
         <many-to-one name="waardeType" lazy="false" />
         <many-to-one name="dataType" lazy="false" />
         <property name="commando"/>

@@ -342,12 +342,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         var tableData="";
         for (layer in obj){
             tableData+="<table class=\"aanvullende_info_table\" >";
-            tableData+="    <tr class=\"topRow\">";
-            tableData+="        <th colspan=\"2\" class=\"aanvullende_info_td\">";
-            tableData+=layer;
-            tableData+="        </th>";
-            tableData+="    </tr>";
             for (feature in obj[layer]){
+                tableData+="    <tr class=\"topRow\">";
+                tableData+="        <th colspan=\"2\" class=\"aanvullende_info_td\">&nbsp;";
+                tableData+=layer;
+                tableData+="        </th>";
+                tableData+="    </tr>";
                 var tellerAtt=0;
                 for (attribute in obj[layer][feature]){
                     if (tellerAtt%2==0){

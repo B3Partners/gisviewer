@@ -31,7 +31,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             _uacct = "UA-2873163-1";
             urchinTracker();
         </script>
-    -->
+   
     
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -42,4 +42,5 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         pageTracker._initData();
         pageTracker._trackPageview();
     </script>
+     -->
 </c:if>

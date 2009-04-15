@@ -251,11 +251,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
                 Themas t = new Themas();
                 t.setNaam(l.getTitle());
                 t.setId(new Integer(tid++));
-                //l.getLayers()
-                String legendUrl=user.getLegendGraphicUrl(l);
-                if(legendUrl!=null){
-                    t.setWms_legendlayer_real(legendUrl);
-                }else{
+                if(user.hasLegendGraphic(l)){
                     t.setWms_legendlayer_real(layer);
                 }
                 if ("1".equalsIgnoreCase(l.getQueryable())){

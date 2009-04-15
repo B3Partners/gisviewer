@@ -159,11 +159,13 @@ public class WfsUtil {
         if (conn==null)
             return null;
         ArrayList elements = getFeatureElements(conn,t.getAdmin_tabel());
-        for (int i=0; i < elements.size(); i++){
-            Element e = (Element)elements.get(i);
-            String type=e.getAttribute("type");
-            if (type!=null && type.toLowerCase().startsWith("gml:")){
-                return e.getAttribute("name");
+        if (elements!=null){
+            for (int i=0; i < elements.size(); i++){
+                Element e = (Element)elements.get(i);
+                String type=e.getAttribute("type");
+                if (type!=null && type.toLowerCase().startsWith("gml:")){
+                    return e.getAttribute("name");
+                }
             }
         }
         return null;

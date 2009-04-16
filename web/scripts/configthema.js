@@ -78,8 +78,8 @@ function handleFeatureList(list){
     dwr.util.removeAllOptions('spatial_adminref_select');
     dwr.util.addOptions("admin_tabel_select",[""]);
     dwr.util.addOptions("spatial_tabel_select",[""]);
-    dwr.util.addOptions("admin_tabel_select",list);
-    dwr.util.addOptions("spatial_tabel_select",list);
+    dwr.util.addOptions("admin_tabel_select",list,"0","1");
+    dwr.util.addOptions("spatial_tabel_select",list,"0","1");
 }
 function refreshAdminAttributeList(element){
     var connid=document.getElementById('connectie_select').value;
@@ -94,7 +94,7 @@ function refreshAdminAttributeList(element){
 function handleAdminAttributeList(list){
     dwr.util.removeAllOptions('admin_pk_select');
     dwr.util.addOptions("admin_pk_select",[""]);
-    dwr.util.addOptions("admin_pk_select",list);
+    dwr.util.addOptions("admin_pk_select",list,"0","1");
 }
 function refreshSpatialAttributeList(element){
     var connid=document.getElementById('connectie_select').value;
@@ -103,10 +103,10 @@ function refreshSpatialAttributeList(element){
 function handleSpatialAttributeList(list){
     dwr.util.removeAllOptions('spatial_pk_select');
     dwr.util.addOptions('spatial_pk_select',[""]);
-    dwr.util.addOptions('spatial_pk_select',list);
+    dwr.util.addOptions('spatial_pk_select',list,"0","1");
     dwr.util.removeAllOptions('spatial_adminref_select');
     dwr.util.addOptions('spatial_adminref_select',[""]);
-    dwr.util.addOptions('spatial_adminref_select',list);
+    dwr.util.addOptions('spatial_adminref_select',list,"0","1");
 }
 function refreshTheLists(){
     document.forms[0].refreshLists.value="do";

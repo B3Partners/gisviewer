@@ -792,7 +792,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         return null;
     }
 
-    public String removeNamespace(String rawName){
+    public static String removeNamespace(String rawName){
         if (rawName==null){
             return rawName;
         }

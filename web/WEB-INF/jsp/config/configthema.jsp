@@ -199,7 +199,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:select property="admin_tabel" onchange="refreshAdminAttributeList(this);" styleId="admin_tabel_select" styleClass="configSelect">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${listTables}">
-                                <html:option value="${cuItem}"/>
+                                <html:option value="${cuItem[0]}">${cuItem[1]}</html:option>
                             </c:forEach>
                         </html:select>&nbsp;
                     </td>
@@ -212,7 +212,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <c:choose>
                                 <c:when test="${fn:length(listAdminTableColumns)>1}">
                                     <c:forEach var="cuItem" items="${listAdminTableColumns}">
-                                        <html:option value="${cuItem}"/>
+                                        <html:option value="${cuItem[0]}">${cuItem[1]}</html:option>
                                     </c:forEach>
                                 </c:when>
                                 <c:otherwise>
@@ -240,7 +240,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <html:select property="spatial_tabel" onchange="refreshSpatialAttributeList(this);" styleId="spatial_tabel_select" styleClass="configSelect">
                                 <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listTables}">
-                                    <html:option value="${cuItem}"/>
+                                    <html:option value="${cuItem[0]}">${cuItem[1]}</html:option>
                                 </c:forEach>
                             </html:select>&nbsp;
                         </td>
@@ -253,7 +253,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <c:choose>
                                     <c:when test="${fn:length(listSpatialTableColumns)>1}">
                                         <c:forEach var="cuItem" items="${listSpatialTableColumns}">
-                                            <html:option value="${cuItem}"/>
+                                            <html:option value="${cuItem[0]}">${cuItem[1]}</html:option>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
@@ -271,7 +271,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <c:choose>
                                     <c:when test="${fn:length(listSpatialTableColumns)>1}">
                                         <c:forEach var="cuItem" items="${listSpatialTableColumns}">
-                                            <html:option value="${cuItem}"/>
+                                            <html:option value="${cuItem[0]}">${cuItem[1]}</html:option>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>

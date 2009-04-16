@@ -58,7 +58,11 @@ function hoverRowOut(obj) {
     obj.className = obj.className.replace(pattern, '');
 }
 function refreshFeatureList(element){
-    currentConnectionType=connectionTypes[element.value];
+    if (connectionTypes){
+        if (connectionTypes[element.value]){
+            currentConnectionType=connectionTypes[element.value];
+        }
+    }
     JConfigListsUtil.getPossibleFeaturesById(element.value,handleFeatureList);
 }
 function handleFeatureList(list){

@@ -22,7 +22,6 @@
  */
 package nl.b3p.gis.viewer;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -107,7 +106,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         }
         //maak lijsten die iets te maken hebben met de admin/spatial_data
         List tns = ConfigListsUtil.getPossibleFeatures(c);
-        if (t != null) {
+        /*if (t != null) {
             String sptn = t.getAdmin_tabel();
             if (sptn != null && !tns.contains(sptn)) {
                 tns.add(sptn);
@@ -116,7 +115,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
             if (atn != null && !tns.contains(atn)) {
                 tns.add(atn);
             }
-        }
+        }*/
         request.setAttribute("listTables", tns);
 
         String adminTable = null;

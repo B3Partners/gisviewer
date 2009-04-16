@@ -81,20 +81,43 @@ public class ConfigListsUtil {
      * Zowel jdbc en wfs
      */
     public static List getPossibleFeatures(Connecties c) throws Exception{
+        ArrayList returnValue=null;
         if (SpatialUtil.validJDBCConnection(c)) {
-            Connection conn=null;
-            List returnValue=null;
+            Connection conn=null;           
             try{
                 conn = c.getJdbcConnection();
-                returnValue=SpatialUtil.getTableNames(conn);
+                List features=SpatialUtil.getTableNames(conn);
+                if (features!=null)
+                    returnValue=new ArrayList();
+                for (int i=0; i < features.size(); i++){
+                    String[] s = new String[2];
+                    s[0]=(String)features.get(i);
+                    s[1]=BaseGisAction.removeNamespace((String)features.get(i));
+                    returnValue.add(s);
+                }
             }finally{
                 if (conn!=null)
                     conn.close();
             }
             return returnValue;
         }else if (WfsUtil.validWfsConnection(c)) {
-            WFS_Capabilities cap = WfsUtil.getCapabilities(c);
-            return WfsUtil.getFeatureNameList(cap);
+            WFS_Capabilities cap=null;
+            try{
+                cap = WfsUtil.getCapabilities(c);
+            }catch(Exception e){
+                log.error("fout bij ophalen capabilities",e);
+            }
+            List features= WfsUtil.getFeatureNameList(cap);
+            if (features!=null){
+                returnValue=new ArrayList();
+                for (int i=0; i < features.size(); i++){
+                    String[] s = new String[2];
+                    s[0]=(String)features.get(i);
+                    s[1]=BaseGisAction.removeNamespace((String)features.get(i));
+                    returnValue.add(s);
+                }
+            }
+            return returnValue;
         }else{
             return null;
         }
@@ -104,14 +127,22 @@ public class ConfigListsUtil {
      * Zowel jdbc en wfs
      */
     public static List getPossibleAttributes(Connecties c, String feature) throws Exception {
+        ArrayList returnValue=null;
         if (feature == null) {
             return null;
         }else if (SpatialUtil.validJDBCConnection(c)) {
-            Connection conn=null;
-            List returnValue=null;
+            Connection conn=null;            
             try{
                 conn = c.getJdbcConnection();
-                returnValue=SpatialUtil.getColumnNames(feature, conn);
+                List columns=SpatialUtil.getColumnNames(feature, conn);
+                if (columns!=null)
+                    returnValue=new ArrayList();
+                for (int i=0; i < columns.size(); i++){
+                    String[] s = new String[2];
+                    s[0]=(String)columns.get(i);
+                    s[1]=BaseGisAction.removeNamespace((String)columns.get(i));
+                    returnValue.add(s);
+                }
             }finally{
                 if (conn!=null)
                     conn.close();
@@ -122,12 +153,16 @@ public class ConfigListsUtil {
             if (elements == null) {
                 return null;
             }
-            ArrayList elementsNames = new ArrayList();
+            returnValue = new ArrayList();
             for (int i = 0; i < elements.size(); i++) {
                 Element e = (Element) elements.get(i);
-                elementsNames.add(e.getAttribute("name"));
+                String name=e.getAttribute("name");
+                String[] s=new String[2];
+                s[0]=name;
+                s[1]=BaseGisAction.removeNamespace(name);
+                returnValue.add(s);
             }
-            return elementsNames;
+            return returnValue;
         }else{
             return null;
         }

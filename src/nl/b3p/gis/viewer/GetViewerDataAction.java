@@ -776,10 +776,9 @@ public class GetViewerDataAction extends BaseGisAction {
             return null;
         }
         String adminPk = t.getAdmin_pk();
-        String id = request.getParameter(adminPk);
-        if (id == null && adminPk.split(":").length > 1) {
-            id = request.getParameter(adminPk.split(":")[1]);
-        }
+        adminPk=removeNamespace(adminPk);
+        String id = request.getParameter(adminPk);       
+        
         if (id == null) {
             return null;
         }

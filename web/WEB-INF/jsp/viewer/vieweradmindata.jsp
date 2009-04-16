@@ -299,41 +299,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </c:choose>
 <div id="getFeatureInfo">
 </div>
-<script type="text/javascript">    
-    /*function writeFeatureInfoData(obj){
-        var tableData=""
-        for (layer in obj){
-            tableData+="<div class=\"topRow\" style=\"width: 100%; clear: both; margin-bottom: 5px; border-bottom: 1px solid #EAEEF2; background-repeat: repeat-x;\" id=\""+getFeatureInfoPrefix+layer+"\">";
-            tableData+= layer;
-            tableData+= "<table>";
-            tableData+=     "<thead>";
-            tableData+=         "<tr class=\"topRow\" style=\"height: 20px;\">";            
-            for (attribute in obj[layer][0]){
-                tableData+=         "<th style=\"width: 50px;\" class=\"table-sortable:numeric\" id=\"volgnr_th\" >";
-                tableData+=         attribute;
-                tableData+=         "</th>";
-
-            }
-            tableData+=         "</tr>";
-            tableData+=     "</thead>";
-            tableData+=     "<tbody>";
-            for (feature in obj[layer]){
-                tableData+=     "<tr class=\"row\" onclick=\"colorRow(this);\">";
-                for (attribute in obj[layer][feature]){
-                    tableData+=     "<td>";
-                    tableData+=         obj[layer][feature][attribute];
-                    tableData+=     "</td>";
-                }
-                tableData+=     "</tr>";
-            }
-            tableData+=     "</tbody>";
-            tableData+= "</table>";
-            //tableData+= "</div>";
-            tableData+="</div>";
-        }
-        //alert(tableData);
-        document.write(tableData);
-    }*/
+<script type="text/javascript">
+    //writes the obj data from flamingo to a table
     function writeFeatureInfoData(obj){
         doClose=false;
         if (document.getElementById("content_style")!=undefined){

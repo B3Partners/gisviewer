@@ -785,13 +785,24 @@ public abstract class BaseGisAction extends BaseHibernateAction {
         if (f.getSchema().hasAttribute(attName)) {
             return attName;
         }
-        if (attName.split(":").length > 1) {
-            attName = attName.split(":")[1];
-        }
+        attName=removeNamespace(attName);
         if (f.getSchema().hasAttribute(attName)) {
             return attName;
         }
         return null;
+    }
+
+    public String removeNamespace(String rawName){
+        if (rawName==null){
+            return rawName;
+        }
+        String returnValue= new String(rawName);
+        if (returnValue.indexOf("{")>=0 && returnValue.indexOf("}") >=0 )
+            returnValue= returnValue.substring(returnValue.indexOf("}")+1);
+        if (returnValue.split(":").length > 1) {
+            returnValue = returnValue.split(":")[1];
+        }
+        return returnValue;
     }
 
     /**

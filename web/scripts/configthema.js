@@ -63,7 +63,11 @@ function refreshFeatureList(element){
             currentConnectionType=connectionTypes[element.value];
         }
     }
-    JConfigListsUtil.getPossibleFeaturesById(element.value,handleFeatureList);
+    var value=element.value;
+    if (value=="kb"){
+        value="";
+    }
+    JConfigListsUtil.getPossibleFeaturesById(value,handleFeatureList);
 }
 function handleFeatureList(list){
     if (currentConnectionType=="jdbc"){

@@ -174,7 +174,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </td>
                     <td colspan="3">
                         <html:select property="connectie" onchange="refreshFeatureList(this);" styleId='connectie_select' styleClass="configSelect">
-                            <html:option value="">Kaartenbalie Wfs</html:option>
+                            <html:option value="kb">Kaartenbalie Wfs</html:option>
                             <c:forEach var="cuItem" items="${listConnecties}">
                                 <html:option value="${cuItem.id}">
                                     <c:out value="${cuItem.naam}"/>
@@ -404,6 +404,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var pageConnectionType="${connectieType}";
     var currentConnectionType="${connectieType}";
     var connectionTypes=new Array();
+    connectionTypes["kb"]="wfs";
     <c:forEach var="cuItem" items="${listConnecties}">
         connectionTypes["${cuItem.id}"]="${cuItem.type}";
     </c:forEach>

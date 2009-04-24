@@ -56,7 +56,6 @@ public class CycloramaFetcherServlet extends HttpServlet {
     }
 
     private void initSecurity() {
-
         if (privateBase64Key == null) {
             StringBuffer privateBase64KeyDefault = new StringBuffer();
             privateBase64KeyDefault.append("MIIBPAIBAAJBAKjeVutOmj3gQAv5tRCEvCmDr8qCMCiavtJGFekZ6X9kO3i2Gsq+\n");
@@ -67,7 +66,6 @@ public class CycloramaFetcherServlet extends HttpServlet {
             privateBase64KeyDefault.append("S8w3cb947pTpMpMCIQC/EWoZ+Mz15o0aiw72lOa1PH7pTJqwXFA5pDRAasc40QIg\n");
             privateBase64KeyDefault.append("PbiSX7GYGWggb20XFCPHEf6MHwfH/EZYIXCYxz7K6DM=\n");
             privateBase64Key = privateBase64KeyDefault.toString();
-
         }
         // Determine cyclomedia private key for signing
         Security.addProvider(new BouncyCastleProvider());
@@ -87,7 +85,10 @@ public class CycloramaFetcherServlet extends HttpServlet {
             tmpval = defaultValue;
         }
         log.info("ConfigValue(" + parameter + ", " + tmpval + ")");
-        return tmpval.trim();
+        if (tmpval==null)
+            return null;
+        else
+            return tmpval.trim();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -159,26 +159,28 @@ public class ViewerAction extends BaseGisAction {
         Polygon fullExtentBbox = null;
 
         //stukje voor BBox toevoegen.
-        
-        Set bboxen = user.getSp().getTopLayer().getSrsbb();
-        Iterator it = bboxen.iterator();
-        while (it.hasNext()) {
-            SrsBoundingBox bbox = (SrsBoundingBox) it.next();
-            if (FormUtils.nullIfEmpty(bbox.getMaxx()) != null && FormUtils.nullIfEmpty(bbox.getMaxy()) != null && FormUtils.nullIfEmpty(bbox.getMinx()) != null && FormUtils.nullIfEmpty(bbox.getMiny()) != null) {
-                if (bbox.getSrs() != null && bbox.getSrs().equalsIgnoreCase("epsg:28992")) {
-                    request.setAttribute("fullExtent", bbox.getMinx() + "," + bbox.getMiny() + "," + bbox.getMaxx() + "," + bbox.getMaxy());
-                    try {
-                        Coordinate[] ca = getCoordinateArray(
-                                Double.parseDouble(bbox.getMinx()),
-                                Double.parseDouble(bbox.getMiny()),
-                                Double.parseDouble(bbox.getMaxx()),
-                                Double.parseDouble(bbox.getMaxy()));
-                        LinearRing lr = geometryFactory.createLinearRing(ca);
-                        fullExtentBbox = geometryFactory.createPolygon(lr, null);
-                    } catch (NumberFormatException nfe) {
-                        log.error("BBOX fullextent wrong format: " + request.getAttribute("fullExtent"));
+        Set bboxen=null;
+        if (user.getSp().getTopLayer()!=null){
+            bboxen = user.getSp().getTopLayer().getSrsbb();
+            Iterator it = bboxen.iterator();
+            while (it.hasNext()) {
+                SrsBoundingBox bbox = (SrsBoundingBox) it.next();
+                if (FormUtils.nullIfEmpty(bbox.getMaxx()) != null && FormUtils.nullIfEmpty(bbox.getMaxy()) != null && FormUtils.nullIfEmpty(bbox.getMinx()) != null && FormUtils.nullIfEmpty(bbox.getMiny()) != null) {
+                    if (bbox.getSrs() != null && bbox.getSrs().equalsIgnoreCase("epsg:28992")) {
+                        request.setAttribute("fullExtent", bbox.getMinx() + "," + bbox.getMiny() + "," + bbox.getMaxx() + "," + bbox.getMaxy());
+                        try {
+                            Coordinate[] ca = getCoordinateArray(
+                                    Double.parseDouble(bbox.getMinx()),
+                                    Double.parseDouble(bbox.getMiny()),
+                                    Double.parseDouble(bbox.getMaxx()),
+                                    Double.parseDouble(bbox.getMaxy()));
+                            LinearRing lr = geometryFactory.createLinearRing(ca);
+                            fullExtentBbox = geometryFactory.createPolygon(lr, null);
+                        } catch (NumberFormatException nfe) {
+                            log.error("BBOX fullextent wrong format: " + request.getAttribute("fullExtent"));
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }

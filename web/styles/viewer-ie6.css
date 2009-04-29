@@ -100,3 +100,8 @@ ul#nav li#tab3 { margin-right: 0px; }
 #content_style div.inleiding {
     padding-left: 30px;
 }
+
+/* Config tabs min height IE6 */
+#content_style .config_tab {
+    height: 150px;
+}

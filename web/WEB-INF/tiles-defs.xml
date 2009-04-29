@@ -7,6 +7,7 @@
 <tiles-definitions>
     <definition name="template" path="/WEB-INF/jsp/templates/template.jsp"/>
     <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp"/>
+    <definition name="templateConfig" path="/WEB-INF/jsp/templates/templateConfig.jsp"/>
     <!-- algemeen -->
     <definition name="algemeen" extends="template">
         <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
@@ -82,7 +83,7 @@
         <put name="content" value="/WEB-INF/jsp/viewer/createmappdf.jsp"/>
     </definition>
     <!-- config -->   
-    <definition name="config" extends="template">
+    <definition name="config" extends="templateConfig">
         <put name="menu" value="/WEB-INF/jsp/commons/configmenu.jsp"/>
     </definition>
     <definition name="configthema" extends="config">

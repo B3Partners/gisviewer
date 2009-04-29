@@ -39,7 +39,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var fullbbox='${fullExtent}';
     var bbox='${extent}';
     //Wel of niet cookies
-    var useCookies=true;
+    var useCookies=false;
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
      * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
      */

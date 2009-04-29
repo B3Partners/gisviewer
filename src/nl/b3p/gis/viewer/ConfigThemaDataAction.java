@@ -58,6 +58,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
     private static final Log log = LogFactory.getLog(ConfigThemaAction.class);
     protected static final String CHANGE = "change";
     protected static final String CREATEALLTHEMADATA = "createAllThemaData";
+    private int DEFAULTBASISCOLUMNS = 6;
 
     protected Map getActionMethodPropertiesMap() {
         Map map = super.getActionMethodPropertiesMap();
@@ -306,7 +307,10 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
                 }
                 if (!bestaatAl) {
                     ThemaData td = new ThemaData();
-                    td.setBasisregel(false);
+                    if (attributes.size() <= DEFAULTBASISCOLUMNS)
+                        td.setBasisregel(true);
+                    else
+                        td.setBasisregel(false);
                     td.setDataType((DataTypen) sess.get(DataTypen.class, DataTypen.DATA));
                     String netteNaam=themadataobject;
                     if (netteNaam.indexOf("{")>=0 && netteNaam.indexOf("}")>=0){
@@ -323,21 +327,23 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
             }
         }
         //haal opnieuw de ThemaData objecten op om te kijken of er een Extra data veld is of nog moet aangemaakt worden.
-        List bestaandeObjecten = SpatialUtil.getThemaData(t, false);
-        boolean extraBestaat = false;
-        boolean nietBasisregels = false;
-        for (int i = 0; i < bestaandeObjecten.size(); i++) {
-            ThemaData td = (ThemaData) bestaandeObjecten.get(i);
-            if (!td.isBasisregel()) {
-                nietBasisregels = true;
+        if (attributes.size() > DEFAULTBASISCOLUMNS){
+            List bestaandeObjecten = SpatialUtil.getThemaData(t, false);
+            boolean extraBestaat = false;
+            boolean nietBasisregels = false;
+            for (int i = 0; i < bestaandeObjecten.size(); i++) {
+                ThemaData td = (ThemaData) bestaandeObjecten.get(i);
+                if (!td.isBasisregel()) {
+                    nietBasisregels = true;
+                }
+                if (td.getCommando() != null && td.getCommando().toLowerCase().startsWith("viewerdata.do?aanvullendeinfo=t")) {
+                    extraBestaat = true;
+                }
             }
-            if (td.getCommando() != null && td.getCommando().toLowerCase().startsWith("viewerdata.do?aanvullendeinfo=t")) {
-                extraBestaat = true;
+            if (!extraBestaat && nietBasisregels) {
+                ThemaData td = createDefaultExtraThemaData(t);
+                sess.saveOrUpdate(td);
             }
-        }
-        if (!extraBestaat && nietBasisregels) {
-            ThemaData td = createDefaultExtraThemaData(t);
-            sess.saveOrUpdate(td);
         }
         return unspecified(mapping, dynaForm, request, response);
     }

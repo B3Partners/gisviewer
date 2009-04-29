@@ -255,7 +255,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 obj.className = obj.className + ' admin_data_selected_tr';
             }
             
-             <c:if test="${nuOfRegels == 1 && nuOfColumns == 1}">
+             <c:if test="${nuOfRegels == 1 && nuOfColumns == 1 and (not empty refreshURL)}">
                 // Doe een window.location als er maar 1 cel en 1 kolom is en dit is een URL
                 window.location = '${refreshURL}';
             </c:if>

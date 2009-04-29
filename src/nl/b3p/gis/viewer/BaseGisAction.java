@@ -438,10 +438,13 @@ public abstract class BaseGisAction extends BaseHibernateAction {
 
         String saf = t.getSpatial_admin_ref();
         if (saf == null || saf.length() == 0) {
-            return null;
+            saf = t.getAdmin_pk();
         }
         String sptn = t.getSpatial_tabel();
         if (sptn == null || sptn.length() == 0) {
+            sptn = t.getAdmin_tabel();
+        }
+        if (sptn==null || saf==null || sptn.length()==0 || saf.length()==0){
             return null;
         }
 

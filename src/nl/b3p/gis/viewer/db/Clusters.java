@@ -34,6 +34,7 @@ public class Clusters {
     private boolean hide_tree;
     private boolean background_cluster;
     private boolean extra_level;
+    private boolean callable;
     private Clusters parent;
     private Set children;
     private Set themas;
@@ -238,6 +239,20 @@ public class Clusters {
      */
     public void setExtra_level(boolean extra_level) {
         this.extra_level = extra_level;
+    }
+
+    /**
+     * @return the callable
+     */
+    public boolean isCallable() {
+        return callable;
+    }
+
+    /**
+     * @param callable the callable to set
+     */
+    public void setCallable(boolean callable) {
+        this.callable = callable;
     }
     // </editor-fold>
 }

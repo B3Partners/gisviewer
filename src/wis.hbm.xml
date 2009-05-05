@@ -36,6 +36,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <property name="hide_tree" not-null="true"/>
         <property name="background_cluster" not-null="true"/>
         <property name="extra_level" not-null="true"/>
+        <property name="callable" not-null="true"/>
         <many-to-one name="parent" column="parent"/>
         <set name="children" inverse="true" cascade="all-delete-orphan">
             <key column="parent"/>

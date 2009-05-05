@@ -139,6 +139,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         Cluster voor uitgebreide toegang
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <html:checkbox property="callable"/>
+                    </td>
+                    <td colspan="3">
+                        Cluster kan aan/uit worden gevinkt.
+                    </td>
+                </tr>
               <tr>
                     <td>
                         Ouder Cluster:

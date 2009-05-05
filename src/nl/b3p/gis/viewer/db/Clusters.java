@@ -29,6 +29,7 @@ public class Clusters {
     private int id;
     private String naam;
     private String omschrijving;
+    private String metadatalink;
     private boolean default_cluster;
     private boolean hide_legend;
     private boolean hide_tree;
@@ -253,6 +254,20 @@ public class Clusters {
      */
     public void setCallable(boolean callable) {
         this.callable = callable;
+    }
+
+    /**
+     * @return the metadatalink
+     */
+    public String getMetadatalink() {
+        return metadatalink;
+    }
+
+    /**
+     * @param metadatalink the metadatalink to set
+     */
+    public void setMetadatalink(String metadatalink) {
+        this.metadatalink = metadatalink;
     }
     // </editor-fold>
 }

@@ -101,6 +101,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
                 <tr>
                     <td>
+                        Metadata link:
+                    </td>
+                    <td colspan="3">
+                        <html:text property="metadatalink"  size="140"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <html:checkbox property="default_cluster"/>
                     </td>
                     <td colspan="3">

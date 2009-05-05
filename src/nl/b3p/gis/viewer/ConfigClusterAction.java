@@ -160,11 +160,13 @@ public class ConfigClusterAction extends ViewerCrudAction {
         dynaForm.set("clusterID", Integer.toString(c.getId()));
         dynaForm.set("naam", c.getNaam());
         dynaForm.set("omschrijving", c.getOmschrijving());
+        dynaForm.set("metadatalink",c.getMetadatalink());
         dynaForm.set("default_cluster", new Boolean(c.isDefault_cluster()));
         dynaForm.set("hide_legend", new Boolean(c.isHide_legend()));
         dynaForm.set("hide_tree", new Boolean(c.isHide_tree()));
         dynaForm.set("background_cluster", new Boolean(c.isBackground_cluster()));
         dynaForm.set("extra_level", new Boolean(c.isExtra_level()));
+        dynaForm.set("callable", new Boolean(c.isCallable()));
         String val = "";
         if (c.getParent() != null) {
             val = Integer.toString(c.getParent().getId());
@@ -176,6 +178,7 @@ public class ConfigClusterAction extends ViewerCrudAction {
 
         c.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
         c.setOmschrijving(FormUtils.nullIfEmpty(dynaForm.getString("omschrijving")));
+        c.setMetadatalink(FormUtils.nullIfEmpty(dynaForm.getString("metadatalink")));
         Boolean b = (Boolean) dynaForm.get("default_cluster");
         c.setDefault_cluster(b == null ? false : b.booleanValue());
         b = (Boolean) dynaForm.get("hide_legend");
@@ -186,6 +189,8 @@ public class ConfigClusterAction extends ViewerCrudAction {
         c.setBackground_cluster(b == null ? false : b.booleanValue());
         b = (Boolean) dynaForm.get("extra_level");
         c.setExtra_level(b == null ? false : b.booleanValue());
+        b = (Boolean) dynaForm.get("callable");
+        c.setCallable(b == null ? false : b.booleanValue());
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String parentID = FormUtils.nullIfEmpty(dynaForm.getString("parentID"));

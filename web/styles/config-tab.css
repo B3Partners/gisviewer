@@ -21,6 +21,7 @@
     padding: 10px;
     color: #1C6CA7;
     background-color: White;
+    cursor: pointer;
 }
 
 #content_style .active_tab {

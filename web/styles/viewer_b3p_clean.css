@@ -199,7 +199,7 @@ a.menulink:hover, a.activemenulink:hover {
     padding: 3px;
 }
 
-#objectvakViewer, #analysevakViewer {
+#objectvakViewer, #analysevakViewer, #beschrijvingVakViewer {
     width: 291px;
 }
 
@@ -481,7 +481,7 @@ html, body {
     height: 100%;
 }
 
-#objectframeViewer, #analyseframeViewer {
+#objectframeViewer, #analyseframeViewer, #beschrijvingVakViewer {
     margin: 0px;
     padding: 0px;
     height: 100%;

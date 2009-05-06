@@ -328,8 +328,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                             <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe">
                                                 <iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
                                             </div>
-                                            <div id="beschrijvingvak" style="display: none;" class="tabvak">
-                                                Hier volgt een beschrijving van het thema.
+                                            <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe">
+                                                <iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe>
                                             </div>
                                         <script type="text/javascript">
                                             if(navigator.userAgent.indexOf("Firefox")!= -1) {

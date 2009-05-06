@@ -190,6 +190,9 @@ function radioClick(obj) {
         setActiveThema(obj.theItem.id, obj.theItem.title, true);
         activateCheckbox(obj.theItem.id);
         deActivateCheckbox(oldActiveThemaId);
+
+        if (obj.theItem.metadatalink && obj.theItem.metadatalink.length > 1) {
+            if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=obj.theItem.metadatalink;
     }
 }
 
@@ -225,6 +228,8 @@ function createLabel(container, item) {
                     }
                 }
                 radioControleString += ' checked="checked"';
+                if (item.metadatalink && item.metadatalink.length > 1) {
+                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
                 prevRadioButton = 'radio' + item.id;
                 if (item.analyse=="active") {
                     analyseRadioChecked = true;
@@ -257,6 +262,9 @@ function createLabel(container, item) {
                 }
                 el.checked = true;
                 prevRadioButton = 'radio' + item.id;
+                if (item.metadatalink && item.metadatalink.length > 1) {
+                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+                }
                 if (item.analyse=="active") {
                     analyseRadioChecked = true;
                 }

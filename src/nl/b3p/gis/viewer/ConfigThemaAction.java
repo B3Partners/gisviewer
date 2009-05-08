@@ -299,9 +299,14 @@ public class ConfigThemaAction extends ViewerCrudAction {
         t.setNaam(FormUtils.nullIfEmpty(dynaForm.getString("naam")));
         t.setMetadata_link(FormUtils.nullIfEmpty(dynaForm.getString("metadatalink")));
         if (FormUtils.nullIfEmpty(dynaForm.getString("connectie")) != null) {
-            Integer conId = Integer.parseInt(dynaForm.getString("connectie"));
-            Connecties c = (Connecties) sess.get(Connecties.class, conId);
-            t.setConnectie(c);
+            try{
+                Integer conId = Integer.parseInt(dynaForm.getString("connectie"));
+                Connecties c = (Connecties) sess.get(Connecties.class, conId);
+                t.setConnectie(c);
+            }catch(NumberFormatException nfe){
+                //no connection.
+            }
+            
         }
         if (dynaForm.getString("belangnr") != null && dynaForm.getString("belangnr").length() > 0) {
             t.setBelangnr(Integer.parseInt(dynaForm.getString("belangnr")));

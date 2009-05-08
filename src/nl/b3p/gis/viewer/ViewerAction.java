@@ -457,5 +457,10 @@ public class ViewerAction extends BaseGisAction {
         } else {
             jsonCluster.put("extra_level", false);
         }
+        if (cluster.isCallable()) {
+            jsonCluster.put("callable", true);
+        } else {
+            jsonCluster.put("callable", false);
+        }
     }
 }

@@ -193,6 +193,7 @@ function radioClick(obj) {
 
         if (obj.theItem.metadatalink && obj.theItem.metadatalink.length > 1) {
             if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=obj.theItem.metadatalink;
+        }
     }
 }
 
@@ -207,12 +208,61 @@ function isActiveItem(item) {
     }
     return (activeAnalyseThemaId == item.id);
 }
-
+function filterInvisibleItems(cluster){
+    var hasClusters=false;
+    if(cluster.children) {
+        for(var i = 0; i < cluster.children.length; i++) {
+            var item=cluster.children[i];
+            if (item.cluster){
+                filterInvisibleItems(item);
+                if (item.hide_tree && !item.callable){
+                    hasCluster=true;
+                }
+            }
+        }
+    }        
+    if (cluster.hide_tree && !hasClusters){
+        cluster.children=null;
+    }
+}
+function createCheckboxCluster(item){
+    var checkbox;
+    /*if (navigator.appName=="Microsoft Internet Explorer") {
+        var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
+        if(item.visible)
+            checkboxControleString += ' checked="checked"';
+        checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this)"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+    }else{*/
+    checkbox = document.createElement('input');
+    checkbox.id = item.id;
+    checkbox.type = 'checkbox';
+    checkbox.value = item.id;
+    checkbox.onclick = function(){
+        clusterCheckboxClick(this, false);
+    }
+    if(item.visible)
+        checkbox.checked = true;
+    //}
+    return checkbox;
+}
+function clusterCheckboxClick(element){
+    alert(element);
+}
 var prevRadioButton = null;
 function createLabel(container, item) {
     if(item.cluster) {
-        container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
-    } else {
+        //if callable
+        if (item.callable){
+            var checkbox= createCheckboxCluster(item);
+            container.appendChild(checkbox);
+        }
+        if (!item.hide_tree || item.callable){
+            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
+        }
+        
+    } else if (!item.hide_tree) {
         var analyseRadioChecked = false;
 
         var layerPos = getLayerPosition(item);
@@ -227,9 +277,10 @@ function createLabel(container, item) {
                         rc.checked = false;
                     }
                 }
-                radioControleString += ' checked="checked"';
-                if (item.metadatalink && item.metadatalink.length > 1) {
-                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+            }
+            radioControleString += ' checked="checked"';
+            if (item.metadatalink && item.metadatalink.length > 1) {
+                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
                 prevRadioButton = 'radio' + item.id;
                 if (item.analyse=="active") {
                     analyseRadioChecked = true;
@@ -252,7 +303,9 @@ function createLabel(container, item) {
             el.name = 'selkaartlaag';
             el.value = item.id;
             el.id = 'radio' + item.id;
-            el.onclick = function(){radioClick(this);  }
+            el.onclick = function(){
+                radioClick(this);
+            }
             if (isActiveItem(item)) {
                 if(item.analyse=="active" && prevRadioButton != null){
                     var rc = document.getElementById(prevRadioButton);
@@ -297,7 +350,7 @@ function createLabel(container, item) {
         if (item.metadatalink && item.metadatalink.length > 1)
             lnk.onclick = function(){
                 popUp(item.metadatalink, "metadata")
-                };
+            };
 
 
         if(item.wmslayers){
@@ -308,6 +361,7 @@ function createLabel(container, item) {
         }
         container.appendChild(document.createTextNode('  '));
         container.appendChild(lnk);
+        
     }
 }
 
@@ -505,7 +559,7 @@ function refreshLayer(){
         newLayer+="\" color_layers=\""+layersToAdd+
         "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
         /** add the highlight layer properties.
-         */
+                 */
         var layersArray= layersToAdd.split(",");
         for (var i=0; i < layersArray.length; i++){
             if (layersArray[i].length> 0){
@@ -600,7 +654,7 @@ function deleteFromArray(obj) {
 }
 
 /*Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
- **/
+         **/
 function getCoords() {
     if (zoekThemaIds.length <= 0){
         return;
@@ -867,7 +921,7 @@ function updateGetFeatureInfo(){
     }
 }
 function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLayers,totalLayers){
-    featureInfoData=data;   
+    featureInfoData=data;
     teller=0;
     updateGetFeatureInfo();
 }
@@ -965,8 +1019,8 @@ if(activeAnalyseThemaTitle != '') {
 }
 
 /*functie controleerd of het component is geladen. Zo niet dan wordt het oninit event afgevangen en daarin
- *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de functie wel worden aangeroepen.
- **/
+         *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de functie wel worden aangeroepen.
+         **/
 function callFlamingoComponent(id,func,value){
     if (typeof flamingo.callMethod == 'function' && flamingo.callMethod('flamingo','exists',id)==true){
         eval("setTimeout(\"flamingo.callMethod('"+id+"','"+func+"',"+value+")\",10);");
@@ -1058,8 +1112,8 @@ function getMovie(movieName) {
 }
 
 /**
- *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
- **/
+         *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
+         **/
 function searchThemaValue(themaList,themaId,val){
     for (var i in themaList){
         //alert(" key: "+i + " value: "+themaList[i]);
@@ -1103,7 +1157,7 @@ function exportMap(){
 }
 
 /*Instellingen voor barneveld
- **/
+         **/
 function barneveldSettings() {
     fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));

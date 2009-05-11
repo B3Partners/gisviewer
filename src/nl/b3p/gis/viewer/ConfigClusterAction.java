@@ -157,7 +157,7 @@ public class ConfigClusterAction extends ViewerCrudAction {
         if (c == null) {
             return;
         }
-        dynaForm.set("clusterID", Integer.toString(c.getId()));
+        dynaForm.set("clusterID", Integer.toString(c.getId().intValue()));
         dynaForm.set("naam", c.getNaam());
         dynaForm.set("omschrijving", c.getOmschrijving());
         dynaForm.set("metadatalink",c.getMetadatalink());
@@ -169,7 +169,7 @@ public class ConfigClusterAction extends ViewerCrudAction {
         dynaForm.set("callable", new Boolean(c.isCallable()));
         String val = "";
         if (c.getParent() != null) {
-            val = Integer.toString(c.getParent().getId());
+            val = Integer.toString(c.getParent().getId().intValue());
         }
         dynaForm.set("parentID", val);
     }

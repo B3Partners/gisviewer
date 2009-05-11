@@ -259,7 +259,7 @@ public class ConfigThemaAction extends ViewerCrudAction {
         dynaForm.set("belangnr", FormUtils.IntToString(t.getBelangnr()));
         val = "";
         if (t.getCluster() != null) {
-            val = Integer.toString(t.getCluster().getId());
+            val = Integer.toString(t.getCluster().getId().intValue());
         }
         dynaForm.set("clusterID", val);
         dynaForm.set("opmerkingen", t.getOpmerkingen());

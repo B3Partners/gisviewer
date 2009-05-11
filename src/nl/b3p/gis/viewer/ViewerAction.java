@@ -150,9 +150,25 @@ public class ViewerAction extends BaseGisAction {
         if (actieveThemas!=null)
             lastActiefThemaId=""+actieveThemas.get(actieveThemas.size()-1);
         Themas actiefThema = SpatialUtil.getThema(lastActiefThemaId);
-        
+
+        List actieveClusters=null;
+        if (FormUtils.nullIfEmpty(request.getParameter("clusterId"))!=null){
+            actieveClusters=new ArrayList();
+            String[] ids=request.getParameter("clusterId").split(",");
+            for (int i =0; i < ids.length; i++){
+                try{
+                    int id= Integer.parseInt(ids[i]);
+                    actieveClusters.add(id);
+                }catch (NumberFormatException nfe){
+                    log.error("ClusterId geen integer. ",nfe);
+                }
+            }
+            if (actieveClusters.size()==0){
+                actieveClusters=null;
+            }
+        }
         GisPrincipal user = GisPrincipal.getGisPrincipal(request);
-        request.setAttribute("tree", createJasonObject(rootClusterMap, actieveThemas, user));
+        request.setAttribute("tree", createJasonObject(rootClusterMap, actieveThemas,actieveClusters, user));
 
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 28992);
         Polygon extentBbox = null;
@@ -309,7 +325,7 @@ public class ViewerAction extends BaseGisAction {
         return children;
     }
 
-    protected JSONObject createJasonObject(Map rootClusterMap, List actieveThemas,GisPrincipal user) throws JSONException {
+    protected JSONObject createJasonObject(Map rootClusterMap, List actieveThemas,List actieveClusters,GisPrincipal user) throws JSONException {
         if (rootClusterMap == null || rootClusterMap.isEmpty()) {
             return null;
         }
@@ -318,12 +334,12 @@ public class ViewerAction extends BaseGisAction {
             return null;
         }
         JSONObject root = new JSONObject().put("id", "root").put("type", "root").put("title", "root");
-        root.put("children", getSubClusters(clusterMaps, null, actieveThemas,user));
+        root.put("children", getSubClusters(clusterMaps, null, actieveThemas,actieveClusters,user));
 
         return root;
     }
 
-    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, List actieveThemas,GisPrincipal user) throws JSONException {
+    private JSONArray getSubClusters(List subclusterMaps, JSONArray clusterArray, List actieveThemas,List actieveClusters,GisPrincipal user) throws JSONException {
         if (subclusterMaps == null) {
             return clusterArray;
         }
@@ -333,16 +349,22 @@ public class ViewerAction extends BaseGisAction {
 
             Clusters cluster = (Clusters) clMap.get("cluster");
             JSONObject jsonCluster = new JSONObject();
-            jsonCluster.put("id", "c" + cluster.getId());
+            if (cluster.getId()!=null){
+                jsonCluster.put("id", "c" + cluster.getId().intValue());
+            }
             jsonCluster.put("type", "child");
             jsonCluster.put("title", cluster.getNaam());
             jsonCluster.put("cluster", true);
             setExtraClusterProperties(jsonCluster,cluster);
-
+            if (actieveClusters!=null && cluster.getId()!=null && cluster.isCallable() && actieveClusters.contains(cluster.getId())){
+                jsonCluster.put("visible",true);
+            }else{
+                jsonCluster.put("visible",false);
+            }
             List childrenList = (List) clMap.get("children");
             JSONArray childrenArray = getChildren(childrenList, actieveThemas,user);
             List subsubclusterMaps = (List) clMap.get("subclusters");
-            childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actieveThemas,user);
+            childrenArray = getSubClusters(subsubclusterMaps, childrenArray, actieveThemas,actieveClusters,user);
             jsonCluster.put("children", childrenArray);
 
             if (clusterArray == null) {

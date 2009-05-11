@@ -32,9 +32,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
     var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
     var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;    
-       
+
     var kburl="${kburl}";
     var themaTree=${tree};
+    var visibleTree=${tree};
+    
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
     var bbox='${extent}';
@@ -390,10 +392,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             resizeTabVak();
         }
     }
-   
+    filterInvisibleItems(visibleTree);
+    
+
    treeview_create({
     "id": "layermaindiv",
-    "root": ${tree},
+    "root": visibleTree,
     "rootChildrenAsRoots": true,
     "itemLabelCreatorFunction": createLabel,
     "toggleImages": {
@@ -404,7 +408,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     "saveExpandedState": true,
     "saveScrollState": true,
     "expandAll": false
-    });    
+    });
+   
     
 </script>
 

@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class Clusters {
 
-    private int id;
+    private Integer id;
     private String naam;
     private String omschrijving;
     private String metadatalink;
@@ -50,7 +50,7 @@ public class Clusters {
      * @return int ID van de clusters
      */
     // <editor-fold defaultstate="" desc="public int getId()">
-    public int getId() {
+    public Integer getId() {
         return id;
     }
     // </editor-fold>
@@ -60,7 +60,7 @@ public class Clusters {
      * @param id int id
      */
     // <editor-fold defaultstate="" desc="public void setId(int id)">
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     // </editor-fold>

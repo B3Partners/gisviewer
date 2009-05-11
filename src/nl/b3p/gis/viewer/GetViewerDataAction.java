@@ -730,7 +730,7 @@ public class GetViewerDataAction extends BaseGisAction {
             return null;
         }
         if (thema_items == null || thema_items.isEmpty()) {
-            return null;
+            throw new Exception("Er is geen themadata geconfigureerd!");
         }
         String[] coordString = null;
         double[] coords = null;

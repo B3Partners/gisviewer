@@ -53,8 +53,7 @@ function handleGetAdminData(coords) {
     if(checkedThemaIds == null || checkedThemaIds == '') {
         //alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
         return;
-    }
-
+    }    
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = '';
@@ -447,8 +446,7 @@ function checkboxClick(obj, dontRefresh) {
         //add querylayers
         
     } else {
-        if (useCookies)
-            deleteFromArray(obj);
+        deleteFromArray(obj);
         removeItemAsLayer(obj.theItem);
     }
     if (!dontRefresh){        
@@ -469,6 +467,7 @@ function clusterCheckboxClick(element,dontRefresh){
             if (!child.cluster){
                 addItemAsLayer(child);
             }
+            document.getElementById(child.id).checked=true;
         }
     }else{
         for (var c=0; c < cluster.children.length;c++){
@@ -476,6 +475,7 @@ function clusterCheckboxClick(element,dontRefresh){
             if (!child.cluster){
                 removeItemAsLayer(child);
             }
+            document.getElementById(child.id).checked=false;
         }
     }
     if (!dontRefresh){
@@ -485,16 +485,15 @@ function clusterCheckboxClick(element,dontRefresh){
 //adds a item as a layer (Wmslayer, legend and querylayer) and a cookie if needed.
 function addItemAsLayer(theItem){
     //part for cookie
-    if(useCookies){
-        if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
-        if(checkboxArray.length > 0) {
-            var arrayString = getArrayAsString();
-            eraseCookie('checkedLayers');
-            createCookie('checkedLayers', arrayString, '7');
-        } else {
-            eraseCookie('checkedLayers');
-        }
+    if(!isInCheckboxArray(theItem.id)) checkboxArray[checkboxArray.length] = theItem.id;
+    if(checkboxArray.length > 0) {
+        var arrayString = getArrayAsString();
+        eraseCookie('checkedLayers');
+        createCookie('checkedLayers', arrayString, '7');
+    } else {
+        eraseCookie('checkedLayers');
     }
+    
     //add legend part   
     addLayerToVolgorde(theItem);
     //add wms part

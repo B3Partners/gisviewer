@@ -70,11 +70,16 @@ function refreshFeatureList(element){
     JConfigListsUtil.getPossibleFeaturesById(value,handleFeatureList);
 }
 function handleFeatureList(list){
+    /*
+    //Er voor zorgen dat het tabblad geavanceerd wordt gehide en in gegevens bron adminquery onzichtbaar wordt
+    //als thema wfs is (!="jdbc" )
     if (currentConnectionType=="jdbc"){
         document.getElementById('jdbcRows').className="tbodyshow";
     }else{
         document.getElementById('jdbcRows').className="tbodyhide";
     }
+
+     */
     dwr.util.removeAllOptions('admin_tabel_select');
     dwr.util.removeAllOptions('spatial_tabel_select');
     dwr.util.removeAllOptions('admin_pk_select');

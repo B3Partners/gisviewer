@@ -248,7 +248,8 @@ function createCheckboxCluster(item){
     return checkbox;
 }
 function clusterCheckboxClick(element){
-    alert(element);
+    var item=element.theItem;
+
 }
 var prevRadioButton = null;
 function createLabel(container, item) {
@@ -256,12 +257,13 @@ function createLabel(container, item) {
         //if callable
         if (item.callable){
             var checkbox= createCheckboxCluster(item);
+            //add the real(not filtered) item to the checkbox.
+            checkbox.theItem=treeview_findItem(themaTree,item.id);
             container.appendChild(checkbox);
         }
         if (!item.hide_tree || item.callable){
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
-        }
-        
+        }        
     } else if (!item.hide_tree) {
         var analyseRadioChecked = false;
 
@@ -443,26 +445,27 @@ function isInCheckboxArray(id) {
 function checkboxClick(obj, dontRefresh) {
     if (obj==undefined || obj==null)
         return;
-    if(obj.checked) {
+    if (layerUrl==null){
+        layerUrl=""+kburl;
+    }
+    if(obj.checked) {        
+        //add legend
+        //add wms layer part
+        addItemAsLayer(obj.theItem);        
+        //add querylayers
+        
+    } else {
+        removeItemAsLayer(obj.theItem);
+    }
+    if (!dontRefresh){
+        deleteFromArray(obj);
+        refreshLayerWithDelay();
+    }
+}
+function addItemAsLayer(theItem){
+    //part for cookie
+    if(useCookies){
         if(!isInCheckboxArray(obj.value)) checkboxArray[checkboxArray.length] = obj.value;
-        var legendURL="";
-        if (obj.theItem.legendurl!=undefined){
-            legendURL=obj.theItem.legendurl;
-        }else{
-            legendURL=undefined;
-        }
-        /*if (obj.theItem.wmslegendlayer!=undefined){
-            legendURL+=kburl;
-            if(legendURL.indexOf('?')> 0)
-                legendURL+='&';
-            else
-                legendURL+='?';
-            legendURL +='SERVICE=WMS&STYLE=&REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&LAYER=' + obj.theItem.wmslegendlayer;
-        }else{
-            legendURL=undefined;
-        }*/
-        addLayerToVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers, legendURL, obj.theItem.hide_legend);
-
         if(checkboxArray.length > 0) {
             var arrayString = getArrayAsString();
             eraseCookie('checkedLayers');
@@ -470,45 +473,44 @@ function checkboxClick(obj, dontRefresh) {
         } else {
             eraseCookie('checkedLayers');
         }
-        if (layerUrl==null){
-            layerUrl=""+kburl;
-        }
-        if (obj.theItem.wmslayers){
-            var organizationCodeKey = obj.theItem.organizationcodekey;
-            if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
-                if(layerUrl.indexOf(organizationCodeKey)<=0){
-                    if(layerUrl.indexOf('?')> 0)
-                        layerUrl+='&';
-                    else
-                        layerUrl+='?';
-                    layerUrl = layerUrl + organizationCodeKey + "="+organizationcode;
-                }
-            }
-            if(obj.theItem.background){
-                allActiveBackgroundLayers+=","+obj.theItem.wmslayers;
-            }
-            else{
-                allActiveLayers+= ","+obj.theItem.wmslayers;
-            }
-            if (!dontRefresh){
-                refreshLayerWithDelay();
+    }
+    //add legend part   
+    addLayerToVolgorde(theItem);
+    //add wms part
+    if (theItem.wmslayers){
+        var organizationCodeKey = theItem.organizationcodekey;
+        if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
+            if(layerUrl.indexOf(organizationCodeKey)<=0){
+                if(layerUrl.indexOf('?')> 0)
+                    layerUrl+='&';
+                else
+                    layerUrl+='?';
+                layerUrl = layerUrl + organizationCodeKey + "="+organizationcode;
             }
         }
-        if (obj.theItem.wmsquerylayers){
-            allQueryLayers+=","+obj.theItem.wmsquerylayers
+        if(theItem.background){
+            allActiveBackgroundLayers+=","+theItem.wmslayers;
         }
-    } else {
-        deleteFromArray(obj);
-        removeLayerFromVolgorde(obj.theItem.title, obj.value + '##' + obj.theItem.wmslayers);
-        if (obj.theItem.wmslayers){
-            allActiveLayers=allActiveLayers.replace(","+obj.theItem.wmslayers,"");
-            allActiveBackgroundLayers=allActiveBackgroundLayers.replace(","+obj.theItem.wmslayers,"");
-            allQueryLayers=allQueryLayers.replace(","+obj.theItem.wmsquerylayers,"");
-            refreshLayerWithDelay();
+        else{
+            allActiveLayers+= ","+theItem.wmslayers;
         }
+    }
+    //add query part
+    if (theItem.wmsquerylayers){
+        allQueryLayers+=","+theItem.wmsquerylayers
     }
 }
 
+function removeItemAsLayer(theItem){    
+        removeLayerFromVolgorde(theItem.title, theItem.id + '##' + theItem.wmslayers);
+        if (theItem.wmslayers){
+            allActiveLayers=allActiveLayers.replace(","+theItem.wmslayers,"");
+            allActiveBackgroundLayers=allActiveBackgroundLayers.replace(","+theItem.wmslayers,"");                     
+        }
+        if (theItem.wmsquerylayers){
+            allQueryLayers=allQueryLayers.replace(","+theItem.wmsquerylayers,"");
+        }
+}
 
 function refreshLayerWithDelay(){
     timeouts++;
@@ -723,28 +725,55 @@ function getCoordsCallbackFunction(values){
     searchResults.innerHTML=sResult;
 }
 
-function addLayerToVolgorde(name, id, legendURL,hide_legend) {
+function addLayerToVolgorde(theItem) {    
+    var id=theItem.id + '##' + theItem.wmslayers;
+    
+    var legendURL="";
+    if (theItem.legendurl!=undefined){
+        legendURL=theItem.legendurl;
+    }else{
+        legendURL=undefined;
+    }
     var myImage = new Image();
-    myImage.name = name;
+    myImage.name = theItem.title;
     myImage.id=id;
     myImage.onerror=imageOnerror;
     myImage.onload=imageOnload;
 
     var spanEl = document.createElement("span");
-    spanEl.innerHTML = ' ' + name + '<br />';
+    spanEl.innerHTML = ' ' + theItem.title + '<br />';
     spanEl.style.color = 'Black';
     spanEl.style.fontWeight = 'bold';
 
     var div = document.createElement("div");
     div.name=id;
     div.id=id;
-    div.title =name;
+    div.title =theItem.title;
     div.className="orderLayerClass";
     div.appendChild(spanEl);
-    if(!orderLayerBox.hasChildNodes() || hide_legend) {
+    div.theItem=theItem;
+    if(!orderLayerBox.hasChildNodes() || theItem.hide_legend) {
         orderLayerBox.appendChild(div);
     } else {
-        orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
+        //place layer before the background layers.
+        if (theItem.background){
+            var beforeChild=null;
+            for(var i=0; i < orderLayerBox.childNodes.length && beforeChild==null; i++){
+                var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
+                if (orderLayerItem){
+                    if (orderLayerItem.background){
+                        beforeChild=orderLayerBox.childNodes.item(i);
+                    }
+                }
+            }
+            if (beforeChild==null){
+                orderLayerBox.appendChild(div);
+            }else{
+                orderLayerBox.insertBefore(div,beforeChild);
+            }
+        }else{
+            orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
+        }
     }
     if (legendURL==undefined){
         myImage.onerror();
@@ -754,7 +783,7 @@ function addLayerToVolgorde(name, id, legendURL,hide_legend) {
     div.onclick=function(){
         selectLayer(this);
     };
-    if (hide_legend && demogebruiker){
+    if (theItem.hide_legend && demogebruiker){
         div.style.display="none";
     }
 }

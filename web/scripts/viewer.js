@@ -441,7 +441,7 @@ function isInCheckboxArray(id) {
     }
     return false;
 }
-
+//called when a checkbox is clicked.
 function checkboxClick(obj, dontRefresh) {
     if (obj==undefined || obj==null)
         return;
@@ -458,10 +458,12 @@ function checkboxClick(obj, dontRefresh) {
         removeItemAsLayer(obj.theItem);
     }
     if (!dontRefresh){
-        deleteFromArray(obj);
+        if (useCookies)
+            deleteFromArray(obj);
         refreshLayerWithDelay();
     }
 }
+//adds a item as a layer (Wmslayer, legend and querylayer) and a cookie if needed.
 function addItemAsLayer(theItem){
     //part for cookie
     if(useCookies){
@@ -724,7 +726,7 @@ function getCoordsCallbackFunction(values){
     }
     searchResults.innerHTML=sResult;
 }
-
+//adds a layer to the legenda
 function addLayerToVolgorde(theItem) {    
     var id=theItem.id + '##' + theItem.wmslayers;
     

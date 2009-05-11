@@ -247,10 +247,7 @@ function createCheckboxCluster(item){
     //}
     return checkbox;
 }
-function clusterCheckboxClick(element){
-    var item=element.theItem;
 
-}
 var prevRadioButton = null;
 function createLabel(container, item) {
     if(item.cluster) {
@@ -442,12 +439,7 @@ function isInCheckboxArray(id) {
     return false;
 }
 //called when a checkbox is clicked.
-function checkboxClick(obj, dontRefresh) {
-    if (obj==undefined || obj==null)
-        return;
-    if (layerUrl==null){
-        layerUrl=""+kburl;
-    }
+function checkboxClick(obj, dontRefresh) {    
     if(obj.checked) {        
         //add legend
         //add wms layer part
@@ -455,11 +447,38 @@ function checkboxClick(obj, dontRefresh) {
         //add querylayers
         
     } else {
-        removeItemAsLayer(obj.theItem);
-    }
-    if (!dontRefresh){
         if (useCookies)
             deleteFromArray(obj);
+        removeItemAsLayer(obj.theItem);
+    }
+    if (!dontRefresh){        
+        refreshLayerWithDelay();
+    }
+}
+//called when a clustercheckbox is clicked
+function clusterCheckboxClick(element,dontRefresh){
+    if (element==undefined || element==null)
+        return;
+    if (layerUrl==null){
+        layerUrl=""+kburl;
+    }
+    var cluster=element.theItem;
+    if (element.checked){
+        for (var i=0; i < cluster.children.length;i++){
+            var child=cluster.children[i];
+            if (!child.cluster){
+                addItemAsLayer(child);
+            }
+        }
+    }else{
+        for (var c=0; c < cluster.children.length;c++){
+            var child=cluster.children[c];
+            if (!child.cluster){
+                removeItemAsLayer(child);
+            }
+        }
+    }
+    if (!dontRefresh){
         refreshLayerWithDelay();
     }
 }
@@ -491,15 +510,21 @@ function addItemAsLayer(theItem){
             }
         }
         if(theItem.background){
-            allActiveBackgroundLayers+=","+theItem.wmslayers;
+            if (allActiveBackgroundLayers.indexOf(","+theItem.wmslayers)==-1){
+                allActiveBackgroundLayers+=","+theItem.wmslayers;
+            }
         }
         else{
-            allActiveLayers+= ","+theItem.wmslayers;
+            if (allActiveLayers.indexOf(","+theItem.wmslayers)==-1){
+                allActiveLayers+= ","+theItem.wmslayers;
+            }
         }
     }
     //add query part
     if (theItem.wmsquerylayers){
-        allQueryLayers+=","+theItem.wmsquerylayers
+        if (allQueryLayers.indexOf(","+theItem.wmsquerylayers)==-1){
+            allQueryLayers+=","+theItem.wmsquerylayers;
+        }
     }
 }
 

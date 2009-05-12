@@ -186,21 +186,24 @@ public class GisPrincipal implements Principal {
             return null;
         }
         Iterator it = styles.iterator();
+        String legendUrl=null;
         while (it.hasNext()) {
             Style style = (Style) it.next();
             Set ldrs = style.getDomainResource();
-            if (ldrs == null || ldrs.isEmpty()) {
-                return null;
-            }
-            Iterator it2 = ldrs.iterator();
-            while (it2.hasNext()) {
-                StyleDomainResource sdr = (StyleDomainResource) it2.next();
-                if ("LegendURL".equalsIgnoreCase(sdr.getDomain())) {
-                    return sdr.getUrl();
+            if (ldrs != null && !ldrs.isEmpty()) {
+                Iterator it2 = ldrs.iterator();
+                while (it2.hasNext()) {
+                    StyleDomainResource sdr = (StyleDomainResource) it2.next();
+                    if ("LegendURL".equalsIgnoreCase(sdr.getDomain())) {
+                        legendUrl= sdr.getUrl();
+                        if (style.getName().equalsIgnoreCase("default")){
+                            return legendUrl;
+                        }
+                    }
                 }
             }
         }
-        return null;
+        return legendUrl;
     }
 
     public Layer getLayer(String layerName) {

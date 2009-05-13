@@ -466,16 +466,20 @@ function clusterCheckboxClick(element,dontRefresh){
             var child=cluster.children[i];
             if (!child.cluster){
                 addItemAsLayer(child);
+                if (!cluster.hide_tree){
+                    document.getElementById(child.id).checked=true;
+                }
             }
-            document.getElementById(child.id).checked=true;
         }
     }else{
         for (var c=0; c < cluster.children.length;c++){
             var child=cluster.children[c];
             if (!child.cluster){
                 removeItemAsLayer(child);
+                if (!cluster.hide_tree){
+                    document.getElementById(child.id).checked=false;
+                }
             }
-            document.getElementById(child.id).checked=false;
         }
     }
     if (!dontRefresh){

@@ -240,15 +240,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
-                    <c:choose>
-                        <c:when test="${connectieType=='jdbc'}">
-                            <!-- Show -->
-                        </c:when>
-                        <c:otherwise>
-                            <!-- Hide -->
-                        </c:otherwise>
-                    </c:choose>
-                    <tr><td><fmt:message key="configthema.${connectieType}.adminquery"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminquery.uitleg"/></div></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
+                    <tr><td><span id="adminqueryrow"><fmt:message key="configthema.${connectieType}.adminquery"/> <a href="#" onclick="return showHelp(this);">(?)</a></span><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.${connectieType}.adminquery.uitleg"/></div></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
                 </table>
             </div>
 
@@ -437,4 +429,5 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:forEach var="cuItem" items="${listConnecties}">
         connectionTypes["${cuItem.id}"]="${cuItem.type}";
     </c:forEach>
+    showHideJDBC();
 </script>

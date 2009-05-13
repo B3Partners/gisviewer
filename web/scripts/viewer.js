@@ -380,35 +380,36 @@ function deActivateCheckbox(id) {
 function switchTab(obj) {
     if (obj==undefined || obj==null)
         return;
+    
+    // Check if user is allowed for the tab, if not select first tab
+    var allowed = false;
+    for(i in enabledtabs) {
+        var tabid = enabledtabs[i];
+        if(tabid == obj.id) allowed = true;
+    }
+    if(!allowed) obj = document.getElementById(enabledtabs[0]);
+
     eraseCookie('activetab');
     createCookie('activetab', obj.id, '7');
-    document.getElementById('tab0').className = '';
-    document.getElementById('tab1').className = '';
-    document.getElementById('tab2').className = '';
-    document.getElementById('tab3').className = '';
-    document.getElementById('tab4').className = '';
-    document.getElementById('tab5').className = '';
     obj.className="activelink";
-    document.getElementById('treevak').style.display = 'none';
-    document.getElementById('layermaindiv').style.display = 'none';
-    document.getElementById('infovak').style.display = 'none';
-    document.getElementById('objectvakViewer').style.display = 'none';
-    document.getElementById('analysevakViewer').style.display = 'none';
-    document.getElementById('volgordevak').style.display = 'none';
-    document.getElementById('beschrijvingvak').style.display = 'none';
-    if(obj.id == "tab0") {
-        document.getElementById('treevak').style.display = 'block';
-        document.getElementById('layermaindiv').style.display = 'block';
-    } else if(obj.id == "tab1") {
-        document.getElementById('infovak').style.display = 'block';
-    } else if(obj.id == "tab2") {
-        document.getElementById('objectvakViewer').style.display = 'block';
-    } else if(obj.id == "tab3") {
-        document.getElementById('analysevakViewer').style.display = 'block';
-    } else if(obj.id == "tab4") {
-        document.getElementById('volgordevak').style.display = 'block';
-    } else if(obj.id == "tab5") {
-        document.getElementById('beschrijvingvak').style.display = 'block';
+    for(i in tabbladen) {
+        var tabobj = tabbladen[i];
+        if(tabobj.id != obj.id) {
+            document.getElementById(tabobj.id).className = '';
+            document.getElementById(tabobj.contentid).style.display = 'none';
+            if(tabobj.extracontent != undefined) {
+                for(j in tabobj.extracontent) {
+                    document.getElementById(tabobj.extracontent[j]).style.display = 'none';
+                }
+            }
+        } else {
+            document.getElementById(tabobj.contentid).style.display = 'block';
+            if(tabobj.extracontent != undefined) {
+                for(j in tabobj.extracontent) {
+                    document.getElementById(tabobj.extracontent[j]).style.display = 'block';
+                }
+            }
+        }
     }
 }
 

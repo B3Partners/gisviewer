@@ -70,16 +70,7 @@ function refreshFeatureList(element){
     JConfigListsUtil.getPossibleFeaturesById(value,handleFeatureList);
 }
 function handleFeatureList(list){
-    /*
-    //Er voor zorgen dat het tabblad geavanceerd wordt gehide en in gegevens bron adminquery onzichtbaar wordt
-    //als thema wfs is (!="jdbc" )
-    if (currentConnectionType=="jdbc"){
-        document.getElementById('jdbcRows').className="tbodyshow";
-    }else{
-        document.getElementById('jdbcRows').className="tbodyhide";
-    }
-
-     */
+    showHideJDBC();
     dwr.util.removeAllOptions('admin_tabel_select');
     dwr.util.removeAllOptions('spatial_tabel_select');
     dwr.util.removeAllOptions('admin_pk_select');
@@ -89,6 +80,19 @@ function handleFeatureList(list){
     dwr.util.addOptions("spatial_tabel_select",[""]);
     dwr.util.addOptions("admin_tabel_select",list,"0","1");
     dwr.util.addOptions("spatial_tabel_select",list,"0","1");
+}
+function showHideJDBC() {
+    //Er voor zorgen dat het tabblad geavanceerd wordt gehide en in gegevens bron adminquery onzichtbaar wordt
+    //als thema wfs is (!="jdbc" )
+    if (currentConnectionType=="jdbc"){
+        document.getElementById('tab-geavanceerd-header').style.display = "block";
+        document.getElementById('adminqueryrow').style.display = "block";
+        document.getElementById('admin_query_text').style.display = "block";
+    } else {
+        document.getElementById('tab-geavanceerd-header').style.display = "none";
+        document.getElementById('adminqueryrow').style.display = "none";
+        document.getElementById('admin_query_text').style.display = "none";
+    }
 }
 function refreshAdminAttributeList(element){
     var connid=document.getElementById('connectie_select').value;

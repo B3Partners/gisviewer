@@ -148,6 +148,50 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     
     naamZoekVelden[0]="Straatnaam,Bedrijfsnaam"
     naamZoekVelden[1]="Adres";*/
+    
+    /* De rechten van de verschillende gebruikers. De tabbladen die ze mogen zien en de volgorde waarin ze getoond worden.
+     * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
+     *       Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
+    var userrights = {
+        "beheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
+        // "organisatiebeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
+        // "themabeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
+        "gebruiker": ["tab0", "tab4", "tab1", "tab2", "tab3"],
+        "demogebruiker": ["tab1", "tab4", "tab5"]
+    };
+    
+    /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
+     * de naam en eventueel extra Content-divs die geopend moeten worden */
+    var tabbladen = {
+        "tab0": { "id": "tab0", "contentid": "treevak", "name": "Thema's", "extracontent": ["layermaindiv"] },
+        "tab1": { "id": "tab1", "contentid": "infovak", "name": "Zoeker" },
+        "tab2": { "id": "tab2", "contentid": "objectvakViewer", "name": "Gebieden" },
+        "tab3": { "id": "tab3", "contentid": "analysevakViewer", "name": "Analyse" },
+        "tab4": { "id": "tab4", "contentid": "volgordevak", "name": "Legenda" },
+        "tab5": { "id": "tab5", "contentid": "beschrijvingvak", "name": "Informatie" }
+    };
+
+    var enabledtabs = new Array();
+    if(beheerder) enabledtabs = userrights.beheerder;
+    if(gebruiker) {
+        for(k in userrights.gebruiker) {
+            var found = false;
+            for(j in enabledtabs) {
+                if(userrights.gebruiker[k] == enabledtabs[j]) found = true;
+            }
+            if(!found) enabledtabs[enabledtabs.length] = userrights.gebruiker[k];
+        }
+    }
+    if(demogebruiker) {
+        for(k in userrights.demogebruiker) {
+            var found = false;
+            for(j in enabledtabs) {
+                if(userrights.demogebruiker[k] == enabledtabs[j]) found = true;
+            }
+            if(!found) enabledtabs[enabledtabs.length] = userrights.demogebruiker[k];
+        }
+    }
+
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
@@ -212,38 +256,30 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <td id="tabjes">
                                     <ul id="nav">
                                         <script type="text/javascript">
-                                            if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
-                                                document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 57px;">Thema\'s</a></li>');
-                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 58px;">Legenda</a></li>');
-                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 57px;">Zoeker</a></li>');
-                                                document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="width: 58px;">Gebieden</a></li>');
-                                                document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="width: 57px;">Analyse</a></li>');
-                                                document.write('<li id="tab5" onmouseover="switchTab(this);"><a href="#" id="tab5link" style="display: none;">Informatie</a></li>');
-                                            } else if(false) {                   
-                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
-                                                document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="width: 96px;">Thema\'s</a></li>');
-                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
-                                                document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
-                                                document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
-                                                document.write('<li id="tab5" onmouseover="switchTab(this);"><a href="#" id="tab5link" style="display: none;">Informatie</a></li>');
-                                            } else {
-                                                document.write('<li id="tab0" onmouseover="switchTab(this);"><a href="#" id="tab0link" style="display: none;">Thema\'s</a></li>');
-                                                document.write('<li id="tab1" onmouseover="switchTab(this);"><a href="#" id="tab1link" style="width: 97px;">Zoeker</a></li>');
-                                                document.write('<li id="tab4" onmouseover="switchTab(this);"><a href="#" id="tab4link" style="width: 96px;">Legenda</a></li>');
-                                                document.write('<li id="tab2" onmouseover="switchTab(this);"><a href="#" id="tab2link" style="display: none;">Gebieden</a></li>');
-                                                document.write('<li id="tab3" onmouseover="switchTab(this);"><a href="#" id="tab3link" style="display: none;">Analyse</a></li>');
-                                                document.write('<li id="tab5" onmouseover="switchTab(this);"><a href="#" id="tab5link" style="width: 96px;">Informatie</a></li>');
+                                            var createdTabs = new Array();
+                                            var noOfTabs = enabledtabs.length;
+                                            if(noOfTabs > 5) noOfTabs = 5;
+                                            var tabwidth = Math.floor(287 / noOfTabs);
+                                            for(i in enabledtabs) {
+                                                var tabid = enabledtabs[i];
+                                                var tabobj = eval("tabbladen."+tabid);
+                                                document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
+                                                createdTabs[i] = enabledtabs[i];
+                                                if(i == 4) break;
+                                            }
+
+                                            for(i in tabbladen) {
+                                                var tabid = tabbladen[i].id;
+                                                var tabIsEnabled = false;
+                                                for(j in createdTabs) {
+                                                    var tabide = createdTabs[j];
+                                                    if(tabid == tabide) tabIsEnabled = true;
+                                                }
+                                                if(!tabIsEnabled) {
+                                                    document.write('<li id="' + tabid + '"><a href="#" id="' + tabid + 'link" style="display: none;">' + tabbladen[i].name + '</a></li>');
+                                                }
                                             }
                                         </script>
-                                        <!--[if lte IE 6]>
-                                            <script type="text/javascript">
-                                                if(beheerder || themabeheerder || organisatiebeheerder || gebruiker) {
-                                                    document.getElementById('tab3link').style.width = '58px';
-                                                } else if(demogebruiker) {
-                                                    document.getElementById('tab1link').marginRight = '0px';
-                                                }
-                                            </script>
-                                        <![endif]-->
                                     </ul>
                                 </td>
                             </tr>

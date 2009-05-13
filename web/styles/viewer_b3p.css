@@ -7,6 +7,9 @@ body {
     margin: 0px;
     padding: 0px;
 }
+body.pdfExportClass {
+    background-color: White;
+}
 th {
     font-size: 8pt; 
     font-weight: bold;

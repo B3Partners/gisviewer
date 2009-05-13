@@ -127,6 +127,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
      */
     var minBboxZoeken=1000;
+    /*
+     * Maximaal aantal zoekresultaten
+     */
+    var maxResults=25;
     
     //Instellingen voor edam volendam
     /*adresThemaId=7;

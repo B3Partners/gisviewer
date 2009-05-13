@@ -63,7 +63,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:choose>
             
             <%-- html:link href="javascript: printpage();" styleClass="menulink" module="">&#155; Print kaart </html:link --%>
-            <html:link href="javascript: exportMap();" styleClass="menulink" module="">&#155; Exporteer kaart</html:link>
+            <html:link href="javascript: exportMap();" styleClass="menulink" module="">&#155; Print voorbeeld</html:link>
 
             <c:set var="stijlklasse" value="menulink" />
             <c:if test="${requestJSP eq 'viewer.do'}">

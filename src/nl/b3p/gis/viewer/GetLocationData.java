@@ -56,7 +56,7 @@ import org.opengis.geometry.BoundingBox;
 public class GetLocationData {
 
     private static final Log log = LogFactory.getLog(GetLocationData.class);
-    private static int maxSearchResults = 25;
+    private static int maxSearchResults = 10000;
 
     public GetLocationData() {
     }
@@ -306,7 +306,7 @@ public class GetLocationData {
      * @param themaIds de ids van de themas waar op gezocht moet worden
      * @param distance Als de bbox een punt is of kleiner dan 1 bij 1 dan wordt de bbox vergroot met de distance
      */
-    public ArrayList getMapCoords(String[] waarden, String[] colomns, int[] themaIds, double distance) {
+    public ArrayList getMapCoords(String[] waarden, String[] colomns, int[] themaIds, double distance, int maxResults) {
         double distance2 = 0.0;
         if (distance > 0) {
             distance2 = distance / 2;
@@ -350,12 +350,14 @@ public class GetLocationData {
                     allcoords.add(mbc);
                     return allcoords;
                 }
+                // Maximaal aantal zoekresultaten mag de maxSearchResults waarde niet overschrijden
+                if(maxResults > maxSearchResults) maxResults = maxSearchResults;
                 //maak thema connectie
                 if (SpatialUtil.validJDBCConnection(t)) {
-                    allcoords.addAll(getMapCoordsJdbcThema(t,sess,cols,waarden,distance2));
+                    allcoords.addAll(getMapCoordsJdbcThema(t,sess,cols,waarden,distance2,maxResults));
                 }
                 else if (WfsUtil.validWfsConnection(t)) {
-                    allcoords.addAll(getMapCoordsWfsThema(t,sess,cols,waarden,distance2));
+                    allcoords.addAll(getMapCoordsWfsThema(t,sess,cols,waarden,distance2,maxResults));
                 }
 
             }
@@ -371,12 +373,13 @@ public class GetLocationData {
     }
     //}catch(Exception )
 
-    private ArrayList getMapCoordsJdbcThema(Themas t, Session sess,String[] cols,String[] waarden,double distance2) {
+    private ArrayList getMapCoordsJdbcThema(Themas t, Session sess,String[] cols,String[] waarden,double distance2,int maxResults) {
         if (!SpatialUtil.validJDBCConnection(t)){
             return null;
         }
         ArrayList coords = new ArrayList();
         Connection connection = null;
+        
         try {
             if (t.getConnectie() != null) {
                 connection = t.getConnectie().getJdbcConnection();
@@ -444,16 +447,16 @@ public class GetLocationData {
             q.append(" order by ");
             q.append(qc);
 
-            if (maxSearchResults > 0) {
+            if (maxResults > 0) {
                 q.append(" LIMIT ");
-                q.append(maxSearchResults);
+                q.append(maxResults);
             }
             log.debug(q.toString());
             PreparedStatement statement = connection.prepareStatement(q.toString());
             try {
                 ResultSet rs = statement.executeQuery();
                 //int loopnum = 0;
-                while (rs.next() && coords.size() <= maxSearchResults) {
+                while (rs.next() && coords.size() <= maxResults) {
                     double minx, maxx, miny, maxy;
                     String envelope = rs.getString("bbox");
                     double[] bbox = SpatialUtil.wktEnvelope2bbox(envelope,28992);
@@ -523,7 +526,7 @@ public class GetLocationData {
 
     }
 
-    private ArrayList getMapCoordsWfsThema(Themas t, Session sess,String[] cols,String[] waarden,double distance2){
+    private ArrayList getMapCoordsWfsThema(Themas t, Session sess,String[] cols,String[] waarden,double distance2, int maxResults){
         WebContext ctx = WebContextFactory.get();
         HttpServletRequest request = ctx.getHttpServletRequest();
         Connecties conn= WfsUtil.getWfsConnection(t,request);
@@ -540,7 +543,7 @@ public class GetLocationData {
             if(conn != null){
                 ds=conn.getDatastore();
                 if (ds!=null){
-                    ds.setMaxFeatures(maxSearchResults);
+                    ds.setMaxFeatures(maxResults);
                     String version=ds.getServiceVersion();
                     ft= "app:"+t.getAdmin_tabel().substring(t.getAdmin_tabel().indexOf("}")+1,t.getAdmin_tabel().length());
                     if (version.equals("1.0.0")){

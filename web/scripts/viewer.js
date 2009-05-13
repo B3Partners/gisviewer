@@ -10,7 +10,9 @@ var activeAnalyseThemaTitle = '';
 var featureInfoData=null;
 
 var layersAan= new Array();
+var clustersAan = new Array();
 var checkboxArray = new Array();
+var clusterCheckboxArray = new Array();
 var timeouts=0;
 var featureInfoTimeOut=30;
 
@@ -256,10 +258,15 @@ function createLabel(container, item) {
             //add the real(not filtered) item to the checkbox.
             checkbox.theItem=treeview_findItem(themaTree,item.id);
             container.appendChild(checkbox);
+
+            clusterCheckboxArray.push(item.id);
+            if (item.visible){
+                clustersAan.push(checkbox);
+            }
         }
         if (!item.hide_tree || item.callable){
             container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
-        }        
+        }
     } else if (!item.hide_tree) {
         var analyseRadioChecked = false;
 
@@ -991,8 +998,9 @@ var doOnInit= new Boolean("true");
 function flamingo_map1_onInit(){
     if(doOnInit){
         doOnInit=false;
+        //check / activate the themas that have init status visible
         var newLayersAan = new Array();
-        if(checkboxArray.length == layersAan.length) {
+        if(checkboxArray.length== layersAan.length) {
             for(var j=0; j < checkboxArray.length; j++) {
                 for (var k=0; k < layersAan.length; k++) {
                     if(layersAan[k].theItem.id == checkboxArray[j]) {
@@ -1006,6 +1014,10 @@ function flamingo_map1_onInit(){
         for (var i=0; i < newLayersAan.length; i++){
             checkboxClick(newLayersAan[i],true);
         }
+        for (i=0; i < clustersAan.length; i++){
+            clusterCheckboxClick(clustersAan[i], true);
+        }
+
         if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
             moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
         }else{

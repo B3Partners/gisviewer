@@ -158,45 +158,50 @@ public class GetViewerDataAction extends BaseGisAction {
             for (int i = 0; i < themas.size(); i++) {
                 Themas t = (Themas) themas.get(i);
                 if (t.getAdmin_tabel()!=null){
-                    List thema_items = SpatialUtil.getThemaData(t, true);
-                    int themadatanummer = 0;
-                    if (ti != null) {
-                        themadatanummer = ti.size();
-                    }
-                    if (ti != null) {
-                        for (int a = 0; a < ti.size(); a++) {
-                            if (compareThemaDataLists((List) ti.get(a), thema_items)) {
-                                themadatanummer = a;
-                                break;
+                    try{
+                        List thema_items = SpatialUtil.getThemaData(t, true);
+                        int themadatanummer = 0;
+                        if (ti != null) {
+                            themadatanummer = ti.size();
+                        }
+                        if (ti != null) {
+                            for (int a = 0; a < ti.size(); a++) {
+                                if (compareThemaDataLists((List) ti.get(a), thema_items)) {
+                                    themadatanummer = a;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    //haal op met JDBC connectie
-                    List l = null;
-                    if (SpatialUtil.validJDBCConnection(t)) {
-                        List pks = null;
-                        pks = findPks(t, mapping, dynaForm, request);
-                        if (themadatanummer == regels.size()) {
-                            regels.add(new ArrayList());
-                        }
-                        l = getThemaObjects(t, pks, thema_items);
+                        //haal op met JDBC connectie
+                        List l = null;
+                        if (SpatialUtil.validJDBCConnection(t)) {
+                            List pks = null;
+                            pks = findPks(t, mapping, dynaForm, request);
+                            if (themadatanummer == regels.size()) {
+                                regels.add(new ArrayList());
+                            }
+                            l = getThemaObjects(t, pks, thema_items);
 
-                    }//Haal op met WFS
-                    else if (WfsUtil.validWfsConnection(t)) {
-                        if (themadatanummer == regels.size()) {
-                            regels.add(new ArrayList());
-                        }
-                        l = getThemaWfsObjectsWithGeom(t, thema_items, request);
+                        }//Haal op met WFS
+                        else if (WfsUtil.validWfsConnection(t)) {
+                            if (themadatanummer == regels.size()) {
+                                regels.add(new ArrayList());
+                            }
+                            l = getThemaWfsObjectsWithGeom(t, thema_items, request);
 
-                    }
-                    if (l != null && l.size() > 0) {
-                        ((ArrayList) regels.get(themadatanummer)).addAll(l);
-                        if (ti == null) {
-                            ti = new ArrayList();
                         }
-                        if (themadatanummer == ti.size()) {
-                            ti.add(thema_items);
+                        if (l != null && l.size() > 0) {
+                            ((ArrayList) regels.get(themadatanummer)).addAll(l);
+                            if (ti == null) {
+                                ti = new ArrayList();
+                            }
+                            if (themadatanummer == ti.size()) {
+                                ti.add(thema_items);
+                            }
                         }
+                    }catch(Exception e){
+                        log.error("Fout bij laden admindata voor thema: ",e);
+                        addAlternateMessage(mapping, request, "",e.getMessage());
                     }
                 }
             }
@@ -730,7 +735,7 @@ public class GetViewerDataAction extends BaseGisAction {
             return null;
         }
         if (thema_items == null || thema_items.isEmpty()) {
-            throw new Exception("Er is geen themadata geconfigureerd!");
+            throw new Exception("Er is geen themadata geconfigureerd voor thema: "+t.getNaam()+" met id: "+t.getId());
         }
         String[] coordString = null;
         double[] coords = null;

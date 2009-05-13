@@ -275,10 +275,11 @@ function createLabel(container, item) {
                         rc.checked = false;
                     }
                 }
-            }
-            radioControleString += ' checked="checked"';
-            if (item.metadatalink && item.metadatalink.length > 1) {
-                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+            
+                radioControleString += ' checked="checked"';
+                if (item.metadatalink && item.metadatalink.length > 1) {
+                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+                }
                 prevRadioButton = 'radio' + item.id;
                 if (item.analyse=="active") {
                     analyseRadioChecked = true;

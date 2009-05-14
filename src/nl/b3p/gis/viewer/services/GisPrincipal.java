@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import nl.b3p.gis.viewer.BaseGisAction;
 import nl.b3p.gis.viewer.db.Connecties;
 import nl.b3p.wms.capabilities.Layer;
 import nl.b3p.wms.capabilities.Roles;
@@ -237,10 +239,7 @@ public class GisPrincipal implements Principal {
     }
 
     public static GisPrincipal getGisPrincipal(HttpServletRequest request) {
-        Principal user = request.getUserPrincipal();
-        if (!(user instanceof GisPrincipal)) {
-            return null;
-        }
+        Principal user = request.getUserPrincipal();        
         if (user == null) {
             // Eventueel fake Principal aanmaken
             if (!HibernateUtil.isCheckLoginKaartenbalie()) {
@@ -257,10 +256,35 @@ public class GisPrincipal implements Principal {
             }
 
         }
+        if (!(user instanceof GisPrincipal)) {
+            return null;
+        }
+        GisPrincipal gp  =(GisPrincipal) user;
+        String code=request.getParameter(BaseGisAction.URL_AUTH);
+        if(code!=null && code.length()>0 && gp.getCode()!=null && gp.getCode().length()>0){
+            if (gp.getCode().equals(code)){
+                return gp;
+            }else{
+                HttpSession session = request.getSession();
+                String sesId = session.getId();
+                session.invalidate();
+                String url = GisSecurityRealm.createCapabilitiesURL(code);
+                user = GisSecurityRealm.authenticateHttp(url, HibernateUtil.ANONYMOUS_USER, null, code);
+                if (user != null) {
+                    // invalidate old session if the user was already authenticated, and they logged in as a different user
+                    if (request.getUserPrincipal() != null && false == request.getUserPrincipal().equals(user)) {
+                        request.getSession().invalidate();
+                    }
+                    SecurityRequestWrapper srw = (SecurityRequestWrapper) request;
+                    srw.setUserPrincipal(user);
+                    log.debug("Automatic login for user: " + HibernateUtil.ANONYMOUS_USER);
 
-        return (GisPrincipal) user;
-    }
-
+                }
+                gp=(GisPrincipal) user;
+            }
+        }
+        return gp;
+    }    
     /**
      * @return the kbWfsConnectie
      */

@@ -73,7 +73,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         return inRole;
     }
 
-    protected static String createCapabilitiesURL(String code) {
+    public static String createCapabilitiesURL(String code) {
         String url = HibernateUtil.createPersonalKbUrl(code);
         if (url.indexOf('?') == -1) {
             url += "?";
@@ -97,7 +97,7 @@ public class GisSecurityRealm implements FlexibleRealmInterface, ExternalAuthent
         return new GisPrincipal(username, roles);
     }
 
-    protected static GisPrincipal authenticateHttp(String location, String username, String password, String code) {
+    public static GisPrincipal authenticateHttp(String location, String username, String password, String code) {
         WMSCapabilitiesReader wmscr = new WMSCapabilitiesReader();
         ServiceProvider sp = null;
         try {

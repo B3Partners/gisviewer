@@ -287,8 +287,8 @@ public class CreateMapPDF extends HttpServlet {
     private Image getImage(String mapUrl, HttpServletRequest request) throws IOException, Exception {
         String username = null;
         String password = null;
-        if (request.getUserPrincipal() instanceof GisPrincipal) {
-            GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();
+        GisPrincipal gp = GisPrincipal.getGisPrincipal(request);
+        if (gp!=null) {
             username = gp.getName();
             password = gp.getPassword();
         }

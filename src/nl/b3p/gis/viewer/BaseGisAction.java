@@ -55,9 +55,10 @@ import org.hibernate.Session;
 public abstract class BaseGisAction extends BaseHibernateAction {
 
     private static final Log log = LogFactory.getLog(BaseGisAction.class);
+    public static final String URL_AUTH = "code";
 
     protected String getOrganizationCode(HttpServletRequest request) {
-        GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();
+        GisPrincipal gp = GisPrincipal.getGisPrincipal(request);
         if (gp != null) {
             ServiceProvider sp = gp.getSp();
             if (sp != null) {
@@ -73,7 +74,7 @@ public abstract class BaseGisAction extends BaseHibernateAction {
     }
 
     protected void createLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
-        GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();
+        GisPrincipal gp = GisPrincipal.getGisPrincipal(request);
         String code = null;
         if (gp != null) {
             code = gp.getCode();

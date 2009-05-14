@@ -49,7 +49,6 @@ import org.securityfilter.filter.SecurityRequestWrapper;
 public class IndexAction extends BaseGisAction {
 
     private static final Log log = LogFactory.getLog(IndexAction.class);
-    protected static final String URL_AUTH = "code";
     protected static final String LOGIN = "login";
     protected static final String LOGINERROR = "loginError";
     protected static final String LOGOUT = "logout";
@@ -184,23 +183,23 @@ public class IndexAction extends BaseGisAction {
      *
      * @throws Exception
      */
-    public ActionForward list(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+    public ActionForward list(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {        
         List validThemas = getValidThemas(false, null, request);
         ArrayList themalist=new ArrayList();
         ArrayList clusterlist=new ArrayList();
-        for (int i=0; i < validThemas.size(); i++){
-            Themas t= (Themas) validThemas.get(i);
-            if (!t.getCluster().isHide_tree()){
-                themalist.add(t);
-            }
-            if (t.getCluster().isCallable()){
-                if(!clusterlist.contains(t.getCluster())){
-                    clusterlist.add(t.getCluster());
+        if (validThemas!=null){
+            for (int i=0; i < validThemas.size(); i++){
+                Themas t= (Themas) validThemas.get(i);
+                if (!t.getCluster().isHide_tree()){
+                    themalist.add(t);
+                }
+                if (t.getCluster().isCallable()){
+                    if(!clusterlist.contains(t.getCluster())){
+                        clusterlist.add(t.getCluster());
+                    }
                 }
             }
         }
-
         request.setAttribute("themalist", themalist);
         request.setAttribute("clusterlist", clusterlist);
 

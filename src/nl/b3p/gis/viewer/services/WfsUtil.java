@@ -247,8 +247,8 @@ public class WfsUtil {
         if (!validWfsConnection(c))
             return null;
         if (c==null){
-            if (request.getUserPrincipal() instanceof GisPrincipal) {
-                GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();                
+            GisPrincipal gp =GisPrincipal.getGisPrincipal(request);
+            if (gp!=null) {
                 c= gp.getKbWfsConnectie();
             }
         }

@@ -48,7 +48,7 @@ public class ViewerCrudAction extends CrudAction {
     }
 
     protected String getOrganizationCode(HttpServletRequest request) {
-        GisPrincipal gp = (GisPrincipal) request.getUserPrincipal();
+        GisPrincipal gp = GisPrincipal.getGisPrincipal(request);
         if (gp != null) {
             ServiceProvider sp = gp.getSp();
             if (sp != null) {

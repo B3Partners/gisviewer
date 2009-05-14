@@ -25,6 +25,7 @@ package nl.b3p.gis.viewer.services;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpSession;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.BaseGisAction;
+import nl.b3p.gis.viewer.db.Themas;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
@@ -184,8 +186,23 @@ public class IndexAction extends BaseGisAction {
      */
     public ActionForward list(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        List themalist = getValidThemas(false, null, request);
+        List validThemas = getValidThemas(false, null, request);
+        ArrayList themalist=new ArrayList();
+        ArrayList clusterlist=new ArrayList();
+        for (int i=0; i < validThemas.size(); i++){
+            Themas t= (Themas) validThemas.get(i);
+            if (!t.getCluster().isHide_tree()){
+                themalist.add(t);
+            }
+            if (t.getCluster().isCallable()){
+                if(!clusterlist.contains(t.getCluster())){
+                    clusterlist.add(t.getCluster());
+                }
+            }
+        }
+
         request.setAttribute("themalist", themalist);
+        request.setAttribute("clusterlist", clusterlist);
 
         addDefaultMessage(mapping, request);
         return getDefaultForward(mapping, request);

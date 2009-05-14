@@ -109,16 +109,26 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <td valign="top">               
                 <h2>Beschikbare Thema's</h2>
                 <c:choose>
-                    <c:when test="${not empty themalist}">
+                    <c:when test="${not empty themalist || not empty clusterlist}">
                         <ol>
-                            <c:forEach var="thema" items="${themalist}">
-                                <c:if test="${thema.analyse_thema}">
+                            <c:if test="${not empty themalist}">
+                                <c:forEach var="thema" items="${themalist}">
+                                    <c:if test="${thema.analyse_thema}">
+                                        <c:set var="found" value="true"/>
+                                        <li>
+                                            <html:link page="/viewer.do?id=${thema.id}&code=${kbcode}">${thema.naam}</html:link>
+                                        </li>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${not empty clusterlist}">
+                                <c:forEach var="cluster" items="${clusterlist}">
                                     <c:set var="found" value="true"/>
                                     <li>
-                                        <html:link page="/viewer.do?id=${thema.id}&code=${kbcode}">${thema.naam}</html:link>
+                                        <html:link page="/viewer.do?clusterId=${cluster.id}&code=${kbcode}">${cluster.naam}</html:link>
                                     </li>
-                                </c:if>
-                            </c:forEach>
+                                </c:forEach>
+                            </c:if>
                             <c:if test="${not found}">
                                 <li>Er zijn geen voorgeselecteerde thema's gevonden.</li>
                                 <li>U kunt direct naar de <html:link page="/viewer.do">viewer</html:link>.</li>

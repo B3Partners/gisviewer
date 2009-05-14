@@ -152,7 +152,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="callable"/>
                     </td>
                     <td colspan="3">
-                        Cluster kan aan/uit worden gevinkt.
+                        Cluster kan aan/uit worden gevinkt. 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <html:checkbox property="default_visible"/>
+                    </td>
+                    <td colspan="3">
+                        Cluster is default aangevinkt.(Deze optie is alleen mogelijk als het cluster ook aangevinkt kan worden)
                     </td>
                 </tr>
               <tr>

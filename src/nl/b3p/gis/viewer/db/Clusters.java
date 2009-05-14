@@ -36,6 +36,7 @@ public class Clusters {
     private boolean background_cluster;
     private boolean extra_level;
     private boolean callable;
+    private boolean default_visible;
     private Clusters parent;
     private Set children;
     private Set themas;
@@ -268,6 +269,20 @@ public class Clusters {
      */
     public void setMetadatalink(String metadatalink) {
         this.metadatalink = metadatalink;
+    }
+
+    /**
+     * @return the default_visible
+     */
+    public boolean isDefault_visible() {
+        return default_visible;
+    }
+
+    /**
+     * @param default_visible the default_visible to set
+     */
+    public void setDefault_visible(boolean default_visible) {
+        this.default_visible = default_visible;
     }
     // </editor-fold>
 }

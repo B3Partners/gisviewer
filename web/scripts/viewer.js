@@ -507,8 +507,9 @@ function addItemAsLayer(theItem){
         eraseCookie('checkedLayers');
     }
     
-    //add legend part   
-    addLayerToVolgorde(theItem);
+    //add legend part
+    if (!theItem.hide_legend)
+        addLayerToVolgorde(theItem);
     //add wms part
     if (theItem.wmslayers){
         var organizationCodeKey = theItem.organizationcodekey;
@@ -540,15 +541,16 @@ function addItemAsLayer(theItem){
     }
 }
 
-function removeItemAsLayer(theItem){    
+function removeItemAsLayer(theItem){
+    if (!theItem.hide_legend)
         removeLayerFromVolgorde(theItem.title, theItem.id + '##' + theItem.wmslayers);
-        if (theItem.wmslayers){
-            allActiveLayers=allActiveLayers.replace(","+theItem.wmslayers,"");
-            allActiveBackgroundLayers=allActiveBackgroundLayers.replace(","+theItem.wmslayers,"");                     
-        }
-        if (theItem.wmsquerylayers){
-            allQueryLayers=allQueryLayers.replace(","+theItem.wmsquerylayers,"");
-        }
+    if (theItem.wmslayers){
+        allActiveLayers=allActiveLayers.replace(","+theItem.wmslayers,"");
+        allActiveBackgroundLayers=allActiveBackgroundLayers.replace(","+theItem.wmslayers,"");
+    }
+    if (theItem.wmsquerylayers){
+        allQueryLayers=allQueryLayers.replace(","+theItem.wmsquerylayers,"");
+    }
 }
 
 function refreshLayerWithDelay(){

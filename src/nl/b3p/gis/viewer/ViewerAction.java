@@ -356,7 +356,9 @@ public class ViewerAction extends BaseGisAction {
             jsonCluster.put("title", cluster.getNaam());
             jsonCluster.put("cluster", true);
             setExtraClusterProperties(jsonCluster,cluster);
-            if (actieveClusters!=null && cluster.getId()!=null && cluster.isCallable() && actieveClusters.contains(cluster.getId())){
+            if (actieveClusters!=null &&  actieveClusters.contains(cluster.getId())){
+                jsonCluster.put("visible",true);
+            }else if (cluster.isDefault_visible()){
                 jsonCluster.put("visible",true);
             }else{
                 jsonCluster.put("visible",false);

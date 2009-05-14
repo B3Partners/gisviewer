@@ -167,6 +167,7 @@ public class ConfigClusterAction extends ViewerCrudAction {
         dynaForm.set("background_cluster", new Boolean(c.isBackground_cluster()));
         dynaForm.set("extra_level", new Boolean(c.isExtra_level()));
         dynaForm.set("callable", new Boolean(c.isCallable()));
+        dynaForm.set("default_visible", new Boolean (c.isDefault_visible()));
         String val = "";
         if (c.getParent() != null) {
             val = Integer.toString(c.getParent().getId().intValue());
@@ -191,6 +192,8 @@ public class ConfigClusterAction extends ViewerCrudAction {
         c.setExtra_level(b == null ? false : b.booleanValue());
         b = (Boolean) dynaForm.get("callable");
         c.setCallable(b == null ? false : b.booleanValue());
+        b = (Boolean) dynaForm.get("default_visible");
+        c.setDefault_visible(b == null ? false : b.booleanValue());
 
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
         String parentID = FormUtils.nullIfEmpty(dynaForm.getString("parentID"));

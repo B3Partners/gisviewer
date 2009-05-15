@@ -9,8 +9,10 @@ function setMapImageSrc(url){
                 endIndex=url.length;
             }
             var imageSize=url.substring(beginIndex, endIndex);
-            if(document.getElementById("imageSize")!=undefined)
+            if(document.getElementById("imageSize")!=undefined){
                 document.getElementById("imageSize").value=imageSize;
+                changeVal(imageSize);
+            }
         }
     }
 }

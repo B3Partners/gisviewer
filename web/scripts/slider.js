@@ -1,3 +1,4 @@
+var firstCall;
 var slider;
 slider = YAHOO.widget.Slider.getHorizSlider("sliderbg", "sliderthumb", 0, 300);
 slider.setValue(300);
@@ -9,6 +10,7 @@ slider.subscribe("change", function(offsetFromStart) {
         var fld = document.getElementById("imageSize");
         var actualValue = slider.getRealValue();
         fld.value = actualValue;
+        alert(actualValue);
     }else{
         changeVal(document.getElementById("imageSize"));
         firstCall=false;
@@ -17,6 +19,7 @@ slider.subscribe("change", function(offsetFromStart) {
 
 function changeVal(obj) {
     var strValue = obj.value;
+    alert(obj.value);
     var fValue = parseFloat(strValue);
     if(!isNaN(fValue)) {
         if(fValue >= 0 && fValue <= 2048) {

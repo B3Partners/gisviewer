@@ -357,11 +357,19 @@ public class ViewerAction extends BaseGisAction {
             jsonCluster.put("cluster", true);
             setExtraClusterProperties(jsonCluster,cluster);
             if (actieveClusters!=null &&  actieveClusters.contains(cluster.getId())){
+                jsonCluster.put("active",true);
                 jsonCluster.put("visible",true);
             }else if (cluster.isDefault_visible()){
                 jsonCluster.put("visible",true);
             }else{
                 jsonCluster.put("visible",false);
+            }
+            if (cluster.getMetadatalink() != null) {
+                String metadatalink = cluster.getMetadatalink();
+                metadatalink = metadatalink.replaceAll("%id%", "" + cluster.getId());
+                jsonCluster.put("metadatalink", metadatalink);
+            } else {
+                jsonCluster.put("metadatalink", "#");
             }
             List childrenList = (List) clMap.get("children");
             JSONArray childrenArray = getChildren(childrenList, actieveThemas,user);

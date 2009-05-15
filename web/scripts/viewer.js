@@ -5,6 +5,7 @@ var layerUrl=""+kburl;
 var cookieArray = readCookie('checkedLayers');
 
 var activeAnalyseThemaId = '';
+var activeClusterId='';
 var activeAnalyseThemaTitle = '';
 
 var featureInfoData=null;
@@ -148,10 +149,18 @@ function getLayerPosition(item) {
         return -1;
     return 0;
 }
-
+function setActiveCluster(item,overrule){
+    if (((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0))|| overrule){
+        var atlabel = document.getElementById('actief_thema');
+        if (atlabel!=null && item.title!=null){
+            activeClusterId=item.id;
+            atlabel.innerHTML = 'Actieve thema: ' + item.title;
+        }
+    }
+}
 function setActiveThema(id, label, overrule) {
     var atlabel;
-    if (activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0 || overrule){
+    if (((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
         activeAnalyseThemaId = id;
         activeAnalyseThemaTitle = label;
 
@@ -265,7 +274,19 @@ function createLabel(container, item) {
             }
         }
         if (!item.hide_tree || item.callable){
-            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
+            var lnk = document.createElement('a');
+            lnk.innerHTML = item.title ? item.title : item.id;
+            lnk.href = '#';
+            if (item.metadatalink && item.metadatalink.length > 1)
+                lnk.onclick = function(){
+                    popUp(item.metadatalink, "metadata")
+                };
+            container.appendChild(lnk);
+//            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
+        }
+        if (item.active && item.metadatalink && item.metadatalink.length > 1){
+            setActiveCluster(item, true);
+            if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;            
         }
     } else if (!item.hide_tree) {
         var analyseRadioChecked = false;

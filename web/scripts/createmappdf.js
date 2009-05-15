@@ -2,7 +2,7 @@ function setMapImageSrc(url){
     document.getElementById("mapImage").src=url;
     document.getElementById("mapUrl").value=url;
     if(setDefaultImageSizeFromMap){
-        if (url.toLowerCase().indexOf("height=")>=0){
+        if (url.toLowerCase().indexOf("width=")>=0){
             var beginIndex=url.toLowerCase().indexOf("width=")+6;
             var endIndex=url.toLowerCase().indexOf("&",beginIndex);
             if (endIndex==-1){
@@ -11,7 +11,6 @@ function setMapImageSrc(url){
             var imageSize=url.substring(beginIndex, endIndex);
             if(document.getElementById("imageSize")!=undefined){
                 document.getElementById("imageSize").value=imageSize;
-                changeVal(imageSize);
             }
         }
     }

@@ -1,5 +1,6 @@
-var firstCall;
+var firstCall=true;
 var slider;
+var multiplier=300 /2048;
 slider = YAHOO.widget.Slider.getHorizSlider("sliderbg", "sliderthumb", 0, 300);
 slider.setValue(300);
 slider.getRealValue = function() {
@@ -10,7 +11,6 @@ slider.subscribe("change", function(offsetFromStart) {
         var fld = document.getElementById("imageSize");
         var actualValue = slider.getRealValue();
         fld.value = actualValue;
-        alert(actualValue);
     }else{
         changeVal(document.getElementById("imageSize"));
         firstCall=false;
@@ -19,11 +19,10 @@ slider.subscribe("change", function(offsetFromStart) {
 
 function changeVal(obj) {
     var strValue = obj.value;
-    alert(obj.value);
     var fValue = parseFloat(strValue);
     if(!isNaN(fValue)) {
         if(fValue >= 0 && fValue <= 2048) {
-            slider.setValue(Math.round(fValue / 10.24), false);
+            slider.setValue(Math.round(fValue * multiplier), false);
         }
     }
 }

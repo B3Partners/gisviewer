@@ -38,7 +38,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css">
-        <!-- <link href="styles/edamvolendam/viewer_ev.css" rel="stylesheet" type="text/css" > -->
+        <!-- <link href="styles/custom/viewer_ev.css" rel="stylesheet" type="text/css" > -->
         
         <!--[if lte IE 6]>
             <style type="text/css">

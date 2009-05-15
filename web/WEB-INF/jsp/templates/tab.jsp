@@ -38,7 +38,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/main.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/viewer_b3p.css" rel="stylesheet" type="text/css" >
-        <!-- <link rel="stylesheet" type="text/css" href="styles/edamvolendam/viewer_ev_clean_overlay.css"> -->
+        <!-- <link rel="stylesheet" type="text/css" href="styles/custom/viewer_clean_overlay.css"> -->
         <script type="text/javascript">  
             var usePopup = false;
             if(opener) {

@@ -237,24 +237,24 @@ function filterInvisibleItems(cluster){
 }
 function createCheckboxCluster(item){
     var checkbox;
-    /*if (navigator.appName=="Microsoft Internet Explorer") {
+    if (navigator.appName=="Microsoft Internet Explorer") {
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
         if(item.visible)
             checkboxControleString += ' checked="checked"';
-        checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this)"';
+        checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
-    }else{*/
-    checkbox = document.createElement('input');
-    checkbox.id = item.id;
-    checkbox.type = 'checkbox';
-    checkbox.value = item.id;
-    checkbox.onclick = function(){
-        clusterCheckboxClick(this, false);
+    }else{
+	    checkbox = document.createElement('input');
+	    checkbox.id = item.id;
+	    checkbox.type = 'checkbox';
+	    checkbox.value = item.id;
+	    checkbox.onclick = function(){
+		clusterCheckboxClick(this, false);
+	    }
+	    if(item.visible)
+		checkbox.checked = true;
     }
-    if(item.visible)
-        checkbox.checked = true;
-    //}
     return checkbox;
 }
 

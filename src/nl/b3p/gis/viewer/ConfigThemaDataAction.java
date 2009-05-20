@@ -327,7 +327,7 @@ public class ConfigThemaDataAction extends ViewerCrudAction {
             }
         }
         //haal opnieuw de ThemaData objecten op om te kijken of er een Extra data veld is of nog moet aangemaakt worden.
-        if (attributes.size() > DEFAULTBASISCOLUMNS){
+        if (attributes!=null && attributes.size() > DEFAULTBASISCOLUMNS){
             List bestaandeObjecten = SpatialUtil.getThemaData(t, false);
             boolean extraBestaat = false;
             boolean nietBasisregels = false;

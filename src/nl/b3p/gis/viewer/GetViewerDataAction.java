@@ -65,6 +65,7 @@ public class GetViewerDataAction extends BaseGisAction {
     protected static final String ANALYSEDATA = "analysedata";
     protected static final String ANALYSEWAARDE = "analysewaarde";
     protected static final String ANALYSEOBJECT = "analyseobject";
+    protected static final double clickTolerance = 5.0;
 
     /**
      * Return een hashmap die een property koppelt aan een Action.
@@ -751,18 +752,17 @@ public class GetViewerDataAction extends BaseGisAction {
         try {
             if (s != null) {
                 scale = Double.parseDouble(s);
-                //af ronden op 1 decimaal
-                scale = Math.round(scale * 10) / 10;
+                //af ronden op 6 decimalen
+                scale = Math.round((scale * 1000000));
+                scale = scale/1000000;
             }
         } catch (NumberFormatException nfe) {
             scale = 0.0;
             log.debug("Scale is geen double dus wordt genegeerd");
         }
-        double distance = 10.0;
+        double distance = clickTolerance;
         if (scale > 0.0) {
-            distance = scale * (distance);
-        } else {
-            distance = 10.0;
+            distance = scale * (clickTolerance);
         }
         ArrayList regels = new ArrayList();
         ArrayList features = WfsUtil.getWFSObjects(t, coords, "EPSG:28992",distance,request);

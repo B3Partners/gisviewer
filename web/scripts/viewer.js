@@ -476,7 +476,6 @@ function checkboxClick(obj, dontRefresh) {
         //add querylayers
         
     } else {
-        deleteFromArray(obj);
         removeItemAsLayer(obj.theItem);
     }
     if (!dontRefresh){        
@@ -563,6 +562,7 @@ function addItemAsLayer(theItem){
 }
 
 function removeItemAsLayer(theItem){
+    deleteFromArray(theItem);
     if (!theItem.hide_legend)
         removeLayerFromVolgorde(theItem.title, theItem.id + '##' + theItem.wmslayers);
     if (theItem.wmslayers){
@@ -701,12 +701,12 @@ function getArrayAsString() {
     return ret;
 }
 
-function deleteFromArray(obj) {
-    if(checkboxArray.length == 1 && checkboxArray[0] == obj) checkboxArray = new Array();
+function deleteFromArray(theItem) {
+    if(checkboxArray.length == 1 && checkboxArray[0] == theItem.id) checkboxArray = new Array();
     var tempArray = new Array();
     var j = 0;
     for(i = 0; i < checkboxArray.length; i++) {
-        if(checkboxArray[i] != obj.value) {
+        if(checkboxArray[i] != theItem.id) {
             tempArray[j] = checkboxArray[i];
             j++;
         }

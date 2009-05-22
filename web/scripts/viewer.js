@@ -284,9 +284,11 @@ function createLabel(container, item) {
             container.appendChild(lnk);
 //            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
         }
-        if (item.active && item.metadatalink && item.metadatalink.length > 1){
+        if (item.active){
             setActiveCluster(item, true);
-            if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;            
+            if(item.metadatalink && item.metadatalink.length > 1){
+                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+            }
         }
     } else if (!item.hide_tree) {
         var analyseRadioChecked = false;

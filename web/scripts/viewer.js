@@ -154,6 +154,7 @@ function setActiveCluster(item,overrule){
         var atlabel = document.getElementById('actief_thema');
         if (atlabel!=null && item.title!=null){
             activeClusterId=item.id;
+            activeAnalyseThemaTitle = item.title;
             atlabel.innerHTML = 'Actieve thema: ' + item.title;
         }
     }

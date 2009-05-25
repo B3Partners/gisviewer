@@ -35,6 +35,7 @@ import javax.servlet.http.HttpSession;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.viewer.BaseGisAction;
+import nl.b3p.gis.viewer.db.Clusters;
 import nl.b3p.gis.viewer.db.Themas;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -190,12 +191,13 @@ public class IndexAction extends BaseGisAction {
         if (validThemas!=null){
             for (int i=0; i < validThemas.size(); i++){
                 Themas t= (Themas) validThemas.get(i);
-                if (!t.getCluster().isHide_tree()){
+                Clusters c = t.getCluster();
+                if (!c.isHide_tree() && !c.isBackground_cluster()){
                     themalist.add(t);
                 }
-                if (t.getCluster().isCallable()){
-                    if(!clusterlist.contains(t.getCluster())){
-                        clusterlist.add(t.getCluster());
+                if (c.isCallable() && !c.isBackground_cluster()){
+                    if(!clusterlist.contains(c)){
+                        clusterlist.add(c);
                     }
                 }
             }

@@ -1087,13 +1087,28 @@ function doIdentify(minx,miny,maxx,maxy){
     });
     flamingo.callMethod("toolGroup","setTool","identify");
 }
+var nextIdentifyExtent=null;
+function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
+    nextIdentifyExtent=new Object();
+    nextIdentifyExtent.minx=minx;
+    nextIdentifyExtent.miny=miny;
+    nextIdentifyExtent.maxx=maxx;
+    nextIdentifyExtent.maxy=maxy;
+}
 function moveAndIdentify(minx,miny,maxx,maxy){
     moveToExtent(minx,miny,maxx,maxy);
     var centerX=Number(Number(Number(minx)+Number(maxx))/2);
     var centerY=Number(Number(Number(miny)+Number(maxy))/2);
-    doIdentify(centerX,centerY,centerX,centerY);
-}
+    //doIdentify(centerX,centerY,centerX,centerY);
+    doIdentifyAfterUpdate(centerX,centerY,centerX,centerY);
 
+}
+function flamingo_map1_onUpdateComplete(mapId){
+    if(nextIdentifyExtent!=null){
+        doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
+        nextIdentifyExtent=null;
+    }
+}
 if(useSortableFunction) {
     $("#orderLayerBox").sortable({
         stop:function(){

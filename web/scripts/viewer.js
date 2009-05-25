@@ -392,6 +392,12 @@ function createLabel(container, item) {
         container.appendChild(document.createTextNode('  '));
         container.appendChild(lnk);
         
+    }else if(item.hide_tree && item.visible && item.wmslayers){
+        if (item.background){
+            allActiveBackgroundLayers+=","+item.wmslayers;
+        }else{
+            allActiveLayers+=","+item.wmslayers;
+        }
     }
 }
 

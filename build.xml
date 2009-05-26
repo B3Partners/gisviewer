@@ -64,6 +64,4 @@
 
     -->
     
-    <import file="database/hibernate-schemaexport.xml"/>
-    
 </project>

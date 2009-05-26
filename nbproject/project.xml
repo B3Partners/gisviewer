@@ -60,7 +60,6 @@
                 </library>
                 <library>
                     <file>${libs.B3pItextLib.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library>
                     <file>${libs.B3pSecurityLib.classpath}</file>
@@ -80,6 +79,10 @@
                 </library>
                 <library>
                     <file>${reference.b3p-geotools-filterImpl2.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library>
+                    <file>${reference.b3p-gisviewer.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
@@ -126,6 +129,14 @@
             </reference>
             <reference>
                 <foreign-project>b3p-geotools-filterImpl2</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
+                <foreign-project>b3p-gisviewer</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

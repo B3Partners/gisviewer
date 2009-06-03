@@ -802,7 +802,12 @@ function getCoordsCallbackFunction(values){
 //adds a layer to the legenda
 function addLayerToVolgorde(theItem) {    
     var id=theItem.id + '##' + theItem.wmslayers;
-    
+    //check if already exists in legend
+    for(var i=0; i < orderLayerBox.childNodes.length; i++){
+        if(orderLayerBox.childNodes.item(i).id==id){
+            return;
+        }
+    }    
     var legendURL="";
     if (theItem.legendurl!=undefined){
         legendURL=theItem.legendurl;

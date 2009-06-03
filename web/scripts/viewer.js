@@ -16,6 +16,8 @@ var checkboxArray = new Array();
 var clusterCheckboxArray = new Array();
 var timeouts=0;
 var featureInfoTimeOut=30;
+//timestamp in days
+var timestamp=(Math.floor(d.getTime()/86400000));
 
 var fmcController = new FMCController(flamingo,'fmcController');
 /* voobeelden:
@@ -851,7 +853,7 @@ function addLayerToVolgorde(theItem) {
     if (legendURL==undefined){
         myImage.onerror();
     }else{
-        myImage.src = legendURL;
+        myImage.src = legendURL+"&timestamp="+timestamp;
     }
     div.onclick=function(){
         selectLayer(this);

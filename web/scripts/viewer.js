@@ -1028,6 +1028,9 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
 readCookieArrayIntoCheckboxArray();
 var doOnInit= new Boolean("true");
 function flamingo_map1_onInit(){
+    if (document.getElementById("treeForm")){
+        document.getElementById("treeForm").reset();
+    }
     if(doOnInit){
         doOnInit=false;
         //check / activate the themas that have init status visible

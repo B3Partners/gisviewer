@@ -296,7 +296,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                             }
                                         </script>
                                             <div id="treevak" style="display: none;" class="tabvak">
+                                                <form id="treeForm">
                                                 <div id="layermaindiv" style="display: none;"></div>
+                                                </form>
                                             </div>
                                             <div id="volgordevak" style="display: none;" class="tabvak">
                                                 Bepaal de volgorde waarin de kaartlagen getoond worden

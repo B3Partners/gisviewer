@@ -385,7 +385,9 @@ function createLabel(container, item) {
 
         if(item.wmslayers){
             if(item.analyse=="on" || item.analyse=="active"){
-                container.appendChild(el);
+            	if (!multipleActiveThemas){
+                	container.appendChild(el);
+		}
             }
             container.appendChild(el2);
         }

@@ -1037,7 +1037,7 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
 readCookieArrayIntoCheckboxArray();
 var doOnInit= new Boolean("true");
 function flamingo_map1_onInit(){
-    if (document.getElementById("treeForm")){
+    if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
     if(doOnInit){

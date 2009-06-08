@@ -17,7 +17,7 @@ var clusterCheckboxArray = new Array();
 var timeouts=0;
 var featureInfoTimeOut=30;
 //timestamp in days
-var timestamp=(Math.floor(d.getTime()/86400000));
+var timestamp=(Math.floor(new Date().getTime()/86400000));
 
 var fmcController = new FMCController(flamingo,'fmcController');
 /* voobeelden:

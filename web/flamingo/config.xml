@@ -32,7 +32,7 @@
             <string id="xy" nl="X: [x]     Y: [y]" />
         </fmc:Coordinates>
     </fmc:Container>
-    <fmc:Container id="containerLeft" backgroundcolor="#D2E0EB" left="0" top="10%" height="90%" width="20%">                
+    <fmc:Container id="containerLeft" backgroundcolor="#D2E0EB" left="0" top="5%" height="95%" width="20%">
         <fmc:Map id="overview"  left="20%" top="0%" height="118" width="100" extent="7663,300655,285051,626588" fullextent="7663,300655,285051,626588">
             <fmc:LayerOverview listento="map1"/>
             <fmc:LayerImage id="Limburg" imageurl="../images/overviewNederland.png" extent="7663,300655,285051,626588" />

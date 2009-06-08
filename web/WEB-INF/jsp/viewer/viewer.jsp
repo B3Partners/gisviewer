@@ -32,7 +32,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
     var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
     var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;    
-
+    var anoniem= !beheerder && !organisatiebeheerder && !themabeheerder && !gebruiker && !demogebruiker;
+    
     var kburl="${kburl}";
     var themaTree=${tree};
     var visibleTree=${tree};
@@ -161,7 +162,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         // "organisatiebeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
         // "themabeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
         "gebruiker": ["tab0", "tab4", "tab1", "tab2", "tab3"],
-        "demogebruiker": ["tab1", "tab4", "tab5"]
+        "demogebruiker": ["tab1", "tab4", "tab5"],
+        "anoniem": ["tab0", "tab4", "tab1", "tab2", "tab3"]
     };
     
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
@@ -193,6 +195,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 if(userrights.demogebruiker[k] == enabledtabs[j]) found = true;
             }
             if(!found) enabledtabs[enabledtabs.length] = userrights.demogebruiker[k];
+        }
+    }
+    if(anoniem){
+        for(k in userrights.anoniem) {
+            var found = false;
+            for(j in enabledtabs) {
+                if(userrights.anoniem[k] == enabledtabs[j]) found = true;
+            }
+            if(!found) enabledtabs[enabledtabs.length] = userrights.anoniem[k];
         }
     }
 

@@ -259,8 +259,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             }
             
              <c:if test="${nuOfTables == 1 && nuOfRegels == 1 && nuOfColumns == 1 && (not empty refreshURL)}">
-                // Doe een window.location als er maar 1 cel en 1 kolom is en dit is een URL
-                window.location = '${refreshURL}';
+                // creeer popup als nog niet in popup
+                if(opener && opener.usePopup) {
+                    // Doe een window.location als er maar 1 cel en 1 kolom is en dit is een URL
+                    window.location = '${refreshURL}';
+                } else {
+                    popUp('${refreshURL}', 'externe_link');
+                }
             </c:if>
        </script>
 

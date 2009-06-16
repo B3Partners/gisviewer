@@ -45,7 +45,7 @@
         <tr>
             <td></td>
             <td>
-                Als u de kwaliteit van de kaart veranderd kan het uiterlijk van de kaart veranderen.
+                Als u de kwaliteit van de kaart verandert, kan het uiterlijk van de kaart veranderen.
             </td>
         </tr>
         <tr>

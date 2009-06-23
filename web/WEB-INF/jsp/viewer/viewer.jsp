@@ -463,6 +463,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     "expandAll": false
     });
    
+    // sometimes IE6 refuses to init Flamingo
+    ie6_hack_onInit();
     
 </script>
 

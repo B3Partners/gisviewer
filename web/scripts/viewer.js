@@ -1080,6 +1080,15 @@ function flamingo_map1_onInit(){
         refreshLayer();
     }
 }
+function ie6_hack_onInit(){
+    if (navigator.appVersion.indexOf("MSIE") != -1) {
+        version = parseFloat(navigator.appVersion.split("MSIE")[1]);
+        //alert("version IE: " + version);
+        if (version == 6) {
+            setTimeout("doOnInit=true; flamingo_map1_onInit();",5000);
+        }
+    }
+}
 function moveToExtent(minx,miny,maxx,maxy){
     flamingo.callMethod("map1", "moveToExtent", {
         minx:minx,

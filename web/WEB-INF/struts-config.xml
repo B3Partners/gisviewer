@@ -23,7 +23,7 @@
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
             <form-property name="themaID" type="java.lang.String"/>
-            <form-property name="code" type="java.lang.String"/>
+            <form-property name="themaCode" type="java.lang.String"/>
             <form-property name="naam" type="java.lang.String"/>
             <form-property name="metadatalink" type="java.lang.String"/>
             <form-property name="connectie" type="java.lang.String"/>

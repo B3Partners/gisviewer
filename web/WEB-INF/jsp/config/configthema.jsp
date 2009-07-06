@@ -150,7 +150,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <fmt:message key="configthema.code"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.code.uitleg"/></div>
                         </td>
                         <td colspan="3">
-                            <html:select property="code" styleClass="configSelect">
+                            <html:select property="themaCode" styleClass="configSelect">
                                 <html:option value="1">Oorspronkelijk Thema (1)</html:option>
                                 <html:option value="2">Nieuw Thema (2)</html:option>
                                 <html:option value="3">Thema niet meer in gebruik (3)</html:option>

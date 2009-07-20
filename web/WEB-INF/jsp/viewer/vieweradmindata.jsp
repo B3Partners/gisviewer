@@ -100,9 +100,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <input name="themaId" type="hidden" value="${themaId}"/>
                         <input name="objectIds" type="hidden" value=""/>
                     </form>
-                    <form action="viewerdata.do?aanvullendeinfo=t" name="data2info${tStatus.count}" id="data2info${tStatus.count}" target="_blank" method="post">
+                    <form action="viewerdata.do?aanvullendeinfo=t&pkFieldName=primaryKeys" name="data2info${tStatus.count}" id="data2info${tStatus.count}" target="_blank" method="post">
                         <input name="themaid" type="hidden" value="${themaId}"/>
-                        <input name="${adminPk}" type="hidden" value=""/>
+                        <input name="primaryKeys" type="hidden" value=""/>
                         <input name="addKaart" type="hidden" value="j"/>
                     </form>
                 </div>
@@ -157,10 +157,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                     }
                                     document.data2csv${tStatus.count}.objectIds.value+="${regel.primairyKey}";
                                     if (${counter.count} < maxExtraInfo+1){
-                                        if (document.data2info${tStatus.count}.${adminPk}.value.length > 0){
-                                            document.data2info${tStatus.count}.${adminPk}.value+=",";
+                                        if (document.data2info${tStatus.count}.primaryKeys.value.length > 0){
+                                            document.data2info${tStatus.count}.primaryKeys.value+=",";
                                         }
-                                        document.data2info${tStatus.count}.${adminPk}.value+="${regel.primairyKey}";
+                                        document.data2info${tStatus.count}.primaryKeys.value+="${regel.primairyKey}";
                                     }
                                 </script>
                                 <c:if test="${counter.count < 501}">

@@ -108,6 +108,7 @@
             <form-property name="ycoord" type="java.lang.String"/-->
             <form-property name="coords" type="java.lang.String"/>
             <form-property name="scale" type="java.lang.String"/>
+            <form-property name="tolerance" type="java.lang.String"/>
             <form-property name="lagen" type="java.lang.String"/>
             <form-property name="locatieveld" type="java.lang.String"/>
             <form-property name="extraCriteria" type="java.lang.String"/>

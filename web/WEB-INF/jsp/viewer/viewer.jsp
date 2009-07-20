@@ -54,7 +54,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      */
     var usePopup=false;
     var dataframepopupHandle = null;
-    
+
+    /* het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
+     * en info wordt opgevraagd. Dus een tolerantie.
+     **/
+    var tolerance=1;
     if(demogebruiker) usePopup=true;
     
     
@@ -230,6 +234,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <html:hidden property="ycoord"/ --%>
         <html:hidden property="coords" />
         <html:hidden property="scale"/>
+        <html:hidden property="tolerance"/>
     </html:form>
 </div>
 

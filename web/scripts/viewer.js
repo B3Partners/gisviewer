@@ -80,6 +80,7 @@ function handleGetAdminData(coords) {
     }
     document.forms[0].coords.value=coordsVal;
     document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
+    document.forms[0].tolerance.value=tolerance;
     if(usePopup) {
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) dataframepopupHandle = popUpData('dataframepopup', '680', '225');

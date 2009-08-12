@@ -48,7 +48,7 @@ function handleGetData(str) {
 }
 
 
-function handleGetAdminData(coords) {
+function handleGetAdminData(/*coords,*/ geom) {
     var checkedThemaIds;
     if (!multipleActiveThemas){
         checkedThemaIds = activeAnalyseThemaId;
@@ -71,14 +71,15 @@ function handleGetAdminData(coords) {
     document.forms[0].lagen.value='';
     //document.forms[0].xcoord.value=x;
     //document.forms[0].ycoord.value=y;
-    var coordsVal='';
+    /*var coordsVal='';
     for (var i=0; i < coords.length; i++){
         if (i!=0){
             coordsVal+=","
         }
         coordsVal+=coords[i];
     }
-    document.forms[0].coords.value=coordsVal;
+    document.forms[0].coords.value=coordsVal;*/
+    document.forms[0].geom.value=geom;
     document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
     document.forms[0].tolerance.value=tolerance;
     if(usePopup) {
@@ -655,7 +656,7 @@ function refreshLayer(){
         }
     }
 }
-function loadObjectInfo(coords) {
+function loadObjectInfo(/*coords,*/ geom) {
     // vul object frame
     document.forms[0].admindata.value = '';
     document.forms[0].metadata.value = '';
@@ -678,14 +679,15 @@ function loadObjectInfo(coords) {
     }
     //document.forms[0].xcoord.value = x;
     //document.forms[0].ycoord.value = y;
-    var coordsVal='';
+    /*var coordsVal='';
     for (var i=0; i < coords.length; i++){
         if (i!=0){
             coordsVal+=","
         }
         coordsVal+=coords[i];
     }
-    document.forms[0].coords.value=coordsVal;
+    document.forms[0].coords.value=coordsVal;*/
+    document.forms[0].geom.value=geom;
     document.forms[0].scale.value ='';
 
     // vul adressen/locatie
@@ -992,7 +994,25 @@ function flamingo_map1_onIdentify(movie,extend){
     document.getElementById('kadastraledata').innerHTML = loadingStr;
     var xp = (extend.minx + extend.maxx)/2;
     var yp = (extend.miny + extend.maxy)/2;
-    var coords = new Array();
+
+    var geom = "";
+    if (extend.minx!=extend.maxx && extend.miny!=extend.maxy){
+        // polygon
+        geom += "POLYGON((";
+        geom += extend.minx +" "+ extend.miny +",";
+        geom += extend.maxx +" "+ extend.miny +",";
+        geom += extend.maxx +" "+ extend.maxy +",";
+        geom += extend.minx +" "+ extend.maxy +",";
+        geom += extend.minx +" "+ extend.miny;
+        geom += "))";
+    }else{
+        // point
+        geom += "POINT(";
+        geom += extend.minx +" "+ extend.miny;
+        geom += ")";
+    }
+
+    /*var coords = new Array();
     coords.push(extend.minx);
     coords.push(extend.miny);
     if (extend.minx!=extend.maxx && extend.miny!=extend.maxy){
@@ -1004,10 +1024,11 @@ function flamingo_map1_onIdentify(movie,extend){
         coords.push(extend.maxy);
         coords.push(extend.minx);
         coords.push(extend.miny);
-    }
-    handleGetAdminData(coords);
+    }*/
+    handleGetAdminData(/*coords,*/ geom);
+
     doAjaxRequest(xp,yp);
-    loadObjectInfo(coords);
+    loadObjectInfo(/*coords,*/ geom);
 }
 var teller=0;
 //update the getFeatureInfo in the feature window.
@@ -1309,4 +1330,18 @@ function barneveldSettings() {
     if (demogebruiker){
         fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));
     }
+}
+
+function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureWKT){
+    //alert(activeFeatureWKT);
+    document.getElementById('start_message').style.display = 'none';
+    document.getElementById('algdatavak').style.display = 'block';
+
+    var loadingStr = "Bezig met laden...";
+    document.getElementById('kadastraledata').innerHTML = loadingStr;
+
+    var geom = activeFeatureWKT;
+
+    handleGetAdminData(geom);
+    loadObjectInfo(geom);
 }

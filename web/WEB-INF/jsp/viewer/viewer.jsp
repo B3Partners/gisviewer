@@ -233,6 +233,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <%--html:hidden property="xcoord" />
         <html:hidden property="ycoord"/ --%>
         <html:hidden property="coords" />
+        <html:hidden property="geom" />
         <html:hidden property="scale"/>
         <html:hidden property="tolerance"/>
     </html:form>

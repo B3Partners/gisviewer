@@ -107,6 +107,7 @@
             <!--form-property name="xcoord" type="java.lang.String"/>
             <form-property name="ycoord" type="java.lang.String"/-->
             <form-property name="coords" type="java.lang.String"/>
+            <form-property name="geom" type="java.lang.String"/>
             <form-property name="scale" type="java.lang.String"/>
             <form-property name="tolerance" type="java.lang.String"/>
             <form-property name="lagen" type="java.lang.String"/>

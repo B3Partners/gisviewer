@@ -646,7 +646,9 @@ function refreshLayer(){
                 newLayer+='<visualisationselected id="';
                 newLayer+=layersArray[i]+'" ';
                 newLayer+='colorkey="id" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>'
+                //maptip tag toeveoegen searchThemaValue(tree,''
                 newLayer+='</layer>';
+
             }
         }
         newLayer+= "</fmc:LayerOGWMS>";
@@ -1334,14 +1336,16 @@ function barneveldSettings() {
 
 function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureWKT){
     //alert(activeFeatureWKT);
-    document.getElementById('start_message').style.display = 'none';
-    document.getElementById('algdatavak').style.display = 'block';
+    if(activeFeatureWKT != null){
+        document.getElementById('start_message').style.display = 'none';
+        document.getElementById('algdatavak').style.display = 'block';
 
-    var loadingStr = "Bezig met laden...";
-    document.getElementById('kadastraledata').innerHTML = loadingStr;
+        var loadingStr = "Bezig met laden...";
+        document.getElementById('kadastraledata').innerHTML = loadingStr;
 
-    var geom = activeFeatureWKT;
+        var geom = activeFeatureWKT;
 
-    handleGetAdminData(geom);
-    loadObjectInfo(geom);
+        handleGetAdminData(geom);
+        loadObjectInfo(geom);
+    }
 }

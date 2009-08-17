@@ -1,10 +1,12 @@
 function createAdminQ() {
     if (document.getElementById('admin_query_text')!=undefined){
-        if(document.getElementById('admin_query_text').value == '') {
-            var admin_tabel = document.getElementById('admin_tabel_select').options[document.getElementById('admin_tabel_select').selectedIndex].value;
-            var admin_pk = document.getElementById('admin_pk_select').options[document.getElementById('admin_pk_select').selectedIndex].value;
-            var query = 'select * from "' + admin_tabel + '" where "' + admin_pk + '" = ?';
-            document.getElementById('admin_query_text').value = query;
+        if(currentConnectionType == 'jdbc'){
+            if(document.getElementById('admin_query_text').value == '') {
+                var admin_tabel = document.getElementById('admin_tabel_select').options[document.getElementById('admin_tabel_select').selectedIndex].value;
+                var admin_pk = document.getElementById('admin_pk_select').options[document.getElementById('admin_pk_select').selectedIndex].value;
+                var query = 'select * from "' + admin_tabel + '" where "' + admin_pk + '" = ?';
+                document.getElementById('admin_query_text').value = query;
+            }
         }
     }
 }
@@ -90,8 +92,8 @@ function showHideJDBC() {
         document.getElementById('admin_query_text').style.display = "block";
     } else {
         document.getElementById('tab-geavanceerd-header').style.display = "none";
-        document.getElementById('adminqueryrow').style.display = "none";
-        document.getElementById('admin_query_text').style.display = "none";
+        document.getElementById('adminqueryrow').style.display = "block";
+        document.getElementById('admin_query_text').style.display = "block";
     }
 }
 function refreshAdminAttributeList(element){

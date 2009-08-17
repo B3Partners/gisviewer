@@ -305,6 +305,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
+                    <tr>
+                        <td><fmt:message key="configthema.maptip"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.maptip.uitleg"/></div></td>
+                        <td colspan="3">
+                            <html:text property="thema_maptip" size="140"/>
+                        </td>
+                    </tr>
                 </table>
             </div>
 

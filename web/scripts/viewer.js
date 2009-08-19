@@ -1,6 +1,5 @@
-var allActiveLayers="";
-var allActiveBackgroundLayers="";
-var allQueryLayers="";
+var enabledLayerItems= new Array();
+
 var layerUrl=""+kburl;
 var cookieArray = readCookie('checkedLayers');
 
@@ -19,14 +18,14 @@ var featureInfoTimeOut=30;
 //timestamp in days
 var timestamp=(Math.floor(new Date().getTime()/86400000));
 
-var fmcController = new FMCController(flamingo,'fmcController');
-/* voobeelden:
-fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
-fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
-fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
-fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
-fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));
- */
+
+var flamingoController= new FlamingoController(flamingo,'flamingoController');
+flamingoController.createMap("map1");
+//flamingoController.createEditMap("editMap");
+//flamingoController.setRequestListener("requestIsDone");
+//flamingoController.getMap().enableLayerRequestListener();
+
+
 function doAjaxRequest(point_x, point_y) {
     if (adresThemaId!=undefined){
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
@@ -97,9 +96,15 @@ function openUrlInIframe(url){
     iframe.src=url;
 }
 
-function popUp(URL, naam) {
+function popUp(URL, naam, width, height) {
     var screenwidth = 600;
     var screenheight = 500;
+    if (width){
+        screenwidth=width;
+    }
+    if (height){
+        screenheight=height;
+    }
     var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
     var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
     properties = "toolbar = 0, " +
@@ -364,9 +369,12 @@ function createLabel(container, item) {
             el2.onclick = function(){
                 checkboxClick(this, false);
             }
-            if(layerPos!=0 || analyseRadioChecked )
+            if(layerPos!=0 || analyseRadioChecked ){
                 el2.checked = true;
+            }
         }
+        if(layerPos!=0 || analyseRadioChecked )
+            addItemAsLayer(item);
         if (analyseRadioChecked && layerPos==0){
             layersAan.push(el2);
         }
@@ -399,11 +407,7 @@ function createLabel(container, item) {
         container.appendChild(lnk);
         
     }else if(item.hide_tree && item.visible && item.wmslayers){
-        if (item.background){
-            allActiveBackgroundLayers+=","+item.wmslayers;
-        }else{
-            allActiveLayers+=","+item.wmslayers;
-        }
+        addItemAsLayer(item);
     }
 }
 
@@ -540,7 +544,8 @@ function addItemAsLayer(theItem){
         createCookie('checkedLayers', arrayString, '7');
     } else {
         eraseCookie('checkedLayers');
-    }
+    }    
+    enabledLayerItems.push(theItem);
     
     //add legend part
     if (!theItem.hide_legend)
@@ -557,35 +562,18 @@ function addItemAsLayer(theItem){
                 layerUrl = layerUrl + organizationCodeKey + "="+organizationcode;
             }
         }
-        if(theItem.background){
-            if (allActiveBackgroundLayers.indexOf(","+theItem.wmslayers)==-1){
-                allActiveBackgroundLayers+=","+theItem.wmslayers;
-            }
-        }
-        else{
-            if (allActiveLayers.indexOf(","+theItem.wmslayers)==-1){
-                allActiveLayers+= ","+theItem.wmslayers;
-            }
-        }
-    }
-    //add query part
-    if (theItem.wmsquerylayers){
-        if (allQueryLayers.indexOf(","+theItem.wmsquerylayers)==-1){
-            allQueryLayers+=","+theItem.wmsquerylayers;
-        }
-    }
+    }    
 }
 
 function removeItemAsLayer(theItem){
     deleteFromArray(theItem);
     if (!theItem.hide_legend)
         removeLayerFromVolgorde(theItem.title, theItem.id + '##' + theItem.wmslayers);
-    if (theItem.wmslayers){
-        allActiveLayers=allActiveLayers.replace(","+theItem.wmslayers,"");
-        allActiveBackgroundLayers=allActiveBackgroundLayers.replace(","+theItem.wmslayers,"");
-    }
-    if (theItem.wmsquerylayers){
-        allQueryLayers=allQueryLayers.replace(","+theItem.wmsquerylayers,"");
+    for (var i=0; i < enabledLayerItems.length; i++){
+        if (enabledLayerItems[i].id==theItem.id){
+            enabledLayerItems.splice(i,1);
+            return;
+        }
     }
 }
 
@@ -606,19 +594,31 @@ function doRefreshLayer(){
 }
 function refreshLayer(){
     if (layerUrl!=undefined && layerUrl!=null) {
-        var layersToAdd;
-        if (allActiveBackgroundLayers.length>0){
-            //omdat de eerste positie een , is
-            layersToAdd= allActiveBackgroundLayers.substring(1);
-        }else{
-            layersToAdd="";
+        var backgroundLayers="";
+        var topLayers="";
+        var queryLayers="";
+        for (var i=0; i < enabledLayerItems.length; i++){
+            var item=enabledLayerItems[i];
+            if (item.visible){
+                if (item.wmslayers){
+                    if (item.background){
+                        if (backgroundLayers.length>0)
+                            backgroundLayers+=",";
+                        backgroundLayers+=item.wmslayers;
+                    }else{
+                        if(topLayers.length > 0)
+                            topLayers+=",";
+                        topLayers+=item.wmslayers;
+                    }
+                }
+                if (item.wmsquerylayers){
+                    if (queryLayers.length > 0)
+                        queryLayers+=",";
+                    queryLayers+=item.wmsquerylayers
+                }
+            }
         }
-        if (layersToAdd.length>0 && allActiveLayers.length>0){
-            layersToAdd+=allActiveLayers;
-        }else if (allActiveLayers.length>0){
-            //omdat de eerste positie een , is
-            layersToAdd+=allActiveLayers.substring(1);
-        }
+        var layersToAdd=backgroundLayers+topLayers;
         if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
             if(layerUrl.indexOf('?')> 0)
                 layerUrl+='&';
@@ -632,8 +632,8 @@ function refreshLayer(){
         "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl +
         "\"styles=\""+
         "\" layers=\""+layersToAdd;
-        if (allQueryLayers.length > 1){
-            newLayer+="\" query_layers=\""+allQueryLayers.substring(1);
+        if (queryLayers.length > 1){
+            newLayer+="\" query_layers=\""+queryLayers;
         }
         newLayer+="\" color_layers=\""+layersToAdd+
         "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
@@ -908,8 +908,7 @@ function deleteAllLayers() {
         document.getElementById(splitValue(orderLayerBox.childNodes[i].id)[0]).checked = false;
         orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
     }
-    allActiveLayers = "";
-    allActiveBackgroundLayers="";
+    enabledLayerItems=new Array();
     cookieArray = "";
     eraseCookie('checkedLayers');
     createCookie('checkedLayers', cookieArray, '7');
@@ -924,7 +923,6 @@ function parseVolgordeBox() {
         cookieString = "," + splitValue(orderLayerBox.childNodes[i].id)[0] + cookieString;
         layersString = "," + splitValue(orderLayerBox.childNodes[i].id)[1] + layersString;
     }
-    allActiveLayers = layersString;
     cookieArray = cookieString.substring(1);
     eraseCookie('checkedLayers');
     createCookie('checkedLayers', cookieArray, '7');
@@ -1324,14 +1322,14 @@ function exportMap(){
 /*Instellingen voor barneveld
          **/
 function barneveldSettings() {
-    fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
+    /*fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
 
     if (demogebruiker){
         fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));
-    }
+    }*/
 }
 
 function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureWKT){

@@ -288,6 +288,7 @@ function FlamingoWMSLayer(id){
     this.url=null;
     this.layers=null;
     this.querylayers=null;
+    this.maptiplayers=null;
     this.srs=null;
     this.showerrors=null;
     this.nocache=false;
@@ -315,6 +316,8 @@ function FlamingoWMSLayer(id){
             xml+=" layers=\""+this.getLayers()+"\"";
         if (this.getQuerylayers()!=null)
             xml+=" query_layers=\""+this.getQuerylayers()+"\"";
+        if (this.getMaptiplayers()!=null)
+            xml+=" maptip_layers=\""+this.getMaptiplayers()+"\"";
         if (this.getSrs()!=null)
             xml+=" srs=\""+this.getSrs()+"\"";
         if (this.getShowerrors()!=null)
@@ -336,7 +339,8 @@ function FlamingoWMSLayer(id){
         if (this.getGetCapabilitiesUrl()!=null)
             xml+=" getcapabilitiesurl=\""+this.getGetCapabilitiesUrl()+"\"";
         xml+=">";
-        for (var layerProperty in this.getLayerProperties()){
+        for (var i=0; i < this.getLayerProperties().length; i++){
+            var layerProperty=this.getLayerProperties()[i];
             xml+=layerProperty.toXml();
         }
         xml+="</";
@@ -375,6 +379,12 @@ function FlamingoWMSLayer(id){
     }
     this.setQuerylayers = function(querylayers){
         this.querylayers=querylayers;
+    }
+    this.getMaptiplayers= function(){
+        return this.maptiplayers;
+    }
+    this.setMaptiplayers= function(maptiplayers){
+        this.maptiplayers=maptiplayers;
     }
     this.getShowerrors = function(){
         return this.showerrors;
@@ -457,9 +467,16 @@ function FlamingoWMSLayer(id){
 
     this.setId(id);
 }
-function LayerProperty(id,maptipField){
+/**
+ *A child of a flamingo layer object (<layer> tag) With this the maptip string can be defined
+ *id: the layer id/name
+ *maptipField: the string that is used for showing the maptip (optional)
+ *aka: if the returned getFeatureInfo has another name then the layer. (optional)
+ **/
+function LayerProperty(id,maptipField,aka){
     this.id=null;
     this.maptipField=null;
+    this.aka=null;
     if (id==undefined){
         alert("Error: Id must be defined");
         return;
@@ -476,16 +493,31 @@ function LayerProperty(id,maptipField){
     this.getMaptipField= function(){
         return this.maptipField;
     }
+    this.setAka=function(aka){
+        this.aka=aka;
+    }
+    this.getAka=function(){
+        return this.aka;
+    }
     this.toXml=function(){
         var xml="<layer";
-        xml+=" id=\""+this.getId+"\"";
-        if (this.getMaptipField!=null)
-            xml+=" maptip=\""+this.getMaptipField+"\"";
+        xml+=" id=\""+this.getId()+"\"";
+        if (this.getMaptipField()!=null)
+            xml+=" maptip=\""+this.getMaptipField()+"\"";
+        if (this.getAka()!=null){
+            xml+=" aka=\""+this.getAka()+"\"";
+        }
         xml+="/>"
+        return xml;
     }
     //init
     this.setId(id);
-    this.setMaptipField(maptipField);
+    if (maptipField){
+        this.setMaptipField(maptipField);
+    }
+    if (aka){
+        this.setAka(aka);
+    }
 }
 function EditMap(id,flamingoController){
     this.id=id;

@@ -34,6 +34,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;    
     var anoniem= !beheerder && !organisatiebeheerder && !themabeheerder && !gebruiker && !demogebruiker;
     
+    var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
     var kburl="${kburl}";
     var themaTree=${tree};
     var visibleTree=${tree};

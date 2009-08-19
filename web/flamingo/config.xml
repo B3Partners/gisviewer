@@ -45,7 +45,8 @@
         <fmc:Map id="overview"  left="20%" top="0%" height="118" width="100" extent="7663,300655,285051,626588" fullextent="7663,300655,285051,626588">
             <fmc:LayerOverview listento="map1"/>
             <fmc:LayerImage id="Limburg" imageurl="../images/overviewNederland.png" extent="7663,300655,285051,626588" />
-        </fmc:Map>        
+        </fmc:Map>
+        
         <fmc:ZoomerV id="zoomerv" left="0%" top="0" height="118" listento="map1"></fmc:ZoomerV>           
         <!-- stukje knoppen voor redlining/ editing-->
         <fmc:EditLegend id="editLegend" left="0" top="118" listento="editMap"/>
@@ -66,7 +67,8 @@
                 <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>
             </fmc:Layer>
         </fmc:GIS>
-        <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extenthistory="10" extent="1200,30400,28000,62000">
+        <fmc:Maptip listento="map1"/>
+        <fmc:Map maptipdelay="1000" id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extenthistory="10" extent="1200,30400,28000,62000">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>
         </fmc:Map>                
     </fmc:Container>

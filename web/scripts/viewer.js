@@ -640,13 +640,25 @@ function refreshLayer(){
         newLayer.setQuerylayers(queryLayers);
         newLayer.setSrs("EPSG:28992");
         newLayer.setVersion("1.1.1");
-        /*TODO: Jytte even controleren:*/
-        /*for (var i=0; i < enabledLayerItems.length; i++){
+        newLayer.setShowerros(true);
+
+        var maptipLayers="";
+        for (var i=0; i < enabledLayerItems.length; i++){
             if (enabledLayerItems[i].maptipfield){
-                newLayer.addLayerProperty(new LayerProperty(enabledLayerItems[i].wmslayers, enabledLayerItems[i].maptipfield));
+                if (maptipLayers.length!=0)
+                    maptipLayers+=",";
+                maptipLayers+=enabledLayerItems[i].wmslayers;
+                var aka=enabledLayerItems[i].wmslayers;
+                /*Als de gebruiker ingelogd is dan zal het waarschijnlijk een kaartenbalie service zijn
+                 *Daarom moet er een andere aka worden gemaakt voor de map tip.
+                */
+                if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
+                    aka=aka.substring(aka.indexOf("_")+1);
+                }
+                newLayer.addLayerProperty(new LayerProperty(enabledLayerItems[i].wmslayers, enabledLayerItems[i].maptipfield, aka));
             }
-        }*/
-        /*Einde TODO*/
+        }
+        newLayer.setMaptiplayers(maptipLayers);
         flamingoController.getMap().addLayer(newLayer, true,true);
         
     }

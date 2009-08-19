@@ -305,12 +305,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
-                    <tr>
-                        <td><fmt:message key="configthema.maptip"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.maptip.uitleg"/></div></td>
-                        <td colspan="3">
-                            <html:text property="thema_maptip" size="140"/>
-                        </td>
-                    </tr>
                 </table>
             </div>
 
@@ -374,6 +368,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <tr><td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslegendlayers.uitleg"/></div></td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
                         </c:otherwise>
                     </c:choose>
+
+                    <tr>
+                        <td><fmt:message key="configthema.maptip"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.maptip.uitleg"/></div></td>
+                        <td colspan="3">
+                            <html:text property="thema_maptip" size="140"/>
+                        </td>
+                    </tr>
 
                     <tr><td colspan="4">&nbsp;</td></tr>
                     <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.updatefreqindagen.uitleg"/></div></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>

@@ -74,19 +74,30 @@ function Map(id,flamingoController){
      *Add a layer to flamingo
      *layer: a FlamingoWMSLayer object
      *refresh: if true the function will do a refresh after adding the layer
+     *replaceifIdExists: Replaces the layer when it has a layer with the same id
+     *      set true if you want to let the previous layer be visible until the new layer is loaded.
      */
-    this.addLayer= function(layer,refresh){
+    this.addLayer= function(layer,refresh,replaceIfIdExists){
         //this.removeLayer(layer);
         var flamingoLayers= this.getFlamingoController().getFlamingo().callMethod(this.getId(),'getLayers');
         if (layer.id.length==0){
             layer.id="layer";
         }
-        var newId=this.createUniqueLayerId(flamingoLayers,layer.id);
-        if (newId==null){
-            return;
+        if (!replaceIfIdExists){
+            var newId=this.createUniqueLayerId(flamingoLayers,layer.id);
+            if (newId==null){
+                return;
+            }
+            layer.setId(newId);
+        }else{
+            for (var i=0; i < this.layers.length; i++){
+                if (this.layers[i].getId()==layer.getId()){
+                    this.layers.splice(i,1);
+                }
+            }
         }
         this.layers.push(layer);
-        this.getFlamingoController().getFlamingo().callMethod(this.getId(),'addLayer',layer.getXml(this.getFlamingoController().getNamespacePrefix()));
+        this.getFlamingoController().getFlamingo().callMethod(this.getId(),'addLayer',layer.toXml(this.getFlamingoController().getNamespacePrefix()));
         if (this.getRequestListener()!=null){
             this.createLayerListener(layer.getId(),'onRequest',this.getRequestListener());
         }
@@ -208,6 +219,7 @@ function Map(id,flamingoController){
         return false;
     }
     //flamingo call methods:
+    //move to a extent
     this.moveToExtent = function(ext,delay){
         if(delay==undefined){
             delay=0;
@@ -217,6 +229,17 @@ function Map(id,flamingoController){
     this.moveToFullExtent = function(){
         this.moveToExtent(this.getFlamingoController().getFlamingo().callMethod(this.getId(), "getFullExtent"));
     }
+    //set and get the maximum extent of this map
+    this.setFullExtent=function(ext){
+        this.getFlamingoController().getFlamingo().callMethod(this.getId(), "setFullExtent", ext);
+    }
+    this.getFullExtent=function(){
+        return this.getFlamingoController().getFlamingo().callMethod(this.getId(), "getFullExtent");
+    }
+    this.doIdentify=function(ext){
+        this.getFlamingoController().getFlamingo().callMethod(this.getId(), "identify", ext);        
+    }
+    //Get the current extent
     this.getExtent= function(){
         return this.getFlamingoController().getFlamingo().callMethod(this.getId(),'getExtent');
     }
@@ -271,9 +294,15 @@ function FlamingoWMSLayer(id){
     this.transparent=true;
     this.lastGetMapRequest=null;
     this.version=null;
+    this.timeOut=null;
+    this.retryOnError=null;
+    this.format=null;
+    this.exceptions=null;
+    this.getCapabilitiesUrl=null;
+    this.layerProperties= new Array();
 
     //methods
-    this.getXml = function(namespaceprefix){
+    this.toXml = function(namespaceprefix){
         var xml="<";
         if (namespaceprefix!=null)
             xml+=namespaceprefix+":";
@@ -290,13 +319,30 @@ function FlamingoWMSLayer(id){
             xml+=" srs=\""+this.getSrs()+"\"";
         if (this.getShowerrors()!=null)
             xml+=" showerrors=\""+this.getShowerrors()+"\"";
-        if (this.nocache)
+        if (this.getNocache())
             xml+=" nocache=\"true\"";
-        if(!this.transparent)
+        if(!this.getTransparent())
             xml+=" transparent=\"false\"";
-        if(this.version!=null)
+        if(this.getVersion()!=null)
             xml+=" version=\""+this.getVersion()+"\"";
-        xml+="/>";
+        if(this.getTimeOut()!=null)
+            xml+=" timeout=\""+this.getTimeOut()+"\"";
+        if(this.getRetryOnError()!=null)
+            xml+=" retryonerror=\""+this.getRetryOnError()+"\"";
+        if (this.getFormat()!=null)
+            xml+=" format=\""+this.getFormat()+"\"";
+        if (this.getExceptions()!=null)
+            xml+=" exceptions=\""+this.getExceptions()+"\"";
+        if (this.getGetCapabilitiesUrl()!=null)
+            xml+=" getcapabilitiesurl=\""+this.getGetCapabilitiesUrl()+"\"";
+        xml+=">";
+        for (var layerProperty in this.getLayerProperties()){
+            xml+=layerProperty.toXml();
+        }
+        xml+="</";
+        if (namespaceprefix!=null)
+            xml+=namespaceprefix+":";
+        xml+="LayerOGWMS>";
         return xml;
     }
     //getters and setters
@@ -360,6 +406,45 @@ function FlamingoWMSLayer(id){
     this.getVersion= function(){
         return this.version;
     }
+    this.getTimeOut= function(){
+        return this.timeOut;
+    }
+    this.setTimeOut= function(timeOut){
+        this.timeOut=timeOut;
+    }
+    this.setRetryOnError = function(retryOnError){
+        this.retryOnError=retryOnError;
+    }
+    this.getRetryOnError= function(){
+        return this.retryOnError;
+    }
+    this.setFormat= function (format){
+        this.format=format;
+    }
+    this.getFormat= function(){
+        return this.format;
+    }
+    this.setExceptions= function(exceptions){
+        this.exceptions=exceptions;
+    }
+    this.getExceptions= function(){
+        return this.exceptions;
+    }
+    this.setGetCapabilitiesUrl= function(getCapabilitiesUrl){
+        this.getCapabilitiesUrl=getCapabilitiesUrl;
+    }
+    this.getGetCapabilitiesUrl= function(){
+        return this.getCapabilitiesUrl;
+    }
+    this.setLayerProperties= function (layerProperties){
+        this.layerProperties=layerProperties;
+    }
+    this.getLayerProperties= function(){
+        return this.layerProperties;
+    }
+    this.addLayerProperty= function (layerPropertie){
+        this.layerProperties.push(layerPropertie);
+    }
     this.toString= function(){
         var s="";
         s+=this.getId()+": ";
@@ -371,6 +456,36 @@ function FlamingoWMSLayer(id){
     /*Init*/
 
     this.setId(id);
+}
+function LayerProperty(id,maptipField){
+    this.id=null;
+    this.maptipField=null;
+    if (id==undefined){
+        alert("Error: Id must be defined");
+        return;
+    }
+    this.setId= function(id){
+        this.id=id;
+    }
+    this.getId= function(){
+        return this.id;
+    }
+    this.setMaptipField= function(maptipField){
+        this.maptipField=maptipField;
+    }
+    this.getMaptipField= function(){
+        return this.maptipField;
+    }
+    this.toXml=function(){
+        var xml="<layer";
+        xml+=" id=\""+this.getId+"\"";
+        if (this.getMaptipField!=null)
+            xml+=" maptip=\""+this.getMaptipField+"\"";
+        xml+="/>"
+    }
+    //init
+    this.setId(id);
+    this.setMaptipField(maptipField);
 }
 function EditMap(id,flamingoController){
     this.id=id;

@@ -550,7 +550,7 @@ function addItemAsLayer(theItem){
     //add legend part
     if (!theItem.hide_legend)
         addLayerToVolgorde(theItem);
-    //add wms part
+    //If ther is a orgainization code key then add this to the service url.
     if (theItem.wmslayers){
         var organizationCodeKey = theItem.organizationcodekey;
         if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
@@ -627,35 +627,28 @@ function refreshLayer(){
             layerUrl+="SERVICE=WMS";
         }
         var capLayerUrl=layerUrl;
-        var newLayer= "<fmc:LayerOGWMS xmlns:fmc=\"fmc\" id=\"fmcLayer\" timeout=\"30\"" +
-        "retryonerror=\"10\" format=\"image/png\" transparent=\"true\" url=\""+layerUrl +
-        "\"exceptions=\"application/vnd.ogc.se_inimage\" getcapabilitiesurl=\""+capLayerUrl +
-        "\"styles=\""+
-        "\" layers=\""+layersToAdd;
-        if (queryLayers.length > 1){
-            newLayer+="\" query_layers=\""+queryLayers;
-        }
-        newLayer+="\" color_layers=\""+layersToAdd+
-        "\" srs=\"EPSG:28992\" version=\"1.1.1\">";
-        /** add the highlight layer properties.
-                 */
-        var layersArray= layersToAdd.split(",");
-        for (var i=0; i < layersArray.length; i++){
-            if (layersArray[i].length> 0){
-                newLayer+='<layer id="'+layersArray[i]+'">';
-                newLayer+='<visualisationselected id="';
-                newLayer+=layersArray[i]+'" ';
-                newLayer+='colorkey="id" fill="#0000ff" fill-opacity="0.5" stroke="#0000ff"/>'
-                //maptip tag toeveoegen searchThemaValue(tree,''
-                newLayer+='</layer>';
-
+        //maak layer
+        var newLayer= new FlamingoWMSLayer("fmcLayer");
+        newLayer.setTimeOut("30");
+        newLayer.setRetryOnError("10");
+        newLayer.setFormat("image/png")
+        newLayer.setTransparent(true);
+        newLayer.setUrl(layerUrl);
+        newLayer.setExceptions("application/vnd.ogc.se_inimage");
+        newLayer.setGetCapabilitiesUrl(capLayerUrl);
+        newLayer.setLayers(layersToAdd);
+        newLayer.setQuerylayers(queryLayers);
+        newLayer.setSrs("EPSG:28992");
+        newLayer.setVersion("1.1.1");
+        /*TODO: Jytte even controleren:*/
+        /*for (var i=0; i < enabledLayerItems.length; i++){
+            if (enabledLayerItems[i].maptipfield){
+                newLayer.addLayerProperty(new LayerProperty(enabledLayerItems[i].wmslayers, enabledLayerItems[i].maptipfield));
             }
-        }
-        newLayer+= "</fmc:LayerOGWMS>";
-        if (flamingo && layerUrl!=undefined && layerUrl!=null){
-            flamingo.call('map1','removeLayer','fmcLayer');
-            flamingo.call('map1','addLayer',newLayer);
-        }
+        }*/
+        /*Einde TODO*/
+        flamingoController.getMap().addLayer(newLayer, true,true);
+        
     }
 }
 function loadObjectInfo(/*coords,*/ geom) {
@@ -1112,7 +1105,7 @@ function ie6_hack_onInit(){
     }
 }
 function moveToExtent(minx,miny,maxx,maxy){
-    flamingo.callMethod("map1", "moveToExtent", {
+    flamingoController.getMap().moveToExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
@@ -1120,7 +1113,7 @@ function moveToExtent(minx,miny,maxx,maxy){
     }, 0);
 }
 function setFullExtent(minx,miny,maxx,maxy){
-    flamingo.callMethod("map1","setFullExtent", {
+    flamingoController.getMap().setFullExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
@@ -1128,13 +1121,13 @@ function setFullExtent(minx,miny,maxx,maxy){
     });
 }
 function doIdentify(minx,miny,maxx,maxy){
-    flamingo.callMethod("map1","identify", {
+    flamingoController.getMap().doIdentify({
         minx:minx,
         miny:miny,
         maxx:maxx,
         maxy:maxy
     });
-    flamingo.callMethod("toolGroup","setTool","identify");
+    flamingoController.getFlamingo().callMethod("toolGroup","setTool","identify");
 }
 var nextIdentifyExtent=null;
 function doIdentifyAfterUpdate(minx,miny,maxx,maxy){

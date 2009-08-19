@@ -129,6 +129,7 @@ function handleGetArea(str){
 }  
 /**
  * Highlight the clicked object.
+ * Not working with flamingo 3.x Needs to be changed.
  */
 function highlight(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
     var wmsLayer;

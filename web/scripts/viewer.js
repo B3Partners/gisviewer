@@ -374,7 +374,7 @@ function createLabel(container, item) {
             }
         }
         if(layerPos!=0 || analyseRadioChecked )
-            addItemAsLayer(item);
+            addItemAsLayer(item,true);
         if (analyseRadioChecked && layerPos==0){
             layersAan.push(el2);
         }
@@ -407,7 +407,7 @@ function createLabel(container, item) {
         container.appendChild(lnk);
         
     }else if(item.hide_tree && item.visible && item.wmslayers){
-        addItemAsLayer(item);
+        addItemAsLayer(item,true);
     }
 }
 
@@ -535,7 +535,8 @@ function clusterCheckboxClick(element,dontRefresh){
     }
 }
 //adds a item as a layer (Wmslayer, legend and querylayer) and a cookie if needed.
-function addItemAsLayer(theItem){
+//if atBottomOfType is set to treu the layer will be added at the bottom of its type (background or top type)
+function addItemAsLayer(theItem,atBottomOfType){
     //part for cookie
     if(!isInCheckboxArray(theItem.id)) checkboxArray[checkboxArray.length] = theItem.id;
     if(checkboxArray.length > 0) {
@@ -549,7 +550,7 @@ function addItemAsLayer(theItem){
     
     //add legend part
     if (!theItem.hide_legend)
-        addLayerToVolgorde(theItem);
+        addLayerToVolgorde(theItem,atBottomOfType);
     //If ther is a orgainization code key then add this to the service url.
     if (theItem.wmslayers){
         var organizationCodeKey = theItem.organizationcodekey;
@@ -597,7 +598,10 @@ function refreshLayer(){
         var backgroundLayers="";
         var topLayers="";
         var queryLayers="";
-        for (var i=0; i < enabledLayerItems.length; i++){
+        /*eerste in de array moet boven op komen als kaart
+         *dus loop achteruit de layer door.
+         **/
+        for (var i=enabledLayerItems.length-1; i >=0 ; i--){
             var item=enabledLayerItems[i];
             if (item.visible){
                 if (item.wmslayers){
@@ -618,7 +622,10 @@ function refreshLayer(){
                 }
             }
         }
-        var layersToAdd=backgroundLayers+topLayers;
+        var layersToAdd=backgroundLayers;
+        if (layersToAdd.length>0)
+            layersToAdd+=",";
+        layersToAdd+=topLayers;
         if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
             if(layerUrl.indexOf('?')> 0)
                 layerUrl+='&';
@@ -810,7 +817,8 @@ function getCoordsCallbackFunction(values){
     searchResults.innerHTML=sResult;
 }
 //adds a layer to the legenda
-function addLayerToVolgorde(theItem) {    
+//if atBottomOfType is set to treu the layer will be added at the bottom of its type (background or top type)
+function addLayerToVolgorde(theItem,atBottomOfType) {
     var id=theItem.id + '##' + theItem.wmslayers;
     //check if already exists in legend
     for(var i=0; i < orderLayerBox.childNodes.length; i++){
@@ -842,27 +850,47 @@ function addLayerToVolgorde(theItem) {
     div.className="orderLayerClass";
     div.appendChild(spanEl);
     div.theItem=theItem;
+
+    var beforeChild=null;
     if(!orderLayerBox.hasChildNodes() || theItem.hide_legend) {
         orderLayerBox.appendChild(div);
     } else {
         //place layer before the background layers.
         if (theItem.background){
-            var beforeChild=null;
-            for(var i=0; i < orderLayerBox.childNodes.length && beforeChild==null; i++){
-                var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
-                if (orderLayerItem){
-                    if (orderLayerItem.background){
-                        beforeChild=orderLayerBox.childNodes.item(i);
+            if (atBottomOfType){
+                beforeChild=null;
+            }else{
+                for(var i=0; i < orderLayerBox.childNodes.length; i++){
+                    var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
+                    if (orderLayerItem){
+                        if (orderLayerItem.background){
+                            beforeChild=orderLayerBox.childNodes.item(i);
+                            break;
+                        }
                     }
                 }
             }
-            if (beforeChild==null){
-                orderLayerBox.appendChild(div);
-            }else{
-                orderLayerBox.insertBefore(div,beforeChild);
-            }
         }else{
-            orderLayerBox.insertBefore(div, orderLayerBox.firstChild);
+            if (atBottomOfType){
+                var previousChild=null;
+                for(var i=0; i < orderLayerBox.childNodes.length; i++){
+                    var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
+                    if (orderLayerItem){
+                        if (orderLayerItem.background){
+                            beforeChild=previousChild;
+                            break;
+                        }
+                    }
+                    previousChild=orderLayerBox.childNodes.item(i);
+                }
+            }else{
+                beforeChild=orderLayerBox.firstChild;
+            }
+        }
+        if (beforeChild==null){
+            orderLayerBox.appendChild(div);
+        }else{
+            orderLayerBox.insertBefore(div,beforeChild);
         }
     }
     if (legendURL==undefined){

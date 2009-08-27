@@ -8,6 +8,15 @@
 -->
 
 <FLAMINGO xmlns:fmc="fmc" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" commtojava="true" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+    <fmc:Veil id="veil" width="100%" height="100%" visible="false" borderwidth="0" fillcolor="#FFFFFF" alpha="50"/>
+    <fmc:Window skin="g" top="100" left="20%" width="290" height="180" canresize="false" canclose="true" visible="false">
+        <string id="title" en="Confirm" nl="Bevestigen"/>
+        <fmc:Confirmation id="confirmation" visible="false" listento="veil,editBar">
+            <string id="question" en="Are you sure you want to remove the object?" nl="Weet u zeker dat u het object wilt verwijderen?"/>
+            <string id="yes" en="yes" nl="Ja"/>
+            <string id="no" en="Cancel" nl="Annuleren"/>
+        </fmc:Confirmation>
+    </fmc:Window>
     <fmc:Window id="bufferwindow" skin="f1" top="100" left="100" width="290" height="180" canresize="false" canclose="true" visible="false">
         <string id="title" en="Buffer operation" nl="Buffer operatie"/>
         <fmc:BufferConfirmation id="bufferconfirmation" defaultbufferdistance="100" visible="false" listento="gis,editmapbuffer">
@@ -57,6 +66,9 @@
                 <string id="tooltip" en="buffer geometry" nl="buffer geometrie"/>
             </fmc:EditMapBufferButton>
         </fmc:Container>
+        <fmc:RemoveFeatureButton left="2" top="340" listento="confirmation">
+            <string id="tooltip" en="remove object" nl="Tekenobject verwijderen"/>
+        </fmc:RemoveFeatureButton>
     </fmc:Container>
     <fmc:Container id="containerMain"  borderwidth="1" bordercolor="#606060" left="20%" top="5%" height="95%" width="80%">
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>        

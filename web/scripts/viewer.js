@@ -896,7 +896,11 @@ function addLayerToVolgorde(theItem,atBottomOfType) {
     if (legendURL==undefined){
         myImage.onerror();
     }else{
-        myImage.src = legendURL+"&timestamp="+timestamp;
+        var imageUrl=legendURL;
+        if(legendURL.charAt(legendURL.length-4)!='.'){
+            imageUrl+="&timestamp="+timestamp;
+        }
+        myImage.src = imageUrl;
     }
     div.onclick=function(){
         selectLayer(this);

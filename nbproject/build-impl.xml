@@ -579,6 +579,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.B3pXalanLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pXalanLib.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.B3pCastorLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pCastorLib.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.B3pSpatialLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pSpatialLib.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pItextLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pItextLib.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.B3pSecurityLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pSecurityLib.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.Base64Encoder.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.Base64Encoder.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.B3pGeotoolsCommonLib2.5.2.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsCommonLib2.5.2.classpath" todir="${dist.ear.dir}"/>
@@ -587,7 +588,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.b3p-gisviewer.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-gisviewer.jar" todir="${dist.ear.dir}"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.libs.struts.classpath} ${manifest.libs.jstl11.classpath} ${manifest.libs.B3pHibernateLib.classpath} ${manifest.libs.B3pCommonsLib.classpath} ${manifest.libs.B3pDwrLib.classpath} ${manifest.reference.b3p-commons-core.jar} ${manifest.reference.jump-b3p.jar} ${manifest.reference.b3p-commons-hibernate.jar} ${manifest.reference.b3p-commons-gis.jar} ${manifest.reference.securityfilter-b3p.jar} ${manifest.libs.B3pXalanLib.classpath} ${manifest.libs.B3pCastorLib.classpath} ${manifest.libs.B3pSpatialLib.classpath} ${manifest.libs.B3pSecurityLib.classpath} ${manifest.reference.Base64Encoder.jar} ${manifest.libs.B3pGeotoolsCommonLib2.5.2.classpath} ${manifest.libs.B3pGeotoolsOgcLib2.5.2.classpath} ${manifest.reference.b3p-geotools-filterImpl2.jar} ${manifest.reference.b3p-gisviewer.jar} "/>
+            <attribute name="Class-Path" value="${manifest.libs.struts.classpath} ${manifest.libs.jstl11.classpath} ${manifest.libs.B3pHibernateLib.classpath} ${manifest.libs.B3pCommonsLib.classpath} ${manifest.libs.B3pDwrLib.classpath} ${manifest.reference.b3p-commons-core.jar} ${manifest.reference.jump-b3p.jar} ${manifest.reference.b3p-commons-hibernate.jar} ${manifest.reference.b3p-commons-gis.jar} ${manifest.reference.securityfilter-b3p.jar} ${manifest.libs.B3pXalanLib.classpath} ${manifest.libs.B3pCastorLib.classpath} ${manifest.libs.B3pSpatialLib.classpath} ${manifest.libs.B3pItextLib.classpath} ${manifest.libs.B3pSecurityLib.classpath} ${manifest.reference.Base64Encoder.jar} ${manifest.libs.B3pGeotoolsCommonLib2.5.2.classpath} ${manifest.libs.B3pGeotoolsOgcLib2.5.2.classpath} ${manifest.reference.b3p-geotools-filterImpl2.jar} ${manifest.reference.b3p-gisviewer.jar} "/>
         </manifest>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
@@ -604,6 +605,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.B3pXalanLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.B3pCastorLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.B3pSpatialLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.B3pItextLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.B3pSecurityLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.Base64Encoder.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.B3pGeotoolsCommonLib2.5.2.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>

@@ -37,31 +37,21 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
         <link href="styles/gisviewer_b3p.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/ui-lightness/jquery-ui-1.7.2.custom.css"/>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
-        <script type="text/javascript" src="scripts/etltransform.js"></script>
+        <script type="text/javascript" src="scripts/commonfunctions.js"></script>
 
-        <!--[if lte IE 6]>
-            <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if lte IE 7]>
-            <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
-            <script type="text/javascript" src="<html:rewrite page='/scripts/cssfixes_ie.js' module=''/>"></script>
-        <![endif]-->
         <script type="text/javascript">
-            attachOnload(checkLocation);
+            var usePopup = false;
+            if(opener) {
+                usePopup = opener.usePopup;
+            }
+            attachOnload(checkLocationPopup);
         </script>
+
     </head>
-    <body>
-        <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
-        <div id="content_normal">
-            <div id="content">
-                <tiles:insert attribute="content" />
-            </div>
-        </div>
-        <div id="footer"><div id="footer_content"></div></div>
+    <body class="tabvak_body">
+        <tiles:insert attribute="content" />
         <tiles:insert definition="googleAnalytics"/>
     </body>
 </html:html>

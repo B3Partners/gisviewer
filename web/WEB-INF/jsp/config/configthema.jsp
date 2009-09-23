@@ -34,28 +34,29 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src='dwr/util.js'></script>
 <script type="text/javascript" src='dwr/interface/JConfigListsUtil.js'></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/configthema.js"/>"></script>
 
-
-<div class="onderbalk">THEMA CONFIG<span><tiles:insert name="loginblock"/></span></div>
+<div class="infobalk">
+    <div class="infobalk_description">THEMA CONFIG</div>
+    <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
+</div>
 <html:form action="/configThema" focus="${focus}">
-    <html:hidden property="action"/>
-    <html:hidden property="alt_action"/>
-    <html:hidden property="themaID"/>
+    <div style="display: none;">
+        <html:hidden property="action"/>
+        <html:hidden property="alt_action"/>
+        <html:hidden property="themaID"/>
+        <html:hidden property="wms_url"/>
+        <html:hidden property="wms_layers"/>
+        <html:hidden property="wms_legendlayer"/>
+        <html:hidden property="wms_querylayers"/>
+        <html:hidden property="admin_pk_complex"/>
+        <html:hidden property="spatial_pk_complex"/>
+        <html:hidden property="admin_spatial_ref"/>
+        <input type="hidden" name="refreshLists">
+    </div>
 
-    <html:hidden property="wms_url"/>
-    <html:hidden property="wms_layers"/>
-    <html:hidden property="wms_legendlayer"/>
-    <html:hidden property="wms_querylayers"/>
-    <html:hidden property="admin_pk_complex"/>
-    <html:hidden property="spatial_pk_complex"/>
-    <html:hidden property="admin_spatial_ref"/>
-
-    <input type="hidden" name="refreshLists"/>
-
-    <div style="float: left; clear: both; margin-left: 15px;">
-        <c:if test="${!empty allThemas}">
+    <c:if test="${!empty allThemas}">
+        <div style="float: left; clear: both; margin-left: 15px;">
             <div class="topbar">
                 <div class="bar_regel">
                     <div class="bar_item" style="width: 40px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});">Nr</div>
@@ -71,7 +72,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tbody>
                         <c:forEach var="ci" varStatus="status" items="${allThemas}">
                             <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}"/>
-                            <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
+                            <c:set var="id_selected" value='' />
+                            <c:if test="${ci.id == mainid}"><c:set var="id_selected" value=' id="regel_selected"' /></c:if>
+                            <tr${id_selected} onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';">
                                 <td class="c_item" style="width: 40px;"><c:out value="${ci.belangnr}"/>&nbsp;</td>
                                 <td class="c_item" style="width: 358px;"><c:out value="${ci.naam}"/>&nbsp;</td>
                                 <td class="c_item" style="width: 30px;"><c:out value="${ci.code}"/>&nbsp;</td>
@@ -87,8 +90,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </tbody>
                 </table>
             </div>
-        </c:if>
-    </div>
+        </div>
+    </c:if>
     <div id="content_style" style="float: left; clear: left;">
         <div class="berichtenbalk">
             <html:messages id="error" message="true">
@@ -368,13 +371,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <tr><td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.wmslegendlayers.uitleg"/></div></td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
                         </c:otherwise>
                     </c:choose>
-
-                    <tr>
+					
+					<tr>
                         <td><fmt:message key="configthema.maptip"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.maptip.uitleg"/></div></td>
                         <td colspan="3">
                             <html:text property="thema_maptip" size="140"/>
                         </td>
-                    </tr>
+                    </tr
 
                     <tr><td colspan="4">&nbsp;</td></tr>
                     <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthema.updatefreqindagen.uitleg"/></div></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
@@ -415,17 +418,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </table>
             </div>
         </div>
+        <script type="text/javascript">
+            // Tabs
+            createTabs('config_tab_header_container');
+            firstTab('tab-algemeen-header');
+        </script>
     </div>
 </html:form>
-<iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0"
-        style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
-<script type="text/javascript">
-    // Tabs
-    createTabs('config_tab_header_container');
-    firstTab('tab-algemeen-header');
 
-    Table.stripe(document.getElementById('themalisttable'), 'regel_even');
-    Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});
+<iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0" style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
+<script type="text/javascript">
+    if(document.getElementById('themalisttable')) {
+        Table.stripe(document.getElementById('themalisttable'), 'regel_even');
+        Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});
+    }
     if(document.getElementById('regel_selected')) {
         document.getElementById('regel_selected').className = 'regel_selected';
     }

@@ -32,9 +32,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <c:set var="focus" value="naam"/>
 
-<div class="onderbalk">CONNECTIE CONFIG<span><tiles:insert name="loginblock"/></span></div>
+<div class="infobalk">
+    <div class="infobalk_description">CONNECTIE CONFIG</div>
+    <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
+</div>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript">
     function hoverRow(obj) {
         obj.className += ' regel_over';
@@ -47,12 +49,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 <html:javascript formName="connectieForm" staticJavascript="false"/>
 <html:form action="/configConnectie" onsubmit="return validateConnectieForm(this)" focus="${focus}">
-    <html:hidden property="action"/>
-    <html:hidden property="alt_action"/>
-    <html:hidden property="id"/>
-    
-    <div style="float: left; clear: both; margin-left: 15px;">
-        <c:if test="${!empty allConnecties}">
+    <div style="display: none;">
+        <html:hidden property="action"/>
+        <html:hidden property="alt_action"/>
+        <html:hidden property="id"/>
+    </div>
+    <c:if test="${!empty allConnecties}">
+        <div style="float: left; clear: both; margin-left: 15px;">
             <div class="topbar">
                 <div class="bar_regel"> 
                     <div class="bar_item" style="width: 250px;" onclick="Table.sort(document.getElementById('connectietable'), {sorttype:Sort['default'], col:0});"><fmt:message key="configconnectie.naam"/></div>
@@ -72,8 +75,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </tbody>
                 </table>
             </div>
-        </c:if>
-    </div>
+        </div>
+    </c:if>
     <div id="content_style" style="float: left; clear: left;">
         <div class="berichtenbalk" style="margin-top: 5px;">
             <html:messages id="error" message="true">
@@ -153,9 +156,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div> 
     </div>
 </html:form>
-<script language="javascript">
-    Table.stripe(document.getElementById('connectietable'), 'regel_even');
-    Table.sort(document.getElementById('connectietable'), {sorttype:Sort['default'], col:0});
+<script type="text/javascript">
+    if(document.getElementById('connectietable')) {
+        Table.stripe(document.getElementById('connectietable'), 'regel_even');
+        Table.sort(document.getElementById('connectietable'), {sorttype:Sort['default'], col:0});
+    }
     if(document.getElementById('regel_selected')) {
         document.getElementById('regel_selected').className = 'regel_selected';
     }

@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -22,57 +22,50 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-
+<%@page isELIgnored="false"%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
-<%@ page isELIgnored="false"%>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html:html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <META HTTP-EQUIV="Expires" CONTENT="-1">
-        <META HTTP-EQUIV="Cache-Control" CONTENT="max-age=0, no-store">
-        
+        <meta http-equiv="Expires" content="-1">
+        <meta http-equiv="Cache-Control" content="max-age=0, no-store">
+        <meta http-equiv=”X-UA-Compatible” content=”IE=edge” />
+
         <title>B3P GIS Viewer</title>
-        <link href="styles/main.css" rel="stylesheet" type="text/css">
-        <link href="styles/viewer.css" rel="stylesheet" type="text/css">
-        <link href="styles/etl.css" rel="stylesheet" type="text/css">
-        <link href="styles/etltransform.css" rel="stylesheet" type="text/css">
-        <link href="styles/config.css" rel="stylesheet" type="text/css">
-        <link href="styles/config-tab.css" rel="stylesheet" type="text/css">
-        
-        <link rel="stylesheet" type="text/css" href="styles/niftyCorners.css">
-        <link rel="stylesheet" type="text/css" href="styles/ARC.css">
-        <link rel="stylesheet" type="text/css" href="styles/viewer_b3p.css">
-        <!-- <link rel="stylesheet" type="text/css" href="styles/custom/viewer_ev.css"> -->
-        
-        <!--[if lte IE 6]>
-            <link href="styles/viewer-ie6.css" rel="stylesheet" type="text/css">
-            <script type="text/javascript" src="scripts/resizewindow-ie6.js"></script>
-        <![endif]-->
-        <!--[if gte IE 7]>
-        <script type="text/javascript" src="scripts/resizewindow.js"></script>
-        <![endif]-->
-        <!--[if IE 8]>
-        <style type="text/css"> .onderbalk span { top: -18px; } </style>
-        <![endif]-->
-        <!--[if !IE]>--><script type="text/javascript" src="scripts/resizewindow.js"></script><!--<![endif]-->
-        <script language="JavaScript" type="text/JavaScript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
-        <script type="text/javascript" src="scripts/etltransform.js"></script>
+        <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_config.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_b3p.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/ui-lightness/jquery-ui-1.7.2.custom.css"/>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
+        <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/table.js" module=''/>"></script>
         <script type="text/javascript" src="scripts/config-tab.js"></script>
-        <script type="text/javascript">  
-            function checkLocation() {
-                if (top.location != self.location)
-                    top.location = self.location;
-            };
+        <script type="text/javascript" src="scripts/etltransform.js"></script>
+
+        <!--[if lte IE 6]>
+            <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+        <!--[if lte IE 7]>
+            <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
+            <script type="text/javascript" src="<html:rewrite page='/scripts/cssfixes_ie.js' module=''/>"></script>
+        <![endif]-->
+        <script type="text/javascript">
+            attachOnload(checkLocation);
         </script>
-        
+
     </head>
-    <body onload="checkLocation()">
-        <div id="menu_div"><tiles:insert attribute="menu" /></div>
-        <div id="maindiv"><div id="content_div"><tiles:insert attribute="content" /></div></div>
-        <div id="onder_div"><div id="copyright"></div><div id="initiatief"></div></div>
-        <tiles:insert definition="googleAnalytics"/>        
+    <body>
+        <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
+        <div id="content_normal">
+            <div id="content">
+                <tiles:insert attribute="content" />
+            </div>
+        </div>
+        <div id="footer"><div id="footer_content"></div></div>
+        <tiles:insert definition="googleAnalytics"/>
     </body>
 </html:html>

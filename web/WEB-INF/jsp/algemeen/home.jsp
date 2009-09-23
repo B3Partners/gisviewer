@@ -22,7 +22,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<script language="JavaScript">
+<script type="text/javascript">
     <!--
     function reloadOpener() {
         window.opener.document.forms[0].submit();
@@ -47,15 +47,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </script>
 
 <div id="content_style">
-    
-    <hr size="1" width="100%" />
-    
+    <hr>
     <table class="kolomtabel">
         <tr>
             <td valign="top">
                 <html:messages id="message" message="true">
                     <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
-                </html:messages><br/>
+                </html:messages><br>
                 <h1>B3P GIS Suite Demo</h1>
                 
                 <div class="inleiding">
@@ -111,7 +109,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:choose>
                     <c:when test="${not empty themalist || not empty clusterlist}">
                         <ol>
-                            <c:if test="${not empty clusterlist}">
+							<c:if test="${not empty clusterlist}">
                                 <c:forEach var="cluster" items="${clusterlist}">
                                     <c:set var="found" value="true"/>
                                     <li>
@@ -136,13 +134,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </ol>
                     </c:when>
                     <c:when test="${pageContext.request.remoteUser == null}">
-                        <p>
                             Klik hier om beschikbare thema's op te vragen:
                             <ul>
                                 <li><html:link page="/indexlist.do" module="">zonder inloggen</html:link></li>
                                 <li><html:link page="/viewerlist.do" module="">met inloggen</html:link></li>
                             </ul>
-                        </p>
                     </c:when>
                     <c:otherwise>
                         <ol>
@@ -154,7 +150,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </td>
         </tr>
     </table>
-    
-    <hr size="1" width="100%" />
+    <hr>
     <tiles:insert name="loginblock"/>
 </div>

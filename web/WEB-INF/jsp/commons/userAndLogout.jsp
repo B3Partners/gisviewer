@@ -40,7 +40,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             };
         </script>
         <div id="logoutvak" style="display: none;">
-            <iframe id="logoutframe" name="logoutframe" src=""></iframe>
+            <iframe src="" id="logoutframe" name="logoutframe"></iframe>
         </div>
         Ingelogd als: <c:out value="${pageContext.request.remoteUser}"/> | <a href="#"  onclick="javascript:logout();">Uitloggen</a>
     </c:when>

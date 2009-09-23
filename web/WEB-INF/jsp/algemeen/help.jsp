@@ -24,14 +24,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="content_style">
     
-    <hr size="1" width="100%" />
+    <hr>
     
     <table class="kolomtabel">
         <tr>
             <td valign="top">
                 <html:messages id="message" message="true">
                     <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
-                </html:messages><br/>
+                </html:messages><br>
                 <h1>B3P GIS Suite Demo</h1>
                 
                 <div class="inleiding">
@@ -40,8 +40,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     De getoonde kaarten zijn alleen ten bate van deze demo beschikbaar. Later worden voor elk project specifieke
                     kaarten aangeschaft en geconfigureerd.
                     <p>
-                    Deze demo staat op een testserver, welke soms wordt herstart. 
-                    Als er even geen contact mogelijk is, dan verzoeken wij u het later nog een keer te proberen. 
+                        Deze demo staat op een testserver, welke soms wordt herstart.
+                        Als er even geen contact mogelijk is, dan verzoeken wij u het later nog een keer te proberen.
+                    </p>
                 </div>
                 <h2>Hoofdelementen van de GIS Viewer</h2>
                 De GIS viewer bestaat uit een kaart, een paneel met tabbladen waarmee de viewer wordt bestuurd en een paneel met resultaten.
@@ -70,19 +71,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </table>
                 -->
                 <a name="thema"></a><h2>Tabblad Thema's</h2>
-                <strong>Kaarten zichtbaar maken</strong><br />
+                <strong>Kaarten zichtbaar maken</strong><br>
                 Het tabblad Thema's bestaat uit een uitklapbare boomstructuur met alle selecteerbare thema's. 
                 Indien een thema geen vinkvak heeft dan is de onderliggende dataset niet aangemaakt. 
                 De gebruiker kan de thema's aan en uitzetten; de kaart wordt dan ververst.
                 <p>Sommige kaartlagen zijn pas zichtbaar wanneer ingezoomd om overmatige serverbelasting te voorkomen.</p>
                 
                 <p>
-                    <strong>Kaartlaaginformatie</strong><br />
+                    <strong>Kaartlaaginformatie</strong><br>
                     De themanaam is een link naar metadata van de kaartlaag. 
                 </p>
                 
                 <p>
-                    <strong>Actieve kaartlaag</strong><br />
+                    <strong>Actieve kaartlaag</strong><br>
                     Door het selecteren van een kaartlaag wordt deze kaartlaag actief en vervolgacties hebben betrekking op die kaartlaag
                 </p>
                 
@@ -134,6 +135,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </tr>
     </table>
     
-    <hr size="1" width="100%" />
+    <hr>
     <tiles:insert name="loginblock"/>
 </div>

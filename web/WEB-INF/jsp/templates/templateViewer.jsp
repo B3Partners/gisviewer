@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -22,50 +22,56 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-
+<%@page isELIgnored="false"%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
-<%@ page isELIgnored="false"%>
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html:html>
     <head>
-        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Expires" content="-1">
+        <meta http-equiv="Cache-Control" content="max-age=0, no-store">
+        <meta http-equiv=”X-UA-Compatible” content=”IE=edge” />
+
         <title>B3P GIS Viewer</title>
-        
-        <link rel="stylesheet" type="text/css" href="styles/niftyCorners.css">
-        
-        <!--
-        <link rel="stylesheet" type="text/css" href="styles/custom/viewer_clean.css">
-        <link rel="stylesheet" type="text/css" href="styles/custom/viewer_clean_overlay.css">
-        -->
-        
-        <link rel="stylesheet" type="text/css" href="styles/viewer_b3p_clean.css">
-        <link rel="stylesheet" type="text/css" href="styles/viewer_b3p_clean_overlay.css">
-        
-        
-         <!-- Onderstaande stylesheet vervangen door styles/viewer_b3p_clean_ie6.css bij gebruik van B3Partners design -->
-        <!-- Onderstaande stylesheet vervangen door styles/custom/viewer_clean_ie6.css bij gebruik van Edam-Volendam design -->
-        <!--[if lte IE 6]>
-            <link rel="stylesheet" type="text/css" href="styles/viewer_b3p_clean_ie6.css">   
-        <![endif]-->
-        
+        <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_viewer.css" rel="stylesheet" type="text/css">
+        <link href="styles/niftyCorners.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_b3p.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/ui-lightness/jquery-ui-1.7.2.custom.css"/>
+        <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
+        <script type="text/javascript" src="scripts/commonfunctions.js"></script>
         <script type="text/javascript" src="scripts/etltransform.js"></script>
-        <script type="text/javascript">  
-            function checkLocation() {
-                if (top.location != self.location)
-                    top.location = self.location;
-            };
+
+        <!--[if lte IE 6]>
+            <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+        <!--[if lte IE 7]>
+            <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
+            <script type="text/javascript" src="scripts/cssfixes_ie.js"></script>
+        <![endif]-->
+        <script type="text/javascript">
+            attachOnload(checkLocation);
         </script>
-        
+        <!--[if IE]>
+        <script type="text/javascript">
+            var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer'];
+            fixTransparentBackgroundIframe = function() {
+                for(i in iframes) {
+                    var iframe = document.getElementById(iframes[i]);
+                    if(iframe) {
+                        iframe.allowTransparency = 'allowtransparency';
+                    }
+                }
+            }
+            attachOnload(fixTransparentBackgroundIframe);
+        </script>
+        <![endif]-->
     </head>
-    <body onload="checkLocation()">
-        <table width="100%" height="100%" style="max-height: 100%" cellpadding="0" cellspacing="0">
-            <tr id="menuTr">
-                <td width="100%" style="height: 50px;" id="mainTopmenuTd"><tiles:insert attribute="menu" /></td>
-            </tr>
-            <tr>
-                <td width="100%" height="100%" id="mainContentTd"><tiles:insert attribute="content" /></td>
-            </tr>
-        </table>
-        <tiles:insert definition="googleAnalytics"/>        
+    <body>
+        <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
+        <div id="content_viewer"><tiles:insert attribute="content" /></div>
+        <tiles:insert definition="googleAnalytics"/>
     </body>
 </html:html>

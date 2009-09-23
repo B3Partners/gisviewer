@@ -26,23 +26,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/admindataFunctions.js"/>"></script>
 <script type="text/javascript">
-    function popUp(URL, naam) {
-        var screenwidth = 1024;
-        var screenheight = 768;
-        var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
-        var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
-        properties = "toolbar = 0, " + 
-            "scrollbars = 1, " + 
-            "location = 0, " + 
-            "statusbar = 1, " + 
-            "menubar = 0, " + 
-            "resizable = 1, " + 
-            "width = " + screenwidth + ", " + 
-            "height = " + screenheight + ", " + 
-            "top = " + popuptop + ", " + 
-            "left = " + popupleft;
-        eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
-    }   
     var mapRequest;
     if (window.opener){
         if (window.opener.lastGetMapRequest){
@@ -119,7 +102,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                     -
                                                 </c:when>
                                                 <c:when test="${ThemaItem.dataType.id == 3}">
-                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${regel.values[counter.count - 1]}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
+                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${regel.values[counter.count - 1]}', 'externe_link', 1024, 768);" style="cursor: pointer; cursor: hand;" />
                                                 </c:when>
                                                 <c:when test="${ThemaItem.dataType.id == 4}">
                                                     <c:set var="valar" value="${fn:split(regel.values[counter.count - 1], '###')}" />

@@ -22,7 +22,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<div class="onderbalk">LOGIN<span><tiles:insert name="loginblock"/></span></div>
+<div class="infobalk">
+    <div class="infobalk_description">LOGIN</div>
+    <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
+</div>
 <form id="loginForm" action="j_security_check" method="POST">
     <div style="height: 430px">
         <div style="width: 430px; padding: 10px; border: 1px solid #dddddd;">
@@ -40,7 +43,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>    
 </form>
 
-<script language="JavaScript">
+<script type="text/javascript">
     <!--
     document.forms.loginForm.j_username.focus();
     // -->

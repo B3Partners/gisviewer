@@ -22,7 +22,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<div class="onderbalk">ERROR</div>
+<div class="infobalk">ERROR</div>
 
 <div style="height: 430px">
     <div style="width: 430px; padding: 10px; border: 1px solid #dddddd;">

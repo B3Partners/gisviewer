@@ -29,53 +29,49 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:if>
 </c:if>
 
-<table width="100%" height="100%;" cellpadding="0" cellspacing="0">
-    <tr>
-        <td width="40%" id="menubalklogoboven"></td>
-        <td width="60%" align="right" id="menubalkmenucontent">
-            <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
-            <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
-            <c:set var="kaartid" value="${param['id']}"/>
-            
-            <c:set var="stijlklasse" value="menulink" />
-            <c:if test="${requestJSP eq 'help.do'}">
-                <c:set var="stijlklasse" value="activemenulink" />
-            </c:if>
-            <html:link page="/help.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Help</html:link>
-            
-            <c:choose>
-                <c:when test="${beheerder == true}">
-                    <c:set var="stijlklasse" value="menulink" />
-                    <c:if test="${requestJSP eq 'configThema.do'}">
-                        <c:set var="stijlklasse" value="activemenulink" />
-                    </c:if>
-                    <html:link page="/configThema.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Configuratie</html:link>
-                </c:when>
-                <c:otherwise>
-                    <%--
-                <c:set var="stijlklasse" value="menulink" />
-                <c:if test="${requestJSP eq 'contact.do'}">
-                    <c:set var="stijlklasse" value="activemenulink" />
-                </c:if>
-                <html:link page="/index.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Contact</html:link>
-                --%>
-                </c:otherwise>
-            </c:choose>
-            
-            <%-- html:link href="javascript: printpage();" styleClass="menulink" module="">&#155; Print kaart </html:link --%>
-            <html:link href="javascript: exportMap();" styleClass="menulink" module="">&#155; Print voorbeeld</html:link>
+<div id="topmenu">
+    <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
+    <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
+    <c:set var="kaartid" value="${param['id']}"/>
 
+    <c:set var="stijlklasse" value="menulink" />
+    <c:if test="${requestJSP eq 'help.do'}">
+        <c:set var="stijlklasse" value="activemenulink" />
+    </c:if>
+    <html:link page="/help.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Help</html:link>
+
+    <c:choose>
+        <c:when test="${beheerder == true}">
             <c:set var="stijlklasse" value="menulink" />
-            <c:if test="${requestJSP eq 'viewer.do'}">
+            <c:if test="${requestJSP eq 'configThema.do'}">
                 <c:set var="stijlklasse" value="activemenulink" />
             </c:if>
-            <html:link page="/viewer.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Viewer</html:link>
-            
+            <html:link page="/configThema.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Configuratie</html:link>
+        </c:when>
+        <c:otherwise>
+            <%--
             <c:set var="stijlklasse" value="menulink" />
-            <c:if test="${requestJSP eq 'index.do'}">
+            <c:if test="${requestJSP eq 'contact.do'}">
                 <c:set var="stijlklasse" value="activemenulink" />
             </c:if>
-            <html:link page="/indexlist.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Home</html:link>
-        </td>
-    </tr>
-</table>
+            <html:link page="/index.do" styleClass="${stijlklasse}" module="">&#155; Contact</html:link>
+            --%>
+        </c:otherwise>
+    </c:choose>
+
+    <html:link href="javascript: exportMap();" styleClass="menulink" module="">&#155; Print voorbeeld</html:link>
+
+    <c:set var="stijlklasse" value="menulink" />
+    <c:if test="${requestJSP eq 'viewer.do'}">
+        <c:set var="stijlklasse" value="activemenulink" />
+    </c:if>
+    <html:link page="/viewer.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Viewer</html:link>
+
+    <c:set var="stijlklasse" value="menulink" />
+    <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
+        <c:set var="stijlklasse" value="activemenulink" />
+    </c:if>
+    <html:link page="/indexlist.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Home</html:link>
+
+
+</div>

@@ -27,7 +27,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <c:set var="links" value='<a class="*" href="configConnectie.do">&#155; Connectie</a>%<a class="*" href="configThemaData.do">&#155; Thema Data</a>%<a class="*" href="configCluster.do">&#155; Cluster</a>%<a class="*" href="configThema.do">&#155; Thema</a>%<a class="*" href="index.do">&#155; Home</a>' />
 
-<div class="topmenu">
+<div id="topmenu">
     <c:set var="lnkArray" value="${fn:split(links, '%')}" />
     
     <c:if test="${requestJSP eq 'index.do'}">
@@ -57,4 +57,3 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </c:choose>
     </c:forEach>
 </div>
-<div class="menu_boven_logo"></div>

@@ -28,23 +28,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="<html:rewrite page="/scripts/admindataFunctions.js"/>"></script>
 <script type="text/javascript">
     var doClose=true;
-    function popUp(URL, naam) {
-        var screenwidth = 600;
-        var screenheight = 500;
-        var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
-        var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
-        properties = "toolbar = 0, " +
-            "scrollbars = 1, " +
-            "location = 0, " +
-            "statusbar = 1, " +
-            "menubar = 0, " +
-            "resizable = 1, " +
-            "width = " + screenwidth + ", " +
-            "height = " + screenheight + ", " +
-            "top = " + popuptop + ", " +
-            "left = " + popupleft;
-        eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
-    }
     function toggleList(nr) {
         var obj = document.getElementById('fullTable' + nr);
         var plusmin = document.getElementById('plusMin' + nr);
@@ -62,6 +45,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
     var usePopup = true;
     var maxExtraInfo=100;
+    var styleObjects = new Array();
 </script>
 <html:messages id="error" message="true">
     <div class="messages"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15"/>&nbsp;<c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
@@ -80,9 +64,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:if>
             </c:forEach>
 
-            <div class="topRow" style="margin-bottom: 0px; cursor: pointer; width: 100%; height: 25px; clear: both; font-weight: bold; background-repeat: repeat;" onclick="toggleList(${tStatus.count})">
+            <div class="topRow" style="margin-bottom: 0px; cursor: pointer; width: 100%; height: 20px; clear: both; font-weight: bold; background-repeat: repeat;" onclick="toggleList(${tStatus.count})" id="topRow${tStatus.count}">
                 <div style="margin-left: 5px; margin-top: 3px;">
-                    <div style="background-color: white; padding: 0px; margin-top: 1px; height: 10px; width: 10px; border: 1px solid black; margin-right: 5px;">
+                    <div style="background-color: white; padding: 0px; margin-top: 1px; height: 10px; width: 10px; border: 1px solid black; margin-right: 5px; float: left;">
                         <c:set var="plusmin" value="+" />
                         <c:set var="margins" value="2" />
                         <c:if test="${tStatus.count == 1}">
@@ -164,13 +148,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                     }
                                 </script>
                                 <c:if test="${counter.count < 501}">
-                                    <c:set var="last_id" value="" />
                                     <tr class="row" onclick="colorRow(this);">
                                         <td style="width: 50px;" valign="top">
-                                            ${counter.count}
+                                            &nbsp;${counter.count}
                                         </td>
-                                        <c:set var="totale_breedte_onder" value="65" />
-                                    		<c:set value="0" var="nuOfColumns" />
+                                        <c:set var="totale_breedte_onder" value="50" />
+                                    	<c:set value="0" var="nuOfColumns" />
                                         <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
                                             <c:if test="${thema_items[kolom.count - 1] != null}">
                                                 <c:choose>
@@ -181,12 +164,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                         <c:set var="breedte" value="150" />
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
-                                                <c:if test="${kolom.last}">
-                                                    <c:set var="last_id" value=" id=\"footer_last_item${counter.count}\"" />
-                                                </c:if>
+                                                <c:choose>
+                                                    <c:when test="${kolom.last}">
+                                                        <c:set var="last_id" value=" class=\"lastThClass${tStatus.count}\" id=\"footer_last_item${counter.count}\"" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:set var="last_id" value=" style=\"width: ${breedte}px;\"" />
+                                                        <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 <c:set var="noOfRegels" value="${counter.count}" />
-                                                <td style="width: ${breedte}px;"${last_id} valign="top">
+                                                <td${last_id} valign="top">
                                                     <c:choose>
                                                         <c:when test="${waarde eq '' or  waarde eq null}">
                                                             &nbsp;
@@ -195,11 +183,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                             <c:choose>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
                                                                 		<c:set var="refreshURL" value="${waarde}" />
-                                                                    <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm');" style="cursor: pointer; cursor: hand;" />
+                                                                    <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" style="cursor: pointer;" />
                                                                 </c:when>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
                                                                 		<c:set var="refreshURL" value="${waarde}" />
-                                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link');" style="cursor: pointer; cursor: hand;" />
+                                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link', 600, 500);" style="cursor: pointer;" />
                                                                 </c:when>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
                                                                 	<c:choose>
@@ -233,8 +221,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <script>
                 document.getElementById('ahref_data2csv${tStatus.count}').style.visibility="visible";
                 document.getElementById('ahref_data2info${tStatus.count}').style.visibility="visible";
+                var tempStyleObject = new Array(3);
+                tempStyleObject[0] = ${totale_breedte_onder};
+                tempStyleObject[1] = ${tStatus.count};
+                styleObjects[styleObjects.length] = tempStyleObject;
             </script>
         </c:forEach>
+
+        <!-- Wordt vervangen door stylesheet dmv Javascript. Wordt gebruikt om de laatste kolom uit te vullen -->
+        <div id="styleReplace"></div>
         <script language="javascript" type="text/javascript">
             for(i = 1; i < (${nuOfTables} + 1); i++) {
                 Table.stripe(document.getElementById('data_table' + i), 'admin_data_alternate_tr');
@@ -257,17 +252,35 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 currentObjOldStyle = obj.className;
                 obj.className = obj.className + ' admin_data_selected_tr';
             }
+
+            fixAdmindataWidths = function() {
+                var styletext = '';
+                var totale_breedte_tabel = document.getElementById('topRow1').offsetWidth;
+                for(i in styleObjects) {
+                    styletext += '.lastThClass' + styleObjects[i][1] + ' { width: ' + (totale_breedte_tabel - styleObjects[i][0]) + 'px; } ';
+                }
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                if (style.styleSheet) {
+                    style.styleSheet.cssText = styletext;
+                } else {
+                    style.appendChild(document.createTextNode(styletext));
+                }
+                document.body.appendChild(style);
+            }
+            fixAdmindataWidths();
+            attachOnresize(fixAdmindataWidths);
             
-             <c:if test="${nuOfTables == 1 && nuOfRegels == 1 && nuOfColumns == 1 && (not empty refreshURL)}">
+             <c:if test="${nuOfTables == 1 && nuOfRegels == 1 && nuOfColumns == 3 && (not empty refreshURL)}">
                 // creeer popup als nog niet in popup
-                if(opener && opener.usePopup) {
+                if((parent && parent.useDivPopup) || (opener && opener.usePopup)) {
                     // Doe een window.location als er maar 1 cel en 1 kolom is en dit is een URL
                     window.location = '${refreshURL}';
                 } else {
-                    popUp('${refreshURL}', 'externe_link');
+                    popUp('${refreshURL}', 'externe_link', 600, 500);
                 }
             </c:if>
-       </script>
+        </script>
 
         <!-- Wordt gebruikt om eventuele opmerkingen te bewerken -->
         <div id="opmerkingenedit" style="display: none; position: absolute; text-align: right;">

@@ -3,9 +3,6 @@
 <script type="text/javascript">
     var setDefaultImageSizeFromMap=true;
 </script>
-<script type="text/javascript" src="scripts/yahoo-dom-event.js"></script>
-<script type="text/javascript" src="scripts/dragdrop-min.js"></script>
-<script type="text/javascript" src="scripts/slider-min.js"></script>
 
 <div class="createMapPDFBody">
     <h1><fmt:message key="createmappdf"/></h1><br />
@@ -17,12 +14,12 @@
             </td>
             <td>
                 <div id="imageContainer">        
-                    <img id="mapImage" alt="Preview"></img>
+                    <img src="" id="mapImage" alt="Preview" style="width: 474px; height:1px;" />
                 </div>
                 <input type="hidden" name="mapUrl" id="mapUrl"/>
             </td>            
         </tr>
-        <tr>
+        <tr class="aanvullende_info_alternateTr">
             <td><fmt:message key="createmappdf.title"/></td>
             <td><input type="text" name="title" id="title"></td>
         </tr>
@@ -30,16 +27,13 @@
             <td valign="top"><fmt:message key="createmappdf.remark"/></td>
             <td><textarea name="remark" cols="40" rows="4"></textarea></td>
         </tr>
-        <tr>
+        <tr class="aanvullende_info_alternateTr">
             <td><fmt:message key="createmappdf.imageSize"/></td>
             <td>
-                <div style="padding-top: 5px; margin-right: 4px;">laag</div>
-                <div id="sliderbg" style="background-image: url(images/bg-h.gif); cursor: pointer; width: 309px;">
-                    <div id="sliderthumb"><img src="images/thumb-n.gif" alt="sliderhandle"></div>
-                </div>
-                <div style="padding-top: 5px; margin-left: 12px;">hoog</div>
-                <input type="hidden" size="4" style="border: 0px none;" name="imageSize" id="imageSize" value="2048" onchange="changeVal(this);" />
-                <script type="text/javascript" src="scripts/slider.js"></script>
+                <div style="padding-top: 5px; margin-right: 12px; float: left; padding-bottom: 5px; margin-left: 5px;">laag</div>
+                <div id="slider" style="width: 300px; float: left; margin-top: 8px; margin-bottom: 5px;"></div>
+                <div style="padding-top: 5px; margin-left: 16px; float: left; padding-bottom: 5px;">hoog</div>
+                <input type="hidden" size="4" style="border: 0px none;" name="imageSize" id="imageSize" value="2048" onchange="imageSizeChange();" />
             </td>
         </tr>
         <tr>
@@ -48,7 +42,7 @@
                 Als u de kwaliteit van de kaart verandert, kan het uiterlijk van de kaart veranderen.
             </td>
         </tr>
-        <tr>
+        <tr class="aanvullende_info_alternateTr">
             <td><fmt:message key="createmappdf.landscape"/></td>
             <td>
                 <input type="radio" name="landscape" value="false" checked>Staand</input>
@@ -64,7 +58,7 @@
                 </select>
             </td>
         </tr>
-        <tr>
+        <tr class="aanvullende_info_alternateTr">
             <td><fmt:message key="createmappdf.outputtype"/></td>
             <td>
                 <select name="outputType">
@@ -81,4 +75,15 @@
 </form>
 <br />
 </div>
+<script type="text/javascript">
+    $(function() {
+        $("#slider").slider({
+             min: 0,
+             max: 2048,
+             value: 2048,
+             animate: true,
+             change: function(event, ui) { $("#imageSize").val(ui.value); }
+        });
+    });
+</script>
 <script type="text/javascript" src="scripts/createmappdf.js"></script>

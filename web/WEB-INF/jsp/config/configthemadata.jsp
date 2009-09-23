@@ -32,9 +32,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <c:set var="focus" value="label"/>
 
-<div class="onderbalk">DATA CONFIG<span><tiles:insert name="loginblock"/></span></div>
+<div class="infobalk">
+    <div class="infobalk_description">DATA CONFIG</div>
+    <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
+</div>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
 <script type="text/javascript">
     function showHelp(obj) {
         var helpDiv = obj.nextSibling;
@@ -75,24 +77,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
 </script>
 
-<style type="text/css">
-    .helptekstDiv {
-    position: absolute;
-    margin-left: 40px;
-    margin-top: 4px;
-    display: none;
-    padding: 5px;
-    background-color: #eeeeee;
-    z-index: 99999;
-    color: #19619b;
-    border: 1px solid #19619b;
-    }
-</style>
-
 <html:form action="/configThemaData" focus="${focus}">
-    <html:hidden property="action"/>
-    <html:hidden property="alt_action"/>
-    <html:hidden property="themaDataID"/>    
+    <div style="display: none;">
+        <html:hidden property="action"/>
+        <html:hidden property="alt_action"/>
+        <html:hidden property="themaDataID"/>
+    </div>
     <div class="maintable" style="margin-bottom: 10px; margin-left: 15px; float: left; clear: left;">
         <table>
             <tr>
@@ -120,9 +110,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </tr>
         </table>
     </div>
-    
-    <div style="float: left; clear: both; margin-left: 15px;">
-        <c:if test="${!empty listThemaData}">
+
+    <c:if test="${!empty listThemaData}">
+        <div style="float: left; clear: both; margin-left: 15px;">
             <div class="topbar">
                 <div class="bar_regel"> 
                     <div class="bar_item" style="width: 180px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['numeric'], col:0});">Volgorde</div>
@@ -148,8 +138,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </tbody>
                 </table>
             </div>
-        </c:if>
-    </div>
+        </div>
+    </c:if>
     <div id="content_style" style="float: left; clear: left;">
         <div class="berichtenbalk" style="margin-top: 5px;">
             <html:messages id="error" message="true">
@@ -251,29 +241,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         
     </div> 
 </html:form>
-<iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0"
-        style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
-<script language="javascript">
-    function popUp(URL, naam) {
-        var screenwidth = 1024;
-        var screenheight = 768;
-        var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
-        var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
-        properties = "toolbar = 0, " + 
-            "scrollbars = 1, " + 
-            "location = 0, " + 
-            "statusbar = 1, " + 
-            "menubar = 0, " + 
-            "resizable = 1, " + 
-            "width = " + screenwidth + ", " + 
-            "height = " + screenheight + ", " + 
-            "top = " + popuptop + ", " + 
-            "left = " + popupleft;
-        eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
+<iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0" style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
+<script type="text/javascript">
+    if(document.getElementById('themadatatable')) {
+        Table.stripe(document.getElementById('themadatatable'), 'regel_even');
+        Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['numeric'], col:0});
     }
-    
-    Table.stripe(document.getElementById('themadatatable'), 'regel_even');
-    Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['numeric'], col:0});
     if(document.getElementById('regel_selected')) {
         document.getElementById('regel_selected').className = 'regel_selected';
     }

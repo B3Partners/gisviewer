@@ -60,9 +60,9 @@
       <cookie-auth-token-config>
           <set-cookies>true</set-cookies>
           <accept-cookie>false</accept-cookie>
-            <!-- deze waardes zijn voor (HOU DEZE INFORMATIE UP-TO-DATE!): www.kaartenbalie.nl -->
+            <!-- deze waardes zijn voor (HOU DEZE INFORMATIE UP-TO-DATE!): www.kaartenbalie.nl 81BF677C3015E66FE5F2A71DDA21160B Extra hash: s6AWd5MYe39B5NP3UaLl4 -->
             <secret-key>81BF677C3015E66FE5F2A71DDA21160B</secret-key>
-            <extra-hash-string>s6AWd5MYe39B5NP3UaLl4</extra-hash-string>                    
+            <extra-hash-string>s6AWd5MYe39B5NP3UaLl4</extra-hash-string>
           <cookie-paths>/kaartenbalie</cookie-paths>
           <cookie-expire>3600</cookie-expire>
       </cookie-auth-token-config>

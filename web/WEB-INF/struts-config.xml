@@ -54,7 +54,7 @@
             <form-property name="view_geomtype" type="java.lang.String"/>
             <form-property name="visible" type="java.lang.Boolean"/>
             <form-property name="themadataobjecten" type="java.lang.String[]"/>
-            <form-property name="thema_maptip" type="java.lang.String"/>
+			<form-property name="thema_maptip" type="java.lang.String"/>
         </form-bean>
         <form-bean name="clusterForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
@@ -105,12 +105,10 @@
             <form-property name="alt_action" type="java.lang.String"/>
             <form-property name="themaid" type="java.lang.String"/>
             <form-property name="analysethemaid" type="java.lang.String"/>
-            <!--form-property name="xcoord" type="java.lang.String"/>
-            <form-property name="ycoord" type="java.lang.String"/-->
             <form-property name="coords" type="java.lang.String"/>
-            <form-property name="geom" type="java.lang.String"/>
+			<form-property name="geom" type="java.lang.String"/>
             <form-property name="scale" type="java.lang.String"/>
-            <form-property name="tolerance" type="java.lang.String"/>
+			<form-property name="tolerance" type="java.lang.String"/>
             <form-property name="lagen" type="java.lang.String"/>
             <form-property name="locatieveld" type="java.lang.String"/>
             <form-property name="extraCriteria" type="java.lang.String"/>

@@ -51,7 +51,7 @@
         <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>
     </definition>
     <!-- viewer databody-->
-    <definition name="databody" path="/WEB-INF/jsp/templates/databody.jsp"/>
+    <definition name="databody" path="/WEB-INF/jsp/templates/templateDatabody.jsp"/>
     <definition name="vieweradmindata" extends="databody">
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp"/>
     </definition>
@@ -61,7 +61,7 @@
     <definition name="viewerwelkom" extends="databody">
         <put name="content" value="/WEB-INF/jsp/viewer/viewerwelkom.jsp"/>
     </definition>
-    <definition name="tab" path="/WEB-INF/jsp/templates/tab.jsp"/>
+    <definition name="tab" path="/WEB-INF/jsp/templates/templateTab.jsp"/>
     <!-- viewer tab-->
     <definition name="viewerdata" extends="tab">
         <put name="content" value="/WEB-INF/jsp/viewer/viewerdata.jsp"/>
@@ -76,7 +76,7 @@
         <put name="content" value="/WEB-INF/jsp/viewer/vieweranalyseobject.jsp"/>
     </definition>
     <!-- viewer popup -->
-    <definition name="popup" path="/WEB-INF/jsp/templates/popup.jsp"/>
+    <definition name="popup" path="/WEB-INF/jsp/templates/templatePopup.jsp"/>
     <definition name="vieweraanvullendeinfo" extends="popup">
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>
     </definition>    
@@ -100,8 +100,6 @@
         <put name="content" value="/WEB-INF/jsp/config/configconnecties.jsp"/>
     </definition>
 
-    
-    
     <!-- tiles met herbruikbare onderdelen die in de content pagina's kunnen worden ge-insert  -->
     <definition name="loginblock" path="/WEB-INF/jsp/commons/userAndLogout.jsp"/>
     <definition name="googleAnalytics" path="/WEB-INF/jsp/commons/googleAnalytics.jsp"/>

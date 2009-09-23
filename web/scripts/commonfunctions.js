@@ -92,7 +92,7 @@ popUp = function(URL, naam, width, height, useDiv) {
     if(useDivPopup) {
         if(!popupCreated) initPopup();
         document.getElementById("dataframedivpopup").src = URL;
-        document.getElementById("popupWindow_Title").innerHTML = 'B3p GIS Viewer popup';
+        document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
         $("#popupWindow").show();
         if(ieVersion <= 6) fixPopup();
     } else {
@@ -136,7 +136,7 @@ popUpData = function(naam, width, height, useDiv) {
 
     if(useDivPopup) {
         if(!popupCreated) initPopup();
-        document.getElementById("popupWindow_Title").innerHTML = 'B3p GIS Viewer popup';
+        document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
         $("#popupWindow").show();
         if(ieVersion <= 6) fixPopup();
         return document.getElementById("dataframedivpopup");

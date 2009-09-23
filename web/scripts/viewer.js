@@ -1313,6 +1313,14 @@ function barneveldSettings() {
     }*/
 }
 
+function checkboxClickById(id){
+    var el2=document.getElementById(id);
+    if (el2) {
+        el2.checked=!el2.checked;
+        checkboxClick(el2,false);
+    }
+}
+
 function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureWKT){
     //alert(activeFeatureWKT);
     if(activeFeatureWKT != null){

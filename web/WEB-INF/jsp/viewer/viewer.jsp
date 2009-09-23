@@ -139,27 +139,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      */
     var maxResults=25;
     
-    //Instellingen voor edam volendam
-    /*adresThemaId=7;
-    
-    infoArray[0] = "straatnaam";
-    infoArray[1] = "huisnr";
-    
-    zoekThemaIds[0]=7;
-    zoekThemaIds[1]=9;
-    
-    zoekKolommen[0]="straatnaam,naambedrijf";
-    zoekKolommen[1]="AdresOpgemaakt";
-    
-    naamZoekThemas[0]="Bedrijven";
-    naamZoekThemas[1]="Percelen";
-    
-    aparteZoekVelden[0]=true;
-    aparteZoekVelden[1]=true;
-    
-    naamZoekVelden[0]="Straatnaam,Bedrijfsnaam"
-    naamZoekVelden[1]="Adres";*/
-    
     /* De rechten van de verschillende gebruikers. De tabbladen die ze mogen zien en de volgorde waarin ze getoond worden.
      * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
      *       Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */

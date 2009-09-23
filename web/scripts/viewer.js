@@ -83,8 +83,18 @@ function handleGetAdminData(/*coords,*/ geom) {
     document.forms[0].tolerance.value=tolerance;
     if(usePopup) {
         // open popup when not opened en submit form to popup
-        if(dataframepopupHandle == null || dataframepopupHandle.closed) dataframepopupHandle = popUpData('dataframepopup', '680', '225');
-        document.forms[0].target = 'dataframepopup';
+        if(dataframepopupHandle == null || dataframepopupHandle.closed) {
+            if(useDivPopup) {
+                dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
+            } else {
+                dataframepopupHandle = popUpData('dataframepopup', 680, 225);
+            }
+        }
+        if(useDivPopup) {
+            document.forms[0].target = 'dataframedivpopup';
+        } else {
+            document.forms[0].target = 'dataframepopup';
+        }
     } else {
         document.forms[0].target = 'dataframe';
     }
@@ -96,47 +106,7 @@ function openUrlInIframe(url){
     iframe.src=url;
 }
 
-function popUp(URL, naam, width, height) {
-    var screenwidth = 600;
-    var screenheight = 500;
-    if (width){
-        screenwidth=width;
-    }
-    if (height){
-        screenheight=height;
-    }
-    var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
-    var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
-    properties = "toolbar = 0, " +
-    "scrollbars = 1, " +
-    "location = 0, " +
-    "statusbar = 1, " +
-    "menubar = 0, " +
-    "resizable = 1, " +
-    "width = " + screenwidth + ", " +
-    "height = " + screenheight + ", " +
-    "top = " + popuptop + ", " +
-    "left = " + popupleft;
-    return eval("page" + naam + " = window.open(URL, '" + naam + "', properties);");
-}
 
-function popUpData(naam, width, height) {
-    var screenwidth = width;
-    var screenheight = height;
-    var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
-    var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
-    properties = "toolbar = 0, " +
-    "scrollbars = 1, " +
-    "location = 0, " +
-    "statusbar = 1, " +
-    "menubar = 0, " +
-    "resizable = 1, " +
-    "width = " + screenwidth + ", " +
-    "height = " + screenheight + ", " +
-    "top = " + popuptop + ", " +
-    "left = " + popupleft;
-    return window.open('', naam, properties);
-}
 
 // 0 = niet in cookie en niet visible,
 // >0 = in cookie, <0 = geen cookie maar wel visible
@@ -289,7 +259,7 @@ function createLabel(container, item) {
             lnk.href = '#';
             if (item.metadatalink && item.metadatalink.length > 1)
                 lnk.onclick = function(){
-                    popUp(item.metadatalink, "metadata")
+                    popUp(item.metadatalink, "metadata", 600, 500, useDivPopup)
                 };
             container.appendChild(lnk);
 //            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
@@ -391,7 +361,7 @@ function createLabel(container, item) {
         lnk.href = '#';
         if (item.metadatalink && item.metadatalink.length > 1)
             lnk.onclick = function(){
-                popUp(item.metadatalink, "metadata")
+                popUp(item.metadatalink, "metadata", 600, 500, useDivPopup)
             };
 
 
@@ -425,6 +395,7 @@ function deActivateCheckbox(id) {
         document.getElementById(id).click();
 }
 
+var currentActiveTab = null;
 function switchTab(obj) {
     if (obj==undefined || obj==null)
         return;
@@ -439,6 +410,7 @@ function switchTab(obj) {
 
     eraseCookie('activetab');
     createCookie('activetab', obj.id, '7');
+    currentActiveTab = obj.id;
     obj.className="activelink";
     for(i in tabbladen) {
         var tabobj = tabbladen[i];
@@ -896,11 +868,7 @@ function addLayerToVolgorde(theItem,atBottomOfType) {
     if (legendURL==undefined){
         myImage.onerror();
     }else{
-        var imageUrl=legendURL;
-        if(legendURL.charAt(legendURL.length-4)!='.'){
-            imageUrl+="&timestamp="+timestamp;
-        }
-        myImage.src = imageUrl;
+        myImage.src = legendURL+"&timestamp="+timestamp;
     }
     div.onclick=function(){
         selectLayer(this);
@@ -968,31 +936,6 @@ function parseVolgordeBox() {
 
 function splitValue(val) {
     return val.split('##');
-}
-
-function resizeTabVak() {
-    document.getElementById('tabcontainervakscroll').style.height = document.getElementById('tab_container_td').offsetHeight + 'px';
-    document.getElementById('tabcontainervakscroll').style.width = document.getElementById('tab_container_td').offsetWidth + 'px';
-    var vakHeight = document.getElementById('tabcontainervakscroll').offsetHeight - 6;
-    document.getElementById('volgordeForm').style.height = (vakHeight - 30) + 'px';
-    document.getElementById('volgordevak').style.height = vakHeight + 'px';
-    document.getElementById('infovak').style.height = vakHeight + 'px';
-    document.getElementById('treevak').style.height = (vakHeight + 3) + 'px';
-}
-
-function setFirefoxCSS() {
-    document.getElementById('layermaindiv').style.overflow = 'visible';
-    document.getElementById('treevak').style.overflow = 'visible';
-    document.getElementById('volgordevak').style.overflow = 'visible';
-    document.getElementById('tabcontainervakscroll').style.overflow = 'auto';
-    document.getElementById('tabcontainervakscroll').style.backgroundColor = '#183C56';
-}
-
-function resizeVolgordeVakIE() {
-    var tdHeight = document.getElementById('tab_container_td').offsetHeight;
-    document.getElementById('volgordevak').style.height = (tdHeight-10) + 'px';
-    document.getElementById('volgordeForm').style.height = (tdHeight-30) + 'px';
-    document.getElementById('orderLayerBox').style.height = (tdHeight-80) + 'px';
 }
 
 function getActiveLayerId(cookiestring) {
@@ -1196,7 +1139,7 @@ function flamingo_map1_onUpdateComplete(mapId){
     }
 }
 if(useSortableFunction) {
-    $("#orderLayerBox").sortable({
+    document.getElementById("orderLayerBox").sortable({
         stop:function(){
             setTimerForReload();
         },
@@ -1349,7 +1292,8 @@ function exportMap(){
         return;
     }
     if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
-        exportMapWindow=window.open("createmappdf.do");
+        // exportMapWindow=popUp("createmappdf.do", "exportMapWindow", 620, 620, false);
+        exportMapWindow=window.open("createmappdf.do", "exportMapWindow");
         exportMapWindow.focus();
     }else{
         exportMapWindow.setMapImageSrc(lastGetMapRequest);
@@ -1381,6 +1325,6 @@ function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureW
         var geom = activeFeatureWKT;
 
         handleGetAdminData(geom);
-        loadObjectInfo(geom);
+        //loadObjectInfo(geom);
     }
 }

@@ -34,12 +34,7 @@ b.tb7{border-width: 0 2px;height:2px}
 b.tb8{border-width: 0 1px;height:2px}
 b.ts1{border-width: 0 2px}
 
-
-
 ul#nav,ul#nav li{list-style-type:none;margin:0;padding:0}
-ul#nav{margin-left: 0px;width:292px;}
-ul#nav li{float:left;margin-right: 1px;text-align: center;}
-ul#nav a{float:left;width: 57px;padding-top: 3px;background: #f7d3d3;text-decoration:none;color: #000;height:18px; font-size: 8pt;}
-ul#nav a:hover{background: #FF0000;color: #000}
-ul#nav li.activelink a,ul#nav li.activelink a:hover{background: #FF0000;color: #FFF}
-ul#nav li#tab2 a, ul#nav li#tab4 a { width: 58px; }
+ul#nav{margin-left: 0px;width:288px;}
+ul#nav li{float:left;margin-right: 1px;text-align:center;}
+ul#nav a{float:left;padding-top: 3px;text-decoration:none;height:20px;font-size: 8pt;}

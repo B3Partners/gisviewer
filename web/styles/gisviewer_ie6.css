@@ -1,0 +1,28 @@
+a.menulink, a.menulink:visited, a.menulink:active, a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
+    height: 27px;
+}
+
+#content {
+    height: 1px;
+    overflow: hidden;
+}
+
+#flashcontent {
+    right: auto;
+    bottom: auto;
+}
+
+#dataframediv {
+    right: auto;
+}
+
+#tab_container .tabvak_with_iframe {
+    top: 0px;
+}
+
+#popupWindow_Content {
+    position: absolute;
+    top: 21px;
+    width: 100%;
+    z-index: 110;
+}

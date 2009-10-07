@@ -1,3 +1,6 @@
+// jQuery gives problems with DWR - util.js, so noConflict mode. Usage for jQuery selecter becomes $j() instead of $()
+$j = jQuery.noConflict();
+
 attachOnload = function(onloadfunction) {
     if(typeof(onloadfunction) == 'function') {
         var oldonload=window.onload;
@@ -93,7 +96,7 @@ popUp = function(URL, naam, width, height, useDiv) {
         if(!popupCreated) initPopup();
         document.getElementById("dataframedivpopup").src = URL;
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
-        $("#popupWindow").show();
+        $j("#popupWindow").show();
         if(ieVersion <= 6) fixPopup();
     } else {
         properties = "toolbar = 0, " +
@@ -137,7 +140,7 @@ popUpData = function(naam, width, height, useDiv) {
     if(useDivPopup) {
         if(!popupCreated) initPopup();
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
-        $("#popupWindow").show();
+        $j("#popupWindow").show();
         if(ieVersion <= 6) fixPopup();
         return document.getElementById("dataframedivpopup");
     } else {
@@ -201,10 +204,10 @@ buildPopup = function() {
 }
 
 var popupCreated = false;
-$(document).ready(function(){
+$j(document).ready(function(){
     if(!document.getElementById('popupWindow') && !parent.document.getElementById('popupWindow')) {
         buildPopup();
-        $('#popupWindow').draggable({
+        $j('#popupWindow').draggable({
             handle:    '#popupWindow_Handle',
             iframeFix: true,
             zIndex: 200,
@@ -216,13 +219,13 @@ $(document).ready(function(){
             start: function(event, ui) { startResize(); },
             stop: function(event, ui) { stopResize(); }
         });
-        $('#popupWindow_Close').click(function(){
+        $j('#popupWindow_Close').click(function(){
             dataframepopupHandle.closed = true;
-            $("#popupWindow").hide();
+            $j("#popupWindow").hide();
         });
-        $("#popupWindow").mouseover(function(){startDrag();});
-        $("#popupWindow").mouseout(function(){stopDrag();});
-        $("#popupWindow").hide();
+        $j("#popupWindow").mouseover(function(){startDrag();});
+        $j("#popupWindow").mouseout(function(){stopDrag();});
+        $j("#popupWindow").hide();
     }
     popupCreated = true;
 });

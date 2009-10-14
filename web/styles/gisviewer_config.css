@@ -6,6 +6,21 @@
     min-height: 150px;
 }
 
+.configbody .infobalk {
+    width: 925px;
+}
+
+#content_style #config_tab_header_container {
+    width: 800px;
+}
+
+.configbody .infobalk .infobalk_actions {
+    text-align: right;
+    width: 765px;
+    float: left;
+    margin-top: 1px;
+}
+
 #content_style .config_tab_header {
     float: left;
     margin-right: 5px;
@@ -75,6 +90,17 @@
     display: none;
     padding: 5px;
     z-index: 200;
+}
+
+#iframeBehindHelp {
+    position: absolute;
+    width: 1px;
+    height: 0px;
+    top: 0px;
+    left: 0px;
+    border: none;
+    display: none;
+    z-index: 100;
 }
 
 .topbar {

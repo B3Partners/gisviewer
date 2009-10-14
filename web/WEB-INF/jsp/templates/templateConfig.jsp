@@ -58,7 +58,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </script>
 
     </head>
-    <body>
+    <body class="configbody">
         <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
         <div id="content_normal">
             <div id="content">

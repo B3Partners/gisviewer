@@ -11,35 +11,6 @@ function createAdminQ() {
     }
 }
 
-function showHelp(obj) {
-    var helpDiv = obj.nextSibling;
-    showHideDiv(helpDiv);
-    return false;
-}
-
-var prevOpened = null;
-function showHideDiv(obj) {
-    var iObj = document.getElementById('iframeBehindHelp');
-    if(prevOpened != null) {
-        prevOpened.style.display = 'none';
-        iObj.style.display = 'none';
-    }
-    if(prevOpened != obj) {
-        prevOpened = obj;
-        if(obj.style.display != 'block') {
-            obj.style.display = 'block';
-            var objPos = findPos(obj);
-            iObj.style.width = obj.offsetWidth + 'px';
-            iObj.style.height = obj.offsetHeight + 'px';
-            iObj.style.left = objPos[0] + 'px';
-            iObj.style.top = objPos[1] + 'px';
-            iObj.style.display = 'block';
-        } else {
-            obj.style.display = 'none';
-        }
-    }
-}
-
 function hoverRow(obj) {
     obj.className += ' regel_over';
 }

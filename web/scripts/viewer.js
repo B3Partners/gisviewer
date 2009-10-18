@@ -11,8 +11,7 @@ var featureInfoData=null;
 
 var layersAan= new Array();
 var clustersAan = new Array();
-var checkboxArray = new Array();
-var clusterCheckboxArray = new Array();
+
 var timeouts=0;
 var featureInfoTimeOut=30;
 //timestamp in days
@@ -52,7 +51,7 @@ function handleGetAdminData(/*coords,*/ geom) {
     if (!multipleActiveThemas){
         checkedThemaIds = activeAnalyseThemaId;
     } else {
-        checkedThemaIds = getArrayAsString();
+        checkedThemaIds = getLayerIdsAsString();
     }
     if(checkedThemaIds == null || checkedThemaIds == '') {
         //alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
@@ -65,7 +64,7 @@ function handleGetAdminData(/*coords,*/ geom) {
     if (!multipleActiveThemas){
         document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
-        document.forms[0].themaid.value = getArrayAsString();
+        document.forms[0].themaid.value = getLayerIdsAsString();
     }
     document.forms[0].lagen.value='';
     //document.forms[0].xcoord.value=x;
@@ -225,20 +224,106 @@ function createCheckboxCluster(item){
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
     }else{
-	    checkbox = document.createElement('input');
-	    checkbox.id = item.id;
-	    checkbox.type = 'checkbox';
-	    checkbox.value = item.id;
-	    checkbox.onclick = function(){
-		clusterCheckboxClick(this, false);
-	    }
-	    if(item.visible)
-		checkbox.checked = true;
+        checkbox = document.createElement('input');
+        checkbox.id = item.id;
+        checkbox.type = 'checkbox';
+        checkbox.value = item.id;
+        checkbox.onclick = function(){
+            clusterCheckboxClick(this, false);
+        }
+        if(item.visible)
+            checkbox.checked = true;
     }
     return checkbox;
 }
 
 var prevRadioButton = null;
+function createRadioThema(item){
+    var radio;
+    if (navigator.appName=="Microsoft Internet Explorer") {
+        var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
+        if (isActiveItem(item)) {
+            if(item.analyse=="active" && prevRadioButton != null){
+                var rc = document.getElementById(prevRadioButton);
+                if (rc!=undefined && rc!=null) {
+                    rc.checked = false;
+                }
+            }
+
+            radioControleString += ' checked="checked"';
+            if (item.metadatalink && item.metadatalink.length > 1) {
+                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+            }
+            prevRadioButton = 'radio' + item.id;
+        }
+        radioControleString += ' onclick="radioClick(this);"';
+        radioControleString += '>';
+        radio = document.createElement(radioControleString);
+    } else {
+        radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'selkaartlaag';
+        radio.value = item.id;
+        radio.id = 'radio' + item.id;
+        radio.onclick = function(){
+            radioClick(this);
+        }
+        if (isActiveItem(item)) {
+            if(item.analyse=="active" && prevRadioButton != null){
+                var rc = document.getElementById(prevRadioButton);
+                if (rc!=undefined && rc!=null) {
+                    rc.checked = false;
+                }
+            }
+            radio.checked = true;
+            prevRadioButton = 'radio' + item.id;
+            if (item.metadatalink && item.metadatalink.length > 1) {
+                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+            }
+        }
+    }
+    radio.theItem=item;
+    return radio;
+}
+
+function createCheckboxThema(item, checked){
+    var checkbox;
+    if (navigator.appName=="Microsoft Internet Explorer") {
+
+        var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
+        if(checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = item.id;
+        checkbox.type = 'checkbox';
+        checkbox.value = item.id;
+        checkbox.onclick = function(){
+            checkboxClick(this, false);
+        }
+        if(checked){
+            checkbox.checked = true;
+        }
+    }
+    checkbox.theItem=item;
+    return checkbox;
+}
+
+function createMetadatLink(item){
+    var lnk = document.createElement('a');
+    lnk.innerHTML = item.title ? item.title : item.id;
+    lnk.href = '#';
+    if (item.metadatalink && item.metadatalink.length > 1)
+        lnk.onclick = function(){
+            popUp(item.metadatalink, "metadata", 600, 500, useDivPopup)
+        };
+    return lnk;
+}
+
 function createLabel(container, item) {
     if(item.cluster) {
         //if callable
@@ -248,21 +333,12 @@ function createLabel(container, item) {
             checkbox.theItem=treeview_findItem(themaTree,item.id);
             container.appendChild(checkbox);
 
-            clusterCheckboxArray.push(item.id);
             if (item.visible){
                 clustersAan.push(checkbox);
             }
         }
         if (!item.hide_tree || item.callable){
-            var lnk = document.createElement('a');
-            lnk.innerHTML = item.title ? item.title : item.id;
-            lnk.href = '#';
-            if (item.metadatalink && item.metadatalink.length > 1)
-                lnk.onclick = function(){
-                    popUp(item.metadatalink, "metadata", 600, 500, useDivPopup)
-                };
-            container.appendChild(lnk);
-//            container.appendChild(document.createTextNode((item.title ? item.title : item.id)));
+            container.appendChild(createMetadatLink(item));
         }
         if (item.active){
             setActiveCluster(item, true);
@@ -271,112 +347,39 @@ function createLabel(container, item) {
             }
         }
     } else if (!item.hide_tree) {
-        var analyseRadioChecked = false;
-
-        var layerPos = getLayerPosition(item);
-        var el;
-        var el2;
-        if (navigator.appName=="Microsoft Internet Explorer") {
-            var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
-            if (isActiveItem(item)) {
-                if(item.analyse=="active" && prevRadioButton != null){
-                    var rc = document.getElementById(prevRadioButton);
-                    if (rc!=undefined && rc!=null) {
-                        rc.checked = false;
-                    }
-                }
-            
-                radioControleString += ' checked="checked"';
-                if (item.metadatalink && item.metadatalink.length > 1) {
-                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
-                }
-                prevRadioButton = 'radio' + item.id;
-                if (item.analyse=="active") {
-                    analyseRadioChecked = true;
-                }
-            }
-            radioControleString += ' onclick="radioClick(this);"';
-            radioControleString += '>';
-            el = document.createElement(radioControleString);
-
-            var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-            if(layerPos!=0 || analyseRadioChecked )
-                checkboxControleString += ' checked="checked"';
-            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
-            checkboxControleString += '>';
-            el2 = document.createElement(checkboxControleString);
-
-        } else {
-            el = document.createElement('input');
-            el.type = 'radio';
-            el.name = 'selkaartlaag';
-            el.value = item.id;
-            el.id = 'radio' + item.id;
-            el.onclick = function(){
-                radioClick(this);
-            }
-            if (isActiveItem(item)) {
-                if(item.analyse=="active" && prevRadioButton != null){
-                    var rc = document.getElementById(prevRadioButton);
-                    if (rc!=undefined && rc!=null) {
-                        rc.checked = false;
-                    }
-                }
-                el.checked = true;
-                prevRadioButton = 'radio' + item.id;
-                if (item.metadatalink && item.metadatalink.length > 1) {
-                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
-                }
-                if (item.analyse=="active") {
-                    analyseRadioChecked = true;
-                }
-            }
-
-            el2 = document.createElement('input');
-            el2.id = item.id;
-            el2.type = 'checkbox';
-            el2.value = item.id;
-            el2.onclick = function(){
-                checkboxClick(this, false);
-            }
-            if(layerPos!=0 || analyseRadioChecked ){
-                el2.checked = true;
-            }
-        }
-        if(layerPos!=0 || analyseRadioChecked )
-            addItemAsLayer(item,true);
-        if (analyseRadioChecked && layerPos==0){
-            layersAan.push(el2);
-        }
-        el.theItem=item;
-        el2.theItem=item;
-
-        if (layerPos<0)
-            layersAan.unshift(el2);
-        else if (layerPos>0)
-            layersAan.push(el2);
-
-        var lnk = document.createElement('a');
-        lnk.innerHTML = item.title ? item.title : item.id;
-        lnk.href = '#';
-        if (item.metadatalink && item.metadatalink.length > 1)
-            lnk.onclick = function(){
-                popUp(item.metadatalink, "metadata", 600, 500, useDivPopup)
-            };
-
-
+        
         if(item.wmslayers){
-            if(item.analyse=="on" || item.analyse=="active"){
-            	if (!multipleActiveThemas){
-                	container.appendChild(el);
-		}
+            var analyseRadioChecked = false;
+            if (item.analyse=="active") {
+                analyseRadioChecked = true;
             }
-            container.appendChild(el2);
+            var layerPos = getLayerPosition(item);
+            var checkboxChecked = false;
+            if(layerPos!=0 || analyseRadioChecked ){
+                checkboxChecked = true;
+            }
+            var labelCheckbox = createCheckboxThema(item, checkboxChecked);
+
+            if (checkboxChecked) {
+                if (layerPos<0) {
+                    layersAan.unshift(labelCheckbox);
+                } else {
+                    layersAan.push(labelCheckbox);
+                }
+            }
+
+            if(item.analyse=="on" || item.analyse=="active"){
+                if (!multipleActiveThemas){
+                    var labelRadio = createRadioThema(item);
+                    container.appendChild(labelRadio);
+                }
+            }
+            container.appendChild(labelCheckbox);
         }
         container.appendChild(document.createTextNode('  '));
-        container.appendChild(lnk);
+        container.appendChild(createMetadatLink(item));
         
-    }else if(item.hide_tree && item.visible && item.wmslayers){
+    } else if(item.hide_tree && item.visible && item.wmslayers){
         addItemAsLayer(item,true);
     }
 }
@@ -433,38 +436,21 @@ function switchTab(obj) {
     }
 }
 
-function readCookieArrayIntoCheckboxArray() {
-    if(cookieArray != null) {
-        var tempArr = cookieArray.split(',');
-        for(i = 0; i < tempArr.length; i++) {
-            checkboxArray[i] = tempArr[i];
-        }
-        if(checkboxArray.length > 0) {
-            var arrayString = getArrayAsString();
-            document.forms[0].lagen.value = arrayString;
-        } else {
-            document.forms[0].lagen.value = 'ALL';
-        }
+function syncLayerCookieAndForm(layerString) {
+    eraseCookie('checkedLayers');
+     if (layerString!=null) {
+        createCookie('checkedLayers', layerString, '7');
     }
+    document.forms[0].lagen.value = layerString;
 }
 
-function isInCheckboxArray(id) {
-    if(checkboxArray == null)
-        return false;
-    for(i = 0; i < checkboxArray.length; i++) {
-        if(checkboxArray[i] == id) {
-            return true;
-        }
-    }
-    return false;
-}
 //called when a checkbox is clicked.
 function checkboxClick(obj, dontRefresh) {    
     if(obj.checked) {        
         //add legend
         //add wms layer part
         addItemAsLayer(obj.theItem);        
-        //add querylayers
+    //add querylayers
         
     } else {
         removeItemAsLayer(obj.theItem);
@@ -507,23 +493,19 @@ function clusterCheckboxClick(element,dontRefresh){
     }
 }
 //adds a item as a layer (Wmslayer, legend and querylayer) and a cookie if needed.
-//if atBottomOfType is set to treu the layer will be added at the bottom of its type (background or top type)
+//if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
 function addItemAsLayer(theItem,atBottomOfType){
-    //part for cookie
-    if(!isInCheckboxArray(theItem.id)) checkboxArray[checkboxArray.length] = theItem.id;
-    if(checkboxArray.length > 0) {
-        var arrayString = getArrayAsString();
-        eraseCookie('checkedLayers');
-        createCookie('checkedLayers', arrayString, '7');
-    } else {
-        eraseCookie('checkedLayers');
-    }    
-    enabledLayerItems.push(theItem);
+    addLayerToEnabledLayerItems(theItem);
+    var arrayString = getLayerIdsAsString();
+    if (arrayString == "") {
+        arrayString = 'ALL';
+    }
+    syncLayerCookieAndForm(arrayString)
     
     //add legend part
     if (!theItem.hide_legend)
-        addLayerToVolgorde(theItem,atBottomOfType);
-    //If ther is a orgainization code key then add this to the service url.
+        addLayerToLegendBox(theItem,atBottomOfType);
+    //If there is a orgainization code key then add this to the service url.
     if (theItem.wmslayers){
         var organizationCodeKey = theItem.organizationcodekey;
         if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
@@ -538,16 +520,32 @@ function addItemAsLayer(theItem,atBottomOfType){
     }    
 }
 
+function addLayerToEnabledLayerItems(theItem){
+    enabledLayerItems.push(theItem);
+}
+
 function removeItemAsLayer(theItem){
-    deleteFromArray(theItem);
     if (!theItem.hide_legend)
-        removeLayerFromVolgorde(theItem.title, theItem.id + '##' + theItem.wmslayers);
+        removeLayerFromLegendBox(theItem.id + '##' + theItem.wmslayers);
+    if (removeLayerFromEnabledLayerItems(theItem.id)!=null) {
+        var arrayString = getLayerIdsAsString();
+        if (arrayString == "") {
+            arrayString = 'ALL';
+        }
+        syncLayerCookieAndForm(arrayString)
+        return;
+    }
+}
+
+function removeLayerFromEnabledLayerItems(itemId){
     for (var i=0; i < enabledLayerItems.length; i++){
-        if (enabledLayerItems[i].id==theItem.id){
+        if (enabledLayerItems[i].id==itemId){
+            var foundLayerItem = enabledLayerItems[i];
             enabledLayerItems.splice(i,1);
-            return;
+            return foundLayerItem;
         }
     }
+    return null;
 }
 
 function refreshLayerWithDelay(){
@@ -649,30 +647,11 @@ function loadObjectInfo(/*coords,*/ geom) {
     if (!multipleActiveThemas){
         document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
-        document.forms[0].themaid.value = getArrayAsString();
+        document.forms[0].themaid.value = getLayerIdsAsString();
     }
 
     document.forms[0].analysethemaid.value = activeAnalyseThemaId;
 
-    if(checkboxArray.length > 0) {
-        var arrayString = getArrayAsString();
-        document.forms[0].lagen.value = arrayString;
-        eraseCookie('checkedLayers');
-        createCookie('checkedLayers', arrayString, '7');
-    } else {
-        eraseCookie('checkedLayers');
-        document.forms[0].lagen.value = 'ALL';
-    }
-    //document.forms[0].xcoord.value = x;
-    //document.forms[0].ycoord.value = y;
-    /*var coordsVal='';
-    for (var i=0; i < coords.length; i++){
-        if (i!=0){
-            coordsVal+=","
-        }
-        coordsVal+=coords[i];
-    }
-    document.forms[0].coords.value=coordsVal;*/
     document.forms[0].geom.value=geom;
     document.forms[0].scale.value ='';
 
@@ -689,34 +668,19 @@ function loadObjectInfo(/*coords,*/ geom) {
     document.forms[0].submit();
 }
 
-function getArrayAsString() {
+function getLayerIdsAsString() {
     var ret = "";
     var firstTime = true;
-    for(var i = 0; i < checkboxArray.length; i++) {
+
+    for (var i=0; i < enabledLayerItems.length; i++){
         if(firstTime) {
-            ret += checkboxArray[i];
+            ret += enabledLayerItems[i].id;
             firstTime = false;
         } else {
-            ret += "," + checkboxArray[i];
+            ret += "," + enabledLayerItems[i].id;
         }
     }
     return ret;
-}
-
-function deleteFromArray(theItem) {
-    if(checkboxArray.length == 1 && checkboxArray[0] == theItem.id) checkboxArray = new Array();
-    var tempArray = new Array();
-    var j = 0;
-    for(i = 0; i < checkboxArray.length; i++) {
-        if(checkboxArray[i] != theItem.id) {
-            tempArray[j] = checkboxArray[i];
-            j++;
-        }
-    }
-    checkboxArray = tempArray;
-    var arrayString = getArrayAsString();
-    eraseCookie('checkedLayers');
-    createCookie('checkedLayers', arrayString, '7');
 }
 
 /*Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
@@ -788,94 +752,42 @@ function getCoordsCallbackFunction(values){
     }
     searchResults.innerHTML=sResult;
 }
-//adds a layer to the legenda
-//if atBottomOfType is set to treu the layer will be added at the bottom of its type (background or top type)
-function addLayerToVolgorde(theItem,atBottomOfType) {
-    var id=theItem.id + '##' + theItem.wmslayers;
-    //check if already exists in legend
-    for(var i=0; i < orderLayerBox.childNodes.length; i++){
-        if(orderLayerBox.childNodes.item(i).id==id){
-            return;
-        }
-    }    
-    var legendURL="";
-    if (theItem.legendurl!=undefined){
-        legendURL=theItem.legendurl;
-    }else{
-        legendURL=undefined;
-    }
+
+function createLegendDiv(item) {
+    var id=item.id + '##' + item.wmslayers;
     var myImage = new Image();
-    myImage.name = theItem.title;
+    myImage.name = item.title;
     myImage.id=id;
     myImage.onerror=imageOnerror;
     myImage.onload=imageOnload;
 
     var spanEl = document.createElement("span");
-    spanEl.innerHTML = ' ' + theItem.title + '<br />';
+    spanEl.innerHTML = ' ' + item.title + '<br />';
     spanEl.style.color = 'Black';
     spanEl.style.fontWeight = 'bold';
 
     var div = document.createElement("div");
     div.name=id;
     div.id=id;
-    div.title =theItem.title;
+    div.title =item.title;
     div.className="orderLayerClass";
     div.appendChild(spanEl);
-    div.theItem=theItem;
+    div.theItem=item;
 
-    var beforeChild=null;
-    if(!orderLayerBox.hasChildNodes() || theItem.hide_legend) {
-        orderLayerBox.appendChild(div);
+    if (item.legendurl != undefined){
+        myImage.src = item.legendurl + "&timestamp=" + timestamp;
     } else {
-        //place layer before the background layers.
-        if (theItem.background){
-            if (atBottomOfType){
-                beforeChild=null;
-            }else{
-                for(var i=0; i < orderLayerBox.childNodes.length; i++){
-                    var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
-                    if (orderLayerItem){
-                        if (orderLayerItem.background){
-                            beforeChild=orderLayerBox.childNodes.item(i);
-                            break;
-                        }
-                    }
-                }
-            }
-        }else{
-            if (atBottomOfType){
-                var previousChild=null;
-                for(var i=0; i < orderLayerBox.childNodes.length; i++){
-                    var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
-                    if (orderLayerItem){
-                        if (orderLayerItem.background){
-                            beforeChild=previousChild;
-                            break;
-                        }
-                    }
-                    previousChild=orderLayerBox.childNodes.item(i);
-                }
-            }else{
-                beforeChild=orderLayerBox.firstChild;
-            }
-        }
-        if (beforeChild==null){
-            orderLayerBox.appendChild(div);
-        }else{
-            orderLayerBox.insertBefore(div,beforeChild);
-        }
-    }
-    if (legendURL==undefined){
         myImage.onerror();
-    }else{
-        myImage.src = legendURL+"&timestamp="+timestamp;
     }
+
     div.onclick=function(){
         selectLayer(this);
     };
-    if (theItem.hide_legend && demogebruiker){
+
+    if (item.hide_legend && demogebruiker){
         div.style.display="none";
     }
+    return div;
 }
 function imageOnerror(){
     this.style.height='0';
@@ -892,10 +804,83 @@ function imageOnload(){
         legendimg.style.border = '0px none White';
         legendimg.alt = this.name;
         legendimg.title = this.name;
-        document.getElementById(this.id).appendChild(legendimg);
+        var legendImage = document.getElementById(this.id);
+        if (legendImage) {
+            legendImage.appendChild(legendimg);
+        }
     }
 }
-function removeLayerFromVolgorde(name, id) {
+
+//adds a layer to the legenda
+//if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
+function addLayerToLegendBox(theItem,atBottomOfType) {
+    //check if already exists in legend
+    var layerDiv = findLayerDivInLegendBox(theItem);
+    if (layerDiv!=null)
+        return;
+
+    var div = createLegendDiv(theItem);
+    
+    var beforeChild=null;
+    if(orderLayerBox.hasChildNodes() && !theItem.hide_legend) {
+        beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
+    }
+    if (beforeChild==null){
+        orderLayerBox.appendChild(div);
+    }else{
+        orderLayerBox.insertBefore(div,beforeChild);
+    }
+}
+
+function findLayerDivInLegendBox(theItem) {
+    var id=theItem.id + '##' + theItem.wmslayers;
+    for(var i=0; i < orderLayerBox.childNodes.length; i++){
+        var child = orderLayerBox.childNodes.item(i);
+        if(child.id==id){
+            return child;
+        }
+    }
+    return null;
+}
+
+function findBeforeDivInLegendBox(theItem, atBottomOfType) {
+    var beforeChild=null;
+    //place layer before the background layers.
+    if (theItem.background){
+        if (atBottomOfType){
+            beforeChild=null;
+        }else{
+            for(var i=0; i < orderLayerBox.childNodes.length; i++){
+                var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
+                if (orderLayerItem){
+                    if (orderLayerItem.background){
+                        beforeChild=orderLayerBox.childNodes.item(i);
+                        break;
+                    }
+                }
+            }
+        }
+    }else{
+        if (atBottomOfType){
+            var previousChild=null;
+            for(var i=0; i < orderLayerBox.childNodes.length; i++){
+                var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
+                if (orderLayerItem){
+                    if (orderLayerItem.background){
+                        beforeChild=previousChild;
+                        break;
+                    }
+                }
+                previousChild=orderLayerBox.childNodes.item(i);
+            }
+        }else{
+            beforeChild=orderLayerBox.firstChild;
+        }
+    }
+    return beforeChild;
+}
+
+function removeLayerFromLegendBox(id) {
     var remel = document.getElementById(id);
     if (remel!=undefined && remel!=null) {
         orderLayerBox.removeChild(remel);
@@ -903,8 +888,22 @@ function removeLayerFromVolgorde(name, id) {
 }
 
 function refreshMapVolgorde() {
-    parseVolgordeBox();
+    parseLegendBox();
     refreshLayer();
+}
+
+function parseLegendBox() {
+    // by removing and adding order is sync'd.
+    for(var i = 0; i < orderLayerBox.childNodes.length; i++) {
+        var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
+        var removedLayerItem = removeLayerFromEnabledLayerItems(itemId);
+        addLayerToEnabledLayerItems(removedLayerItem);
+    }
+    var arrayString = getLayerIdsAsString();
+    if (arrayString == "") {
+        arrayString = 'ALL';
+    }
+    syncLayerCookieAndForm(arrayString);
 }
 
 function deleteAllLayers() {
@@ -914,24 +913,8 @@ function deleteAllLayers() {
         orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
     }
     enabledLayerItems=new Array();
-    cookieArray = "";
-    eraseCookie('checkedLayers');
-    createCookie('checkedLayers', cookieArray, '7');
-    readCookieArrayIntoCheckboxArray();
+    syncLayerCookieAndForm("");
     refreshLayer();
-}
-
-function parseVolgordeBox() {
-    var cookieString = "";
-    var layersString = "";
-    for(var i = 0; i < orderLayerBox.childNodes.length; i++) {
-        cookieString = "," + splitValue(orderLayerBox.childNodes[i].id)[0] + cookieString;
-        layersString = "," + splitValue(orderLayerBox.childNodes[i].id)[1] + layersString;
-    }
-    cookieArray = cookieString.substring(1);
-    eraseCookie('checkedLayers');
-    createCookie('checkedLayers', cookieArray, '7');
-    readCookieArrayIntoCheckboxArray();
 }
 
 function splitValue(val) {
@@ -1036,7 +1019,7 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
     teller=0;
     updateGetFeatureInfo();
 }
-readCookieArrayIntoCheckboxArray();
+
 var doOnInit= new Boolean("true");
 function flamingo_map1_onInit(){
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
@@ -1046,10 +1029,14 @@ function flamingo_map1_onInit(){
         doOnInit=false;
         //check / activate the themas that have init status visible
         var newLayersAan = new Array();
-        if(checkboxArray.length== layersAan.length) {
-            for(var j=0; j < checkboxArray.length; j++) {
+        var cookieLayers = new Array();
+        if (cookieArray != null) {
+            cookieLayers = cookieArray.split(',');
+        }
+        if(cookieLayers.length == layersAan.length) {
+            for(var j=0; j < cookieLayers.length; j++) {
                 for (var k=0; k < layersAan.length; k++) {
-                    if(layersAan[k].theItem.id == checkboxArray[j]) {
+                    if(layersAan[k].theItem.id == cookieLayers[j]) {
                         newLayersAan[newLayersAan.length] = layersAan[k];
                     }
                 }
@@ -1303,7 +1290,7 @@ function exportMap(){
 /*Instellingen voor barneveld
          **/
 function barneveldSettings() {
-    /*fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
+/*fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
@@ -1333,6 +1320,6 @@ function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureW
         var geom = activeFeatureWKT;
 
         handleGetAdminData(geom);
-        //loadObjectInfo(geom);
+    //loadObjectInfo(geom);
     }
 }

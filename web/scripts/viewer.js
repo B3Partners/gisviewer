@@ -1,3 +1,5 @@
+// main list that holds current visible layers
+// in correct order, last is top
 var enabledLayerItems= new Array();
 
 var layerUrl=""+kburl;
@@ -9,6 +11,7 @@ var activeAnalyseThemaTitle = '';
 
 var featureInfoData=null;
 
+// temp lists for init
 var layersAan= new Array();
 var clustersAan = new Array();
 
@@ -564,14 +567,13 @@ function doRefreshLayer(){
 
 }
 function refreshLayer(){
+    getLayerIdsAsString();
     if (layerUrl!=undefined && layerUrl!=null) {
         var backgroundLayers="";
         var topLayers="";
         var queryLayers="";
-        /*eerste in de array moet boven op komen als kaart
-         *dus loop achteruit de layer door.
-         **/
-        for (var i=enabledLayerItems.length-1; i >=0 ; i--){
+        // last in list will be on top in map
+        for (var i=0; i<enabledLayerItems.length; i++){
             var item=enabledLayerItems[i];
             if (item.visible){
                 if (item.wmslayers){
@@ -680,6 +682,7 @@ function getLayerIdsAsString() {
             ret += "," + enabledLayerItems[i].id;
         }
     }
+//    alert ("layerasstring: " + ret);
     return ret;
 }
 
@@ -893,8 +896,9 @@ function refreshMapVolgorde() {
 }
 
 function parseLegendBox() {
-    // by removing and adding order is sync'd.
-    for(var i = 0; i < orderLayerBox.childNodes.length; i++) {
+    // by removing and adding, order is sync'd.
+    // order in legend box is reverse of order layer list
+    for(var i = orderLayerBox.childNodes.length -1; i>=0; i--) {
         var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
         var removedLayerItem = removeLayerFromEnabledLayerItems(itemId);
         addLayerToEnabledLayerItems(removedLayerItem);
@@ -1044,10 +1048,13 @@ function flamingo_map1_onInit(){
         } else {
             newLayersAan = layersAan;
         }
-        for (var i=0; i < newLayersAan.length; i++){
+        // layer added in reverse order
+        // layer with lowest order number should be on top
+        // so added last
+        for (var i=newLayersAan.length-1; i >=0 ; i--){
             checkboxClick(newLayersAan[i],true);
         }
-        for (i=0; i < clustersAan.length; i++){
+        for (var i=clustersAan.length-1; i >=0 ; i--){
             clusterCheckboxClick(clustersAan[i], true);
         }
 

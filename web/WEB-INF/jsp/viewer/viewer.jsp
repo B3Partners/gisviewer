@@ -146,9 +146,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         "beheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
         // "organisatiebeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
         // "themabeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
-        "gebruiker": ["tab0", "tab4", "tab1", "tab2", "tab3"],
+        "gebruiker": ["tab0", "tab4", "tab1", "tab5"],
         "demogebruiker": ["tab1", "tab4", "tab5"],
-        "anoniem": ["tab0", "tab4", "tab1", "tab2", "tab3"]
+        "anoniem": ["tab0", "tab4", "tab1", "tab5"]
     };
     
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,

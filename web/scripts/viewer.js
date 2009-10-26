@@ -16,8 +16,7 @@ var clustersAan = new Array();
 
 var timeouts=0;
 var featureInfoTimeOut=30;
-//timestamp in days
-var timestamp=(Math.floor(new Date().getTime()/86400000));
+
 
 
 var flamingoController= new FlamingoController(flamingo,'flamingoController');
@@ -782,6 +781,7 @@ function createLegendDiv(item) {
     div.theItem=item;
 
     if (item.legendurl != undefined){
+        var timestamp=(Math.floor(new Date().getTime()));
         myImage.src = item.legendurl + "&timestamp=" + timestamp;
     } else {
         myImage.onerror();

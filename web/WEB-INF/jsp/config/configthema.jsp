@@ -38,7 +38,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="infobalk">
     <div class="infobalk_description">THEMA CONFIG</div>
-    <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
+    <div class="infobalk_actions"> <tiles:insert name="loginblock"/> </div>
 </div>
 <html:form action="/configThema" focus="${focus}">
     <div style="display: none;">
@@ -56,31 +56,31 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 
     <c:if test="${!empty allThemas}">
-        <div style="float: left; clear: both; margin-left: 15px;">
-            <div class="topbar">
-                <div class="bar_regel">
-                    <div class="bar_item" style="width: 40px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});">Nr</div>
-                    <div class="bar_item" style="width: 358px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:1});">Naam</div>
-                    <div class="bar_item" style="width: 30px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:2});">Code</div>
-                    <div class="bar_item" style="width: 180px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:3});">Admin Tabel</div>
-                    <div class="bar_item" style="width: 180px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:4});">Spatial Tabel</div>
-                    <div class="bar_item" style="width: 68px;" onclick="Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['default'], col:5});">Data</div>
-                </div>
-            </div>
+        <div style="float: left; clear: both; margin-left: 5px;">
             <div class="scroll">
-                <table style="width: 100%;" cellpadding="0" cellspacing="0" id="themalisttable" class="table-autosort table-stripeclass:regel_even">
+                <table id="themalisttable" class="tablesorter">
+                    <thead>
+                        <tr>
+                            <th style="width: 7%;" id="sort_col1">Nr</th>
+                            <th style="width: 35%;" id="sort_col2">Naam</th>
+                            <th style="width: 10%;" id="sort_col3">Code</th>
+                            <th style="width: 19%;" id="sort_col4">Admin Table</th>
+                            <th style="width: 19%;" id="sort_col5">Spatial Tabel</th>
+                            <th style="width: 10%;" id="sort_col6">Data</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <c:forEach var="ci" varStatus="status" items="${allThemas}">
-                            <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}"/>
+                            <c:url var="link" value="/configThema.do?edit=submit&themaID=${ci.id}" />
                             <c:set var="id_selected" value='' />
                             <c:if test="${ci.id == mainid}"><c:set var="id_selected" value=' id="regel_selected"' /></c:if>
-                            <tr${id_selected} onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';">
-                                <td class="c_item" style="width: 40px;"><c:out value="${ci.belangnr}"/>&nbsp;</td>
-                                <td class="c_item" style="width: 358px;"><c:out value="${ci.naam}"/>&nbsp;</td>
-                                <td class="c_item" style="width: 30px;"><c:out value="${ci.code}"/>&nbsp;</td>
-                                <td class="c_item" style="width: 180px;"><c:out value="${ci.admin_tabel}"/>&nbsp;</td>
-                                <td class="c_item" style="width: 180px;"><c:out value="${ci.spatial_tabel}"/>&nbsp;</td>
-                                <td class="c_item" style="width: 51px; border-right: 0px none White;">
+                            <tr onclick="javascript: window.location.href='${link}';"${id_selected}>
+                                <td style="width: 7%;"><c:out value="${ci.belangnr}"/>&nbsp;</td>
+                                <td style="width: 35%;"><c:out value="${ci.naam}"/>&nbsp;</td>
+                                <td style="width: 10%;"><c:out value="${ci.code}"/>&nbsp;</td>
+                                <td style="width: 19%;"><c:out value="${ci.admin_tabel}"/>&nbsp;</td>
+                                <td style="width: 19%;"><c:out value="${ci.spatial_tabel}"/>&nbsp;</td>
+                                <td style="width: 10%;">
                                     <c:if test="${ci.code!='3'}">
                                         &nbsp;<html:link page="/configThemaData.do?edit=submit&themaID=${ci.id}">TD</html:link>&nbsp;
                                     </c:if>
@@ -427,13 +427,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </html:form>
 
 <script type="text/javascript">
-    if(document.getElementById('themalisttable')) {
-        Table.stripe(document.getElementById('themalisttable'), 'regel_even');
-        Table.sort(document.getElementById('themalisttable'), {sorttype:Sort['numeric'], col:0});
-    }
     if(document.getElementById('regel_selected')) {
-        document.getElementById('regel_selected').className = 'regel_selected';
+        $j("#regel_selected").addClass('selected');
+        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
     }
+    $j("#themalisttable").tablesorter({
+        widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
+        sortList: [[0,0]]
+    });
     var pageConnectionType="${connectieType}";
     var currentConnectionType="${connectieType}";
     var connectionTypes=new Array();

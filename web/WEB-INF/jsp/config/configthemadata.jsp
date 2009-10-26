@@ -37,47 +37,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
 </div>
 
-<script type="text/javascript">
-    function showHelp(obj) {
-        var helpDiv = obj.nextSibling;
-        showHideDiv(helpDiv);
-        return false;
-    }
-    
-    var prevOpened = null;
-    function showHideDiv(obj) {
-        var iObj = document.getElementById('iframeBehindHelp');
-        if(prevOpened != null) {
-            prevOpened.style.display = 'none';
-            iObj.style.display = 'none';
-        }
-        if(prevOpened != obj) {
-            prevOpened = obj;
-            if(obj.style.display != 'block') {
-                obj.style.display = 'block';
-                var objPos = findPos(obj);
-                iObj.style.width = obj.offsetWidth + 'px';
-                iObj.style.height = obj.offsetHeight + 'px';
-                iObj.style.left = objPos[0] + 'px';
-                iObj.style.top = objPos[1] + 'px';
-                iObj.style.display = 'block';
-            } else {
-                obj.style.display = 'none';
-            }
-        }
-    }
-    
-    function hoverRow(obj) {
-        obj.className += ' regel_over';
-    }
-    
-    var pattern = new RegExp("\\bregel_over\\b");
-    function hoverRowOut(obj) {
-        obj.className = obj.className.replace(pattern, '');
-    }
-</script>
-
-<html:form action="/configThemaData" focus="${focus}">
+    <html:form action="/configThemaData" focus="${focus}">
     <div style="display: none;">
         <html:hidden property="action"/>
         <html:hidden property="alt_action"/>
@@ -112,25 +72,27 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 
     <c:if test="${!empty listThemaData}">
-        <div style="float: left; clear: both; margin-left: 15px;">
-            <div class="topbar">
-                <div class="bar_regel"> 
-                    <div class="bar_item" style="width: 180px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['numeric'], col:0});">Volgorde</div>
-                    <div class="bar_item" style="width: 200px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['default'], col:1});"><fmt:message key="configthemadata.label"/></div>
-                    <div class="bar_item" style="width: 200px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['default'], col:2});"><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></div>
-                    <div class="bar_item" style="width: 290px" onclick="Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['default'], col:3});"><fmt:message key="configthemadata.basisregel"/></div>
-                </div>
-            </div>
+        <div style="float: left; clear: both; margin-left: 5px;">
             <div class="scroll">
-                <table style="width: 100%;" cellpadding="0" cellspacing="0" id="themadatatable" class="table-autosort table-stripeclass:regel_even">
+                <table id="themadatatable" class="tablesorter">
+                    <thead>
+                        <tr>
+                            <th style="width: 21%;" id="sort_col1">Volgorde</th>
+                            <th style="width: 23%;" id="sort_col2"><fmt:message key="configthemadata.label"/></th>
+                            <th style="width: 23%;" id="sort_col3"><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></th>
+                            <th style="width: 33%;" id="sort_col4"><fmt:message key="configthemadata.basisregel"/></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <c:forEach var="ci" varStatus="status" items="${listThemaData}">
+                            <c:set var="id_selected" value='' />
+                            <c:if test="${ci.id == mainid}"><c:set var="id_selected" value=' id="regel_selected"' /></c:if>
                             <c:url var="link" value="/configThemaData.do?edit=submit&themaDataID=${ci.id}"/>
-                            <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
-                                <td class="c_item" style="width: 180px;"><c:out value="${ci.dataorder}"/></td>
-                                <td class="c_item" style="width: 200px;"><c:out value="${ci.label}"/></td>
-                                <td class="c_item" style="width: 200px;"><c:out value="${ci.kolomnaam}"/></td>
-                                <td class="c_item" style="width: 273px; border: 0px none White;">
+                            <tr onclick="javascript: window.location.href='${link}';"${id_selected}>
+                                <td style="width: 21%;"><c:out value="${ci.dataorder}"/></td>
+                                <td style="width: 23%;"><c:out value="${ci.label}"/></td>
+                                <td style="width: 23%;"><c:out value="${ci.kolomnaam}"/></td>
+                                <td style="width: 33%;">
                                     <c:if test="${ci.basisregel}">Ja</c:if>
                                 </td>
                             </tr>
@@ -181,16 +143,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div>
         <div class="maintable" style="margin-top: 5px;">
             <table cellpadding="2" cellspacing="2" border="0">
-                <tr><td><fmt:message key="configthemadata.label"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.label.uitleg"/></div></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.eenheid"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.eenheid.uitleg"/></div></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.omschrijving"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.omschrijving.uitleg"/></div></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.basisregel"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.basisregel.uitleg"/></div></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.uitgebreid"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.uitgebreid.uitleg"/></div></td><td colspan="3"><html:checkbox property="uitgebreid"/></td></tr>
-                <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.voorbeelden.uitleg"/></div></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.kolombreedte"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.kolombreedte.uitleg"/></div></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.label"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.label"/>"><p><fmt:message key="configthemadata.label.uitleg"/></p></div></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.eenheid"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.eenheid"/>"><p><fmt:message key="configthemadata.eenheid.uitleg"/></p></div></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.omschrijving"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.omschrijving"/>"><p><fmt:message key="configthemadata.omschrijving.uitleg"/></p></div></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.basisregel"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.basisregel"/>"><p><fmt:message key="configthemadata.basisregel.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.uitgebreid"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.uitgebreid"/>"><p><fmt:message key="configthemadata.uitgebreid.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="uitgebreid"/></td></tr>
+                <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.voorbeelden"/>"><p><fmt:message key="configthemadata.voorbeelden.uitleg"/></p></div></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.kolombreedte"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.kolombreedte"/>"><p><fmt:message key="configthemadata.kolombreedte.uitleg"/></p></div></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthemadata.waardetype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.waardetype.uitleg"/></div>
+                        <fmt:message key="configthemadata.waardetype"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.waardetype"/>"><p><fmt:message key="configthemadata.waardetype.uitleg"/></p></div>
                     </td>
                     <td colspan="3">
                         <html:select property="waardeTypeID">
@@ -204,7 +166,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthemadata.datatype"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.datatype.uitleg"/></div>
+                        <fmt:message key="configthemadata.datatype"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.datatype"/>"><p><fmt:message key="configthemadata.datatype.uitleg"/></p></div>
                     </td>
                     <td colspan="3">
                         <html:select property="dataTypeID">
@@ -216,11 +178,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr><td><fmt:message key="configthemadata.commando"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.commando.uitleg"/></div></td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.commando"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.commando"/>"><p><fmt:message key="configthemadata.commando.uitleg"/></p></div></td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
                 <c:choose>
                     <c:when test="${fn:length(listAdminTableColumns)>1}">
                         <tr>
-                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.${connectieType}.kolomnaam.uitleg"/></div></td>
+                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.${connectieType}.kolomnaam.uitleg"/></div></td>
                             <td colspan="3">
                                 <html:select property="kolomnaam">
                                     <html:option value=""/>
@@ -232,10 +194,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthemadata.kolomnaam"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.kolomnaam.uitleg"/></div></td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
+                        <tr><td><fmt:message key="configthemadata.kolomnaam"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.kolomnaam"/>"><p><fmt:message key="configthemadata.kolomnaam.uitleg"/></p></div></td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
                     </c:otherwise>
                 </c:choose>
-                <tr><td><fmt:message key="configthemadata.dataorder"/> <a href="#" onclick="return showHelp(this);">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.dataorder.uitleg"/></div></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.dataorder"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.dataorder"/>"><p><fmt:message key="configthemadata.dataorder.uitleg"/></p></div></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
             </table>
         </div>        
         
@@ -243,11 +205,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </html:form>
 <iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0" style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
 <script type="text/javascript">
-    if(document.getElementById('themadatatable')) {
-        Table.stripe(document.getElementById('themadatatable'), 'regel_even');
-        Table.sort(document.getElementById('themadatatable'), {sorttype:Sort['numeric'], col:0});
-    }
     if(document.getElementById('regel_selected')) {
-        document.getElementById('regel_selected').className = 'regel_selected';
+        $j("#regel_selected").addClass('selected');
+        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
     }
+    $j("#themadatatable").tablesorter({
+        widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
+        sortList: [[0,0]]
+    });
 </script>

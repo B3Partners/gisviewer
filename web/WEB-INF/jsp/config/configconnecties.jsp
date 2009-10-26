@@ -37,16 +37,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
 </div>
 
-<script type="text/javascript">
-    function hoverRow(obj) {
-        obj.className += ' regel_over';
-    }
-    
-    var pattern = new RegExp("\\bregel_over\\b");
-    function hoverRowOut(obj) {
-        obj.className = obj.className.replace(pattern, '');
-    }
-</script>
 <html:javascript formName="connectieForm" staticJavascript="false"/>
 <html:form action="/configConnectie" onsubmit="return validateConnectieForm(this)" focus="${focus}">
     <div style="display: none;">
@@ -55,21 +45,23 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <html:hidden property="id"/>
     </div>
     <c:if test="${!empty allConnecties}">
-        <div style="float: left; clear: both; margin-left: 15px;">
-            <div class="topbar">
-                <div class="bar_regel"> 
-                    <div class="bar_item" style="width: 250px;" onclick="Table.sort(document.getElementById('connectietable'), {sorttype:Sort['default'], col:0});"><fmt:message key="configconnectie.naam"/></div>
-                    <div class="bar_item" style="width: 634px;" onclick="Table.sort(document.getElementById('connectietable'), {sorttype:Sort['default'], col:1});"><fmt:message key="configconnectie.url"/></div>
-                </div>
-            </div>
+        <div style="float: left; clear: both; margin-left: 5px;">
             <div class="scroll">
-                <table style="width: 100%;" cellpadding="0" cellspacing="0" id="connectietable" class="table-autosort table-stripeclass:regel_even">
+                <table id="connectietable" class="tablesorter">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;" id="sort_col1"><fmt:message key="configconnectie.naam"/></th>
+                            <th style="width: 70%;" id="sort_col2"><fmt:message key="configconnectie.url"/></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <c:forEach var="ci" varStatus="status" items="${allConnecties}">
+                            <c:set var="id_selected" value='' />
+                            <c:if test="${ci.id == mainid}"><c:set var="id_selected" value=' id="regel_selected"' /></c:if>
                             <c:url var="link" value="/configConnectie.do?edit=submit&id=${ci.id}"/>
-                            <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
-                                <td class="c_item" style="width: 250px;"><c:out value="${ci.naam}"/></td>
-                                <td class="c_item" style="width: 617px; border: 0px none White;"><c:out value="${ci.connectie_url}"/></td>
+                            <tr onclick="javascript: window.location.href='${link}';"${id_selected}>
+                                <td style="width: 30%;"><c:out value="${ci.naam}"/></td>
+                                <td style="width: 70%;"><c:out value="${ci.connectie_url}"/></td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -157,11 +149,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 </html:form>
 <script type="text/javascript">
-    if(document.getElementById('connectietable')) {
-        Table.stripe(document.getElementById('connectietable'), 'regel_even');
-        Table.sort(document.getElementById('connectietable'), {sorttype:Sort['default'], col:0});
-    }
     if(document.getElementById('regel_selected')) {
-        document.getElementById('regel_selected').className = 'regel_selected';
+        $j("#regel_selected").addClass('selected');
+        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
     }
+    $j("#connectietable").tablesorter({
+        widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
+        sortList: [[0,0]]
+    });
 </script>

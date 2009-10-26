@@ -344,7 +344,7 @@ a:hover{
     background-color: #DEDEDE;
 }
 
-.regel_selected {
+.regel_selected, #regel_selected {
     background-color: #FFEEBE;
 }
 
@@ -414,4 +414,32 @@ body.pdfExportClass {
 .createMapPDFBody{
     margin: 10px;
     overflow: visible;
+}
+
+table.tablesorter {
+	background-color: #CDCDCD;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+        border: 1px solid #FFF;
+}
+table.tablesorter tbody td {
+	color: #3D3D3D;
+}
+table.tablesorter tbody tr.odd td {
+	background-color: #F0F0F6;
+}
+table.tablesorter tbody tr.hover td {
+	background-color: #DEDEDE;
+        cursor: pointer;
+}
+table.tablesorter tbody tr.selected td {
+	background-color: #FFEEBE;
+        cursor: pointer;
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+        background-color: #8dbdd8;
+}
+table.tablesorter tbody td a {
+    color: #196299;
 }

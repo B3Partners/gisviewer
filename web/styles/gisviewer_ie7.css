@@ -25,3 +25,7 @@
     margin: 0px;
     padding: 0px;
 }
+
+.configbody table.tablesorter {
+    width: 883px;
+}

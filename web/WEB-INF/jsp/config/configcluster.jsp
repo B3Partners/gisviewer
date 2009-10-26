@@ -37,17 +37,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
 </div>
 
-<script type="text/javascript">
-    function hoverRow(obj) {
-        obj.className += ' regel_over';
-    }
-    
-    var pattern = new RegExp("\\bregel_over\\b");
-    function hoverRowOut(obj) {
-        obj.className = obj.className.replace(pattern, '');
-    }
-</script>
-
 <html:form action="/configCluster" focus="${focus}">
     <div style="display: none;">
         <html:hidden property="action"/>
@@ -55,21 +44,23 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <html:hidden property="clusterID"/>
     </div>
     <c:if test="${!empty allClusters}">
-        <div style="float: left; clear: both; margin-left: 15px;">
-            <div class="topbar">
-                <div class="bar_regel"> 
-                    <div class="bar_item" style="width: 250px;" onclick="Table.sort(document.getElementById('clustertable'), {sorttype:Sort['default'], col:0});">Naam</div>
-                    <div class="bar_item" style="width: 634px;" onclick="Table.sort(document.getElementById('clustertable'), {sorttype:Sort['default'], col:1});">Ouder</div>
-                </div>
-            </div>
+        <div style="float: left; clear: both; margin-left: 5px;">
             <div class="scroll">
-                <table style="width: 100%;" cellpadding="0" cellspacing="0" id="clustertable" class="table-autosort table-stripeclass:regel_even">
+                <table id="clustertable" class="tablesorter">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;" id="sort_col1">Naam</th>
+                            <th style="width: 70%;" id="sort_col2">Ouder</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <c:forEach var="ci" varStatus="status" items="${allClusters}">						
+                        <c:forEach var="ci" varStatus="status" items="${allClusters}">
+                            <c:set var="id_selected" value='' />
+                            <c:if test="${ci.id == mainid}"><c:set var="id_selected" value=' id="regel_selected"' /></c:if>
                             <c:url var="link" value="/configCluster.do?edit=submit&clusterID=${ci.id}"/>
-                            <tr onmouseover="hoverRow(this)" onmouseout="hoverRowOut(this)" onclick="javascript: window.location.href='${link}';"<c:if test="${ci.id == mainid}"><c:out value=' id="regel_selected"' escapeXml="false" /></c:if>>
-                                <td class="c_item" style="width: 250px;"><c:out value="${ci.naam}"/></td>
-                                <td class="c_item" style="width: 617px; border: 0px none White;"><c:out value="${ci.parent.naam}"/></td>
+                            <tr onclick="javascript: window.location.href='${link}';"${id_selected}>
+                                <td style="width: 30%;"><c:out value="${ci.naam}"/></td>
+                                <td style="width: 70%;"><c:out value="${ci.parent.naam}"/></td>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -220,11 +211,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 </html:form>
 <script type="text/javascript">
-    if(document.getElementById('clustertable')) {
-        Table.stripe(document.getElementById('clustertable'), 'regel_even');
-        Table.sort(document.getElementById('clustertable'), {sorttype:Sort['default'], col:0});
-    }
     if(document.getElementById('regel_selected')) {
-        document.getElementById('regel_selected').className = 'regel_selected';
+        $j("#regel_selected").addClass('selected');
+        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
     }
+    $j("#clustertable").tablesorter({
+        widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
+        sortList: [[0,0]]
+    });
 </script>

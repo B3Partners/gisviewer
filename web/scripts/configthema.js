@@ -48,12 +48,8 @@ function showHideJDBC() {
     //als thema wfs is (!="jdbc" )
     if (currentConnectionType=="jdbc"){
         document.getElementById('tab-geavanceerd-header').style.display = "block";
-        document.getElementById('adminqueryrow').style.display = "block";
-        document.getElementById('admin_query_text').style.display = "block";
     } else {
         document.getElementById('tab-geavanceerd-header').style.display = "none";
-        document.getElementById('adminqueryrow').style.display = "block";
-        document.getElementById('admin_query_text').style.display = "block";
     }
 }
 function refreshAdminAttributeList(element){

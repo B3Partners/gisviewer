@@ -29,7 +29,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 var kburl = '${kburl}';
                 var logoutLocation = '/kaartenbalie/logout.do'
                 if (kburl!='') {
-                    var pos = kburl.lastIndexOf("wms");
+                    var pos = kburl.lastIndexOf("services");
                     if (pos>=0) {
                         logoutLocation = kburl.substring(0,pos) + "logout.do";
                     }

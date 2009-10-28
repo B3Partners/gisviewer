@@ -1,6 +1,6 @@
 ieFixes = function() {
     fixMenu();
-    if(ieVersion <= 6) {
+    if(ieVersion <= 6 && ieVersion != -1) {
         fixAbsolutePositions();
         attachOnresize(fixAbsolutePositions);
     }
@@ -48,7 +48,7 @@ fixAbsolutePositions = function() {
 }
 
 fixPopup = function() {
-    if(ieVersion <= 6) {
+    if(ieVersion <= 6 && ieVersion != -1) {
         var popupWindow = document.getElementById('popupWindow');
         if(popupWindow) popupHeight = popupWindow.offsetHeight;
 

@@ -97,7 +97,7 @@ popUp = function(URL, naam, width, height, useDiv) {
         document.getElementById("dataframedivpopup").src = URL;
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
         $j("#popupWindow").show();
-        if(ieVersion <= 6) fixPopup();
+        if(ieVersion <= 6 && ieVersion != -1) fixPopup();
     } else {
         properties = "toolbar = 0, " +
         "scrollbars = 1, " +
@@ -141,7 +141,7 @@ popUpData = function(naam, width, height, useDiv) {
         if(!popupCreated) initPopup();
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
         $j("#popupWindow").show();
-        if(ieVersion <= 6) fixPopup();
+        if(ieVersion <= 6 && ieVersion != -1) fixPopup();
         return document.getElementById("dataframedivpopup");
     } else {
         properties = "toolbar = 0, " +
@@ -180,7 +180,7 @@ buildPopup = function() {
     popupContent.styleClass = 'popup_Content';
     popupContent.id = 'popupWindow_Content';
     var popupIframe = null;
-    if(ieVersion > 4 && ieVersion <= 7) {
+    if(ieVersion <= 7 && ieVersion != -1) {
         popupIframe = document.createElement('<iframe name="dataframedivpopup">');
     } else {
         popupIframe = document.createElement('iframe');
@@ -252,11 +252,11 @@ function stopDrag() {
 function startResize() {
     document.getElementById('popupWindow_Windowbackground').style.display = 'block';
     document.getElementById('popupWindow_Resizediv').style.display = 'block';
-    if(ieVersion > 4 && ieVersion <= 7) fixPopup();
+    if(ieVersion <= 7 && ieVersion != -1) fixPopup();
 }
 
 function stopResize() {
     document.getElementById('popupWindow_Windowbackground').style.display = 'none';
     document.getElementById('popupWindow_Resizediv').style.display = 'none';
-    if(ieVersion > 4 && ieVersion <= 7) fixPopup();
+    if(ieVersion <= 7 && ieVersion != -1) fixPopup();
 }

@@ -456,7 +456,6 @@ function checkboxClick(obj, dontRefresh) {
         //add legend
         //add wms layer part
         addItemAsLayer(obj.theItem);        
-    //add querylayers
         
     } else {
         removeItemAsLayer(obj.theItem);
@@ -1008,8 +1007,8 @@ function updateGetFeatureInfo(){
         return;
     }
     //if the admindata window is loaded then update the page (add the featureinfo thats given by the getFeatureInfo request.
-    if (usePopup && dataframepopupHandle.writeFeatureInfoData){
-        dataframepopupHandle.writeFeatureInfoData(featureInfoData);
+    if (usePopup && dataframepopupHandle.contentWindow.writeFeatureInfoData){
+        dataframepopupHandle.contentWindow.writeFeatureInfoData(featureInfoData);
         featureInfoData=null;
     }else if (window.frames.dataframe.writeFeatureInfoData){
         window.frames.dataframe.writeFeatureInfoData(featureInfoData);

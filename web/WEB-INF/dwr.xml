@@ -12,5 +12,8 @@
             <include method="getPossibleFeaturesById"/>
             <include method="getPossibleAttributesById"/>
         </create>
+        <!-- convert match="java.lang.Exception" converter="exception">
+            <param name='include' value='message,lineNumber'/>
+        </convert -->
     </allow>
 </dwr>

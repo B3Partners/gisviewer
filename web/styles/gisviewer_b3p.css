@@ -419,10 +419,6 @@ body.pdfExportClass {
 table.tablesorter {
 	background-color: #CDCDCD;
 }
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6EEEE;
-        border: 1px solid #FFF;
-}
 table.tablesorter tbody td {
 	color: #3D3D3D;
 }
@@ -437,9 +433,24 @@ table.tablesorter tbody tr.selected td {
 	background-color: #FFEEBE;
         cursor: pointer;
 }
+table.tablesorter tbody td a {
+    color: #196299;
+}
+
+/* Belangrijkste kleuren (blauw) en sorteerpijltjes */
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+        border: 1px solid #FFF;
+}
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
         background-color: #8dbdd8;
 }
-table.tablesorter tbody td a {
-    color: #196299;
+table.tablesorter thead tr .header {
+	background-image: url(/gisviewer/images/icons/bg.gif);
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(/gisviewer/images/icons/asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(/gisviewer/images/icons/desc.gif);
 }

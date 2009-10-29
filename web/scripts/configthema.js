@@ -54,6 +54,9 @@ function showHideJDBC() {
 }
 function refreshAdminAttributeList(element){
     var connid=document.getElementById('connectie_select').value;
+    if (connid=="kb"){
+        connid="";
+    }
     JConfigListsUtil.getPossibleAttributesById(connid,element.value,handleAdminAttributeList);
     if (element.value!=undefined && element.value.length > 0){
         document.getElementById("wms_querylayers_real").disabled=true;

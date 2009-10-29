@@ -44,7 +44,7 @@ function handleFeatureList(list){
     dwr.util.addOptions("spatial_tabel_select",list,"0","1");
 }
 function showHideJDBC() {
-    //Er voor zorgen dat het tabblad geavanceerd wordt gehide en in gegevens bron adminquery onzichtbaar wordt
+    //Er voor zorgen dat het tabblad geavanceerd wordt gehide
     //als thema wfs is (!="jdbc" )
     if (currentConnectionType=="jdbc"){
         document.getElementById('tab-geavanceerd-header').style.display = "block";

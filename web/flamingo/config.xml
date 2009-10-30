@@ -44,11 +44,11 @@
     <fmc:Container id="containerLeft" backgroundcolor="#D2E0EB" left="0" top="5%" height="95%" width="20%">
         <fmc:Map id="overview"  left="20%" top="0%" height="118" width="100" extent="7663,300655,285051,626588" fullextent="7663,300655,285051,626588">
             <fmc:LayerOverview listento="map1"/>
-            <fmc:LayerImage id="Limburg" imageurl="../images/overviewNederland.png" extent="7663,300655,285051,626588" />
+            <fmc:LayerImage id="oimage" imageurl="../images/overviewNederland.png" extent="7663,300655,285051,626588" listento="map1"/>
         </fmc:Map>
         
         <fmc:ZoomerV id="zoomerv" left="0%" top="0" height="118" listento="map1"></fmc:ZoomerV>           
-        <!-- stukje knoppen voor redlining/ editing-->
+        <!-- stukje knoppen voor redlining/ editing
         <fmc:EditLegend id="editLegend" left="0" top="118" listento="editMap"/>
         <fmc:EditBar id="editBar" left="0" top="150" listento="editMap"/>
         <fmc:EditMapGetFeature id="EditMapGetFeature" left="2" top="150" bottom="bottom" listento="gis,editMap"/>
@@ -57,6 +57,7 @@
                 <string id="tooltip" en="buffer geometry" nl="buffer geometrie"/>
             </fmc:EditMapBufferButton>
         </fmc:Container>
+        -->
     </fmc:Container>
     <fmc:Container id="containerMain"  borderwidth="1" bordercolor="#606060" left="20%" top="5%" height="95%" width="80%">
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>        

@@ -182,7 +182,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:choose>
                     <c:when test="${fn:length(listAdminTableColumns)>1}">
                         <tr>
-                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div class="helptekstDiv" onclick="showHideDiv(this);"><fmt:message key="configthemadata.${connectieType}.kolomnaam.uitleg"/></div></td>
+                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.${connectieType}.kolomnaam"/>"><p><fmt:message key="configthemadata.${connectieType}.kolomnaam.uitleg"/></p></div></td>
                             <td colspan="3">
                                 <html:select property="kolomnaam">
                                     <html:option value=""/>

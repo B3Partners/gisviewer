@@ -27,6 +27,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
         <c:set var="beheerder" value="true"/>
     </c:if>
+    <c:if test="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}">
+        <c:set var="beheerder" value="true"/>
+    </c:if>
 </c:if>
 
 <div id="topmenu">

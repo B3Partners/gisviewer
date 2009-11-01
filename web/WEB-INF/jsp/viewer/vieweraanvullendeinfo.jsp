@@ -24,7 +24,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type="text/javascript" src='dwr/engine.js'></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/admindataFunctions.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
 <script type="text/javascript">
     var mapRequest;
     if (window.opener){
@@ -111,7 +111,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                         <c:set var="funct" value="${valar[1]}" />
                                                     </c:if>
                                                     <c:choose>
-                                                        <c:when test="${fn:startsWith(funct,'setAttributeValue')}}">
+                                                        <c:when test="${fn:startsWith(funct,'setAttributeValue')}">
                                                             <c:choose>
                                                                 <c:when test="${fn:length(valar) > 1}">
                                                                     <c:out value="${valar[0]}"/>

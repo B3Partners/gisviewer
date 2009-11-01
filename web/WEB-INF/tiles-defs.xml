@@ -32,20 +32,6 @@
         <put name="content" value="/WEB-INF/jsp/algemeen/messages.jsp"/>
     </definition>
     
-    <!-- etl -->   
-    <definition name="etl" extends="template">
-        <put name="menu" value="/WEB-INF/jsp/commons/themabeheermenu.jsp"/>
-    </definition>
-    <definition name="etlhome" extends="etl">
-        <put name="content" value="/WEB-INF/jsp/etl/etlhome.jsp"/>
-    </definition>
-    <definition name="etlscheduler" extends="etl">
-        <put name="content" value="/WEB-INF/jsp/etl/etlScheduler.jsp"/>
-    </definition>
-    <definition name="etltransform" extends="etl">
-        <put name="content" value="/WEB-INF/jsp/etl/etltransform.jsp"/>
-    </definition>
-    
     <!-- viewer -->
     <definition name="viewer" extends="algemeenViewer">
         <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>

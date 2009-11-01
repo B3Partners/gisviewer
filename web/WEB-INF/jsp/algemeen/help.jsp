@@ -106,7 +106,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 
                 <a name="gebieden"></a><h2>Tabblad Gebieden</h2>
                 Zodra in de kaart met de Info icoon wordt geklikt, haalt het WIS de gebieden op waarin het klikpunt zich bevindt. 
-                Per kaarlaag is door de beheerder aangegeven of dit een gebied betreft dat in deze lijst moet worden opgenomen.
+                Per kaartlaag is door de beheerder aangegeven of dit een gebied betreft dat in deze lijst moet worden opgenomen.
                 <p>De gevonden gebieden kunnen later bij de analyse worden gebruikt.</p>
                 
                 <a name="analyse"></a><h2>Tabblad Analyse</h2>

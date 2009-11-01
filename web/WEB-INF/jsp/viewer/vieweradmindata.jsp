@@ -24,8 +24,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type="text/javascript" src='dwr/engine.js'></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/table.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/admindataFunctions.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/table.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
 <script type="text/javascript">
     var doClose=true;
     function toggleList(nr) {

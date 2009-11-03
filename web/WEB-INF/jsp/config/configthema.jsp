@@ -218,7 +218,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.admintabel"/>"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="admin_tabel" onchange="refreshAdminAttributeList(this);" styleId="admin_tabel_select" styleClass="configSelect">
-                                <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listTables}">
                                     <html:option value="${cuItem[0]}">${cuItem[1]}</html:option>
                                 </c:forEach>
@@ -237,7 +236,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
-                                        <html:option value="Kies eerst een admintabel" />
+                                        <html:option value="Kies eerst tabel of feature..." />
                                     </c:otherwise>
                                 </c:choose>
                             </html:select>&nbsp;

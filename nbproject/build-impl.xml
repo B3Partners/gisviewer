@@ -168,6 +168,10 @@
             </and>
         </condition>
         <property name="runmain.jvmargs" value=""/>
+        <path id="endorsed.classpath.path" path="${endorsed.classpath}"/>
+        <condition else="" property="endorsed.classpath.cmd.line.arg" value="-Xbootclasspath/p:'${toString:endorsed.classpath.path}'">
+            <length length="0" string="${endorsed.classpath}" when="greater"/>
+        </condition>
     </target>
     <target depends="init" name="-init-cos" unless="deploy.on.save">
         <condition property="deploy.on.save" value="true">
@@ -230,6 +234,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                     <classpath>
                         <path path="@{classpath}"/>
                     </classpath>
+                    <compilerarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <compilerarg line="${javac.compilerargs} ${javac.compilerargs.jaxws}"/>
                     <customize/>
                 </javac>
@@ -249,7 +254,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                         </fileset>
                     </batchtest>
                     <classpath>
-                        <path path="${run.test.classpath}:${j2ee.platform.classpath}"/>
+                        <path path="${run.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}"/>
                     </classpath>
                     <syspropertyset>
                         <propertyref prefix="test-sys-prop."/>
@@ -257,6 +262,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                     </syspropertyset>
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${runmain.jvmargs}"/>
                 </junit>
             </sequential>
@@ -269,6 +275,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
             <element name="customize" optional="true"/>
             <sequential>
                 <java classname="@{classname}" fork="true">
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${runmain.jvmargs}"/>
                     <classpath>
                         <path path="@{classpath}:${j2ee.platform.classpath}"/>
@@ -346,6 +353,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
             <element name="customize" optional="true"/>
             <sequential>
                 <java classname="@{classname}" fork="true">
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${debug-args-line}"/>
                     <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
                     <jvmarg line="${runmain.jvmargs}"/>
@@ -566,30 +574,28 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest" name="do-dist"/>
     <target depends="init" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copyfiles files="${libs.struts.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.struts.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.jstl11.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.jstl11.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pHibernateLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pHibernateLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pCommonsLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pCommonsLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pDwrLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pDwrLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.b3p-commons-core.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-commons-core.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.jump-b3p.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.jump-b3p.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.b3p-commons-hibernate.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-commons-hibernate.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.b3p-commons-gis.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-commons-gis.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.securityfilter-b3p.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.securityfilter-b3p.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pXalanLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pXalanLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pCastorLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pCastorLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pSpatialLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pSpatialLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pItextLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pItextLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pSecurityLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pSecurityLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.Base64Encoder.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.Base64Encoder.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-geotools-filterImpl2.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.b3p-gisviewer.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-gisviewer.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pGeotoolsCommonLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsCommonLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pGeotoolsOgcLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsOgcLib.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.struts.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.jstl11.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pHibernateLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pCommonsLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pDwrLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.b3p-commons-core.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.jump-b3p.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.b3p-commons-hibernate.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.b3p-commons-gis.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.securityfilter-b3p.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pXalanLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pCastorLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pSpatialLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pItextLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pSecurityLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.Base64Encoder.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.b3p-gisviewer.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pGeotoolsCommonLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pGeotoolsOgcLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
-        <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.libs.struts.classpath} ${manifest.libs.jstl11.classpath} ${manifest.libs.B3pHibernateLib.classpath} ${manifest.libs.B3pCommonsLib.classpath} ${manifest.libs.B3pDwrLib.classpath} ${manifest.reference.b3p-commons-core.jar} ${manifest.reference.jump-b3p.jar} ${manifest.reference.b3p-commons-hibernate.jar} ${manifest.reference.b3p-commons-gis.jar} ${manifest.reference.securityfilter-b3p.jar} ${manifest.libs.B3pXalanLib.classpath} ${manifest.libs.B3pCastorLib.classpath} ${manifest.libs.B3pSpatialLib.classpath} ${manifest.libs.B3pItextLib.classpath} ${manifest.libs.B3pSecurityLib.classpath} ${manifest.reference.Base64Encoder.jar} ${manifest.reference.b3p-geotools-filterImpl2.jar} ${manifest.reference.b3p-gisviewer.jar} ${manifest.libs.B3pGeotoolsCommonLib.classpath} ${manifest.libs.B3pGeotoolsOgcLib.classpath} "/>
-        </manifest>
+        <manifest file="${build.web.dir}/META-INF/MANIFEST.MF"/>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
         <copyfiles files="${libs.struts.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -815,13 +821,14 @@ exists or setup the property manually. For example like this:
             -->
     <target depends="init,compile" if="have.tests" name="-pre-pre-compile-test">
         <mkdir dir="${build.test.classes.dir}"/>
+        <property name="j2ee.platform.embeddableejb.classpath" value=""/>
     </target>
     <target name="-pre-compile-test">
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test" if="have.tests" name="-do-compile-test">
-        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}" debug="true" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
+        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}" debug="true" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
@@ -837,7 +844,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single" if="have.tests" name="-do-compile-test-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
-        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}" debug="true" destdir="${build.test.classes.dir}" excludes="" includes="${javac.includes}" srcdir="${test.src.dir}"/>
+        <webproject2:javac classpath="${javac.test.classpath}:${j2ee.platform.classpath}:${j2ee.platform.embeddableejb.classpath}" debug="true" destdir="${build.test.classes.dir}" excludes="" includes="${javac.includes}" srcdir="${test.src.dir}"/>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>

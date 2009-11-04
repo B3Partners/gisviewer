@@ -1332,3 +1332,8 @@ function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureW
     //loadObjectInfo(geom);
     }
 }
+
+function flamingo_b_buffer_onEvent(id, event) {
+    if (event["down"])
+        alert("Buffer knop");
+}

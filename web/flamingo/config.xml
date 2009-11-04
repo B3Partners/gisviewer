@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Document   : config.xml
-    Created on : 24 januari 2007, 11:16
-    Author     : Roy
-    Description:
-        Configuration of the flamingo viewer.
--->
 
 <FLAMINGO xmlns:fmc="fmc" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" commtojava="true" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <fmc:Window id="bufferwindow" skin="f1" top="100" left="100" width="290" height="180" canresize="false" canclose="true" visible="false">
@@ -48,23 +41,25 @@
         </fmc:Map>
         
         <fmc:ZoomerV id="zoomerv" left="0%" top="0" height="118" listento="map1"></fmc:ZoomerV>           
-        <!-- stukje knoppen voor redlining/ editing
-        <fmc:EditLegend id="editLegend" left="0" top="118" listento="editMap"/>
+        <!-- stukje knoppen voor redlining/ editing -->
+        <fmc:EditLegend id="editLegend" left="0" top="118" listento="editMap" expandable="false"/>
         <fmc:EditBar id="editBar" left="0" top="150" listento="editMap"/>
         <fmc:EditMapGetFeature id="EditMapGetFeature" left="2" top="150" bottom="bottom" listento="gis,editMap"/>
+        
         <fmc:Container left="3" top="180">
-            <fmc:EditMapBufferButton width="25" height="25" listento="bufferconfirmation">
-                <string id="tooltip" en="buffer geometry" nl="buffer geometrie"/>
-            </fmc:EditMapBufferButton>
+            <fmc:JsButton id="b_buffer" left="0" top="0" width="25" height="25" iconurl_up="../flamingo/assets/jsbtn/buffer.png" iconurl_over="../flamingo/assets/jsbtn/buffer_over.png" iconurl_sel="../flamingo/assets/jsbtn/buffer_down.png" iconurl_dis="../flamingo/assets/jsbtn/buffer.png" label="" toggle="true" visible="true" enabled="true" selected="false">
+                <string id="tooltip" en="Buffer" nl="Buffer"/>
+            </fmc:JsButton>
         </fmc:Container>
-        -->
+        
+
     </fmc:Container>
     <fmc:Container id="containerMain"  borderwidth="1" bordercolor="#606060" left="20%" top="5%" height="95%" width="80%">
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>        
         <!-- het 'canvas' waar op getekend kan worden-->
         <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
         <fmc:GIS id="gis" geometryeditable="yes" alwaysdrawpoints="no">
-            <fmc:Layer name="layer1" title="Layer 1" visible="true" geometrytypes="Polygon,LineString,Point" loadfeaturesonstart="false">
+            <fmc:Layer name="layer1" title="Layer 1" visible="true" geometrytypes="Polygon,LineString,Point,Circle" loadfeaturesonstart="false">
                 <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>
             </fmc:Layer>
         </fmc:GIS>

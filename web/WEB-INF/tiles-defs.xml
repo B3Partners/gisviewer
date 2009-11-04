@@ -17,53 +17,67 @@
         <put name="menu" value="/WEB-INF/jsp/commons/topmenuViewer.jsp"/>
     </definition>
     <definition name="login" extends="algemeen">
+        <put name="title" value="Inlogscherm" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/login.jsp"/>
     </definition>
     <definition name="loginError" extends="algemeen">
+        <put name="title" value="Fout bij inloggen" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/loginError.jsp"/>
     </definition>
     <definition name="help" extends="algemeen">
+        <put name="title" value="Help" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
     </definition>
     <definition name="home" extends="algemeen">
+        <put name="title" value="Home" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>
     </definition>
     <definition name="messages" extends="algemeen">
+        <put name="title" value="Meldingen" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/messages.jsp"/>
     </definition>
     
     <!-- viewer -->
     <definition name="viewer" extends="algemeenViewer">
+        <put name="title" value="Viewer" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>
     </definition>
     <!-- viewer databody-->
     <definition name="databody" path="/WEB-INF/jsp/templates/templateDatabody.jsp"/>
     <definition name="vieweradmindata" extends="databody">
+        <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp"/>
     </definition>
     <definition name="viewermetadata" extends="databody">
+        <put name="title" value="Metadata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewermetadata.jsp"/>
     </definition>
     <definition name="viewerwelkom" extends="databody">
+        <put name="title" value="Welkom" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerwelkom.jsp"/>
     </definition>
     <definition name="tab" path="/WEB-INF/jsp/templates/templateTab.jsp"/>
     <!-- viewer tab-->
     <definition name="viewerdata" extends="tab">
+        <put name="title" value="Viewerdata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerdata.jsp"/>
     </definition>
     <definition name="viewerobjectdata" extends="tab">
+        <put name="title" value="Viewerobjectdata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerobjectdata.jsp"/>
     </definition>
     <definition name="vieweranalysedata" extends="tab">
+        <put name="title" value="Viewer analyse data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweranalysedata.jsp"/>
     </definition>
     <definition name="vieweranalyseobject" extends="tab">
+        <put name="title" value="Viewerobject analyse" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweranalyseobject.jsp"/>
     </definition>
     <!-- viewer popup -->
     <definition name="popup" path="/WEB-INF/jsp/templates/templatePopup.jsp"/>
     <definition name="vieweraanvullendeinfo" extends="popup">
+        <put name="title" value="Aanvullende informatie" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>
     </definition>    
     <definition name="createmappdf" extends="templatePrint">
@@ -74,15 +88,19 @@
         <put name="menu" value="/WEB-INF/jsp/commons/configmenu.jsp"/>
     </definition>
     <definition name="configthema" extends="config">
+        <put name="title" value="Configureer thema's" type="string"/>
         <put name="content" value="/WEB-INF/jsp/config/configthema.jsp"/>
     </definition>
     <definition name="configcluster" extends="config">
+        <put name="title" value="Configureer clusters" type="string"/>
         <put name="content" value="/WEB-INF/jsp/config/configcluster.jsp"/>
     </definition>
     <definition name="configthemadata" extends="config">
+        <put name="title" value="Configureer themadata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/config/configthemadata.jsp"/>
     </definition>
     <definition name="configconnectie" extends="config">
+        <put name="title" value="Configureer connecties" type="string"/>
         <put name="content" value="/WEB-INF/jsp/config/configconnecties.jsp"/>
     </definition>
 

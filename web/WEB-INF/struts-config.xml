@@ -54,7 +54,8 @@
             <form-property name="view_geomtype" type="java.lang.String"/>
             <form-property name="visible" type="java.lang.Boolean"/>
             <form-property name="themadataobjecten" type="java.lang.String[]"/>
-			<form-property name="thema_maptip" type="java.lang.String"/>
+            <form-property name="thema_maptip" type="java.lang.String"/>
+            <form-property name="sldattribuut" type="java.lang.String"/>
         </form-bean>
         <form-bean name="clusterForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
@@ -106,9 +107,9 @@
             <form-property name="themaid" type="java.lang.String"/>
             <form-property name="analysethemaid" type="java.lang.String"/>
             <form-property name="coords" type="java.lang.String"/>
-			<form-property name="geom" type="java.lang.String"/>
+            <form-property name="geom" type="java.lang.String"/>
             <form-property name="scale" type="java.lang.String"/>
-			<form-property name="tolerance" type="java.lang.String"/>
+            <form-property name="tolerance" type="java.lang.String"/>
             <form-property name="lagen" type="java.lang.String"/>
             <form-property name="locatieveld" type="java.lang.String"/>
             <form-property name="extraCriteria" type="java.lang.String"/>
@@ -165,7 +166,7 @@
         <action path="/configThema" type="nl.b3p.gis.viewer.ConfigThemaAction" name="themaForm" scope="request" validate="false">
             <forward name="success" path="configthema"/>
             <forward name="failure" path="configthema"/>
-        </action> 
+        </action>
         <action path="/configCluster" type="nl.b3p.gis.viewer.ConfigClusterAction" name="clusterForm" scope="request" validate="false">
             <forward name="success" path="configcluster"/>
             <forward name="failure" path="configcluster"/>
@@ -176,12 +177,12 @@
         </action>
         <action path="/configThemaData" type="nl.b3p.gis.viewer.ConfigThemaDataAction" name="themaDataForm" scope="request" validate="false">
             <forward name="success" path="configthemadata"/>
-            <forward name="failure" path="configthemadata"/>            
+            <forward name="failure" path="configthemadata"/>
         </action>
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>
             <forward name="continue" path="/index.do"/>
-        </action>       
+        </action>
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
@@ -190,7 +191,7 @@
     
     <!-- ========================= Tiles plugin ===============================-->
     <plug-in className="org.apache.struts.tiles.TilesPlugin" >
-        <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />      
+        <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
         <set-property property="moduleAware" value="true" />
     </plug-in>
     

@@ -43,9 +43,11 @@ function handleFeatureList(list){
     dwr.util.addOptions("admin_tabel_select",list,"0","1");
     dwr.util.addOptions("spatial_tabel_select",list,"0","1");
 
-    dwr.util.addOptions("admin_pk_select", ["Kies eerst tabel of feature..."]);
-    dwr.util.addOptions("spatial_pk_select", ["Kies eerst spatialtabel..."]);
-    dwr.util.addOptions("spatial_adminref_select", ["Kies eerst spatialtabel..."]);
+    var data = [ { value:"", label:"Kies eerst tabel of feature...." } ];
+    var data2 = [ { value:"", label:"Kies eerst spatialtabel...." } ];
+    dwr.util.addOptions("admin_pk_select", data, "value", "label");
+    dwr.util.addOptions("spatial_pk_select", data2, "value", "label");
+    dwr.util.addOptions("spatial_adminref_select", data2, "value", "label");
 }
 function showHideJDBC() {
     //Er voor zorgen dat het tabblad geavanceerd wordt gehide

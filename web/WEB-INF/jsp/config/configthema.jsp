@@ -330,6 +330,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <tr><td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.wmslayers"/>"><p><fmt:message key="configthema.wmslayers.uitleg"/></p></div></td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
                         </c:otherwise>
                     </c:choose>
+                    <tr><td><fmt:message key="configthema.sldattribuut"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.sldattribuut"/>"><p><fmt:message key="configthema.sldattribuut.uitleg"/></p></div></td><td colspan="3"><html:text property="sldattribuut" size="50"/></td></tr>
                     <c:choose>
                         <c:when test="${fn:length(listLayers)>1}">
                             <tr>

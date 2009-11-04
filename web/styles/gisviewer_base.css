@@ -90,6 +90,18 @@ html, body {
     height: 50px;
 }
 
+#footer_tekst_links {
+    position: absolute;
+    left: 12px;
+    top: 18px;
+}
+
+#footer_tekst_rechts {
+    position: absolute;
+    right: 126px;
+    top: 18px;
+}
+
 #popupWindow {
     position: absolute;
     z-index: 110;

@@ -112,6 +112,11 @@ body {
         background-repeat: no-repeat;
     }
 
+        .footer_tekst {
+            color: #7891A5;
+            font-size: 11px;
+        }
+
 /* Common styles */
 th {
     font-size: 8pt;

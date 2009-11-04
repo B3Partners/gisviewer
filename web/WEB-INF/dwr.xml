@@ -12,8 +12,13 @@
             <include method="getPossibleFeaturesById"/>
             <include method="getPossibleAttributesById"/>
         </create>
-        <!-- convert match="java.lang.Exception" converter="exception">
+
+        <create creator="new" javascript="EditUtil">
+            <param name="class" value="nl.b3p.gis.utils.EditUtil"/>
+        </create>
+
+        <convert match="java.lang.Exception" converter="exception">
             <param name='include' value='message,lineNumber'/>
-        </convert -->
+        </convert>
     </allow>
 </dwr>

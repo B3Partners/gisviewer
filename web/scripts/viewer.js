@@ -1,4 +1,15 @@
-// main list that holds current visible layers
+dwr.engine.setErrorHandler(handler);
+
+function handler(msg) {
+    var message = msg;
+
+    if (message != '')
+    {
+        alert(message);
+    }
+}
+
+// // main list that holds current visible layers
 // in correct order, last is top
 var enabledLayerItems= new Array();
 
@@ -16,8 +27,6 @@ var clustersAan = new Array();
 
 var timeouts=0;
 var featureInfoTimeOut=30;
-
-
 
 var flamingoController= new FlamingoController(flamingo,'flamingoController');
 flamingoController.createMap("map1");
@@ -1333,7 +1342,58 @@ function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureW
     }
 }
 
+/* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
 function flamingo_b_buffer_onEvent(id, event) {
     if (event["down"])
-        alert("Buffer knop");
+    {
+        var wkt = "";
+
+        wkt = getWktFromScreen();
+
+        var str = prompt('Geef de bufferafstand in meters');
+        var afstand = 0;
+
+        if((str == '') || ( str == 'undefined') || ( str == null))
+            return;
+
+        if( !isNaN( str) ) {
+            str = str.replace( ",", ".");
+            afstand = str;
+        } else {
+            handler( "Geen getal" );
+            return;
+        }
+
+        EditUtil.buffer(wkt, afstand, returnBuffer);
+    }
+}
+
+function returnBuffer(wkt) {
+
+    if (wkt.length > 0)
+    {
+        var polyObject = new Object();
+
+        polyObject["id"]=61501;
+        polyObject["wktgeom"]=wkt;
+
+        drawBufferPolygon(polyObject);
+    }
+}
+
+function drawBufferPolygon(poly) {
+
+    flamingo.call("editMap", 'removeAllFeatures');   
+    flamingo.callMethod("editMap", "addFeature", "layer1", poly);
+}
+
+function getWktFromScreen() {
+    return flamingo.callMethod("editMap", "getAllFeaturesAsObject")[0].wktgeom;
+}
+
+function flamingo_b_removePolygons_onEvent(id, event) {
+    if (event["down"])
+    {
+        flamingo.call("editMap", 'removeAllFeatures');
+    }
 }

@@ -97,7 +97,7 @@
         <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
         <init-param>
             <param-name>locationPrefix</param-name>
-            <param-value>http://localhost:8084/gisviewer</param-value>
+            <param-value>http://b3p-demoserver/gisviewer</param-value>
         </init-param>
         <init-param>
             <param-name>directoryKeepDepth</param-name>

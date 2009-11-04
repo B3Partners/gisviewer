@@ -23,6 +23,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
+<script type='text/javascript' src='dwr/interface/EditUtil.js'></script>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>

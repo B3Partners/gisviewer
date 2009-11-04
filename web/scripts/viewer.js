@@ -437,14 +437,18 @@ function switchTab(obj) {
             document.getElementById(tabobj.contentid).style.display = 'none';
             if(tabobj.extracontent != undefined) {
                 for(j in tabobj.extracontent) {
-                    document.getElementById(tabobj.extracontent[j]).style.display = 'none';
+                    if(document.getElementById(tabobj.extracontent[j])){
+                        document.getElementById(tabobj.extracontent[j]).style.display = 'none';
+                    }
                 }
             }
         } else {
             document.getElementById(tabobj.contentid).style.display = 'block';
             if(tabobj.extracontent != undefined) {
                 for(j in tabobj.extracontent) {
-                    document.getElementById(tabobj.extracontent[j]).style.display = 'block';
+                    if(document.getElementById(tabobj.extracontent[j])){
+                        document.getElementById(tabobj.extracontent[j]).style.display = 'block';
+                    }
                 }
             }
         }

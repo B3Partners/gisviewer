@@ -112,3 +112,36 @@ html, body {
     padding-top: 4px;
     color: #175480;
 }
+
+/* voor plan select tab */
+
+.planselectcontainer{
+    margin-left: 3px;
+    float: left;
+    width: 230px;
+}
+.planselectbox{
+    width: 225px;
+    height: 100px;
+}
+
+#firstLink {
+    margin-top: 0px;
+}
+
+#kopTekst {
+    background-color: #E5352C;
+    color: White;
+	font-weight: bold;
+	padding: 4px 0px 5px 23px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    cursor: pointer;
+    background-position: 5px 4px;
+}
+
+#kolomTekst {
+    padding: 11px;
+    padding-left: 3px;
+    padding-top: 3px;
+}

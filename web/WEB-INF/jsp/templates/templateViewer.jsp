@@ -42,6 +42,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>
+        
 
         <!--[if lte IE 6]>
             <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />

@@ -25,8 +25,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <script type='text/javascript' src='dwr/interface/EditUtil.js'></script>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+<script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
+
 <script type="text/javascript" src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
+
 <script type="text/javascript">
     var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
     var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
@@ -144,10 +148,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
      *       Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
     var userrights = {
-        "beheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
+        "beheerder": ["tab0", "tab4", "tab1", "tab2", "tab3", "tab6"],
         // "organisatiebeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
         // "themabeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
-        "gebruiker": ["tab0", "tab4", "tab1", "tab5"],
+        "gebruiker": ["tab0", "tab4", "tab1", "tab5", "tab6"],
         "demogebruiker": ["tab1", "tab4", "tab5"],
         "anoniem": ["tab0", "tab4", "tab1", "tab5"]
     };
@@ -160,7 +164,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         "tab2": { "id": "tab2", "contentid": "objectvakViewer", "name": "Gebieden" },
         "tab3": { "id": "tab3", "contentid": "analysevakViewer", "name": "Analyse" },
         "tab4": { "id": "tab4", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
-        "tab5": { "id": "tab5", "contentid": "beschrijvingvak", "name": "Informatie" }
+        "tab5": { "id": "tab5", "contentid": "beschrijvingvak", "name": "Informatie" },
+        "tab6": { "id": "tab6", "contentid": "plannenzoeker", "name": "Plan selectie" }
     };
 
     var enabledtabs = new Array();
@@ -299,6 +304,32 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </form>
 
+    <div id="plannenzoeker" style="display: none; overflow: auto;" class="tabvak">
+        <div class="planselectcontainer">
+            <!--<a class="toggleLinkActive" id="kopTekst" onclick="return toggle(this, 'kolomTekst');">Plan selectie module</a>-->
+            <div id="kolomTekst">
+                Eigenaar:
+                <select id="eigenaarselect" name="eigenaarselect" onchange="eigenaarchanged(this)" class="planselectbox" size="10" disabled="true">
+                    <option value="">Bezig met laden eigenaren</option>
+                </select>
+                Plan type
+                <select id="plantypeselect" name="plantypeselect" size="10" class="planselectbox" onchange="plantypechanged(this)">
+                    <option value="">Kies een eigenaar</option>
+                </select>
+                Plan status
+                <select id="statusselect" name="statusselect" size="10" class="planselectbox" onchange="statuschanged(this)">
+                    <option value="">Kies een eigenaar</option>
+                </select>
+                Plan
+                <select id="planselect" name="planselect" size="10" class="planselectbox" onchange="planchanged(this)">
+                    <option value="">Kies een eigenaar</option>
+                </select>
+                <div id="selectedPlan">Geen plan geselecteerd</div>
+            </div>
+
+        </div>
+    </div>
+
     <div id="infovak" style="display: none; overflow: auto;" class="tabvak">
         <div id="start_message">
             Kies de Info-tool en klik vervolgens op een punt<br/>
@@ -405,3 +436,5 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     ie6_hack_onInit();
 	
 </script>
+
+    <script type="text/javascript" src="scripts/zoeker.js"></script>

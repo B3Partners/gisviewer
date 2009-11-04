@@ -12,13 +12,18 @@
             <include method="getPossibleFeaturesById"/>
             <include method="getPossibleAttributesById"/>
         </create>
-
-        <create creator="new" javascript="EditUtil">
-            <param name="class" value="nl.b3p.gis.utils.EditUtil"/>
+        <create creator="new" javascript="JZoeker">
+            <param name="class" value="nl.b3p.zoeker.services.Zoeker"/>
+            <include method="zoek"/>
         </create>
-
-        <convert match="java.lang.Exception" converter="exception">
+        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaat"/>
+        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaatAttribuut"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekAttribuut"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron"/>
+        <!-- convert match="java.lang.Exception" converter="exception">
             <param name='include' value='message,lineNumber'/>
-        </convert>
+        </convert -->
     </allow>
 </dwr>

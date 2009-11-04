@@ -144,7 +144,7 @@ function setActiveCluster(item,overrule){
             var atlabel = document.getElementById('actief_thema');
             if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
                 activeClusterId=item.id;
-                atlabel.innerHTML = 'Actieve thema: ' + activeClusterTitle;
+                atlabel.innerHTML = 'Actief thema: ' + activeClusterTitle;
             }
         }
     }
@@ -161,7 +161,7 @@ function setActiveThema(id, label, overrule) {
 
         var atlabel = document.getElementById('actief_thema');
         if (atlabel && label && atlabel!=null && label!=null) {
-            atlabel.innerHTML = 'Actieve thema: ' + label;
+            atlabel.innerHTML = 'Actief thema: ' + label;
         }
 
         if (document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0){

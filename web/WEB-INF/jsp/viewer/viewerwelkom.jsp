@@ -41,7 +41,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <p>
                     Het active thema wordt rechts getoond in de titelbalk hierboven. U kunt
                     informatie opvragen door met de informatie-tool in de kaart te klikken.
-                    Deze informatie verschijnt dan hier. Via zoeker of zoomen navigeert u eerst 
+                    Deze informatie verschijnt dan hier. Via zoeken of zoomen navigeert u eerst
                     naar het juiste deel van de kaart. Voor meer hulp klik <html:link page="/help.do" module="">Help</html:link>
                 </p>
            </td>

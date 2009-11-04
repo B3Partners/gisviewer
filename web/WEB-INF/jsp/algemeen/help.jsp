@@ -98,7 +98,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 houdt u slechts de basiskaart over.</p>
             </td>
             <td valign="top">               
-                <a name="zoeker"></a><h2>Tabblad Zoeker</h2>
+                <a name="zoeker"></a><h2>Tabblad Zoeken</h2>
                 Zodra in de kaart met de Info icoon wordt geklikt, haalt het WIS de lokatie-informatie op: RD x,y co&ouml;rdinaten, WOL/HM aanduiding en adres.
                 <p>Medewerkers die gewend zijn de WOL/HM aanduiding te gebruiken, kunnen hier altijd deze informatie vinden.</p>
                 <p>Daarnaast vind u de mogelijkheid een bepaalde locatie op de kaart op te zoeken. Dit kunt u doen door 

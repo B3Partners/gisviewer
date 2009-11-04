@@ -62,7 +62,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <html:hidden property="ycoord" /--%>
                 <html:hidden property="coords" />
 
-                <strong> Extra criterium voor actieve thema</strong><br/>
+                <strong> Extra criterium voor actief thema</strong><br/>
                 <html:text property="extraCriteria" size="40"/><br/>
 
                 <strong> Analysegebied</strong><br/>

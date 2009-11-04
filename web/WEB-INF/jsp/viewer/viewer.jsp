@@ -156,7 +156,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * de naam en eventueel extra Content-divs die geopend moeten worden */
     var tabbladen = {
         "tab0": { "id": "tab0", "contentid": "treevak", "name": "Thema's", "extracontent": ["layermaindiv"] },
-        "tab1": { "id": "tab1", "contentid": "infovak", "name": "Zoeker" },
+        "tab1": { "id": "tab1", "contentid": "infovak", "name": "Zoeken" },
         "tab2": { "id": "tab2", "contentid": "objectvakViewer", "name": "Gebieden" },
         "tab3": { "id": "tab3", "contentid": "analysevakViewer", "name": "Analyse" },
         "tab4": { "id": "tab4", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
@@ -228,7 +228,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <div class="infobalk" id="viewerinfobalk">
     <div class="infobalk_description">VIEWER</div>
     <div class="infobalk_actions">
-        <div style="float: left;"><span id="actief_thema">Actieve thema</span></div>
+        <div style="float: left;"><span id="actief_thema">Actief thema</span></div>
         <tiles:insert name="loginblock"/>
     </div>
 </div>

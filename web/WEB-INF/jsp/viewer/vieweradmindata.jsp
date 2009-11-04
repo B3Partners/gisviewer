@@ -78,8 +78,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </div>
                     </div>
                     ${themanaam}
-                    <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()">Exporteer naar csv</a>
-                    <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()">Exporteer naar infobox</a>
+                    <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()"><html:image src="./images/icons/page_white_csv.png" alt="Exporteer naar csv" /></a> 
+                    <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()"><html:image src="./images/icons/page_white_info.png" alt="Exporteer naar infobox" /></a>
                     <form action="services/Data2CSV" name="data2csv${tStatus.count}" id="data2csv${tStatus.count}" target="_blank" method="post">
                         <input name="themaId" type="hidden" value="${themaId}"/>
                         <input name="objectIds" type="hidden" value=""/>

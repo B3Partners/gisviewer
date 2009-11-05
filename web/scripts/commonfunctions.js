@@ -260,3 +260,14 @@ function stopResize() {
     document.getElementById('popupWindow_Resizediv').style.display = 'none';
     if(ieVersion <= 7 && ieVersion != -1) fixPopup();
 }
+
+function showHelpDialog(divid) {
+    $j("#" + divid).dialog({
+        resizable: true,
+        draggable: true,
+        show: 'slide',
+        hide: 'slide'
+    });
+    $j("#" + divid).dialog('open');
+    return false;
+}

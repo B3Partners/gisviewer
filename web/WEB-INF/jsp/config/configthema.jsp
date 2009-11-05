@@ -145,12 +145,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <div class="config_tab" id="tab-algemeen-content">
                 <table cellpadding="2" cellspacing="2" border="0">
                     <tr><td>
-                            <fmt:message key="configthema.naam"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.naam"/>"><p><fmt:message key="configthema.naam.uitleg"/></p></div>
+                            <fmt:message key="configthema.naam"/> <a href="#" onclick="return showHelpDialog('help_configthemanaam');">(?)</a><div id="help_configthemanaam" style="display: none;" title="<fmt:message key="configthema.naam"/>"><p><fmt:message key="configthema.naam.uitleg"/></p></div>
                     </td><td colspan="3"><html:text property="naam" size="140"/></td></tr>
-                    <tr><td><fmt:message key="configthema.metadatalink"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.metadatalink"/>"><p><fmt:message key="configthema.metadatalink.uitleg"/></p></div></td><td colspan="3"><html:text property="metadatalink" size="140"/></td></tr>
+                    <tr><td><fmt:message key="configthema.metadatalink"/> <a href="#" onclick="return showHelpDialog('help_configthemametadatalink');">(?)</a><div id="help_configthemametadatalink" style="display: none;" title="<fmt:message key="configthema.metadatalink"/>"><p><fmt:message key="configthema.metadatalink.uitleg"/></p></div></td><td colspan="3"><html:text property="metadatalink" size="140"/></td></tr>
                     <tr class="optionalConfigItems">
                         <td>
-                            <fmt:message key="configthema.code"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.code"/>"><p><fmt:message key="configthema.code.uitleg"/></p></div>
+                            <fmt:message key="configthema.code"/> <a href="#" onclick="return showHelpDialog('help_configthemacode');">(?)</a><div id="help_configthemacode" style="display: none;" title="<fmt:message key="configthema.code"/>"><p><fmt:message key="configthema.code.uitleg"/></p></div>
                         </td>
                         <td colspan="3">
                             <html:select property="themaCode" styleClass="configSelect">
@@ -160,10 +160,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
-                    <tr><td><fmt:message key="configthema.belangnr"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.belangnr"/>"><p><fmt:message key="configthema.belangnr.uitleg"/></p></div></td><td colspan="3"><html:text property="belangnr" size="140"/></td></tr>
+                    <tr><td><fmt:message key="configthema.belangnr"/> <a href="#" onclick="return showHelpDialog('help_configthemabelangnr');">(?)</a><div id="help_configthemabelangnr" style="display: none;" title="<fmt:message key="configthema.belangnr"/>"><p><fmt:message key="configthema.belangnr.uitleg"/></p></div></td><td colspan="3"><html:text property="belangnr" size="140"/></td></tr>
                     <tr>
                         <td>
-                            <fmt:message key="configthema.cluser"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.cluser"/>"><p><fmt:message key="configthema.cluser.uitleg"/></p></div>
+                            <fmt:message key="configthema.cluser"/> <a href="#" onclick="return showHelpDialog('help_configthemacluser');">(?)</a><div id="help_configthemacluser" style="display: none;" title="<fmt:message key="configthema.cluser"/>"><p><fmt:message key="configthema.cluser.uitleg"/></p></div>
                         </td>
                         <td colspan="3">
                             <html:select property="clusterID" styleClass="configSelect">
@@ -175,15 +175,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
-                    <tr><td><fmt:message key="configthema.opmerkingen"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.opmerkingen"/>"><p><fmt:message key="configthema.opmerkingen.uitleg"/></p></div></td><td colspan="3"><html:text property="opmerkingen" size="140"/></td></tr>
+                    <tr><td><fmt:message key="configthema.opmerkingen"/> <a href="#" onclick="return showHelpDialog('help_configthemaopmerkingen');">(?)</a><div id="help_configthemaopmerkingen" style="display: none;" title="<fmt:message key="configthema.opmerkingen"/>"><p><fmt:message key="configthema.opmerkingen.uitleg"/></p></div></td><td colspan="3"><html:text property="opmerkingen" size="140"/></td></tr>
                 </table>
             </div>
 
             <div class="config_tab" id="tab-themaopties-content">
                 <table cellpadding="2" cellspacing="2" border="0">
-                    <tr><td><fmt:message key="configthema.locatiethema"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.locatiethema"/>"><p><fmt:message key="configthema.locatiethema.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="locatie_thema"/></td></tr>
-                    <tr><td><fmt:message key="configthema.analysethema"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.analysethema"/>"><p><fmt:message key="configthema.analysethema.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
-                    <tr><td><fmt:message key="configthema.defaultvisible"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.defaultvisible"/>"><p><fmt:message key="configthema.defaultvisible.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="visible"/></td></tr>
+                    <tr><td><fmt:message key="configthema.locatiethema"/> <a href="#" onclick="return showHelpDialog('help_configthemalocatiethema');">(?)</a><div id="help_configthemalocatiethema" style="display: none;" title="<fmt:message key="configthema.locatiethema"/>"><p><fmt:message key="configthema.locatiethema.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="locatie_thema"/></td></tr>
+                    <tr><td><fmt:message key="configthema.analysethema"/> <a href="#" onclick="return showHelpDialog('help_configthemaanalysethema');">(?)</a><div id="help_configthemaanalysethema" style="display: none;" title="<fmt:message key="configthema.analysethema"/>"><p><fmt:message key="configthema.analysethema.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="analyse_thema"/></td></tr>
+                    <tr><td><fmt:message key="configthema.defaultvisible"/> <a href="#" onclick="return showHelpDialog('help_configthemadefaultvisible');">(?)</a><div id="help_configthemadefaultvisible" style="display: none;" title="<fmt:message key="configthema.defaultvisible"/>"><p><fmt:message key="configthema.defaultvisible.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="visible"/></td></tr>
                 </table>
             </div>
 
@@ -191,7 +191,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <table cellpadding="2" cellspacing="2" border="0">
                     <tr>
                         <td>
-                            <fmt:message key="configthema.connectie"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.connectie"/>"><p><fmt:message key="configthema.connectie.uitleg"/></p></div>
+                            <fmt:message key="configthema.connectie"/> <a href="#" onclick="return showHelpDialog('help_configthemaconnectie');">(?)</a><div id="help_configthemaconnectie" style="display: none;" title="<fmt:message key="configthema.connectie"/>"><p><fmt:message key="configthema.connectie.uitleg"/></p></div>
                         </td>
                         <td colspan="3">
                             <html:select property="connectie" onchange="refreshFeatureList(this);" styleId='connectie_select' styleClass="configSelect">
@@ -213,9 +213,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </c:forEach>
                     </c:if>
                     <tr><td colspan="4">&nbsp;</td></tr>
-                    <tr><td><fmt:message key="configthema.${connectieType}.admintabelopmerkingen"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.admintabelopmerkingen"/>"><fmt:message key="configthema.${connectieType}.admintabelopmerkingen.uitleg"/></div></td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
+                    <tr><td><fmt:message key="configthema.${connectieType}.admintabelopmerkingen"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}admintabelopmerkingen');">(?)</a><div id="help_configthema${connectieType}admintabelopmerkingen" style="display: none;" title="<fmt:message key="configthema.${connectieType}.admintabelopmerkingen"/>"><fmt:message key="configthema.${connectieType}.admintabelopmerkingen.uitleg"/></div></td><td colspan="3"><html:text property="admin_tabel_opmerkingen" size="140"/></td></tr>
                     <tr>
-                        <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.admintabel"/>"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
+                        <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}admintabel');">(?)</a><div id="help_configthema${connectieType}admintabel" style="display: none;" title="<fmt:message key="configthema.${connectieType}.admintabel"/>"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="admin_tabel" onchange="refreshAdminAttributeList(this);" styleId="admin_tabel_select" styleClass="configSelect">
                                 <c:forEach var="cuItem" items="${listTables}">
@@ -225,7 +225,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </td>
                     </tr>
                     <tr>
-                        <td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.adminpk"/>"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td>
+                        <td><fmt:message key="configthema.${connectieType}.adminpk"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}adminpk');">(?)</a><div id="help_configthema${connectieType}adminpk" style="display: none;" title="<fmt:message key="configthema.${connectieType}.adminpk"/>"><fmt:message key="configthema.${connectieType}.adminpk.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="admin_pk" onchange="createAdminQ();" styleId="admin_pk_select" styleClass="configSelect">
                                 <html:option value=""/>
@@ -242,15 +242,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </html:select>&nbsp;
                         </td>
                     </tr>
-                    <tr><td><span id="adminqueryrow"><fmt:message key="configthema.${connectieType}.adminquery"/> <a href="#" onclick="$j(this).parent().next().dialog();">(?)</a></span><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.adminquery"/>"><fmt:message key="configthema.${connectieType}.adminquery.uitleg"/></div></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
+                    <tr><td><span id="adminqueryrow"><fmt:message key="configthema.${connectieType}.adminquery"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}adminquery');">(?)</a></span><div id="help_configthema${connectieType}adminquery" style="display: none;" title="<fmt:message key="configthema.${connectieType}.adminquery"/>"><fmt:message key="configthema.${connectieType}.adminquery.uitleg"/></div></td><td colspan="3"><html:text property="admin_query" size="140" styleId="admin_query_text"/></td></tr>
                 </table>
             </div>
 
             <div class="config_tab" id="tab-geavanceerd-content">
                 <table cellpadding="2" cellspacing="2" border="0">
-                    <tr><td><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen"/>"><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen.uitleg"/></div></td><td colspan="3"><html:text property="spatial_tabel_opmerkingen" size="140"/></td></tr>
+                    <tr><td><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}spatialtabelopmerkingen');">(?)</a><div id="help_configthema${connectieType}spatialtabelopmerkingen" style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen"/>"><fmt:message key="configthema.${connectieType}.spatialtabelopmerkingen.uitleg"/></div></td><td colspan="3"><html:text property="spatial_tabel_opmerkingen" size="140"/></td></tr>
                     <tr>
-                        <td><fmt:message key="configthema.${connectieType}.spatialtabel"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialtabel"/>"><fmt:message key="configthema.${connectieType}.spatialtabel.uitleg"/></div></td>
+                        <td><fmt:message key="configthema.${connectieType}.spatialtabel"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}spatialtabel');">(?)</a><div id="help_configthema${connectieType}spatialtabel" style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialtabel"/>"><fmt:message key="configthema.${connectieType}.spatialtabel.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="spatial_tabel" onchange="refreshSpatialAttributeList(this);" styleId="spatial_tabel_select" styleClass="configSelect">
                                 <html:option value=""/>
@@ -261,7 +261,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </td>
                     </tr>
                     <tr>
-                        <td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialpk"/>"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td>
+                        <td><fmt:message key="configthema.${connectieType}.spatialpk"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}spatialpk');">(?)</a><div id="help_configthema${connectieType}spatialpk" style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialpk"/>"><fmt:message key="configthema.${connectieType}.spatialpk.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="spatial_pk" styleId="spatial_pk_select" styleClass="configSelect">
                                 <html:option value=""/>
@@ -279,7 +279,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </td>
                     </tr>
                     <tr>
-                        <td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialadminref"/>"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td>
+                        <td><fmt:message key="configthema.${connectieType}.spatialadminref"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}spatialadminref');">(?)</a><div id="help_configthema${connectieType}spatialadminref" style="display: none;" title="<fmt:message key="configthema.${connectieType}.spatialadminref"/>"><fmt:message key="configthema.${connectieType}.spatialadminref.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="spatial_admin_ref" styleId="spatial_adminref_select" styleClass="configSelect">
                                 <html:option value=""/>
@@ -297,7 +297,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </td>
                     </tr>
                     <tr>
-                        <td><fmt:message key="configthema.viewgeomtype"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.viewgeomtype"/>"><p><fmt:message key="configthema.viewgeomtype.uitleg"/></p></div></td>
+                        <td><fmt:message key="configthema.viewgeomtype"/> <a href="#" onclick="return showHelpDialog('help_configthemaviewgeomtype');">(?)</a><div id="help_configthemaviewgeomtype" style="display: none;" title="<fmt:message key="configthema.viewgeomtype"/>"><p><fmt:message key="configthema.viewgeomtype.uitleg"/></p></div></td>
                         <td colspan="3">
                             <html:select property="view_geomtype" styleClass="configSelect">
                                 <html:option value=""/>
@@ -315,7 +315,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <c:choose>
                         <c:when test="${fn:length(listLayers)>1}">
                             <tr>
-                                <td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.wmslayers"/>"><p><fmt:message key="configthema.wmslayers.uitleg"/></p></div></td>
+                                <td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="return showHelpDialog('help_configthemawmslayers');">(?)</a><div id="help_configthemawmslayers" style="display: none;" title="<fmt:message key="configthema.wmslayers"/>"><p><fmt:message key="configthema.wmslayers.uitleg"/></p></div></td>
                                 <td colspan="3">
                                     <html:select property="wms_layers_real" styleClass="configSelect">
                                         <html:option value=""/>
@@ -327,14 +327,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </tr>
                         </c:when>
                         <c:otherwise>
-                            <tr><td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.wmslayers"/>"><p><fmt:message key="configthema.wmslayers.uitleg"/></p></div></td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
+                            <tr><td><fmt:message key="configthema.wmslayers"/> <a href="#" onclick="return showHelpDialog('help_configthemawmslayers');">(?)</a><div id="help_configthemawmslayers" style="display: none;" title="<fmt:message key="configthema.wmslayers"/>"><p><fmt:message key="configthema.wmslayers.uitleg"/></p></div></td><td colspan="3"><html:text property="wms_layers_real" size="140"/></td></tr>
                         </c:otherwise>
                     </c:choose>
-                    <tr><td><fmt:message key="configthema.sldattribuut"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.sldattribuut"/>"><p><fmt:message key="configthema.sldattribuut.uitleg"/></p></div></td><td colspan="3"><html:text property="sldattribuut" size="50"/></td></tr>
+                    <tr><td><fmt:message key="configthema.sldattribuut"/> <a href="#" onclick="return showHelpDialog('help_configthemasldattribuut');">(?)</a><div id="help_configthemasldattribuut" style="display: none;" title="<fmt:message key="configthema.sldattribuut"/>"><p><fmt:message key="configthema.sldattribuut.uitleg"/></p></div></td><td colspan="3"><html:text property="sldattribuut" size="50"/></td></tr>
                     <c:choose>
                         <c:when test="${fn:length(listLayers)>1}">
                             <tr>
-                                <td><fmt:message key="configthema.wmsquerylayers"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.wmsquerylayers"/>"><p><fmt:message key="configthema.wmsquerylayers.uitleg"/></p></div></td>
+                                <td><fmt:message key="configthema.wmsquerylayers"/> <a href="#" onclick="return showHelpDialog('help_configthemawmsquerylayers');">(?)</a><div id="help_configthemawmsquerylayers" style="display: none;" title="<fmt:message key="configthema.wmsquerylayers"/>"><p><fmt:message key="configthema.wmsquerylayers.uitleg"/></p></div></td>
                                 <td colspan="3">
                                     <c:set var="queryDisabled" value="true"/>
                                     <c:if test="${fn:length(form.map.admin_tabel) <= 0}">
@@ -350,13 +350,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </tr>
                         </c:when>
                         <c:otherwise>
-                            <tr><td><fmt:message key="configthema.wmsquerylayers"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.wmsquerylayers"/>"><p><fmt:message key="configthema.wmsquerylayers.uitleg"/></p></div></td><td colspan="3"><html:text property="wms_querylayers_real" size="140"/></td></tr>
+                            <tr><td><fmt:message key="configthema.wmsquerylayers"/> <a href="#" onclick="return showHelpDialog('help_configthemawmsquerylayers');">(?)</a><div id="help_configthemawmsquerylayers" style="display: none;" title="<fmt:message key="configthema.wmsquerylayers"/>"><p><fmt:message key="configthema.wmsquerylayers.uitleg"/></p></div></td><td colspan="3"><html:text property="wms_querylayers_real" size="140"/></td></tr>
                         </c:otherwise>
                     </c:choose>
                     <c:choose>
                         <c:when test="${fn:length(listLegendLayers)>1}">
                             <tr>
-                                <td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.wmslegendlayers"/>"><p><fmt:message key="configthema.wmslegendlayers.uitleg"/></p></div></td>
+                                <td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="return showHelpDialog('help_configthemawmslegendlayers');">(?)</a><div id="help_configthemawmslegendlayers" style="display: none;" title="<fmt:message key="configthema.wmslegendlayers"/>"><p><fmt:message key="configthema.wmslegendlayers.uitleg"/></p></div></td>
                                 <td colspan="3">
                                     <html:select property="wms_legendlayer_real" styleClass="configSelect">
                                         <html:option value=""/>
@@ -368,19 +368,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </tr>
                         </c:when>
                         <c:otherwise>
-                            <tr><td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.wmslegendlayers"/>"><p><fmt:message key="configthema.wmslegendlayers.uitleg"/></p></div></td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
+                            <tr><td><fmt:message key="configthema.wmslegendlayers"/> <a href="#" onclick="return showHelpDialog('help_configthemawmslegendlayers');">(?)</a><div id="help_configthemawmslegendlayers" style="display: none;" title="<fmt:message key="configthema.wmslegendlayers"/>"><p><fmt:message key="configthema.wmslegendlayers.uitleg"/></p></div></td><td colspan="3"><html:text property="wms_legendlayer_real" size="140"/></td></tr>
                         </c:otherwise>
                     </c:choose>
 					
 					<tr>
-                        <td><fmt:message key="configthema.maptip"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.maptip"/>"><p><fmt:message key="configthema.maptip.uitleg"/></p></div></td>
+                        <td><fmt:message key="configthema.maptip"/> <a href="#" onclick="return showHelpDialog('help_configthemamaptip');">(?)</a><div id="help_configthemamaptip" style="display: none;" title="<fmt:message key="configthema.maptip"/>"><p><fmt:message key="configthema.maptip.uitleg"/></p></div></td>
                         <td colspan="3">
                             <html:text property="thema_maptip" size="140"/>
                         </td>
                     </tr
 
                     <tr><td colspan="4">&nbsp;</td></tr>
-                    <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthema.updatefreqindagen"/>"><p><fmt:message key="configthema.updatefreqindagen.uitleg"/></p></div></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
+                    <tr class="optionalConfigItems"><td><fmt:message key="configthema.updatefreqindagen"/> <a href="#" onclick="return showHelpDialog('help_configthemaupdatefreqindagen');">(?)</a><div id="help_configthemaupdatefreqindagen" style="display: none;" title="<fmt:message key="configthema.updatefreqindagen"/>"><p><fmt:message key="configthema.updatefreqindagen.uitleg"/></p></div></td><td colspan="3"><html:text property="update_frequentie_in_dagen" size="140"/></td></tr>
 
                     <%-- <tr>
                     <td><fmt:message key="configthema.themadata"/>(Verwijderen van Themadata objecten kan alleen via het scherm 'Themadata')</td>

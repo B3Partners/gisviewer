@@ -143,16 +143,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div>
         <div class="maintable" style="margin-top: 5px;">
             <table cellpadding="2" cellspacing="2" border="0">
-                <tr><td><fmt:message key="configthemadata.label"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.label"/>"><p><fmt:message key="configthemadata.label.uitleg"/></p></div></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.eenheid"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.eenheid"/>"><p><fmt:message key="configthemadata.eenheid.uitleg"/></p></div></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.omschrijving"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.omschrijving"/>"><p><fmt:message key="configthemadata.omschrijving.uitleg"/></p></div></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.basisregel"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.basisregel"/>"><p><fmt:message key="configthemadata.basisregel.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.uitgebreid"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.uitgebreid"/>"><p><fmt:message key="configthemadata.uitgebreid.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="uitgebreid"/></td></tr>
-                <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.voorbeelden"/>"><p><fmt:message key="configthemadata.voorbeelden.uitleg"/></p></div></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
-                <tr><td><fmt:message key="configthemadata.kolombreedte"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.kolombreedte"/>"><p><fmt:message key="configthemadata.kolombreedte.uitleg"/></p></div></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.label"/> <a href="#" onclick="return showHelpDialog('help_configthemadatalabel');">(?)</a><div id="help_configthemadatalabel" style="display: none;" title="<fmt:message key="configthemadata.label"/>"><p><fmt:message key="configthemadata.label.uitleg"/></p></div></td><td colspan="3"><html:text property="label" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.eenheid"/> <a href="#" onclick="return showHelpDialog('help_configthemadataeenheid');">(?)</a><div id="help_configthemadataeenheid" style="display: none;" title="<fmt:message key="configthemadata.eenheid"/>"><p><fmt:message key="configthemadata.eenheid.uitleg"/></p></div></td><td colspan="3"><html:text property="eenheid" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.omschrijving"/> <a href="#" onclick="return showHelpDialog('help_configthemadataomschrijving');">(?)</a><div id="help_configthemadataomschrijving" style="display: none;" title="<fmt:message key="configthemadata.omschrijving"/>"><p><fmt:message key="configthemadata.omschrijving.uitleg"/></p></div></td><td colspan="3"><html:text property="omschrijving" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.basisregel"/> <a href="#" onclick="return showHelpDialog('help_configthemadatabasisregel');">(?)</a><div id="help_configthemadatabasisregel" style="display: none;" title="<fmt:message key="configthemadata.basisregel"/>"><p><fmt:message key="configthemadata.basisregel.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="basisregel"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.uitgebreid"/> <a href="#" onclick="return showHelpDialog('help_configthemadatauitgebreid');">(?)</a><div id="help_configthemadatauitgebreid" style="display: none;" title="<fmt:message key="configthemadata.uitgebreid"/>"><p><fmt:message key="configthemadata.uitgebreid.uitleg"/></p></div></td><td colspan="3"><html:checkbox property="uitgebreid"/></td></tr>
+                <tr class="optionalConfigItems"><td><fmt:message key="configthemadata.voorbeelden"/> <a href="#" onclick="return showHelpDialog('help_configthemadatavoorbeelden');">(?)</a><div id="help_configthemadatavoorbeelden" style="display: none;" title="<fmt:message key="configthemadata.voorbeelden"/>"><p><fmt:message key="configthemadata.voorbeelden.uitleg"/></p></div></td><td colspan="3"><html:text property="voorbeelden" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.kolombreedte"/> <a href="#" onclick="return showHelpDialog('help_configthemadatakolombreedte');">(?)</a><div id="help_configthemadatakolombreedte" style="display: none;" title="<fmt:message key="configthemadata.kolombreedte"/>"><p><fmt:message key="configthemadata.kolombreedte.uitleg"/></p></div></td><td colspan="3"><html:text property="kolombreedte" size="140"/></td></tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthemadata.waardetype"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.waardetype"/>"><p><fmt:message key="configthemadata.waardetype.uitleg"/></p></div>
+                        <fmt:message key="configthemadata.waardetype"/> <a href="#" onclick="return showHelpDialog('help_configthemadatawaardetype');">(?)</a><div id="help_configthemadatawaardetype" style="display: none;" title="<fmt:message key="configthemadata.waardetype"/>"><p><fmt:message key="configthemadata.waardetype.uitleg"/></p></div>
                     </td>
                     <td colspan="3">
                         <html:select property="waardeTypeID">
@@ -166,7 +166,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
                 <tr>
                     <td>
-                        <fmt:message key="configthemadata.datatype"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.datatype"/>"><p><fmt:message key="configthemadata.datatype.uitleg"/></p></div>
+                        <fmt:message key="configthemadata.datatype"/> <a href="#" onclick="return showHelpDialog('help_configthemadatadatatype');">(?)</a><div id="help_configthemadatadatatype" style="display: none;" title="<fmt:message key="configthemadata.datatype"/>"><p><fmt:message key="configthemadata.datatype.uitleg"/></p></div>
                     </td>
                     <td colspan="3">
                         <html:select property="dataTypeID">
@@ -178,11 +178,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </html:select>&nbsp;
                     </td>
                 </tr>
-                <tr><td><fmt:message key="configthemadata.commando"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.commando"/>"><p><fmt:message key="configthemadata.commando.uitleg"/></p></div></td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.commando"/> <a href="#" onclick="return showHelpDialog('help_configthemadatacommando');">(?)</a><div id="help_configthemadatacommando" style="display: none;" title="<fmt:message key="configthemadata.commando"/>"><p><fmt:message key="configthemadata.commando.uitleg"/></p></div></td><td colspan="3"><html:text property="commando" size="140"/></td></tr>
                 <c:choose>
                     <c:when test="${fn:length(listAdminTableColumns)>1}">
                         <tr>
-                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.${connectieType}.kolomnaam"/>"><p><fmt:message key="configthemadata.${connectieType}.kolomnaam.uitleg"/></p></div></td>
+                            <td><fmt:message key="configthemadata.${connectieType}.kolomnaam"/> <a href="#" onclick="return showHelpDialog('help_configthemadata${connectieType}kolomnaam');">(?)</a><div id="help_configthemadata${connectieType}kolomnaam" style="display: none;" title="<fmt:message key="configthemadata.${connectieType}.kolomnaam"/>"><p><fmt:message key="configthemadata.${connectieType}.kolomnaam.uitleg"/></p></div></td>
                             <td colspan="3">
                                 <html:select property="kolomnaam">
                                     <html:option value=""/>
@@ -194,10 +194,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <tr><td><fmt:message key="configthemadata.kolomnaam"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.kolomnaam"/>"><p><fmt:message key="configthemadata.kolomnaam.uitleg"/></p></div></td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
+                        <tr><td><fmt:message key="configthemadata.kolomnaam"/> <a href="#" onclick="return showHelpDialog('help_configthemadatakolomnaam');">(?)</a><div id="help_configthemadatakolomnaam" style="display: none;" title="<fmt:message key="configthemadata.kolomnaam"/>"><p><fmt:message key="configthemadata.kolomnaam.uitleg"/></p></div></td><td colspan="3"><html:text property="kolomnaam" size="140"/></td></tr>
                     </c:otherwise>
                 </c:choose>
-                <tr><td><fmt:message key="configthemadata.dataorder"/> <a href="#" onclick="$j(this).next().dialog();">(?)</a><div style="display: none;" title="<fmt:message key="configthemadata.dataorder"/>"><p><fmt:message key="configthemadata.dataorder.uitleg"/></p></div></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
+                <tr><td><fmt:message key="configthemadata.dataorder"/> <a href="#" onclick="return showHelpDialog('help_configthemadatadataorder');">(?)</a><div id="help_configthemadatadataorder" style="display: none;" title="<fmt:message key="configthemadata.dataorder"/>"><p><fmt:message key="configthemadata.dataorder.uitleg"/></p></div></td><td colspan="3"><html:text property="dataorder" size="140"/></td></tr>
             </table>
         </div>        
         

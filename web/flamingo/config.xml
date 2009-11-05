@@ -36,8 +36,6 @@
         <fmc:EditLegend id="editLegend" left="0" top="118" listento="editMap" expandable="false"/>
         <fmc:EditBar id="editBar" left="0" top="150" listento="editMap"/>
         
-        <!-- fmc:EditMapGetFeature id="EditMapGetFeature" left="2" top="150" bottom="bottom" listento="gis,editMap"/ -->
-        
         <fmc:Container left="3" top="180">
             <fmc:JsButton id="b_buffer" left="0" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/buffer.png" iconurl_over="flamingo/assets/jsbtn/buffer_over.png" iconurl_sel="flamingo/assets/jsbtn/buffer_down.png" iconurl_dis="flamingo/assets/jsbtn/buffer.png" label="" toggle="false" visible="true" enabled="true" selected="false">
                 <string id="tooltip" en="Buffer" nl="Buffer"/>

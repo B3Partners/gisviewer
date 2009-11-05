@@ -1330,17 +1330,19 @@ function checkboxClickById(id){
     }
 }
 
-function flamingo_b_getfeatures_onEvent(id,event){
-    var wkt= flamingoController.getEditMap.getActiveFeature().wktgeom;
-    if (wkt){
-        document.getElementById('start_message').style.display = 'none';
-        document.getElementById('algdatavak').style.display = 'block';
+function flamingo_b_getfeatures_onEvent(id,event) {    
+    if (event["down"]) {
+        var wkt = getWktFromScreen();
 
-        var loadingStr = "Bezig met laden...";
-        document.getElementById('kadastraledata').innerHTML = loadingStr;
-        handleGetAdminData(wkt);
+        if (wkt) {
+            document.getElementById('start_message').style.display = 'none';
+            document.getElementById('algdatavak').style.display = 'block';
+
+            var loadingStr = "Bezig met laden...";
+            document.getElementById('kadastraledata').innerHTML = loadingStr;
+            handleGetAdminData(wkt);
+        }
     }
-
 }
 
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */

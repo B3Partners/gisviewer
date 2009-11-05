@@ -30,7 +30,7 @@ var featureInfoTimeOut=30;
 
 var flamingoController= new FlamingoController(flamingo,'flamingoController');
 flamingoController.createMap("map1");
-//flamingoController.createEditMap("editMap");
+flamingoController.createEditMap("editMap");
 //flamingoController.setRequestListener("requestIsDone");
 //flamingoController.getMap().enableLayerRequestListener();
 
@@ -1330,20 +1330,17 @@ function checkboxClickById(id){
     }
 }
 
-function flamingo_EditMapGetFeature_onEditMapGetFeature(MovieClip,activeFeatureWKT){
-    //alert(activeFeatureWKT);
-    if(activeFeatureWKT != null){
+function flamingo_b_getfeatures_onEvent(id,event){
+    var wkt= flamingoController.getEditMap.getActiveFeature().wktgeom;
+    if (wkt){
         document.getElementById('start_message').style.display = 'none';
         document.getElementById('algdatavak').style.display = 'block';
 
         var loadingStr = "Bezig met laden...";
         document.getElementById('kadastraledata').innerHTML = loadingStr;
-
-        var geom = activeFeatureWKT;
-
-        handleGetAdminData(geom);
-    //loadObjectInfo(geom);
+        handleGetAdminData(wkt);
     }
+
 }
 
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */

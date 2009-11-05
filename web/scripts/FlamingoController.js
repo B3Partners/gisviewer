@@ -534,6 +534,14 @@ function EditMap(id,flamingoController){
     this.getActiveFeature = function(){
         return flamingoController.getFlamingo().callMethod(this.id,'getActiveFeature');
     }
+
+    this.getAllFeatures = function(){
+        return flamingoController.getFlamingo().callMethod(this.id, 'getAllFeaturesAsObject');
+    }
+
+    this.addFeature = function(layerId,feature){
+        return flamingoController.getFlamingo().callMethod(this.id, 'addFeature', layerId, feature);
+    }
 }
 
 /*Old javascript code that checks if a component is loaded and after that starts the method

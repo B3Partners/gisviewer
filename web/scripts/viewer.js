@@ -1332,7 +1332,7 @@ function checkboxClickById(id){
 
 function flamingo_b_getfeatures_onEvent(id,event) {    
     if (event["down"]) {
-        var wkt = getWktFromScreen();
+        var wkt = getWktFromScreen(); //flamingoController.getEditMap.getActiveFeature().wktgeom;
 
         if (wkt) {
             document.getElementById('start_message').style.display = 'none';
@@ -1364,6 +1364,12 @@ function flamingo_b_buffer_onEvent(id, event) {
             afstand = str;
         } else {
             handler( "Geen getal" );
+            return;
+        }
+
+        if (afstand == 0)
+        {
+            handler("Buffer mag niet 0 zijn");
             return;
         }
 

@@ -1332,7 +1332,15 @@ function checkboxClickById(id){
 
 function flamingo_b_getfeatures_onEvent(id,event) {    
     if (event["down"]) {
-        var wkt = getWktFromScreen(); //flamingoController.getEditMap.getActiveFeature().wktgeom;
+        var object = flamingoController.getEditMap().getActiveFeature();
+
+        if (object == null)
+        {
+            handler("U heeft geen polygoon geselecteerd.");
+            return;
+        }
+
+        wkt = object.wktgeom;
 
         if (wkt) {
             document.getElementById('start_message').style.display = 'none';
@@ -1351,7 +1359,15 @@ function flamingo_b_buffer_onEvent(id, event) {
     {
         var wkt = "";
 
-        wkt = getWktFromScreen();
+        var object = flamingoController.getEditMap().getActiveFeature();
+
+        if (object == null)
+        {
+            handler("U heeft geen polygoon geselecteerd.");
+            return;
+        }
+
+        wkt = object.wktgeom;
 
         var str = prompt('Geef de bufferafstand in meters');
         var afstand = 0;
@@ -1394,10 +1410,6 @@ function drawBufferPolygon(poly) {
 
     flamingo.call("editMap", 'removeAllFeatures');   
     flamingo.callMethod("editMap", "addFeature", "layer1", poly);
-}
-
-function getWktFromScreen() {
-    return flamingo.callMethod("editMap", "getAllFeaturesAsObject")[0].wktgeom;
 }
 
 function flamingo_b_removePolygons_onEvent(id, event) {

@@ -15,13 +15,23 @@
       <property name="hibernate.connection.password" value="publicatie01"/>
       <property name="hibernate.connection.url" value="jdbc:oracle:thin:@dbt01:1521:geopubt"/>
 -->
-      <!-- instellingen dev -->
+      <!-- instellingen utrecht dev 
       <property name="hibernate.connection.username" value="arnhem_zoeker"/>
       <property name="hibernate.connection.password" value="arnhem"/>
       <property name="hibernate.connection.url" value="jdbc:oracle:thin:@b3p-demoserver:1521:ORCL"/>
 
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+      <property name="hibernate.ejb.cfgfile" value="nl/b3p/zoeker/hibernate.cfg.xml"/>
+
+-->
+      <property name="hibernate.connection.username" value="zoeker_algemeen"/>
+      <property name="hibernate.connection.password" value="zoeker_algemeen"/>
+      <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/zoeker_algemeen"/>
+
+
+      <property name="hibernate.connection.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.ejb.cfgfile" value="nl/b3p/zoeker/hibernate.cfg.xml"/>
 
       <property name="hibernate.c3p0.max_size" value="100"/>

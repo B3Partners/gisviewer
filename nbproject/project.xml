@@ -79,14 +79,6 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library>
-                    <file>${libs.B3pGeotoolsCommonLib.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library>
-                    <file>${libs.B3pGeotoolsOgcLib.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library>
                     <file>${reference.b3p-zoeker.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -95,7 +87,19 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library>
-                    <file>${libs.B3pGeotoolsOracleLib.classpath}</file>
+                    <file>${libs.B3pGeotoolsOgcLib2.5.5.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library>
+                    <file>${libs.B3pGeotoolsPostgisLib2.5.5.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library>
+                    <file>${libs.B3pGeotoolsCommonLib2.5.5.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library>
+                    <file>${libs.B3pGeotoolsOracleLib2.5.5.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

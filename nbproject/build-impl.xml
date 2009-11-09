@@ -590,14 +590,15 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.Base64Encoder.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.Base64Encoder.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-geotools-filterImpl2.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.b3p-gisviewer.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-gisviewer.jar" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pGeotoolsCommonLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsCommonLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pGeotoolsOgcLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsOgcLib.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.b3p-zoeker.jar}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.reference.b3p-zoeker.jar" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.B3pHibernateEntityManagerLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pHibernateEntityManagerLib.classpath" todir="${dist.ear.dir}"/>
-        <copyfiles files="${libs.B3pGeotoolsOracleLib.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsOracleLib.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pGeotoolsOgcLib2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsOgcLib2.5.5.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pGeotoolsPostgisLib2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsPostgisLib2.5.5.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pGeotoolsCommonLib2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsCommonLib2.5.5.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.B3pGeotoolsOracleLib2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.B3pGeotoolsOracleLib2.5.5.classpath" todir="${dist.ear.dir}"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.libs.struts.classpath} ${manifest.libs.jstl11.classpath} ${manifest.libs.B3pHibernateLib.classpath} ${manifest.libs.B3pCommonsLib.classpath} ${manifest.libs.B3pDwrLib.classpath} ${manifest.reference.b3p-commons-core.jar} ${manifest.reference.jump-b3p.jar} ${manifest.reference.b3p-commons-hibernate.jar} ${manifest.reference.b3p-commons-gis.jar} ${manifest.reference.securityfilter-b3p.jar} ${manifest.libs.B3pXalanLib.classpath} ${manifest.libs.B3pCastorLib.classpath} ${manifest.libs.B3pSpatialLib.classpath} ${manifest.libs.B3pItextLib.classpath} ${manifest.libs.B3pSecurityLib.classpath} ${manifest.reference.Base64Encoder.jar} ${manifest.reference.b3p-geotools-filterImpl2.jar} ${manifest.reference.b3p-gisviewer.jar} ${manifest.libs.B3pGeotoolsCommonLib.classpath} ${manifest.libs.B3pGeotoolsOgcLib.classpath} ${manifest.reference.b3p-zoeker.jar} ${manifest.libs.B3pHibernateEntityManagerLib.classpath} ${manifest.libs.B3pGeotoolsOracleLib.classpath} "/>
+            <attribute name="Class-Path" value="${manifest.libs.struts.classpath} ${manifest.libs.jstl11.classpath} ${manifest.libs.B3pHibernateLib.classpath} ${manifest.libs.B3pCommonsLib.classpath} ${manifest.libs.B3pDwrLib.classpath} ${manifest.reference.b3p-commons-core.jar} ${manifest.reference.jump-b3p.jar} ${manifest.reference.b3p-commons-hibernate.jar} ${manifest.reference.b3p-commons-gis.jar} ${manifest.reference.securityfilter-b3p.jar} ${manifest.libs.B3pXalanLib.classpath} ${manifest.libs.B3pCastorLib.classpath} ${manifest.libs.B3pSpatialLib.classpath} ${manifest.libs.B3pItextLib.classpath} ${manifest.libs.B3pSecurityLib.classpath} ${manifest.reference.Base64Encoder.jar} ${manifest.reference.b3p-geotools-filterImpl2.jar} ${manifest.reference.b3p-gisviewer.jar} ${manifest.reference.b3p-zoeker.jar} ${manifest.libs.B3pHibernateEntityManagerLib.classpath} ${manifest.libs.B3pGeotoolsOgcLib2.5.5.classpath} ${manifest.libs.B3pGeotoolsPostgisLib2.5.5.classpath} ${manifest.libs.B3pGeotoolsCommonLib2.5.5.classpath} ${manifest.libs.B3pGeotoolsOracleLib2.5.5.classpath} "/>
         </manifest>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
@@ -619,11 +620,12 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.Base64Encoder.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-gisviewer.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${libs.B3pGeotoolsCommonLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${libs.B3pGeotoolsOgcLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-zoeker.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.B3pHibernateEntityManagerLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${libs.B3pGeotoolsOracleLib.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.B3pGeotoolsOgcLib2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.B3pGeotoolsPostgisLib2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.B3pGeotoolsCommonLib2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.B3pGeotoolsOracleLib2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,library-inclusion-in-manifest" if="do.tmp.war.package" name="do-ear-dist">
         <dirname file="${dist.ear.war}" property="dist.jar.dir"/>

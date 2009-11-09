@@ -3,41 +3,17 @@
   <persistence-unit name="zoekerPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
-    <properties>
-      <property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
-      <!--instellingen utrecht prod
-      <property name="hibernate.connection.username" value="plannenbank"/>
-      <property name="hibernate.connection.password" value="plannenbank_01"/>
-      <property name="hibernate.connection.url" value="jdbc:oracle:thin:@dbp01:1521:geopubp"/>
-      -->
-      <!-- instellingen utrecht test
-      <property name="hibernate.connection.username" value="ro"/>
-      <property name="hibernate.connection.password" value="publicatie01"/>
-      <property name="hibernate.connection.url" value="jdbc:oracle:thin:@dbt01:1521:geopubt"/>
--->
-      <!-- instellingen utrecht dev 
-      <property name="hibernate.connection.username" value="arnhem_zoeker"/>
-      <property name="hibernate.connection.password" value="arnhem"/>
-      <property name="hibernate.connection.url" value="jdbc:oracle:thin:@b3p-demoserver:1521:ORCL"/>
-
-      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
-      <property name="hibernate.ejb.cfgfile" value="nl/b3p/zoeker/hibernate.cfg.xml"/>
-
--->
-      <property name="hibernate.connection.username" value="zoeker_algemeen"/>
-      <property name="hibernate.connection.password" value="zoeker_algemeen"/>
-      <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/zoeker_algemeen"/>
-
+    <properties>      
+      <property name="hibernate.connection.datasource" value="java:comp/env/jdbc/gisviewer"/>
 
       <property name="hibernate.connection.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
       <property name="hibernate.ejb.cfgfile" value="nl/b3p/zoeker/hibernate.cfg.xml"/>
 
-      <property name="hibernate.c3p0.max_size" value="100"/>
+      <!--property name="hibernate.c3p0.max_size" value="100"/>
       <property name="hibernate.c3p0.idle_test_period" value="100"/>
       <property name="hibernate.c3p0.min_size" value="0"/>
-      <property name="hibernate.c3p0.timeout" value="60"/>
+      <property name="hibernate.c3p0.timeout" value="60"/-->
     </properties>
   </persistence-unit>
 </persistence>

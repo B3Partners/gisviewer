@@ -406,7 +406,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
 </script>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/FlamingoController.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
    if(usePopup) {

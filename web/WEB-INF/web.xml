@@ -132,7 +132,7 @@
             <param-name>defaultSld</param-name>
             <param-value>/WEB-INF/defaultSld.xml</param-value>
         </init-param>
-     </servlet>
+     </servlet>    
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
@@ -170,7 +170,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreateSLD</servlet-name>
-        <url-pattern>/services/CreateSLD</url-pattern>
+        <url-pattern>/CreateSLD</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

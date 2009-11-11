@@ -629,7 +629,7 @@ function refreshLayer(){
         newLayer.setTransparent(true);
         newLayer.setUrl(layerUrl);
         newLayer.setExceptions("application/vnd.ogc.se_inimage");
-        newLayer.setGetCapabilitiesUrl(capLayerUrl);
+        newLayer.setGetcapabilitiesUrl(capLayerUrl);
         newLayer.setLayers(layersToAdd);
         newLayer.setQuerylayers(queryLayers);
         newLayer.setSrs("EPSG:28992");
@@ -657,6 +657,7 @@ function refreshLayer(){
         
     }
 }
+
 function loadObjectInfo(/*coords,*/ geom) {
     // vul object frame
     document.forms[0].admindata.value = '';

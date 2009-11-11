@@ -42,6 +42,7 @@ var flamingo= parent.flamingo;
 if(opener) {
   flamingo= opener.flamingo;
 }
+
 function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
         // Leeg -> Ja
         // Nee -> Ja
@@ -115,26 +116,6 @@ function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, 
 function handleGetArea(str){
     document.getElementById(str[0]).innerHTML=str[1];
 }  
-/**
- * Highlight the clicked object.
- * Not working with flamingo 3.x Needs to be changed.
- */
-function highlight(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
-    var wmsLayer;
-    var tt;
-    if (window.themaTree){
-        tt=window.themaTree;
-        wmsLayer=searchThemaValue(tt,themaid,"wmslayers");  
-    }else if (window.opener){
-        tt=window.opener.themaTree;
-        wmsLayer=window.opener.searchThemaValue(tt,themaid,"wmslayers");
-    }else if(window.parent.themaTree){
-        tt=window.parent.themaTree
-        wmsLayer=window.parent.searchThemaValue(tt,themaid,"wmslayers");
-    }
-    
-    flamingo.call('map1_fmcLayer','setRecordedValues',wmsLayer,attributeName,trim(attributeValue,' '));
-}
 
 function trim(str, chars) {
     return ltrim(rtrim(str, chars), chars);
@@ -148,4 +129,63 @@ function ltrim(str, chars) {
 function rtrim(str, chars) {
     chars = chars || "\\s";
     return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
+}
+
+function getParent(){
+     if (window.opener){
+        return window.opener;
+    }else if (window.parent){
+        return window.parent;
+    }else{
+        alert("No parent found");
+        return null;
+    }
+}
+
+function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
+    // sld string opbouwen
+    var sldstring =""+sldServletUrl;// window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";//"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
+    
+    var ouder = getParent();
+    var fmco = getParent().flamingoController;
+    if(fmco == undefined){
+        ouder = getParent().getParent();
+        fmco = ouder.flamingoController;
+    }
+    var mapje = fmco.getMap();
+    var existingLayer = mapje.getLayer("fmcLayer");
+    var wmsLayer=ouder.searchThemaValue(ouder.themaTree,themaid,"wmslayers");
+    waardepk = waardepk.trim();
+    sldstring += "?visibleValue=" + waardepk;
+    sldstring += "&id=" + themaid;
+    //var kaartenbalieurl = getParent().kburl;
+    var beginChar = "?";
+    if(existingLayer.getUrl().indexOf("?") != -1){
+        beginChar = "&";
+    }
+    //sldstring="http://dev.b3p.nl/SldGeneratorStyle/CreateSLD.xml";
+    //sldstring="http://b3p-meine:8084/gisviewer/CreateSLD";
+
+    sldstring= escape(sldstring);
+
+
+
+    var sldUrl = existingLayer.getUrl() + beginChar + "SLD=" + sldstring;
+    existingLayer.setUrl(sldUrl);
+    var sldLayer= new FlamingoWMSLayer("sldLayer");
+    sldLayer.setTimeOut("30");
+    sldLayer.setRetryOnError("10");
+    sldLayer.setFormat(existingLayer.getFormat());
+    sldLayer.setTransparent(true);
+    sldLayer.setUrl(sldUrl);
+    sldLayer.setGetcapabilitiesUrl(existingLayer.getUrl());
+    sldLayer.setGetfeatureinfoUrl(existingLayer.getUrl());
+    sldLayer.setLayers(wmsLayer);
+    sldLayer.setExceptions(existingLayer.getExceptions());
+    sldLayer.setSrs(existingLayer.getSrs());
+    sldLayer.setVersion(existingLayer.getVersion());
+    sldLayer.setShowerros(true);
+
+    
+    fmco.getMap().addLayer(sldLayer, true,true);
 }

@@ -38,7 +38,7 @@
             dwr.util.addOptions(statusSelectName,[ "Bezig met ophalen..."]);
             dwr.util.addOptions(planSelectName,[ "Bezig met ophalen..."]);
 
-            JZoeker.zoek(new Array("1","4"),element.value,0,handleGetPlannen);
+            JZoeker.zoek(new Array("1"),element.value,0,handleGetPlannen);
             //geen nieuwe eigenaar kiezen tijdens de zoek opdracht
             eigenaarSelect.disabled=true;
             setSelectedPlan(null);

@@ -144,7 +144,7 @@ function getParent(){
 
 function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
     // sld string opbouwen
-    var sldstring =""+sldServletUrl;// window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";//"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
+    var sldstring=window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";//"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
     
     var ouder = getParent();
     var fmco = getParent().flamingoController;

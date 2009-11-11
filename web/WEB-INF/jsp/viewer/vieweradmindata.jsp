@@ -193,7 +193,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
                                                                 	<c:choose>
                                                                     <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
-                                                                        <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}">${fn:split(waarde, '###')[0]}</a>
+                                                                        <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}" title="${fn:split(waarde, '###')[0]}">
+                                                                            <img src="./images/icons/flag_blue.png" alt="Flag" style="border: 0px none;" />
+                                                                        </a>
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         -

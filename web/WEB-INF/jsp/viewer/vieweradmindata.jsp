@@ -271,15 +271,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             fixAdmindataWidths();
             attachOnresize(fixAdmindataWidths);
             
-             <c:if test="${nuOfTables == 1 && nuOfRegels == 1 && nuOfColumns == 3 && (not empty refreshURL)}">
-                // creeer popup als nog niet in popup
-                if((parent && parent.useDivPopup) || (opener && opener.usePopup)) {
-                    // Doe een window.location als er maar 1 cel en 1 kolom is en dit is een URL
+            var noOfColumnsRedirect = 1;
+            if(parent && parent.autoRedirect) noOfColumnsRedirect = parent.autoRedirect;
+            if(opener && opener.autoRedirect) noOfColumnsRedirect = opener.autoRedirect;
+            if(isNaN(noOfColumnsRedirect)) noOfColumnsRedirect = 1;
+            if(${nuOfTables} == 1 && ${nuOfRegels} == 1 && ${nuOfColumns} == noOfColumnsRedirect && '${refreshURL}' != '') {
+                if(opener && opener.usePopup) {
                     window.location = '${refreshURL}';
+                } else if(parent && parent.useDivPopup) {
+                    popUp('${refreshURL}', 'externe_link', 600, 500);
                 } else {
                     popUp('${refreshURL}', 'externe_link', 600, 500);
                 }
-            </c:if>
+            }
         </script>
 
         <!-- Wordt gebruikt om eventuele opmerkingen te bewerken -->

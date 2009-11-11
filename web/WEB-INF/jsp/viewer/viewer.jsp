@@ -61,6 +61,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var usePopup=true;
     var useDivPopup=true;
     var dataframepopupHandle = null;
+
+    /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
+     * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
+     * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
+     * als de admindata automatisch moeten worden doorgestuurd)
+     */
+    var autoRedirect = 2;
     
 	/* het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie.

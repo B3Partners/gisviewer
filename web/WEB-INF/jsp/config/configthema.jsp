@@ -205,7 +205,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </td>
                     </tr>
                     <c:set var="connectieType" value="wfs"/>
-                    <c:if test="${form.map.connectie!=null}">
+                    <c:if test="${form.map.connectie!=null && form.map.connectie!='kb'}">
                         <c:forEach var="i" items="${listConnecties}">
                             <c:if test="${i.id==form.map.connectie && i.type=='jdbc'}">
                                 <c:set var="connectieType" value="jdbc"/>

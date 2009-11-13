@@ -143,7 +143,7 @@ function getParent(){
 }
 
 function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
-    // sld string opbouwen
+
     var sldstring=window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";//"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
     
     var ouder = getParent();
@@ -155,23 +155,17 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     var mapje = fmco.getMap();
     var existingLayer = mapje.getLayer("fmcLayer");
     var wmsLayer=ouder.searchThemaValue(ouder.themaTree,themaid,"wmslayers");
-    waardepk = waardepk.trim();
+    waardepk = trim(waardepk);
     sldstring += "?visibleValue=" + waardepk;
     sldstring += "&id=" + themaid;
-    //var kaartenbalieurl = getParent().kburl;
     var beginChar = "?";
     if(existingLayer.getUrl().indexOf("?") != -1){
         beginChar = "&";
     }
-    //sldstring="http://dev.b3p.nl/SldGeneratorStyle/CreateSLD.xml";
-    //sldstring="http://b3p-meine:8084/gisviewer/CreateSLD";
 
     sldstring= escape(sldstring);
 
-
-
     var sldUrl = existingLayer.getUrl() + beginChar + "SLD=" + sldstring;
-    existingLayer.setUrl(sldUrl);
     var sldLayer= new FlamingoWMSLayer("sldLayer");
     sldLayer.setTimeOut("30");
     sldLayer.setRetryOnError("10");
@@ -185,7 +179,6 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     sldLayer.setSrs(existingLayer.getSrs());
     sldLayer.setVersion(existingLayer.getVersion());
     sldLayer.setShowerros(true);
-
     
     fmco.getMap().addLayer(sldLayer, true,true);
 }

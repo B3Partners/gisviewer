@@ -68,6 +68,7 @@ fixViewer = function() {
     var flashcontent = document.getElementById('flashcontent');
     var dataframediv = document.getElementById('dataframediv');
     var tab_container = document.getElementById('tab_container');
+    var leftcontent = document.getElementById('leftcontent');
     if(content_viewer) {
         var contentheight = 0; var contentwidth = 0;
         contentheight = content_viewer.offsetParent.offsetHeight - headerheight;
@@ -80,12 +81,19 @@ fixViewer = function() {
         }
 
         if(viewerinfobalk) viewerinfobalk.style.width = (contentwidth - 6) + 'px';
+        var tab_container_width = 0;
+        if(tab_container) tab_container_width = tab_container.offsetWidth;
+        var leftcontent_width = 0;
+        if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
         if(usePopup) {
             if(tab_container) {
                 tab_container.style.height = (contentheight - 49) + 'px';
             }
+            if(leftcontent) {
+                leftcontent.style.height = (contentheight - 49) + 'px';
+            }
             if(flashcontent) {
-                flashcontent.style.width = (contentwidth - 297) + 'px';
+                flashcontent.style.width = (contentwidth - ((tab_container_width==0?0:tab_container_width+9)) - ((leftcontent_width==0?0:leftcontent_width+9))) + 'px';
                 flashcontent.style.height = (contentheight - 29) + 'px';
             }
        } else {
@@ -94,11 +102,14 @@ fixViewer = function() {
                dataframediv.style.width = viewerinfobalk.style.width = (contentwidth - 6) + 'px';
            }
            if(tab_container) {
-               tab_container.style.height = (contentheight - 49 - (dataframehoogte + 29)) + 'px';
+               tab_container.style.height = (contentheight - 29 - (dataframehoogte + 49)) + 'px';
            }
+           if(leftcontent) {
+                leftcontent.style.height = (contentheight - 29 - (dataframehoogte + 29)) + 'px';
+            }
            if(flashcontent) {
                flashcontent.style.height = (contentheight - 29 - (dataframehoogte + 29)) + 'px';
-               flashcontent.style.width = (contentwidth - 297) + 'px';
+               flashcontent.style.width = (contentwidth - ((tab_container_width==0?0:tab_container_width+9)) - ((leftcontent_width==0?0:leftcontent_width+9))) + 'px';
            }
            if(informatiebalk) {
                informatiebalk.style.bottom = (dataframehoogte + 3) + 'px';

@@ -459,3 +459,25 @@ table.tablesorter thead tr .headerSortUp {
 table.tablesorter thead tr .headerSortDown {
 	background-image: url(/gisviewer/images/icons/desc.gif);
 }
+
+/* Panel controls */
+#panelControls .left_closed, #panelControls .right_closed {
+    background-image: url(/gisviewer/images/icons/panel_leftright.gif);
+    background-position: 0px 20px;
+}
+
+#panelControls .right_open, #panelControls .left_open {
+    background-image: url(/gisviewer/images/icons/panel_leftright.gif);
+    background-position: 0px 0px;
+}
+
+#panelControls .bottom_closed {
+    background-image: url(/gisviewer/images/icons/panel_updown.gif);
+    background-position: 0px 20px;
+}
+
+#panelControls .bottom_open {
+    background-image: url(/gisviewer/images/icons/panel_updown.gif);
+    background-position: 0px 0px;
+}
+

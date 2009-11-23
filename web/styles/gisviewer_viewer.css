@@ -52,6 +52,16 @@ html, body {
     height: 100%;
 }
 
+#leftcontent {
+    position: absolute;
+    left: 3px;
+    width: 288px;
+    top: 28px;
+    bottom: 229px;
+    background-color: Green;
+    display: none;
+}
+
 #tabjes {
     position: absolute;
     right: 3px;
@@ -144,4 +154,30 @@ html, body {
     padding: 11px;
     padding-left: 3px;
     padding-top: 3px;
+}
+
+/* Panel controls */
+#panelControls div {
+    z-index: 200;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+#leftControl {
+    position: absolute;
+    left: 3px;
+    top: 90px;
+}
+
+#rightControl {
+    position: absolute;
+    right: 291px;
+    top: 90px;
+}
+
+#onderbalkControl {
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
 }

@@ -58,9 +58,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * False als deze onder de kaart moet worden getoond
      * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond
      */
-    var usePopup=true;
-    var useDivPopup=true;
+    var usePopup=false;
+    var useDivPopup=false;
     var dataframepopupHandle = null;
+
+    /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
+    var usePanelControls = true;
 
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
@@ -245,6 +248,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 </div>
 
+    <div id="leftcontent" style="display: none;">
+        &nbsp;
+    </div>
+
 <div id="flashcontent">
     <strong style="color: Red;"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>
 </div>
@@ -396,31 +403,42 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <script type="text/javascript">
     if(!usePopup) {
-        document.write('<div class="infobalk" id="informatiebalk">'
+        document.write('<div class="infobalk" id="informatiebalk" style="display: none;">'
                        +'     <div class="infobalk_description">INFORMATIE</div>'
                        +'     <div class="infobalk_actions">&nbsp;</div>'
                        +' </div>'
-                       +' <div id="dataframediv" class="dataframediv">'
+                       +' <div id="dataframediv" class="dataframediv" style="display: none;">'
                        +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
                        +' </div>');
     }
+
+    if(usePanelControls) {
+        document.write('<div id="panelControls">'
+            + '<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"></div>'
+            + '<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>'
+            + '<div id="onderbalkControl" class="bottom_closed" onclick="panelResize(\'below\');"></div>'
+        + '</div>');
+    }
+
 </script>
 
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
    if(usePopup) {
+        document.getElementById('left').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
         document.getElementById('flashcontent').style.bottom = '3px';
         //document.getElementById('dataframediv').style.display = 'none';
         //document.getElementById('informatiebalk').style.display = 'none';
    } else {
        // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
-       var dataframehoogte = 200;
+       var dataframehoogte = 0;
        document.getElementById('dataframediv').style.height = dataframehoogte + 'px';
-       document.getElementById('tab_container').style.bottom = (dataframehoogte + 29) + 'px';
-       document.getElementById('flashcontent').style.bottom = (dataframehoogte + 29) + 'px';
-       document.getElementById('informatiebalk').style.bottom = (dataframehoogte + 3) + 'px';
+       document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+       document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+       document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+       document.getElementById('informatiebalk').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 3)) + 'px';
    }
 
    filterInvisibleItems(visibleTree);
@@ -438,8 +456,101 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     "saveScrollState": true,
     "expandAll": false
     });
-	
-	// sometimes IE6 refuses to init Flamingo
+
+    var panelBelowCollapsed = true;
+    var panelLeftCollapsed = true;
+    var panelRightCollapsed = false;
+    function panelResize(dir)
+    {
+       if(ieVersion <= 6 && ieVersion != -1) {
+           var headerheight = 0;
+           headerheight = document.getElementById('header').offsetHeight;
+           var contentheight = 0; var contentwidth = 0;
+           var content_viewer = document.getElementById('content_viewer');
+           contentheight = content_viewer.offsetParent.offsetHeight - headerheight;
+           contentwidth = content_viewer.offsetParent.offsetWidth;
+       }
+       if(dir == 'below') {
+           if(!usePopup) {
+               if(panelBelowCollapsed) {
+                   dataframehoogte = 200;
+                   document.getElementById('informatiebalk').style.display = 'block';
+                   document.getElementById('dataframediv').style.display = 'block';
+                   document.getElementById('onderbalkControl').className = 'bottom_open';
+                   panelBelowCollapsed = false;
+               } else {
+                   dataframehoogte = 0;
+                   document.getElementById('informatiebalk').style.display = 'none';
+                   document.getElementById('dataframediv').style.display = 'none';
+                   document.getElementById('onderbalkControl').className = 'bottom_closed';
+                   panelBelowCollapsed = true;
+               }
+               $j("#dataframediv").animate({ height: dataframehoogte }, 200);
+               $j("#onderbalkControl").animate({ bottom: (dataframehoogte==3?0:(dataframehoogte + 3)) }, 200);
+               $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 200);
+               if(ieVersion <= 6 && ieVersion != -1) {
+                   var divheighs = contentheight - 29 - (dataframehoogte==0?0:(dataframehoogte + 29));
+                   document.getElementById('leftcontent').style.height = divheighs + 'px';
+                   document.getElementById('tab_container').style.height = divheighs - 20 + 'px';
+                   document.getElementById('flashcontent').style.height = divheighs + 'px';
+               } else {
+                   document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+                   document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+                   document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+               }
+           }
+       }
+       if(dir == 'right') {
+           if(panelRightCollapsed) {
+               var panelbreedte = 288;
+               document.getElementById('tab_container').style.display = 'block';
+               document.getElementById('tabjes').style.display = 'block';
+               document.getElementById('rightControl').className = 'right_open';
+               panelRightCollapsed = false;
+           } else {
+               var panelbreedte = 0;
+                document.getElementById('tab_container').style.display = 'none';
+                document.getElementById('tabjes').style.display = 'none';
+                document.getElementById('rightControl').className = 'right_closed';
+                panelRightCollapsed = true;
+           }
+           $j("#tab_container").animate({ width: panelbreedte }, 200);
+           $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
+           if(ieVersion <= 6 && ieVersion != -1) {
+               var leftcontent_width = 0;
+               if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
+               document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
+           } else {
+               $j("#tabjes").animate({ width: panelbreedte }, 200);
+               document.getElementById('flashcontent').style.right = (panelbreedte==0?0:(panelbreedte + 6)) + 'px';
+           }
+       }
+       if(dir == 'left') {
+           if(panelLeftCollapsed) {
+               var panelbreedte = 288;
+               document.getElementById('leftcontent').style.display = 'block';
+               document.getElementById('leftControl').className = 'left_open';
+               panelLeftCollapsed = false;
+           } else {
+               var panelbreedte = 0;
+               document.getElementById('leftcontent').style.display = 'none';
+               document.getElementById('leftControl').className = 'left_closed';
+               panelLeftCollapsed = true;
+           }
+           $j("#leftcontent").animate({ width: panelbreedte }, 200);
+           $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
+           if(ieVersion <= 6 && ieVersion != -1) {
+               var tab_container_width = 0;
+               if(tab_container) tab_container_width = tab_container.offsetWidth;
+               document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((tab_container_width==0?0:tab_container_width+6))) + 'px';
+               document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
+           } else {
+               document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
+           }
+       }
+    }
+
+    // sometimes IE6 refuses to init Flamingo
     ie6_hack_onInit();
 	
 </script>

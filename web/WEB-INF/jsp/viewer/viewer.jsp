@@ -62,8 +62,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var useDivPopup=false;
     var dataframepopupHandle = null;
 
-    /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
+    /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
+     * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
+     * en op null als het leftPanel niet moet worden getoond */
     var usePanelControls = true;
+    var showLeftPanel = null;
 
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
@@ -243,7 +246,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <div class="infobalk" id="viewerinfobalk">
     <div class="infobalk_description">VIEWER</div>
     <div class="infobalk_actions">
-        <div style="float: left;"><span id="actief_thema">Actief thema</span></div>
+        <div style="float: left;"><span id="actief_thema"></span></div>
         <tiles:insert name="loginblock"/>
     </div>
 </div>
@@ -266,15 +269,27 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <ul id="nav">
         <script type="text/javascript">
             var createdTabs = new Array();
-            var noOfTabs = enabledtabs.length;
+            
+            var noOfTabs = 0;
+            for(i in enabledtabs) {
+                var tabid = enabledtabs[i];
+                if(showLeftPanel == null || tabid != showLeftPanel) {
+                    noOfTabs++;
+                }
+            }
             if(noOfTabs > 5) noOfTabs = 5;
             var tabwidth = Math.floor((288 - (noOfTabs-1)) / noOfTabs);
+            var cloneTabContentId = null;
             for(i in enabledtabs) {
                 var tabid = enabledtabs[i];
                 var tabobj = eval("tabbladen."+tabid);
-                document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
-                createdTabs[i] = enabledtabs[i];
-                if(i == 4) break;
+                if(showLeftPanel != null && tabid == showLeftPanel) {
+                    cloneTabContentId = tabobj.contentid;
+                } else {
+                    document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
+                    createdTabs[i] = enabledtabs[i];
+                    if(i == 4) break;
+                }
             }
 
             for(i in tabbladen) {             
@@ -412,10 +427,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                        +' </div>');
     }
 
+    if(cloneTabContentId != null) {
+        document.getElementById(cloneTabContentId).style.display = 'block';
+        $j("#leftcontent").append($j("#"+cloneTabContentId));
+    }
     if(usePanelControls) {
-        document.write('<div id="panelControls">'
-            + '<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"></div>'
-            + '<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>'
+        document.write('<div id="panelControls">');
+        if(showLeftPanel != null && cloneTabContentId != null) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"></div>');
+        document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>'
             + '<div id="onderbalkControl" class="bottom_closed" onclick="panelResize(\'below\');"></div>'
         + '</div>');
     }
@@ -425,6 +444,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
+   var dataframehoogte = 0;
    if(usePopup) {
         document.getElementById('left').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
@@ -433,7 +453,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         //document.getElementById('informatiebalk').style.display = 'none';
    } else {
        // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
-       var dataframehoogte = 0;
        document.getElementById('dataframediv').style.height = dataframehoogte + 'px';
        document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
        document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
@@ -471,9 +490,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
            contentwidth = content_viewer.offsetParent.offsetWidth;
        }
        if(dir == 'below') {
-           if(!usePopup) {
+           if(!usePopup && !useDivPopup) {
                if(panelBelowCollapsed) {
-                   dataframehoogte = 200;
+                   dataframehoogte = 150;
                    document.getElementById('informatiebalk').style.display = 'block';
                    document.getElementById('dataframediv').style.display = 'block';
                    document.getElementById('onderbalkControl').className = 'bottom_open';
@@ -485,9 +504,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                    document.getElementById('onderbalkControl').className = 'bottom_closed';
                    panelBelowCollapsed = true;
                }
-               $j("#dataframediv").animate({ height: dataframehoogte }, 200);
-               $j("#onderbalkControl").animate({ bottom: (dataframehoogte==3?0:(dataframehoogte + 3)) }, 200);
-               $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 200);
+               $j("#dataframediv").animate({ height: dataframehoogte }, 400);
+               $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 4)) }, 400);
+               $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
                if(ieVersion <= 6 && ieVersion != -1) {
                    var divheighs = contentheight - 29 - (dataframehoogte==0?0:(dataframehoogte + 29));
                    document.getElementById('leftcontent').style.height = divheighs + 'px';
@@ -498,6 +517,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                    document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
                    document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
                }
+               resizeTabContents();
            }
        }
        if(dir == 'right') {
@@ -514,8 +534,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 document.getElementById('rightControl').className = 'right_closed';
                 panelRightCollapsed = true;
            }
-           $j("#tab_container").animate({ width: panelbreedte }, 200);
-           $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
+           $j("#tab_container").animate({ width: panelbreedte }, 400);
+           // $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
            if(ieVersion <= 6 && ieVersion != -1) {
                var leftcontent_width = 0;
                if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
@@ -537,8 +557,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                document.getElementById('leftControl').className = 'left_closed';
                panelLeftCollapsed = true;
            }
-           $j("#leftcontent").animate({ width: panelbreedte }, 200);
-           $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
+           $j("#leftcontent").animate({ width: panelbreedte }, 400);
+           // $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
            if(ieVersion <= 6 && ieVersion != -1) {
                var tab_container_width = 0;
                if(tab_container) tab_container_width = tab_container.offsetWidth;

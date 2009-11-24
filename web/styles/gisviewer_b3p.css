@@ -90,7 +90,7 @@ body {
         color: #FFF0C4
     }
 
-    #tab_container {
+    #tab_container, #leftcontent {
         background-image: url(/gisviewer/images/tabvak_bg.gif);
         background-color: #19619B;
         background-repeat: repeat-x;
@@ -98,7 +98,8 @@ body {
         background-position: 100% 100%;
     }
 
-    #tab_container div, #tab_container td, #tab_container span {
+    #tab_container div, #tab_container td, #tab_container span,
+    #leftcontent div, #leftcontent td, #leftcontent span {
         color: White;
     }
 
@@ -461,23 +462,43 @@ table.tablesorter thead tr .headerSortDown {
 }
 
 /* Panel controls */
-#panelControls .left_closed, #panelControls .right_closed {
-    background-image: url(/gisviewer/images/icons/panel_leftright.gif);
+#panelControls .left_closed, #panelControls .right_open {
+    background-image: url(/gisviewer/images/icons/panel_leftright.png);
     background-position: 0px 20px;
 }
 
-#panelControls .right_open, #panelControls .left_open {
-    background-image: url(/gisviewer/images/icons/panel_leftright.gif);
+#panelControls .left_closed:hover, #panelControls .right_open:hover {
+    background-image: url(/gisviewer/images/icons/panel_leftright.png);
+    background-position: 20px 20px;
+}
+
+#panelControls .right_closed, #panelControls .left_open {
+    background-image: url(/gisviewer/images/icons/panel_leftright.png);
     background-position: 0px 0px;
+}
+
+#panelControls .right_closed:hover, #panelControls .left_open:hover {
+    background-image: url(/gisviewer/images/icons/panel_leftright.png);
+    background-position: 20px 0px;
 }
 
 #panelControls .bottom_closed {
-    background-image: url(/gisviewer/images/icons/panel_updown.gif);
-    background-position: 0px 20px;
+    background-image: url(/gisviewer/images/icons/panel_updown.png);
+    background-position: 20px 0px;
+}
+
+#panelControls .bottom_closed:hover {
+    background-image: url(/gisviewer/images/icons/panel_updown.png);
+    background-position: 20px 20px;
 }
 
 #panelControls .bottom_open {
-    background-image: url(/gisviewer/images/icons/panel_updown.gif);
+    background-image: url(/gisviewer/images/icons/panel_updown.png);
     background-position: 0px 0px;
+}
+
+#panelControls .bottom_open:hover {
+    background-image: url(/gisviewer/images/icons/panel_updown.png);
+    background-position: 0px 20px;
 }
 

@@ -18,11 +18,12 @@ html, body {
     text-align: left;
     width: 175px;
     float: left;
+    margin-left: 20px;
 }
 
 #content_viewer .infobalk .infobalk_actions {
     text-align: right;
-    width: 755px;
+    width: 735px;
     float: left;
 }
 
@@ -60,6 +61,7 @@ html, body {
     bottom: 229px;
     background-color: Green;
     display: none;
+    overflow: auto;
 }
 
 #tabjes {
@@ -166,18 +168,18 @@ html, body {
 
 #leftControl {
     position: absolute;
-    left: 3px;
-    top: 90px;
+    left: 6px;
+    top: 3px;
 }
 
 #rightControl {
     position: absolute;
-    right: 291px;
-    top: 90px;
+    right: 6px;
+    top: 3px;
 }
 
 #onderbalkControl {
     position: absolute;
-    right: 5px;
+    left: 6px;
     bottom: 3px;
 }

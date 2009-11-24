@@ -434,11 +434,13 @@ function switchTab(obj) {
         var tabobj = tabbladen[i];
         if(tabobj.id != obj.id) {
             document.getElementById(tabobj.id).className = '';
-            document.getElementById(tabobj.contentid).style.display = 'none';
-            if(tabobj.extracontent != undefined) {
-                for(j in tabobj.extracontent) {
-                    if(document.getElementById(tabobj.extracontent[j])){
-                        document.getElementById(tabobj.extracontent[j]).style.display = 'none';
+            if(cloneTabContentId == null || cloneTabContentId != tabobj.contentid) {
+                document.getElementById(tabobj.contentid).style.display = 'none';
+                if(tabobj.extracontent != undefined) {
+                    for(j in tabobj.extracontent) {
+                        if(document.getElementById(tabobj.extracontent[j])){
+                            document.getElementById(tabobj.extracontent[j]).style.display = 'none';
+                        }
                     }
                 }
             }

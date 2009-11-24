@@ -278,13 +278,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             if(parent && parent.autoRedirect) noOfColumnsRedirect = parent.autoRedirect;
             if(opener && opener.autoRedirect) noOfColumnsRedirect = opener.autoRedirect;
             if(isNaN(noOfColumnsRedirect)) noOfColumnsRedirect = 1;
+            var autoPopupRedirect = false;
             if(${nuOfTables} == 1 && ${nuOfRegels} == 1 && ${nuOfColumns} == noOfColumnsRedirect && '${refreshURL}' != '') {
                 if(opener && opener.usePopup) {
                     window.location = '${refreshURL}';
+                    autoPopupRedirect = true;
                 } else if(parent && parent.useDivPopup) {
                     popUp('${refreshURL}', 'externe_link', 600, 500);
+                    autoPopupRedirect = true;
                 } else {
                     popUp('${refreshURL}', 'externe_link', 600, 500);
+                    autoPopupRedirect = true;
                 }
             }
         </script>
@@ -295,6 +299,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <input type="button" value="Ok" id="opmOkButton" />
             <input type="button" value="Cancel" id="opmCancelButton" />
         </div>
+        <script type="text/javascript">
+            if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
+                if(parent) {
+                    if(parent.panelBelowCollapsed) {
+                        parent.panelResize('below');
+                    }
+                }
+            }
+        </script>
     </c:when>
     <c:otherwise>
         <div id="content_style">

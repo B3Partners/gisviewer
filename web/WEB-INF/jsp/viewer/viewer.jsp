@@ -446,7 +446,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript">
    var dataframehoogte = 0;
    if(usePopup) {
-        document.getElementById('left').style.bottom = '3px';
+        document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
         document.getElementById('flashcontent').style.bottom = '3px';
         //document.getElementById('dataframediv').style.display = 'none';

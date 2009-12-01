@@ -195,7 +195,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </td>
                         <td colspan="3">
                             <html:select property="connectie" onchange="refreshFeatureList(this);" styleId='connectie_select' styleClass="configSelect">
-                                <html:option value="kb">Kaartenbalie Wfs</html:option>
+                                <html:option value="-1">Geen Connectie</html:option>
+                                <html:option value="0">Kaartenbalie Wfs</html:option>
                                 <c:forEach var="cuItem" items="${listConnecties}">
                                     <html:option value="${cuItem.id}">
                                         <c:out value="${cuItem.naam}"/>
@@ -205,7 +206,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </td>
                     </tr>
                     <c:set var="connectieType" value="wfs"/>
-                    <c:if test="${form.map.connectie!=null && form.map.connectie!='kb'}">
+                    <c:if test="${form.map.connectie!=null}">
                         <c:forEach var="i" items="${listConnecties}">
                             <c:if test="${i.id==form.map.connectie && i.type=='jdbc'}">
                                 <c:set var="connectieType" value="jdbc"/>
@@ -218,6 +219,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <td><fmt:message key="configthema.${connectieType}.admintabel"/> <a href="#" onclick="return showHelpDialog('help_configthema${connectieType}admintabel');">(?)</a><div id="help_configthema${connectieType}admintabel" style="display: none;" title="<fmt:message key="configthema.${connectieType}.admintabel"/>"><fmt:message key="configthema.${connectieType}.admintabel.uitleg"/></div></td>
                         <td colspan="3">
                             <html:select property="admin_tabel" onchange="refreshAdminAttributeList(this);" styleId="admin_tabel_select" styleClass="configSelect">
+                                <html:option value=""/>
                                 <c:forEach var="cuItem" items="${listTables}">
                                     <html:option value="${cuItem[0]}">${cuItem[1]}</html:option>
                                 </c:forEach>

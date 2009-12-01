@@ -101,6 +101,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:text property="metadatalink"  size="140"/>
                     </td>
                 </tr>
+
+                <tr>
+                    <td>
+                        Volgorde:
+                    </td>
+                    <td colspan="3">
+                        <html:text property="belangnr" size="10"/>
+                    </td>
+                </tr>
+
+
                 <tr>
                     <td>
                         <html:checkbox property="default_cluster"/>

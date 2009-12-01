@@ -63,6 +63,7 @@
             <form-property name="clusterID" type="java.lang.String"/>
             <form-property name="naam" type="java.lang.String"/>
             <form-property name="omschrijving" type="java.lang.String"/>
+            <form-property name="belangnr" type="java.lang.String"/>
             <form-property name="metadatalink" type="java.lang.String"/>
             <form-property name="parentID" type="java.lang.String"/>
             <form-property name="default_cluster" type="java.lang.Boolean"/>

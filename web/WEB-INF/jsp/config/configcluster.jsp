@@ -165,9 +165,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:select property="parentID">
                             <html:option value=""/>
                             <c:forEach var="cuItem" items="${allClusters}">
-                                <html:option value="${cuItem.id}">
-                                    <c:out value="${cuItem.naam}"/>
-                                </html:option>
+                                <c:if test="${mainid != cuItem.id}">
+                                    <html:option value="${cuItem.id}">
+                                        <c:out value="${cuItem.naam}"/>
+                                    </html:option>
+                                </c:if>
                             </c:forEach>
                         </html:select>&nbsp;
                     </td>

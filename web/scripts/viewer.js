@@ -138,12 +138,12 @@ function getLayerPosition(item) {
     return 0;
 }
 function setActiveCluster(item,overrule){
-    if (((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0))|| overrule){
-        if (item & item!=null) {
+    if(((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
+        if(item != undefined & item != null) {
             var activeClusterTitle = item.title;
             var atlabel = document.getElementById('actief_thema');
             if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
-                activeClusterId=item.id;
+                activeClusterId = item.id;
                 atlabel.innerHTML = 'Actief thema: ' + activeClusterTitle;
             }
         }
@@ -351,6 +351,7 @@ function createLabel(container, item) {
             }
         }
         if (!item.hide_tree || item.callable){
+            container.appendChild(document.createTextNode('  '));
             container.appendChild(createMetadatLink(item));
         }
         if (item.active){

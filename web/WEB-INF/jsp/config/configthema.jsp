@@ -440,7 +440,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var pageConnectionType="${connectieType}";
     var currentConnectionType="${connectieType}";
     var connectionTypes=new Array();
-    connectionTypes["kb"]="wfs";
+    connectionTypes["-1"]="";
+    connectionTypes["0"]="wfs";
     <c:forEach var="cuItem" items="${listConnecties}">
         connectionTypes["${cuItem.id}"]="${cuItem.type}";
     </c:forEach>

@@ -52,7 +52,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
      * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
      */
-    var multipleActiveThemas=true;
+    var multipleActiveThemas=false;
     
     /* True als de admin- of metadata in een popup wordt getoond
      * False als deze onder de kaart moet worden getoond
@@ -79,7 +79,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * en info wordt opgevraagd. Dus een tolerantie.
      **/
     var tolerance=1;
-    if(demogebruiker) usePopup=true;
+    if(demogebruiker) usePopup=false;
     
     
     /*
@@ -164,7 +164,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         "beheerder": ["tab0", "tab4", "tab1", "tab2", "tab3", "tab6"],
         // "organisatiebeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
         // "themabeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
-        "gebruiker": ["tab0", "tab4", "tab1", "tab5", "tab6"],
+        "gebruiker": ["tab2", "tab3", "tab0", "tab5", "tab6"],
         "demogebruiker": ["tab1", "tab4", "tab5"],
         "anoniem": ["tab0", "tab4", "tab1", "tab5"]
     };

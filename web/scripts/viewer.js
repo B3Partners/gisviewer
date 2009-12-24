@@ -744,32 +744,37 @@ function getCoords() {
 function getCoordsCallbackFunction(values){
     var searchResults=document.getElementById("searchResults");
     var sResult = "<br><b>Er zijn geen resultaten gevonden!<b>";
-    if (values!=null && values.length > 0) {
-        for (var i=0; i < values.length; i++){
-            if (Number(values[i].maxx-values[i].minx) < minBboxZoeken){
-                var addX=Number((minBboxZoeken-(values[i].maxx-values[i].minx))/2);
-                var addY=Number((minBboxZoeken-(values[i].maxy-values[i].miny))/2);
-                values[i].minx=Number(values[i].minx-addX);
-                values[i].maxx=Number(Number(values[i].maxx)+Number(addX));
-                values[i].miny=Number(values[i].miny-addY);
-                values[i].maxy=Number(Number(values[i].maxy)+Number(addY));
-            }
+    if (values==null || values.length == 0) {
+        searchResults.innerHTML=sResult;
+    }
+    for (var i=0; i < values.length; i++){
+        if ((Number(values[i].maxx-values[i].minx) < minBboxZoeken) && values[i].valid){
+            var addX=Number((minBboxZoeken-(values[i].maxx-values[i].minx))/2);
+            var addY=Number((minBboxZoeken-(values[i].maxy-values[i].miny))/2);
+            values[i].minx=Number(values[i].minx-addX);
+            values[i].maxx=Number(Number(values[i].maxx)+Number(addX));
+            values[i].miny=Number(values[i].miny-addY);
+            values[i].maxy=Number(Number(values[i].maxy)+Number(addY));
         }
-        if (values.length > 1){
-            var displayLength = values.length;
-            if (displayLength<5000) {
-                sResult = "<br><b>Meerdere resultaten gevonden:<b><ol>";
-            } else {
-                displayLenght=5000;
-                sResult = "<br><b>Meer dan 5000 resultaten gevonden. Er worden slechts 5000 resultaten weergegeven:<b><ol>";
-            }
-            for (i =0; i < displayLength; i++){
-                sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a></li>";
-            }
-            sResult += "</ol>";
+    }
+    if (values.length > 1){
+        var displayLength = values.length;
+        if (displayLength<5000) {
+            sResult = "<br><b>Meerdere resultaten gevonden:<b><ol>";
         } else {
+            displayLenght=5000;
+            sResult = "<br><b>Meer dan 5000 resultaten gevonden. Er worden slechts 5000 resultaten weergegeven:<b><ol>";
+        }
+        for (i =0; i < displayLength; i++){
+            sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a></li>";
+        }
+        sResult += "</ol>";
+    } else {
+        if (values[0].valid) {
             sResult = "<br><b>Locatie gevonden:<br>" + values[0].naam + "<b>";
             moveAndIdentify(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
+        } else {
+            sResult = "<br><b>" + values[0].naam + "<b>";
         }
     }
     searchResults.innerHTML=sResult;

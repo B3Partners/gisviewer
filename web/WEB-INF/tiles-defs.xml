@@ -48,6 +48,10 @@
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp"/>
     </definition>
+	<definition name="vieweradmindata_small" extends="databody">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata_small.jsp"/>
+    </definition>
     <definition name="viewermetadata" extends="databody">
         <put name="title" value="Metadata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewermetadata.jsp"/>

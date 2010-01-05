@@ -155,7 +155,7 @@
         </action>
         <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction" name="viewerForm" scope="request" validate="false">
             <forward name="failure" path="viewerdata"/>
-            <forward name="admindata" path="vieweradmindata"/>
+            <forward name="admindata" path="vieweradmindata"/> <!-- Voor eenvoudige versie: <forward name="admindata" path="vieweradmindata_small"/> -->
             <forward name="metadata" path="viewermetadata"/>
             <forward name="objectdata" path="viewerobjectdata"/>
             <forward name="analysedata" path="vieweranalysedata"/>

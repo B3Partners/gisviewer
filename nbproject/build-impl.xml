@@ -615,11 +615,12 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.HibernateEntityManager.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.HibernateEntityManager.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.GeotoolsOgc2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.GeotoolsOgc2.5.5.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.GeotoolsPostgis2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.GeotoolsPostgis2.5.5.classpath" todir="${dist.ear.dir}"/>
+        <copyfiles files="${libs.GeotoolsJdbc2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.GeotoolsJdbc2.5.5.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.GeotoolsCommon2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.GeotoolsCommon2.5.5.classpath" todir="${dist.ear.dir}"/>
         <copyfiles files="${libs.GeotoolsOracle2.5.5.classpath}" iftldtodir="${build.web.dir}/WEB-INF" manifestproperty="manifest.libs.GeotoolsOracle2.5.5.classpath" todir="${dist.ear.dir}"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.libs.Struts.classpath} ${manifest.libs.jstl11.classpath} ${manifest.libs.Hibernate.classpath} ${manifest.libs.Commons.classpath} ${manifest.libs.DWR.classpath} ${manifest.reference.b3p-commons-core.jar} ${manifest.reference.jump-b3p.jar} ${manifest.reference.b3p-commons-hibernate.jar} ${manifest.reference.b3p-commons-gis.jar} ${manifest.reference.securityfilter-b3p.jar} ${manifest.libs.Xalan.classpath} ${manifest.libs.Castor.classpath} ${manifest.libs.JTS.classpath} ${manifest.libs.IText.classpath} ${manifest.libs.Security.classpath} ${manifest.reference.Base64Encoder.jar} ${manifest.reference.b3p-geotools-filterImpl2.jar} ${manifest.reference.b3p-gisviewer.jar} ${manifest.reference.b3p-zoeker.jar} ${manifest.libs.HibernateEntityManager.classpath} ${manifest.libs.GeotoolsOgc2.5.5.classpath} ${manifest.libs.GeotoolsPostgis2.5.5.classpath} ${manifest.libs.GeotoolsCommon2.5.5.classpath} ${manifest.libs.GeotoolsOracle2.5.5.classpath} "/>
+            <attribute name="Class-Path" value="${manifest.libs.Struts.classpath} ${manifest.libs.jstl11.classpath} ${manifest.libs.Hibernate.classpath} ${manifest.libs.Commons.classpath} ${manifest.libs.DWR.classpath} ${manifest.reference.b3p-commons-core.jar} ${manifest.reference.jump-b3p.jar} ${manifest.reference.b3p-commons-hibernate.jar} ${manifest.reference.b3p-commons-gis.jar} ${manifest.reference.securityfilter-b3p.jar} ${manifest.libs.Xalan.classpath} ${manifest.libs.Castor.classpath} ${manifest.libs.JTS.classpath} ${manifest.libs.IText.classpath} ${manifest.libs.Security.classpath} ${manifest.reference.Base64Encoder.jar} ${manifest.reference.b3p-geotools-filterImpl2.jar} ${manifest.reference.b3p-gisviewer.jar} ${manifest.reference.b3p-zoeker.jar} ${manifest.libs.HibernateEntityManager.classpath} ${manifest.libs.GeotoolsOgc2.5.5.classpath} ${manifest.libs.GeotoolsPostgis2.5.5.classpath} ${manifest.libs.GeotoolsJdbc2.5.5.classpath} ${manifest.libs.GeotoolsCommon2.5.5.classpath} ${manifest.libs.GeotoolsOracle2.5.5.classpath} "/>
         </manifest>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
@@ -645,6 +646,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.HibernateEntityManager.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsOgc2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsPostgis2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.GeotoolsJdbc2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsCommon2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsOracle2.5.5.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>

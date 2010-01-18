@@ -8,7 +8,6 @@ function handler(msg) {
         alert(message);
     }
 }
-
 // // main list that holds current visible layers
 // in correct order, last is top
 var enabledLayerItems= new Array();
@@ -34,7 +33,25 @@ flamingoController.createEditMap("editMap");
 //flamingoController.setRequestListener("requestIsDone");
 //flamingoController.getMap().enableLayerRequestListener();
 
-
+var mapInitialized=false;
+var searchExtent=null;
+//if searchConfigId is set do a search
+if (searchConfigId.length>0 && search.length>0){    
+    JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
+}
+function handleInitSearch(list){
+    if (list.length > 0){
+        searchExtent= new Object();
+        searchExtent.minx=list[0].minx;
+        searchExtent.miny=list[0].miny;
+        searchExtent.maxx=list[0].maxx;
+        searchExtent.maxy=list[0].maxy;
+        if(mapInitialized){
+            flamingoController.getMap("map1").moveToExtent(searchExtent);
+        }
+        //alert(ext);
+    }
+}
 function doAjaxRequest(point_x, point_y) {
     if (adresThemaId!=undefined){
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
@@ -1046,13 +1063,12 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
     updateGetFeatureInfo();
 }
 
-var doOnInit= new Boolean("true");
 function flamingo_map1_onInit(){
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
-    if(doOnInit){
-        doOnInit=false;
+    if(!mapInitialized){
+        mapInitialized=true;
 
         //check / activate the themas that have init status visible
         var newLayersAan = new Array();
@@ -1085,14 +1101,18 @@ function flamingo_map1_onInit(){
 //        var activeLayerIdFromCookie = getActiveLayerId(readCookie('activelayer'));
 //        var activeLayerLabelFromCookie = getActiveLayerLabel(readCookie('activelayer'));
 //        activeAnalyseThemaId = setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie, true);
-
-        if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
-            moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+        //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
+        if (searchExtent!=null){
+            flamingoController.getMap("map1").moveToExtent(searchExtent);
         }else{
-            if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
-                moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+            if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
+                moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
             }else{
-                moveToExtent(12000,304000,280000,620000);
+                if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
+                    moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+                }else{
+                    moveToExtent(12000,304000,280000,620000);
+                }
             }
         }
         if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){

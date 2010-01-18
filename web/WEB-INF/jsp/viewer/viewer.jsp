@@ -47,6 +47,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
     var bbox='${extent}';
+
+    // init search
+    var searchConfigId='${searchConfigId}';
+    var search='${search}';
     //Wel of niet cookies
     var useCookies=false;
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers

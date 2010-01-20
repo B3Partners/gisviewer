@@ -271,3 +271,36 @@ function showHelpDialog(divid) {
     $j("#" + divid).dialog('open');
     return false;
 }
+
+var loadingDivCounter = 0;
+function showLoading(parentdiv) {
+    if(!document.getElementById('loadingDiv')) {
+        var loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loadingDiv';
+        loadingDiv.innerHTML = 'Bezig met laden, een ogenblik geduld alstublieft...';
+        document.body.appendChild(loadingDiv);
+        loadingDivCounter++;
+    }
+
+    var pos = findObjectCenter(parentdiv);
+    $j('#loadingDiv').css({left: pos[1], top: pos[0]});
+    $j('#loadingDiv').show();
+}
+
+function hideLoading() {
+    if(loadingDivCounter > 0) {
+        loadingDivCounter--;
+        if(loadingDivCounter == 0) $j('#loadingDiv').hide();
+    }
+}
+
+function findObjectCenter(objectid) {
+    var obj = $j('#'+objectid);
+    var offset = obj.offset();
+    var width = obj.width();
+    var height = obj.height();
+    var top = offset.top + (height / 2);
+    var left = offset.left + (width / 2);
+    
+    return [top, left];
+}

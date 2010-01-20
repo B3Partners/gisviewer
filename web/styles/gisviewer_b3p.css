@@ -502,3 +502,12 @@ table.tablesorter thead tr .headerSortDown {
     background-position: 0px 20px;
 }
 
+#loadingDiv {
+    background-image: url(/gisviewer/images/icons/loading.gif);
+    background-position: center 30px;
+    background-color: #196299;
+    background-repeat: no-repeat;
+    border: 1px solid #183C56;
+    color: #FFFFFF;
+    text-align: center;
+}

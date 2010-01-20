@@ -205,12 +205,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </html:form>
 <iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0" style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
 <script type="text/javascript">
-    if(document.getElementById('regel_selected')) {
-        $j("#regel_selected").addClass('selected');
-        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
-    }
     $j("#themadatatable").tablesorter({
         widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
         sortList: [[0,0]]
     });
+    if(document.getElementById('regel_selected')) {
+        $j("#regel_selected").addClass('selected');
+        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
+    }
 </script>

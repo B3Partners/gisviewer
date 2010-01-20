@@ -429,14 +429,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </html:form>
 
 <script type="text/javascript">
-    if(document.getElementById('regel_selected')) {
-        $j("#regel_selected").addClass('selected');
-        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
-    }
     $j("#themalisttable").tablesorter({
         widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
         sortList: [[0,0]]
     });
+    if(document.getElementById('regel_selected')) {
+        $j("#regel_selected").addClass('selected');
+        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
+    }
     var pageConnectionType="${connectieType}";
     var currentConnectionType="${connectieType}";
     var connectionTypes=new Array();

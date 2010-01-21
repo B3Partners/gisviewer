@@ -37,9 +37,13 @@ var mapInitialized=false;
 var searchExtent=null;
 var sldSearchServlet=null;
 //if searchConfigId is set do a search
-if (searchConfigId.length>0 && search.length>0){    
-    JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
-}
+
+$j(document).ready(function(){
+    if (searchConfigId.length>0 && search.length>0){
+        showLoading();
+        JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
+    }
+});
 function handleInitSearch(list){
     if (list.length > 0){
         handleSearchResult(list[0],searchAction, searchSldThemaId,searchSldClusterId,searchSldVisibleValue);
@@ -103,6 +107,7 @@ function handleSearchResult(result,action,themaId,clusterId,visibleValue){
             sldSearchServlet=sldUrl;
         }
     }
+    hideLoading();
 }
 /*because a simple reload won't change the url in flamingo. Remove the layer and add it again.
  *Maybe a getCap is done but with a little luck the browser cached the last request.*/
@@ -540,7 +545,7 @@ function switchTab(obj) {
 
 function syncLayerCookieAndForm(layerString) {
     eraseCookie('checkedLayers');
-     if (layerString!=null) {
+    if (layerString!=null) {
         createCookie('checkedLayers', layerString, '7');
     }
     document.forms[0].lagen.value = layerString;
@@ -781,7 +786,7 @@ function getLayerIdsAsString() {
             ret += "," + enabledLayerItems[i].id;
         }
     }
-//    alert ("layerasstring: " + ret);
+    //    alert ("layerasstring: " + ret);
     return ret;
 }
 
@@ -1160,258 +1165,259 @@ function flamingo_map1_onInit(){
         }
 
         // activelayer niet meer via cookie zetten!
-//        var activeLayerIdFromCookie = getActiveLayerId(readCookie('activelayer'));
-//        var activeLayerLabelFromCookie = getActiveLayerLabel(readCookie('activelayer'));
-//        activeAnalyseThemaId = setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie, true);
+        //        var activeLayerIdFromCookie = getActiveLayerId(readCookie('activelayer'));
+        //        var activeLayerLabelFromCookie = getActiveLayerLabel(readCookie('activelayer'));
+        //        activeAnalyseThemaId = setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie, true);
         //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
         if (searchExtent!=null){
             flamingoController.getMap("map1").moveToExtent(searchExtent);
         }else{
-        //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
-        if (searchExtent!=null){
-            flamingoController.getMap("map1").moveToExtent(searchExtent);
-        }else{
-            if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
-                moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+            //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
+            if (searchExtent!=null){
+                flamingoController.getMap("map1").moveToExtent(searchExtent);
             }else{
-                if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
-                    moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+                if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
+                    moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
                 }else{
-                    moveToExtent(12000,304000,280000,620000);
+                    if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
+                        moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+                    }else{
+                        moveToExtent(12000,304000,280000,620000);
+                    }
                 }
             }
-        }
-        if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
-            setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-        }
-        else {
-            setFullExtent(12000,304000,280000,620000);
-        }
-        refreshLayer();
-        if (sldSearchServlet!=null){
-            setSldOnDefaultMap(sldSearchServlet, true);
-        }
-        mapInitialized=true;
-    }
-}
-function ie6_hack_onInit(){
-    if (navigator.appVersion.indexOf("MSIE") != -1) {
-        version = parseFloat(navigator.appVersion.split("MSIE")[1]);
-        //alert("version IE: " + version);
-        if (version == 6) {
-            setTimeout("doOnInit=true; flamingo_map1_onInit();",5000);
+            if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
+                setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+            }
+            else {
+                setFullExtent(12000,304000,280000,620000);
+            }
+            refreshLayer();
+            if (sldSearchServlet!=null){
+                setSldOnDefaultMap(sldSearchServlet, true);
+            }
+            mapInitialized=true;
         }
     }
 }
-function moveToExtent(minx,miny,maxx,maxy){
-    flamingoController.getMap().moveToExtent({
-        minx:minx,
-        miny:miny,
-        maxx:maxx,
-        maxy:maxy
-    }, 0);
-}
-function setFullExtent(minx,miny,maxx,maxy){
-    flamingoController.getMap().setFullExtent({
-        minx:minx,
-        miny:miny,
-        maxx:maxx,
-        maxy:maxy
-    });
-}
-function doIdentify(minx,miny,maxx,maxy){
-    flamingoController.getMap().doIdentify({
-        minx:minx,
-        miny:miny,
-        maxx:maxx,
-        maxy:maxy
-    });
-    flamingoController.getFlamingo().callMethod("toolGroup","setTool","identify");
-}
-var nextIdentifyExtent=null;
-function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
-    nextIdentifyExtent=new Object();
-    nextIdentifyExtent.minx=minx;
-    nextIdentifyExtent.miny=miny;
-    nextIdentifyExtent.maxx=maxx;
-    nextIdentifyExtent.maxy=maxy;
-}
-function moveAndIdentify(minx,miny,maxx,maxy){
-    moveToExtent(minx,miny,maxx,maxy);
-    var centerX=Number(Number(Number(minx)+Number(maxx))/2);
-    var centerY=Number(Number(Number(miny)+Number(maxy))/2);
-    //doIdentify(centerX,centerY,centerX,centerY);
-    doIdentifyAfterUpdate(centerX,centerY,centerX,centerY);
-
-}
-function flamingo_map1_onUpdateComplete(mapId){
-    if(nextIdentifyExtent!=null){
-        doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
-        nextIdentifyExtent=null;
-    }
-}
-if(useSortableFunction) {
-    document.getElementById("orderLayerBox").sortable({
-        stop:function(){
-            setTimerForReload();
-        },
-        start:function(){
-            clearTimerForReload();
+    function ie6_hack_onInit(){
+        if (navigator.appVersion.indexOf("MSIE") != -1) {
+            version = parseFloat(navigator.appVersion.split("MSIE")[1]);
+            //alert("version IE: " + version);
+            if (version == 6) {
+                setTimeout("doOnInit=true; flamingo_map1_onInit();",5000);
+            }
         }
-    });
-}
-var reloadTimer;
-function setTimerForReload() {
-    reloadTimer = setTimeout("refreshMapVolgorde()", layerDelay);
-}
+    }
+    function moveToExtent(minx,miny,maxx,maxy){
+        flamingoController.getMap().moveToExtent({
+            minx:minx,
+            miny:miny,
+            maxx:maxx,
+            maxy:maxy
+        }, 0);
+    }
+    function setFullExtent(minx,miny,maxx,maxy){
+        flamingoController.getMap().setFullExtent({
+            minx:minx,
+            miny:miny,
+            maxx:maxx,
+            maxy:maxy
+        });
+    }
+    function doIdentify(minx,miny,maxx,maxy){
+        flamingoController.getMap().doIdentify({
+            minx:minx,
+            miny:miny,
+            maxx:maxx,
+            maxy:maxy
+        });
+        flamingoController.getFlamingo().callMethod("toolGroup","setTool","identify");
+    }
+    var nextIdentifyExtent=null;
+    function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
+        nextIdentifyExtent=new Object();
+        nextIdentifyExtent.minx=minx;
+        nextIdentifyExtent.miny=miny;
+        nextIdentifyExtent.maxx=maxx;
+        nextIdentifyExtent.maxy=maxy;
+    }
+    function moveAndIdentify(minx,miny,maxx,maxy){
+        moveToExtent(minx,miny,maxx,maxy);
+        var centerX=Number(Number(Number(minx)+Number(maxx))/2);
+        var centerY=Number(Number(Number(miny)+Number(maxy))/2);
+        //doIdentify(centerX,centerY,centerX,centerY);
+        doIdentifyAfterUpdate(centerX,centerY,centerX,centerY);
 
-function clearTimerForReload() {
-    clearTimeout(reloadTimer);
-}
+    }
+    function flamingo_map1_onUpdateComplete(mapId){
+        if(nextIdentifyExtent!=null){
+            doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
+            nextIdentifyExtent=null;
+        }
+    }
+    if(useSortableFunction) {
+        document.getElementById("orderLayerBox").sortable({
+            stop:function(){
+                setTimerForReload();
+            },
+            start:function(){
+                clearTimerForReload();
+            }
+        });
+    }
+    var reloadTimer;
+    function setTimerForReload() {
+        reloadTimer = setTimeout("refreshMapVolgorde()", layerDelay);
+    }
 
-/*functie controleerd of het component is geladen. Zo niet dan wordt het oninit event afgevangen en daarin
+    function clearTimerForReload() {
+        clearTimeout(reloadTimer);
+    }
+
+    /*functie controleerd of het component is geladen. Zo niet dan wordt het oninit event afgevangen en daarin
          *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de functie wel worden aangeroepen.
          **/
-function callFlamingoComponent(id,func,value){
-    if (typeof flamingo.callMethod == 'function' && flamingo.callMethod('flamingo','exists',id)==true){
-        eval("setTimeout(\"flamingo.callMethod('"+id+"','"+func+"',"+value+")\",10);");
+    function callFlamingoComponent(id,func,value){
+        if (typeof flamingo.callMethod == 'function' && flamingo.callMethod('flamingo','exists',id)==true){
+            eval("setTimeout(\"flamingo.callMethod('"+id+"','"+func+"',"+value+")\",10);");
+        }
+        else{
+            eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
+        }
     }
-    else{
-        eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
-    }
-}
 
 
 
-var currentSearchSelectId;
-function searchSelectChanged(element){
-    var container=document.getElementById("searchInputFieldsContainer");
-    if (currentSearchSelectId == element.value){
-        return;
-    }else if(element.value==""){
-        currentSearchSelectId="";
-        container.innerHTML="";
-        return;
-    }
-    currentSearchSelectId=element.value;
-    var s="";
-    var i=0;
-    if (aparteZoekVelden[currentSearchSelectId]){
-        var zoekVelden=zoekKolommen[currentSearchSelectId].split(',');
-        var naamVelden=new Array();
-        if (naamZoekVelden)
-            naamVelden=naamZoekVelden[currentSearchSelectId].split(',');
-        for (i=0; i < zoekVelden.length; i++){
-            var naamZoekVeld=zoekVelden[i];
-            if (naamVelden[i]){
-                naamZoekVeld=naamVelden[i];
+    var currentSearchSelectId;
+    function searchSelectChanged(element){
+        var container=document.getElementById("searchInputFieldsContainer");
+        if (currentSearchSelectId == element.value){
+            return;
+        }else if(element.value==""){
+            currentSearchSelectId="";
+            container.innerHTML="";
+            return;
+        }
+        currentSearchSelectId=element.value;
+        var s="";
+        var i=0;
+        if (aparteZoekVelden[currentSearchSelectId]){
+            var zoekVelden=zoekKolommen[currentSearchSelectId].split(',');
+            var naamVelden=new Array();
+            if (naamZoekVelden)
+                naamVelden=naamZoekVelden[currentSearchSelectId].split(',');
+            for (i=0; i < zoekVelden.length; i++){
+                var naamZoekVeld=zoekVelden[i];
+                if (naamVelden[i]){
+                    naamZoekVeld=naamVelden[i];
+                }
+                s+='<b>'+naamZoekVeld+':</b><br/>';
+                s+='<input type="text" id="searchField_'+i+'" name="'+zoekVelden[i]+'" size="40"/><br/>'
             }
-            s+='<b>'+naamZoekVeld+':</b><br/>';
-            s+='<input type="text" id="searchField_'+i+'" name="'+zoekVelden[i]+'" size="40"/><br/>'
-        }
-    }else{
-        s+='<input type="text" id="searchField_'+i+'" name="'+zoekKolommen[currentSearchSelectId]+'" size="40"/>';
-    }
-    s+='<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />';
-    container.innerHTML=s;
-    var searchFieldFound=true;
-    //add a onkeyup event to the created input fields
-    for(i=0; searchFieldFound; i++){
-        var searchField=document.getElementById("searchField_"+i);
-        if (searchField){
-            searchField.onkeyup=function(ev){
-                getCoordsOnEnterKey(ev);
-            };
         }else{
-            searchFieldFound=false;
+            s+='<input type="text" id="searchField_'+i+'" name="'+zoekKolommen[currentSearchSelectId]+'" size="40"/>';
+        }
+        s+='<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />';
+        container.innerHTML=s;
+        var searchFieldFound=true;
+        //add a onkeyup event to the created input fields
+        for(i=0; searchFieldFound; i++){
+            var searchField=document.getElementById("searchField_"+i);
+            if (searchField){
+                searchField.onkeyup=function(ev){
+                    getCoordsOnEnterKey(ev);
+                };
+            }else{
+                searchFieldFound=false;
+            }
         }
     }
-}
 
-function getCoordsOnEnterKey(ev){
-    var sourceEvent;
-    if(ev)			//Moz
-    {
-        sourceEvent= ev.target;
+    function getCoordsOnEnterKey(ev){
+        var sourceEvent;
+        if(ev)			//Moz
+        {
+            sourceEvent= ev.target;
+        }
+
+        if(window.event)	//IE
+        {
+            sourceEvent=window.event.srcElement;
+        }
+        var keycode;
+        if(ev)			//Moz
+        {
+            keycode= ev.keyCode;
+        }
+        if(window.event)	//IE
+        {
+            keycode = window.event.keyCode;
+        }
+        if (keycode==13){
+            getCoords();
+        }
+
+    }
+    /*Get de flash movie*/
+    function getMovie(movieName) {
+        if (navigator.appName.indexOf("Microsoft") != -1) {
+            return window[movieName];
+        }else {
+            return document[movieName];
+        }
     }
 
-    if(window.event)	//IE
-    {
-        sourceEvent=window.event.srcElement;
-    }
-    var keycode;
-    if(ev)			//Moz
-    {
-        keycode= ev.keyCode;
-    }
-    if(window.event)	//IE
-    {
-        keycode = window.event.keyCode;
-    }
-    if (keycode==13){
-        getCoords();
-    }
-
-}
-/*Get de flash movie*/
-function getMovie(movieName) {
-    if (navigator.appName.indexOf("Microsoft") != -1) {
-        return window[movieName];
-    }else {
-        return document[movieName];
-    }
-}
-
-/**
+    /**
          *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
          **/
-function searchThemaValue(themaList,themaId,val){
-    for (var i in themaList){
-        //alert(" key: "+i + " value: "+themaList[i]);
-        if (i=="id" && themaList[i]==themaId){
-            return themaList[val];
-        }
-        if (i=="children"){
-            for (var ichild in themaList[i]){
-                var returnValue=searchThemaValue(themaList[i][ichild],themaId,val);
-                if (returnValue!=undefined && returnValue!=null){
-                    return returnValue;
-                }
+    function searchThemaValue(themaList,themaId,val){
+        for (var i in themaList){
+            //alert(" key: "+i + " value: "+themaList[i]);
+            if (i=="id" && themaList[i]==themaId){
+                return themaList[val];
+            }
+            if (i=="children"){
+                for (var ichild in themaList[i]){
+                    var returnValue=searchThemaValue(themaList[i][ichild],themaId,val);
+                    if (returnValue!=undefined && returnValue!=null){
+                        return returnValue;
+                    }
 
+                }
             }
         }
     }
-}
 
-var exportMapWindow;
-var lastGetMapRequest="";
-function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
-    if(requestObject && requestObject.url){
-        if (requestObject.requesttype=="GetMap"){
-            //if (requestObject.url.toLowerCase().indexOf("getmap")){
-            lastGetMapRequest=requestObject.url;
-        //}
+    var exportMapWindow;
+    var lastGetMapRequest="";
+    function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
+        if(requestObject && requestObject.url){
+            if (requestObject.requesttype=="GetMap"){
+                //if (requestObject.url.toLowerCase().indexOf("getmap")){
+                lastGetMapRequest=requestObject.url;
+            //}
+            }
         }
     }
-}
-function exportMap(){
-    if (lastGetMapRequest.length==0){
-        alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
-        return;
+    function exportMap(){
+        if (lastGetMapRequest.length==0){
+            alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
+            return;
+        }
+        if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
+            // exportMapWindow=popUp("createmappdf.do", "exportMapWindow", 620, 620, false);
+            exportMapWindow=window.open("createmappdf.do", "exportMapWindow");
+            exportMapWindow.focus();
+        }else{
+            exportMapWindow.setMapImageSrc(lastGetMapRequest);
+        }
     }
-    if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
-        // exportMapWindow=popUp("createmappdf.do", "exportMapWindow", 620, 620, false);
-        exportMapWindow=window.open("createmappdf.do", "exportMapWindow");
-        exportMapWindow.focus();
-    }else{
-        exportMapWindow.setMapImageSrc(lastGetMapRequest);
-    }
-}
 
-/*Instellingen voor barneveld
+    /*Instellingen voor barneveld
          **/
-function barneveldSettings() {
-/*fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
+    function barneveldSettings() {
+    /*fmcController.callCommand(new FlamingoCall('containerLeft', 'setVisible', false));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setLeft','0'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'setWidth','100%'));
     fmcController.callCommand(new FlamingoCall('containerMain', 'resize'));
@@ -1419,101 +1425,101 @@ function barneveldSettings() {
     if (demogebruiker){
         fmcController.callCommand(new FlamingoCall('coordinates', 'setVisible', false));
     }*/
-}
-
-function checkboxClickById(id){
-    var el2=document.getElementById(id);
-    if (el2) {
-        el2.checked=!el2.checked;
-        checkboxClick(el2,false);
     }
-}
 
-function flamingo_b_getfeatures_onEvent(id,event) {    
-    if (event["down"]) {
-        var object = flamingoController.getEditMap().getActiveFeature();
+    function checkboxClickById(id){
+        var el2=document.getElementById(id);
+        if (el2) {
+            el2.checked=!el2.checked;
+            checkboxClick(el2,false);
+        }
+    }
 
-        if (object == null)
+    function flamingo_b_getfeatures_onEvent(id,event) {
+        if (event["down"]) {
+            var object = flamingoController.getEditMap().getActiveFeature();
+
+            if (object == null)
+            {
+                handler("U heeft geen polygoon geselecteerd.");
+                return;
+            }
+
+            wkt = object.wktgeom;
+
+            if (wkt) {
+                document.getElementById('start_message').style.display = 'none';
+                document.getElementById('algdatavak').style.display = 'block';
+
+                var loadingStr = "Bezig met laden...";
+                document.getElementById('kadastraledata').innerHTML = loadingStr;
+                handleGetAdminData(wkt);
+            }
+        }
+    }
+
+    /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
+    function flamingo_b_buffer_onEvent(id, event) {
+        if (event["down"])
         {
-            handler("U heeft geen polygoon geselecteerd.");
-            return;
-        }
+            var wkt = "";
 
-        wkt = object.wktgeom;
+            var object = flamingoController.getEditMap().getActiveFeature();
 
-        if (wkt) {
-            document.getElementById('start_message').style.display = 'none';
-            document.getElementById('algdatavak').style.display = 'block';
+            if (object == null)
+            {
+                handler("U heeft geen polygoon geselecteerd.");
+                return;
+            }
 
-            var loadingStr = "Bezig met laden...";
-            document.getElementById('kadastraledata').innerHTML = loadingStr;
-            handleGetAdminData(wkt);
+            wkt = object.wktgeom;
+
+            var str = prompt('Geef de bufferafstand in meters');
+            var afstand = 0;
+
+            if((str == '') || ( str == 'undefined') || ( str == null))
+                return;
+
+            if( !isNaN( str) ) {
+                str = str.replace( ",", ".");
+                afstand = str;
+            } else {
+                handler( "Geen getal" );
+                return;
+            }
+
+            if (afstand == 0)
+            {
+                handler("Buffer mag niet 0 zijn");
+                return;
+            }
+
+            EditUtil.buffer(wkt, afstand, returnBuffer);
         }
     }
-}
 
-/* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
-function flamingo_b_buffer_onEvent(id, event) {
-    if (event["down"])
-    {
-        var wkt = "";
+    function returnBuffer(wkt) {
 
-        var object = flamingoController.getEditMap().getActiveFeature();
-
-        if (object == null)
+        if (wkt.length > 0)
         {
-            handler("U heeft geen polygoon geselecteerd.");
-            return;
+            var polyObject = new Object();
+
+            polyObject["id"]=61501;
+            polyObject["wktgeom"]=wkt;
+
+            drawBufferPolygon(polyObject);
         }
-
-        wkt = object.wktgeom;
-
-        var str = prompt('Geef de bufferafstand in meters');
-        var afstand = 0;
-
-        if((str == '') || ( str == 'undefined') || ( str == null))
-            return;
-
-        if( !isNaN( str) ) {
-            str = str.replace( ",", ".");
-            afstand = str;
-        } else {
-            handler( "Geen getal" );
-            return;
-        }
-
-        if (afstand == 0)
-        {
-            handler("Buffer mag niet 0 zijn");
-            return;
-        }
-
-        EditUtil.buffer(wkt, afstand, returnBuffer);
     }
-}
 
-function returnBuffer(wkt) {
+    function drawBufferPolygon(poly) {
 
-    if (wkt.length > 0)
-    {
-        var polyObject = new Object();
-
-        polyObject["id"]=61501;
-        polyObject["wktgeom"]=wkt;
-
-        drawBufferPolygon(polyObject);
-    }
-}
-
-function drawBufferPolygon(poly) {
-
-    flamingo.call("editMap", 'removeAllFeatures');   
-    flamingo.callMethod("editMap", "addFeature", "layer1", poly);
-}
-
-function flamingo_b_removePolygons_onEvent(id, event) {
-    if (event["down"])
-    {
         flamingo.call("editMap", 'removeAllFeatures');
+        flamingo.callMethod("editMap", "addFeature", "layer1", poly);
     }
-}
+
+    function flamingo_b_removePolygons_onEvent(id, event) {
+        if (event["down"])
+        {
+            flamingo.call("editMap", 'removeAllFeatures');
+        }
+    }

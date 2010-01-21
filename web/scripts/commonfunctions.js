@@ -281,9 +281,13 @@ function showLoading(parentdiv) {
         document.body.appendChild(loadingDiv);
         loadingDivCounter++;
     }
+    if (parentdiv){
+        var pos = findObjectCenter(parentdiv);
+        $j('#loadingDiv').css({left: pos[1], top: pos[0]});
+    }else{
+        $j('#loadingDiv').css({left: "50%", top: "50%", marginLeft: "-175px", marginTop: "-30px"});
 
-    var pos = findObjectCenter(parentdiv);
-    $j('#loadingDiv').css({left: pos[1], top: pos[0]});
+    }
     $j('#loadingDiv').show();
 }
 

@@ -2,7 +2,7 @@
 B3P Gisviewer is an extension to Flamingo MapComponents making      
 it a complete webbased GIS viewer and configuration tool that    
 works in cooperation with B3P Kaartenbalie.  
-                    
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -20,7 +20,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
- <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
+<%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
 <script type='text/javascript' src='dwr/interface/EditUtil.js'></script>
@@ -53,8 +53,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     // init search
     var searchConfigId='${searchConfigId}';
     var search='${search}';
+
+    //search with sld result (searchAction: filter or highlight and zoom)
     var searchAction='${searchAction}';
-    //search with sld result (searchAction: filter or highlight)
     var searchSldThemaId='${searchSldThemaId}';
     var searchSldClusterId='${searchSldClusterId}';
     var searchSldVisibleValue='${searchSldVisibleValue}';
@@ -87,7 +88,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      */
     var autoRedirect = 2;
     
-	/* het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
+    /* het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie.
      **/
     var tolerance=1;
@@ -124,7 +125,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     
     /****************************************************************************
     Zoeker instellingen
-    ******************************************************************************/
+     ******************************************************************************/
     /*
      *Het id van het thema dat wordt gebruikt om de dichtsbij zijnde adres te tonen.
      */
@@ -249,9 +250,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <%--html:hidden property="xcoord" />
         <html:hidden property="ycoord"/ --%>
         <html:hidden property="coords" />
-		<html:hidden property="geom" />
+        <html:hidden property="geom" />
         <html:hidden property="scale"/>
-		<html:hidden property="tolerance"/>
+        <html:hidden property="tolerance"/>
     </html:form>
 </div>
 
@@ -263,9 +264,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 </div>
 
-    <div id="leftcontent" style="display: none;">
-        &nbsp;
-    </div>
+<div id="leftcontent" style="display: none;">
+    &nbsp;
+</div>
 
 <div id="flashcontent">
     <strong style="color: Red;"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>
@@ -324,10 +325,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     <div id="treevak" style="display: none;" class="tabvak">
         <form id="treeForm">
-			<div id="layermaindiv" style="display: none;"></div>
-		</form>
+            <div id="layermaindiv" style="display: none;"></div>
+        </form>
     </div>
-    
+
     <form id="volgordeForm">
         <div id="volgordevak" style="display: none;" class="tabvak">
             <div>Bepaal de volgorde waarin de kaartlagen getoond worden</div>
@@ -431,12 +432,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript">
     if(!usePopup) {
         document.write('<div class="infobalk" id="informatiebalk" style="display: none;">'
-                       +'     <div class="infobalk_description">INFORMATIE</div>'
-                       +'     <div class="infobalk_actions">&nbsp;</div>'
-                       +' </div>'
-                       +' <div id="dataframediv" class="dataframediv" style="display: none;">'
-                       +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
-                       +' </div>');
+            +'     <div class="infobalk_description">INFORMATIE</div>'
+            +'     <div class="infobalk_actions">&nbsp;</div>'
+            +' </div>'
+            +' <div id="dataframediv" class="dataframediv" style="display: none;">'
+            +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
+            +' </div>');
     }
 
     if(cloneTabContentId != null) {
@@ -448,7 +449,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         if(showLeftPanel != null && cloneTabContentId != null) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"></div>');
         document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>'
             + '<div id="onderbalkControl" class="bottom_closed" onclick="panelResize(\'below\');"></div>'
-        + '</div>');
+            + '</div>');
     }
 
 </script>
@@ -456,36 +457,36 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
-   var dataframehoogte = 0;
-   if(usePopup) {
+    var dataframehoogte = 0;
+    if(usePopup) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
         document.getElementById('flashcontent').style.bottom = '3px';
         //document.getElementById('dataframediv').style.display = 'none';
         //document.getElementById('informatiebalk').style.display = 'none';
-   } else {
-       // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
-       document.getElementById('dataframediv').style.height = dataframehoogte + 'px';
-       document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-       document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-       document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-       document.getElementById('informatiebalk').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 3)) + 'px';
-   }
+    } else {
+        // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
+        document.getElementById('dataframediv').style.height = dataframehoogte + 'px';
+        document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+        document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+        document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+        document.getElementById('informatiebalk').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 3)) + 'px';
+    }
 
-   filterInvisibleItems(visibleTree);
-   treeview_create({
-    "id": "layermaindiv",
-    "root": visibleTree,
-    "rootChildrenAsRoots": true,
-    "itemLabelCreatorFunction": createLabel,
-    "toggleImages": {
-        "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
-        "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
-        "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
-    },
-    "saveExpandedState": true,
-    "saveScrollState": true,
-    "expandAll": true
+    filterInvisibleItems(visibleTree);
+    treeview_create({
+        "id": "layermaindiv",
+        "root": visibleTree,
+        "rootChildrenAsRoots": true,
+        "itemLabelCreatorFunction": createLabel,
+        "toggleImages": {
+            "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
+            "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
+            "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
+        },
+        "saveExpandedState": true,
+        "saveScrollState": true,
+        "expandAll": true
     });
 
     var panelBelowCollapsed = true;
@@ -493,93 +494,93 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var panelRightCollapsed = false;
     function panelResize(dir)
     {
-       if(ieVersion <= 6 && ieVersion != -1) {
-           var headerheight = 0;
-           headerheight = document.getElementById('header').offsetHeight;
-           var contentheight = 0; var contentwidth = 0;
-           var content_viewer = document.getElementById('content_viewer');
-           contentheight = content_viewer.offsetParent.offsetHeight - headerheight;
-           contentwidth = content_viewer.offsetParent.offsetWidth;
-       }
-       if(dir == 'below') {
-           if(!usePopup && !useDivPopup) {
-               if(panelBelowCollapsed) {
-                   dataframehoogte = 150;
-                   document.getElementById('informatiebalk').style.display = 'block';
-                   document.getElementById('dataframediv').style.display = 'block';
-                   document.getElementById('onderbalkControl').className = 'bottom_open';
-                   panelBelowCollapsed = false;
-               } else {
-                   dataframehoogte = 0;
-                   document.getElementById('informatiebalk').style.display = 'none';
-                   document.getElementById('dataframediv').style.display = 'none';
-                   document.getElementById('onderbalkControl').className = 'bottom_closed';
-                   panelBelowCollapsed = true;
-               }
-               $j("#dataframediv").animate({ height: dataframehoogte }, 400);
-               $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 4)) }, 400);
-               $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
-               if(ieVersion <= 6 && ieVersion != -1) {
-                   var divheighs = contentheight - 29 - (dataframehoogte==0?0:(dataframehoogte + 29));
-                   document.getElementById('leftcontent').style.height = divheighs + 'px';
-                   document.getElementById('tab_container').style.height = divheighs - 20 + 'px';
-                   document.getElementById('flashcontent').style.height = divheighs + 'px';
-               } else {
-                   document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-                   document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-                   document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-               }
-               resizeTabContents();
-           }
-       }
-       if(dir == 'right') {
-           if(panelRightCollapsed) {
-               var panelbreedte = 288;
-               document.getElementById('tab_container').style.display = 'block';
-               document.getElementById('tabjes').style.display = 'block';
-               document.getElementById('rightControl').className = 'right_open';
-               panelRightCollapsed = false;
-           } else {
-               var panelbreedte = 0;
+        if(ieVersion <= 6 && ieVersion != -1) {
+            var headerheight = 0;
+            headerheight = document.getElementById('header').offsetHeight;
+            var contentheight = 0; var contentwidth = 0;
+            var content_viewer = document.getElementById('content_viewer');
+            contentheight = content_viewer.offsetParent.offsetHeight - headerheight;
+            contentwidth = content_viewer.offsetParent.offsetWidth;
+        }
+        if(dir == 'below') {
+            if(!usePopup && !useDivPopup) {
+                if(panelBelowCollapsed) {
+                    dataframehoogte = 150;
+                    document.getElementById('informatiebalk').style.display = 'block';
+                    document.getElementById('dataframediv').style.display = 'block';
+                    document.getElementById('onderbalkControl').className = 'bottom_open';
+                    panelBelowCollapsed = false;
+                } else {
+                    dataframehoogte = 0;
+                    document.getElementById('informatiebalk').style.display = 'none';
+                    document.getElementById('dataframediv').style.display = 'none';
+                    document.getElementById('onderbalkControl').className = 'bottom_closed';
+                    panelBelowCollapsed = true;
+                }
+                $j("#dataframediv").animate({ height: dataframehoogte }, 400);
+                $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 4)) }, 400);
+                $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
+                if(ieVersion <= 6 && ieVersion != -1) {
+                    var divheighs = contentheight - 29 - (dataframehoogte==0?0:(dataframehoogte + 29));
+                    document.getElementById('leftcontent').style.height = divheighs + 'px';
+                    document.getElementById('tab_container').style.height = divheighs - 20 + 'px';
+                    document.getElementById('flashcontent').style.height = divheighs + 'px';
+                } else {
+                    document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+                    document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+                    document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+                }
+                resizeTabContents();
+            }
+        }
+        if(dir == 'right') {
+            if(panelRightCollapsed) {
+                var panelbreedte = 288;
+                document.getElementById('tab_container').style.display = 'block';
+                document.getElementById('tabjes').style.display = 'block';
+                document.getElementById('rightControl').className = 'right_open';
+                panelRightCollapsed = false;
+            } else {
+                var panelbreedte = 0;
                 document.getElementById('tab_container').style.display = 'none';
                 document.getElementById('tabjes').style.display = 'none';
                 document.getElementById('rightControl').className = 'right_closed';
                 panelRightCollapsed = true;
-           }
-           $j("#tab_container").animate({ width: panelbreedte }, 400);
-           // $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-           if(ieVersion <= 6 && ieVersion != -1) {
-               var leftcontent_width = 0;
-               if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
-               document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
-           } else {
-               $j("#tabjes").animate({ width: panelbreedte }, 200);
-               document.getElementById('flashcontent').style.right = (panelbreedte==0?0:(panelbreedte + 6)) + 'px';
-           }
-       }
-       if(dir == 'left') {
-           if(panelLeftCollapsed) {
-               var panelbreedte = 288;
-               document.getElementById('leftcontent').style.display = 'block';
-               document.getElementById('leftControl').className = 'left_open';
-               panelLeftCollapsed = false;
-           } else {
-               var panelbreedte = 0;
-               document.getElementById('leftcontent').style.display = 'none';
-               document.getElementById('leftControl').className = 'left_closed';
-               panelLeftCollapsed = true;
-           }
-           $j("#leftcontent").animate({ width: panelbreedte }, 400);
-           // $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-           if(ieVersion <= 6 && ieVersion != -1) {
-               var tab_container_width = 0;
-               if(tab_container) tab_container_width = tab_container.offsetWidth;
-               document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((tab_container_width==0?0:tab_container_width+6))) + 'px';
-               document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
-           } else {
-               document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
-           }
-       }
+            }
+            $j("#tab_container").animate({ width: panelbreedte }, 400);
+            // $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
+            if(ieVersion <= 6 && ieVersion != -1) {
+                var leftcontent_width = 0;
+                if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
+                document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
+            } else {
+                $j("#tabjes").animate({ width: panelbreedte }, 200);
+                document.getElementById('flashcontent').style.right = (panelbreedte==0?0:(panelbreedte + 6)) + 'px';
+            }
+        }
+        if(dir == 'left') {
+            if(panelLeftCollapsed) {
+                var panelbreedte = 288;
+                document.getElementById('leftcontent').style.display = 'block';
+                document.getElementById('leftControl').className = 'left_open';
+                panelLeftCollapsed = false;
+            } else {
+                var panelbreedte = 0;
+                document.getElementById('leftcontent').style.display = 'none';
+                document.getElementById('leftControl').className = 'left_closed';
+                panelLeftCollapsed = true;
+            }
+            $j("#leftcontent").animate({ width: panelbreedte }, 400);
+            // $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
+            if(ieVersion <= 6 && ieVersion != -1) {
+                var tab_container_width = 0;
+                if(tab_container) tab_container_width = tab_container.offsetWidth;
+                document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((tab_container_width==0?0:tab_container_width+6))) + 'px';
+                document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
+            } else {
+                document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
+            }
+        }
     }
 
     // sometimes IE6 refuses to init Flamingo
@@ -587,4 +588,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 	
 </script>
 
-    <script type="text/javascript" src="scripts/zoeker.js"></script>
+<script type="text/javascript" src="scripts/zoeker.js"></script>

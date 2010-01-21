@@ -35,23 +35,86 @@ flamingoController.createEditMap("editMap");
 
 var mapInitialized=false;
 var searchExtent=null;
+var sldSearchServlet=null;
 //if searchConfigId is set do a search
 if (searchConfigId.length>0 && search.length>0){    
     JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
 }
 function handleInitSearch(list){
     if (list.length > 0){
-        searchExtent= new Object();
-        searchExtent.minx=list[0].minx;
-        searchExtent.miny=list[0].miny;
-        searchExtent.maxx=list[0].maxx;
-        searchExtent.maxy=list[0].maxy;
-        if(mapInitialized){
-            flamingoController.getMap("map1").moveToExtent(searchExtent);
-        }
-        //alert(ext);
+        handleSearchResult(list[0],searchAction, searchSldThemaId,searchSldClusterId,searchSldVisibleValue);
     }
 }
+/*Handles the searchresult.
+ **/
+function handleSearchResult(result,action,themaId,clusterId,visibleValue){
+    var doZoom= true;
+    var doHighlight=false;
+    var doFilter=false;
+    if (searchAction){
+        if (searchAction.toLowerCase().indexOf("zoom")==-1)
+            doZoom=false;
+        if (searchAction.toLowerCase().indexOf("highlight")>=0)
+            doHighlight=true;
+        else if (searchAction.toLowerCase().indexOf("filter")>=0)
+            doFilter=true;
+    }
+    if (doZoom){
+        var ext= new Object();
+        ext.minx=result.minx;
+        ext.miny=result.miny;
+        ext.maxx=result.maxx;
+        ext.maxy=result.maxy;
+        if(mapInitialized){
+            flamingoController.getMap("map1").moveToExtent(ext);
+        }else{
+            searchExtent=ext;
+        }
+    }
+    if (doHighlight || doFilter){
+        var sldOptions="";
+        var visval=null;
+        if (visibleValue)
+            visval=visibleValue;
+        else if (result.id)
+            visval=result.id;
+        else
+            visval=search;
+        if (visval!=null){
+            sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
+            sldOptions+="visibleValue="+visval;
+        }if(themaId){
+            sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
+            sldOptions+="themaId="+themaId;
+        }if(clusterId){
+            sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
+            sldOptions+="clusterId="+clusterId;
+        }
+        sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
+        if (doHighlight){
+            sldOptions+="sldType=UserStyle";
+        }if (doFilter){
+            sldOptions+="sldType=LayerFeatureConstraint";
+        }
+        var sldUrl=sldServletUrl+sldOptions;
+        if(mapInitialized){
+            setSldOnDefaultMap(sldUrl,true);
+        }else{
+            sldSearchServlet=sldUrl;
+        }
+    }
+}
+/*because a simple reload won't change the url in flamingo. Remove the layer and add it again.
+ *Maybe a getCap is done but with a little luck the browser cached the last request.*/
+function setSldOnDefaultMap(sldUrl,reload){
+    var kbLayer=flamingoController.getMap("map1").getLayer("fmcLayer");
+    kbLayer.setSld(escape(sldUrl));
+    if (reload){
+        flamingoController.getMap("map1").removeLayerById(kbLayer.getId(), false);
+        flamingoController.getMap("map1").addLayer(kbLayer, true, true);
+    }
+}
+
 function doAjaxRequest(point_x, point_y) {
     if (adresThemaId!=undefined){
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
@@ -1062,14 +1125,13 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
     teller=0;
     updateGetFeatureInfo();
 }
-
+var firstTimeOninit=true;
 function flamingo_map1_onInit(){
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
-    if(!mapInitialized){
-        mapInitialized=true;
-
+    if(firstTimeOninit){
+        firstTimeOninit=false;
         //check / activate the themas that have init status visible
         var newLayersAan = new Array();
         var cookieLayers = new Array();
@@ -1105,6 +1167,10 @@ function flamingo_map1_onInit(){
         if (searchExtent!=null){
             flamingoController.getMap("map1").moveToExtent(searchExtent);
         }else{
+        //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
+        if (searchExtent!=null){
+            flamingoController.getMap("map1").moveToExtent(searchExtent);
+        }else{
             if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
                 moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
             }else{
@@ -1122,6 +1188,10 @@ function flamingo_map1_onInit(){
             setFullExtent(12000,304000,280000,620000);
         }
         refreshLayer();
+        if (sldSearchServlet!=null){
+            setSldOnDefaultMap(sldSearchServlet, true);
+        }
+        mapInitialized=true;
     }
 }
 function ie6_hack_onInit(){

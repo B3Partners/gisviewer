@@ -39,6 +39,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
     var anoniem= !beheerder && !organisatiebeheerder && !themabeheerder && !gebruiker && !demogebruiker;
     
+    var sldServletUrl=window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>";
+
     var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
     var kburl="${kburl}";
     var themaTree=${tree};
@@ -51,6 +53,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     // init search
     var searchConfigId='${searchConfigId}';
     var search='${search}';
+    var searchAction='${searchAction}';
+    //search with sld result (searchAction: filter or highlight)
+    var searchSldThemaId='${searchSldThemaId}';
+    var searchSldClusterId='${searchSldClusterId}';
+    var searchSldVisibleValue='${searchSldVisibleValue}';
+
     //Wel of niet cookies
     var useCookies=false;
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers

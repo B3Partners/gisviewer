@@ -98,7 +98,7 @@ function handleSearchResult(result,action,themaId,clusterId,visibleValue){
         if (doHighlight){
             sldOptions+="sldType=UserStyle";
         }if (doFilter){
-            sldOptions+="sldType=LayerFeatureConstraint";
+            sldOptions+="sldType=NamedStyle";
         }
         var sldUrl=sldServletUrl+sldOptions;
         if(mapInitialized){

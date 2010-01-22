@@ -45,6 +45,7 @@ $j(document).ready(function(){
     }
 });
 function handleInitSearch(list){
+    hideLoading();
     if (list.length > 0){
         handleSearchResult(list[0],searchAction, searchSldThemaId,searchSldClusterId,searchSldVisibleValue);
     }
@@ -107,7 +108,6 @@ function handleSearchResult(result,action,themaId,clusterId,visibleValue){
             sldSearchServlet=sldUrl;
         }
     }
-    hideLoading();
 }
 /*because a simple reload won't change the url in flamingo. Remove the layer and add it again.
  *Maybe a getCap is done but with a little luck the browser cached the last request.*/

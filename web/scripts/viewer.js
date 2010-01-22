@@ -38,12 +38,12 @@ var searchExtent=null;
 var sldSearchServlet=null;
 //if searchConfigId is set do a search
 
-$j(document).ready(function(){
+function doInitSearch(){
     if (searchConfigId.length>0 && search.length>0){
         showLoading();
         JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
     }
-});
+}
 function handleInitSearch(list){
     hideLoading();
     if (list.length > 0){
@@ -1193,12 +1193,10 @@ function flamingo_map1_onInit(){
                 setFullExtent(12000,304000,280000,620000);
             }
             refreshLayer();
-            if (sldSearchServlet!=null){
-                setSldOnDefaultMap(sldSearchServlet, true);
-            }
-            mapInitialized=true;
         }
     }
+    mapInitialized=true;
+    doInitSearch();
 }
     function ie6_hack_onInit(){
         if (navigator.appVersion.indexOf("MSIE") != -1) {

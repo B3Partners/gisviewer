@@ -130,7 +130,7 @@
                 ext.miny=plan.miny;
                 ext.maxx=plan.maxx;
                 ext.maxy=plan.maxy;
-                flamingoController.getMap("map").moveToExtent(ext);
+                flamingoController.getMap("map1").moveToExtent(ext);
             }
         }
     }

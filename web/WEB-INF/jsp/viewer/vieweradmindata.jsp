@@ -49,7 +49,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var styleObjects = new Array();
 </script>
 <html:messages id="error" message="true">
-    <div class="messages"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15"/>&nbsp;<c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
+    <div class="messages"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="false"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
 </html:messages>
 <c:choose>
     <c:when test="${not empty thema_items_list and not empty regels_list}">

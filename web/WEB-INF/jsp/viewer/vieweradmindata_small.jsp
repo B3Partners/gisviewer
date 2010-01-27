@@ -46,9 +46,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
                     <c:if test="${ThemaItem.thema.naam != themanaam}">
                         <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
-                        <strong>${themanaam}</strong>
-                    </c:if>
-                </c:forEach>
+                    <strong>${themanaam}</strong>
+                </c:if>
+            </c:forEach>
             <div class="topRowThemaData" id="fullTable${tStatus.count}">
                 <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
                 <div id="admin_data_content_div${tStatus.count}">
@@ -67,61 +67,48 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             </c:forEach>
                         </c:if>
                     </c:forEach>
-                    <table id="data_table${tStatus.count}" cellpadding="0" cellspacing="0" style="table-layout: fixed; margin-left: 5px; width: ${totale_breedte}px;}">
-                        <tbody>
-                            <c:forEach var="regel" items="${regels}" varStatus="counter">
-                                <tr>
-                                    <c:set var="totale_breedte_onder" value="50" />
-                                    <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
-                                        <c:if test="${thema_items[kolom.count - 1] != null}">
+
+                    <c:forEach var="regel" items="${regels}" varStatus="counter">
+                        <c:set var="totale_breedte_onder" value="50" />
+                        <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
+                            <c:if test="${thema_items[kolom.count - 1] != null}">
+                                <div class="admindataSmallCell">
+                                    <strong>${thema_items[kolom.count - 1].label}</strong> 
+                                    <c:choose>
+                                        <c:when test="${waarde eq '' or  waarde eq null}">
+                                            &nbsp;
+                                        </c:when>
+                                        <c:otherwise>
                                             <c:choose>
-                                                <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
-                                                    <c:set var="breedte" value="${thema_items[kolom.count - 1].kolombreedte}" />
+                                                <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
+                                                    <a href="#" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);">${thema_items[kolom.count - 1].label}</a>
+                                                </c:when>
+                                                <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
+                                                    <a href="#" onclick="popUp('${waarde}', 'externe_link', 600, 500);">${thema_items[kolom.count - 1].label}</a>
+                                                </c:when>
+                                                <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
+                                                    <c:choose>
+                                                        <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
+                                                            <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}" title="${fn:split(waarde, '###')[0]}">
+                                                                <img src="./images/icons/flag_blue.png" alt="Flag" style="border: 0px none;" />
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            -
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <c:set var="breedte" value="150" />
+                                                    ${waarde}
                                                 </c:otherwise>
                                             </c:choose>
-                                            <c:set var="last_id" value=" style=\"width: ${breedte}px;\"" />
-                                            <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
-                                            <td${last_id} valign="top">
-                                                <c:choose>
-                                                    <c:when test="${waarde eq '' or  waarde eq null}">
-                                                        &nbsp;
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <c:choose>
-                                                            <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                                                <a href="#" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);">${thema_items[kolom.count - 1].label}</a>
-                                                            </c:when>
-                                                            <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
-                                                                <a href="#" onclick="popUp('${waarde}', 'externe_link', 600, 500);">${thema_items[kolom.count - 1].label}</a>
-                                                            </c:when>
-                                                            <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
-                                                                <c:choose>
-                                                                    <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
-                                                                        <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}" title="${fn:split(waarde, '###')[0]}">
-                                                                            <img src="./images/icons/flag_blue.png" alt="Flag" style="border: 0px none;" />
-                                                                        </a>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        -
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                ${waarde}
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </td>
-                                        </c:if>
-                                    </c:forEach>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </c:if>
+                        </c:forEach>
+                    </c:forEach>
+
                 </div>
             </div>
         </c:forEach>

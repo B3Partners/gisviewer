@@ -511,3 +511,7 @@ table.tablesorter thead tr .headerSortDown {
     color: #FFFFFF;
     text-align: center;
 }
+
+.admindataSmallCell a {
+    color: #196299;
+}

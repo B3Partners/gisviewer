@@ -41,6 +41,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     
     var sldServletUrl=window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>";
 
+    /**
+     *Met zoek configuratie
+     */
+    var zoekconfiguraties=${zoekconfiguraties};
+    
     var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
     var kburl="${kburl}";
     var themaTree=${tree};
@@ -135,31 +140,24 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      */
     var infoArray = new Array();
     infoArray[0] = "bu_naam";
-    infoArray[1] = "gm_naam"; 
+    infoArray[1] = "gm_naam";
+
     /*
-     * Geef hier de thema nummers op waarop gezocht moet kunnen worden.
+     * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
+     * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
+     * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus)
      */
-    var zoekThemaIds = new Array();
-    zoekThemaIds[0]=88;
-    /*
-     * Geef hier per thema op op welke kolommen gezocht moet worden. Moet het voor een thema op meerdere kolommen
-     * geeft dan de kolommen gescheiden door een komma (Zonder spaties rond de komma!).
-     */
-    var zoekKolommen = new Array();
-    zoekKolommen[0]= "bu_naam,gm_naam";
-    /* Zet aparteZoekThemas op true als je per zoekthema een apart zoek invoer selectie wil. (selectie box wordt zichtbaar)
-     * Met aparteZoekThemas[<index>] kan je de eventueel een naam aangeven die boven het zoekveld moet komen.
-     **/
-    var aparteZoekThemas= true;
-    var naamZoekThemas= new Array();
-    naamZoekThemas[0]="Buurt"
-    /*Zet aparte zoek velden per thema     
-     **/
-    var aparteZoekVelden= new Array();
-    aparteZoekVelden[0]=true;   
-    /*Naam van de aparte zoekvelden*/
-    var naamZoekVelden= new Array();
-    naamZoekVelden[0]="Buurtnaam,Gemeentenaam"
+    var zoekConfigIds = "1,2";
+    //ZOEKCONFIGURATIEWEG: Gehele functie weg
+    function showZoekConfiguratie(zoekconfiguratie){
+        var visibleIds= zoekConfigIds.split(",");
+        for (var i=0; i < visibleIds.length; i++){
+            if (zoekconfiguratie.id == visibleIds[i]){
+                return true;
+            }
+        }
+        return false;
+    }
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
@@ -390,32 +388,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <div>
             <br>
             <script type="text/javascript">
-                if (aparteZoekThemas){
-                    if (zoekThemaIds.length >= 1){
-                        document.write('<b>Zoek op:</b><br>')
-                        document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
-                        document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
-                    }
-                    for (var i=0; i < zoekThemaIds.length; i++){
-                        var naamZoekThema="Zoek op locatie:";
-                        if (naamZoekThemas[i]!=undefined){
-                            naamZoekThema=naamZoekThemas[i];
-                        }else{
-                            naamZoekThema=zoekKolommen[i];
+                    document.write('<b>Zoek op:</b><br>')
+                    document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
+                    document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
+                    for (var i=0; i < zoekconfiguraties.length; i++){
+                        //ZOEKCONFIGURATIEWEG : if statement weg (inhoud behouden)
+                        if (showZoekConfiguratie(zoekconfiguraties[i])){
+                            document.write('<OPTION value="'+i+'">'+zoekconfiguraties[i].naam+'</OPTION>');
                         }
-                        document.write('<OPTION value="'+i+'">'+naamZoekThema+'</OPTION>');
                     }
-                    if (zoekThemaIds.length >= 1){
-                        document.write('</SELECT>');
-                    }
+                    document.write('</SELECT>');
+                    
                     document.write('<DIV id="searchInputFieldsContainer">&nbsp;</DIV>')
-                }else{
-                    document.write('<b>Zoek naar locatie:</b>');
-                    document.write('<br>');
-                    document.write('<input type="text" id="searchField_0" name="locatieveld" size="40"/>');
-                    document.write('&nbsp;');
-                    document.write('<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />');
-                }
+                
             </script>
             <br>
             <div class="searchResultsClass" id="searchResults"></div>

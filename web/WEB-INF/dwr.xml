@@ -24,7 +24,9 @@
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekAttribuut"/>
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>
-        <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron">
+            <param name="exclude" value="gebruikersnaam, wachtwoord"/>
+        </convert>
         <convert match="java.lang.Exception" converter="exception">
             <param name='include' value='message,lineNumber'/>
         </convert>

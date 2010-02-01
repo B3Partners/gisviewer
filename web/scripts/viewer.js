@@ -792,38 +792,23 @@ function getLayerIdsAsString() {
 
 /*Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
          **/
-function getCoords() {
-    if (zoekThemaIds.length <= 0){
-        return;
-    }
+function getCoords() {    
     document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
     var waarde=null;
     var zoekK=null;
-    var zoekT=null;
-    if (aparteZoekThemas){
-        var searchFieldFound=true;
-        waarde=new Array();
-        for(var i=0; searchFieldFound; i++){
-            var searchField=document.getElementById("searchField_"+i);
-            if (searchField){
-                waarde[i]=searchField.value;
-                if (zoekK==null)
-                    zoekK="";
-                else
-                    zoekK+=",";
-                zoekK+=searchField.name;
-            }else{
-                searchFieldFound=false;
-            }
+    var zoekT=null;    
+    var searchFieldFound=true;
+    waarde=new Array();
+    for(var i=0; searchFieldFound; i++){
+        var searchField=document.getElementById("searchField_"+i);
+        if (searchField){
+            waarde[i]=searchField.value;
+        }else{
+            searchFieldFound=false;
         }
-        zoekT=zoekThemaIds[currentSearchSelectId];
-    }
-    else{
-        waarde = document.getElementById("searchField").value;
-        zoekK=zoekKolommen;
-        zoekT=zoekThemaIds;
-    }
-    JMapData.getMapCoords(waarde, zoekK, zoekT, minBboxZoeken, maxResults, getCoordsCallbackFunction);
+    }    
+    JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,getCoordsCallbackFunction);
+    //JMapData.getMapCoords(waarde, zoekK, zoekT, minBboxZoeken, maxResults, getCoordsCallbackFunction);
 }
 
 function getCoordsCallbackFunction(values){
@@ -831,9 +816,11 @@ function getCoordsCallbackFunction(values){
     var sResult = "<br><b>Er zijn geen resultaten gevonden!<b>";
     if (values==null || values.length == 0) {
         searchResults.innerHTML=sResult;
+        return;
     }
+    /*Controleer of de bbox groter is dan de minimale bbox van de zoeker*/
     for (var i=0; i < values.length; i++){
-        if ((Number(values[i].maxx-values[i].minx) < minBboxZoeken) && values[i].valid){
+        if ((Number(values[i].maxx-values[i].minx) < minBboxZoeken)){
             var addX=Number((minBboxZoeken-(values[i].maxx-values[i].minx))/2);
             var addY=Number((minBboxZoeken-(values[i].maxy-values[i].miny))/2);
             values[i].minx=Number(values[i].minx-addX);
@@ -843,24 +830,18 @@ function getCoordsCallbackFunction(values){
         }
     }
     if (values.length > 1){
-        var displayLength = values.length;
-        if (displayLength<5000) {
+        if (values.length<maxResults) {
             sResult = "<br><b>Meerdere resultaten gevonden:<b><ol>";
         } else {
-            displayLenght=5000;
-            sResult = "<br><b>Meer dan 5000 resultaten gevonden. Er worden slechts 5000 resultaten weergegeven:<b><ol>";
+            sResult = "<br><b>Meer dan "+maxResults+" resultaten gevonden. Er worden slechts "+maxResults+" resultaten weergegeven:<b><ol>";
         }
-        for (i =0; i < displayLength; i++){
-            sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].naam+"</a></li>";
+        for (var i =0; i < values.length; i++){            
+            sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].label+"</a></li>";
         }
         sResult += "</ol>";
     } else {
-        if (values[0].valid) {
-            sResult = "<br><b>Locatie gevonden:<br>" + values[0].naam + "<b>";
-            moveAndIdentify(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
-        } else {
-            sResult = "<br><b>" + values[0].naam + "<b>";
-        }
+        sResult = "<br><b>Locatie gevonden:<br>" + values[0].label + "<b>";
+        moveAndIdentify(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
     }
     searchResults.innerHTML=sResult;
 }
@@ -1299,22 +1280,11 @@ function flamingo_map1_onInit(){
         }
         currentSearchSelectId=element.value;
         var s="";
-        var i=0;
-        if (aparteZoekVelden[currentSearchSelectId]){
-            var zoekVelden=zoekKolommen[currentSearchSelectId].split(',');
-            var naamVelden=new Array();
-            if (naamZoekVelden)
-                naamVelden=naamZoekVelden[currentSearchSelectId].split(',');
-            for (i=0; i < zoekVelden.length; i++){
-                var naamZoekVeld=zoekVelden[i];
-                if (naamVelden[i]){
-                    naamZoekVeld=naamVelden[i];
-                }
-                s+='<b>'+naamZoekVeld+':</b><br/>';
-                s+='<input type="text" id="searchField_'+i+'" name="'+zoekVelden[i]+'" size="40"/><br/>'
-            }
-        }else{
-            s+='<input type="text" id="searchField_'+i+'" name="'+zoekKolommen[currentSearchSelectId]+'" size="40"/>';
+        var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
+        for (var i=0; i < zoekVelden.length; i++){
+            s+='<b>'+zoekVelden[i].naam+':</b><br/>';
+            s+='<input type="text" id="searchField_'+i+'" name="'+zoekVelden[i].attribuutnaam+'" size="40"/><br/>'
+
         }
         s+='<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />';
         container.innerHTML=s;

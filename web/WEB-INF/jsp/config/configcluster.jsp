@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -33,7 +33,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <c:set var="focus" value="naam"/>
 
 <div class="infobalk">
-    <div class="infobalk_description">CLUSTER CONFIG</div>
+    <div class="infobalk_description"><fmt:message key="config.configcluster.infobalk"/></div>
     <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
 </div>
 
@@ -49,8 +49,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <table id="clustertable" class="tablesorter">
                     <thead>
                         <tr>
-                            <th style="width: 30%;" id="sort_col1">Naam</th>
-                            <th style="width: 70%;" id="sort_col2">Ouder</th>
+                            <th style="width: 30%;" id="sort_col1"><fmt:message key="config.configcluster.naam"/></th>
+                            <th style="width: 70%;" id="sort_col2"><fmt:message key="config.configcluster.ouder"/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,29 +73,29 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <html:messages id="error" message="true">
                 <div class="messages">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
             </html:messages>
-        </div> 
-        
+        </div>
+
         <div class="maintable" style="margin-top: 5px;">
             <table cellpadding="2" cellspacing="2" border="0">
                 <tr>
                     <td>
-                        Naam:
+                        <fmt:message key="config.configcluster.naam"/>:
                     </td>
                     <td colspan="3">
-                        <html:text property="naam" size="140"/>                   
+                        <html:text property="naam" size="140"/>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Omschrijving:
+                        <fmt:message key="config.configcluster.omschrijving"/>:
                     </td>
                     <td colspan="3">
-                        <html:text property="omschrijving"  size="140"/>                   
+                        <html:text property="omschrijving"  size="140"/>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Metadata link:
+                        <fmt:message key="config.configcluster.metadatalink"/>:
                     </td>
                     <td colspan="3">
                         <html:text property="metadatalink"  size="140"/>
@@ -104,7 +104,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
                 <tr>
                     <td>
-                        Volgorde:
+                        <fmt:message key="config.configcluster.volgorde"/>:
                     </td>
                     <td colspan="3">
                         <html:text property="belangnr" size="10"/>
@@ -117,7 +117,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="default_cluster"/>
                     </td>
                     <td colspan="3">
-                        Cluster voor ongeconfigureerde kaartlagen
+                        <fmt:message key="config.configcluster.geenconfiglagen"/>
                     </td>
                 </tr>
                 <tr>
@@ -125,7 +125,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="hide_legend"/>
                     </td>
                     <td colspan="3">
-                        Cluster onzichtbaar in de legenda
+                        <fmt:message key="config.configcluster.onzichtbaarinlegenda"/>
                     </td>
                 </tr>
                 <tr>
@@ -133,7 +133,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="hide_tree"/>
                     </td>
                     <td colspan="3">
-                        Cluster onzichtbaar in de boomstructuur
+                        <fmt:message key="config.configcluster.onzichtbaarinboom"/>
                     </td>
                 </tr>
                 <tr>
@@ -141,7 +141,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="background_cluster"/>
                     </td>
                     <td colspan="3">
-                        Cluster met achtergrond kaartlagen
+                        <fmt:message key="config.configcluster.achtergrondlagen"/>
                     </td>
                 </tr>
                 <tr>
@@ -149,7 +149,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="extra_level"/>
                     </td>
                     <td colspan="3">
-                        Cluster voor uitgebreide toegang
+                        <fmt:message key="config.configcluster.uitgebreidetoegang"/>
                     </td>
                 </tr>
                 <tr>
@@ -157,7 +157,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="callable"/>
                     </td>
                     <td colspan="3">
-                        Cluster kan aan/uit worden gevinkt. 
+                        <fmt:message key="config.configcluster.aanuitvink"/>
                     </td>
                 </tr>
                 <tr>
@@ -165,12 +165,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="default_visible"/>
                     </td>
                     <td colspan="3">
-                        Cluster is default aangevinkt.(Deze optie is alleen mogelijk als het cluster ook aangevinkt kan worden)
+                        <fmt:message key="config.configcluster.defaultaangevinkt"/>
                     </td>
                 </tr>
               <tr>
                     <td>
-                        Ouder Cluster:
+                        <fmt:message key="config.configcluster.oudercluster"/>:
                     </td>
                     <td colspan="3">
                         <html:select property="parentID">
@@ -187,7 +187,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
             </table>
         </div>
-        
+
         <div class="knoppenbalk">
             <c:choose>
                 <c:when test="${save || delete}">
@@ -207,12 +207,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:submit property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
                             <fmt:message key="button.new"/>
                         </html:submit>
-                    </div> 
+                    </div>
                     <div class="knoppen">
                         <html:submit property="delete" accesskey="d" styleClass="knop" onclick="bCancel=true; return confirm('Weet u zeker dat u dit cluster wilt verwijderen?');" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
                             <fmt:message key="button.remove"/>
                         </html:submit>
-                    </div> 
+                    </div>
                     <div class="knoppen">
                         <html:submit property="save" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';" onclick="return confirm('Weet u zeker dat u dit cluster wilt opslaan?');">
                             <fmt:message key="button.save"/>
@@ -220,7 +220,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </div>
                 </c:otherwise>
             </c:choose>
-        </div> 
+        </div>
     </div>
 </html:form>
 <script type="text/javascript">

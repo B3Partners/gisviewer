@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -24,7 +24,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <c:choose>
     <c:when test="${pageContext.request.remoteUser != null}">
-        <script type="text/javascript">  
+        <script type="text/javascript">
             function logout() {
                 var kburl = '${kburl}';
                 var logoutLocation = '/kaartenbalie/logout.do'
@@ -34,7 +34,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         logoutLocation = kburl.substring(0,pos) + "logout.do";
                     }
                 }
-                lof = document.getElementById('logoutframe'); 
+                lof = document.getElementById('logoutframe');
                 lof.src=logoutLocation;
                 location.href = '<html:rewrite page="/logout.do" module=""/>';
             };
@@ -42,9 +42,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <div id="logoutvak" style="display: none;">
             <iframe src="" id="logoutframe" name="logoutframe"></iframe>
         </div>
-        Ingelogd als: <c:out value="${pageContext.request.remoteUser}"/> | <a href="#"  onclick="javascript:logout();">Uitloggen</a>
+        <fmt:message key="commons.userandlogout.ingelogdals"/><c:out value="${pageContext.request.remoteUser}"/> | <a href="#"  onclick="javascript:logout();"><fmt:message key="commons.userandlogout.uitloggen"/></a>
     </c:when>
     <c:otherwise>
-        <html:link page="/login.do" module="">Inloggen</html:link>
+        <html:link page="/login.do" module=""><fmt:message key="commons.userandlogout.inloggen"/></html:link>
     </c:otherwise>
 </c:choose>

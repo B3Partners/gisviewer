@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -23,7 +23,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <div class="infobalk">
-    <div class="infobalk_description">LOGIN</div>
+    <div class="infobalk_description"><fmt:message key="algemeen.login.infobalk"/></div>
     <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
 </div>
 <form id="loginForm" action="j_security_check" method="POST">
@@ -33,14 +33,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
             </html:messages><br />
             <table>
-                <tr><td>Gebruikersnaam:</td><td><input type="text" name="j_username" size="36"></td></tr>
-                <tr><td>Wachtwoord:</td><td><input type="password" name="j_password" size="36"></td></tr>
-                <tr><td colspan="2">Of</td></tr>
-                <tr><td>Code:</td><td><input type="text" name="j_code" size="36"></td></tr>
-                <tr><td><input type="Submit" value="Login"></td></tr>
+                <tr><td><fmt:message key="algemeen.login.gebruikersnaam"/>:</td><td><input type="text" name="j_username" size="36"></td></tr>
+                <tr><td><fmt:message key="algemeen.login.wachtwoord"/>:</td><td><input type="password" name="j_password" size="36"></td></tr>
+                <tr><td colspan="2"><fmt:message key="algemeen.login.of"/></td></tr>
+                <tr><td><fmt:message key="algemeen.login.code"/>:</td><td><input type="text" name="j_code" size="36"></td></tr>
+                <tr><td><input type="Submit" value="<fmt:message key="algemeen.login.login"/>"></td></tr>
             </table>
         </div>
-    </div>    
+    </div>
 </form>
 
 <script type="text/javascript">

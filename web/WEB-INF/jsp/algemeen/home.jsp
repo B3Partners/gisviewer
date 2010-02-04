@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -32,7 +32,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         //reloadOpener();
         window.close();
     }
-    
+
     // Instelling voor Kerio mailinglists
     var mailinglist = "b3partners";
     var mailingdomain = "b3partners.nl";
@@ -54,24 +54,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <html:messages id="message" message="true">
                     <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
                 </html:messages><br>
-                <h1>B3P GIS Suite Demo</h1>
-                
+                <h1><fmt:message key="algemeen.home.titel"/></h1>
+
                 <div class="inleiding">
-                    <h2>Introductie</h2>
+                    <h2><fmt:message key="algemeen.home.introductie.titel"/></h2>
                     <p>
-                        Deze B3P GIS Suite demo toont de mogelijkheden van de GIS viewer 
-                        zoals deze binnen de GIS suite gebruikt wordt. De getoonde kaarten 
-                        zijn alleen ten bate van deze demo beschikbaar. Later worden voor 
-                        elk project specifieke kaarten aangeschaft en geconfigureerd.
+                        <fmt:message key="algemeen.home.introductie.content1"/>
                     </p>
                     <p>
-                        Deze demo staat op een testserver, welke soms wordt herstart. 
-                        Als er even geen contact mogelijk is, dan verzoeken wij u het 
-                        later nog een keer te proberen. 
+                    	<fmt:message key="algemeen.home.introductie.content2"/>
                     </p>
                 </div>
                 <%--
-                <h2>Aanmelden voor de B3Partners mailinglijst</h2>
+                <h2><fmt:message key="algemeen.home.mailinglist.titel"/></h2>
                 <p>
                 <html:messages id="error" message="true">
                     <div class="messages" style="padding-top: 5px">&#8594; <c:out value="${error}" escapeXml="false"/>&#160;&#160;</div>
@@ -84,28 +79,28 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <html:hidden property="subject" value="aan- en afmelden mailinglijst b3partners"/>
                     <html:hidden property="body" value=""/>
                     <input type="hidden" name="send"/>
-                    
+
                     <table>
                         <tr>
                             <td>
-                                emailadres<br>
+                                <fmt:message key="algemeen.home.mailinglist.email"/><br>
                                 <html:text property="from" size="25" maxlength="100"/>
                             </td>
                             <td>
                                 <a href="javascript: sendSubscription('subscribe');">
-                                aanmelden</a>
+                                <fmt:message key="algemeen.home.mailinglist.aanmelden"/></a>
                             </td>
                             <td>
                                 <a href="javascript: sendSubscription('unsubscribe');">
-                                afmelden</a>
+                                <fmt:message key="algemeen.home.mailinglist.afmelden"/></a>
                             </td>
                         </tr>
                     </table>
                 </html:form>
                 --%>
             </td>
-            <td valign="top">               
-                <h2>Beschikbare Thema's</h2>
+            <td valign="top">
+                <h2><fmt:message key="algemeen.home.themas.titel"/></h2>
                 <c:choose>
                     <c:when test="${not empty themalist || not empty clusterlist}">
                         <ol>
@@ -128,22 +123,22 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 </c:forEach>
                             </c:if>
                             <c:if test="${not found}">
-                                <li>Er zijn geen voorgeselecteerde thema's gevonden.</li>
-                                <li>U kunt direct naar de <html:link page="/viewer.do">viewer</html:link>.</li>
+                                <li><fmt:message key="algemeen.home.themas.geengevonden"/></li>
+                                <li><fmt:message key="algemeen.home.themas.linknaarviewer"/><html:link page="/viewer.do"><fmt:message key="algemeen.home.themas.viewer"/></html:link>.</li>
                             </c:if>
                         </ol>
                     </c:when>
                     <c:when test="${pageContext.request.remoteUser == null}">
-                            Klik hier om beschikbare thema's op te vragen:
+                            <fmt:message key="algemeen.home.themas.themaophalen"/>
                             <ul>
-                                <li><html:link page="/indexlist.do" module="">zonder inloggen</html:link></li>
-                                <li><html:link page="/viewerlist.do" module="">met inloggen</html:link></li>
+                                <li><html:link page="/indexlist.do" module=""><fmt:message key="algemeen.home.themas.nologin"/></html:link></li>
+                                <li><html:link page="/viewerlist.do" module=""><fmt:message key="algemeen.home.themas.login"/></html:link></li>
                             </ul>
                     </c:when>
                     <c:otherwise>
                         <ol>
-                            <li>Er zijn geen thema's gevonden voor uw inlog!</li>
-                            <li>Haal <html:link page="/indexlist.do" module="">hier</html:link> opnieuw op.</li>
+                            <li><fmt:message key="algemeen.home.themas.geengevondenvoorinlog"/></li>
+                            <li><html:link page="/indexlist.do" module=""><fmt:message key="algemeen.home.themas.opnieuwophalen"/></html:link></li>
                         </ol>
                     </c:otherwise>
                 </c:choose>

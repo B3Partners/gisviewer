@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -38,7 +38,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:if test="${requestJSP eq 'help.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/help.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Help</html:link>
+    <html:link page="/help.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.help"/></html:link>
 
     <c:choose>
         <c:when test="${beheerder == true}">
@@ -46,7 +46,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:if test="${requestJSP eq 'configThema.do'}">
                 <c:set var="stijlklasse" value="activemenulink" />
             </c:if>
-            <html:link page="/configThema.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Configuratie</html:link>
+            <html:link page="/configThema.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.configuratie"/></html:link>
         </c:when>
         <c:otherwise>
             <%--
@@ -54,24 +54,24 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:if test="${requestJSP eq 'contact.do'}">
                 <c:set var="stijlklasse" value="activemenulink" />
             </c:if>
-            <html:link page="/index.do" styleClass="${stijlklasse}" module="">&#155; Contact</html:link>
+            <html:link page="/index.do" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.contact"/></html:link>
             --%>
         </c:otherwise>
     </c:choose>
 
-    <html:link href="javascript: exportMap();" styleClass="menulink" module="">&#155; Print voorbeeld</html:link>
+    <html:link href="javascript: exportMap();" styleClass="menulink" module=""><fmt:message key="commons.topmenuviewer.print"/></html:link>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'viewer.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/viewer.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Viewer</html:link>
+    <html:link page="/viewer.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/indexlist.do?id=${kaartid}" styleClass="${stijlklasse}" module="">&#155; Home</html:link>
+    <html:link page="/indexlist.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
 
 
 </div>

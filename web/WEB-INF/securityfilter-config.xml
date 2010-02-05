@@ -54,7 +54,8 @@
             <secret-key>8540514F91F4EEA059AA123C4B8DF665</secret-key>
             <extra-hash-string>W3wG16YJ5oCpbUfKXnmx</extra-hash-string>
           <cookie-paths>/kaartenbalie</cookie-paths>
-          <cookie-expire>3600</cookie-expire>
+          <!-- 8 uur -->
+          <cookie-expire>28800</cookie-expire>
       </cookie-auth-token-config>
    </login-config>
 

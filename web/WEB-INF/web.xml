@@ -173,8 +173,9 @@
         <url-pattern>/CreateSLD</url-pattern>
     </servlet-mapping>
     <session-config>
+    	  <!-- 8 uur -->
         <session-timeout>
-            30
+            480
         </session-timeout>
     </session-config>
     <welcome-file-list>

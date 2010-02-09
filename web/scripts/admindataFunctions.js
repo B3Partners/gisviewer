@@ -155,8 +155,12 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     var mapje = fmco.getMap();
     var existingLayer = mapje.getLayer("fmcLayer");
     var wmsLayer=ouder.searchThemaValue(ouder.themaTree,themaid,"wmslayers");
-    waardepk = trim(waardepk);
-    sldstring += "?visibleValue=" + waardepk;
+    var visValue=trim(waardepk);
+    if (waardeingevuldekolom!=null && waardeingevuldekolom.length>0){
+        visValue=trim(waardeingevuldekolom);
+    }
+    visValue=visValue.replace(" ","%20");
+    sldstring += "?visibleValue=" + visValue;
     sldstring += "&id=" + themaid;
     var beginChar = "?";
     if(existingLayer.getUrl().indexOf("?") != -1){

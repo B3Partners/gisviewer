@@ -44,7 +44,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     /**
      *Met zoek configuratie
      */
-    var zoekconfiguraties=${zoekconfiguraties};
+    var zoekconfiguraties=null;
+    if(${zoekconfiguraties}){
+        zoekconfiguraties=${zoekconfiguraties};
+    }
     
     var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
     var kburl="${kburl}";

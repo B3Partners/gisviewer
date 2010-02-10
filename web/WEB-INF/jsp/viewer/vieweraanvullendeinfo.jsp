@@ -102,7 +102,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                     -
                                                 </c:when>
                                                 <c:when test="${ThemaItem.dataType.id == 3}">
-                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${regel.values[counter.count - 1]}', 'externe_link', 1024, 768);" style="cursor: pointer; cursor: hand;" />
+                                                    <c:forEach var="listWaarde" items="${regel.values[counter.count - 1]}">
+                                                        <html:image src="./images/icons/world_link.png" onclick="popUp('${listWaarde}', 'externe_link', 1024, 768);" style="cursor: pointer; cursor: hand;" />
+                                                    </c:forEach>
                                                 </c:when>
                                                 <c:when test="${ThemaItem.dataType.id == 4}">
                                                     <c:set var="valar" value="${fn:split(regel.values[counter.count - 1], '###')}" />

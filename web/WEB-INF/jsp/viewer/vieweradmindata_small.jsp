@@ -84,7 +84,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                     <a href="#" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);">${thema_items[kolom.count - 1].label}</a>
                                                 </c:when>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
-                                                    <a href="#" onclick="popUp('${waarde}', 'externe_link', 600, 500);">${thema_items[kolom.count - 1].label}</a>
+                                                    <c:forEach var="listWaarde" items="${waarde}">
+                                                        <a href="#" onclick="popUp('${listWaarde}', 'externe_link', 600, 500);">${thema_items[kolom.count - 1].label}</a>
+                                                    </c:forEach>
                                                 </c:when>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
                                                     <c:choose>

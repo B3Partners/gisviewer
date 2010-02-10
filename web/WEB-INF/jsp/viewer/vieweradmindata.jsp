@@ -187,8 +187,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                                                     <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" style="cursor: pointer;" />
                                                                 </c:when>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
-                                                                		<c:set var="refreshURL" value="${waarde}" />
-                                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${waarde}', 'externe_link', 600, 500);" style="cursor: pointer;" />
+                                                                    <c:forEach var="listWaarde" items="${waarde}">
+                                                                	<c:set var="refreshURL" value="${listWaarde}" />
+                                                                        <html:image src="./images/icons/world_link.png" onclick="popUp('${listWaarde}', 'externe_link', 600, 500);" style="cursor: pointer;" />
+                                                                    </c:forEach>
                                                                 </c:when>
                                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
                                                                 	<c:choose>

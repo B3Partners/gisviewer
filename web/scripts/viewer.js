@@ -810,8 +810,9 @@ function getCoords() {
     JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,getCoordsCallbackFunction);
     //JMapData.getMapCoords(waarde, zoekK, zoekT, minBboxZoeken, maxResults, getCoordsCallbackFunction);
 }
-
+var foundValues=null;
 function getCoordsCallbackFunction(values){
+    foundValues=values;
     var searchResults=document.getElementById("searchResults");
     var sResult = "<br><b>Er zijn geen resultaten gevonden!<b>";
     if (values==null || values.length == 0) {
@@ -836,16 +837,66 @@ function getCoordsCallbackFunction(values){
             sResult = "<br><b>Meer dan "+maxResults+" resultaten gevonden. Er worden slechts "+maxResults+" resultaten weergegeven:<b><ol>";
         }
         for (var i =0; i < values.length; i++){            
-            sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+values[i].minx+", "+values[i].miny+", "+values[i].maxx+", "+values[i].maxy+")'>"+values[i].label+"</a></li>";
+            sResult += "<li><a href='#' onclick='javascript: handleSearchResult("+i+")'>"+values[i].label+"</a></li>";
         }
         sResult += "</ol>";
     } else {
-        sResult = "<br><b>Locatie gevonden:<br>" + values[0].label + "<b>";
-        moveAndIdentify(values[0].minx, values[0].miny, values[0].maxx, values[0].maxy);
-    }
+        sResult = "<br><b>Locatie gevonden:<br>" + values[0].label + "<b>";        
+    }    
     searchResults.innerHTML=sResult;
+    if (values.length==1)
+        handleSearchResult(0);
 }
+/*Handel het resultaat af*/
+function handleSearchResult(searchResultId){    
+    var searchResult=foundValues[searchResultId];
+    //zoom naar het gevonden object.(als er een bbox is)
+    if (searchResult.minx)
+        moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
+    var zoekConfiguratie=searchResult.zoekConfiguratie;
+    //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan nog kinderen heeft.
+    var childs=getChildzoekConfiguraties(zoekConfiguratie);
+    if (childs.length==0){
+        return;
+    }else if (childs.length > 1){
+        alert("Zoekconfiguratie heeft meerdere kinderen. Dit is momenteel niet mogelijk. De eerste wordt gebruikt voor het verder zoeken");
+    }
+    var child=childs[0];    
+    document.getElementById("searchResults").innerHTML+="<br><b>Bezig met "+child.naam +" voor "+searchResult.label+"</b>";
+    if (child.zoekVelden==undefined || child.zoekVelden.length==0){
+        alert("Geen zoekvelden geconfigureerd voor zoekconfiguratie child met id: "+child.id);
+    }
+    /*Maak een nieuwe zoekopdracht voor het kind.
+     *Vergelijk de gevondenAttributen met de zoekvelden van het kind.
+     *Als het type gelijk is van beide vul dan de gevonden waarde in voor het zoekveld.
+     */
+    var zoekStrings= new Array();
+    var gevondenResultIds=new Array();
+    for (var i=0; i < child.zoekVelden.length; i++){
+        zoekStrings[i]="";
+        var zoekVeld=child.zoekVelden[i];
+        for (var b=0; b  < searchResult.attributen.length;  b++){
+            var searchedAttribuut=searchResult.attributen[b];
+            //als een resultaat al gebruikt is niet nogmaals gebruiken. Controleer tevens op type.
+            if (!gevondenResultIds.contains(searchedAttribuut.id) && zoekVeld.type == searchedAttribuut.type){
+                gevondenResultIds.push(searchedAttribuut.id);
+                zoekStrings[i]=searchedAttribuut.waarde;
+            }
+        }
+    }
+    JZoeker.zoek(child.id,zoekStrings,maxResults,getCoordsCallbackFunction);
+}
+/*Geeft de kinderen van deze zoekconfiguratie terug (als die er zijn)*/
+function getChildzoekConfiguraties(zoekconfiguratie){
+    var childs= new Array();
+    for (var i=0; i < zoekconfiguraties.length; i++){
+        if (zoekconfiguraties[i].parentZoekConfiguratieId && zoekconfiguratie.id==zoekconfiguraties[i].parentZoekConfiguratieId){
+            childs.push(zoekconfiguraties[i]);
+        }
+    }
 
+    return childs;
+}
 function createLegendDiv(item) {
     var id=item.id + '##' + item.wmslayers;
     var myImage = new Image();

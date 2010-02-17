@@ -1,3 +1,13 @@
+/*Hulp functions*/
+//contains on array function
+Array.prototype.contains = function (element) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == element) {
+            return true;
+        }
+    }
+    return false;
+}
 // jQuery gives problems with DWR - util.js, so noConflict mode. Usage for jQuery selecter becomes $j() instead of $()
 $j = jQuery.noConflict();
 

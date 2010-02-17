@@ -134,16 +134,6 @@
             }
         }
     }
-    /*Hulp functions*/
-    //contains on array function
-    Array.prototype.contains = function (element) {
-        for (var i = 0; i < this.length; i++) {
-            if (this[i] == element) {
-                return true;
-            }
-        }
-        return false;
-    }
     /*Haalt een lijst met mogelijke waarden op met de meegegeven attribuutnaam uit de plannen*/
     function getDistinctFromPlannen(attribuutnaam,plannenArray){
         if(plannenArray==undefined){

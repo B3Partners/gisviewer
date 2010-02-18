@@ -1310,7 +1310,7 @@ function handleSearchResult(searchResultId){
             for (var b=0; b  < searchResult.attributen.length;  b++){
                 var searchedAttribuut=searchResult.attributen[b];
                 //als een resultaat al gebruikt is niet nogmaals gebruiken. Controleer tevens op type.
-                if (!gevondenResultIds.contains(searchedAttribuut.id) && zoekVeld.type == searchedAttribuut.type){
+                if (!arrayContains(gevondenResultIds,searchedAttribuut.id) && zoekVeld.type == searchedAttribuut.type){
                     gevondenResultIds.push(searchedAttribuut.id);
                     zoekStrings[i]=searchedAttribuut.waarde;
                 }

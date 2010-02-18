@@ -1,8 +1,8 @@
 /*Hulp functions*/
 //contains on array function
-Array.prototype.contains = function (element) {
-    for (var i = 0; i < this.length; i++) {
-        if (this[i] == element) {
+function arrayContains(array,element) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == element) {
             return true;
         }
     }

@@ -144,7 +144,7 @@
             var attributen=plannenArray[i].attributen;
             for (var e=0; e <attributen.length; e++){
                 if(attributen[e].naam==attribuutnaam){
-                    if (!typen.contains(attributen[e].waarde)){
+                    if (!arrayContains(typen,attributen[e].waarde)){
                         typen.push(attributen[e].waarde);
                     }
                 }

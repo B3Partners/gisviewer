@@ -975,9 +975,9 @@ var activeTab = readCookie('activetab');
 if(activeTab != null) {
     switchTab(document.getElementById(activeTab));
 } else if (demogebruiker) {
-    switchTab(document.getElementById('tab5'));
+    switchTab(document.getElementById('informatie'));
 } else {
-    switchTab(document.getElementById('tab1'));
+    switchTab(document.getElementById('zoeken'));
 }
 Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");

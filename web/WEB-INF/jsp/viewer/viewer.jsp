@@ -150,7 +150,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
      * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus)
      */
-    var zoekConfigIds = "1,2";
+    var zoekConfigIds = "1,2,7";
     //ZOEKCONFIGURATIEWEG: Gehele functie weg
     function showZoekConfiguratie(zoekconfiguratie){
         var visibleIds= zoekConfigIds.split(",");
@@ -175,24 +175,24 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
      *       Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
     var userrights = {
-        "beheerder": ["tab0", "tab4", "tab1", "tab6"],
-        // "organisatiebeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
-        // "themabeheerder": ["tab0", "tab4", "tab1", "tab2", "tab3"],
-        "gebruiker": ["tab0", "tab4", "tab1", "tab6"],
-        "demogebruiker": ["tab0", "tab4", "tab1", "tab6"],
-        "anoniem": ["tab0", "tab4", "tab1", "tab6"]
+        "beheerder": ["themas", "legenda", "zoeken", "planselectie"],
+        // "organisatiebeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
+        // "themabeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
+        "gebruiker": ["themas", "legenda", "zoeken", "planselectie"],
+        "demogebruiker": ["themas", "legenda", "zoeken", "planselectie"],
+        "anoniem": ["themas", "legenda", "zoeken", "planselectie"]
     };
     
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
      * de naam en eventueel extra Content-divs die geopend moeten worden */
     var tabbladen = {
-        "tab0": { "id": "tab0", "contentid": "treevak", "name": "Thema's", "extracontent": ["layermaindiv"] },
-        "tab1": { "id": "tab1", "contentid": "infovak", "name": "Zoeken" },
-        "tab2": { "id": "tab2", "contentid": "objectvakViewer", "name": "Gebieden" },
-        "tab3": { "id": "tab3", "contentid": "analysevakViewer", "name": "Analyse" },
-        "tab4": { "id": "tab4", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
-        "tab5": { "id": "tab5", "contentid": "beschrijvingvak", "name": "Informatie" },
-        "tab6": { "id": "tab6", "contentid": "plannenzoeker", "name": "Plan selectie" }
+        "themas": { "id": "themas", "contentid": "treevak", "name": "Thema's", "extracontent": ["layermaindiv"] },
+        "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken" },
+        "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden" },
+        "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse" },
+        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
+        "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
+        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" }
     };
 
     var enabledtabs = new Array();
@@ -224,6 +224,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             if(!found) enabledtabs[enabledtabs.length] = userrights.anoniem[k];
         }
     }
+    <c:if test="${not empty enabledTabs}">
+        enabledtabs=${enabledTabs};
+    </c:if>
 
 </script>
 <!--[if lte IE 6]>
@@ -477,6 +480,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         "expandAll": true
     });
 
+    <c:if test="${not empty activeTab}">
+        if (document.getElementById("${activeTab}")){
+            switchTab(document.getElementById("${activeTab}"));
+        }
+    </c:if>
     var panelBelowCollapsed = true;
     var panelLeftCollapsed = true;
     var panelRightCollapsed = false;
@@ -573,7 +581,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     // sometimes IE6 refuses to init Flamingo
     ie6_hack_onInit();
-	
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>

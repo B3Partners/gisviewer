@@ -226,8 +226,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
     <c:if test="${not empty enabledTabs}">
         enabledtabs=${enabledTabs};
-    </c:if>
-
+    </c:if>    
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">
@@ -477,7 +476,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         },
         "saveExpandedState": true,
         "saveScrollState": true,
-        "expandAll": true
+        "expandAll": false
     });
 
     <c:if test="${not empty activeTab}">
@@ -578,7 +577,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             }
         }
     }
-
+    var expandNodes=null;
+    <c:if test="${not empty expandNodes}">
+        expandNodes=${expandNodes};
+    </c:if>
+    if(expandNodes!=null){
+        for (var i=0; i < expandNodes.length; i++){
+            alert(expandNodes[i]);
+            treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
+        }
+    }
     // sometimes IE6 refuses to init Flamingo
     ie6_hack_onInit();
 </script>

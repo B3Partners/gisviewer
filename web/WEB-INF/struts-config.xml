@@ -165,6 +165,7 @@
         </action>
         <action path="/viewerwelkom" forward="viewerwelkom"/>
         
+        <action path="/beheer" forward="/configThema.do"/>
         <action path="/configThema" type="nl.b3p.gis.viewer.ConfigThemaAction" name="themaForm" scope="request" validate="false">
             <forward name="success" path="configthema"/>
             <forward name="failure" path="configthema"/>

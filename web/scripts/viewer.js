@@ -142,6 +142,8 @@ function handleGetData(str) {
 
 
 function handleGetAdminData(/*coords,*/ geom) {
+    showLoading();
+
     var checkedThemaIds;
     if (!multipleActiveThemas){
         checkedThemaIds = activeAnalyseThemaId;
@@ -975,9 +977,9 @@ var activeTab = readCookie('activetab');
 if(activeTab != null) {
     switchTab(document.getElementById(activeTab));
 } else if (demogebruiker) {
-    switchTab(document.getElementById('informatie'));
+    switchTab(document.getElementById('themas'));
 } else {
-    switchTab(document.getElementById('zoeken'));
+    switchTab(document.getElementById('themas'));
 }
 Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
@@ -1057,6 +1059,8 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
 }
 var firstTimeOninit=true;
 function flamingo_map1_onInit(){
+    showLoading();
+    
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
@@ -1226,6 +1230,8 @@ function getCoords() {
         var searchField=document.getElementById("searchField_"+zoekVelden[i].id);
         waarde[i]=searchField.value;        
     }
+    showLoading();
+
     JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,getCoordsCallbackFunction);
 //JMapData.getMapCoords(waarde, zoekK, zoekT, minBboxZoeken, maxResults, getCoordsCallbackFunction);
 }
@@ -1235,6 +1241,8 @@ function getCoords() {
  */
 var foundValues=null;
 function getCoordsCallbackFunction(values){
+    hideLoading();
+
     foundValues=values;
     var searchResults=document.getElementById("searchResults");
     var sResult = "<br><b>Er zijn geen resultaten gevonden!<b>";
@@ -1552,4 +1560,10 @@ function flamingo_b_removePolygons_onEvent(id, event) {
     {
         flamingo.call("editMap", 'removeAllFeatures');
     }
+}
+
+function dispatchEventJS(event, comp) {
+
+    if (event=="onGetCapabilities")
+        hideLoading();
 }

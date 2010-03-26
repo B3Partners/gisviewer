@@ -377,4 +377,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         document.getElementById('getFeatureInfo').innerHTML=tableData;
         //document.write(tableData);
     }
+
+    if (opener) {
+        opener.hideLoading();
+    } else if (parent) {
+        parent.hideLoading();
+    } else {
+        alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
+    }
+    
 </script>

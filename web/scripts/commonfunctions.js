@@ -287,9 +287,15 @@ function showLoading(parentdiv) {
     if(!document.getElementById('loadingDiv')) {
         var loadingDiv = document.createElement('div');
         loadingDiv.id = 'loadingDiv';
-        loadingDiv.innerHTML = 'Bezig met laden, een ogenblik geduld alstublieft...';
+        loadingDiv.style.width = '300px';
+        loadingDiv.style.height = '60px';
+        loadingDiv.style.backgroundColor = '#fff';
+        loadingDiv.style.border = '1px solid #000';
+        loadingDiv.style.textAlign = 'center';
+        loadingDiv.style.paddingTop = '25px';
+        loadingDiv.style.color ='#000';
+        loadingDiv.innerHTML = 'Bezig met laden<br /><img src="images/icons/loading.gif" border="0" alt="laadbalk">';
         document.body.appendChild(loadingDiv);
-        loadingDivCounter++;
     }
     if (parentdiv){
         var pos = findObjectCenter(parentdiv);
@@ -298,14 +304,17 @@ function showLoading(parentdiv) {
         $j('#loadingDiv').css({left: "50%", top: "50%", marginLeft: "-175px", marginTop: "-30px"});
 
     }
+
+    loadingDivCounter++;
     $j('#loadingDiv').show();
 }
 
 function hideLoading() {
-    if(loadingDivCounter > 0) {
+    if(loadingDivCounter > 0)
         loadingDivCounter--;
-        if(loadingDivCounter == 0) $j('#loadingDiv').hide();
-    }
+
+    if(loadingDivCounter == 0)
+        $j('#loadingDiv').hide();
 }
 
 function findObjectCenter(objectid) {

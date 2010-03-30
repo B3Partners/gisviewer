@@ -65,6 +65,7 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
             doFilter=true;
     }
     if (doZoom){
+        result=getBboxMinSize(result);
         var ext= new Object();
         ext.minx=result.minx;
         ext.miny=result.miny;
@@ -1252,14 +1253,7 @@ function getCoordsCallbackFunction(values){
     }
     /*Controleer of de bbox groter is dan de minimale bbox van de zoeker*/
     for (var i=0; i < values.length; i++){
-        if ((Number(values[i].maxx-values[i].minx) < minBboxZoeken)){
-            var addX=Number((minBboxZoeken-(values[i].maxx-values[i].minx))/2);
-            var addY=Number((minBboxZoeken-(values[i].maxy-values[i].miny))/2);
-            values[i].minx=Number(values[i].minx-addX);
-            values[i].maxx=Number(Number(values[i].maxx)+Number(addX));
-            values[i].miny=Number(values[i].miny-addY);
-            values[i].maxy=Number(Number(values[i].maxy)+Number(addY));
-        }
+        values[i]=getBboxMinSize(values[i]);
     }
     if (values.length > 1){
         if (values.length<maxResults) {
@@ -1277,6 +1271,18 @@ function getCoordsCallbackFunction(values){
     searchResults.innerHTML=sResult;
     if (values.length==1)
         handleSearchResult(0);
+}
+
+function getBboxMinSize(feature){
+    if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
+        var addX=Number((minBboxZoeken-(feature.maxx-feature.minx))/2);
+        var addY=Number((minBboxZoeken-(feature.maxy-feature.miny))/2);
+        feature.minx=Number(feature.minx-addX);
+        feature.maxx=Number(Number(feature.maxx)+Number(addX));
+        feature.miny=Number(feature.miny-addY);
+        feature.maxy=Number(Number(feature.maxy)+Number(addY));
+    }
+    return feature;
 }
 /*Handel het resultaat af*/
 function handleSearchResult(searchResultId){

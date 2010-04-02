@@ -89,6 +89,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td>
                         <fmt:message key="configconnectie.url"/>:
+
+                        <a href="#" onclick="return showHelpDialog('help_configconnectie');">(?)</a>
+                        <div id="help_configconnectie" style="display: none;" title="<fmt:message key="configconnectie.url"/>">
+                            <p><fmt:message key="configconnectie.url.uitleg"/></p>
+                        </div>
                     </td>
                     <td colspan="3">
                         <html:text property="url"  size="140"/>

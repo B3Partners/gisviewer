@@ -33,7 +33,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <c:set var="focus" value="naam"/>
 
 <div class="infobalk">
-    <div class="infobalk_description"><fmt:message key="config.configcluster.infobalk"/></div>
+    <div class="infobalk_description"><fmt:message key="configcluster.infobalk"/></div>
     <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
 </div>
 
@@ -49,8 +49,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <table id="clustertable" class="tablesorter">
                     <thead>
                         <tr>
-                            <th style="width: 30%;" id="sort_col1"><fmt:message key="config.configcluster.naam"/></th>
-                            <th style="width: 70%;" id="sort_col2"><fmt:message key="config.configcluster.ouder"/></th>
+                            <th style="width: 30%;" id="sort_col1"><fmt:message key="configcluster.naam"/></th>
+                            <th style="width: 70%;" id="sort_col2"><fmt:message key="configcluster.ouder"/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -79,7 +79,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <table cellpadding="2" cellspacing="2" border="0">
                 <tr>
                     <td>
-                        <fmt:message key="config.configcluster.naam"/>:
+                        <fmt:message key="configcluster.naam"/>:
                     </td>
                     <td colspan="3">
                         <html:text property="naam" size="140"/>
@@ -87,7 +87,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
                 <tr>
                     <td>
-                        <fmt:message key="config.configcluster.omschrijving"/>:
+                        <fmt:message key="configcluster.omschrijving"/>:
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_omschr');">(?)</a>
+                        <div id="help_cluster_omschr" style="display: none;" title="<fmt:message key="configcluster.omschrijving"/>">
+                            <p><fmt:message key="configcluster.omschrijving.uitleg"/></p>
+                        </div>
+
                     </td>
                     <td colspan="3">
                         <html:text property="omschrijving"  size="140"/>
@@ -95,7 +101,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </tr>
                 <tr>
                     <td>
-                        <fmt:message key="config.configcluster.metadatalink"/>:
+                        <fmt:message key="configcluster.metadatalink"/>:
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_meta');">(?)</a>
+                        <div id="help_cluster_meta" style="display: none;" title="<fmt:message key="configcluster.metadatalink"/>">
+                            <p><fmt:message key="configcluster.metadatalink.uitleg"/></p>
+                        </div>
                     </td>
                     <td colspan="3">
                         <html:text property="metadatalink"  size="140"/>
@@ -104,7 +115,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
                 <tr>
                     <td>
-                        <fmt:message key="config.configcluster.volgorde"/>:
+                        <fmt:message key="configcluster.volgorde"/>:
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_volgorde');">(?)</a>
+                        <div id="help_cluster_volgorde" style="display: none;" title="<fmt:message key="configcluster.volgorde"/>">
+                            <p><fmt:message key="configcluster.volgorde.uitleg"/></p>
+                        </div>
                     </td>
                     <td colspan="3">
                         <html:text property="belangnr" size="10"/>
@@ -117,7 +133,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="default_cluster"/>
                     </td>
                     <td colspan="3">
-                        <fmt:message key="config.configcluster.geenconfiglagen"/>
+                        <fmt:message key="configcluster.geenconfiglagen"/>
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_noconfig');">(?)</a>
+                        <div id="help_cluster_noconfig" style="display: none;" title="<fmt:message key="configcluster.geenconfiglagen"/>">
+                            <p><fmt:message key="configcluster.geenconfiglagen.uitleg"/></p>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -125,7 +146,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="hide_legend"/>
                     </td>
                     <td colspan="3">
-                        <fmt:message key="config.configcluster.onzichtbaarinlegenda"/>
+                        <fmt:message key="configcluster.onzichtbaarinlegenda"/>
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_onzichtbaar');">(?)</a>
+                        <div id="help_cluster_onzichtbaar" style="display: none;" title="<fmt:message key="configcluster.onzichtbaarinlegenda"/>">
+                            <p><fmt:message key="configcluster.onzichtbaarinlegenda.uitleg"/></p>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -133,7 +159,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="hide_tree"/>
                     </td>
                     <td colspan="3">
-                        <fmt:message key="config.configcluster.onzichtbaarinboom"/>
+                        <fmt:message key="configcluster.onzichtbaarinboom"/>
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_onzichtbaarinboom');">(?)</a>
+                        <div id="help_cluster_onzichtbaarinboom" style="display: none;" title="<fmt:message key="configcluster.onzichtbaarinboom"/>">
+                            <p><fmt:message key="configcluster.onzichtbaarinboom.uitleg"/></p>
+                        </div>
+
+                        &nbsp;
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_combi');">(info over gebruik samen met aan/uit optie ?)</a>
+                        <div id="help_cluster_combi" style="display: none;" title="<fmt:message key="configcluster.onzichtbaar.combinatie"/>">
+                            <p><fmt:message key="configcluster.onzichtbaar.combinatie.uitleg"/></p>
+                        </div>
+
                     </td>
                 </tr>
                 <tr>
@@ -141,23 +180,35 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="background_cluster"/>
                     </td>
                     <td colspan="3">
-                        <fmt:message key="config.configcluster.achtergrondlagen"/>
+                        <fmt:message key="configcluster.achtergrondlagen"/>
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_achtergrond');">(?)</a>
+                        <div id="help_cluster_achtergrond" style="display: none;" title="<fmt:message key="configcluster.achtergrondlagen"/>">
+                            <p><fmt:message key="configcluster.achtergrondlagen.uitleg"/></p>
+                        </div>
                     </td>
                 </tr>
+                <!--
                 <tr>
                     <td>
                         <html:checkbox property="extra_level"/>
                     </td>
                     <td colspan="3">
-                        <fmt:message key="config.configcluster.uitgebreidetoegang"/>
+                        <fmt:message key="configcluster.uitgebreidetoegang"/>
                     </td>
                 </tr>
+                -->
                 <tr>
                     <td>
                         <html:checkbox property="callable"/>
                     </td>
                     <td colspan="3">
-                        <fmt:message key="config.configcluster.aanuitvink"/>
+                        <fmt:message key="configcluster.aanuitvink"/>
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_aanuitvink');">(?)</a>
+                        <div id="help_cluster_aanuitvink" style="display: none;" title="<fmt:message key="configcluster.aanuitvink"/>">
+                            <p><fmt:message key="configcluster.aanuitvink.uitleg"/></p>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -165,12 +216,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <html:checkbox property="default_visible"/>
                     </td>
                     <td colspan="3">
-                        <fmt:message key="config.configcluster.defaultaangevinkt"/>
+                        <fmt:message key="configcluster.defaultaangevinkt"/>
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_defaultaan');">(?)</a>
+                        <div id="help_cluster_defaultaan" style="display: none;" title="<fmt:message key="configcluster.defaultaangevinkt"/>">
+                            <p><fmt:message key="configcluster.defaultaangevinkt.uitleg"/></p>
+                        </div>
                     </td>
                 </tr>
               <tr>
                     <td>
-                        <fmt:message key="config.configcluster.oudercluster"/>:
+                        <fmt:message key="configcluster.oudercluster"/>:
                     </td>
                     <td colspan="3">
                         <html:select property="parentID">
@@ -183,6 +239,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 </c:if>
                             </c:forEach>
                         </html:select>&nbsp;
+
+                        <a href="#" onclick="return showHelpDialog('help_cluster_parent');">(?)</a>
+                        <div id="help_cluster_parent" style="display: none;" title="<fmt:message key="configcluster.oudercluster"/>">
+                            <p><fmt:message key="configcluster.oudercluster.uitleg"/></p>
+                        </div>
                     </td>
                 </tr>
             </table>

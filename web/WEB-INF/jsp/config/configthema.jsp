@@ -111,6 +111,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
             <div class="config_tab" id="tab-algemeen-content">
                 <table cellpadding="2" cellspacing="2" border="0">
+
+                    <c:if test="${!empty form.map.themaID}">
+                    <tr>
+                        <td>
+                        <fmt:message key="config.label.copypastelink"/>
+                        <a href="#" onclick="return showHelpDialog('help_copypastelink');">(?)</a>
+                        <div id="help_copypastelink" style="display: none;" title="<fmt:message key="config.label.copypastelink"/>">
+                            <p><fmt:message key="config.copypastelink.uitleg"/></p>
+                        </div>
+                        </td>
+                        <td><html:link page="/viewer.do?id=${form.map.themaID}"><fmt:message key="config.linknaam.copypastelink"/></html:link></td>
+                    </tr>
+                    </c:if>
+
                     <tr><td>
                             <fmt:message key="configthema.naam"/> <a href="#" onclick="return showHelpDialog('help_configthemanaam');">(?)</a><div id="help_configthemanaam" style="display: none;" title="<fmt:message key="configthema.naam"/>"><p><fmt:message key="configthema.naam.uitleg"/></p></div>
                     </td><td colspan="3"><html:text property="naam" size="140"/></td></tr>

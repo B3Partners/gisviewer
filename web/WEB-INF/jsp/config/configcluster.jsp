@@ -77,6 +77,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
         <div class="maintable" style="margin-top: 5px;">
             <table cellpadding="2" cellspacing="2" border="0">
+
+                <c:if test="${!empty form.map.clusterID}">
+                    <tr>
+                        <td>
+                        <fmt:message key="config.label.copypastelink"/>
+                        <a href="#" onclick="return showHelpDialog('help_copypastelink');">(?)</a>
+                        <div id="help_copypastelink" style="display: none;" title="<fmt:message key="config.label.copypastelink"/>">
+                            <p><fmt:message key="config.copypastelink.uitleg"/></p>
+                        </div>
+                        </td>
+                        <td><html:link page="/viewer.do?clusterId=${form.map.clusterID}"><fmt:message key="config.linknaam.copypastelink"/></html:link></td>
+                    </tr>
+                </c:if>
+
                 <tr>
                     <td>
                         <fmt:message key="configcluster.naam"/>:

@@ -47,7 +47,7 @@ function doInitSearch(){
 function handleInitSearch(list){
     hideLoading();
     if (list.length > 0){
-        handleInitSearchResult(list[0],searchAction, searchSldThemaId,searchSldClusterId,searchSldVisibleValue);
+        handleInitSearchResult(list[0],searchAction, searchId,searchClusterId,searchSldVisibleValue);
     }
 }
 /*Handles the searchresult.
@@ -165,16 +165,15 @@ function handleGetAdminData(/*coords,*/ geom) {
         document.forms[0].themaid.value = getLayerIdsAsString();
     }
     document.forms[0].lagen.value='';
-    //document.forms[0].xcoord.value=x;
-    //document.forms[0].ycoord.value=y;
-    /*var coordsVal='';
-    for (var i=0; i < coords.length; i++){
-        if (i!=0){
-            coordsVal+=","
-        }
-        coordsVal+=coords[i];
+
+    //als er een init search is meegegeven (dus ook een sld is gemaakt)
+    if (searchAction.toLowerCase().indexOf("filter")>=0){
+        //alert("search: "+search);
+        document.forms[0].search.value=search;
+        document.forms[0].searchId.value=searchId;
+        document.forms[0].searchClusterId.value=searchClusterId;
     }
-    document.forms[0].coords.value=coordsVal;*/
+
     document.forms[0].geom.value=geom;
     document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
     document.forms[0].tolerance.value=tolerance;

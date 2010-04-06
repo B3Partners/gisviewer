@@ -64,8 +64,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     //search with sld result (searchAction: filter or highlight and zoom)
     var searchAction='${searchAction}';
-    var searchSldThemaId='${searchSldThemaId}';
-    var searchSldClusterId='${searchSldClusterId}';
+    var searchId='${searchId}';
+    var searchClusterId='${searchClusterId}';
     var searchSldVisibleValue='${searchSldVisibleValue}';
 
     //Wel of niet cookies
@@ -247,6 +247,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <input type="hidden" name="metadata" />
         <input type="hidden" name="objectdata"/>
         <input type="hidden" name="analysedata"/>
+        <input type="hidden" name="search"/>
+        <input type="hidden" name="searchId"/>
+        <input type="hidden" name="searchClusterId"/>
         <html:hidden property="themaid" />
         <html:hidden property="analysethemaid" />
         <html:hidden property="lagen" />

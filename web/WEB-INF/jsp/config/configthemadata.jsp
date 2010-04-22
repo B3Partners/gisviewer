@@ -72,24 +72,23 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 
     <c:if test="${!empty listThemaData}">
-        <div style="float: left; clear: both; margin-left: 5px;">
-            <div class="scroll">
+        <div style="float: left; clear: both; margin-left: 5px; height: 180px; overflow: hidden;">
                 <table id="themadatatable" class="tablesorter">
                     <thead>
                         <tr>
-                            <th style="width: 21%;" id="sort_col1">Volgorde</th>
-                            <th style="width: 23%;" id="sort_col2"><fmt:message key="configthemadata.label"/></th>
-                            <th style="width: 23%;" id="sort_col3"><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></th>
-                            <th style="width: 33%;" id="sort_col4"><fmt:message key="configthemadata.basisregel"/></th>
+                            <th style="width: 21%;" class="sorttype-int">Volgorde</th>
+                            <th style="width: 23%;"><fmt:message key="configthemadata.label"/></th>
+                            <th style="width: 23%;"><fmt:message key="configthemadata.${connectieType}.kolomnaam"/></th>
+                            <th style="width: 33%;"><fmt:message key="configthemadata.basisregel"/></th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach var="ci" varStatus="status" items="${listThemaData}">
                             <c:set var="id_selected" value='' />
-                            <c:if test="${ci.id == mainid}"><c:set var="id_selected" value=' id="regel_selected"' /></c:if>
+                            <c:if test="${ci.id == mainid}"><c:set var="id_selected" value='selected' /></c:if>
                             <c:url var="link" value="/configThemaData.do?edit=submit&themaDataID=${ci.id}"/>
-                            <tr onclick="javascript: window.location.href='${link}';"${id_selected}>
-                                <td style="width: 21%;"><c:out value="${ci.dataorder}"/></td>
+                            <tr>
+                                <td style="width: 21%;"><c:out value="${ci.dataorder}"/><input type="hidden" name="link" value="${link}" /><input type="hidden" name="selected" value="${id_selected}" /></td>
                                 <td style="width: 23%;"><c:out value="${ci.label}"/></td>
                                 <td style="width: 23%;"><c:out value="${ci.kolomnaam}"/></td>
                                 <td style="width: 33%;">
@@ -99,7 +98,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </c:forEach>
                     </tbody>
                 </table>
-            </div>
         </div>
     </c:if>
     <div id="content_style" style="float: left; clear: left;">
@@ -211,12 +209,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 </html:form>
 <iframe src="BLOCKED SCRIPT'&lt;html&gt;&lt;/html&gt;';" id="iframeBehindHelp" scrolling="no" frameborder="0" style="position:absolute; width:1px; height:0px; top:0px; left:0px; border:none; display:none; z-index:100"></iframe>
 <script type="text/javascript">
-    $j("#themadatatable").tablesorter({
-        widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
-        sortList: [[0,0]]
+    $j(document).ready(function() {
+        tablesort(
+            'themadatatable',
+            '153',
+            '900'
+        );
+        $j("#themadatatable > tbody > tr").each(function(){
+            if($j(this).find("input[name=selected]").val() == "selected") {
+                $j(this).addClass("ui-state-highlight");
+                $j("#themadatatable").parent().parent().scrollTop(($j(this).position().top - $j(this).parent().position().top)-1);
+            }
+            $j(this).click(function() {
+                window.location.href=$j(this).find("input[name=link]").val();
+            });
+        });
     });
-    if(document.getElementById('regel_selected')) {
-        $j("#regel_selected").addClass('selected');
-        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
-    }
 </script>

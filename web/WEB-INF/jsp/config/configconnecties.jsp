@@ -45,28 +45,26 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <html:hidden property="id"/>
     </div>
     <c:if test="${!empty allConnecties}">
-        <div style="float: left; clear: both; margin-left: 5px;">
-            <div class="scroll">
-                <table id="connectietable" class="tablesorter">
-                    <thead>
+        <div style="float: left; clear: both; margin-left: 5px; height: 180px; overflow: hidden;">
+            <table id="connectietable" class="tablesorter">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;"><fmt:message key="configconnectie.naam"/></th>
+                        <th style="width: 70%;"><fmt:message key="configconnectie.url"/></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="ci" varStatus="status" items="${allConnecties}">
+                        <c:set var="id_selected" value="" />
+                        <c:if test="${ci.id == mainid}"><c:set var="id_selected" value='selected' /></c:if>
+                        <c:url var="link" value="/configConnectie.do?edit=submit&id=${ci.id}"/>
                         <tr>
-                            <th style="width: 30%;" id="sort_col1"><fmt:message key="configconnectie.naam"/></th>
-                            <th style="width: 70%;" id="sort_col2"><fmt:message key="configconnectie.url"/></th>
+                            <td style="width: 30%;"><c:out value="${ci.naam}"/><input type="hidden" name="link" value="${link}" /><input type="hidden" name="selected" value="${id_selected}" /></td>
+                            <td style="width: 70%;"><c:out value="${ci.connectie_url}"/></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="ci" varStatus="status" items="${allConnecties}">
-                            <c:set var="id_selected" value='' />
-                            <c:if test="${ci.id == mainid}"><c:set var="id_selected" value=' id="regel_selected"' /></c:if>
-                            <c:url var="link" value="/configConnectie.do?edit=submit&id=${ci.id}"/>
-                            <tr onclick="javascript: window.location.href='${link}';"${id_selected}>
-                                <td style="width: 30%;"><c:out value="${ci.naam}"/></td>
-                                <td style="width: 70%;"><c:out value="${ci.connectie_url}"/></td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-            </div>
+                    </c:forEach>
+                </tbody>
+            </table>
         </div>
     </c:if>
     <div id="content_style" style="float: left; clear: left;">
@@ -154,12 +152,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 </html:form>
 <script type="text/javascript">
-    $j("#connectietable").tablesorter({
-        widgets: ['zebra', 'hoverRows', 'fixedHeaders'],
-        sortList: [[0,0]]
+    $j(document).ready(function() {
+        tablesort(
+            'connectietable',
+            '153',
+            '900'
+        );
+        $j("#connectietable > tbody > tr").each(function(){
+            if($j(this).find("input[name=selected]").val() == "selected") {
+                $j(this).addClass("ui-state-highlight");
+                $j("#connectietable").parent().parent().scrollTop(($j(this).position().top - $j(this).parent().position().top)-1);
+            }
+            $j(this).click(function() {
+                window.location.href=$j(this).find("input[name=link]").val();
+            });
+        });
     });
-    if(document.getElementById('regel_selected')) {
-        $j("#regel_selected").addClass('selected');
-        $j(".scroll").scrollTop(($j("#regel_selected").position().top - $j("#regel_selected").parent().position().top));
-    }
 </script>

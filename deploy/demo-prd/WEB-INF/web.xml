@@ -109,23 +109,6 @@
         </init-param>
     </servlet>
     <servlet>
-        <description>adds credentials and redirects to cyclomedia</description>
-        <servlet-name>CycloramaFetcher</servlet-name>
-        <servlet-class>nl.b3p.gis.utils.CycloramaFetcherServlet</servlet-class>
-        <init-param>
-            <param-name>accountId</param-name>
-            <param-value>2194</param-value>
-        </init-param>
-        <init-param>
-            <param-name>cyclomediaUrl</param-name>
-            <param-value>http://live.cyclomedia.nl/cycloscopeliteview/cycloviewui.asp?</param-value>
-        </init-param>
-        <init-param>
-            <param-name>privateBase64Key</param-name>
-            <param-value>MIIBPAIBAAJBAKjeVutOmj3gQAv5tRCEvCmDr8qCMCiavtJGFekZ6X9kO3i2Gsq+\n4zS+c2/hPgquiJMVJ+9O+nlFYnQy7btrtxsCAwEAAQJBAIXDgWRpYgKLhRA3X7bS\n/d2Ao5otIAq58VfNDoQT84LlUCYxmsJMrFox9ybqoQDQj68LuaaLiAjzQI5DS60z\nm3ECIQDW8ykzf4SDpC6mA1ofn9fnnnfdv9JA1xvkNhYy4FC/cwIhAMkeRlss89UW\nt4hNVpcLl4owhKZByVXbA5GYdbYJF++5AiEAkib5/8MXxi6PbV/gGpqjwiBU3lk8\nS8w3cb947pTpMpMCIQC/EWoZ+Mz15o0aiw72lOa1PH7pTJqwXFA5pDRAasc40QIg\nPbiSX7GYGWggb20XFCPHEf6MHwfH/EZYIXCYxz7K6DM=\n</param-value>
-        </init-param>
-    </servlet>
-    <servlet>
         <servlet-name>CreateSLD</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
         <init-param>
@@ -163,10 +146,6 @@
     <servlet-mapping>
         <servlet-name>DocFetcher</servlet-name>
         <url-pattern>/docfetcher</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CycloramaFetcher</servlet-name>
-        <url-pattern>/cycloramafetcher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreateSLD</servlet-name>

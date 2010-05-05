@@ -1,0 +1,182 @@
+#content_style .config_tab {
+    display: none;
+    width: 880px;
+    padding: 10px;
+    margin-bottom: 15px;
+    min-height: 150px;
+}
+
+.configbody .infobalk {
+    width: 925px;
+}
+
+#content_style #config_tab_header_container {
+    width: 800px;
+}
+
+.configbody .infobalk .infobalk_actions {
+    text-align: right;
+    width: 765px;
+    float: left;
+    margin-top: 1px;
+}
+
+#content_style .config_tab_header {
+    float: left;
+    margin-right: 5px;
+    border-bottom: 0px none;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.optionalConfigItems{
+    display: none;
+}
+
+.tbodyshow {
+    display: block; display: table-row-group;
+}
+
+.tbodyhide {
+    display: none;
+}
+
+.configSelect{
+    width: 500px;
+}
+
+.knoppen {
+    float: left;
+}
+
+.knoppenbalk {
+    width: 900px;
+    float: left;
+    clear: both;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.berichtenbalk {
+    width: 900px;
+    float: left;
+    clear: both;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.messages {
+    clear: both;
+    float: left;
+    font-size: 12px;
+    font-style: normal;
+    font-family: verdana, arial, helvetica, sans-serif;
+    padding: 4px;
+    margin: 0px;
+}
+
+.maintable {
+    padding: 0;
+    clear: both;
+    width: 900px;
+}
+
+.helptekstDiv {
+    position: absolute;
+    margin-left: 40px;
+    margin-top: 4px;
+    display: none;
+    padding: 5px;
+    z-index: 200;
+}
+
+#iframeBehindHelp {
+    position: absolute;
+    width: 1px;
+    height: 0px;
+    top: 0px;
+    left: 0px;
+    border: none;
+    display: none;
+    z-index: 100;
+}
+
+.topbar {
+    float: left;
+    clear: both;
+    vertical-align: middle;
+    width: 901px;
+}
+
+.scroll {
+    width: 900px;
+    height: 153px;
+    overflow: auto;
+    font-size: 11px;
+    clear: both;
+}
+
+.bar_regel {
+    clear: both;
+    padding-left: 3px;
+    height: 17px;
+}
+
+.regel_odd {
+    clear: both;
+    height: 17px;
+    padding-left: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    width: 880px;
+}
+
+.regel_even {
+    clear: both;
+    height: 17px;
+    padding-left: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    width: 880px;
+}
+
+.regel_over {
+    clear: both;
+    height: 17px;
+    padding-left: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    width: 880px;
+}
+
+.regel_selected {
+    clear: both;
+    height: 17px;
+    padding-left: 3px;
+    overflow: hidden;
+    width: 880px;
+}
+
+.bar_item {
+    float: left;
+    overflow: hidden;
+    text-align: left;
+    padding-left: 3px;
+    padding-right: 3px;
+    white-space: nowrap;
+    text-align: left;
+    height: 17px;
+}
+
+.c_item {
+    height: 17px;
+    float: left;
+    overflow: hidden;
+    text-align: left;
+    padding-left: 3px;
+    padding-right: 3px;
+    white-space: nowrap;
+    text-align: left;
+}

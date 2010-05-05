@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FLAMINGO xmlns:fmc="fmc" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" commtojava="true" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+    <style id=".tooltip" font-family="arial, sans-serif" font-size="11" color="#880000" display="block"/>
+    <yguide id="my" y="50%"/>
+    <xguide id="mx" x="50%"/>
+    <fmc:MonitorLayer id="monitorl" left="25%" top="10%" width="35%" listento="map1">
+        <string id="waiting"  en="Making... [layer] [percentage]%..." nl="Kaart aan het maken..."/>
+        <string id="loading"  en="Making... [layer] [percentage]%..." nl="Kaart aan het laden. [percentage]%"/>
+    </fmc:MonitorLayer>
+    <fmc:Container backgroundcolor="#D2E0EB" left="0" top="0" height="5%" width="100%">
+        <fmc:Scalebar left="260" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
+        <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="148" height="65" left="0" top="0%">
+            <fmc:ToolZoomin id="toolZoomin"/>
+            <fmc:ToolZoomout id="toolZoomout" left="30"/>
+            <fmc:ToolPan id="toolPan" left="60"/>
+            <fmc:ToolMeasure id="toolMeasure" left="90"/>
+            <fmc:ToolIdentify id="identify" left="120"/>
+            <fmc:ButtonFull id="toolFullExtent" left="150" listento="map1"/>
+            <fmc:ButtonPrev id="toolPrevExtent" left="180" listento="map1"/>
+            <fmc:ButtonNext id="toolNextExtent" left="210" listento="map1"/>
+        </fmc:ToolGroup>
+        <fmc:Coordinates id="coordinates" listento="map1" left="80%" top="10%" decimals="0">
+            <style id=".xy" font-family="arial" font-size="11" />
+            <string id="xy" nl="X: [x]     Y: [y]" />
+        </fmc:Coordinates>
+    </fmc:Container>
+    <fmc:Container id="containerLeft" backgroundcolor="#D2E0EB" left="0" top="5%" height="95%" width="20%">
+        <fmc:Map id="overview"  left="20%" top="0%" height="118" width="100" extent="7663,300655,285051,626588" fullextent="7663,300655,285051,626588">
+            <fmc:LayerOverview listento="map1"/>
+            <fmc:LayerImage id="oimage" imageurl="../images/overviewNederland.png" extent="7663,300655,285051,626588" listento="map1"/>
+        </fmc:Map>
+        
+        <fmc:ZoomerV id="zoomerv" left="0%" top="0" height="118" listento="map1"></fmc:ZoomerV>           
+        <!-- stukje knoppen voor redlining/ editing -->
+        <fmc:EditLegend id="editLegend" left="0" top="118" listento="editMap" expandable="false"/>
+        <fmc:EditBar id="editBar" left="0" top="150" listento="editMap"/>
+        
+        <fmc:Container left="3" top="180">
+            <fmc:JsButton id="b_buffer" left="0" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/buffer.png" iconurl_over="flamingo/assets/jsbtn/buffer_over.png" iconurl_sel="flamingo/assets/jsbtn/buffer_down.png" iconurl_dis="flamingo/assets/jsbtn/buffer.png" label="" toggle="false" visible="true" enabled="true" selected="false">
+                <string id="tooltip" en="Buffer" nl="Buffer"/>
+            </fmc:JsButton>
+
+            <fmc:JsButton id="b_removePolygons" left="30" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/remove_polygon.png" iconurl_over="flamingo/assets/jsbtn/remove_polygon_over.png" iconurl_sel="flamingo/assets/jsbtn/remove_polygon_down.png" iconurl_dis="flamingo/assets/jsbtn/remove_polygon.png" label="" toggle="false" visible="true" enabled="true" selected="false">
+                <string id="tooltip" en="Remove polygons" nl="Verwijder polygonen"/>
+            </fmc:JsButton>
+
+            <fmc:JsButton id="b_getfeatures" left="60" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/getfeatures.png" iconurl_over="flamingo/assets/jsbtn/getfeatures.png" iconurl_sel="flamingo/assets/jsbtn/getfeatures.png" iconurl_dis="flamingo/assets/jsbtn/getfeatures.png" label="" toggle="false" visible="true" enabled="true" selected="false">
+                <string id="tooltip" en="Select features for geometry" nl="Selecteer features in geometrie"/>
+            </fmc:JsButton>
+        </fmc:Container>
+        
+    </fmc:Container>
+    <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="20%" top="5%" height="95%" width="80%">
+        <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>        
+
+        <!-- het 'canvas' waar op getekend kan worden-->
+        <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
+        <fmc:GIS id="gis" geometryeditable="yes" alwaysdrawpoints="no">
+            <fmc:Layer id="layer1" name="layer1" title="Layer 1" visible="true" geometrytypes="Point,LineString,Polygon,Circle">
+                <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>
+            </fmc:Layer>
+        </fmc:GIS>
+
+        <fmc:Maptip listento="map1"/>
+        <fmc:Map maptipdelay="1000" id="map1" left="0" top="0%" height="100%" width="100%" bottom="bottom" visible="true" extenthistory="10" extent="1200,30400,28000,62000">
+            <fmc:LayerIdentifyIcon  id="identifyicon"/>
+        </fmc:Map>                
+    </fmc:Container>
+</FLAMINGO>

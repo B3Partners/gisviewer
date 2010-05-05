@@ -1,0 +1,34 @@
+<!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"
+    "http://www.getahead.ltd.uk/dwr/dwr10.dtd">
+<dwr>
+    <allow>
+        <create creator="new" javascript="JMapData">
+            <param name="class" value="nl.b3p.gis.viewer.GetLocationData"/>
+        </create>
+        <convert converter="bean" match="nl.b3p.gis.viewer.MapCoordsBean"/>
+        <create creator="new" javascript="JConfigListsUtil">
+            <param name="class" value="nl.b3p.gis.viewer.ConfigListsUtil"/>
+            <include method="getPossibleFeaturesById"/>
+            <include method="getPossibleAttributesById"/>
+        </create>
+        <create creator="new" javascript="EditUtil">
+            <param name="class" value="nl.b3p.gis.utils.EditUtil"/>
+        </create>
+        <create creator="new" javascript="JZoeker">
+            <param name="class" value="nl.b3p.zoeker.services.Zoeker"/>
+            <include method="zoek"/>
+        </create>
+        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaat"/>
+        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaatAttribuut"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekAttribuut"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron">
+            <param name="exclude" value="gebruikersnaam, wachtwoord"/>
+        </convert>
+        <convert match="java.lang.Exception" converter="exception">
+            <param name='include' value='message,lineNumber'/>
+        </convert>
+    </allow>
+</dwr>

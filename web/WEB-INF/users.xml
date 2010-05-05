@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : autorization.xml
+    Created on : 12 januari 2007, 9:42
+    Author     : Roy
+    Description:
+        Purpose of the document follows.
+-->
+<Webapp-users>
+  <role rolename="beheerder"/>
+  <role rolename="gebruiker"/>
+  <role rolename="themabeheerder"/>
+  <role rolename="demogebruiker"/>
+</Webapp-users>
+

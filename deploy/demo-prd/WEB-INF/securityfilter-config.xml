@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE securityfilter-config PUBLIC
+    "-//SecurityFilter.org//DTD Security Filter Configuration 2.0//EN"
+    "http://www.securityfilter.org/dtd/securityfilter-config_2_0.dtd">
+
+<securityfilter-config>
+
+    <!-- Indexpagina door iedereen te bekijken -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Index</web-resource-name>
+            <url-pattern>/indexlist.do</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
+
+    <!-- Viewer alleen door ingelogde personen -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Viewer</web-resource-name>
+            <url-pattern>/viewer.do</url-pattern>
+            <url-pattern>/viewerdata.do</url-pattern>
+            <url-pattern>/viewerlist.do</url-pattern>
+            <url-pattern>/services/*</url-pattern>
+        </web-resource-collection>       
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- /config* alleen voor (organisatie)beheerders -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Configuratie</web-resource-name>
+            <url-pattern>/config*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>beheerder</role-name>
+            <role-name>organisatiebeheerder</role-name>
+        </auth-constraint>
+    </security-constraint>
+   <login-config>
+      <auth-method>FORM_COOKIE_TOKEN</auth-method>
+      <form-login-config>
+          <form-login-page>/login.do</form-login-page>
+          <form-error-page>/loginError.do</form-error-page>
+          <form-default-page>/index.do</form-default-page>
+          <form-logout-page>/logout.do</form-logout-page>
+      </form-login-config>
+      <cookie-auth-token-config>
+          <set-cookies>true</set-cookies>
+          <accept-cookie>false</accept-cookie>
+          <!-- deze waardes zijn voor (HOU DEZE INFORMATIE UP-TO-DATE!): demo.kaartenbalie.nl  -->
+	    <secret-key>DE00677C3015E66FE5F2A71DDA21160B</secret-key>
+            <extra-hash-string>DeMod5MYe39B5NP3UaLl4</extra-hash-string>
+          <cookie-paths>/kaartenbalie</cookie-paths>
+          <cookie-expire>3600</cookie-expire>
+      </cookie-auth-token-config>
+   </login-config>
+
+   <realm className="nl.b3p.gis.viewer.services.GisSecurityRealm"/>
+</securityfilter-config>

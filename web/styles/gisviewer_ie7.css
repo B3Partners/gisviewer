@@ -1,0 +1,31 @@
+#topmenu {
+    width: 350px;
+}
+
+#content {
+    margin: 0px;
+    height: auto;
+    overflow: auto;
+    position: absolute;
+	left: 50%;
+    margin-left: -476px;
+    width: 955px;
+	top: 0px;
+	bottom: 0px;
+}
+
+#tab_container .tabvak_with_iframe {
+    top: 0px;
+    height: 100%;
+}
+
+#tab_container .tabvak_with_iframe iframe {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.configbody table.tablesorter {
+    width: 883px;
+}

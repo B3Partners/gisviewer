@@ -1,0 +1,185 @@
+html, body {
+    overflow: hidden;
+}
+
+#content_viewer .infobalk {
+    height: 20px;
+    padding-top: 3px;
+    margin: 0px;
+    padding-left: 10px;
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    top: 2px;
+    width: auto;
+}
+
+#content_viewer .infobalk .infobalk_description {
+    text-align: left;
+    width: 175px;
+    float: left;
+    margin-left: 20px;
+}
+
+#content_viewer .infobalk .infobalk_actions {
+    text-align: right;
+    width: 735px;
+    float: left;
+}
+
+#content_viewer #informatiebalk {
+    top: auto;
+    bottom: 203px;
+}
+
+#flashcontent {
+    position: absolute;
+    top: 28px;
+    left: 3px;
+    right: 294px;
+    bottom: 229px;
+}
+
+#dataframediv {
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    bottom: 1px;
+    height: 200px;
+}
+
+#dataframediv iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#leftcontent {
+    position: absolute;
+    left: 3px;
+    width: 288px;
+    top: 28px;
+    bottom: 229px;
+    background-color: Green;
+    display: none;
+    overflow: auto;
+}
+
+#tabjes {
+    position: absolute;
+    right: 3px;
+    width: 288px;
+    top: 28px;
+    height: 20px;
+}
+
+#tab_container {
+    position: absolute;
+    right: 3px;
+    width: 288px;
+    top: 48px;
+    bottom: 229px;
+    overflow: auto;
+}
+
+#tab_container .tabvak {
+    margin: 5px;
+}
+
+#tab_container .tabvak_with_iframe {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 0px;
+    right: 0px;
+}
+
+#tab_container .tabvak_with_iframe iframe {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.orderLayerBox {
+    border: 1px solid #606060;
+    background-color: White;
+    color: #175480;
+    overflow: auto;
+}
+
+.orderLayerClass{
+    cursor: pointer;
+    background-color: White;
+    color: #175480;
+    overflow: hidden;
+}
+
+.orderLayerClassSelected{
+    background-color: #bbbbbb;
+    cursor: pointer;
+    color: #175480;
+}
+
+.orderLayerClass span, .orderLayerClassSelected span {
+    padding-top: 4px;
+    color: #175480;
+}
+
+/* voor plan select tab */
+
+.planselectcontainer{
+    margin-left: 3px;
+    float: left;
+    width: 230px;
+}
+.planselectbox{
+    width: 225px;
+    height: 100px;
+}
+
+#firstLink {
+    margin-top: 0px;
+}
+
+#kopTekst {
+    background-color: #E5352C;
+    color: White;
+	font-weight: bold;
+	padding: 4px 0px 5px 23px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    cursor: pointer;
+    background-position: 5px 4px;
+}
+
+#kolomTekst {
+    padding: 11px;
+    padding-left: 3px;
+    padding-top: 3px;
+}
+
+/* Panel controls */
+#panelControls div {
+    z-index: 200;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+#leftControl {
+    position: absolute;
+    left: 6px;
+    top: 3px;
+}
+
+#rightControl {
+    position: absolute;
+    right: 6px;
+    top: 3px;
+}
+
+#onderbalkControl {
+    position: absolute;
+    left: 6px;
+    bottom: 3px;
+}

@@ -6,103 +6,6 @@
 
 <struts-config>
     <form-beans>
-        <form-bean name="messagesForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="action" type="java.lang.String"/>
-            <form-property name="alt_action" type="java.lang.String"/>
-            <form-property name="xsl" type="java.lang.String"/>
-            <form-property name="to" type="java.lang.String"/>
-            <form-property name="from" type="java.lang.String"/>
-            <form-property name="subject" type="java.lang.String"/>
-            <form-property name="cc" type="java.lang.String"/>
-            <form-property name="bcc" type="java.lang.String"/>
-            <form-property name="body" type="java.lang.String"/>
-            <form-property name="mailhost" type="java.lang.String" initial="kmail.b3partners.nl"/>
-        </form-bean>
-        
-        <form-bean name="themaForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="action" type="java.lang.String"/>
-            <form-property name="alt_action" type="java.lang.String"/>
-            <form-property name="themaID" type="java.lang.String"/>
-            <form-property name="themaCode" type="java.lang.String"/>
-            <form-property name="naam" type="java.lang.String"/>
-            <form-property name="metadatalink" type="java.lang.String"/>
-            <form-property name="connectie" type="java.lang.String"/>
-            <form-property name="belangnr" type="java.lang.String"/>
-            <form-property name="clusterID" type="java.lang.String"/>
-            <form-property name="opmerkingen" type="java.lang.String"/>
-            <form-property name="analyse_thema" type="java.lang.Boolean"/>
-            <form-property name="locatie_thema" type="java.lang.Boolean"/>
-            <form-property name="admin_tabel_opmerkingen" type="java.lang.String"/>
-            <form-property name="admin_tabel" type="java.lang.String"/>
-            <form-property name="admin_pk" type="java.lang.String"/>
-            <form-property name="admin_pk_complex" type="java.lang.Boolean"/>
-            <form-property name="admin_spatial_ref" type="java.lang.String"/>
-            <form-property name="admin_query" type="java.lang.String"/>
-            <form-property name="spatial_tabel_opmerkingen" type="java.lang.String"/>
-            <form-property name="spatial_tabel" type="java.lang.String"/>
-            <form-property name="spatial_pk" type="java.lang.String"/>
-            <form-property name="spatial_pk_complex" type="java.lang.Boolean"/>
-            <form-property name="spatial_admin_ref" type="java.lang.String"/>
-            <form-property name="wms_url" type="java.lang.String"/>
-            <form-property name="wms_layers" type="java.lang.String"/>
-            <form-property name="wms_layers_real" type="java.lang.String"/>
-            <form-property name="wms_querylayers" type="java.lang.String"/>
-            <form-property name="wms_querylayers_real" type="java.lang.String"/>
-            <form-property name="wms_legendlayer" type="java.lang.String"/>
-            <form-property name="wms_legendlayer_real" type="java.lang.String"/>
-            <form-property name="update_frequentie_in_dagen" type="java.lang.String"/>
-            <form-property name="view_geomtype" type="java.lang.String"/>
-            <form-property name="visible" type="java.lang.Boolean"/>
-            <form-property name="themadataobjecten" type="java.lang.String[]"/>
-            <form-property name="thema_maptip" type="java.lang.String"/>
-            <form-property name="sldattribuut" type="java.lang.String"/>
-            <form-property name="uitgebreid" type="java.lang.Boolean"/>
-        </form-bean>
-        <form-bean name="clusterForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="action" type="java.lang.String"/>
-            <form-property name="alt_action" type="java.lang.String"/>
-            <form-property name="clusterID" type="java.lang.String"/>
-            <form-property name="naam" type="java.lang.String"/>
-            <form-property name="omschrijving" type="java.lang.String"/>
-            <form-property name="belangnr" type="java.lang.String"/>
-            <form-property name="metadatalink" type="java.lang.String"/>
-            <form-property name="parentID" type="java.lang.String"/>
-            <form-property name="default_cluster" type="java.lang.Boolean"/>
-            <form-property name="hide_legend" type="java.lang.Boolean"/>
-            <form-property name="hide_tree" type="java.lang.Boolean"/>
-            <form-property name="background_cluster" type="java.lang.Boolean"/>
-            <form-property name="extra_level" type="java.lang.Boolean"/>
-            <form-property name="callable" type="java.lang.Boolean"/>
-            <form-property name="default_visible" type="java.lang.Boolean"/>
-        </form-bean>
-        <form-bean name="connectieForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="action" type="java.lang.String"/>
-            <form-property name="alt_action" type="java.lang.String"/>
-            <form-property name="id" type="java.lang.String"/>
-            <form-property name="naam" type="java.lang.String"/>
-            <form-property name="url" type="java.lang.String"/>
-            <form-property name="gebruikersnaam" type="java.lang.String"/>
-            <form-property name="wachtwoord" type="java.lang.String"/>
-        </form-bean>
-        <form-bean name="themaDataForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="action" type="java.lang.String"/>
-            <form-property name="alt_action" type="java.lang.String"/>
-            <form-property name="themaDataID" type="java.lang.String"/>
-            <form-property name="label" type="java.lang.String"/>
-            <form-property name="eenheid" type="java.lang.String"/>
-            <form-property name="omschrijving" type="java.lang.String"/>
-            <form-property name="themaID" type="java.lang.String"/>
-            <form-property name="uitgebreid" type="java.lang.Boolean"/>
-            <form-property name="basisregel" type="java.lang.Boolean"/>
-            <form-property name="voorbeelden" type="java.lang.String"/>
-            <form-property name="kolombreedte" type="java.lang.String"/>
-            <form-property name="waardeTypeID" type="java.lang.String"/>
-            <form-property name="dataTypeID" type="java.lang.String"/>
-            <form-property name="commando" type="java.lang.String"/>
-            <form-property name="kolomnaam" type="java.lang.String"/>
-            <form-property name="dataorder" type="java.lang.String"/>
-        </form-bean>
-        
         <form-bean name="viewerForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
@@ -165,23 +68,6 @@
         </action>
         <action path="/viewerwelkom" forward="viewerwelkom"/>
         
-        <action path="/beheer" forward="/configThema.do"/>
-        <action path="/configThema" type="nl.b3p.gis.viewer.ConfigThemaAction" name="themaForm" scope="request" validate="false">
-            <forward name="success" path="configthema"/>
-            <forward name="failure" path="configthema"/>
-        </action>
-        <action path="/configCluster" type="nl.b3p.gis.viewer.ConfigClusterAction" name="clusterForm" scope="request" validate="false">
-            <forward name="success" path="configcluster"/>
-            <forward name="failure" path="configcluster"/>
-        </action>
-        <action path="/configConnectie" type="nl.b3p.gis.viewer.ConfigConnectieAction" name="connectieForm" scope="request" validate="false">
-            <forward name="success" path="configconnectie"/>
-            <forward name="failure" path="configconnectie"/>
-        </action>
-        <action path="/configThemaData" type="nl.b3p.gis.viewer.ConfigThemaDataAction" name="themaDataForm" scope="request" validate="false">
-            <forward name="success" path="configthemadata"/>
-            <forward name="failure" path="configthemadata"/>
-        </action>
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>
             <forward name="continue" path="/index.do"/>

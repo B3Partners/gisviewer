@@ -7,7 +7,6 @@
 <tiles-definitions>
     <definition name="template" path="/WEB-INF/jsp/templates/template.jsp"/>
     <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp"/>
-    <definition name="templateConfig" path="/WEB-INF/jsp/templates/templateConfig.jsp"/>
     <definition name="templatePrint" path="/WEB-INF/jsp/templates/templatePrint.jsp"/>
     <!-- algemeen -->
     <definition name="algemeen" extends="template">
@@ -86,26 +85,6 @@
     </definition>    
     <definition name="createmappdf" extends="templatePrint">
         <put name="content" value="/WEB-INF/jsp/viewer/createmappdf.jsp"/>
-    </definition>
-    <!-- config -->   
-    <definition name="config" extends="templateConfig">
-        <put name="menu" value="/WEB-INF/jsp/commons/configmenu.jsp"/>
-    </definition>
-    <definition name="configthema" extends="config">
-        <put name="title" value="Configureer thema's" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/config/configthema.jsp"/>
-    </definition>
-    <definition name="configcluster" extends="config">
-        <put name="title" value="Configureer clusters" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/config/configcluster.jsp"/>
-    </definition>
-    <definition name="configthemadata" extends="config">
-        <put name="title" value="Configureer themadata" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/config/configthemadata.jsp"/>
-    </definition>
-    <definition name="configconnectie" extends="config">
-        <put name="title" value="Configureer connecties" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/config/configconnecties.jsp"/>
     </definition>
 
     <!-- tiles met herbruikbare onderdelen die in de content pagina's kunnen worden ge-insert  -->

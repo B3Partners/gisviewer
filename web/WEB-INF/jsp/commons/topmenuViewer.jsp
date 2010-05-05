@@ -23,12 +23,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<c:if test="${pageContext.request.remoteUser != null}">
-    <c:if test="${f:isUserInRole(pageContext.request, 'beheerder')}">
-        <c:set var="beheerder" value="true"/>
-    </c:if>
-</c:if>
-
 <div id="topmenu">
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
     <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
@@ -39,25 +33,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
     <html:link page="/help.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.help"/></html:link>
-
-    <c:choose>
-        <c:when test="${beheerder == true}">
-            <c:set var="stijlklasse" value="menulink" />
-            <c:if test="${requestJSP eq 'configThema.do'}">
-                <c:set var="stijlklasse" value="activemenulink" />
-            </c:if>
-            <html:link page="/configThema.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.configuratie"/></html:link>
-        </c:when>
-        <c:otherwise>
-            <%--
-            <c:set var="stijlklasse" value="menulink" />
-            <c:if test="${requestJSP eq 'contact.do'}">
-                <c:set var="stijlklasse" value="activemenulink" />
-            </c:if>
-            <html:link page="/index.do" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.contact"/></html:link>
-            --%>
-        </c:otherwise>
-    </c:choose>
 
     <html:link href="javascript: exportMap();" styleClass="menulink" module=""><fmt:message key="commons.topmenuviewer.print"/></html:link>
 

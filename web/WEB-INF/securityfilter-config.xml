@@ -28,18 +28,7 @@
         </auth-constraint>
     </security-constraint>
 
-    <!-- /config* alleen voor (organisatie)beheerders -->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Configuratie</web-resource-name>
-            <url-pattern>/config*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>beheerder</role-name>
-            <role-name>organisatiebeheerder</role-name>
-        </auth-constraint>
-    </security-constraint>
-   <login-config>
+  <login-config>
       <auth-method>FORM_COOKIE_TOKEN</auth-method>
       <form-login-config>
           <form-login-page>/login.do</form-login-page>
@@ -51,11 +40,10 @@
           <set-cookies>true</set-cookies>
           <accept-cookie>false</accept-cookie>
             <!-- deze waardes zijn voor (HOU DEZE INFORMATIE UP-TO-DATE!): www.kaartenbalie.nl 81BF677C3015E66FE5F2A71DDA21160B Extra hash: s6AWd5MYe39B5NP3UaLl4 -->
-            <secret-key>8540514F91F4EEA059AA123C4B8DF665</secret-key>
-            <extra-hash-string>W3wG16YJ5oCpbUfKXnmx</extra-hash-string>
+            <secret-key>81BF677C3015E66FE5F2A71DDA21160B</secret-key>
+            <extra-hash-string>s6AWd5MYe39B5NP3UaLl4</extra-hash-string>
           <cookie-paths>/kaartenbalie</cookie-paths>
-          <!-- 8 uur -->
-          <cookie-expire>28800</cookie-expire>
+          <cookie-expire>3600</cookie-expire>
       </cookie-auth-token-config>
    </login-config>
 

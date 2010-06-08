@@ -42,6 +42,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery.hotkeys-0.7.9.min.js"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/tablesort.js' module=''/>"></script>
         <script type="text/javascript" src="scripts/config-tab.js"></script>

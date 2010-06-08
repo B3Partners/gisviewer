@@ -23,6 +23,27 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
+<script type="text/javascript">
+    /* Keyboard shortcuts voor form */
+    $j(document).bind('keydown', 'CTRL+S', save);
+    $j(document).bind('keydown', 'CTRL+V', verwijderen);
+    $j(document).bind('keydown', 'CTRL+N', create);
+
+    function save() {
+        $j('#save').click();
+    }
+
+    function verwijderen() {
+        $j('#delete').click();
+    }
+
+    function create() {
+        $j('#create').click();
+    }
+
+    $j(document).unbind('keydown', 'CTRL+S', save);
+</script>
+
 <c:set var="form" value="${clusterForm}"/>
 <c:set var="action" value="${form.map.action}"/>
 <c:set var="mainid" value="${form.map.clusterID}"/>
@@ -279,24 +300,24 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:when>
                 <c:otherwise>
                     <div class="knoppen">
-                        <html:submit property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <html:submit styleId="create" property="create" accesskey="n" styleClass="knop" onclick="bCancel=true" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
                             <fmt:message key="button.new"/>
                         </html:submit>
                     </div>
                     <div class="knoppen">
-                        <html:submit property="delete" accesskey="d" styleClass="knop" onclick="bCancel=true; return confirm('Weet u zeker dat u dit cluster wilt verwijderen?');" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
+                        <html:submit styleId="delete" property="delete" accesskey="d" styleClass="knop" onclick="bCancel=true; return confirm('Weet u zeker dat u dit cluster wilt verwijderen?');" onmouseover="this.className='knopover';" onmouseout="this.className='knop';">
                             <fmt:message key="button.remove"/>
                         </html:submit>
                     </div>
                     <div class="knoppen">
-                        <html:submit property="save" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';" onclick="return confirm('Weet u zeker dat u dit cluster wilt opslaan?');">
+                        <html:submit styleId="save" property="save" accesskey="s" styleClass="knop" onmouseover="this.className='knopover';" onmouseout="this.className='knop';" onclick="return confirm('Weet u zeker dat u dit cluster wilt opslaan?');">
                             <fmt:message key="button.save"/>
                         </html:submit>
                     </div>
                 </c:otherwise>
             </c:choose>
         </div>
-        <a href="#" onclick="$j('#clustertable').setSelection('20', true);">Click!</a>
+        <!-- <a href="#" onclick="$j('#clustertable').setSelection('20', true);">Click!</a> -->
     </div>
 </html:form>
 

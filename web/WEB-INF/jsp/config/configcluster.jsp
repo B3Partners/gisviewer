@@ -23,27 +23,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type="text/javascript">
-    /* Keyboard shortcuts voor form */
-    $j(document).bind('keydown', 'CTRL+S', save);
-    $j(document).bind('keydown', 'CTRL+V', verwijderen);
-    $j(document).bind('keydown', 'CTRL+N', create);
-
-    function save() {
-        $j('#save').click();
-    }
-
-    function verwijderen() {
-        $j('#delete').click();
-    }
-
-    function create() {
-        $j('#create').click();
-    }
-
-    $j(document).unbind('keydown', 'CTRL+S', save);
-</script>
-
 <c:set var="form" value="${clusterForm}"/>
 <c:set var="action" value="${form.map.action}"/>
 <c:set var="mainid" value="${form.map.clusterID}"/>
@@ -337,5 +316,21 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 window.location.href=$j(this).find("input[name=link]").val();
             });
         });
+    });
+
+    /* Keyboard shortcuts voor form */
+    $j(document).bind('keydown', 'ctrl+s', function(evt) {
+        $j('#save').click();
+        return false;
+    });
+
+    $j(document).bind('keydown', 'ctrl+d', function(evt) {
+        $j('#delete').click();
+        return false;
+    });
+
+    $j(document).bind('keydown', 'ctrl+n', function(evt) {
+        $j('#create').click();
+        return false;
     });
 </script>

@@ -33,7 +33,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
+            <param-value>http://www.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -173,9 +173,8 @@
         <url-pattern>/CreateSLD</url-pattern>
     </servlet-mapping>
     <session-config>
-    	  <!-- 8 uur -->
         <session-timeout>
-            480
+            30
         </session-timeout>
     </session-config>
     <welcome-file-list>

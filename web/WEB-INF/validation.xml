@@ -23,18 +23,6 @@
 
     <formset>
         <!-- An example form -->
-        <form name="connectieForm">
-            <field
-                property="url"
-                depends="required">
-                    <arg key="configconnectie.url"/>
-            </field>
-            <field
-                property="naam"
-                depends="required">
-                    <arg key="configconnectie.naam"/>
-            </field>
-        </form>
 
     </formset>  
 

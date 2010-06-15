@@ -175,10 +175,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
      *       Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
     var userrights = {
-        "beheerder": ["themas", "legenda", "zoeken", "planselectie"],
+        "beheerder": ["themas", "legenda", "zoeken"],
         // "organisatiebeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
         // "themabeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
-        "gebruiker": ["themas", "legenda", "zoeken", "planselectie"],
+        "gebruiker": ["themas", "legenda", "zoeken"],
         "demogebruiker": ["themas", "legenda", "zoeken", "planselectie"],
         "anoniem": ["themas", "legenda", "zoeken", "planselectie"]
     };
@@ -186,7 +186,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
      * de naam en eventueel extra Content-divs die geopend moeten worden */
     var tabbladen = {
-        "themas": { "id": "themas", "contentid": "treevak", "name": "Thema's", "extracontent": ["layermaindiv"] },
+        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "extracontent": ["layermaindiv"] },
         "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken" },
         "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden" },
         "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse" },
@@ -479,7 +479,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         },
         "saveExpandedState": true,
         "saveScrollState": true,
-        "expandAll": false
+        "expandAll": true
     });
 
     <c:if test="${not empty activeTab}">

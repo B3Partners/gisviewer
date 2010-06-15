@@ -516,3 +516,82 @@ table.tablesorter thead tr .headerSortDown {
 .admindataSmallCell a {
     color: #196299;
 }
+
+/* nieuwe divs voor gebruik op Home pagina Gisviewer */
+.content_block {
+    float: left;
+    width: 450px;
+    margin-left: 15px;
+    min-height: 180px;
+}
+
+.content_block a {
+    padding-top: 5px;
+    color: #1962A0;
+    text-decoration: underline;
+}
+
+.content_title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #196299;
+    margin-top: 15px;
+    padding-bottom: 10px;
+}
+
+.inleiding_body {
+    background-color: #FFF0C5;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    color: #1962A0;
+    font-weight: bold;
+}
+
+.content_body {
+    background-color: #FFF;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.content_body td {
+    padding-right: 10px;
+}
+
+.content_body a {
+    padding-top: 5px;
+    color: #1962A0;
+    text-decoration: underline;
+}
+
+.message {
+    color: red;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding-bottom: 20px;
+}
+
+.inputfield {
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+    padding: 3px;
+    border: solid 1px #85b1de;
+    width: 200px;
+}
+
+.inlogbutton {
+    display: block;
+    margin-top: 10px;
+    padding: 8px;
+    border: solid 1px #000;
+}
+
+.hr_line {
+    margin-top: 20px;
+    text-align: left;
+    width: 200px;
+}

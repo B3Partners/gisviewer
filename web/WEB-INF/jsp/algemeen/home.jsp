@@ -120,8 +120,7 @@
 </div>
 
 <c:if test="${pageContext.request.remoteUser != null}">
-    <div class="content_block">
-        <hr class="hr_line">
+    <div class="uitloggen">
         <p><tiles:insert name="loginblock"/></p>
     </div>
 </c:if>

@@ -1,25 +1,3 @@
-<%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-
-Copyright 2006, 2007, 2008 B3Partners BV
-
-This file is part of B3P Gisviewer.
-
-B3P Gisviewer is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-B3P Gisviewer is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
---%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
@@ -62,6 +40,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
                     <c:set var="themaId" value="${ThemaItem.thema.id}"/>
                     <c:set var="adminPk" value="${ThemaItem.thema.admin_pk}"/>
+                    <c:set var="conn_type" value="${ThemaItem.thema.connectie.type}" />
                 </c:if>
             </c:forEach>
 
@@ -79,8 +58,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         </div>
                     </div>
                     ${themanaam}
-                    <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()"><html:image src="./images/icons/page_white_csv.png" title="Exporteer naar csv" alt="Exporteer naar csv" /></a>
-                    <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()"><html:image src="./images/icons/page_white_info.png" title="Exporteer naar infobox" alt="Exporteer naar infobox" /></a>
+
+                    <c:if test="${conn_type == 'jdbc'}">
+                        <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()"><html:image src="./images/icons/page_white_csv.png" title="Exporteer naar csv" alt="Exporteer naar csv" /></a>
+                        <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()"><html:image src="./images/icons/page_white_info.png" title="Exporteer naar infobox" alt="Exporteer naar infobox" /></a>
+                    </c:if>
+                    
                     <form action="services/Data2CSV" name="data2csv${tStatus.count}" id="data2csv${tStatus.count}" target="_blank" method="post">
                         <input name="themaId" type="hidden" value="${themaId}"/>
                         <input name="objectIds" type="hidden" value=""/>
@@ -317,11 +300,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td valign="top">
                         <div class="inleiding">
-                            <h2>Er is geen informatie gevonden.</h2>
-                            <p>
-                                Mogelijk is er op de door u gezochte plaats geen informatie beschikbaar.
-                                Of uw selectie criteria leveren niks op.
-                            </p>
+                            <h2><fmt:message key="admindata.geeninfo.header"/></h2>
+                            <p><fmt:message key="admindata.geeninfo.tekst"/></p>
                         </div>
                     </td>
                 </tr>

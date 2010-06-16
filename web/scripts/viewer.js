@@ -1254,18 +1254,25 @@ function getCoordsCallbackFunction(values){
     for (var i=0; i < values.length; i++){
         values[i]=getBboxMinSize(values[i]);
     }
+    var hasChilds=getChildzoekConfiguraties(foundValues[0].zoekConfiguratie).length>0;
     if (values.length > 1){
-        if (values.length<maxResults) {
-            sResult = "<br><b>Meerdere resultaten gevonden:<b><ol>";
-        } else {
-            sResult = "<br><b>Meer dan "+maxResults+" resultaten gevonden. Er worden slechts "+maxResults+" resultaten weergegeven:<b><ol>";
+        //als de zoekconfiguratie nog kinderen heeft dan moet er doorgezocht worden, dus iets andere melding
+        if(hasChilds){
+            sResult="U bedoelt: ";        
+        }else{
+            if (values.length<maxResults) {
+                sResult = "<br><b>Meerdere resultaten gevonden.<b>";
+            } else {
+                sResult = "<br><b>Meer dan "+maxResults+" resultaten gevonden. Er worden slechts "+maxResults+" resultaten weergegeven:<b>";
+            }
         }
+        sResult+="<ol>";
         for (var i =0; i < values.length; i++){
             sResult += "<li><a href='#' onclick='javascript: handleSearchResult("+i+")'>"+values[i].label+"</a></li>";
         }
         sResult += "</ol>";
     } else {
-        sResult = "<br><b>Locatie gevonden:<br>" + values[0].label + "<b>";
+        sResult = "<br><b>Locatie gevonden:<br>" + values[0].label + "</b>";
     }
     searchResults.innerHTML=sResult;
     if (values.length==1)
@@ -1298,7 +1305,7 @@ function handleSearchResult(searchResultId){
         alert("Zoekconfiguratie heeft meerdere kinderen. Dit is momenteel niet mogelijk. De eerste wordt gebruikt voor het verder zoeken");
     }
     var child=childs[0];
-    document.getElementById("searchResults").innerHTML+="<br><b>Bezig met "+child.naam +" voor "+searchResult.label+"</b>";
+    document.getElementById("searchResults").innerHTML="<br><b>Bezig met zoeken op: \""+child.naam +"\" voor \""+searchResult.label+"\"</b>";
     if (child.zoekVelden==undefined || child.zoekVelden.length==0){
         alert("Geen zoekvelden geconfigureerd voor zoekconfiguratie child met id: "+child.id);
     }
@@ -1311,13 +1318,15 @@ function handleSearchResult(searchResultId){
      */
     var zoekStrings= new Array();
     var gevondenResultIds=new Array();
-    for (var i=0; i < child.zoekVelden.length; i++){
-        //haal de waarde van het ingevulde zoekveld op dat bij dit zoekveld hoort
-        zoekStrings[i]="";
+    for (var i=0; i < child.zoekVelden.length; i++){        
+        zoekStrings[i]="";               
         var zoekVeld=child.zoekVelden[i];
+        //haal de waarde van het ingevulde zoekveld op dat bij dit zoekveld hoort 
+        /* Doe dit niet meer, zie xxxChildZoekVeldenxxx op deze pagina.
         if(document.getElementById("searchField_"+zoekVeld.id)){
             zoekStrings[i]=document.getElementById("searchField_"+zoekVeld.id).value;
         }
+        */
         //als het zoekveld leeg was probeer dan een waarde uit de vorige zoekopdracht te halen.
         if (zoekStrings[i].length==0){
             for (var b=0; b  < searchResult.attributen.length;  b++){
@@ -1350,10 +1359,12 @@ function getChildzoekConfiguraties(zoekconfiguratie){
 function createZoekConfiguratieVelden(zc){
     var zoekVelden=zc.zoekVelden;
     var s="";
-    for (var i=0; i < zoekVelden.length; i++){
-        if (zoekVelden[i].type!=3){
-            s+='<b>'+zoekVelden[i].label+':</b><br/>';
-            s+='<input type="text" id="searchField_'+zoekVelden[i].id+'" name="'+zoekVelden[i].attribuutnaam+'" size="40"/><br/>'
+    if (zoekVelden){
+        for (var i=0; i < zoekVelden.length; i++){
+            if (zoekVelden[i].type!=3){
+                s+='<b>'+zoekVelden[i].label+':</b><br/>';
+                s+='<input type="text" id="searchField_'+zoekVelden[i].id+'" name="'+zoekVelden[i].attribuutnaam+'" size="40"/><br/>'
+            }
         }
     }
     return s;
@@ -1372,13 +1383,14 @@ function searchSelectChanged(element){
     var s="";
     s+=createZoekConfiguratieVelden(zoekconfiguraties[currentSearchSelectId]);
     var childs=getChildzoekConfiguraties(zoekconfiguraties[currentSearchSelectId]);
-    for (var i=0; i < childs.length; i++){
-        s+=createZoekConfiguratieVelden(childs[i])
-    }
+    /*xxxChildZoekVeldenxxx Hier worden ook de child zoekvelden aangemaakt maar dat lijkt me nog niet erg handig.
+     *for (var i=0; i < childs.length; i++){
+        s+=createZoekConfiguratieVelden(childs[i]);
+    }*/
     s+='<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />';
     container.innerHTML=s;
     var searchFieldFound=true;
-    //add a onkeyup event to the created input fields
+    //add a onkeyup event on the created input fields
     var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
     for(i=0; i<zoekVelden.length; i++){
         var searchField=document.getElementById("searchField_"+zoekVelden[i].id);

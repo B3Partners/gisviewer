@@ -31,15 +31,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <p>
                         Deze B3P GIS Suite toont de mogelijkheden van de GIS viewer. 
                         Op deze plaats vindt u later korte informatie en uitleg over
-                        het active thema van de kaart. Ook kunnen hier een logo en andere
+                        het actieve thema van de kaart. Ook kunnen hier een logo en andere
                         lay-out elementen van de opdrachtgever verwerkt worden.
                     </p>
                 </div>
            </td>
             <td valign="top">               
-                <h2>Active Thema</h2>
+                <h2>Actief Thema</h2>
                 <p>
-                    Het active thema wordt rechts getoond in de titelbalk hierboven. U kunt
+                    Het actieve thema wordt rechts getoond in de titelbalk hierboven. U kunt
                     informatie opvragen door met de informatie-tool in de kaart te klikken.
                     Deze informatie verschijnt dan hier. Via zoeken of zoomen navigeert u eerst
                     naar het juiste deel van de kaart. Voor meer hulp klik <html:link page="/help.do" module="">Help</html:link>

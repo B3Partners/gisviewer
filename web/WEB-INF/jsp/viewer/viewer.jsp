@@ -47,11 +47,11 @@
     var searchSldVisibleValue='${searchSldVisibleValue}';
 
     //Wel of niet cookies
-    var useCookies=false;
+    var useCookies=${cfg_useCookies};
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
      * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
      */
-    var multipleActiveThemas=true;
+    var multipleActiveThemas=${cfg_multipleActiveThemas};
     
     /* True als de admin- of metadata in een popup wordt getoond
      * False als deze onder de kaart moet worden getoond
@@ -59,27 +59,25 @@
      */
     var usePopup= ${cfg_usePopup};
     var useDivPopup= ${cfg_useDivPopup};
-    var dataframepopupHandle = null;
+    var dataframepopupHandle = ${cfg_dataframepopupHandle};
 
     /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
      * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
      * en op null als het leftPanel niet moet worden getoond */
     var usePanelControls = ${cfg_usePanelControls};
-    var showLeftPanel = null;
+    var showLeftPanel = ${cfg_showLeftPanel};
 
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
      * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
      * als de admindata automatisch moeten worden doorgestuurd)
      */
-    var autoRedirect = 2;
+    var autoRedirect = ${cfg_autoRedirect};
     
     /* het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie.
      **/
-    var tolerance=4;
-    //if(demogebruiker) usePopup=false;
-    
+    var tolerance=${cfg_tolerance};
     
     /*
      * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
@@ -102,33 +100,28 @@
      * 
      * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag
      */
-    var useSortableFunction=false;
-    var layerDelay = 5000; // instellen in ms, dus 5000 voor 5 seconden
+    var useSortableFunction=${cfg_useSortableFunction};
+    var layerDelay = ${cfg_layerDelay}; // instellen in ms, dus 5000 voor 5 seconden
 
     //de vertraging voor het refreshen van de kaart.
-    var refreshDelay=1000;
+    var refreshDelay=${cfg_refreshDelay};
+
+    /* kan weg ?
     var nr = 0;
-    
-    /****************************************************************************
-    Zoeker instellingen
-     ******************************************************************************/
-    /*
-     *Het id van het thema dat wordt gebruikt om de dichtsbij zijnde adres te tonen.
-     */
+      
     var adresThemaId=88;
-    /*
-     * De kolommen van het thema dat moet worden getoond als er een identify wordt gedaan.
-     */
     var infoArray = new Array();
     infoArray[0] = "bu_naam";
     infoArray[1] = "gm_naam";
+    */
 
     /*
      * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
      * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
      * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus)
      */
-    var zoekConfigIds = "1,2,7";
+    var zoekConfigIds = ${cfg_zoekConfigIds};
+
     //ZOEKCONFIGURATIEWEG: Gehele functie weg
     function showZoekConfiguratie(zoekconfiguratie){
         var visibleIds= zoekConfigIds.split(",");
@@ -143,11 +136,11 @@
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
      */
-    var minBboxZoeken=1000;
+    var minBboxZoeken=${cfg_minBboxZoeken};
     /*
      * Maximaal aantal zoekresultaten
      */
-    var maxResults=25;
+    var maxResults=${cfg_maxResults};
     
     /* De rechten van de verschillende gebruikers. De tabbladen die ze mogen zien en de volgorde waarin ze getoond worden.
      * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
@@ -457,7 +450,7 @@
         },
         "saveExpandedState": true,
         "saveScrollState": true,
-        "expandAll": true
+        "expandAll": ${cfg_expandAll}
     });
 
     <c:if test="${not empty activeTab}">

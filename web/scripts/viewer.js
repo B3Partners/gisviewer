@@ -153,6 +153,7 @@ function handleGetAdminData(/*coords,*/ geom) {
     }
     if(checkedThemaIds == null || checkedThemaIds == '') {
         //alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
+        hideLoading();
         return;
     }    
     document.forms[0].admindata.value = 't';

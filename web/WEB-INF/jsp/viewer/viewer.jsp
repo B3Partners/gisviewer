@@ -1,25 +1,3 @@
-<%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-
-Copyright 2006, 2007, 2008 B3Partners BV
-
-This file is part of B3P Gisviewer.
-
-B3P Gisviewer is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-B3P Gisviewer is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
---%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
@@ -79,14 +57,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
      * False als deze onder de kaart moet worden getoond
      * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond
      */
-    var usePopup=false;
-    var useDivPopup=false;
+    var usePopup= ${cfg_usePopup};
+    var useDivPopup= ${cfg_useDivPopup};
     var dataframepopupHandle = null;
 
     /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
      * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
      * en op null als het leftPanel niet moet worden getoond */
-    var usePanelControls = true;
+    var usePanelControls = ${cfg_usePanelControls};
     var showLeftPanel = null;
 
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar

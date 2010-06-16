@@ -19,11 +19,9 @@
     
     var sldServletUrl=window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>";
 
-    /**
-     *Met zoek configuratie
-     */
-    var zoekconfiguraties=null;
-    if(${zoekconfiguraties}){
+    var zoekconfiguraties = null;
+
+    if (${zoekconfiguraties}){
         zoekconfiguraties=${zoekconfiguraties};
     }
     
@@ -36,27 +34,25 @@
     var fullbbox='${fullExtent}';
     var bbox='${extent}';
 
-    // init search
+    /* init search */
     var searchConfigId='${searchConfigId}';
     var search='${search}';
 
-    //search with sld result (searchAction: filter or highlight and zoom)
+    /* search with sld result (searchAction: filter or highlight and zoom) */
     var searchAction='${searchAction}';
     var searchId='${searchId}';
     var searchClusterId='${searchClusterId}';
     var searchSldVisibleValue='${searchSldVisibleValue}';
 
-    //Wel of niet cookies
     var useCookies=${cfg_useCookies};
+
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
-     * False als je maximaal van 1 thema data kan ophalen. (radiobuttons)
-     */
+     * False als je maximaal van 1 thema data kan ophalen. (radiobuttons) */
     var multipleActiveThemas=${cfg_multipleActiveThemas};
     
     /* True als de admin- of metadata in een popup wordt getoond
      * False als deze onder de kaart moet worden getoond
-     * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond
-     */
+     * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
     var usePopup= ${cfg_usePopup};
     var useDivPopup= ${cfg_useDivPopup};
     var dataframepopupHandle = ${cfg_dataframepopupHandle};
@@ -70,19 +66,16 @@
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
      * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
-     * als de admindata automatisch moeten worden doorgestuurd)
-     */
+     * als de admindata automatisch moeten worden doorgestuurd) */
     var autoRedirect = ${cfg_autoRedirect};
     
-    /* het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
-     * en info wordt opgevraagd. Dus een tolerantie.
-     **/
+    /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
+     * en info wordt opgevraagd. Dus een tolerantie. */
     var tolerance=${cfg_tolerance};
     
     /*
      * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
-     * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen
-     */
+     * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen */
     var loggedInUser = readCookie('loggedInUser');
     if(loggedInUser != null) {
         if(loggedInUser != '<c:out value="${pageContext.request.remoteUser}"/>') {
@@ -98,28 +91,17 @@
      * de kaart wordt na het slepen automatisch herladen na x aantal (instellen door layerDelay) seconden
      * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
      * 
-     * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag
-     */
+     * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
     var useSortableFunction=${cfg_useSortableFunction};
     var layerDelay = ${cfg_layerDelay}; // instellen in ms, dus 5000 voor 5 seconden
 
-    //de vertraging voor het refreshen van de kaart.
+    /* de vertraging voor het refreshen van de kaart. */
     var refreshDelay=${cfg_refreshDelay};
-
-    /* kan weg ?
-    var nr = 0;
-      
-    var adresThemaId=88;
-    var infoArray = new Array();
-    infoArray[0] = "bu_naam";
-    infoArray[1] = "gm_naam";
-    */
 
     /*
      * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
      * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
-     * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus)
-     */
+     * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
     var zoekConfigIds = ${cfg_zoekConfigIds};
 
     //ZOEKCONFIGURATIEWEG: Gehele functie weg
@@ -132,26 +114,25 @@
         }
         return false;
     }
+
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
-     * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken.
-     */
+     * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
     var minBboxZoeken=${cfg_minBboxZoeken};
-    /*
-     * Maximaal aantal zoekresultaten
-     */
+
+    /* Maximaal aantal zoekresultaten */
     var maxResults=${cfg_maxResults};
     
     /* De rechten van de verschillende gebruikers. De tabbladen die ze mogen zien en de volgorde waarin ze getoond worden.
      * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
-     *       Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
+     * Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
     var userrights = {
-        "beheerder": ["themas", "legenda", "zoeken"],
+        "beheerder": [${cfg_tabbladenBeheerder}],
         // "organisatiebeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
         // "themabeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
-        "gebruiker": ["themas", "legenda", "zoeken"],
-        "demogebruiker": ["themas", "legenda", "zoeken", "planselectie"],
-        "anoniem": ["themas", "legenda", "zoeken", "planselectie"]
+        "gebruiker": [${cfg_tabbladenGebruiker}],
+        "demogebruiker": [${cfg_tabbladenDemoGebruiker}],
+        "anoniem": [${cfg_tabbladenAnoniem}]
     };
     
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,

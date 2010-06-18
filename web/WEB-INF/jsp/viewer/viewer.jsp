@@ -53,21 +53,21 @@
     /* True als de admin- of metadata in een popup wordt getoond
      * False als deze onder de kaart moet worden getoond
      * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
-    var usePopup= ${cfg_usePopup};
-    var useDivPopup= ${cfg_useDivPopup};
-    var dataframepopupHandle = ${cfg_dataframepopupHandle};
+    var usePopup=${cfg_usePopup};
+    var useDivPopup=${cfg_useDivPopup};
+    var dataframepopupHandle=${cfg_dataframepopupHandle};
 
     /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
      * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
      * en op null als het leftPanel niet moet worden getoond */
-    var usePanelControls = ${cfg_usePanelControls};
-    var showLeftPanel = ${cfg_showLeftPanel};
+    var usePanelControls=${cfg_usePanelControls};
+    var showLeftPanel=${cfg_showLeftPanel};
 
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
      * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
      * als de admindata automatisch moeten worden doorgestuurd) */
-    var autoRedirect = ${cfg_autoRedirect};
+    var autoRedirect=${cfg_autoRedirect};
     
     /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie. */

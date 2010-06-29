@@ -18,8 +18,6 @@ var cookieArray = readCookie('checkedLayers');
 var activeAnalyseThemaId = '';
 var activeClusterId='';
 
-var featureInfoData=null;
-
 // temp lists for init
 var layersAan= new Array();
 var clustersAan = new Array();
@@ -1034,7 +1032,7 @@ function flamingo_map1_onIdentify(movie,extend){
 }
 var teller=0;
 //update the getFeatureInfo in the feature window.
-function updateGetFeatureInfo(){
+function updateGetFeatureInfo(data){
     teller++
     //if times out return;
     if (teller==featureInfoTimeOut){
@@ -1043,20 +1041,19 @@ function updateGetFeatureInfo(){
     }
     //if the admindata window is loaded then update the page (add the featureinfo thats given by the getFeatureInfo request.
     if (usePopup && dataframepopupHandle.contentWindow.writeFeatureInfoData){
-        dataframepopupHandle.contentWindow.writeFeatureInfoData(featureInfoData);
-        featureInfoData=null;
+        dataframepopupHandle.contentWindow.writeFeatureInfoData(data);
+        data=null;
     }else if (window.frames.dataframe.writeFeatureInfoData){
-        window.frames.dataframe.writeFeatureInfoData(featureInfoData);
-        featureInfoData=null;
+        window.frames.dataframe.writeFeatureInfoData(data);
+        data=null;
     }else{
         //if the admindata window is not loaded yet then retry after 1sec
-        setTimeout("updateGetFeatureInfo()",1000);
+        setTimeout(function(){updateGetFeatureInfo(data)},1000);
     }
 }
 function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLayers,totalLayers){
-    featureInfoData=data;
     teller=0;
-    updateGetFeatureInfo();
+    updateGetFeatureInfo(data);
 }
 var firstTimeOninit=true;
 function flamingo_map1_onInit(){

@@ -326,9 +326,6 @@
     //writes the obj data from flamingo to a table
     function writeFeatureInfoData(obj){
         doClose=false;
-        if (document.getElementById("content_style")!=undefined){
-            document.getElementById("content_style").style.display="none";
-        }
         var tableData="";
         for (layer in obj){
             tableData+="<table class=\"aanvullende_info_table\" >";
@@ -354,8 +351,10 @@
             }
             tableData+="</table>";
         }
-        document.getElementById('getFeatureInfo').innerHTML=tableData;
-        //document.write(tableData);
+        if (document.getElementById("content_style")!=undefined && tableData.length>0){
+            document.getElementById("content_style").style.display="none";
+        }
+       document.getElementById('getFeatureInfo').innerHTML=tableData;
     }
 
     if (opener) {

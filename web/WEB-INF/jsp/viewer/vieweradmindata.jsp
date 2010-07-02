@@ -40,7 +40,6 @@
                     <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
                     <c:set var="themaId" value="${ThemaItem.thema.id}"/>
                     <c:set var="adminPk" value="${ThemaItem.thema.admin_pk}"/>
-                    <c:set var="conn_type" value="${ThemaItem.thema.connectie.type}" />
                 </c:if>
             </c:forEach>
 
@@ -59,10 +58,10 @@
                     </div>
                     ${themanaam}
 
-                    <c:if test="${conn_type == 'jdbc'}">
+                    <%--c:if test="${conn_type == 'jdbc'}">
                         <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()"><html:image src="./images/icons/page_white_csv.png" title="Exporteer naar csv" alt="Exporteer naar csv" /></a>
                         <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()"><html:image src="./images/icons/page_white_info.png" title="Exporteer naar infobox" alt="Exporteer naar infobox" /></a>
-                    </c:if>
+                    </c:if--%>
                     
                     <form action="services/Data2CSV" name="data2csv${tStatus.count}" id="data2csv${tStatus.count}" target="_blank" method="post">
                         <input name="themaId" type="hidden" value="${themaId}"/>

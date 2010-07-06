@@ -73,7 +73,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             <optgroup label="${thema_object_data[1]}">
                                 <c:forEach var="regel" items="${thema_object_data[2]}">
                                     <html:option  styleClass="thema_object" value="ThemaObject_${thema_object_data[0]}_${regel.primairyKey}">
-                                        <c:forEach var="item" items="${regel}" end="1">
+                                        <c:forEach var="item" items="${regel.values}" end="1">
                                         ${item}
                                         </c:forEach>
                                     </html:option>

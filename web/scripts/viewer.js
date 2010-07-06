@@ -120,9 +120,9 @@ function setSldOnDefaultMap(sldUrl,reload){
 }
 
 function doAjaxRequest(point_x, point_y) {
-    if (adresThemaId!=undefined){
+    /*if (adresThemaId!=undefined){
         JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
-    }
+    }*/
 }
 
 function handleGetData(str) {
@@ -747,7 +747,7 @@ function refreshLayer(){
     }
 }
 
-function loadObjectInfo(/*coords,*/ geom) {
+function loadObjectInfo(geom) {
     // vul object frame
     document.forms[0].admindata.value = '';
     document.forms[0].metadata.value = '';
@@ -1011,24 +1011,11 @@ function flamingo_map1_onIdentify(movie,extend){
         geom += extend.minx +" "+ extend.miny;
         geom += ")";
     }
-
-    /*var coords = new Array();
-    coords.push(extend.minx);
-    coords.push(extend.miny);
-    if (extend.minx!=extend.maxx && extend.miny!=extend.maxy){
-        coords.push(extend.maxx);
-        coords.push(extend.miny);
-        coords.push(extend.maxx);
-        coords.push(extend.maxy);
-        coords.push(extend.minx);
-        coords.push(extend.maxy);
-        coords.push(extend.minx);
-        coords.push(extend.miny);
-    }*/
-    handleGetAdminData(/*coords,*/ geom);
-
+    handleGetAdminData(geom);
+    
     doAjaxRequest(xp,yp);
-    loadObjectInfo(/*coords,*/ geom);
+    
+    loadObjectInfo(geom);
 }
 var teller=0;
 //update the getFeatureInfo in the feature window.

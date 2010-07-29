@@ -127,12 +127,7 @@
      * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
      * Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
     var userrights = {
-        "beheerder": [${cfg_tabbladenBeheerder}],
-        // "organisatiebeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
-        // "themabeheerder": ["themas", "legenda", "zoeken", "gebieden", "analyse"],
-        "gebruiker": [${cfg_tabbladenGebruiker}],
-        "demogebruiker": [${cfg_tabbladenDemoGebruiker}],
-        "anoniem": [${cfg_tabbladenAnoniem}]
+        "${cfg_rolnaam}": [${cfg_tabs}]
     };
     
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
@@ -147,35 +142,8 @@
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" }
     };
 
-    var enabledtabs = new Array();
-    if(beheerder) enabledtabs = userrights.beheerder;
-    if(gebruiker) {
-        for(k in userrights.gebruiker) {
-            var found = false;
-            for(j in enabledtabs) {
-                if(userrights.gebruiker[k] == enabledtabs[j]) found = true;
-            }
-            if(!found) enabledtabs[enabledtabs.length] = userrights.gebruiker[k];
-        }
-    }
-    if(demogebruiker) {
-        for(k in userrights.demogebruiker) {
-            var found = false;
-            for(j in enabledtabs) {
-                if(userrights.demogebruiker[k] == enabledtabs[j]) found = true;
-            }
-            if(!found) enabledtabs[enabledtabs.length] = userrights.demogebruiker[k];
-        }
-    }
-    if(anoniem){
-        for(k in userrights.anoniem) {
-            var found = false;
-            for(j in enabledtabs) {
-                if(userrights.anoniem[k] == enabledtabs[j]) found = true;
-            }
-            if(!found) enabledtabs[enabledtabs.length] = userrights.anoniem[k];
-        }
-    }
+    var enabledtabs = userrights.${cfg_rolnaam};
+
     <c:if test="${not empty enabledTabs}">
         enabledtabs=${enabledTabs};
     </c:if>    

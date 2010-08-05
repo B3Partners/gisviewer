@@ -532,7 +532,7 @@ function loadTreeLegendImage(divid) {
         var legendimg = document.createElement("img");
         legendimg.name = item.title;
         legendimg.alt = "Legenda " + item.title;
-        legendimg.onerror=imageOnerror;
+        legendimg.onerror=treeImageError;
         legendimg.onload=treeImageOnload;
         legendimg.className = 'treeLegendImage';
         var timestamp=(Math.floor(new Date().getTime()));
@@ -556,6 +556,12 @@ function createTreeLegendDiv(item) {
     div.style.display = 'none';
 
     return div;
+}
+
+function treeImageError(){
+    var divobj = $j(this).parent();
+    divobj.find("img.legendLoading").hide();
+    divobj.html('<span style="color: Black;">Legenda kan niet worden opgehaald</span>');
 }
 
 function treeImageOnload(){

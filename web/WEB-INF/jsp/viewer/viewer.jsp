@@ -72,7 +72,10 @@
     /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie. */
     var tolerance=${cfg_tolerance};
-    
+
+    /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
+    var showlegendintree=true;
+
     /*
      * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
      * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen */
@@ -386,6 +389,7 @@
         document.getElementById('informatiebalk').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 3)) + 'px';
     }
 
+    var imageBaseUrl = "<html:rewrite page="/images/"/>";
     filterInvisibleItems(visibleTree);
     treeview_create({
         "id": "layermaindiv",

@@ -478,11 +478,89 @@ function createLabel(container, item) {
             }
             container.appendChild(labelCheckbox);
         }
+
+        if (item.legendurl != undefined && showlegendintree) {
+            container.appendChild(document.createTextNode('  '));
+            container.appendChild(createTreeLegendIcon());
+        }
+
         container.appendChild(document.createTextNode('  '));
         container.appendChild(createMetadatLink(item));
+
+        if (item.legendurl != undefined && showlegendintree) {
+            container.appendChild(createTreeLegendDiv(item));
+        }
         
     } else if(item.hide_tree && item.visible && item.wmslayers){
         addItemAsLayer(item,true);
+    }
+}
+
+// var legendimg = null;
+function createTreeLegendIcon() {
+    var legendicon = document.createElement("img");
+    legendicon.src = imageBaseUrl + "icons/application_view_list.png";
+    legendicon.style.border = '0px none White';
+    legendicon.alt = "Legenda tonen";
+    legendicon.title = "Legenda tonen";
+    legendicon.className = 'treeLegendIcon';
+    $j(legendicon).click(function(){
+        loadTreeLegendImage($j(this).siblings("div").attr("id"));
+    });
+    return legendicon;
+}
+
+function loadTreeLegendImage(divid) {
+    var divobj = document.getElementById(divid);
+    var $divobj = $j(divobj);
+    var item = divobj.theItem;
+
+    var found = $divobj.find("img.legendLoading");
+    if(found.length == 0) {
+        var legendloading = document.createElement("img");
+        legendloading.src = imageBaseUrl + "icons/loadingsmall.gif";
+        legendloading.style.border = '0px none White';
+        legendloading.alt = "Loading";
+        legendloading.title = "Loading";
+        legendloading.className = 'legendLoading';
+
+        divobj.appendChild(legendloading);
+    }
+
+    var foundlegend = $divobj.find("img.treeLegendImage");
+    if(foundlegend.length == 0) {
+        var legendimg = document.createElement("img");
+        legendimg.name = item.title;
+        legendimg.alt = "Legenda " + item.title;
+        legendimg.onerror=imageOnerror;
+        legendimg.onload=treeImageOnload;
+        legendimg.className = 'treeLegendImage';
+        var timestamp=(Math.floor(new Date().getTime()));
+        legendimg.src = item.legendurl + "&timestamp=" + timestamp;
+
+        divobj.appendChild(legendimg);
+    }
+
+    $j(divobj).toggle();
+}
+
+function createTreeLegendDiv(item) {
+    var id=item.id + '#tree#' + item.wmslayers;
+
+    var div = document.createElement("div");
+    div.name=id;
+    div.id=id;
+    div.title =item.title;
+    div.className="treeLegendClass";
+    div.theItem=item;
+    div.style.display = 'none';
+
+    return div;
+}
+
+function treeImageOnload(){
+    if (parseInt(this.height) > 5){
+        $j(this).parent().find("img.legendLoading").hide();
     }
 }
 

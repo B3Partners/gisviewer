@@ -183,3 +183,11 @@ html, body {
     left: 6px;
     bottom: 3px;
 }
+
+.treeLegendClass {
+    border: 1px solid Black;
+    background-color: white;
+    padding: 5px;
+    margin-left: 5px;
+    margin-top: 2px;
+}

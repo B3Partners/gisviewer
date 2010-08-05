@@ -320,6 +320,9 @@ function isActiveItem(item) {
 }
 function filterInvisibleItems(cluster){
     var hasClusters=false;
+    if(typeof cluster === 'undefined' || !cluster) {
+        return;
+    }
     if(cluster.children) {
         for(var i = 0; i < cluster.children.length; i++) {
             var item=cluster.children[i];
@@ -595,7 +598,12 @@ function switchTab(obj) {
         var tabid = enabledtabs[i];
         if(tabid == obj.id) allowed = true;
     }
-    if(!allowed) obj = document.getElementById(enabledtabs[0]);
+    if(!allowed) {
+        obj = document.getElementById(enabledtabs[0]);
+    }
+    if(typeof obj === 'undefined' || !obj) {
+        return;
+    }
 
     eraseCookie('activetab');
     createCookie('activetab', obj.id, '7');

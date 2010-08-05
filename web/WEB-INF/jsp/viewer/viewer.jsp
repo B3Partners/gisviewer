@@ -10,6 +10,10 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 
 <script type="text/javascript">
+    function catchEmpty(defval){
+        return defval
+    }
+
     var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
     var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
@@ -19,17 +23,22 @@
     
     var sldServletUrl=window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>";
 
-    var zoekconfiguraties = null;
-
-    if (${zoekconfiguraties}){
-        zoekconfiguraties=${zoekconfiguraties};
+    var zoekconfiguraties = catchEmpty(${zoekconfiguraties});
+    if(typeof zoekconfiguraties === 'undefined' || !zoekconfiguraties) {  
+        zoekconfiguraties = [{}];
     }
-    
+
     var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
     var kburl="${kburl}";
-    var themaTree=${tree};
-    var visibleTree=${tree};
-    
+    var themaTree=catchEmpty(${tree});
+     if(typeof themaTree === 'undefined' || !themaTree) {
+        themaTree = null;
+    }
+   var visibleTree=catchEmpty(${tree});
+    if(typeof visibleTree === 'undefined' || !visibleTree) {
+        visibleTree = null;
+    }
+   
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
     var bbox='${extent}';
@@ -44,37 +53,67 @@
     var searchClusterId='${searchClusterId}';
     var searchSldVisibleValue='${searchSldVisibleValue}';
 
-    var useCookies=${cfg_useCookies};
+    var useCookies=catchEmpty(${cfg_useCookies});
+    if(typeof useCookies === 'undefined' || !useCookies) {
+        useCookies = true;
+    }
 
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
      * False als je maximaal van 1 thema data kan ophalen. (radiobuttons) */
-    var multipleActiveThemas=${cfg_multipleActiveThemas};
+    var multipleActiveThemas=catchEmpty(${cfg_multipleActiveThemas});
+    if(typeof multipleActiveThemas === 'undefined' || !multipleActiveThemas) {
+        multipleActiveThemas = true;
+    }
     
     /* True als de admin- of metadata in een popup wordt getoond
      * False als deze onder de kaart moet worden getoond
      * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
-    var usePopup=${cfg_usePopup};
-    var useDivPopup=${cfg_useDivPopup};
-    var dataframepopupHandle=${cfg_dataframepopupHandle};
+    var usePopup=catchEmpty(${cfg_usePopup});
+    if(typeof usePopup === 'undefined' || !usePopup) {
+        usePopup = false;
+    }
+    var useDivPopup=catchEmpty(${cfg_useDivPopup});
+    if(typeof useDivPopup === 'undefined' || !useDivPopup) {
+        useDivPopup = false;
+    }
+    var dataframepopupHandle=catchEmpty(${cfg_dataframepopupHandle});
+    if(typeof dataframepopupHandle === 'undefined' || !dataframepopupHandle) {
+        dataframepopupHandle = null;
+    }
 
     /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
      * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
      * en op null als het leftPanel niet moet worden getoond */
-    var usePanelControls=${cfg_usePanelControls};
-    var showLeftPanel=${cfg_showLeftPanel};
+    var usePanelControls=catchEmpty(${cfg_usePanelControls});
+    if(typeof usePanelControls === 'undefined' || !usePanelControls) {
+        usePanelControls = true;
+    }
+    var showLeftPanel=catchEmpty(${cfg_showLeftPanel});
+    if(typeof showLeftPanel === 'undefined' || !showLeftPanel) {
+        showLeftPanel = false;
+    }
 
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
      * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
      * als de admindata automatisch moeten worden doorgestuurd) */
-    var autoRedirect=${cfg_autoRedirect};
+    var autoRedirect=catchEmpty(${cfg_autoRedirect});
+    if(typeof autoRedirect === 'undefined' || !autoRedirect) {
+        autoRedirect = 2;
+    }
     
     /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie. */
-    var tolerance=${cfg_tolerance};
+    var tolerance=catchEmpty(${cfg_tolerance});
+    if(typeof tolerance === 'undefined' || !tolerance) {
+        tolerance = 1;
+    }
 
     /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
-    var showlegendintree=true;
+    var showlegendintree=catchEmpty(${cfg_showlegendintree});
+    if(typeof showlegendintree === 'undefined' || !showlegendintree) {
+        showlegendintree = true;
+    }
 
     /*
      * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
@@ -95,17 +134,29 @@
      * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
      * 
      * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
-    var useSortableFunction=${cfg_useSortableFunction};
-    var layerDelay = ${cfg_layerDelay}; // instellen in ms, dus 5000 voor 5 seconden
+    var useSortableFunction=catchEmpty(${cfg_useSortableFunction});
+    if(typeof useSortableFunction === 'undefined' || !useSortableFunction) {
+        useSortableFunction = false;
+    }
+    var layerDelay = catchEmpty(${cfg_layerDelay}); // instellen in ms, dus 5000 voor 5 seconden
+    if(typeof layerDelay === 'undefined' || !layerDelay) {
+        layerDelay = 5000;
+    }
 
     /* de vertraging voor het refreshen van de kaart. */
-    var refreshDelay=${cfg_refreshDelay};
+    var refreshDelay=catchEmpty(${cfg_refreshDelay});
+    if(typeof refreshDelay === 'undefined' || !refreshDelay) {
+        refreshDelay = 1000;
+    }
 
     /*
      * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
      * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
      * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
-    var zoekConfigIds = ${cfg_zoekConfigIds};
+    var zoekConfigIds = catchEmpty(${cfg_zoekConfigIds});
+    if(typeof zoekConfigIds === 'undefined' || !zoekConfigIds) {
+        zoekConfigIds = "";
+    }
 
     //ZOEKCONFIGURATIEWEG: Gehele functie weg
     function showZoekConfiguratie(zoekconfiguratie){
@@ -121,17 +172,16 @@
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
-    var minBboxZoeken=${cfg_minBboxZoeken};
+    var minBboxZoeken=catchEmpty(${cfg_minBboxZoeken});
+    if(typeof minBboxZoeken === 'undefined' || !minBboxZoeken) {
+        minBboxZoeken = 1000;
+    }
 
     /* Maximaal aantal zoekresultaten */
-    var maxResults=${cfg_maxResults};
-    
-    /* De rechten van de verschillende gebruikers. De tabbladen die ze mogen zien en de volgorde waarin ze getoond worden.
-     * TODO: Hoe te handelen als een gebruiker meerdere rollen heeft en verschillende tabbladen voor deze rollen?? Komt dit voor?
-     * Nu wordt de laatste rol gebruikt om de tabs te bepalen (bijv: user=beheerder en themabeheerder, dan worden themabeheerder tabs gebruikt */
-    var userrights = {
-        "${cfg_rolnaam}": [${cfg_tabs}]
-    };
+    var maxResults=catchEmpty(${cfg_maxResults});
+    if(typeof maxResults === 'undefined' || !maxResults) {
+        maxResults = 25;
+    }
     
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
      * de naam en eventueel extra Content-divs die geopend moeten worden */
@@ -145,11 +195,8 @@
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" }
     };
 
-    var enabledtabs = userrights.${cfg_rolnaam};
+    var enabledtabs = [${cfg_tabs}];
 
-    <c:if test="${not empty enabledTabs}">
-        enabledtabs=${enabledTabs};
-    </c:if>    
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">
@@ -319,6 +366,7 @@
         <div>
             <br>
             <script type="text/javascript">
+                if (zoekconfiguraties!=null) {
                     document.write('<b>Zoek op:</b><br>')
                     document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
                     document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
@@ -331,7 +379,7 @@
                     document.write('</SELECT>');
                     
                     document.write('<DIV id="searchInputFieldsContainer">&nbsp;</DIV>')
-                
+                }
             </script>
             <br>
             <div class="searchResultsClass" id="searchResults"></div>
@@ -391,6 +439,11 @@
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
     filterInvisibleItems(visibleTree);
+    var expandAll=catchEmpty(${cfg_expandAll});
+    if(typeof expandAll === 'undefined' || !expandAll) {
+        expandAll = false;
+    }
+
     treeview_create({
         "id": "layermaindiv",
         "root": visibleTree,
@@ -403,7 +456,7 @@
         },
         "saveExpandedState": true,
         "saveScrollState": true,
-        "expandAll": ${cfg_expandAll}
+        "expandAll": expandAll
     });
 
     <c:if test="${not empty activeTab}">
@@ -428,15 +481,15 @@
             if(!usePopup && !useDivPopup) {
                 if(panelBelowCollapsed) {
                     dataframehoogte = 150;
-                    document.getElementById('informatiebalk').style.display = 'block';
-                    document.getElementById('dataframediv').style.display = 'block';
-                    document.getElementById('onderbalkControl').className = 'bottom_open';
+                    $j("#informatiebalk").css("display", "block");
+                    $j("#dataframediv").css("display", "block");
+                    $j("#onderbalkControl").addClass("bottom_open");
                     panelBelowCollapsed = false;
                 } else {
                     dataframehoogte = 0;
-                    document.getElementById('informatiebalk').style.display = 'none';
-                    document.getElementById('dataframediv').style.display = 'none';
-                    document.getElementById('onderbalkControl').className = 'bottom_closed';
+                    $j("#informatiebalk").css("display", "none");
+                    $j("#dataframediv").css("display", "none");
+                    $j("#onderbalkControl").addClass("bottom_closed");
                     panelBelowCollapsed = true;
                 }
                 $j("#dataframediv").animate({ height: dataframehoogte }, 400);

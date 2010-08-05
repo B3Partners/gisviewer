@@ -645,7 +645,8 @@ function syncLayerCookieAndForm(layerString) {
 }
 
 //called when a checkbox is clicked.
-function checkboxClick(obj, dontRefresh) {    
+function checkboxClick(obj, dontRefresh) {
+
     if(obj.checked) {        
         //add legend
         //add wms layer part
@@ -763,14 +764,22 @@ function doRefreshLayer(){
 
 }
 function refreshLayer(){
-    getLayerIdsAsString();
+    //getLayerIdsAsString();
+
     if (layerUrl!=undefined && layerUrl!=null) {
         var backgroundLayers="";
         var topLayers="";
         var queryLayers="";
         // last in list will be on top in map
         for (var i=0; i<enabledLayerItems.length; i++){
-            var item=enabledLayerItems[i];
+            var item = enabledLayerItems[i];
+
+            /* Item alleen toevoegen aan de layers indien
+             * deze een parent cluster heeft die aangevinkt staat of
+             * geen cluster heeft */
+            if (!itemParentIsEnabled(item))
+                continue;
+            
             if (item.visible){
                 if (item.wmslayers){
                     if (item.background){
@@ -871,7 +880,8 @@ function getLayerIdsAsString() {
     var ret = "";
     var firstTime = true;
 
-    for (var i=0; i < enabledLayerItems.length; i++){
+    for (var i=0; i < enabledLayerItems.length; i++) {
+        
         if(firstTime) {
             ret += enabledLayerItems[i].id;
             firstTime = false;
@@ -879,8 +889,15 @@ function getLayerIdsAsString() {
             ret += "," + enabledLayerItems[i].id;
         }
     }
-    //    alert ("layerasstring: " + ret);
+  
     return ret;
+}
+
+function itemParentIsEnabled(item) {
+
+    var object = document.getElementById(item.id);
+
+    return true;
 }
 
 function createLegendDiv(item) {

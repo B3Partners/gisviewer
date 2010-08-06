@@ -390,6 +390,7 @@ function createRadioThema(item){
 
 function createCheckboxThema(item, checked){
     var checkbox;
+
     if (navigator.appName=="Microsoft Internet Explorer") {
 
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
@@ -399,18 +400,22 @@ function createCheckboxThema(item, checked){
         checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
+
     } else {
         checkbox = document.createElement('input');
         checkbox.id = item.id;
         checkbox.type = 'checkbox';
         checkbox.value = item.id;
+
         checkbox.onclick = function(){
             checkboxClick(this, false);
         }
-        if(checked){
+
+        if(checked) {
             checkbox.checked = true;
         }
     }
+
     checkbox.theItem=item;
     return checkbox;
 }
@@ -775,10 +780,12 @@ function refreshLayer(){
             var item = enabledLayerItems[i];
 
             /* Item alleen toevoegen aan de layers indien
-             * deze een parent cluster heeft die aangevinkt staat of
+             * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
-            if (!itemParentIsEnabled(item))
-                continue;
+
+            // var object = document.getElementById(item.id);
+            // if (!itemHasAllParentsEnabled(object))
+            //    continue;
             
             if (item.visible){
                 if (item.wmslayers){
@@ -893,11 +900,96 @@ function getLayerIdsAsString() {
     return ret;
 }
 
-function itemParentIsEnabled(item) {
+var checkedItems = new Array();
 
-    var object = document.getElementById(item.id);
+function itemHasAllParentsEnabled(object) {
 
-    return true;
+    if (object == null)
+        return false;
+
+    /* zoek eerste div element met _children erin */
+    var parentChildrenDiv = getParentDivContainingChilds(object, 'div');
+
+    /* als er geen parent div is met eventuele children (cluster)
+     * dan status teruggeven van aangevinkte clusters */
+    if (!parentChildrenDiv) {
+        var count = 0;
+        var size = checkedItems.length;
+
+        for (var i=0; i < size; i++) {
+            var bool = checkedItems[i];
+
+            if (bool)
+                count++;
+        }
+
+        /* reset array */
+        checkedItems = new Array();
+
+        if (count == size)
+            return true;
+        else
+            return false;
+    }
+
+    /* neem hiervan eerste div erboven, dit is dan de div
+     * met input vinkje voor het cluster */
+    var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
+
+    /* opzoeken of checkbox element checked is */
+    var name = getItemName(parentDiv);
+    var checked = isCheckBoxChecked(name);
+
+    checkedItems.push(checked);
+
+    return itemHasAllParentsEnabled(parentDiv);
+}
+
+function getParentDivContainingChilds(obj, tag)
+{
+    var obj_parent = obj.parentNode;
+
+    if ( (obj_parent.id == null) || (!obj_parent) )
+        return false;
+    
+    if (obj_parent.id.indexOf("_children") != -1)
+        return obj_parent;
+    else
+        return getParentDivContainingChilds(obj_parent, tag);
+}
+
+function getParentByTagName(obj, tag)
+{
+    var obj_parent = obj.parentNode;
+    if (!obj_parent)
+        return false;
+
+    if (obj_parent.tagName.toLowerCase() == tag)
+        return obj_parent;
+    else
+        return getParentByTagName(obj_parent, tag);
+}
+
+function getItemName(item) {
+    var str = item.id.split("_");
+    var l = str.length;
+
+    var name = str[l-1];
+
+    return name;
+}
+
+function isCheckBoxChecked(name) {
+    var inputs = document.getElementsByTagName('input');
+
+    for (var i=0; i < inputs.length; i++) {
+        var c = inputs[i];
+
+        if ( (c.id == name) && (c.checked) )
+            return true;
+    }
+
+    return false;
 }
 
 function createLegendDiv(item) {

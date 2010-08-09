@@ -1816,6 +1816,13 @@ function flamingo_b_removePolygons_onEvent(id, event) {
     }
 }
 
+function flamingo_b_highlight_onEvent(id, event) {
+    if (event["down"])
+    {
+        alert("Highlight code");
+    }
+}
+
 function dispatchEventJS(event, comp) {
 
     if (event=="onGetCapabilities")

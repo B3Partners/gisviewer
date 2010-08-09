@@ -10,7 +10,7 @@
     </fmc:MonitorLayer>
 
     <fmc:Container backgroundcolor="#D2E0EB" left="0" top="0" height="5%" width="100%">
-        <fmc:Scalebar left="470" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
+        <fmc:Scalebar left="500" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
@@ -36,6 +36,10 @@
 
                 <fmc:JsButton id="b_getfeatures" left="380" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/getfeatures.png" iconurl_over="flamingo/assets/jsbtn/getfeatures.png" iconurl_sel="flamingo/assets/jsbtn/getfeatures.png" iconurl_dis="flamingo/assets/jsbtn/getfeatures.png" label="" toggle="false" visible="true" enabled="true" selected="false">
                     <string id="tooltip" en="Select features" nl="selecteer features"/>
+                </fmc:JsButton>
+
+                <fmc:JsButton id="b_highlight" left="410" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/highlight.png" iconurl_over="flamingo/assets/jsbtn/highlight.png" iconurl_sel="flamingo/assets/jsbtn/highlight.png" iconurl_dis="flamingo/assets/jsbtn/highlight.png" label="" toggle="false" visible="true" enabled="true" selected="false">
+                    <string id="tooltip" en="highlight object" nl="highlight object"/>
                 </fmc:JsButton>
             </fmc:Container>
 

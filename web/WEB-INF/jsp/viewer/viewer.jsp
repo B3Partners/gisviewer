@@ -115,6 +115,14 @@
         showlegendintree = true;
     }
 
+    /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
+     * kaartlaag zichtbaar is in viewer. Default op true */
+    var useInheritCheckbox = catchEmpty(${cfg_useInheritCheckbox});
+    
+    if(typeof useInheritCheckbox === 'undefined') {
+        useInheritCheckbox = true;
+    }
+
     /*
      * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
      * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen */

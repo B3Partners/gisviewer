@@ -671,28 +671,34 @@ function clusterCheckboxClick(element,dontRefresh){
     if (layerUrl==null){
         layerUrl=""+kburl;
     }
-    var cluster=element.theItem;
-    if (element.checked){
-        for (var i=0; i < cluster.children.length;i++){
-            var child=cluster.children[i];
-            if (!child.cluster){
-                addItemAsLayer(child);
-                if (!cluster.hide_tree){
-                    document.getElementById(child.id).checked=true;
+
+    if (!useInheritCheckbox) {
+
+        var cluster=element.theItem;
+        if (element.checked){
+            for (var i=0; i < cluster.children.length;i++){
+                var child=cluster.children[i];
+                if (!child.cluster){
+                    addItemAsLayer(child);
+                    if (!cluster.hide_tree){
+                        document.getElementById(child.id).checked=true;
+                    }
+                }
+            }
+        }else{
+            for (var c=0; c < cluster.children.length;c++){
+                var child=cluster.children[c];
+                if (!child.cluster){
+                    removeItemAsLayer(child);
+                    if (!cluster.hide_tree){
+                        document.getElementById(child.id).checked=false;
+                    }
                 }
             }
         }
-    }else{
-        for (var c=0; c < cluster.children.length;c++){
-            var child=cluster.children[c];
-            if (!child.cluster){
-                removeItemAsLayer(child);
-                if (!cluster.hide_tree){
-                    document.getElementById(child.id).checked=false;
-                }
-            }
-        }
+        
     }
+
     if (!dontRefresh){
         refreshLayerWithDelay();
     }
@@ -779,13 +785,25 @@ function refreshLayer(){
         for (var i=0; i<enabledLayerItems.length; i++){
             var item = enabledLayerItems[i];
 
-            /* Item alleen toevoegen aan de layers indien
-             * parent cluster(s) allemaal aangevinkt staan of
-             * geen cluster heeft */
+            var object = document.getElementById(item.id);
+            
+            /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
+             * toch in deze enabledLayerItems array loop terecht komen waardoor
+             * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
+             * was eigenlijk eerst alleen bedoeld voor de onderstaande
+             * cluster inherit checkbox code */
+            var name = getItemName(object);
+            if (!isCheckBoxChecked(name))
+                continue;
 
-            // var object = document.getElementById(item.id);
-            // if (!itemHasAllParentsEnabled(object))
-            //    continue;
+            /* alleen uitvoern als configuratie optie hiervan op true staat */
+            if (useInheritCheckbox) {
+                /* Item alleen toevoegen aan de layers indien
+                 * parent cluster(s) allemaal aangevinkt staan of
+                 * geen cluster heeft */
+                if (!itemHasAllParentsEnabled(object))
+                    continue;
+            }
             
             if (item.visible){
                 if (item.wmslayers){
@@ -926,33 +944,39 @@ function itemHasAllParentsEnabled(object) {
         /* reset array */
         checkedItems = new Array();
 
-        if (count == size)
+        if ( (count == size) || (size < 1) )
             return true;
         else
             return false;
+
+
+    } else {
+
+        /* neem hiervan eerste div erboven, dit is dan de div
+         * met input vinkje voor het cluster */
+        var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
+
+        /* opzoeken of checkbox element checked is */
+        var name = getItemName(parentDiv);
+        var checked = isCheckBoxChecked(name);
+
+        checkedItems.push(checked);
     }
-
-    /* neem hiervan eerste div erboven, dit is dan de div
-     * met input vinkje voor het cluster */
-    var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
-
-    /* opzoeken of checkbox element checked is */
-    var name = getItemName(parentDiv);
-    var checked = isCheckBoxChecked(name);
-
-    checkedItems.push(checked);
-
+    
     return itemHasAllParentsEnabled(parentDiv);
 }
 
+/* zoekt omhoog naar het eerste element met _children erin
+ * tagname van element meegeven */
 function getParentDivContainingChilds(obj, tag)
 {
     var obj_parent = obj.parentNode;
 
     if ( (obj_parent.id == null) || (!obj_parent) )
         return false;
-    
-    if (obj_parent.id.indexOf("_children") != -1)
+
+    /* alleen parent teruggeven als het ook aangevinkt kan worden */
+    if ( (obj_parent.id.indexOf("_children") != -1) && (parentHasCheckBox(obj_parent)) )
         return obj_parent;
     else
         return getParentDivContainingChilds(obj_parent, tag);
@@ -970,6 +994,7 @@ function getParentByTagName(obj, tag)
         return getParentByTagName(obj_parent, tag);
 }
 
+/* geeft het laatste stukje van de naam terug */
 function getItemName(item) {
     var str = item.id.split("_");
     var l = str.length;
@@ -979,14 +1004,40 @@ function getItemName(item) {
     return name;
 }
 
+/* gebruik om te bepalen of ouder cluster aangevinkt kan worden of niet.
+ * Indien dit niet kan dan moet deze niet meegeteld worden in de
+ * berekening of alle clusters wel aangevinkt staan bij de methode
+ * itemHasAllParentsEnabled()
+*/
+function parentHasCheckBox(parent) {
+    /* neem hiervan eerste div erboven, dit is dan de div
+    * met eventueel input vinkje voor het cluster */
+    var parentDiv = getParentByTagName(parent, 'div');
+    var name = getItemName(parentDiv);
+
+    var inputs = document.getElementsByTagName('input');
+
+    for (var i=0; i < inputs.length; i++) {
+        var c = inputs[i];
+
+        if (c.id == name)
+            return true;
+    }
+
+    return false;
+}
+
 function isCheckBoxChecked(name) {
     var inputs = document.getElementsByTagName('input');
 
     for (var i=0; i < inputs.length; i++) {
         var c = inputs[i];
 
-        if ( (c.id == name) && (c.checked) )
-            return true;
+        if ( (c.id == name) ) {
+            
+            if (c.checked)
+                return true;
+        }
     }
 
     return false;

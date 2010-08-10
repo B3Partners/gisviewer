@@ -1263,6 +1263,10 @@ function flamingo_map1_onIdentify(movie,extend){
         geom += extend.minx +" "+ extend.miny;
         geom += ")";
     }
+
+    if (btn_highLightSelected)
+        highLightThemaObject(geom);
+
     handleGetAdminData(geom);
     
     doAjaxRequest(xp,yp);
@@ -1816,10 +1820,49 @@ function flamingo_b_removePolygons_onEvent(id, event) {
     }
 }
 
+var btn_highLightSelected = false;
+
+/* er is net op de highlight knop gedrukt, start tekenen point */
 function flamingo_b_highlight_onEvent(id, event) {
+
     if (event["down"])
     {
-        alert("Highlight code");
+        if (btn_highLightSelected)
+            btn_highLightSelected = false;
+        else
+            btn_highLightSelected = true;
+    }
+}
+
+function highLightThemaObject(geom) {
+
+    /* indien meerdere analyse themas dan popup voor keuze */
+    var layers = getLayerIdsAsString().split(',');
+
+    if (layers.length > 1) {
+        //alert("Meerdere layers, popup tonen");
+
+        var handle = popUp('viewerhighlightkeuze.html', 'popupHighlight', 640, 480, false);
+
+        //handle.document.getElementById("_child").value=g;
+    }
+
+    //var layer = layers[0];
+    //EditUtil.getHighlightWktForThema(layer, geom, returnHighlight);
+    //flamingo.callMethod("editMap", 'removeAllFeatures');
+}
+
+/* backend heeft wkt teruggegeven */
+function returnHighlight(wkt) {
+
+    if (wkt.length > 0)
+    {
+        var polyObject = new Object();
+
+        polyObject["id"]=61501;
+        polyObject["wktgeom"]=wkt;
+
+        drawBufferPolygon(polyObject);
     }
 }
 

@@ -10,7 +10,7 @@
     </fmc:MonitorLayer>
 
     <fmc:Container backgroundcolor="#D2E0EB" left="0" top="0" height="5%" width="100%">
-        <fmc:Scalebar left="500" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
+        <fmc:Scalebar left="530" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
@@ -55,6 +55,7 @@
 
         <!-- het 'canvas' waar op getekend kan worden-->
         <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
+
         <fmc:GIS id="gis" geometryeditable="yes" alwaysdrawpoints="no">
             <fmc:Layer id="layer1" name="layer1" title="Layer 1" visible="true" geometrytypes="Point,LineString,Polygon,Circle">
                 <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>

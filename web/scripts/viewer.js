@@ -912,6 +912,26 @@ function getLayerIdsAsString() {
     var firstTime = true;
 
     for (var i=0; i < enabledLayerItems.length; i++) {
+
+        var object = document.getElementById(enabledLayerItems[i].id);
+
+        /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
+         * toch in deze enabledLayerItems array loop terecht komen waardoor
+         * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
+         * was eigenlijk eerst alleen bedoeld voor de onderstaande
+         * cluster inherit checkbox code */
+        var name = getItemName(object);
+        if (!isCheckBoxChecked(name))
+            continue;
+
+        /* alleen uitvoern als configuratie optie hiervan op true staat */
+        if (useInheritCheckbox) {
+            /* Item alleen toevoegen aan de layers indien
+             * parent cluster(s) allemaal aangevinkt staan of
+             * geen cluster heeft */
+            if (!itemHasAllParentsEnabled(object))
+                continue;
+        }
         
         if(firstTime) {
             ret += enabledLayerItems[i].id;
@@ -1270,9 +1290,9 @@ function flamingo_map1_onIdentify(movie,extend){
         geom += ")";
     }
 
-    if (btn_highLightSelected) {
-        flamingo.callMethod("editMap", 'removeAllFeatures');
-        
+    flamingo.callMethod("editMap", 'removeAllFeatures');
+
+    if (btn_highLightSelected) {     
         highLightThemaObject(geom);
     } else {
         handleGetAdminData(geom, null);
@@ -1850,21 +1870,45 @@ function highLightThemaObject(geom) {
 
     highLightGeom = geom;
 
-    /* indien meerdere analyse themas dan popup voor keuze */
     var analyseThemas = new Array();
 
+    /* indien meerdere analyse themas dan popup voor keuze */
     for (var i=0; i < enabledLayerItems.length; i++) {
         var item = enabledLayerItems[i];
+
+        var object = document.getElementById(item.id);
+
+        /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
+         * toch in deze enabledLayerItems array loop terecht komen waardoor
+         * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
+         * was eigenlijk eerst alleen bedoeld voor de onderstaande
+         * cluster inherit checkbox code */
+        var name = getItemName(object);
+        if (!isCheckBoxChecked(name))
+            continue;
+
+        /* alleen uitvoern als configuratie optie hiervan op true staat */
+        if (useInheritCheckbox) {
+            /* Item alleen toevoegen aan de layers indien
+             * parent cluster(s) allemaal aangevinkt staan of
+             * geen cluster heeft */
+            if (!itemHasAllParentsEnabled(object))
+                continue;
+        }
 
         if (item.analyse == 'on')
             analyseThemas.push(item);
     }
 
-    if (analyseThemas.length > 1)
+    if (analyseThemas.length > 1) {
         popupWindowRed = popUp('viewerhighlight.do', 'popupHighlight', 320, 240, false);
+    }
 
-    if (analyseThemas.length == 1)
-        EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
+    if (analyseThemas.length == 1) {
+        EditUtil.getHighlightWktForThema(analyseThemas[0].id, highLightGeom, returnHighlight);
+        
+        handleGetAdminData(highLightGeom, analyseThemas[0].id);
+    }
 }
 
 function handlePopupValue(value) {

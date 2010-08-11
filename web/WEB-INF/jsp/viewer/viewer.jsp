@@ -110,9 +110,9 @@
     }
 
     /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
-    var showlegendintree=catchEmpty(${cfg_showlegendintree});
-    if(typeof showlegendintree === 'undefined' || !showlegendintree) {
-        showlegendintree = true;
+    var showLegendInTree = catchEmpty(${cfg_showLegendInTree});
+    if (typeof showLegendInTree === 'undefined') {
+        showLegendInTree = true;
     }
 
     /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat

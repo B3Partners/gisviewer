@@ -493,7 +493,7 @@ function createLabel(container, item) {
             container.appendChild(labelCheckbox);
         }
 
-        if (item.legendurl != undefined && showlegendintree) {
+        if (item.legendurl != undefined && showLegendInTree) {
             container.appendChild(document.createTextNode('  '));
             container.appendChild(createTreeLegendIcon());
         }
@@ -501,7 +501,7 @@ function createLabel(container, item) {
         container.appendChild(document.createTextNode('  '));
         container.appendChild(createMetadatLink(item));
 
-        if (item.legendurl != undefined && showlegendintree) {
+        if (item.legendurl != undefined && showLegendInTree) {
             container.appendChild(createTreeLegendDiv(item));
         }
         

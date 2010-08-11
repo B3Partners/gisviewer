@@ -36,6 +36,8 @@ var searchExtent=null;
 var sldSearchServlet=null;
 //if searchConfigId is set do a search
 
+var highlightThemaId = null;
+
 function doInitSearch(){
     if (searchConfigId.length>0 && search.length>0){
         showLoading();
@@ -140,7 +142,7 @@ function handleGetData(str) {
 }
 
 
-function handleGetAdminData(/*coords,*/ geom) {
+function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     showLoading();
 
     var checkedThemaIds;
@@ -176,6 +178,10 @@ function handleGetAdminData(/*coords,*/ geom) {
     document.forms[0].geom.value=geom;
     document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
     document.forms[0].tolerance.value=tolerance;
+
+    if (highlightThemaId != null)
+        document.forms[0].themaid.value = highlightThemaId;
+
     if(usePopup) {
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) {
@@ -1264,10 +1270,13 @@ function flamingo_map1_onIdentify(movie,extend){
         geom += ")";
     }
 
-    if (btn_highLightSelected)
+    if (btn_highLightSelected) {
+        flamingo.callMethod("editMap", 'removeAllFeatures');
+        
         highLightThemaObject(geom);
-
-    handleGetAdminData(geom);
+    } else {
+        handleGetAdminData(geom, null);
+    }
     
     doAjaxRequest(xp,yp);
     
@@ -1750,7 +1759,7 @@ function flamingo_b_getfeatures_onEvent(id,event) {
 
             var loadingStr = "Bezig met laden...";
             document.getElementById('kadastraledata').innerHTML = loadingStr;
-            handleGetAdminData(wkt);
+            handleGetAdminData(wkt, null);
         }
     }
 }
@@ -1834,22 +1843,36 @@ function flamingo_b_highlight_onEvent(id, event) {
     }
 }
 
+var popupWindowRed = null;
+var highLightGeom = null;
+
 function highLightThemaObject(geom) {
 
+    highLightGeom = geom;
+
     /* indien meerdere analyse themas dan popup voor keuze */
-    var layers = getLayerIdsAsString().split(',');
+    var analyseThemas = new Array();
 
-    if (layers.length > 1) {
-        //alert("Meerdere layers, popup tonen");
+    for (var i=0; i < enabledLayerItems.length; i++) {
+        var item = enabledLayerItems[i];
 
-        var handle = popUp('viewerhighlightkeuze.html', 'popupHighlight', 640, 480, false);
-
-        //handle.document.getElementById("_child").value=g;
+        if (item.analyse == 'on')
+            analyseThemas.push(item);
     }
 
-    //var layer = layers[0];
-    //EditUtil.getHighlightWktForThema(layer, geom, returnHighlight);
-    //flamingo.callMethod("editMap", 'removeAllFeatures');
+    if (analyseThemas.length > 1)
+        popupWindowRed = popUp('viewerhighlight.do', 'popupHighlight', 320, 240, false);
+
+    if (analyseThemas.length == 1)
+        EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
+}
+
+function handlePopupValue(value) {
+    popupWindowRed.close();
+
+    EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
+
+    handleGetAdminData(highLightGeom, value);
 }
 
 /* backend heeft wkt teruggegeven */

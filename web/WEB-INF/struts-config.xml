@@ -51,6 +51,8 @@
         <action path="/viewerlist" forward="/index.do?list=t"/>
         
         <action path="/createmappdf" forward="createmappdf"/>
+
+        <action path="/viewerhighlight" forward="viewerhighlight"/>
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>

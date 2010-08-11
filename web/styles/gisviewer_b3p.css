@@ -606,3 +606,13 @@ table.tablesorter thead tr .headerSortDown {
     color: #1962A0;
     text-decoration: underline;
 }
+
+a.highlightlink, a.highlightlink:visited, a.highlightlink:active {
+    color: blue;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+
+a.highlightlink:hover{
+    text-decoration: underline;
+}

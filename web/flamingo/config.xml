@@ -57,7 +57,7 @@
         <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
 
         <fmc:GIS id="gis" geometryeditable="yes" alwaysdrawpoints="no">
-            <fmc:Layer id="layer1" name="layer1" title="Layer 1" visible="true" geometrytypes="Point,LineString,Polygon,Circle">
+            <fmc:Layer id="layer1" name="layer1" title="Layer 1" visible="true" geometrytypes="Point,LineString,Polygon,Circle,MultiPolygon">
                 <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>
             </fmc:Layer>
         </fmc:GIS>

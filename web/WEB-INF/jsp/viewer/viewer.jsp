@@ -190,6 +190,13 @@
     if(typeof maxResults === 'undefined' || !maxResults) {
         maxResults = 25;
     }
+
+    /* Gebruiker wisselt tabbladen door er met de muis overheen te gaan. Indien false
+     * dan zijn de tabbladen te wisselen door te klikken */
+    var useMouseOverTabs = catchEmpty(${cfg_useMouseOverTabs});
+    if (typeof useMouseOverTabs === 'undefined') {
+        useMouseOverTabs = true;
+    }
     
     /* De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
      * de naam en eventueel extra Content-divs die geopend moeten worden */
@@ -283,7 +290,12 @@
                 if(showLeftPanel != null && tabid == showLeftPanel) {
                     cloneTabContentId = tabobj.contentid;
                 } else {
-                    document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
+
+                    if (useMouseOverTabs)
+                        document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
+                    else
+                        document.write('<li id="' + tabid + '" onclick="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
+
                     createdTabs[i] = enabledtabs[i];
                     if(i == 4) break;
                 }

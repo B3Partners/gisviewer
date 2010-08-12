@@ -43,13 +43,18 @@
     </definition>
     <!-- viewer databody-->
     <definition name="databody" path="/WEB-INF/jsp/templates/templateDatabody.jsp"/>
-    <definition name="vieweradmindata" extends="databody">
+    
+    <definition name="vieweradmindata1" extends="databody">
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp"/>
     </definition>
-	<definition name="vieweradmindata_small" extends="databody">
+	<definition name="vieweradmindata2" extends="databody">
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata_small.jsp"/>
+    </definition>
+    <definition name="vieweradmindata3" extends="databody">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata3.jsp"/>
     </definition>
     <definition name="viewermetadata" extends="databody">
         <put name="title" value="Metadata" type="string"/>

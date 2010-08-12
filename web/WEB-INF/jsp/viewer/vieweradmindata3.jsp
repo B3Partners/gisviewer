@@ -51,7 +51,7 @@
                         <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
                             <c:if test="${thema_items[kolom.count - 1] != null}">
                                 <div class="admindataSmallCell">
-                                    <strong>${thema_items[kolom.count - 1].label}</strong> 
+                                    <strong>${thema_items[kolom.count - 1].label}</strong>
                                     <c:choose>
                                         <c:when test="${waarde eq '' or  waarde eq null}">
                                             &nbsp;
@@ -117,7 +117,7 @@
                 </tr>
             </table>
         </div>
-        <script type="text/javascript">            
+        <script type="text/javascript">
             function closeWindow() {
                 if (doClose)
                     window.close();

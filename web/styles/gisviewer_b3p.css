@@ -616,3 +616,19 @@ a.highlightlink, a.highlightlink:visited, a.highlightlink:active {
 a.highlightlink:hover{
     text-decoration: underline;
 }
+
+.admindata2_header {
+    display: block;
+    padding: 5px;
+    background-color: #D2E0EB;
+    width: 500px;
+    font-size: 1.1em;
+}
+
+.admindata3_header {
+    display: block;
+    padding: 5px;
+    background-color: #D2E0EB;
+    width: 300px;
+    font-size: 1.1em;
+}

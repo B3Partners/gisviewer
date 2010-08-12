@@ -24,7 +24,7 @@
                 <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
                     <c:if test="${ThemaItem.thema.naam != themanaam}">
                         <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
-                    <strong>${themanaam}</strong>
+                    <strong class="admindata2_header">${themanaam}</strong>
                 </c:if>
             </c:forEach>
             <div class="topRowThemaData" id="fullTable${tStatus.count}">
@@ -59,7 +59,7 @@
                                         <c:otherwise>
                                             <c:choose>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                                    <a href="#" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);">${thema_items[kolom.count - 1].label}</a>
+                                                    <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" style="cursor: pointer;" />
                                                 </c:when>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
                                                     <c:forEach var="listWaarde" items="${waarde}">
@@ -87,6 +87,7 @@
                                 </div>
                             </c:if>
                         </c:forEach>
+                        <br/>
                     </c:forEach>
 
                 </div>

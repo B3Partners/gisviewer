@@ -1761,17 +1761,21 @@ function checkboxClickById(id){
     }
 }
 
-function flamingo_b_getfeatures_onEvent(id,event) {
-    if (event["down"]) {
+function getWktActiveFeature() {
         var object = flamingoController.getEditMap().getActiveFeature();
 
         if (object == null)
         {
             handler("U heeft geen polygoon geselecteerd.");
-            return;
+            return null;
         }
 
-        wkt = object.wktgeom;
+        return object.wktgeom;
+}
+
+function flamingo_b_getfeatures_onEvent(id,event) {
+    if (event["down"]) {
+        var wkt = getWktActiveFeature();
 
         if (wkt) {
             document.getElementById('start_message').style.display = 'none';
@@ -1788,17 +1792,11 @@ function flamingo_b_getfeatures_onEvent(id,event) {
 function flamingo_b_buffer_onEvent(id, event) {
     if (event["down"])
     {
-        var wkt = "";
-
-        var object = flamingoController.getEditMap().getActiveFeature();
-
-        if (object == null)
+        var wkt = getWktActiveFeature();
+        if (wkt==null)
         {
-            handler("U heeft geen polygoon geselecteerd.");
             return;
         }
-
-        wkt = object.wktgeom;
 
         var str = prompt('Geef de bufferafstand in meters');
         var afstand = 0;
@@ -1825,21 +1823,24 @@ function flamingo_b_buffer_onEvent(id, event) {
 }
 
 function returnBuffer(wkt) {
+    drawWkt(wkt);
+}
 
+function drawWkt(wkt) {
     if (wkt.length > 0)
     {
         var polyObject = new Object();
 
-        polyObject["id"]=61501;
+        polyObject["id"]=61502;
         polyObject["wktgeom"]=wkt;
 
-        drawBufferPolygon(polyObject);
+        drawObject(polyObject);
     }
 }
 
-function drawBufferPolygon(poly) {
+function drawObject(geom) {
     flamingo.call("editMap", 'removeAllFeatures');
-    flamingo.callMethod("editMap", "addFeature", "layer1", poly);
+    flamingo.callMethod("editMap", "addFeature", "layer1", geom);
 }
 
 function flamingo_b_removePolygons_onEvent(id, event) {

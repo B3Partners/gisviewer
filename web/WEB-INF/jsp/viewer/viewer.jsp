@@ -212,6 +212,15 @@
 
     var enabledtabs = [${cfg_tabs}];
 
+    var tempWkt = "";
+    function getWkt() {
+        tempWkt= getWktActiveFeature();
+        alert(tempWkt);
+    }
+    function setWkt() {
+        drawWkt(tempWkt);
+    }
+
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">
@@ -373,7 +382,7 @@
             Kies de Info-tool en klik vervolgens op een punt<br/>
             op de kaart voor administratieve informatie<br/>
             van het object.
-        </div>
+         </div>
 
         <div id="algdatavak" style="display: none;">
             <b>RD Co&ouml;rdinaten</b><br />
@@ -384,7 +393,7 @@
 
         <!-- input fields for search -->
         <div>
-            <br>
+             <br>
             <script type="text/javascript">
                 if (zoekconfiguraties!=null) {
                     document.write('<b>Zoek op:</b><br>')

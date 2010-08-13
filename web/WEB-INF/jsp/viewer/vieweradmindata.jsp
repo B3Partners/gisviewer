@@ -25,6 +25,10 @@
     var usePopup = true;
     var maxExtraInfo=100;
     var styleObjects = new Array();
+
+    function editFeature(value) {
+        getParent().drawWkt(value);
+    };
 </script>
 <html:messages id="error" message="true">
     <div class="messages"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="false"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
@@ -121,17 +125,18 @@
                                     if (document.data2csv${tStatus.count}.objectIds.value.length > 0){
                                         document.data2csv${tStatus.count}.objectIds.value+=",";
                                     }
-                                    document.data2csv${tStatus.count}.objectIds.value+="${regel.primairyKey}";
+                                    document.data2csv${tStatus.count}.objectIds.value+="${regel.primaryKey}";
                                     if (${counter.count} < maxExtraInfo+1){
                                         if (document.data2info${tStatus.count}.primaryKeys.value.length > 0){
                                             document.data2info${tStatus.count}.primaryKeys.value+=",";
                                         }
-                                        document.data2info${tStatus.count}.primaryKeys.value+="${regel.primairyKey}";
+                                        document.data2info${tStatus.count}.primaryKeys.value+="${regel.primaryKey}";
                                     }
                                 </script>
                                 <c:if test="${counter.count < 501}">
                                     <tr class="row" onclick="colorRow(this);">
                                         <td style="width: 50px;" valign="top">
+                                            &nbsp;<html:image src="./images/icons/wand.png" onclick="editFeature('${regel.wkt}');" style="cursor: pointer;" />
                                             &nbsp;${counter.count}
                                         </td>
                                         <c:set var="totale_breedte_onder" value="50" />

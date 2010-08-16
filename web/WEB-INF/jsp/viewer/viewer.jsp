@@ -53,43 +53,43 @@
     var searchClusterId='${searchClusterId}';
     var searchSldVisibleValue='${searchSldVisibleValue}';
 
-    var useCookies=catchEmpty(${cfg_useCookies});
-    if(typeof useCookies === 'undefined' || !useCookies) {
+    var useCookies=catchEmpty(${configMap["useCookies"]});
+    if(typeof useCookies === 'undefined') {
         useCookies = true;
     }
 
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
      * False als je maximaal van 1 thema data kan ophalen. (radiobuttons) */
-    var multipleActiveThemas=catchEmpty(${cfg_multipleActiveThemas});
-    if(typeof multipleActiveThemas === 'undefined' || !multipleActiveThemas) {
+    var multipleActiveThemas=catchEmpty(${configMap["multipleActiveThemas"]});
+    if(typeof multipleActiveThemas === 'undefined') {
         multipleActiveThemas = true;
     }
     
     /* True als de admin- of metadata in een popup wordt getoond
      * False als deze onder de kaart moet worden getoond
      * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
-    var usePopup=catchEmpty(${cfg_usePopup});
-    if(typeof usePopup === 'undefined' || !usePopup) {
+    var usePopup=catchEmpty(${configMap["usePopup"]});
+    if(typeof usePopup === 'undefined') {
         usePopup = false;
     }
-    var useDivPopup=catchEmpty(${cfg_useDivPopup});
-    if(typeof useDivPopup === 'undefined' || !useDivPopup) {
+    var useDivPopup=catchEmpty(${configMap["useDivPopup"]});
+    if(typeof useDivPopup === 'undefined') {
         useDivPopup = false;
     }
-    var dataframepopupHandle=catchEmpty(${cfg_dataframepopupHandle});
-    if(typeof dataframepopupHandle === 'undefined' || !dataframepopupHandle) {
+    var dataframepopupHandle=catchEmpty(${configMap["dataframepopupHandle"]});
+    if(typeof dataframepopupHandle === 'undefined') {
         dataframepopupHandle = null;
     }
 
     /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
      * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
      * en op null als het leftPanel niet moet worden getoond */
-    var usePanelControls=catchEmpty(${cfg_usePanelControls});
-    if(typeof usePanelControls === 'undefined' || !usePanelControls) {
+    var usePanelControls=catchEmpty(${configMap["usePanelControls"]});
+    if(typeof usePanelControls === 'undefined') {
         usePanelControls = true;
     }
-    var showLeftPanel=catchEmpty(${cfg_showLeftPanel});
-    if(typeof showLeftPanel === 'undefined' || !showLeftPanel) {
+    var showLeftPanel=catchEmpty(${configMap["showLeftPanel"]});
+    if(typeof showLeftPanel === 'undefined') {
         showLeftPanel = false;
     }
 
@@ -97,27 +97,27 @@
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
      * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
      * als de admindata automatisch moeten worden doorgestuurd) */
-    var autoRedirect=catchEmpty(${cfg_autoRedirect});
+    var autoRedirect=catchEmpty(${configMap["autoRedirect"]});
     if(typeof autoRedirect === 'undefined' || !autoRedirect) {
         autoRedirect = 2;
     }
-    
+
     /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie. */
-    var tolerance=catchEmpty(${cfg_tolerance});
+    var tolerance=catchEmpty(${configMap["tolerance"]});
     if(typeof tolerance === 'undefined' || !tolerance) {
         tolerance = 1;
     }
 
     /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
-    var showLegendInTree = catchEmpty(${cfg_showLegendInTree});
+    var showLegendInTree = catchEmpty(${configMap["showLegendInTree"]});
     if (typeof showLegendInTree === 'undefined') {
         showLegendInTree = true;
     }
 
     /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
      * kaartlaag zichtbaar is in viewer. Default op true */
-    var useInheritCheckbox = catchEmpty(${cfg_useInheritCheckbox});
+    var useInheritCheckbox = catchEmpty(${configMap["useInheritCheckbox"]});
     
     if(typeof useInheritCheckbox === 'undefined') {
         useInheritCheckbox = true;
@@ -142,17 +142,17 @@
      * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
      * 
      * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
-    var useSortableFunction=catchEmpty(${cfg_useSortableFunction});
-    if(typeof useSortableFunction === 'undefined' || !useSortableFunction) {
+    var useSortableFunction=catchEmpty(${configMap["useSortableFunction"]});
+    if(typeof useSortableFunction === 'undefined') {
         useSortableFunction = false;
     }
-    var layerDelay = catchEmpty(${cfg_layerDelay}); // instellen in ms, dus 5000 voor 5 seconden
+    var layerDelay = catchEmpty(${configMap["layerDelay"]}); // instellen in ms, dus 5000 voor 5 seconden
     if(typeof layerDelay === 'undefined' || !layerDelay) {
         layerDelay = 5000;
     }
 
     /* de vertraging voor het refreshen van de kaart. */
-    var refreshDelay=catchEmpty(${cfg_refreshDelay});
+    var refreshDelay=catchEmpty(${configMap["refreshDelay"]});
     if(typeof refreshDelay === 'undefined' || !refreshDelay) {
         refreshDelay = 1000;
     }
@@ -161,7 +161,7 @@
      * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
      * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
      * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
-    var zoekConfigIds = catchEmpty(${cfg_zoekConfigIds});
+    var zoekConfigIds = catchEmpty(${configMap["zoekConfigIds"]});
     if(typeof zoekConfigIds === 'undefined' || !zoekConfigIds) {
         zoekConfigIds = "";
     }
@@ -180,20 +180,20 @@
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
-    var minBboxZoeken=catchEmpty(${cfg_minBboxZoeken});
+    var minBboxZoeken=catchEmpty(${configMap["minBboxZoeken"]});
     if(typeof minBboxZoeken === 'undefined' || !minBboxZoeken) {
         minBboxZoeken = 1000;
     }
 
     /* Maximaal aantal zoekresultaten */
-    var maxResults=catchEmpty(${cfg_maxResults});
+    var maxResults=catchEmpty(${configMap["maxResults"]});
     if(typeof maxResults === 'undefined' || !maxResults) {
         maxResults = 25;
     }
 
     /* Gebruiker wisselt tabbladen door er met de muis overheen te gaan. Indien false
      * dan zijn de tabbladen te wisselen door te klikken */
-    var useMouseOverTabs = catchEmpty(${cfg_useMouseOverTabs});
+    var useMouseOverTabs = catchEmpty(${configMap["useMouseOverTabs"]});
     if (typeof useMouseOverTabs === 'undefined') {
         useMouseOverTabs = true;
     }
@@ -210,7 +210,7 @@
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" }
     };
 
-    var enabledtabs = [${cfg_tabs}];
+    var enabledtabs = [${configMap["tabs"]}];
 
     var tempWkt = "";
     function getWkt() {
@@ -468,8 +468,8 @@
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
     filterInvisibleItems(visibleTree);
-    var expandAll=catchEmpty(${cfg_expandAll});
-    if(typeof expandAll === 'undefined' || !expandAll) {
+    var expandAll=catchEmpty(${configMap["expandAll"]});
+    if(typeof expandAll === 'undefined') {
         expandAll = false;
     }
 

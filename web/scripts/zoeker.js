@@ -17,10 +17,15 @@ var planSelect=document.getElementById(planSelectName);
 var plantypeSelect=document.getElementById(plantypeSelectName);
 var statusSelect=document.getElementById(statusSelectName);
 
-/*Hier begint het zoeken:*/
-JZoeker.zoek(new Array("3"),"*",0,handleGetEigenaar);
+/* de geconfigureerde planselectie id's staan als volgt in db
+ * 3,1 waarbij eerste id voor eigenaren is en tweede voor plannen */
+var planEigenaarId = planSelectieIds[0];
+var planId = planSelectieIds[2];
 
-function handleGetEigenaar(list){
+/*Hier begint het zoeken:*/
+JZoeker.zoek(new Array(planEigenaarId),"*",0,handleGetEigenaar);
+
+function handleGetEigenaar(list){    
     eigenaarSelect.disabled=false;
     if (list!=null && list.length > 0){
         //eigenaarselect
@@ -40,7 +45,7 @@ function eigenaarchanged(element){
         dwr.util.addOptions(statusSelectName,[ "Bezig met ophalen..."]);
         dwr.util.addOptions(planSelectName,[ "Bezig met ophalen..."]);
 
-        JZoeker.zoek(new Array("1"),element.value,0,handleGetPlannen);
+        JZoeker.zoek(new Array(planId),element.value,0,handleGetPlannen);
         //geen nieuwe eigenaar kiezen tijdens de zoek opdracht
         eigenaarSelect.disabled=true;
         setSelectedPlan(null);

@@ -10,36 +10,35 @@ body {
     background-repeat: repeat-x;
 }
 
-    #header_content {
-        background-image: url(/gisviewer/images/kaartenbalielogo.gif);
-        background-repeat: no-repeat;
-    }
+#header_content {
+    background-image: url(/gisviewer/images/Gisviewer.gif);
+    background-repeat: no-repeat;
+}
 
-    a.menulink, a.menulink:visited, a.menulink:active, a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
-        display: block;
-        padding-top: 5px;
-        padding-left: 10px;
-        padding-right: 10px;
-        height: 21px;
-        border-bottom: 0px none White;
-        border-left: 1px solid #A0D9FF;
-        border-top: 1px solid #A0D9FF;
-        border-right: 1px solid #102F44;
-        color: #A0D9FF;
-        float: right;
-    }
+a.menulink, a.menulink:visited, a.menulink:active, a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
+    display: block;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 21px;
+    border-bottom: 0px none White;
+    border-left: 1px solid #A0D9FF;
+    border-top: 1px solid #A0D9FF;
+    border-right: 1px solid #102F44;
+    color: #A0D9FF;
+    float: right;
+}
 
-    a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
-        border-bottom: 0px none White;
-        border-left: 1px solid White;
-        border-top: 1px solid White;
-        border-right: 1px solid White;
-        background-color: White;
-        color: #144264;
-        margin-right: 5px;
-        float: left;
-    }
-
+a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
+    border-bottom: 0px none White;
+    border-left: 1px solid White;
+    border-top: 1px solid White;
+    border-right: 1px solid White;
+    background-color: White;
+    color: #144264;
+    margin-right: 5px;
+    float: left;
+}
 
 #content_normal {
     background-color: White;
@@ -51,72 +50,72 @@ body {
     background-color: White;
 }
 
-    .infobalk {
-        background-color: #FFD203;
-        background-image: url(/gisviewer/images/balk_links.gif);
-        background-repeat: no-repeat;
-        background-position: 0% 0%;
-    }
+.infobalk {
+    background-color: #FFD203;
+    background-image: url(/gisviewer/images/balk_links.gif);
+    background-repeat: no-repeat;
+    background-position: 0% 0%;
+}
 
-    .infobalk .infobalk_description {
-        color: #FFF0C4;
-        font-size: 14px;
-        font-weight: bold;
-    }
+.infobalk .infobalk_description {
+    color: #FFF0C4;
+    font-size: 14px;
+    font-weight: bold;
+}
 
-    .infobalk .infobalk_actions {
-        font-size: 8pt;
-        font-weight: bold;
-        color: #19619B;
-    }
+.infobalk .infobalk_actions {
+    font-size: 8pt;
+    font-weight: bold;
+    color: #19619B;
+}
 
-    .infobalk a {
-        color: #FFFFFF;
-        font-weight: bold;
-    }
+.infobalk a {
+    color: #FFFFFF;
+    font-weight: bold;
+}
 
-    ul#nav a {
-        background: #FFF0C4;
-        color: #19619B;
-    }
+ul#nav a {
+    background: #FFF0C4;
+    color: #19619B;
+}
 
-    ul#nav a:hover {
-        background: #19619B;
-        color: #FFF0C4
-    }
+ul#nav a:hover {
+    background: #19619B;
+    color: #FFF0C4
+}
 
-    ul#nav li.activelink a,ul#nav li.activelink a:hover {
-        background: #19619B;
-        color: #FFF0C4
-    }
+ul#nav li.activelink a,ul#nav li.activelink a:hover {
+    background: #19619B;
+    color: #FFF0C4
+}
 
-    #tab_container, #leftcontent {
-        background-image: url(/gisviewer/images/tabvak_bg.gif);
-        background-color: #19619B;
-        background-repeat: repeat-x;
-        color: White;
-        background-position: 100% 100%;
-    }
+#tab_container, #leftcontent {
+    background-image: url(/gisviewer/images/tabvak_bg.gif);
+    background-color: #19619B;
+    background-repeat: repeat-x;
+    color: White;
+    background-position: 100% 100%;
+}
 
-    #tab_container div, #tab_container td, #tab_container span,
-    #leftcontent div, #leftcontent td, #leftcontent span {
-        color: White;
-    }
+#tab_container div, #tab_container td, #tab_container span,
+#leftcontent div, #leftcontent td, #leftcontent span {
+    color: White;
+}
 
 #footer {
     background-image: url(/gisviewer/images/onderbalk.gif);
     background-repeat: repeat-x;
 }
 
-    #footer_content {
-        background-image: url(/gisviewer/images/footerbar.gif);
-        background-repeat: no-repeat;
-    }
+#footer_content {
+    background-image: url(/gisviewer/images/footerbar.gif);
+    background-repeat: no-repeat;
+}
 
-        .footer_tekst {
-            color: #7891A5;
-            font-size: 11px;
-        }
+.footer_tekst {
+    color: #7891A5;
+    font-size: 11px;
+}
 
 /* Common styles */
 th {

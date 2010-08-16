@@ -221,6 +221,12 @@
         drawWkt(tempWkt);
     }
 
+    /* planselectie gebruikt 2 zoekingangen (id's) */
+    var planSelectieIds = catchEmpty(${configMap["planSelectieIds"]});
+    if(typeof planSelectieIds === 'undefined' || !planSelectieIds) {
+        planSelectieIds = "0,0";
+    }
+
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

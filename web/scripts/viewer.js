@@ -1924,13 +1924,13 @@ function handlePopupValue(value) {
 function returnHighlight(wkt) {
 
     if (wkt.length > 0)
-    {
+    {        
         var polyObject = new Object();
 
         polyObject["id"]=61501;
         polyObject["wktgeom"]=wkt;
 
-        drawBufferPolygon(polyObject);
+        drawObject(polyObject);
     }
 }
 

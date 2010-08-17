@@ -94,7 +94,7 @@
             </div>
         </c:forEach>
 
-        <script type="text/javascript">
+        <script type="text/javascript">            
             if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
                 if(parent) {
                     if(parent.panelBelowCollapsed) {

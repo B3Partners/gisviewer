@@ -76,8 +76,8 @@
     if(typeof useDivPopup === 'undefined') {
         useDivPopup = false;
     }
-    var dataframepopupHandle=catchEmpty(${configMap["dataframepopupHandle"]});
-    if(typeof dataframepopupHandle === 'undefined') {
+    var dataframepopupHandle = catchEmpty(${configMap["dataframepopupHandle"]});
+    if(typeof dataframepopupHandle === 'undefined' || !dataframepopupHandle) {
         dataframepopupHandle = null;
     }
 

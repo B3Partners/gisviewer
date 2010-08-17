@@ -19,8 +19,10 @@ var statusSelect=document.getElementById(statusSelectName);
 
 /* de geconfigureerde planselectie id's staan als volgt in db
  * 3,1 waarbij eerste id voor eigenaren is en tweede voor plannen */
-var planEigenaarId = planSelectieIds[0];
-var planId = planSelectieIds[2];
+var planIds = planSelectieIds.split(",");
+
+var planEigenaarId = planIds[0];
+var planId = planIds[1];
 
 /*Hier begint het zoeken:*/
 JZoeker.zoek(new Array(planEigenaarId),"*",0,handleGetEigenaar);

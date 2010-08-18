@@ -51,7 +51,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 }
             }
         </script>
-        <div class="optie">
+        <div class="analysecontainer">
             <html:form action="/viewerdata" target="dataframe">
                 <input type="hidden" name="analysewaarde"/>
                 <input type="hidden" name="analyseobject"/>
@@ -83,7 +83,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </c:forEach>
                 </html:select>
 
-                <div class="optie">
+                <div class="analyseoptie">
                     <html:radio property="zoekopties" value="1" styleId="objectoptie" onclick="showDiv('object_opties')"/> Geef objecten
                 </div>
                 <div id="object_opties" style="display: none;">
@@ -91,7 +91,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <html:radio property="zoekopties_object" value="2"/> Geheel in gebied<br />
                     <html:radio property="zoekopties_object" value="3"/> Met overlap, geheel of gedeeltelijk in gebied
                 </div>
-                <div class="optie">
+                <div class="analyseoptie">
                     <html:radio property="zoekopties" value="2" styleId="waardeoptie"  onclick="showDiv('waarde_opties')"/> Geef waarde
                 </div>
                 <div id="waarde_opties" style="display: none;">
@@ -100,14 +100,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <html:radio property="zoekopties_waarde" value="3"/> Gemiddelde waarde<br />
                     <html:radio property="zoekopties_waarde" value="4"/> Totale waarde<br />
                 </div>
-                <div class="optie">
+                <div class="analyseoptie">
                     <input type="button" value="Bereken" class="zoek_knop" id="analysedata" name="analysedata" onclick="submitdata();" />
                 </div>
-                <div class="optie" style="height: 10px;">&nbsp;</div>
+                <div class="analyseoptie" style="height: 10px;">&nbsp;</div>
             </html:form>
         </div>
     </c:when>
     <c:otherwise>
-        Er zijn geen gebieden ter analyse gevonden!
+        <div class="analysecontainer">
+            Er zijn geen gebieden ter analyse gevonden!
+        </div>
     </c:otherwise>
 </c:choose>

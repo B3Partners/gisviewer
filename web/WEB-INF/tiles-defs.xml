@@ -78,10 +78,6 @@
         <put name="title" value="Viewer analyse data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweranalysedata.jsp"/>
     </definition>
-    <definition name="vieweranalyseobject" extends="tab">
-        <put name="title" value="Viewerobject analyse" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/vieweranalyseobject.jsp"/>
-    </definition>
 
     <definition name="viewerhighlight" extends="popup">
         <put name="title" value="Highlight - Kies kaartlaag" type="string"/>

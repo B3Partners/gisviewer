@@ -66,11 +66,11 @@
             <forward name="admindata3" path="vieweradmindata3"/>
             <forward name="metadata" path="viewermetadata"/>
             <forward name="objectdata" path="viewerobjectdata"/>
-            <forward name="analysedata" path="vieweranalysedata"/>
-            <forward name="analyseobject" path="vieweranalyseobject"/>
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
         </action>
         <action path="/viewerwelkom" forward="viewerwelkom"/>
+        <action path="/vieweranalysedata" forward="vieweranalysedata"/>
+
         
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>

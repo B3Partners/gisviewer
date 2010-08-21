@@ -28,36 +28,71 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type='text/javascript' src='dwr/util.js'></script>
 
 <script type="text/javascript">
-function doAjaxRequest() {
-    /* haal wkt op
-     * haal aangevinkte kaartlagen op
-     *
-        JMapData.getAnalyseData(String wkt, String activeThemaIds, String extraCriterium, handleAnalyseMap);
-    */
-}
-
-function handleAnalyseMap(map) {
-    if (map!=undefined){
-        document.getElementById('wat').innerHTML = "todo";
-    }else{
-        document.getElementById('wat').innerHTML = "Geen adres gevonden";
+    function getParent(){
+        if (window.opener){
+            return window.opener;
+        }else if (window.parent){
+            return window.parent;
+        }else{
+            alert("No parent found");
+            return null;
+        }
     }
-}
+
+    function doAjaxRequest() {
+        var ouder = getParent();
+        if(ouder) {
+            var wkt = ouder.getWktActiveFeature();
+            var themaIdArray =  ouder.enabledLayerItems;
+            var themaIds = "";
+            for (var i=0; i < themaIdArray.length; i++){
+                if (themaIdArray[i].analyse=="on") {
+                    if (themaIds.length > 0) {
+                        themaIds += ",";
+                    }
+                    themaIds += themaIdArray[i].id;
+                }
+            }
+            if (wkt && themaIds.length>0){
+                document.getElementById('analyseresult').innerHTML = "informatie ophalen, een ogenblik aub .....";
+                JMapData.getAnalyseData(wkt, themaIds, null, handleAnalyseMap);
+            }else{
+                alert ("wkt: " + wkt + ", ids: " + themaIds);
+                document.getElementById('analyseresult').innerHTML =
+                    "Er kan geen informatie opgehaald worden, omdat er \n"+
+                    "ofwel geen vlak getekend is in de kaart \n" +
+                    "ofwel er geen analyseerde kaartlagen aanstaan.";
+            }
+
+        } else {
+            document.getElementById('analyseresult').innerHTML = "werkt alleen binnen gisviewer";
+        }
+    }
+
+    function handleAnalyseMap(map) {
+        if (map!=undefined){
+            var result = "";
+            for (var layer in map ) {
+                var lresult = map [layer];
+                result += "<br>";
+                 for (var item in lresult) {
+                    var litem = lresult [item];
+                     result += litem + "<br>";
+                }
+            }
+            document.getElementById('analyseresult').innerHTML = result;
+        }else{
+            document.getElementById('analyseresult').innerHTML = "Geen resultaten gevonden";
+        }
+    }
 </script>
 
-<c:choose>
-    <c:when test="${not empty object_data}">
-         <div class="analysecontainer">
+<div class="analysecontainer">
+    Kies de redlining-tool en teken een vlak op de kaart. De objecten van de
+    actieve kaartlagen worden geanalyseerd nadat u op de analyse knop hebt geklikt.
+    <div class="analyseoptie">
+        <input type="button" value="Analyse" class="zoek_knop" id="analysedata" name="analysedata" onclick="doAjaxRequest();" />
+    </div>
+    <div class="analyseresult" id="analyseresult"  style="height: 10px;">klik op knop voor analyse</div>
+</div>
 
-                <div class="analyseoptie">
-                    <input type="button" value="Bereken" class="zoek_knop" id="analysedata" name="analysedata" onclick="doAjaxRequest();" />
-                </div>
-                <div class="analyseoptie" style="height: 10px;">&nbsp;</div>
-        </div>
-    </c:when>
-    <c:otherwise>
-        <div class="analysecontainer">
-            Er zijn geen gebieden ter analyse gevonden!
-        </div>
-    </c:otherwise>
-</c:choose>

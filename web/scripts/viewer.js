@@ -900,11 +900,6 @@ function loadObjectInfo(geom) {
     document.forms[0].target = 'objectframeViewer';
     document.forms[0].submit();
 
-    // vul analyse frame
-    document.forms[0].objectdata.value = '';
-    document.forms[0].analysedata.value = 't';
-    document.forms[0].target = 'analyseframeViewer';
-    document.forms[0].submit();
 }
 
 function getLayerIdsAsString() {

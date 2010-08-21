@@ -60,7 +60,7 @@ checkLocation = function() {
 checkLocationPopup = function() {
    if(!usePopup) {
         if (top.location == self.location) {
-            top.location = '<html:rewrite page="/index.do"/>';
+            top.location = '/gisviewer/index.do';
         }
     }
 }

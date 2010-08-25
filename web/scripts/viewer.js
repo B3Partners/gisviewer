@@ -15,6 +15,8 @@ var enabledLayerItems= new Array();
 var layerUrl=""+kburl;
 var cookieArray = readCookie('checkedLayers');
 
+var cookieClusterArray = readCookie('checkedClusters');
+
 var activeAnalyseThemaId = '';
 var activeClusterId='';
 
@@ -649,9 +651,11 @@ function switchTab(obj) {
 
 function syncLayerCookieAndForm(layerString) {
     eraseCookie('checkedLayers');
+    
     if (layerString!=null) {
         createCookie('checkedLayers', layerString, '7');
     }
+
     document.forms[0].lagen.value = layerString;
 }
 
@@ -678,10 +682,36 @@ function clusterCheckboxClick(element,dontRefresh){
         layerUrl=""+kburl;
     }
 
+    /* ook cluster ids in cookie stoppen */
+    if (useInheritCheckbox) {
+        
+        var c = element.theItem;
+
+        if (element.checked) {
+            var str = readCookie('checkedClusters');
+
+            if (str == null) {
+                str = c.id;
+
+                createCookie('checkedClusters', str, '7');
+
+                alert("cluster cookie null created with=" + str);
+            } else {
+                str += ","+ c.id;
+
+                createCookie('checkedClusters');
+                createCookie('checkedClusters', str, '7');
+                
+                alert("cluster cookie erased and created with=" + str);
+            }
+        }
+    }
+    
     if (!useInheritCheckbox) {
 
         var cluster=element.theItem;
-        if (element.checked){
+        if (element.checked) {
+            
             for (var i=0; i < cluster.children.length;i++){
                 var child=cluster.children[i];
                 if (!child.cluster){
@@ -691,18 +721,23 @@ function clusterCheckboxClick(element,dontRefresh){
                     }
                 }
             }
-        }else{
-            for (var c=0; c < cluster.children.length;c++){
+
+        } else {
+
+            for (var c=0; c < cluster.children.length;c++) {
+
                 var child=cluster.children[c];
+
                 if (!child.cluster){
+
                     removeItemAsLayer(child);
+
                     if (!cluster.hide_tree){
                         document.getElementById(child.id).checked=false;
                     }
                 }
             }
-        }
-        
+        }     
     }
 
     if (!dontRefresh){
@@ -1329,15 +1364,20 @@ function flamingo_map1_onInit(){
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
-    if(firstTimeOninit){
+
+    if (firstTimeOninit) {
+
         firstTimeOninit=false;
         //check / activate the themas that have init status visible
         var newLayersAan = new Array();
         var cookieLayers = new Array();
+
         if (cookieArray != null) {
             cookieLayers = cookieArray.split(',');
         }
+
         if(cookieLayers.length == layersAan.length) {
+
             for(var j=0; j < cookieLayers.length; j++) {
                 for (var k=0; k < layersAan.length; k++) {
                     if(layersAan[k].theItem.id == cookieLayers[j]) {
@@ -1345,17 +1385,32 @@ function flamingo_map1_onInit(){
                     }
                 }
             }
+
         } else {
             newLayersAan = layersAan;
         }
+
         // layer added in reverse order
         // layer with lowest order number should be on top
         // so added last
         for (var i=newLayersAan.length-1; i >=0 ; i--){
+
             checkboxClick(newLayersAan[i],true);
         }
-        for (var i=clustersAan.length-1; i >=0 ; i--){
-            clusterCheckboxClick(clustersAan[i], true);
+
+        /* clusters uit cookie aanzetten */
+        var clusterLayers = new Array();
+
+        if (cookieClusterArray != null) {
+            clusterLayers = cookieClusterArray.split(',');
+        }
+
+        for (var x=clusterLayers.length-1; x >=0 ; x--){
+            document.getElementById(clusterLayers[x]).checked=true;
+        }
+
+        for (var m=clustersAan.length-1; m >=0 ; m--){
+            clusterCheckboxClick(clustersAan[m], true);
         }
 
         // activelayer niet meer via cookie zetten!

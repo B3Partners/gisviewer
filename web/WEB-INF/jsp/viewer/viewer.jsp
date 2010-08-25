@@ -132,6 +132,7 @@
             eraseCookie('activelayer');
             eraseCookie('activetab');
             eraseCookie('checkedLayers');
+            eraseCookie('checkedClusters');
         }
     }
     createCookie('loggedInUser', '<c:out value="${pageContext.request.remoteUser}"/>', '7');

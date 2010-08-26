@@ -682,9 +682,8 @@ function clusterCheckboxClick(element,dontRefresh){
         layerUrl=""+kburl;
     }
 
-    /* ook cluster ids in cookie stoppen */
-    if (useInheritCheckbox) {
-        
+    /* indien cookies aan dan cluster id in cookie stoppen */
+    if (useCookies) {      
         var c = element.theItem;
 
         if (element.checked) {
@@ -694,21 +693,19 @@ function clusterCheckboxClick(element,dontRefresh){
                 str = c.id;
 
                 createCookie('checkedClusters', str, '7');
-
-                alert("cluster cookie null created with=" + str);
             } else {
                 str += ","+ c.id;
 
-                createCookie('checkedClusters');
                 createCookie('checkedClusters', str, '7');
-                
-                alert("cluster cookie erased and created with=" + str);
             }
         }
+
+        /* cluster id uit cookie halen */
+        if (!element.checked)
+            removeClusterIdFromCookie(c.id);
     }
     
     if (!useInheritCheckbox) {
-
         var cluster=element.theItem;
         if (element.checked) {
             
@@ -724,16 +721,16 @@ function clusterCheckboxClick(element,dontRefresh){
 
         } else {
 
-            for (var c=0; c < cluster.children.length;c++) {
+            for (var d=0; d < cluster.children.length;d++) {
 
-                var child=cluster.children[c];
+                var child1=cluster.children[d];
 
-                if (!child.cluster){
+                if (!child1.cluster){
 
-                    removeItemAsLayer(child);
+                    removeItemAsLayer(child1);
 
                     if (!cluster.hide_tree){
-                        document.getElementById(child.id).checked=false;
+                        document.getElementById(child1.id).checked=false;
                     }
                 }
             }
@@ -744,6 +741,33 @@ function clusterCheckboxClick(element,dontRefresh){
         refreshLayerWithDelay();
     }
 }
+
+function removeClusterIdFromCookie(id) {
+    var str = readCookie('checkedClusters');
+
+    var arr = new Array();
+
+    if (str != null)
+        arr = str.split(',');
+
+    var newValues = "";
+
+    for (var x=arr.length-1; x >=0 ; x--) {
+
+        /* als id niet diegene is die verwidjerd moet worden
+         * dan toevoegen aan nieuwe cookie value */
+        if (arr[x] != id) {
+            if (x == arr.length-1)
+                newValues += arr[x];
+            else
+                newValues += ","+arr[x];
+        }
+    }
+
+    eraseCookie('checkedClusters');
+    createCookie('checkedClusters', newValues, '7');
+}
+
 //adds a item as a layer (Wmslayer, legend and querylayer) and a cookie if needed.
 //if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
 function addItemAsLayer(theItem,atBottomOfType){
@@ -1368,21 +1392,41 @@ function flamingo_map1_onInit(){
     if (firstTimeOninit) {
 
         firstTimeOninit=false;
+
+        /* clusters uit cookie aanzetten */
+        if (useCookies) {
+            var clusterLayers = new Array();
+
+            if (cookieClusterArray != null)
+                clusterLayers = cookieClusterArray.split(',');
+
+            for (var x=clusterLayers.length-1; x >=0; x--) {
+
+                if (clusterLayers[x] != null && clusterLayers[x] != "")           
+                    document.getElementById(clusterLayers[x]).checked=true;
+
+            }
+        }
+        
+        if (!useCookies) {
+            eraseCookie('checkedClusters');
+        }
+        
         //check / activate the themas that have init status visible
         var newLayersAan = new Array();
         var cookieLayers = new Array();
 
-        if (cookieArray != null) {
+        if (cookieArray != null)
             cookieLayers = cookieArray.split(',');
-        }
 
-        if(cookieLayers.length == layersAan.length) {
+        if (cookieLayers.length == layersAan.length) {
 
-            for(var j=0; j < cookieLayers.length; j++) {
+            for (var j=0; j < cookieLayers.length; j++) {
                 for (var k=0; k < layersAan.length; k++) {
-                    if(layersAan[k].theItem.id == cookieLayers[j]) {
+
+                    if (layersAan[k].theItem.id == cookieLayers[j])                  
                         newLayersAan[newLayersAan.length] = layersAan[k];
-                    }
+
                 }
             }
 
@@ -1394,23 +1438,7 @@ function flamingo_map1_onInit(){
         // layer with lowest order number should be on top
         // so added last
         for (var i=newLayersAan.length-1; i >=0 ; i--){
-
             checkboxClick(newLayersAan[i],true);
-        }
-
-        /* clusters uit cookie aanzetten */
-        var clusterLayers = new Array();
-
-        if (cookieClusterArray != null) {
-            clusterLayers = cookieClusterArray.split(',');
-        }
-
-        for (var x=clusterLayers.length-1; x >=0 ; x--){
-            document.getElementById(clusterLayers[x]).checked=true;
-        }
-
-        for (var m=clustersAan.length-1; m >=0 ; m--){
-            clusterCheckboxClick(clustersAan[m], true);
         }
 
         // activelayer niet meer via cookie zetten!

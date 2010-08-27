@@ -143,7 +143,6 @@ function handleGetData(str) {
     }
 }
 
-
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     showLoading();
 
@@ -209,28 +208,32 @@ function openUrlInIframe(url){
     iframe.src=url;
 }
 
-
-
 // 0 = niet in cookie en niet visible,
 // >0 = in cookie, <0 = geen cookie maar wel visible
 // alse item.analyse=="active" dan altijd visible
 function getLayerPosition(item) {
+
     if(cookieArray == null) {
         if (item.visible=="on" || item.analyse=="active")
             return -1;
         else
             return 0;
     }
+
     var arr = cookieArray.split(',');
+
     for(i = 0; i < arr.length; i++) {
         if(arr[i] == item.id) {
             return i+1;
         }
     }
+
     if (item.analyse=="active")
         return -1;
+    
     return 0;
 }
+
 function setActiveCluster(item,overrule){
     if(((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
         if(item != undefined & item != null) {
@@ -346,12 +349,17 @@ function filterInvisibleItems(cluster){
         cluster.children=null;
     }
 }
-function createCheckboxCluster(item){
+function createCheckboxCluster(item, checked){
+
     var checkbox;
     if (navigator.appName=="Microsoft Internet Explorer") {
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-        if(item.visible)
+            
+        if (item.visible) {
+            
             checkboxControleString += ' checked="checked"';
+        }
+
         checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
@@ -363,9 +371,11 @@ function createCheckboxCluster(item){
         checkbox.onclick = function(){
             clusterCheckboxClick(this, false);
         }
+
         if(item.visible)
             checkbox.checked = true;
     }
+    
     return checkbox;
 }
 
@@ -396,15 +406,19 @@ function createRadioThema(item){
     return radio;
 }
 
-function createCheckboxThema(item, checked){
+function createCheckboxThema(item, checked) {
     var checkbox;
 
     if (navigator.appName=="Microsoft Internet Explorer") {
 
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-        if(checked) {
+
+        if (checked) {
+            //alert("IE: create checkbox thema checked id=" + item.id);
+            
             checkboxControleString += ' checked="checked"';
         }
+
         checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
@@ -415,16 +429,17 @@ function createCheckboxThema(item, checked){
         checkbox.type = 'checkbox';
         checkbox.value = item.id;
 
-        checkbox.onclick = function(){
+        checkbox.onclick = function() {
             checkboxClick(this, false);
         }
 
-        if(checked) {
+        if (checked) {
             checkbox.checked = true;
         }
     }
 
     checkbox.theItem=item;
+
     return checkbox;
 }
 
@@ -442,8 +457,11 @@ function createMetadatLink(item){
 function createLabel(container, item) {
     if(item.cluster) {
         //if callable
-        if (item.callable){
-            var checkbox= createCheckboxCluster(item);
+        if (item.callable) {
+            var checkbox = null;
+                        
+            checkbox = createCheckboxCluster(item, true);
+
             //add the real(not filtered) item to the checkbox.
             checkbox.theItem=treeview_findItem(themaTree,item.id);
             container.appendChild(checkbox);
@@ -462,6 +480,7 @@ function createLabel(container, item) {
                 if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
             }
         }
+
     } else if (!item.hide_tree) {
         
         if(item.wmslayers){
@@ -471,9 +490,13 @@ function createLabel(container, item) {
             }
             var layerPos = getLayerPosition(item);
             var checkboxChecked = false;
-            if(layerPos!=0 || analyseRadioChecked ){
+
+            //alert("layerPos=" + layerPos +"analyseRadioChecked=" + analyseRadioChecked);
+
+            if(layerPos!=0 || analyseRadioChecked ) {
                 checkboxChecked = true;
             }
+            
             var labelCheckbox = createCheckboxThema(item, checkboxChecked);
 
             if (checkboxChecked) {
@@ -851,18 +874,17 @@ function refreshLayer(){
             var item = enabledLayerItems[i];
 
             var object = document.getElementById(item.id);
-            
-            /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
-             * toch in deze enabledLayerItems array loop terecht komen waardoor
-             * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
-             * was eigenlijk eerst alleen bedoeld voor de onderstaande
-             * cluster inherit checkbox code */
-            var name = getItemName(object);
-            if (!isCheckBoxChecked(name))
-                continue;
 
-            /* alleen uitvoern als configuratie optie hiervan op true staat */
             if (useInheritCheckbox) {
+                /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
+                 * toch in deze enabledLayerItems array loop terecht komen waardoor
+                 * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
+                 * was eigenlijk eerst alleen bedoeld voor de onderstaande
+                 * cluster inherit checkbox code */
+                var name = getItemName(object);
+                if (!isCheckBoxChecked(name))
+                    continue;
+
                 /* Item alleen toevoegen aan de layers indien
                  * parent cluster(s) allemaal aangevinkt staan of
                  * geen cluster heeft */
@@ -969,17 +991,17 @@ function getLayerIdsAsString() {
 
         var object = document.getElementById(enabledLayerItems[i].id);
 
-        /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
-         * toch in deze enabledLayerItems array loop terecht komen waardoor
-         * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
-         * was eigenlijk eerst alleen bedoeld voor de onderstaande
-         * cluster inherit checkbox code */
-        var name = getItemName(object);
-        if (!isCheckBoxChecked(name))
-            continue;
-
-        /* alleen uitvoern als configuratie optie hiervan op true staat */
         if (useInheritCheckbox) {
+            /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
+             * toch in deze enabledLayerItems array loop terecht komen waardoor
+             * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
+             * was eigenlijk eerst alleen bedoeld voor de onderstaande
+             * cluster inherit checkbox code */
+
+            var name = getItemName(object);
+            if (!isCheckBoxChecked(name))
+                continue;
+          
             /* Item alleen toevoegen aan de layers indien
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
@@ -1393,6 +1415,8 @@ function flamingo_map1_onInit(){
 
         firstTimeOninit=false;
 
+        /* prio, meegegeven ids, cookies, beheerder setting */
+
         /* clusters uit cookie aanzetten */
         if (useCookies) {
             var clusterLayers = new Array();
@@ -1402,43 +1426,66 @@ function flamingo_map1_onInit(){
 
             for (var x=clusterLayers.length-1; x >=0; x--) {
 
-                if (clusterLayers[x] != null && clusterLayers[x] != "")           
+                if (clusterLayers[x] != null && clusterLayers[x] != "")          
                     document.getElementById(clusterLayers[x]).checked=true;
-
             }
         }
-        
-        if (!useCookies) {
-            eraseCookie('checkedClusters');
+
+        /* children aanzetten voor clusters die nu al aanstaan
+         * alleen indien overerving uit staat */
+        if (clustersAan != null && !useInheritCheckbox) {
+            for (var y=clustersAan.length-1; y >= 0; y--) {
+                
+                var cluster = document.getElementById(clustersAan[y].id).theItem;
+
+                if (cluster != null) {
+                    for (var i=0; i < cluster.children.length;i++){
+                        var child=cluster.children[i];
+                        if (!child.cluster){
+                            addItemAsLayer(child);
+                            if (!cluster.hide_tree){
+                                document.getElementById(child.id).checked=true;
+                            }
+                        }
+                    }
+                }
+            }
         }
         
         //check / activate the themas that have init status visible
         var newLayersAan = new Array();
         var cookieLayers = new Array();
-
-        if (cookieArray != null)
+        
+        if (cookieArray != null) {
             cookieLayers = cookieArray.split(',');
+        }
 
-        if (cookieLayers.length == layersAan.length) {
-
+        
+        if (useCookies) {
+            /* alle id's uit cookies in newlayer stoppen als item */
             for (var j=0; j < cookieLayers.length; j++) {
+
                 for (var k=0; k < layersAan.length; k++) {
 
-                    if (layersAan[k].theItem.id == cookieLayers[j])                  
+                    if (layersAan[k].theItem.id == cookieLayers[j]) {
                         newLayersAan[newLayersAan.length] = layersAan[k];
-
+                    }              
                 }
             }
 
-        } else {
-            newLayersAan = layersAan;
+            /* ook er inzetten indien het een laag is met visible off
+            * dit is dan een niet opstartlaag die wel aan hoort te staan */
+            for (var l=0; l < layersAan.length; l++) {
+                if (layersAan[l].theItem.visible == 'off')
+                    newLayersAan[newLayersAan.length] = layersAan[l];
+            } 
         }
 
         // layer added in reverse order
         // layer with lowest order number should be on top
         // so added last
-        for (var i=newLayersAan.length-1; i >=0 ; i--){
-            checkboxClick(newLayersAan[i],true);
+        for (var m=newLayersAan.length-1; m >=0 ; m--){
+            checkboxClick(newLayersAan[m],true);
         }
 
         // activelayer niet meer via cookie zetten!
@@ -1790,7 +1837,7 @@ function getMovie(movieName) {
      **/
 function searchThemaValue(themaList,themaId,val){
     for (var i in themaList){
-        //alert(" key: "+i + " value: "+themaList[i]);
+        
         if (i=="id" && themaList[i]==themaId){
             return themaList[val];
         }

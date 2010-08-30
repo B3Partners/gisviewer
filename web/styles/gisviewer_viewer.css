@@ -158,6 +158,18 @@ html, body {
     padding-top: 3px;
 }
 
+/* voor analyse tab */
+
+.analysecontainer{
+    margin-left: 5px;
+    margin-top: 2px;
+    width: 230px;
+}
+
+.analyseoptie{
+    margin-left: 3px;
+ }
+
 /* Panel controls */
 #panelControls div {
     z-index: 200;

@@ -14,7 +14,6 @@ var enabledLayerItems= new Array();
 
 var layerUrl=""+kburl;
 var cookieArray = readCookie('checkedLayers');
-
 var cookieClusterArray = readCookie('checkedClusters');
 
 var activeAnalyseThemaId = '';
@@ -234,6 +233,25 @@ function getLayerPosition(item) {
     return 0;
 }
 
+function getClusterPosition(item) {
+    if(cookieClusterArray == null) {
+        if (item.visible || item.active)
+            return -1;
+        else
+            return 0;
+    }
+    var arr = cookieClusterArray.split(',');
+    for(i = 0; i < arr.length; i++) {
+        if(arr[i] == item.id) {
+            return i+1;
+        }
+    }
+    if (item.active)
+        return -1;
+    return 0;
+}
+
+
 function setActiveCluster(item,overrule){
     if(((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
         if(item != undefined & item != null) {
@@ -241,7 +259,7 @@ function setActiveCluster(item,overrule){
             var atlabel = document.getElementById('actief_thema');
             if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
                 activeClusterId = item.id;
-                atlabel.innerHTML = 'Actief thema: ' + activeClusterTitle;
+                atlabel.innerHTML = '' + activeClusterTitle; // Actief thema weggehaald
             }
         }
     }
@@ -258,7 +276,7 @@ function setActiveThema(id, label, overrule) {
 
         var atlabel = document.getElementById('actief_thema');
         if (atlabel && label && atlabel!=null && label!=null) {
-            atlabel.innerHTML = 'Actief thema: ' + label;
+            atlabel.innerHTML = '' + label; // Actief thema weggehaald
         }
 
         if (document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0){
@@ -286,10 +304,8 @@ function setActiveThema(id, label, overrule) {
 }
 
 function radioClick(obj) {
-    eraseCookie('activelayer');
     var oldActiveThemaId = activeAnalyseThemaId;
     if (obj && obj!=null && obj.theItem && obj.theItem!=null && obj.theItem.id && obj.theItem.title) {
-        createCookie('activelayer', obj.theItem.id + '##' + obj.theItem.title, '7');
         activeAnalyseThemaId = setActiveThema(obj.theItem.id, obj.theItem.title, true);
         activateCheckbox(obj.theItem.id);
         deActivateCheckbox(oldActiveThemaId);
@@ -354,12 +370,9 @@ function createCheckboxCluster(item, checked){
     var checkbox;
     if (navigator.appName=="Microsoft Internet Explorer") {
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-            
-        if (item.visible) {
-            
+        if (checked) {
             checkboxControleString += ' checked="checked"';
         }
-
         checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
@@ -371,9 +384,9 @@ function createCheckboxCluster(item, checked){
         checkbox.onclick = function(){
             clusterCheckboxClick(this, false);
         }
-
-        if(item.visible)
+        if(checked) {
             checkbox.checked = true;
+        }
     }
     
     return checkbox;
@@ -412,13 +425,9 @@ function createCheckboxThema(item, checked) {
     if (navigator.appName=="Microsoft Internet Explorer") {
 
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-
         if (checked) {
-            //alert("IE: create checkbox thema checked id=" + item.id);
-            
             checkboxControleString += ' checked="checked"';
         }
-
         checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
@@ -458,17 +467,20 @@ function createLabel(container, item) {
     if(item.cluster) {
         //if callable
         if (item.callable) {
-            var checkbox = null;
-                        
-            checkbox = createCheckboxCluster(item, true);
+            var checkboxChecked = false;
+            var clusterPos = getClusterPosition(item);
+            if(clusterPos!=0) {
+                checkboxChecked = true;
+            }
+            var checkbox = createCheckboxCluster(item, checkboxChecked );
 
             //add the real(not filtered) item to the checkbox.
             checkbox.theItem=treeview_findItem(themaTree,item.id);
             container.appendChild(checkbox);
 
-            if (item.visible){
+            if (checkboxChecked){
                 clustersAan.push(checkbox);
-            }
+             }
         }
         if (!item.hide_tree || item.callable){
             container.appendChild(document.createTextNode('  '));
@@ -484,19 +496,11 @@ function createLabel(container, item) {
     } else if (!item.hide_tree) {
         
         if(item.wmslayers){
-            var analyseRadioChecked = false;
-            if (item.analyse=="active") {
-                analyseRadioChecked = true;
-            }
-            var layerPos = getLayerPosition(item);
             var checkboxChecked = false;
-
-            //alert("layerPos=" + layerPos +"analyseRadioChecked=" + analyseRadioChecked);
-
-            if(layerPos!=0 || analyseRadioChecked ) {
+            var layerPos = getLayerPosition(item);
+            if(layerPos!=0) {
                 checkboxChecked = true;
             }
-            
             var labelCheckbox = createCheckboxThema(item, checkboxChecked);
 
             if (checkboxChecked) {
@@ -708,27 +712,15 @@ function clusterCheckboxClick(element,dontRefresh){
     /* indien cookies aan dan cluster id in cookie stoppen */
     if (useCookies) {      
         var c = element.theItem;
-
         if (element.checked) {
-            var str = readCookie('checkedClusters');
-
-            if (str == null) {
-                str = c.id;
-
-                createCookie('checkedClusters', str, '7');
-            } else {
-                str += ","+ c.id;
-
-                createCookie('checkedClusters', str, '7');
-            }
-        }
-
-        /* cluster id uit cookie halen */
-        if (!element.checked)
+            addClusterIdToCookie(c.id);
+        } else {
             removeClusterIdFromCookie(c.id);
+        }
     }
-    
-    if (!useInheritCheckbox) {
+
+    // als dontrefresh, dan opstart, dan ook geen update subvinkjes
+    if (!useInheritCheckbox && !dontRefresh) {
         var cluster=element.theItem;
         if (element.checked) {
             
@@ -741,17 +733,11 @@ function clusterCheckboxClick(element,dontRefresh){
                     }
                 }
             }
-
         } else {
-
             for (var d=0; d < cluster.children.length;d++) {
-
                 var child1=cluster.children[d];
-
                 if (!child1.cluster){
-
                     removeItemAsLayer(child1);
-
                     if (!cluster.hide_tree){
                         document.getElementById(child1.id).checked=false;
                     }
@@ -765,19 +751,43 @@ function clusterCheckboxClick(element,dontRefresh){
     }
 }
 
+function addClusterIdToCookie(id) {
+    var str = readCookie('checkedClusters');
+    var arr = new Array();
+    if (str != null)
+        arr = str.split(',');
+    
+    var newValues = "";
+    var found = false;
+    for (var x=arr.length-1; x >=0 ; x--) {
+        if (arr[x] == id) {
+            found = true;
+        }
+        if (newValues.length==0) {
+            newValues += arr[x];
+        } else {
+            newValues += ","+arr[x];
+        }
+    }
+    if (!found) {
+        if (newValues.length==0) {
+            newValues += id;
+        } else {
+            newValues += ","+ id;
+        }
+    }
+    createCookie('checkedClusters', newValues, '7');
+}
+
 function removeClusterIdFromCookie(id) {
     var str = readCookie('checkedClusters');
-
     var arr = new Array();
-
     if (str != null)
         arr = str.split(',');
 
     var newValues = "";
-
     for (var x=arr.length-1; x >=0 ; x--) {
-
-        /* als id niet diegene is die verwidjerd moet worden
+        /* als id niet diegene is die verwijderd moet worden
          * dan toevoegen aan nieuwe cookie value */
         if (arr[x] != id) {
             if (x == arr.length-1)
@@ -787,7 +797,6 @@ function removeClusterIdFromCookie(id) {
         }
     }
 
-    eraseCookie('checkedClusters');
     createCookie('checkedClusters', newValues, '7');
 }
 
@@ -820,7 +829,16 @@ function addItemAsLayer(theItem,atBottomOfType){
 }
 
 function addLayerToEnabledLayerItems(theItem){
-    enabledLayerItems.push(theItem);
+    var foundLayerItem = null;
+    for (var i=0; i < enabledLayerItems.length; i++){
+        if (enabledLayerItems[i].id==theItem.id){
+            foundLayerItem = enabledLayerItems[i];
+            break;
+        }
+    }
+    if (foundLayerItem == null) {
+        enabledLayerItems.push(theItem);
+    }
 }
 
 function removeItemAsLayer(theItem){
@@ -863,7 +881,6 @@ function doRefreshLayer(){
 
 }
 function refreshLayer(){
-    //getLayerIdsAsString();
 
     if (layerUrl!=undefined && layerUrl!=null) {
         var backgroundLayers="";
@@ -873,18 +890,8 @@ function refreshLayer(){
         for (var i=0; i<enabledLayerItems.length; i++){
             var item = enabledLayerItems[i];
 
-            var object = document.getElementById(item.id);
-
             if (useInheritCheckbox) {
-                /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
-                 * toch in deze enabledLayerItems array loop terecht komen waardoor
-                 * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
-                 * was eigenlijk eerst alleen bedoeld voor de onderstaande
-                 * cluster inherit checkbox code */
-                var name = getItemName(object);
-                if (!isCheckBoxChecked(name))
-                    continue;
-
+            		var object = document.getElementById(item.id);
                 /* Item alleen toevoegen aan de layers indien
                  * parent cluster(s) allemaal aangevinkt staan of
                  * geen cluster heeft */
@@ -922,6 +929,7 @@ function refreshLayer(){
                 layerUrl+='?';
             layerUrl+="SERVICE=WMS";
         }
+        
         var capLayerUrl=layerUrl;
         //maak layer
         var newLayer= new FlamingoWMSLayer("fmcLayer");
@@ -989,20 +997,9 @@ function getLayerIdsAsString() {
 
     for (var i=0; i < enabledLayerItems.length; i++) {
 
-        var object = document.getElementById(enabledLayerItems[i].id);
-
         if (useInheritCheckbox) {
-            /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
-             * toch in deze enabledLayerItems array loop terecht komen waardoor
-             * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
-             * was eigenlijk eerst alleen bedoeld voor de onderstaande
-             * cluster inherit checkbox code */
-
-            var name = getItemName(object);
-            if (!isCheckBoxChecked(name))
-                continue;
-          
-            /* Item alleen toevoegen aan de layers indien
+        		var object = document.getElementById(enabledLayerItems[i].id);
+             /* Item alleen toevoegen aan de layers indien
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
             if (!itemHasAllParentsEnabled(object))
@@ -1020,8 +1017,6 @@ function getLayerIdsAsString() {
     return ret;
 }
 
-var checkedItems = new Array();
-
 function itemHasAllParentsEnabled(object) {
 
     if (object == null)
@@ -1031,41 +1026,25 @@ function itemHasAllParentsEnabled(object) {
     var parentChildrenDiv = getParentDivContainingChilds(object, 'div');
 
     /* als er geen parent div is met eventuele children (cluster)
-     * dan status teruggeven van aangevinkte clusters */
+     * dan top bereikt dus alles aangevinkt */
     if (!parentChildrenDiv) {
-        var count = 0;
-        var size = checkedItems.length;
-
-        for (var i=0; i < size; i++) {
-            var bool = checkedItems[i];
-
-            if (bool)
-                count++;
-        }
-
-        /* reset array */
-        checkedItems = new Array();
-
-        if ( (count == size) || (size < 1) )
-            return true;
-        else
-            return false;
-
-
-    } else {
-
-        /* neem hiervan eerste div erboven, dit is dan de div
-         * met input vinkje voor het cluster */
-        var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
-
-        /* opzoeken of checkbox element checked is */
-        var name = getItemName(parentDiv);
-        var checked = isCheckBoxChecked(name);
-
-        checkedItems.push(checked);
+ 			return true;
     }
-    
+
+    /* neem hiervan eerste div erboven, dit is dan de div
+     * met input vinkje voor het cluster */
+    var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
+
+    /* opzoeken of checkbox element checked is */
+    var name = getItemName(parentDiv);
+    var checked = isCheckBoxChecked(name);
+
+		if (!checked) {
+			/* niet aangevinkt dus false */
+			return false;
+		}
     return itemHasAllParentsEnabled(parentDiv);
+
 }
 
 /* zoekt omhoog naar het eerste element met _children erin
@@ -1415,83 +1394,16 @@ function flamingo_map1_onInit(){
 
         firstTimeOninit=false;
 
-        /* prio, meegegeven ids, cookies, beheerder setting */
-
-        /* clusters uit cookie aanzetten */
-        if (useCookies) {
-            var clusterLayers = new Array();
-
-            if (cookieClusterArray != null)
-                clusterLayers = cookieClusterArray.split(',');
-
-            for (var x=clusterLayers.length-1; x >=0; x--) {
-
-                if (clusterLayers[x] != null && clusterLayers[x] != "")          
-                    document.getElementById(clusterLayers[x]).checked=true;
-            }
-        }
-
-        /* children aanzetten voor clusters die nu al aanstaan
-         * alleen indien overerving uit staat */
-        if (clustersAan != null && !useInheritCheckbox) {
-            for (var y=clustersAan.length-1; y >= 0; y--) {
-                
-                var cluster = document.getElementById(clustersAan[y].id).theItem;
-
-                if (cluster != null) {
-                    for (var i=0; i < cluster.children.length;i++){
-                        var child=cluster.children[i];
-                        if (!child.cluster){
-                            addItemAsLayer(child);
-                            if (!cluster.hide_tree){
-                                document.getElementById(child.id).checked=true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        //check / activate the themas that have init status visible
-        var newLayersAan = new Array();
-        var cookieLayers = new Array();
-        
-        if (cookieArray != null) {
-            cookieLayers = cookieArray.split(',');
-        }
-
-        
-        if (useCookies) {
-            /* alle id's uit cookies in newlayer stoppen als item */
-            for (var j=0; j < cookieLayers.length; j++) {
-
-                for (var k=0; k < layersAan.length; k++) {
-
-                    if (layersAan[k].theItem.id == cookieLayers[j]) {
-                        newLayersAan[newLayersAan.length] = layersAan[k];
-                    }              
-                }
-            }
-
-            /* ook er inzetten indien het een laag is met visible off
-            * dit is dan een niet opstartlaag die wel aan hoort te staan */
-            for (var l=0; l < layersAan.length; l++) {
-                if (layersAan[l].theItem.visible == 'off')
-                    newLayersAan[newLayersAan.length] = layersAan[l];
-            } 
-        }
-
         // layer added in reverse order
         // layer with lowest order number should be on top
         // so added last
-        for (var m=newLayersAan.length-1; m >=0 ; m--){
-            checkboxClick(newLayersAan[m],true);
+        for (var i=clustersAan.length-1; i >=0 ; i--){
+            clusterCheckboxClick(clustersAan[i], true);
+        }
+        for (var m=layersAan.length-1; m >=0 ; m--){
+            checkboxClick(layersAan[m],true);
         }
 
-        // activelayer niet meer via cookie zetten!
-        //        var activeLayerIdFromCookie = getActiveLayerId(readCookie('activelayer'));
-        //        var activeLayerLabelFromCookie = getActiveLayerLabel(readCookie('activelayer'));
-        //        activeAnalyseThemaId = setActiveThema(activeLayerIdFromCookie, activeLayerLabelFromCookie, true);
         //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
         if (searchExtent!=null){
             flamingoController.getMap("map1").moveToExtent(searchExtent);

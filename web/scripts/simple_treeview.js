@@ -350,7 +350,11 @@ function treeview_createContentNode(options, id, item) {
 	var labelContainer = createNormalDiv();
 	labelContainer.id = id + "_label";
 	if(options.itemLabelCreatorFunction) {
-		options.itemLabelCreatorFunction(labelContainer, item);
+		var hide = options.itemLabelCreatorFunction(labelContainer, item);
+                if(hide) { // bij undefined niet hiden
+                    // return div zonder table
+                    return labelContainer;
+                }
 	} else {
 		treeview_defaultItemLabelCreatorFunction(labelContainer, item);
 	}

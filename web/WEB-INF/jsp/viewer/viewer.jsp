@@ -34,11 +34,7 @@
      if(typeof themaTree === 'undefined' || !themaTree) {
         themaTree = null;
     }
-   var visibleTree=catchEmpty(${tree});
-    if(typeof visibleTree === 'undefined' || !visibleTree) {
-        visibleTree = null;
-    }
-   
+    
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
     var bbox='${extent}';
@@ -481,7 +477,6 @@
     }
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
-    filterInvisibleItems(visibleTree);
     var expandAll=catchEmpty(${configMap["expandAll"]});
     if(typeof expandAll === 'undefined') {
         expandAll = false;
@@ -489,7 +484,7 @@
 
     treeview_create({
         "id": "layermaindiv",
-        "root": visibleTree,
+        "root": themaTree,
         "rootChildrenAsRoots": true,
         "itemLabelCreatorFunction": createLabel,
         "toggleImages": {

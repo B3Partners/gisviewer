@@ -345,26 +345,6 @@ function isActiveItem(item) {
 
     return true;
 }
-function filterInvisibleItems(cluster){
-    var hasClusters=false;
-    if(typeof cluster === 'undefined' || !cluster) {
-        return;
-    }
-    if(cluster.children) {
-        for(var i = 0; i < cluster.children.length; i++) {
-            var item=cluster.children[i];
-            if (item.cluster){
-                filterInvisibleItems(item);
-                if (item.hide_tree && !item.callable){
-                    hasCluster=true;
-                }
-            }
-        }
-    }        
-    if (cluster.hide_tree && !hasClusters){
-        cluster.children=null;
-    }
-}
 function createCheckboxCluster(item, checked){
 
     var checkbox;
@@ -452,6 +432,19 @@ function createCheckboxThema(item, checked) {
     return checkbox;
 }
 
+function createInvisibleThemaDiv(item) {
+    var div = document.createElement("div");
+    div.name=item.id;
+    div.id=item.id;
+    div.style.height='0';
+    div.style.width='0';
+    div.height=0;
+    div.width=0;
+
+    div.style.display="none";
+    return div;
+}
+
 function createMetadatLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
@@ -474,8 +467,7 @@ function createLabel(container, item) {
             }
             var checkbox = createCheckboxCluster(item, checkboxChecked );
 
-            //add the real(not filtered) item to the checkbox.
-            checkbox.theItem=treeview_findItem(themaTree,item.id);
+            checkbox.theItem=item;
             container.appendChild(checkbox);
 
             if (checkboxChecked){
@@ -534,8 +526,17 @@ function createLabel(container, item) {
             container.appendChild(createTreeLegendDiv(item));
         }
         
-    } else if(item.hide_tree && item.visible && item.wmslayers){
-        addItemAsLayer(item,true);
+    } else {
+        container.style.height='0';
+        container.style.width='0';
+        container.height=0;
+        container.width=0;
+
+        container.appendChild(createInvisibleThemaDiv(item));
+        if(item.visible=="on" && item.wmslayers){
+            addItemAsLayer(item,true);
+        }
+        return true;//hide
     }
 }
 
@@ -710,18 +711,17 @@ function clusterCheckboxClick(element,dontRefresh){
     }
 
     /* indien cookies aan dan cluster id in cookie stoppen */
+    var cluster=element.theItem;
     if (useCookies) {      
-        var c = element.theItem;
         if (element.checked) {
-            addClusterIdToCookie(c.id);
+            addClusterIdToCookie(cluster.id);
         } else {
-            removeClusterIdFromCookie(c.id);
+            removeClusterIdFromCookie(cluster.id);
         }
     }
-
     // als dontrefresh, dan opstart, dan ook geen update subvinkjes
-    if (!useInheritCheckbox && !dontRefresh) {
-        var cluster=element.theItem;
+    // als hide_tree dan altijd childs aan/uit zetten, want gebruiker kan daar niet bij
+    if ((!useInheritCheckbox && !dontRefresh) || cluster.hide_tree) {
         if (element.checked) {
             
             for (var i=0; i < cluster.children.length;i++){
@@ -889,33 +889,29 @@ function refreshLayer(){
         // last in list will be on top in map
         for (var i=0; i<enabledLayerItems.length; i++){
             var item = enabledLayerItems[i];
-
             if (useInheritCheckbox) {
-            		var object = document.getElementById(item.id);
+                var object = document.getElementById(item.id);
                 /* Item alleen toevoegen aan de layers indien
                  * parent cluster(s) allemaal aangevinkt staan of
                  * geen cluster heeft */
-                if (!itemHasAllParentsEnabled(object))
-                    continue;
+                    if (!itemHasAllParentsEnabled(object))
+                        continue;
             }
-            
-            if (item.visible){
-                if (item.wmslayers){
-                    if (item.background){
-                        if (backgroundLayers.length>0)
-                            backgroundLayers+=",";
-                        backgroundLayers+=item.wmslayers;
-                    }else{
-                        if(topLayers.length > 0)
-                            topLayers+=",";
-                        topLayers+=item.wmslayers;
-                    }
+            if (item.wmslayers){
+                if (item.background){
+                    if (backgroundLayers.length>0)
+                        backgroundLayers+=",";
+                    backgroundLayers+=item.wmslayers;
+                }else{
+                    if(topLayers.length > 0)
+                        topLayers+=",";
+                    topLayers+=item.wmslayers;
                 }
-                if (item.wmsquerylayers){
-                    if (queryLayers.length > 0)
-                        queryLayers+=",";
-                    queryLayers+=item.wmsquerylayers
-                }
+            }
+            if (item.wmsquerylayers){
+                if (queryLayers.length > 0)
+                    queryLayers+=",";
+                queryLayers+=item.wmsquerylayers
             }
         }
         var layersToAdd=backgroundLayers;
@@ -998,13 +994,13 @@ function getLayerIdsAsString() {
     for (var i=0; i < enabledLayerItems.length; i++) {
 
         if (useInheritCheckbox) {
-        		var object = document.getElementById(enabledLayerItems[i].id);
+            var object = document.getElementById(enabledLayerItems[i].id);
              /* Item alleen toevoegen aan de layers indien
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
-            if (!itemHasAllParentsEnabled(object))
+             if (!itemHasAllParentsEnabled(object))
                 continue;
-        }
+         }
         
         if(firstTime) {
             ret += enabledLayerItems[i].id;
@@ -1019,8 +1015,9 @@ function getLayerIdsAsString() {
 
 function itemHasAllParentsEnabled(object) {
 
-    if (object == null)
+    if (object == null) {
         return false;
+    }
 
     /* zoek eerste div element met _children erin */
     var parentChildrenDiv = getParentDivContainingChilds(object, 'div');
@@ -1028,7 +1025,7 @@ function itemHasAllParentsEnabled(object) {
     /* als er geen parent div is met eventuele children (cluster)
      * dan top bereikt dus alles aangevinkt */
     if (!parentChildrenDiv) {
- 			return true;
+        return true;
     }
 
     /* neem hiervan eerste div erboven, dit is dan de div
@@ -1039,10 +1036,10 @@ function itemHasAllParentsEnabled(object) {
     var name = getItemName(parentDiv);
     var checked = isCheckBoxChecked(name);
 
-		if (!checked) {
-			/* niet aangevinkt dus false */
-			return false;
-		}
+    if (!checked) {
+        /* niet aangevinkt dus false */
+        return false;
+    }
     return itemHasAllParentsEnabled(parentDiv);
 
 }
@@ -1156,7 +1153,7 @@ function createLegendDiv(item) {
         selectLayer(this);
     };
 
-    if (item.hide_legend && demogebruiker){
+    if (item.hide_legend){
         div.style.display="none";
     }
     return div;

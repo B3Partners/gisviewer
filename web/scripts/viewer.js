@@ -472,17 +472,21 @@ function createLabel(container, item) {
 
             if (checkboxChecked){
                 clustersAan.push(checkbox);
-             }
+            }
+
+            // alleen een callable item kan active zijn
+            if (item.active){
+                setActiveCluster(item, true);
+                if(item.metadatalink && item.metadatalink.length > 1){
+                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+                }
+            }
         }
         if (!item.hide_tree || item.callable){
             container.appendChild(document.createTextNode('  '));
             container.appendChild(createMetadatLink(item));
-        }
-        if (item.active){
-            setActiveCluster(item, true);
-            if(item.metadatalink && item.metadatalink.length > 1){
-                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
-            }
+        } else {
+            return true; //hide
         }
 
     } else if (!item.hide_tree) {
@@ -689,14 +693,19 @@ function syncLayerCookieAndForm(layerString) {
 
 //called when a checkbox is clicked.
 function checkboxClick(obj, dontRefresh) {
-
+    var item = obj.theItem;
     if(obj.checked) {        
         //add legend
         //add wms layer part
-        addItemAsLayer(obj.theItem);        
-        
+        addItemAsLayer(item);
+
+        if (useInheritCheckbox) {
+            //zet bovenliggende cluster vinkjes aan
+            var object = document.getElementById(item.id);
+            enableParentClusters(object);
+        }
     } else {
-        removeItemAsLayer(obj.theItem);
+        removeItemAsLayer(item);
     }
     if (!dontRefresh){        
         refreshLayerWithDelay();
@@ -1013,6 +1022,25 @@ function getLayerIdsAsString() {
     return ret;
 }
 
+/* uitleg zie itemHasAllParentsEnabled */
+function enableParentClusters(object) {
+    if (object == null) {
+        return;
+    }
+    var parentChildrenDiv = getParentDivContainingChilds(object, 'div');
+    if (!parentChildrenDiv) {
+        return;
+    }
+    var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
+    var name = getItemName(parentDiv);
+    var checkbox = document.getElementById(name);
+    checkbox.checked = true;
+
+    enableParentClusters(parentDiv);
+
+}
+
+
 function itemHasAllParentsEnabled(object) {
 
     if (object == null) {
@@ -1034,9 +1062,8 @@ function itemHasAllParentsEnabled(object) {
 
     /* opzoeken of checkbox element checked is */
     var name = getItemName(parentDiv);
-    var checked = isCheckBoxChecked(name);
-
-    if (!checked) {
+    var checkbox = document.getElementById(name);
+    if (!checkbox.checked) {
         /* niet aangevinkt dus false */
         return false;
     }
@@ -1050,7 +1077,7 @@ function getParentDivContainingChilds(obj, tag)
 {
     var obj_parent = obj.parentNode;
 
-    if ( (obj_parent.id == null) || (!obj_parent) )
+    if ( !obj_parent || (obj_parent.id == null)  )
         return false;
 
     /* alleen parent teruggeven als het ook aangevinkt kan worden */
@@ -1092,32 +1119,10 @@ function parentHasCheckBox(parent) {
     * met eventueel input vinkje voor het cluster */
     var parentDiv = getParentByTagName(parent, 'div');
     var name = getItemName(parentDiv);
-
-    var inputs = document.getElementsByTagName('input');
-
-    for (var i=0; i < inputs.length; i++) {
-        var c = inputs[i];
-
-        if (c.id == name)
-            return true;
+    var checkbox = document.getElementById(name);
+    if (checkbox) {
+        return true;
     }
-
-    return false;
-}
-
-function isCheckBoxChecked(name) {
-    var inputs = document.getElementsByTagName('input');
-
-    for (var i=0; i < inputs.length; i++) {
-        var c = inputs[i];
-
-        if ( (c.id == name) ) {
-            
-            if (c.checked)
-                return true;
-        }
-    }
-
     return false;
 }
 

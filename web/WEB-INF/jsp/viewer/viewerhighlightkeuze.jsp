@@ -13,18 +13,30 @@
         <title>B3P GIS Viewer</title>
         <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
         <link href="styles/gisviewer_b3p.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript">
+            function getParent(){
+                if (window.opener){
+                    return window.opener;
+                }else if (window.parent){
+                    return window.parent;
+                }else{
+                    alert("No parent found");
+                    return null;
+                }
+            }
+        </script>
     </head>
     <body>
         
-    <h2>Meerdere analyse lagen actief</h2>
+    <h2>Meerdere kaartlagen actief</h2>
 
-    <p>Kies de kaartlaag met het object die u wilt highlighten.</p>
+    <p>Kies de kaartlaag met het object die u wilt selecteren.</p>
 
     <script type="text/javascript">
-        for (var i=0; i < opener.enabledLayerItems.length; i++) {
-            var item = opener.enabledLayerItems[i];
+        for (var i=0; i < getParent().enabledLayerItems.length; i++) {
+            var item = getParent().enabledLayerItems[i];
 
-            var link = "<a class='highlightlink' href='javascript:opener.handlePopupValue("+item.id+");'>" + item.title +"</A>";
+            var link = "<a class='highlightlink' href='javascript:getParent().handlePopupValue("+item.id+");'>" + item.title +"</A>";
             document.write("<p>"+link +"</p>");
         }
     </script>

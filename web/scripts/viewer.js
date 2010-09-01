@@ -212,7 +212,7 @@ function openUrlInIframe(url){
 // alse item.analyse=="active" dan altijd visible
 function getLayerPosition(item) {
 
-    if(cookieArray == null) {
+    if((cookieArray == null) || !useCookies) {
         if (item.visible=="on" || item.analyse=="active")
             return -1;
         else
@@ -234,7 +234,7 @@ function getLayerPosition(item) {
 }
 
 function getClusterPosition(item) {
-    if(cookieClusterArray == null) {
+    if ((cookieClusterArray == null) || !useCookies) {
         if (item.visible || item.active)
             return -1;
         else
@@ -677,12 +677,12 @@ function switchTab(obj) {
 }
 
 function syncLayerCookieAndForm(layerString) {
-    eraseCookie('checkedLayers');
-    
-    if (layerString!=null) {
-        createCookie('checkedLayers', layerString, '7');
+    if (useCookies) {
+        eraseCookie('checkedLayers');
+        if (layerString!=null) {
+            createCookie('checkedLayers', layerString, '7');
+        }
     }
-
     document.forms[0].lagen.value = layerString;
 }
 
@@ -1889,7 +1889,7 @@ function flamingo_b_removePolygons_onEvent(id, event) {
 
 var btn_highLightSelected = false;
 
-/* er is net op de highlight knop gedrukt, start tekenen point */
+/* er is net op de highlight knop gedrukt */
 function flamingo_b_highlight_onEvent(id, event) {
 
     if (event["down"])
@@ -1906,6 +1906,7 @@ var highLightGeom = null;
 
 function highLightThemaObject(geom) {
 
+    /* geom bewaren voor callbaack van popup */
     highLightGeom = geom;
 
     var analyseThemas = new Array();
@@ -1916,15 +1917,6 @@ function highLightThemaObject(geom) {
 
         var object = document.getElementById(item.id);
 
-        /* Hack: Deze check zit erin omdat sommige net uitgevinkte lagen
-         * toch in deze enabledLayerItems array loop terecht komen waardoor
-         * ze soms getoond worden, ook als ze net uitgevinkt zijn. Deze check
-         * was eigenlijk eerst alleen bedoeld voor de onderstaande
-         * cluster inherit checkbox code */
-        var name = getItemName(object);
-        if (!isCheckBoxChecked(name))
-            continue;
-
         /* alleen uitvoern als configuratie optie hiervan op true staat */
         if (useInheritCheckbox) {
             /* Item alleen toevoegen aan de layers indien
@@ -1934,7 +1926,7 @@ function highLightThemaObject(geom) {
                 continue;
         }
 
-        if (item.analyse == 'on')
+        if (item.analyse == 'on' || item.analyse=="active")
             analyseThemas.push(item);
     }
 
@@ -1943,9 +1935,9 @@ function highLightThemaObject(geom) {
     }
 
     if (analyseThemas.length == 1) {
-        EditUtil.getHighlightWktForThema(analyseThemas[0].id, highLightGeom, returnHighlight);
+        EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
         
-        handleGetAdminData(highLightGeom, analyseThemas[0].id);
+        handleGetAdminData(geom, analyseThemas[0].id);
     }
 }
 

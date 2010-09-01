@@ -22,11 +22,13 @@
             <fmc:ButtonNext id="toolNextExtent" left="210" listento="map1" skin="f2" />
 
             <!-- stukje knoppen voor redlining/ editing -->
-            <fmc:EditLegend id="editLegend" left="250" top="0" listento="editMap" expandable="false"/>
-            <fmc:EditBar id="editBar" left="250" top="0" listento="editMap"/>
+            <fmc:Container id="redLiningContainer" visible="true">
+                <fmc:EditLegend id="editLegend" left="250" top="0" listento="editMap" expandable="false"/>
+                <fmc:EditBar id="editBar" left="250" top="0" listento="editMap" />
+            </fmc:Container>
 
             <fmc:Container left="20">
-                <fmc:JsButton id="b_buffer" left="320" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/buffer.png" iconurl_over="flamingo/assets/jsbtn/buffer_over.png" iconurl_sel="flamingo/assets/jsbtn/buffer_down.png" iconurl_dis="flamingo/assets/jsbtn/buffer.png" label="" toggle="false" visible="true" enabled="true" selected="false">
+                <fmc:JsButton id="b_buffer" left="320" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/buffer.png" iconurl_over="flamingo/assets/jsbtn/buffer_over.png" iconurl_sel="flamingo/assets/jsbtn/buffer_down.png" iconurl_dis="flamingo/assets/jsbtn/buffer.png" label="" toggle="false" visible="true" enabled="false" selected="false">
                     <string id="tooltip" en="Buffer" nl="Buffer"/>
                 </fmc:JsButton>
 

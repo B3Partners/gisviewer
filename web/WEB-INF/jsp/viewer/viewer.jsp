@@ -9,7 +9,7 @@
 <script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 
-<script type="text/javascript">
+<script type="text/javascript">  
     function catchEmpty(defval){
         return defval
     }
@@ -228,6 +228,13 @@
         planSelectieIds = "0,0";
     }
 
+    /* Geavanceerde knoppen. Default verbergen.
+     * redlining, buffer, bulkselect, removepolygon en breinaald/highlight
+    */
+    var hideAdvancedButtons = catchEmpty(${configMap["hideAdvancedButtons"]});
+    if (typeof hideAdvancedButtons === 'undefined') {
+        hideAdvancedButtons = true;
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

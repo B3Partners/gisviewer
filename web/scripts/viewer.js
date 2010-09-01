@@ -1382,7 +1382,8 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
     teller=0;
     updateGetFeatureInfo(data);
 }
-var firstTimeOninit=true;
+var firstTimeOninit = true;
+
 function flamingo_map1_onInit(){
     showLoading();
     
@@ -1434,6 +1435,7 @@ function flamingo_map1_onInit(){
     mapInitialized=true;
     doInitSearch();
 }
+
 function ie6_hack_onInit(){
     if (navigator.appVersion.indexOf("MSIE") != -1) {
         version = parseFloat(navigator.appVersion.split("MSIE")[1]);
@@ -1971,8 +1973,23 @@ function returnHighlight(wkt) {
     }
 }
 
+function hideButtons() {
+    flamingo.callMethod("b_buffer", "setVisible", false);
+    flamingo.callMethod("b_removePolygons", "setVisible", false);
+    flamingo.callMethod("b_getfeatures", "setVisible", false);
+    flamingo.callMethod("b_highlight", "setVisible", false);
+    
+    flamingo.callMethod("redLiningContainer", "setVisible", false);
+}
+
 function dispatchEventJS(event, comp) {
 
-    if (event=="onGetCapabilities")
+    if (event=="onGetCapabilities") {
         hideLoading();
+    }
+
+    if (event=="onConfigComplete") {
+        if (hideAdvancedButtons)
+            hideButtons();
+    }
 }

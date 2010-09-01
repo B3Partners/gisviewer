@@ -1945,13 +1945,16 @@ function highLightThemaObject(geom) {
     }
 }
 
-function handlePopupValue(value) {
-    //popupWindowRef.close();
+function handlePopupValue(value) {    
     $j("#popupWindow").hide();
 
-    EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
+    analyseThemas = new Array();
 
-    handleGetAdminData(highLightGeom, value);
+    var object = document.getElementById(value);
+    setActiveThema(value, object.theItem.title, true);
+
+    EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
+    handleGetAdminData(highLightGeom, value);   
 }
 
 /* backend heeft wkt teruggegeven */

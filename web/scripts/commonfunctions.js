@@ -106,8 +106,16 @@ popUp = function(URL, naam, width, height, useDiv) {
         if(!popupCreated) initPopup();
         document.getElementById("dataframedivpopup").src = URL;
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
+
+        $j("#popupWindow").width(width);
+        $j("#popupWindow").height(height);
+
         $j("#popupWindow").show();
-        if(ieVersion <= 6 && ieVersion != -1) fixPopup();
+
+        if(ieVersion <= 6 && ieVersion != -1)
+            fixPopup();
+
+
     } else {
         properties = "toolbar = 0, " +
         "scrollbars = 1, " +
@@ -229,8 +237,12 @@ $j(document).ready(function(){
             start: function(event, ui) { startResize(); },
             stop: function(event, ui) { stopResize(); }
         });
+
+
         $j('#popupWindow_Close').click(function(){
-            dataframepopupHandle.closed = true;
+            if (dataframepopupHandle)
+                dataframepopupHandle.closed = true;
+            
             $j("#popupWindow").hide();
         });
         $j("#popupWindow").mouseover(function(){startDrag();});

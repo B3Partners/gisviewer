@@ -1820,7 +1820,11 @@ function flamingo_b_getfeatures_onEvent(id,event) {
 
             var loadingStr = "Bezig met laden...";
             document.getElementById('kadastraledata').innerHTML = loadingStr;
-            handleGetAdminData(wkt, null);
+
+            if (btn_highLightSelected)
+                highLightThemaObject(wkt);
+            else
+                handleGetAdminData(wkt, null);
         }
     }
 }
@@ -1901,15 +1905,15 @@ function flamingo_b_highlight_onEvent(id, event) {
     }
 }
 
-var popupWindowRed = null;
+var popupWindowRef = null;
 var highLightGeom = null;
+
+var analyseThemas = new Array();
 
 function highLightThemaObject(geom) {
 
     /* geom bewaren voor callbaack van popup */
     highLightGeom = geom;
-
-    var analyseThemas = new Array();
 
     /* indien meerdere analyse themas dan popup voor keuze */
     for (var i=0; i < enabledLayerItems.length; i++) {
@@ -1931,7 +1935,7 @@ function highLightThemaObject(geom) {
     }
 
     if (analyseThemas.length > 1) {
-        popupWindowRed = popUp('viewerhighlight.do', 'popupHighlight', 320, 240, false);
+        popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 320, 240, true);
     }
 
     if (analyseThemas.length == 1) {
@@ -1942,7 +1946,8 @@ function highLightThemaObject(geom) {
 }
 
 function handlePopupValue(value) {
-    popupWindowRed.close();
+    //popupWindowRef.close();
+    $j("#popupWindow").hide();
 
     EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
 

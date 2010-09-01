@@ -33,8 +33,8 @@
     <p>Kies de kaartlaag met het object die u wilt selecteren.</p>
 
     <script type="text/javascript">
-        for (var i=0; i < getParent().enabledLayerItems.length; i++) {
-            var item = getParent().enabledLayerItems[i];
+        for (var i=0; i < getParent().analyseThemas.length; i++) {
+            var item = getParent().analyseThemas[i];
 
             var link = "<a class='highlightlink' href='javascript:getParent().handlePopupValue("+item.id+");'>" + item.title +"</A>";
             document.write("<p>"+link +"</p>");

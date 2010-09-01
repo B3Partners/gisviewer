@@ -2,7 +2,7 @@ var plannen = new Object();
 var bestemmingen = new Object();
 var selectedPlan=null;
 
-var plantypeAttribuutNaam="plantype";
+var plantypeAttribuutNaam="typeplan";
 var planStatusAttribuutNaam="planstatus";
 var tekstAttribuutNaam="documenten";
 
@@ -55,6 +55,7 @@ function eigenaarchanged(element){
 }
 
 function handleGetPlannen(list){
+    
     //klaar met zoeken dus eigenaar veld weer aan.
     eigenaarSelect.disabled=false;
     dwr.util.removeAllOptions(planSelectName);
@@ -127,18 +128,21 @@ function planchanged(element){
         var plan;
         var zoekConfigId;
         for (var i=0; i < plannen.length; i++){
-            if (plannen[i].id == element.value){
+            if (plannen[i].id == element.value) {                
                 plan=plannen[i];
                 break;
             }
         }
         if (plan){
             setSelectedPlan(plan);
-            var ext= new Object();
+
+            var ext = new Object();
+
             ext.minx=plan.minx;
             ext.miny=plan.miny;
             ext.maxx=plan.maxx;
             ext.maxy=plan.maxy;
+
             flamingoController.getMap("map1").moveToExtent(ext);
         }
     }
@@ -148,11 +152,13 @@ function getDistinctFromPlannen(attribuutnaam,plannenArray){
     if(plannenArray==undefined){
         plannenArray=plannen;
     }
+ 
     var typen = new Array();
     for (var i=0; i < plannenArray.length; i++){
-        var attributen=plannenArray[i].attributen;
+        var attributen = plannenArray[i].attributen;
+
         for (var e=0; e <attributen.length; e++){
-            if(attributen[e].naam==attribuutnaam){
+            if(attributen[e].attribuutnaam==attribuutnaam){
                 if (!arrayContains(typen,attributen[e].waarde)){
                     typen.push(attributen[e].waarde);
                 }
@@ -169,7 +175,7 @@ function filterPlannen(attribuutType,value,plannenArray){
     for (var i=0; i < plannenArray.length; i++){
         var attributen=plannenArray[i].attributen;
         for (var e=0; e <attributen.length; e++){
-            if(attributen[e].naam==attribuutType){
+            if(attributen[e].attribuutnaam==attribuutType){
                 if (value==attributen[e].waarde){
                     filteredPlannen.push(plannenArray[i]);
                 }

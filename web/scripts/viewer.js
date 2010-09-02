@@ -251,7 +251,6 @@ function getClusterPosition(item) {
     return 0;
 }
 
-
 function setActiveCluster(item,overrule){
     if(((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
         if(item != undefined & item != null) {
@@ -260,6 +259,9 @@ function setActiveCluster(item,overrule){
             if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
                 activeClusterId = item.id;
                 atlabel.innerHTML = '' + activeClusterTitle; // Actief thema weggehaald
+            }
+            if(item.metadatalink && item.metadatalink.length > 1){
+                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
             }
         }
     }
@@ -273,7 +275,7 @@ function setActiveThema(id, label, overrule) {
         (activeClusterId==null || activeClusterId.length==0)) || overrule){
 
         activeAnalyseThemaId = id;
-
+alert(label);
         var atlabel = document.getElementById('actief_thema');
         if (atlabel && label && atlabel!=null && label!=null) {
             atlabel.innerHTML = '' + label; // Actief thema weggehaald
@@ -479,9 +481,6 @@ function createLabel(container, item) {
             // alleen een callable item kan active zijn
             if (item.active){
                 setActiveCluster(item, true);
-                if(item.metadatalink && item.metadatalink.length > 1){
-                    if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
-                }
             }
         }
         if (item.hide_tree && item.callable){
@@ -490,6 +489,7 @@ function createLabel(container, item) {
             var img = document.createElement("img");
             img.setAttribute("border", "0");
             img.src = globalTreeOptions["layermaindiv"].toggleImages["leaf"]
+            img.theItem=item;
             container.togglea = img;
         }
         if (!item.hide_tree || item.callable){
@@ -541,7 +541,9 @@ function createLabel(container, item) {
         }
         
     } else {
-        container.appendChild(createInvisibleThemaDiv(item));
+        var divje = createInvisibleThemaDiv(item);
+        divje.theItem=item;
+        container.appendChild(divje);
         if(item.visible=="on" && item.wmslayers){
             addItemAsLayer(item,true);
         }
@@ -1920,7 +1922,8 @@ var highLightGeom = null;
 var analyseThemas = new Array();
 
 function highLightThemaObject(geom) {
-
+    
+    analyseThemas = new Array();
     /* geom bewaren voor callbaack van popup */
     highLightGeom = geom;
 
@@ -1961,6 +1964,10 @@ function handlePopupValue(value) {
 
     var object = document.getElementById(value);
     setActiveThema(value, object.theItem.title, true);
+
+// TODO uitzoeken of thema onzichtbaar is en dan bovenliggend cluster gebruiken.
+//    setActiveCluster(item, true);
+
 
     EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
     handleGetAdminData(highLightGeom, value);   

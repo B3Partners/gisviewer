@@ -70,7 +70,7 @@
                         <input name="themaId" type="hidden" value="${themaId}"/>
                         <input name="objectIds" type="hidden" value=""/>
                     </form>
-                    <form action="viewerdata.do?aanvullendeinfo=t&pkFieldName=primaryKeys" name="data2info${tStatus.count}" id="data2info${tStatus.count}" target="_blank" method="post">
+                    <form action="viewerdata.do?aanvullendeinfo=t" name="data2info${tStatus.count}" id="data2info${tStatus.count}" target="_blank" method="post">
                         <input name="themaid" type="hidden" value="${themaId}"/>
                         <input name="primaryKeys" type="hidden" value=""/>
                         <input name="addKaart" type="hidden" value="j"/>

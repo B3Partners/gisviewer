@@ -126,15 +126,15 @@
                             </table>
                         </td>
                        <td valign="top">
-                            <!-- Wordt een plaatje getoond van het object -->
-                            <c:if test="${envelops[0]!=null and not empty envelops[0]}">
+                             <!-- Wordt een plaatje getoond van het object -->
+                            <c:if test="${envelops[0].minX!=null and not empty envelops[0].minX}">
                                 <div class="aanvullendeInfoKaartContainer">
                                     <script>
                                         var minx,maxx,miny,maxy,ax,ay;
-                                        minx=<c:out value="${envelops[regelCounter.count-1][0]}"/>;
-                                        miny=<c:out value="${envelops[regelCounter.count-1][1]}"/>;
-                                        maxx=<c:out value="${envelops[regelCounter.count-1][2]}"/>;
-                                        maxy=<c:out value="${envelops[regelCounter.count-1][3]}"/>;
+                                        minx=<c:out value="${envelops[regelCounter.count-1].minX}"/>;
+                                        miny=<c:out value="${envelops[regelCounter.count-1].minY}"/>;
+                                        maxx=<c:out value="${envelops[regelCounter.count-1].maxX}"/>;
+                                        maxy=<c:out value="${envelops[regelCounter.count-1].maxY}"/>;
 
                                         minx=Number(minx)-mapSpaceAround;
                                         miny=Number(miny)-mapSpaceAround;

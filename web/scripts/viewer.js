@@ -1924,6 +1924,7 @@ var analyseThemas = new Array();
 function highLightThemaObject(geom) {
     
     analyseThemas = new Array();
+
     /* geom bewaren voor callbaack van popup */
     highLightGeom = geom;
 
@@ -1959,15 +1960,18 @@ function highLightThemaObject(geom) {
 
 function handlePopupValue(value) {    
     $j("#popupWindow").hide();
-
+    
     analyseThemas = new Array();
 
+    /* heb je bij samengesteld cluster ook theItem.title ? */
     var object = document.getElementById(value);
     setActiveThema(value, object.theItem.title, true);
 
-// TODO uitzoeken of thema onzichtbaar is en dan bovenliggend cluster gebruiken.
-//    setActiveCluster(item, true);
-
+    /*
+     * TODO
+     * uitzoeken of thema onzichtbaar is en dan bovenliggend cluster gebruiken.
+     * setActiveCluster(item, true);
+    */
 
     EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
     handleGetAdminData(highLightGeom, value);   

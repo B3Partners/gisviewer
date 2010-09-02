@@ -275,7 +275,7 @@ function setActiveThema(id, label, overrule) {
         (activeClusterId==null || activeClusterId.length==0)) || overrule){
 
         activeAnalyseThemaId = id;
-alert(label);
+
         var atlabel = document.getElementById('actief_thema');
         if (atlabel && label && atlabel!=null && label!=null) {
             atlabel.innerHTML = '' + label; // Actief thema weggehaald

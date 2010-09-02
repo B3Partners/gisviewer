@@ -23,6 +23,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
+<div style="margin: 5px;">
 <c:choose>
     <c:when test="${not empty object_data}">
         <c:forEach var="thema_object_data" items="${object_data}">
@@ -46,3 +47,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         Er zijn geen gebieden gevonden!
     </c:otherwise>
 </c:choose>
+</div>

@@ -374,7 +374,7 @@ a:hover{
 */
 
 
-.tabvak_body {
+.tabvak_body, .tabvak_body div {
     background-color: transparent;
     color: White;
 }

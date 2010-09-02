@@ -87,6 +87,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
 </script>
 
+<div style="margin: 5px;">
 <div class="analysecontainer">
     Kies de redlining-tool en teken een vlak op de kaart. De objecten van de
     actieve kaartlagen worden geanalyseerd nadat u op de analyse knop hebt geklikt.
@@ -94,5 +95,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <input type="button" value="Analyse" class="zoek_knop" id="analysedata" name="analysedata" onclick="doAjaxRequest();" />
     </div>
     <div class="analyseresult" id="analyseresult"  style="height: 10px;">klik op knop voor analyse</div>
+</div>
 </div>
 

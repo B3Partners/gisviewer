@@ -433,9 +433,12 @@ function createCheckboxThema(item, checked) {
 }
 
 function createInvisibleThemaDiv(item) {
+    return createInvisibleDiv(item.id);
+}
+function createInvisibleDiv(id) {
     var div = document.createElement("div");
-    div.name=item.id;
-    div.id=item.id;
+    div.name=id;
+    div.id=id;
     div.style.height='0';
     div.style.width='0';
     div.height=0;
@@ -444,7 +447,6 @@ function createInvisibleThemaDiv(item) {
     div.style.display="none";
     return div;
 }
-
 function createMetadatLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
@@ -481,6 +483,14 @@ function createLabel(container, item) {
                     if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
                 }
             }
+        }
+        if (item.hide_tree && item.callable){
+            // hack om toggle plaatje uit te zetten als
+            // cluster onzichtbare onderliggende kaartlagen heeft
+            var img = document.createElement("img");
+            img.setAttribute("border", "0");
+            img.src = globalTreeOptions["layermaindiv"].toggleImages["leaf"]
+            container.togglea = img;
         }
         if (!item.hide_tree || item.callable){
             container.appendChild(document.createTextNode('  '));
@@ -531,11 +541,6 @@ function createLabel(container, item) {
         }
         
     } else {
-        container.style.height='0';
-        container.style.width='0';
-        container.height=0;
-        container.width=0;
-
         container.appendChild(createInvisibleThemaDiv(item));
         if(item.visible=="on" && item.wmslayers){
             addItemAsLayer(item,true);

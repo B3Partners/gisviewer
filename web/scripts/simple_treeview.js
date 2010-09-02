@@ -339,15 +339,8 @@ function treeview_createContentNode(options, id, item) {
 	}
 	a.appendChild(img);
 
-	var td0 = document.createElement("td");
-	td0.style.verticalAlign = "middle";
-	td0.appendChild(a);
-
-	var td1 = document.createElement("td");
-	td1.setAttribute("nowrap", "nowrap");
-	td1.style.whiteSpace = "nowrap";
-
 	var labelContainer = createNormalDiv();
+        labelContainer.togglea = a;
 	labelContainer.id = id + "_label";
 	if(options.itemLabelCreatorFunction) {
 		var hide = options.itemLabelCreatorFunction(labelContainer, item);
@@ -358,6 +351,14 @@ function treeview_createContentNode(options, id, item) {
 	} else {
 		treeview_defaultItemLabelCreatorFunction(labelContainer, item);
 	}
+
+	var td0 = document.createElement("td");
+	td0.style.verticalAlign = "middle";
+	td0.appendChild(labelContainer.togglea);
+
+	var td1 = document.createElement("td");
+	td1.setAttribute("nowrap", "nowrap");
+	td1.style.whiteSpace = "nowrap";
 	td1.appendChild(labelContainer);
 
 	var tr = document.createElement("tr");

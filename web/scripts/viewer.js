@@ -154,7 +154,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         checkedThemaIds = getLayerIdsAsString();
     }
     if(checkedThemaIds == null || checkedThemaIds == '') {
-        //alert('Er is geen laag geselecteerd, selecteer eerst een laag om de administratieve data te tonen');
+        
         hideLoading();
         return;
     }    
@@ -171,7 +171,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
     //als er een init search is meegegeven (dus ook een sld is gemaakt)
     if (searchAction.toLowerCase().indexOf("filter")>=0){
-        //alert("search: "+search);
+        
         document.forms[0].search.value=search;
         document.forms[0].searchId.value=searchId;
         document.forms[0].searchClusterId.value=searchClusterId;
@@ -1445,7 +1445,7 @@ function flamingo_map1_onInit(){
 function ie6_hack_onInit(){
     if (navigator.appVersion.indexOf("MSIE") != -1) {
         version = parseFloat(navigator.appVersion.split("MSIE")[1]);
-        //alert("version IE: " + version);
+        
         if (version == 6) {
             setTimeout("doOnInit=true; flamingo_map1_onInit();",5000);
         }

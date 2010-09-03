@@ -35,7 +35,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tr>
                         <c:forEach var="item" items="${regel.values}" end="1">
                             <td>
-                                ${item}
+                                <span class="gebied_item">${item}</span>
                             </td>
                         </c:forEach>
                     </tr>
@@ -44,7 +44,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </c:forEach>
     </c:when>
     <c:otherwise>
-        Er zijn geen gebieden gevonden!
+        <p>Er zijn geen gebieden beschikbaar.</p>
     </c:otherwise>
 </c:choose>
 </div>

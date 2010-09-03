@@ -631,3 +631,9 @@ a.highlightlink:hover{
     width: 300px;
     font-size: 1.1em;
 }
+
+.gebied_item {
+    color: #fff;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}

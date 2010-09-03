@@ -2,7 +2,7 @@
 B3P Gisviewer is an extension to Flamingo MapComponents making      
 it a complete webbased GIS viewer and configuration tool that    
 works in cooperation with B3P Kaartenbalie.  
-                    
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -24,27 +24,50 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 
 <div style="margin: 5px;">
-<c:choose>
-    <c:when test="${not empty object_data}">
-        <c:forEach var="thema_object_data" items="${object_data}">
-            <strong>
-                ${thema_object_data[1]}
-            </strong>
-            <table>
-                <c:forEach var="regel" items="${thema_object_data[2]}">
-                    <tr>
-                        <c:forEach var="item" items="${regel.values}" end="1">
-                            <td>
-                                <span class="gebied_item">${item}</span>
-                            </td>
-                        </c:forEach>
-                    </tr>
+    <html:messages id="error" message="true">
+        <div class="messages"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="true"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
+        </html:messages>
+        <c:choose>
+            <c:when test="${not empty thema_items_list and not empty regels_list}">
+                <c:set var="themanaam" value="" />
+                <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
+                    <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
+                        <c:if test="${ThemaItem.thema.naam != themanaam}">
+                            <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
+                        <strong>${themanaam}</strong>
+                    </c:if>
                 </c:forEach>
-            </table>
-        </c:forEach>
-    </c:when>
-    <c:otherwise>
-        <p>Er zijn geen gebieden beschikbaar.</p>
-    </c:otherwise>
-</c:choose>
+                <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
+                    <%-- tStatus:${tStatus.count} --%>
+                    <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
+                    <c:forEach var="regel" items="${regels}" varStatus="counter">
+                        <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
+                            <br/>
+                            <c:set var="item" value="${thema_items[kolom.count - 1]}"/>
+                            <c:if test="${item != null and item.basisregel and item.dataType.id == 1}">
+                                <strong>${item.label}</strong>
+                                <c:choose>
+                                    <c:when test="${waarde eq '' or  waarde eq null}">
+                                        &nbsp;
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${waarde}
+                                    </c:otherwise>
+                                </c:choose>
+                                <br/>
+                            </c:if>
+                        </c:forEach>
+                        
+                    </c:forEach>
+                    <br/>
+                </c:forEach>
+            </c:forEach>
+
+        </c:when>
+        <c:otherwise>
+            <p>Er zijn geen gebieden beschikbaar.</p>
+        </c:otherwise>
+    </c:choose>
 </div>
+
+

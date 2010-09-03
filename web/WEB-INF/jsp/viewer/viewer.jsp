@@ -257,9 +257,7 @@
         <html:hidden property="themaid" />
         <html:hidden property="analysethemaid" />
         <html:hidden property="lagen" />
-        <%--html:hidden property="xcoord" />
-        <html:hidden property="ycoord"/ --%>
-        <html:hidden property="coords" />
+         <html:hidden property="coords" />
         <html:hidden property="geom" />
         <html:hidden property="scale"/>
         <html:hidden property="tolerance"/>

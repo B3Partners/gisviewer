@@ -25,9 +25,9 @@
                     <c:if test="${ThemaItem.thema.naam != themanaam}">
                         <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
                     <strong class="admindata2_header">${themanaam}</strong>
-                </c:if>
-            </c:forEach>
-            <div class="topRowThemaData" id="fullTable${tStatus.count}">
+                    </c:if>
+                </c:forEach>
+                <div class="topRowThemaData" id="fullTable${tStatus.count}">
                 <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
                 <div id="admin_data_content_div${tStatus.count}">
                     <c:forEach var="regel" items="${regels}" varStatus="counter">

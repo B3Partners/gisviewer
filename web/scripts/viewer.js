@@ -145,6 +145,10 @@ function handleGetData(str) {
 }
 
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
+
+    if (!usePopup && !useDivPopup && !usePanelControls)
+        return;
+
     showLoading();
 
     var checkedThemaIds;
@@ -157,16 +161,19 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         
         hideLoading();
         return;
-    }    
+    }
+
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = '';
     document.forms[0].analysedata.value = '';
+
     if (!multipleActiveThemas){
         document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
         document.forms[0].themaid.value = getLayerIdsAsString();
     }
+
     document.forms[0].lagen.value='';
 
     //als er een init search is meegegeven (dus ook een sld is gemaakt)
@@ -184,23 +191,27 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     if (highlightThemaId != null)
         document.forms[0].themaid.value = highlightThemaId;
 
-    if(usePopup) {
+    if (usePopup) {
+
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) {
-            if(useDivPopup) {
+
+            if(useDivPopup)
                 dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
-            } else {
-                dataframepopupHandle = popUpData('dataframepopup', 680, 225);
-            }
+            else
+                dataframepopupHandle = popUpData('dataframepopup', 680, 225, false);
+        
         }
-        if(useDivPopup) {
+
+        if(useDivPopup)
             document.forms[0].target = 'dataframedivpopup';
-        } else {
+        else
             document.forms[0].target = 'dataframepopup';
-        }
+
     } else {
         document.forms[0].target = 'dataframe';
     }
+    
     document.forms[0].submit();
 }
 
@@ -1001,8 +1012,8 @@ function loadObjectInfo(geom) {
     document.forms[0].objectdata.value = 't';
     document.forms[0].analysedata.value = '';
     document.forms[0].target = 'objectframeViewer';
-    document.forms[0].submit();
 
+    document.forms[0].submit();
 }
 
 function getLayerIdsAsString() {

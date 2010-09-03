@@ -1,10 +1,8 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
-<%@ page isELIgnored="false"%>
+<%@ page isELIgnored="false" %>
+
 <script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
-<script type="text/javascript">
-    var doClose=true;
-    var usePopup = true;
-</script>
+
 <style type="text/css">
     .topRowThemaData {
         margin: 5px;
@@ -12,21 +10,27 @@
 
     .topRowThemaData td {
         padding: 3px;
-    }
+    }    
 </style>
+
 <html:messages id="error" message="true">
-    <div class="messages"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="true"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
+    <div class="messages"><img alt="Foutmelding" src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="true"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
 </html:messages>
+
     <c:choose>
         <c:when test="${not empty thema_items_list and not empty regels_list}">
+
             <c:set var="themanaam" value="" />
             <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
+
                 <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
                     <c:if test="${ThemaItem.thema.naam != themanaam}">
-                        <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
-                    <strong class="admindata3_header">${themanaam}</strong>
-                </c:if>
+                        <c:set var="themanaam" value="${ThemaItem.thema.naam}" />                        
+
+                        <strong class="admindata3_header">${themanaam}</strong>
+                    </c:if>
             </c:forEach>
+
             <div class="topRowThemaData" id="fullTable${tStatus.count}">
                 <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
                 <div id="admin_data_content_div${tStatus.count}">
@@ -87,22 +91,14 @@
                                 </div>
                             </c:if>                           
                         </c:forEach>
+
                         <br/>
                     </c:forEach>
                 </div>
             </div>
         </c:forEach>
-
-        <script type="text/javascript">
-            if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
-                if(parent) {
-                    if(parent.panelBelowCollapsed) {
-                        parent.panelResize('below');
-                    }
-                }
-            }
-        </script>
     </c:when>
+
     <c:otherwise>
         <div id="content_style">
             <table class="kolomtabel" style="width: 230px;">
@@ -117,28 +113,36 @@
                 </tr>
             </table>
         </div>
+
+        <!--
         <script type="text/javascript">
             function closeWindow() {
-                if (doClose)
-                    window.close();
+                if (doClose) {               
+                    $j("#popupWindow").hide();
+                }
             }
+    
+            var timeout = 5000; // Timeout in milliseconden
 
-            // Timeout in milliseconden
-            var timeout = 5000;
-            window.setTimeout(closeWindow, timeout);
-
+            if (opener)
+                opener.setTimeout(closeWindow, timeout);
+            else if (parent)
+                parent.window.setTimeout(closeWindow, timeout);
+            else
+                alert("Er is een fout opgetreden tijdens het afsluiten van deze popup");
         </script>
+        -->
     </c:otherwise>
 </c:choose>
-<div id="getFeatureInfo">
 
-<script type="text/javascript">
-    if (opener) {
-        opener.hideLoading();
-    } else if (parent) {
-        parent.hideLoading();
-    } else {
-        alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
-    }
-</script>
+<div id="getFeatureInfo">
 </div>
+                        
+<script type="text/javascript">
+    if (opener)
+        opener.hideLoading();
+    else if (parent)
+        parent.window.hideLoading();
+    else
+        alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
+</script>

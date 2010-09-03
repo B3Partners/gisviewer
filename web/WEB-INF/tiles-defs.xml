@@ -43,19 +43,6 @@
     </definition>
     <!-- viewer databody-->
     <definition name="databody" path="/WEB-INF/jsp/templates/templateDatabody.jsp"/>
-    
-    <definition name="vieweradmindata1" extends="databody">
-        <put name="title" value="Administratieve data" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp"/>
-    </definition>
-	<definition name="vieweradmindata2" extends="databody">
-        <put name="title" value="Administratieve data" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata_small.jsp"/>
-    </definition>
-    <definition name="vieweradmindata3" extends="databody">
-        <put name="title" value="Administratieve data" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata3.jsp"/>
-    </definition>
     <definition name="viewermetadata" extends="databody">
         <put name="title" value="Metadata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewermetadata.jsp"/>
@@ -78,7 +65,6 @@
         <put name="title" value="Viewer analyse data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweranalysedata.jsp"/>
     </definition>
-
     <definition name="viewerhighlight" extends="popup">
         <put name="title" value="Highlight - Kies kaartlaag" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerhighlightkeuze.jsp"/>
@@ -86,6 +72,19 @@
 
     <!-- viewer popup -->
     <definition name="popup" path="/WEB-INF/jsp/templates/templatePopup.jsp"/>
+
+    <definition name="vieweradmindata1" extends="popup">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp" />
+    </definition>
+    <definition name="vieweradmindata2" extends="popup">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata_small.jsp" />
+    </definition>
+    <definition name="vieweradmindata3" extends="popup">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata3.jsp" />
+    </definition>
     <definition name="vieweraanvullendeinfo" extends="popup">
         <put name="title" value="Aanvullende informatie" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>

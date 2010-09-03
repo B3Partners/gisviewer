@@ -50,10 +50,14 @@ fixAbsolutePositions = function() {
 fixPopup = function() {
     if(ieVersion <= 6 && ieVersion != -1) {
         var popupWindow = document.getElementById('popupWindow');
-        if(popupWindow) popupHeight = popupWindow.offsetHeight;
+
+        if (popupWindow)
+            popupHeight = popupWindow.offsetHeight;
 
         var popupContent = document.getElementById('popupWindow_Content');
-        if(popupContent) popupContent.style.height = (popupHeight - 36) + 'px';
+
+        if (popupContent)
+            popupContent.style.height = (popupHeight - 36) + 'px';
     }
 }
 

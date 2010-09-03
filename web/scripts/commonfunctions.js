@@ -115,7 +115,6 @@ popUp = function(URL, naam, width, height, useDiv) {
         if(ieVersion <= 6 && ieVersion != -1)
             fixPopup();
 
-
     } else {
         properties = "toolbar = 0, " +
         "scrollbars = 1, " +
@@ -135,12 +134,14 @@ popUpData = function(naam, width, height, useDiv) {
     var screenwidth = 600;
     var screenheight = 500;
     var useDivPopup = false;
+
     if (width){
         screenwidth=width;
     }
     if (height){
         screenheight=height;
     }
+
     if(useDiv) {
         useDivPopup = useDiv;
     }
@@ -156,11 +157,17 @@ popUpData = function(naam, width, height, useDiv) {
     }
 
     if(useDivPopup) {
-        if(!popupCreated) initPopup();
+        if (!popupCreated)
+            initPopup();
+
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
         $j("#popupWindow").show();
-        if(ieVersion <= 6 && ieVersion != -1) fixPopup();
+
+        if(ieVersion <= 6 && ieVersion != -1) 
+            fixPopup();
+
         return document.getElementById("dataframedivpopup");
+        
     } else {
         properties = "toolbar = 0, " +
         "scrollbars = 1, " +
@@ -172,6 +179,7 @@ popUpData = function(naam, width, height, useDiv) {
         "height = " + screenheight + ", " +
         "top = " + popuptop + ", " +
         "left = " + popupleft;
+
         return window.open('', naam, properties);
     }
 }
@@ -225,6 +233,7 @@ var popupCreated = false;
 $j(document).ready(function(){
     if(!document.getElementById('popupWindow') && !parent.document.getElementById('popupWindow')) {
         buildPopup();
+        
         $j('#popupWindow').draggable({
             handle:    '#popupWindow_Handle',
             iframeFix: true,
@@ -315,6 +324,7 @@ function showLoading(parentdiv) {
 }
 
 function hideLoading() {
+    
     if(loadingDivCounter > 0)
         loadingDivCounter--;
 

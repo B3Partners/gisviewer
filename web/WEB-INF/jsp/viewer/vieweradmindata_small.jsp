@@ -94,7 +94,9 @@
             </div>
         </c:forEach>
 
-        <script type="text/javascript">            
+        <script type="text/javascript">
+            var autoPopupRedirect = false;
+            
             if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
                 if(parent) {
                     if(parent.panelBelowCollapsed) {
@@ -134,12 +136,11 @@
 <div id="getFeatureInfo">
 
 <script type="text/javascript">
-    if (opener) {
+    if (opener)
         opener.hideLoading();
-    } else if (parent) {
+    else if (parent)
         parent.hideLoading();
-    } else {
+    else 
         alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
-    }
 </script>
 </div>

@@ -129,6 +129,7 @@ function doAjaxRequest(point_x, point_y) {
 }
 
 function handleGetData(str) {
+    /*
     var rd = "X: " + str[0] + "<br />" + "Y: " + str[1];
     var adres;
     if (str[3]!=null && str[4]!=null){
@@ -140,6 +141,7 @@ function handleGetData(str) {
     }else{
         document.getElementById('kadastraledata').innerHTML = "Geen adres gevonden";
     }
+    */
 }
 
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
@@ -1328,17 +1330,12 @@ var orderLayerBox= document.getElementById("orderLayerBox");
 //always call this script after the SWF object script has called the flamingo viewer.
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function flamingo_map1_onIdentify(movie,extend){
-    //alert("extend: "+extend.maxx+","+extend.maxy+"\n"+extend.minx+" "+extend.miny);
-    document.getElementById('start_message').style.display = 'none';
-    document.getElementById('algdatavak').style.display = 'block';
-
-    var loadingStr = "Bezig met laden...";
-    document.getElementById('kadastraledata').innerHTML = loadingStr;
+    
     var xp = (extend.minx + extend.maxx)/2;
     var yp = (extend.miny + extend.maxy)/2;
 
     var geom = "";
-    if (extend.minx!=extend.maxx && extend.miny!=extend.maxy){
+    if (extend.minx!=extend.maxx && extend.miny!=extend.maxy) {
         // polygon
         geom += "POLYGON((";
         geom += extend.minx +" "+ extend.miny +",";
@@ -1362,7 +1359,7 @@ function flamingo_map1_onIdentify(movie,extend){
         handleGetAdminData(geom, null);
     }
     
-    doAjaxRequest(xp,yp);
+    //doAjaxRequest(xp,yp);
     
     loadObjectInfo(geom);
 }
@@ -1826,12 +1823,7 @@ function flamingo_b_getfeatures_onEvent(id,event) {
         var wkt = getWktActiveFeature();
 
         if (wkt) {
-            document.getElementById('start_message').style.display = 'none';
-            document.getElementById('algdatavak').style.display = 'block';
-
-            var loadingStr = "Bezig met laden...";
-            document.getElementById('kadastraledata').innerHTML = loadingStr;
-
+            
             if (btn_highLightSelected)
                 highLightThemaObject(wkt);
             else

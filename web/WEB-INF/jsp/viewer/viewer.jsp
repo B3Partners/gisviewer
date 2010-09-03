@@ -388,18 +388,11 @@
     </div>
 
     <div id="infovak" style="display: none; overflow: auto;" class="tabvak">
-        <div id="start_message">
+        <p>
             Kies de Info-tool en klik vervolgens op een punt<br/>
             op de kaart voor administratieve informatie<br/>
             van het object.
-         </div>
-
-        <div id="algdatavak" style="display: none;">
-            <b>RD Co&ouml;rdinaten</b><br />
-            <span id="rdcoords"></span><br /><br />
-            <b>Adres</b><br />
-            <span id="kadastraledata"></span>
-        </div>
+        </p>
 
         <!-- input fields for search -->
         <div>

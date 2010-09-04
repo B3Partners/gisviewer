@@ -29,38 +29,36 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </html:messages>
         <c:choose>
             <c:when test="${not empty thema_items_list and not empty regels_list}">
-                <c:set var="themanaam" value="" />
-                <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
-                    <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
-                        <c:if test="${ThemaItem.thema.naam != themanaam}">
-                            <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
+
+            <c:set var="themanaam" value="" />
+            <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
+                <p>
+                <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
+                    <c:if test="${ThemaItem.thema.naam != themanaam}">
+                        <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
                         <strong>${themanaam}</strong>
                     </c:if>
                 </c:forEach>
-                <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
-                    <%-- tStatus:${tStatus.count} --%>
-                    <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
-                    <c:forEach var="regel" items="${regels}" varStatus="counter">
-                        <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
+                <c:set var="regels" value="${regels_list[tStatus.count-1]}"/>
+                <c:forEach var="regel" items="${regels}" varStatus="counter">
+                    <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
+                        <c:set var="item" value="${thema_items[kolom.count - 1]}"/>
+                        <c:if test="${item != null and item.basisregel and item.dataType.id == 1}">
                             <br/>
-                            <c:set var="item" value="${thema_items[kolom.count - 1]}"/>
-                            <c:if test="${item != null and item.basisregel and item.dataType.id == 1}">
-                                <strong>${item.label}</strong>
-                                <c:choose>
-                                    <c:when test="${waarde eq '' or  waarde eq null}">
-                                        &nbsp;
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${waarde}
-                                    </c:otherwise>
-                                </c:choose>
-                                <br/>
-                            </c:if>
-                        </c:forEach>
-                        
+                            <strong>${item.label}:</strong>
+                            <c:choose>
+                                <c:when test="${waarde eq '' or  waarde eq null}">
+                                    &nbsp;
+                                </c:when>
+                                <c:otherwise>
+                                    ${waarde}
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
                     </c:forEach>
-                    <br/>
+
                 </c:forEach>
+                </p>
             </c:forEach>
 
         </c:when>

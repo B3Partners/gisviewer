@@ -184,4 +184,16 @@
         Er is geen admin data gevonden!
     </c:otherwise>
 </c:choose>
+        
+<script type="text/javascript">
+     if (opener) {
+        opener.hideLoading();
+    } else if (parent) {
+        parent.hideLoading();
+    } else {
+        alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
+    }
+
+</script>
+
 

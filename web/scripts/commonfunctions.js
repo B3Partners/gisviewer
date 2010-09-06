@@ -184,6 +184,16 @@ popUpData = function(naam, width, height, useDiv) {
     }
 }
 
+function getParent(){
+    if (window.opener){
+        return window.opener;
+    }else if (window.parent){
+        return window.parent;
+    }else{
+        return window;
+    }
+}
+
 buildPopup = function() {
     var popupDiv = document.createElement('div');
     popupDiv.styleClass = 'popup_Window';
@@ -231,7 +241,7 @@ buildPopup = function() {
 
 var popupCreated = false;
 $j(document).ready(function(){
-    if(!document.getElementById('popupWindow') && !parent.document.getElementById('popupWindow')) {
+    if(!document.getElementById('popupWindow') && !getParent().document.getElementById('popupWindow')) {
         buildPopup();
         
         $j('#popupWindow').draggable({

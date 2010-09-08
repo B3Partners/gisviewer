@@ -467,10 +467,6 @@
         document.getElementById('informatiebalk').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 3)) + 'px';
     }
 
-    if(document.getElementById('analyseframeViewer')) {
-        document.getElementById('analyseframeViewer').src="<html:rewrite page='/vieweranalysedata.do'/>";
-    }
-
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
     var expandAll=catchEmpty(${configMap["expandAll"]});
     if(typeof expandAll === 'undefined') {

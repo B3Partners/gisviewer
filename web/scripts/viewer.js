@@ -748,9 +748,8 @@ function clusterCheckboxClick(element,dontRefresh){
             removeClusterIdFromCookie(cluster.id);
         }
     }
-    // als dontrefresh, dan opstart, dan ook geen update subvinkjes
     // als hide_tree dan altijd childs aan/uit zetten, want gebruiker kan daar niet bij
-    if ((!useInheritCheckbox && !dontRefresh) || cluster.hide_tree) {
+    if (!useInheritCheckbox || cluster.hide_tree) {
         if (element.checked) {
             
             for (var i=0; i < cluster.children.length;i++){
@@ -759,6 +758,12 @@ function clusterCheckboxClick(element,dontRefresh){
                     addItemAsLayer(child);
                     if (!cluster.hide_tree){
                         document.getElementById(child.id).checked=true;
+                    }
+                } else {
+                    if (child.callable){
+                        var elemin = document.getElementById(child.id);
+                        elemin.checked=true;
+                        clusterCheckboxClick(elemin,dontRefresh);
                     }
                 }
             }
@@ -769,6 +774,12 @@ function clusterCheckboxClick(element,dontRefresh){
                     removeItemAsLayer(child1);
                     if (!cluster.hide_tree){
                         document.getElementById(child1.id).checked=false;
+                    }
+                } else {
+                    if (child1.callable){
+                        var elemout = document.getElementById(child1.id);
+                        elemout.checked=false;
+                        clusterCheckboxClick(elemout,dontRefresh);
                     }
                 }
             }

@@ -9,7 +9,12 @@
 
 <form id="loginForm" action="j_security_check" method="POST">
 <html:messages id="message" message="true">
-    <div class="message"><c:out value="${message}"/></div>
+    <div id="error"><c:out value="${message}"/></div>
+</html:messages>
+<html:messages id="message" name="acknowledgeMessages">
+    <div id="acknowledge">
+      <c:out value="${message}"/>
+    </div>
 </html:messages>
 <table>
     <tr>

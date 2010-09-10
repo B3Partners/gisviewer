@@ -14,7 +14,12 @@
 </style>
 
 <html:messages id="error" message="true">
-    <div class="messages"><img alt="Foutmelding" src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="true"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
+    <div id="error"><img alt="Foutmelding" src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="true"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
+</html:messages>
+<html:messages id="message" name="acknowledgeMessages">
+    <div id="acknowledge">
+      <c:out value="${message}"/>
+    </div>
 </html:messages>
 
     <c:choose>

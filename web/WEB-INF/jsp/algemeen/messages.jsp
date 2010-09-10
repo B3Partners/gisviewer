@@ -27,7 +27,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <div style="height: 430px">
     <div style="width: 430px; padding: 10px; border: 1px solid #dddddd;">
         <html:messages id="message" message="true">
-            <div style="color: red; font-weight: bold"><c:out value="${message}"/></div>
+            <div id="error"><c:out value="${message}"/></div>
         </html:messages><br>
+        <html:messages id="message" name="acknowledgeMessages">
+            <div id="acknowledge">
+              <c:out value="${message}"/>
+            </div>
+        </html:messages>
     </div>
 </div>

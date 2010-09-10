@@ -14,14 +14,7 @@
 </script>
 
 <div class="content_block">
-    <html:messages id="message" message="true">
-        <div id="error"><c:out value="${message}"/></div>
-    </html:messages>
-    <html:messages id="message" name="acknowledgeMessages">
-        <div id="acknowledge">
-          <c:out value="${message}"/>
-        </div>
-    </html:messages>
+            <tiles:insert definition="actionMessages"/>
         
     <div class="content_title"><fmt:message key="algemeen.home.titel"/></div>
 

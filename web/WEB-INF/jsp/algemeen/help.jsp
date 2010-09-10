@@ -29,14 +29,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <table class="kolomtabel">
         <tr>
             <td valign="top">
-                <html:messages id="message" message="true">
-                    <div id="error"><c:out value="${message}"/></div>
-                </html:messages><br>
-                <html:messages id="message" name="acknowledgeMessages">
-                    <div id="acknowledge">
-                      <c:out value="${message}"/>
-                    </div>
-                </html:messages>
+                <tiles:insert definition="actionMessages"/>
                 <h1><fmt:message key="algemeen.help.titel"/></h1>
 
                 <div class="inleiding">

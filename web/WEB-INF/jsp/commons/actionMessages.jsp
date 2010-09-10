@@ -1,8 +1,8 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
-                    
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
+
 Copyright 2006, 2007, 2008 B3Partners BV
 
 This file is part of B3P Gisviewer.
@@ -21,6 +21,17 @@ You should have received a copy of the GNU General Public License
 along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
-<%@ page isELIgnored="false"%>
 
-<tiles:insert definition="actionMessages"/>
+<div class="messages"> 
+    <html:messages id="message" message="true" >
+        <div id="error">
+            <c:out value="${message}" escapeXml="false"/>
+        </div>
+    </html:messages> 
+    <html:messages id="message" name="acknowledgeMessages">
+        <div id="acknowledge">
+          <c:out value="${message}"/>
+        </div>
+    </html:messages>
+</div> 
+

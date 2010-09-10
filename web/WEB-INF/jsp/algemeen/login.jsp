@@ -8,14 +8,7 @@
 <div class="content_body">
 
 <form id="loginForm" action="j_security_check" method="POST">
-<html:messages id="message" message="true">
-    <div id="error"><c:out value="${message}"/></div>
-</html:messages>
-<html:messages id="message" name="acknowledgeMessages">
-    <div id="acknowledge">
-      <c:out value="${message}"/>
-    </div>
-</html:messages>
+            <tiles:insert definition="actionMessages"/>
 <table>
     <tr>
         <td><fmt:message key="algemeen.login.gebruikersnaam"/></td>

@@ -9,6 +9,8 @@
     <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp"/>
     <definition name="templatePrint" path="/WEB-INF/jsp/templates/templatePrint.jsp"/>
     <!-- algemeen -->
+    <definition name="actionMessages" path="/WEB-INF/jsp/commons/actionMessages.jsp"/>
+    <definition name="specialMessages" path="/WEB-INF/jsp/commons/specialMessages.jsp"/>
     <definition name="algemeen" extends="template">
         <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
     </definition>
@@ -30,10 +32,6 @@
     <definition name="home" extends="algemeen">
         <put name="title" value="Home" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>
-    </definition>
-    <definition name="messages" extends="algemeen">
-        <put name="title" value="Meldingen" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/algemeen/messages.jsp"/>
     </definition>
     
     <!-- viewer -->

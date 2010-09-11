@@ -24,7 +24,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="messages"> 
     <html:messages id="error" message="true">
-        <div id="error"><img src="<html:rewrite page='/images/icons/error.gif' module='' />" width="15" height="15" title="<c:out value="${error}" escapeXml="true"/>"/>&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
+        <div id="error" title="<c:out value="${error}" escapeXml="true"/>">&nbsp;Niet alle informatie kon worden opgehaald&#160;&#160;</div>
         </html:messages>
         <html:messages id="message" name="acknowledgeMessages">
         <div id="acknowledge">

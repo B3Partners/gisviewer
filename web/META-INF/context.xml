@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/gisviewer">
-<!-- Resource PG b3p-demo
-<Resource
-    auth="Container"
-    driverClassName="org.postgresql.Driver"
-    logAbandoned="true"
-    maxActive="100"
-    maxIdle="30"
-    maxWait="10000"
-    name="jdbc/gisviewer"
-    username="dev"
-    password="b3p"
-    removeAbandoned="true"
-    removeAbandonedTimeout="60"
-    type="javax.sql.DataSource"
-    url="jdbc:postgresql://b3p-demoserver/barneveld_gisviewer"
-    validationQuery="select 1"
-    minEvictableIdleTimeMillis="10000"
-    timeBetweenEvictionRunsMillis="60000"
-/>-->
+    <!--Resource
+ 	auth="Container"
+  	driverClassName="org.postgresql.Driver"
+  	logAbandoned="true"
+  	maxActive="100"
+  	maxIdle="30"
+  	maxWait="10000"
+  	name="jdbc/gisviewer"
+  	username="postgres"
+  	password="postgres"
+  	removeAbandoned="true"
+  	removeAbandonedTimeout="60"
+  	type="javax.sql.DataSource"
+  	url="jdbc:postgresql://localhost:5432/gisviewer"
+  	validationQuery="select 1"
+	minEvictableIdleTimeMillis="10000"
+	timeBetweenEvictionRunsMillis="60000"
+   /-->
+   <Resource
+  	auth="Container"
+  	driverClassName="oracle.jdbc.driver.OracleDriver"
+  	logAbandoned="true"
+  	maxActive="100"
+  	maxIdle="30"
+  	maxWait="10000"
+  	name="jdbc/gisviewer"
+  	username="gisviewer"
+  	password="gisviewer"
+  	removeAbandoned="true"
+  	removeAbandonedTimeout="60"
+  	type="javax.sql.DataSource"
+  	url="jdbc:oracle:thin:@localhost:1521:ORCL"
+	minEvictableIdleTimeMillis="10000"
+	timeBetweenEvictionRunsMillis="60000"
+  />
 
-<!-- Resource Oracle b3p-demo -->
-<Resource
-    auth="Container"
-    driverClassName="oracle.jdbc.driver.OracleDriver"
-    logAbandoned="true"
-    maxActive="100"
-    maxIdle="30"
-    maxWait="10000"
-    name="jdbc/gisviewer"
-    username="gisviewer"
-    password="gisviewer"
-    removeAbandoned="true"
-    removeAbandonedTimeout="60"
-    type="javax.sql.DataSource"
-    url="jdbc:oracle:thin:@b3p-demoserver:1521:ORCL"
-    minEvictableIdleTimeMillis="10000"
-    timeBetweenEvictionRunsMillis="60000"
-/>
 </Context>

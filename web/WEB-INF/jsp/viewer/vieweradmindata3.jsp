@@ -2,6 +2,14 @@
 <%@ page isELIgnored="false" %>
 
 <script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
+<script type="text/javascript">
+    function editFeature(value) {
+        getParent().drawWkt(value);
+    };
+    function popUp(link, title, width, heigth) {
+        getParent().popUp(link, title, width, heigth);
+    }
+</script>
 
 <style type="text/css">
     .topRowThemaData {
@@ -13,7 +21,7 @@
     }    
 </style>
 
-<tiles:insert definition="actionMessages"/>
+<tiles:insert definition="specialMessages"/>
 
     <c:choose>
         <c:when test="${not empty thema_items_list and not empty regels_list}">

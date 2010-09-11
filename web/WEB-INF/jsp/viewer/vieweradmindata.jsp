@@ -29,8 +29,11 @@
     function editFeature(value) {
         getParent().drawWkt(value);
     };
+    function popUp(link, title, width, heigth) {
+        getParent().popUp(link, title, width, heigth);
+    }
 </script>
-<tiles:insert definition="actionMessages"/>
+<tiles:insert definition="specialMessages"/>
 <c:choose>
     <c:when test="${not empty thema_items_list and not empty regels_list}">
         <c:set value="0" var="nuOfTables" />

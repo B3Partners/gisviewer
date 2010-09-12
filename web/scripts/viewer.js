@@ -203,10 +203,12 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         
         }
 
-        if(useDivPopup)
+        if(useDivPopup) {
+            $j("#popupWindow").show();
             document.forms[0].target = 'dataframedivpopup';
-        else
+        } else {
             document.forms[0].target = 'dataframepopup';
+        }
 
     } else {
         document.forms[0].target = 'dataframe';
@@ -1962,7 +1964,7 @@ function highLightThemaObject(geom) {
     }
 
     if (analyseThemas.length > 1) {
-        popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 320, 240, true);
+        popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 680, 225, true);
     }
 
     if (analyseThemas.length == 1) {
@@ -1973,11 +1975,10 @@ function highLightThemaObject(geom) {
 }
 
 function handlePopupValue(value) {    
-    $j("#popupWindow").hide();
+//    $j("#popupWindow").hide();
     
     analyseThemas = new Array();
 
-    /* heb je bij samengesteld cluster ook theItem.title ? */
     var object = document.getElementById(value);
     setActiveThema(value, object.theItem.title, true);
 

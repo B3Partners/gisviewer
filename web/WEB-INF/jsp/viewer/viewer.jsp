@@ -72,10 +72,7 @@
     if(typeof useDivPopup === 'undefined') {
         useDivPopup = false;
     }
-    var dataframepopupHandle = null; //catchEmpty(${configMap["dataframepopupHandle"]});
-    if(typeof dataframepopupHandle === 'undefined' || !dataframepopupHandle) {
-        dataframepopupHandle = null;
-    }
+    var dataframepopupHandle = null;
 
     /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
      * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,

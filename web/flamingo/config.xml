@@ -23,6 +23,7 @@
 
             <!-- stukje knoppen voor redlining/ editing -->
             <fmc:Container id="redLiningContainer" visible="true">
+                <fmc:EditInfoPanel id="editInfoPanel" left="0%" top="50" listento="editMap" nrdigits="2"/>
                 <fmc:EditLegend id="editLegend" left="250" top="0" listento="editMap" expandable="false"/>
                 <fmc:EditBar id="editBar" left="250" top="0" listento="editMap" />
             </fmc:Container>

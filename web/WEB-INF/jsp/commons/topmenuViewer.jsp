@@ -32,7 +32,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:if test="${requestJSP eq 'help.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/help.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.help"/></html:link>
+    <html:link page="/help.do?id=${kaartid}" target="_new" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.help"/></html:link>
 
     <html:link href="javascript: exportMap();" styleClass="menulink" module=""><fmt:message key="commons.topmenuviewer.print"/></html:link>
 

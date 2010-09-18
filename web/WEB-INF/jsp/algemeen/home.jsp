@@ -13,9 +13,9 @@
     // -->
 </script>
 
+<tiles:insert definition="actionMessages"/>
+
 <div class="content_block">
-            <tiles:insert definition="actionMessages"/>
-        
     <div class="content_title"><fmt:message key="algemeen.home.titel"/></div>
 
     <div class="inleiding_body">

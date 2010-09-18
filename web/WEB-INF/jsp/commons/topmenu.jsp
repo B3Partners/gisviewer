@@ -26,6 +26,4 @@
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
     <html:link page="/indexlist.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
-
-
 </div>

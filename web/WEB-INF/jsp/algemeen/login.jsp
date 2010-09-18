@@ -5,10 +5,10 @@
     <div class="infobalk_actions"><tiles:insert name="loginblock"/></div>
 </div>
 
-<div class="content_body">
+<tiles:insert definition="actionMessages"/>
 
+<div class="content_body">
 <form id="loginForm" action="j_security_check" method="POST">
-            <tiles:insert definition="actionMessages"/>
 <table>
     <tr>
         <td><fmt:message key="algemeen.login.gebruikersnaam"/></td>

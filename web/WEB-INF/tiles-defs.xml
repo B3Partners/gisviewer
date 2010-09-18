@@ -7,15 +7,13 @@
 <tiles-definitions>
     <definition name="template" path="/WEB-INF/jsp/templates/template.jsp"/>
     <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp"/>
+    <definition name="templateSimpleViewer" path="/WEB-INF/jsp/templates/templateSimpleViewer.jsp"/>
     <definition name="templatePrint" path="/WEB-INF/jsp/templates/templatePrint.jsp"/>
     <!-- algemeen -->
     <definition name="actionMessages" path="/WEB-INF/jsp/commons/actionMessages.jsp"/>
     <definition name="specialMessages" path="/WEB-INF/jsp/commons/specialMessages.jsp"/>
     <definition name="algemeen" extends="template">
         <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
-    </definition>
-    <definition name="algemeenViewer" extends="templateViewer">
-        <put name="menu" value="/WEB-INF/jsp/commons/topmenuViewer.jsp"/>
     </definition>
     <definition name="login" extends="algemeen">
         <put name="title" value="Inlogscherm" type="string"/>
@@ -35,8 +33,13 @@
     </definition>
     
     <!-- viewer -->
-    <definition name="viewer" extends="algemeenViewer">
+    <definition name="viewer" extends="templateViewer">
         <put name="title" value="Viewer" type="string"/>
+        <put name="menu" value="/WEB-INF/jsp/commons/topmenuViewer.jsp"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>
+    </definition>
+    <definition name="simpleviewer" extends="templateSimpleViewer">
+        <put name="title" value="CMSViewer" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp"/>
     </definition>
     <!-- viewer databody-->

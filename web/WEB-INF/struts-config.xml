@@ -45,6 +45,7 @@
         <action path="/login" forward="/index.do?login=t"/>
         <action path="/loginError" forward="/index.do?loginError=t"/>
         <action path="/logout" forward="/index.do?logout=t"/>
+        <action path="/resetCache" forward="/index.do?resetCache=t"/>
         <action path="/help" forward="help"/>
         <action path="/home" forward="home"/>
         
@@ -56,6 +57,7 @@
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>
+            <forward name="simpleviewer" path="simpleviewer"/>
             <forward name="login" path="login"/>
             <forward name="list" path="index"/>
         </action>

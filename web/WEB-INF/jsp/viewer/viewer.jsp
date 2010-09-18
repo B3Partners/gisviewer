@@ -268,7 +268,7 @@
         <tiles:insert name="loginblock"/>
     </div>
 </div>
-
+    
 <div id="leftcontent" style="display: none;">
     &nbsp;
 </div>

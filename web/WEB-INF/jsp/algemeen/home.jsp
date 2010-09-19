@@ -25,6 +25,45 @@
         <p>
             <fmt:message key="algemeen.home.introductie.content2"/>
         </p>
+        <p>
+            Meer info: info@b3partners.nl en www.b3partners.nl
+        </p>
+</div>
+</div>
+
+<div class="content_block">
+    <div class="content_title">Luchtfoto Heuvelrug</div>
+
+    <div class="inleiding_body">
+        <html:img page="/images/examples/luchtfoto_heuvelrug.png" styleClass="example_image"/>
+        <p>Luchtfoto van de Utrechtse heuvelrug</p>
+    </div>
+</div>
+
+<div class="content_block">
+    <div class="content_title">Nieuwe Kaart Nederland</div>
+
+    <div class="inleiding_body">
+        <html:img page="/images/examples/nkn_utrecht.png" styleClass="example_image"/>
+        <p>Nieuwe kaart van Nederland in de omgeving van Utrecht</p>
+    </div>
+</div>
+
+<div class="content_block">
+    <div class="content_title">OpenStreetMap</div>
+
+    <div class="inleiding_body">
+        <html:img page="/images/examples/osm_wijken_utrecht.png" styleClass="example_image"/>
+        <p>OpenStreetMap als achtergrondkaart met daarop de cbs wijkindeling in Utrecht</p>
+    </div>
+</div>
+
+<div class="content_block">
+    <div class="content_title">Bestemmingsplannen</div>
+
+    <div class="inleiding_body">
+        <html:img page="/images/examples/roo_osm.png" styleClass="example_image"/>
+        <p>Bestemmingsplannen van RO-Online op een achtergrond van OpenStreetMap</p>
     </div>
 </div>
 

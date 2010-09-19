@@ -546,15 +546,15 @@ table.tablesorter thead tr .headerSortDown {
     padding-bottom: 2px;
     color: #1962A0;
     font-weight: bold;
+    min-height: 180px;
 }
 
-.content_body {
-    background-color: #FFF;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-}
+.example_image {
+    float: left;
+    padding-top: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+ }
 
 .content_body td {
     padding-right: 10px;

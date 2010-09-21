@@ -4,7 +4,6 @@
 <div id="topmenu">
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
     <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
-    <c:set var="kaartid" value="${param['id']}"/>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'help.do'}">

@@ -36,8 +36,6 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     border-right: 1px solid White;
     background-color: White;
     color: #144264;
-    margin-right: 5px;
-    float: left;
 }
 
 #content_normal {

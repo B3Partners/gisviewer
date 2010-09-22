@@ -2006,13 +2006,28 @@ function returnHighlight(wkt) {
     }
 }
 
-function hideButtons() {
-    flamingo.callMethod("b_buffer", "setVisible", false);
-    flamingo.callMethod("b_removePolygons", "setVisible", false);
-    flamingo.callMethod("b_getfeatures", "setVisible", false);
-    flamingo.callMethod("b_highlight", "setVisible", false);
+function checkDisplayButtons() {
+
+
+    if (showRedliningTools) {
+        flamingo.callMethod("redLiningContainer", "setVisible", true);
+    }
+
+    if (showBufferTool) {
+        flamingo.callMethod("b_buffer", "setVisible", true);
+    }
+
+    if (showSelectBulkTool) {
+        flamingo.callMethod("b_getfeatures", "setVisible", true);
+    }
     
-    flamingo.callMethod("redLiningContainer", "setVisible", false);
+    if (showNeedleTool) {
+        flamingo.callMethod("b_highlight", "setVisible", true);
+    }
+
+    if (showRedliningTools || showBufferTool || showSelectBulkTool || showNeedleTool) {
+        flamingo.callMethod("b_removePolygons", "setVisible", true);
+    }
 }
 
 function dispatchEventJS(event, comp) {
@@ -2022,8 +2037,7 @@ function dispatchEventJS(event, comp) {
     }
 
     if (event=="onConfigComplete") {
-        if (hideAdvancedButtons)
-            hideButtons();
+        checkDisplayButtons();
     }
 }
 

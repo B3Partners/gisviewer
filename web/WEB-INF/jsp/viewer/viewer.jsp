@@ -221,12 +221,25 @@
         planSelectieIds = "0,0";
     }
 
-    /* Geavanceerde knoppen. Default verbergen.
-     * redlining, buffer, bulkselect, removepolygon en breinaald/highlight
-    */
-    var hideAdvancedButtons = catchEmpty(${configMap["hideAdvancedButtons"]});
-    if (typeof hideAdvancedButtons === 'undefined') {
-        hideAdvancedButtons = true;
+    /* Buttons boven viewer aan / uit */
+    var showRedliningTools = catchEmpty(${configMap["showRedliningTools"]});
+    if (typeof showRedliningTools === 'undefined') {
+        showRedliningTools = false;
+    }
+
+    var showBufferTool = catchEmpty(${configMap["showBufferTool"]});
+    if (typeof showBufferTool === 'undefined') {
+        showBufferTool = false;
+    }
+
+    var showSelectBulkTool = catchEmpty(${configMap["showSelectBulkTool"]});
+    if (typeof showSelectBulkTool === 'undefined') {
+        showSelectBulkTool = false;
+    }
+
+    var showNeedleTool = catchEmpty(${configMap["showNeedleTool"]});
+    if (typeof showNeedleTool === 'undefined') {
+        showNeedleTool = false;
     }
 </script>
 <!--[if lte IE 6]>

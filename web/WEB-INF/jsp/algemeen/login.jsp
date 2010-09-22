@@ -33,8 +33,6 @@
 </form>
 </div>
 
-<script type="text/javascript">
-    <!--
-    document.forms.loginForm.j_username.focus();
-    // -->
+<script type="text/javascript">    
+    document.forms.loginForm.j_username.focus();   
 </script>

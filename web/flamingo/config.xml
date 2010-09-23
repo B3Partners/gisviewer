@@ -16,7 +16,15 @@
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
             <fmc:ToolPan id="toolPan" left="60" skin="f2" skin="f2"/>
             <fmc:ToolMeasure id="toolMeasure" left="90" skin="f2" />
+
             <fmc:ToolIdentify id="identify" left="120" skin="f2" />
+
+            <fmc:ToolIdentify id="breinaald" left="120" skin="f2" visible="false">
+                    <cursor id='cursor' url='assets/jsbtn/btn_breinaald_up.png'/>
+                    <cursor id='click' url='assets/jsbtn/btn_breinaald_up.png'/>
+                    <cursor id='busy' url='assets/jsbtn/btn_breinaald_up.png'/>
+            </fmc:ToolIdentify>
+
             <fmc:ButtonFull id="toolFullExtent" left="150" listento="map1" skin="f2" />
             <fmc:ButtonPrev id="toolPrevExtent" left="180" listento="map1" skin="f2" />
             <fmc:ButtonNext id="toolNextExtent" left="210" listento="map1" skin="f2" />
@@ -30,20 +38,18 @@
 
             <fmc:Container left="20">
                 <fmc:JsButton id="b_buffer" left="320" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/buffer.png" iconurl_over="flamingo/assets/jsbtn/buffer_over.png" iconurl_sel="flamingo/assets/jsbtn/buffer_down.png" iconurl_dis="flamingo/assets/jsbtn/buffer.png" label="" toggle="false" visible="false" enabled="false" selected="false">
-                    <string id="tooltip" en="Buffer" nl="Buffer"/>
+                    <string id="tooltip" en="buffer polygon" nl="buffer het tekenobject"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_removePolygons" left="350" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/remove_polygon.png" iconurl_over="flamingo/assets/jsbtn/remove_polygon_over.png" iconurl_sel="flamingo/assets/jsbtn/remove_polygon_down.png" iconurl_dis="flamingo/assets/jsbtn/remove_polygon.png" label="" toggle="false" visible="false" enabled="true" selected="false">
-                    <string id="tooltip" en="remove polygon" nl="verwijder tekenobject"/>
+                <fmc:JsButton id="b_highlight" left="355" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/btn_breinaald_up.png" iconurl_over="flamingo/assets/jsbtn/btn_breinaald_over.png" iconurl_sel="flamingo/assets/jsbtn/btn_breinaald_over.png" iconurl_dis="flamingo/assets/jsbtn/btn_breinaald_up.png" label="" toggle="true" visible="false" enabled="true" selected="false">
+                    <string id="tooltip" en="get feature info with needle" nl="informatie opvragen via breinaald"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_getfeatures" left="380" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/getfeatures.png" iconurl_over="flamingo/assets/jsbtn/getfeatures.png" iconurl_sel="flamingo/assets/jsbtn/getfeatures.png" iconurl_dis="flamingo/assets/jsbtn/getfeatures.png" label="" toggle="false" visible="false" enabled="true" selected="false">
-                    <string id="tooltip" en="Select features" nl="selecteer features"/>
+                <fmc:JsButton id="b_removePolygons" left="390" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/remove_polygon.png" iconurl_over="flamingo/assets/jsbtn/remove_polygon_over.png" iconurl_sel="flamingo/assets/jsbtn/remove_polygon_down.png" iconurl_dis="flamingo/assets/jsbtn/remove_polygon.png" label="" toggle="false" visible="false" enabled="true" selected="false">
+                    <string id="tooltip" en="remove polygon" nl="verwijder het tekenobject"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_highlight" left="410" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/btn_breinaald_up.png" iconurl_over="flamingo/assets/jsbtn/btn_breinaald_over.png" iconurl_sel="flamingo/assets/jsbtn/btn_breinaald_over.png" iconurl_dis="flamingo/assets/jsbtn/btn_breinaald_up.png" label="" toggle="true" visible="false" enabled="true" selected="false">
-                    <string id="tooltip" en="Needle" nl="Breinaald"/>
-                </fmc:JsButton>
+                
             </fmc:Container>
 
         </fmc:ToolGroup>

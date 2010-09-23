@@ -1355,12 +1355,14 @@ var orderLayerBox= document.getElementById("orderLayerBox");
 
 function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
 
-    if (showNeedleTool) {
-        if (toolId == 'identify')
-            flamingo.callMethod("b_highlight", "setVisible", true);
-        else
-            flamingo.callMethod("b_highlight", "setVisible", false);
-    }
+    /* bij identify en er is een polygon dan handleGetAdminData
+     * met polygon uitvoeren. Dit maakt de extra bulkselectie knop overbodig */
+    if (toolId == 'identify') {
+        var wkt = getWkt();
+
+        if (wkt != null)
+            handleGetAdminData(wkt, null);
+    }   
 }
 
 //always call this script after the SWF object script has called the flamingo viewer.
@@ -1391,8 +1393,10 @@ function flamingo_map1_onIdentify(movie,extend){
 
     if (btn_highLightSelected) {     
         highLightThemaObject(geom);
+        flamingo.call("toolGroup", "setTool", "breinaald");
     } else {
         handleGetAdminData(geom, null);
+        flamingo.call("toolGroup", "setTool", "identify");
     }
     
     //doAjaxRequest(xp,yp);
@@ -1847,9 +1851,18 @@ function getWktActiveFeature() {
 
         if (object == null)
         {
-            handler("U heeft geen polygoon geselecteerd.");
+            handler("Er is nog geen tekenobject op het scherm.");
             return null;
         }
+
+        return object.wktgeom;
+}
+
+function getWkt() {
+        var object = flamingoController.getEditMap().getActiveFeature();
+
+        if (object == null)
+            return null;
 
         return object.wktgeom;
 }
@@ -1858,8 +1871,7 @@ function flamingo_b_getfeatures_onEvent(id,event) {
     if (event["down"]) {
         var wkt = getWktActiveFeature();
 
-        if (wkt) {
-            
+        if (wkt) {          
             if (btn_highLightSelected)
                 highLightThemaObject(wkt);
             else
@@ -1951,10 +1963,15 @@ function flamingo_b_highlight_onEvent(id, event) {
 
     if (event["down"])
     {
-        if (btn_highLightSelected)
+        if (btn_highLightSelected) {
             btn_highLightSelected = false;
-        else
+            flamingo.call("toolGroup", "setTool", "identify");
+        } else {
             btn_highLightSelected = true;
+            flamingo.call("toolGroup", "setTool", "breinaald");
+        }
+
+
     }
 }
 
@@ -2054,6 +2071,10 @@ function checkDisplayButtons() {
     if (showSelectBulkTool) {
         if (showRedliningTools || showNeedleTool)
             flamingo.callMethod("b_getfeatures", "setVisible", true);
+    }
+
+    if (showNeedleTool) {
+            flamingo.callMethod("b_highlight", "setVisible", true);
     }
 
     /* verwijder polygoon alleen tonen als er een tool is die polygoon

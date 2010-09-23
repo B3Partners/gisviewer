@@ -39,6 +39,8 @@ var sldSearchServlet=null;
 
 var highlightThemaId = null;
 
+var multiPolygonBufferWkt = null;
+
 function doInitSearch(){
     if (searchConfigId.length>0 && search.length>0){
         showLoading();
@@ -1860,7 +1862,21 @@ function flamingo_b_getfeatures_onEvent(id,event) {
 function flamingo_b_buffer_onEvent(id, event) {
     if (event["down"])
     {
-        var wkt = getWktActiveFeature();
+        var wkt;
+
+        /* Indien door highlight de global var is gevuld deze
+         * dan gebruiken bij buffer als deze niet null is
+         * De getWktActiveFeature geeft bij sommige multipolygons niet
+         * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
+         * mis gaat. Deze is dus alleen gevuld na een highlight
+         * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
+        if (multiPolygonBufferWkt != null)
+            wkt = multiPolygonBufferWkt;
+        else
+            wkt = getWktActiveFeature();
+
+        multiPolygonBufferWkt = null;
+        
         if (wkt==null)
         {
             return;
@@ -2003,6 +2019,13 @@ function returnHighlight(wkt) {
         polyObject["wktgeom"]=wkt;
 
         drawObject(polyObject);
+
+        /* verkregen back-end polygon voor highlight even in global var opslaan
+         * deze dan gebruiken bij buffer als deze niet null is
+         * De getWktActiveFeature geeft bij sommige multipolygons niet
+         * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
+         * mis gaat */
+        multiPolygonBufferWkt = wkt;
     }
 }
 

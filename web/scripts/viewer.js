@@ -1353,10 +1353,20 @@ if(activeTab != null) {
 Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
 
+function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
+
+    if (showNeedleTool) {
+        if (toolId == 'identify')
+            flamingo.callMethod("b_highlight", "setVisible", true);
+        else
+            flamingo.callMethod("b_highlight", "setVisible", false);
+    }
+}
+
 //always call this script after the SWF object script has called the flamingo viewer.
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function flamingo_map1_onIdentify(movie,extend){
-    
+
     var xp = (extend.minx + extend.maxx)/2;
     var yp = (extend.miny + extend.maxy)/2;
 
@@ -2031,30 +2041,30 @@ function returnHighlight(wkt) {
 
 function checkDisplayButtons() {
 
-
     if (showRedliningTools) {
         flamingo.callMethod("redLiningContainer", "setVisible", true);
     }
 
+    /* buffertool alleen tonen als of redlining of breinaald beschikbaar is */
     if (showBufferTool) {
-        flamingo.callMethod("b_buffer", "setVisible", true);
+        if (showRedliningTools || showNeedleTool)
+            flamingo.callMethod("b_buffer", "setVisible", true);
     }
 
     if (showSelectBulkTool) {
-        flamingo.callMethod("b_getfeatures", "setVisible", true);
-    }
-    
-    if (showNeedleTool) {
-        flamingo.callMethod("b_highlight", "setVisible", true);
+        if (showRedliningTools || showNeedleTool)
+            flamingo.callMethod("b_getfeatures", "setVisible", true);
     }
 
-    if (showRedliningTools || showBufferTool || showSelectBulkTool || showNeedleTool) {
+    /* verwijder polygoon alleen tonen als er een tool is die polygoon
+    op het scherm mogelijk maakt */
+    if (showRedliningTools || showNeedleTool) {
         flamingo.callMethod("b_removePolygons", "setVisible", true);
     }
 }
 
 function dispatchEventJS(event, comp) {
-
+    
     if (event=="onGetCapabilities") {
         hideLoading();
     }

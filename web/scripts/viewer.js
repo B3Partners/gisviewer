@@ -562,7 +562,7 @@ function createLabel(container, item) {
         divje.theItem=item;
         container.appendChild(divje);
         if(item.visible=="on" && item.wmslayers){
-            addItemAsLayer(item,true);
+            addItemAsLayer(item);
         }
         return true;//hide
     }
@@ -705,7 +705,11 @@ function switchTab(obj) {
     }
 }
 
-function syncLayerCookieAndForm(layerString) {
+function syncLayerCookieAndForm() {
+    var layerString = getLayerIdsAsString();
+    if (layerString == "") {
+        layerString = 'ALL';
+    }
     if (useCookies) {
         eraseCookie('checkedLayers');
         if (layerString!=null) {
@@ -719,8 +723,6 @@ function syncLayerCookieAndForm(layerString) {
 function checkboxClick(obj, dontRefresh) {
     var item = obj.theItem;
     if(obj.checked) {        
-        //add legend
-        //add wms layer part
         addItemAsLayer(item);
 
         if (useInheritCheckbox) {
@@ -844,20 +846,12 @@ function removeClusterIdFromCookie(id) {
     createCookie('checkedClusters', newValues, '7');
 }
 
-//adds a item as a layer (Wmslayer, legend and querylayer) and a cookie if needed.
 //if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
-function addItemAsLayer(theItem,atBottomOfType){
+function addItemAsLayer(theItem){
     addLayerToEnabledLayerItems(theItem);
-    var arrayString = getLayerIdsAsString();
-    if (arrayString == "") {
-        arrayString = 'ALL';
-    }
-    syncLayerCookieAndForm(arrayString)
+    syncLayerCookieAndForm();
     
-    //add legend part
-    if (!theItem.hide_legend)
-        addLayerToLegendBox(theItem,atBottomOfType);
-    //If there is a orgainization code key then add this to the service url.
+     //If there is a orgainization code key then add this to the service url.
     if (theItem.wmslayers){
         var organizationCodeKey = theItem.organizationcodekey;
         if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
@@ -886,14 +880,8 @@ function addLayerToEnabledLayerItems(theItem){
 }
 
 function removeItemAsLayer(theItem){
-    if (!theItem.hide_legend)
-        removeLayerFromLegendBox(theItem.id + '##' + theItem.wmslayers);
     if (removeLayerFromEnabledLayerItems(theItem.id)!=null) {
-        var arrayString = getLayerIdsAsString();
-        if (arrayString == "") {
-            arrayString = 'ALL';
-        }
-        syncLayerCookieAndForm(arrayString)
+        syncLayerCookieAndForm();
         return;
     }
 }
@@ -925,6 +913,8 @@ function doRefreshLayer(){
 
 }
 function refreshLayer(){
+
+    refreshLegendBox();
 
     if (layerUrl!=undefined && layerUrl!=null) {
         var backgroundLayers="";
@@ -1231,7 +1221,7 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
     var div = createLegendDiv(theItem);
     
     var beforeChild=null;
-    if(orderLayerBox.hasChildNodes() && !theItem.hide_legend) {
+    if(orderLayerBox.hasChildNodes()) {
         beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
     }
     if (beforeChild==null){
@@ -1289,31 +1279,29 @@ function findBeforeDivInLegendBox(theItem, atBottomOfType) {
     return beforeChild;
 }
 
-function removeLayerFromLegendBox(id) {
-    var remel = document.getElementById(id);
-    if (remel!=undefined && remel!=null) {
-        orderLayerBox.removeChild(remel);
-    }
-}
-
 function refreshMapVolgorde() {
-    parseLegendBox();
     refreshLayer();
+    syncLayerCookieAndForm();
 }
 
-function parseLegendBox() {
-    // by removing and adding, order is sync'd.
-    // order in legend box is reverse of order layer list
-    for(var i = orderLayerBox.childNodes.length -1; i>=0; i--) {
-        var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
-        var removedLayerItem = removeLayerFromEnabledLayerItems(itemId);
-        addLayerToEnabledLayerItems(removedLayerItem);
+function refreshLegendBox() {
+    var totalLength = orderLayerBox.childNodes.length;
+    for(var i = (totalLength - 1); i > -1; i--) {
+        orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
     }
-    var arrayString = getLayerIdsAsString();
-    if (arrayString == "") {
-        arrayString = 'ALL';
+
+    for (var i=0; i<enabledLayerItems.length; i++){
+        var item = enabledLayerItems[i];
+        if (useInheritCheckbox) {
+            var object = document.getElementById(item.id);
+            /* Item alleen toevoegen aan de layers indien
+                 * parent cluster(s) allemaal aangevinkt staan of
+                 * geen cluster heeft */
+            if (!itemHasAllParentsEnabled(object))
+                continue;
+        }
+        addLayerToLegendBox(item, false);
     }
-    syncLayerCookieAndForm(arrayString);
 }
 
 function deleteAllLayers() {
@@ -1323,7 +1311,7 @@ function deleteAllLayers() {
         orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
     }
     enabledLayerItems=new Array();
-    syncLayerCookieAndForm("");
+    syncLayerCookieAndForm();
     refreshLayer();
 }
 
@@ -2280,12 +2268,12 @@ $j(document).ready(function(){
             iframeFix: true,
             zIndex: 200,
             containment: 'document',
-            start: function(event, ui) { startDrag(); },
-            stop: function(event, ui) { stopDrag(); }
+            start: function(event, ui) {startDrag();},
+            stop: function(event, ui) {stopDrag();}
         }).resizable({
             handles: 'se',
-            start: function(event, ui) { startResize(); },
-            stop: function(event, ui) { stopResize(); }
+            start: function(event, ui) {startResize();},
+            stop: function(event, ui) {stopResize();}
         });
 
 

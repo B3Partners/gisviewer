@@ -33,7 +33,9 @@
                 <div style="padding-top: 5px; margin-right: 12px; float: left; padding-bottom: 5px; margin-left: 5px;">laag</div>
                 <div id="slider" style="width: 300px; float: left; margin-top: 8px; margin-bottom: 5px;"></div>
                 <div style="padding-top: 5px; margin-left: 16px; float: left; padding-bottom: 5px;">hoog</div>
-                <input type="hidden" size="4" style="border: 0px none;" name="imageSize" id="imageSize" value="2048" onchange="imageSizeChange();" />
+                <input type="hidden" name="imageSize" id="imageSize" value="2048"/>
+                <input type="hidden" name="startImageSize" id="startImageSize" value="2048"/>
+                <input type="button" style="float: right;" onclick="resetImageSize();" value="origineel"/>
             </td>
         </tr>
         <tr>
@@ -45,8 +47,8 @@
         <tr class="aanvullende_info_alternateTr">
             <td><fmt:message key="createmappdf.landscape"/></td>
             <td>
-                <input type="radio" name="landscape" value="false" checked>Staand</input>
-                <input type="radio" name="landscape" value="true">Liggend</input>
+                <input type="radio" name="landscape" value="false">Staand</input>
+                <input type="radio" name="landscape" value="true" checked>Liggend</input>
             </td>
         </tr>
         <tr>
@@ -62,6 +64,7 @@
             <td><fmt:message key="createmappdf.outputtype"/></td>
             <td>
                 <select name="outputType">
+                    <option value="PDF_PRINT" selected>Print PDF</option>
                     <option value="PDF">PDF</option>                        
                     <option value="RTF">RTF</option>  
                 </select>

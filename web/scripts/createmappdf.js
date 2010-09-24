@@ -15,7 +15,18 @@ function setMapImageSrc(url){
                 document.getElementById("imageSize").value=imageSize;
                 $("#slider").slider("option", "value", parseInt(imageSize));
             }
+            if(document.getElementById("startImageSize")!=undefined){
+                document.getElementById("startImageSize").value=imageSize;
+            }
         }
+    }
+}
+
+function resetImageSize() {
+    if(document.getElementById("startImageSize")!=undefined){
+        var startSize = document.getElementById("startImageSize").value;
+        $("#slider").slider("option", "value", parseInt(startSize));
+        document.getElementById("imageSize").value=startSize;
     }
 }
 

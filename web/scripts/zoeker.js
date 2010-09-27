@@ -258,19 +258,16 @@ function performSearch() {
     var waarde=new Array();
     var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
     for(var i=0; i<zoekVelden.length; i++){
-	// werkt dit voor alle input types?
-        waarde[i]=$j("#searchField_"+zoekVelden[i].id).val();
+        waarde[i]=$j("#"+zoekVelden[i].attribuutnaam).val();
     }
     showLoading();
 
     JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,searchCallBack);
 }
 
-var firebugsearchresult;
 function handleZoekResultaat(searchResultId){
     var searchResult=foundValues[searchResultId];
 
-    firebugsearchresult = searchResult;
     //zoom naar het gevonden object.(als er een bbox is)
     if (searchResult.minx)
         moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
@@ -410,7 +407,6 @@ function searchConfigurationsSelectChanged(element){
     fillSearchDiv(container, zoekVelden, null);
 }
 
-var firebugzoekvelden;
 function fillSearchDiv(container, zoekVelden, zoekStrings) {
     if (!zoekVelden){
             container.html("Geen zoekvelden");
@@ -421,7 +417,6 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             return container;
     }
 
-    firebugzoekvelden = zoekVelden;
     container.empty();
     for (var i=0; i < zoekVelden.length; i++){
         var zoekVeld=zoekVelden[i];
@@ -440,9 +435,10 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
         if (zoekVeld.inputType == 1 && zoekVeld.inputZoekConfiguratie) {
 
             inputfield = $j('<select></select>').attr({
-                id: 'searchField_ ' + zoekVeld.id,
+                id: zoekVeld.attribuutnaam, //'searchField_ ' + zoekVeld.id,
                 name: zoekVeld.attribuutnaam,
-                size: zoekVeld.inputSize
+                size: zoekVeld.inputSize,
+                disabled: "disabled"
             });
             inputfield.append($j('<option></option>').html("Bezig met laden..."));
             container.append(inputfield).append('<br /><br />');
@@ -454,13 +450,15 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
                 if(zoekconfiguraties[k].id == optionZcId) optionListZc = zoekconfiguraties[k];
             }
             var optionListStrings = createZoekStringsFromZoekVelden(optionListZc, zoekVelden, zoekStrings);
-            JZoeker.zoek(new Array(optionListZc), optionListStrings, 0, handleZoekVeldinputList);
+            var ida = new Array(1);
+            ida[0] = optionListZc.id;
+            JZoeker.zoek(ida, optionListStrings, 0, handleZoekVeldinputList);
 
-        } else if (zoekVeld.inputType == 2) {
+        } else {
 
             inputfield = $j('<input type="text" />');
             inputfield.attr({
-                id: 'searchField_' + zoekVeld.id,
+                id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
                 name: zoekVeld.attribuutnaam,
                 maxlength: zoekVeld.inputSize
             }).keyup(function(ev) {
@@ -468,9 +466,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             });
             container.append(inputfield).append('<br /><br />');
 
-        } else {
-            // not implemented
-        }
+         }
 
         if (zoekString != "*") {
             inputfield.val(zoekString);
@@ -484,22 +480,22 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
     return container;
 }
 
-function handleZoekVeldinputList(list){    
+function handleZoekVeldinputList(list){
     if (list!=null && list.length > 0){
         var controlElementName;
         var zc = zoekconfiguraties[currentSearchSelectId];
         var optionListZc = list[0].zoekConfiguratie;
         for (var i=0; i < zc.zoekVelden.length; i++) {
-            var zoekVeld=zoekVelden[i];
-            if (zoekVeld.inputListZoekConfiguration.id == optionListZc.id) {
-                controlElementName="searchField_"+zoekVeld.id;
+            var zoekVeld=zc.zoekVelden[i];
+            if (zoekVeld.inputZoekConfiguratie == optionListZc.id) {
+                // controlElementName="searchField_"+zoekVeld.id;
+                controlElementName = zoekVeld.attribuutnaam;
             }
         }
 
         // hier lijst nog filteren, zodat alleen unieke waarden erin staan
-        
         var controlElement=document.getElementById(controlElementName);
-        controlElement.disabled=false;
+        $j(controlElement).removeAttr("disabled");
         dwr.util.removeAllOptions(controlElementName);
         dwr.util.addOptions(controlElementName,list,"id","label");
     }

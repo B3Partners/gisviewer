@@ -160,17 +160,6 @@
         zoekConfigIds = "";
     }
 
-    //ZOEKCONFIGURATIEWEG: Gehele functie weg
-    function showZoekConfiguratie(zoekconfiguratie){
-        var visibleIds= zoekConfigIds.split(",");
-        for (var i=0; i < visibleIds.length; i++){
-            if (zoekconfiguratie.id == visibleIds[i]){
-                return true;
-            }
-        }
-        return false;
-    }
-
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
@@ -404,7 +393,9 @@
 
         <!-- input fields for search -->
         <div>
-             <br>
+            <div id="searchConfigurationsContainer"></div>
+            <div id="searchInputFieldsContainer"></div>
+             <!--
             <script type="text/javascript">
                 if (zoekconfiguraties!=null) {
                     document.write('<b>Zoek op:</b><br>')
@@ -420,7 +411,7 @@
                     
                     document.write('<DIV id="searchInputFieldsContainer">&nbsp;</DIV>')
                 }
-            </script>
+            </script> -->
             <br>
             <div class="searchResultsClass" id="searchResults"></div>
         </div>

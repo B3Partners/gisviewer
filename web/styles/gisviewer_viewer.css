@@ -204,3 +204,9 @@ html, body {
     margin-top: 2px;
     color: Black;
 }
+
+#searchConfigurationsContainer {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid White;
+}

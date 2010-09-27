@@ -2288,4 +2288,6 @@ $j(document).ready(function(){
         $j("#popupWindow").hide();
     }
     popupCreated = true;
+
+    createSearchConfigurations();
 });

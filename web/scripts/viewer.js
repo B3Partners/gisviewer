@@ -1346,10 +1346,16 @@ function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
     /* bij identify en er is een polygon dan handleGetAdminData
      * met polygon uitvoeren. Dit maakt de extra bulkselectie knop overbodig */
     if (toolId == 'identify') {
+
+        btn_highLightSelected = false;
+        //flamingo.callMethod("b_highlight", "setVisible", false);
+
+        /*
         var wkt = getWkt();
 
         if (wkt != null)
             handleGetAdminData(wkt, null);
+        */
     }   
 }
 
@@ -1379,18 +1385,22 @@ function flamingo_map1_onIdentify(movie,extend){
 
     flamingo.callMethod("editMap", 'removeAllFeatures');
 
-    if (btn_highLightSelected) {     
-        highLightThemaObject(geom);
+    if (btn_highLightSelected) {
         flamingo.call("toolGroup", "setTool", "breinaald");
+
+        highLightThemaObject(geom);
     } else {
-        handleGetAdminData(geom, null);
+        btn_highLightSelected = false;
         flamingo.call("toolGroup", "setTool", "identify");
+
+        handleGetAdminData(geom, null);
     }
     
     //doAjaxRequest(xp,yp);
     
     loadObjectInfo(geom);
 }
+
 var teller=0;
 //update the getFeatureInfo in the feature window.
 function updateGetFeatureInfo(data){
@@ -1948,18 +1958,19 @@ var btn_highLightSelected = false;
 
 /* er is net op de highlight knop gedrukt */
 function flamingo_b_highlight_onEvent(id, event) {
-
     if (event["down"])
     {
-        if (btn_highLightSelected) {
+        btn_highLightSelected = true;
+        flamingo.call("toolGroup", "setTool", "breinaald");
+
+        /*
+        if (!event["selected"]) {
+            flamingo.callMethod("editMap", 'removeAllFeatures');
             btn_highLightSelected = false;
             flamingo.call("toolGroup", "setTool", "identify");
         } else {
-            btn_highLightSelected = true;
-            flamingo.call("toolGroup", "setTool", "breinaald");
-        }
-
-
+            
+        }*/
     }
 }
 
@@ -2047,30 +2058,22 @@ function returnHighlight(wkt) {
 
 function checkDisplayButtons() {
 
-    if (showRedliningTools) {
+    if (showRedliningTools)
         flamingo.callMethod("redLiningContainer", "setVisible", true);
-    }
 
-    /* buffertool alleen tonen als of redlining of breinaald beschikbaar is */
-    if (showBufferTool) {
-        if (showRedliningTools || showNeedleTool)
-            flamingo.callMethod("b_buffer", "setVisible", true);
-    }
+    if (showBufferTool)       
+        flamingo.callMethod("b_buffer", "setVisible", true);
 
-    if (showSelectBulkTool) {
-        if (showRedliningTools || showNeedleTool)
-            flamingo.callMethod("b_getfeatures", "setVisible", true);
-    }
+    if (showSelectBulkTool)
+        flamingo.callMethod("b_getfeatures", "setVisible", true);
 
-    if (showNeedleTool) {
-            flamingo.callMethod("b_highlight", "setVisible", true);
-    }
+    if (showNeedleTool)
+        flamingo.callMethod("b_highlight", "setVisible", true);
 
     /* verwijder polygoon alleen tonen als er een tool is die polygoon
     op het scherm mogelijk maakt */
-    if (showRedliningTools || showNeedleTool) {
+    if (showRedliningTools || showNeedleTool)
         flamingo.callMethod("b_removePolygons", "setVisible", true);
-    }
 }
 
 function dispatchEventJS(event, comp) {

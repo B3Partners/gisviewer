@@ -141,10 +141,43 @@
     </c:otherwise>
 </c:choose>
 
-<div id="getFeatureInfo">
-</div>
+<div id="getFeatureInfo"></div>
                         
 <script type="text/javascript">
+   //writes the obj data from flamingo to a table
+    function writeFeatureInfoData(obj){
+        doClose=false;
+        var tableData="";
+        for (layer in obj){
+            tableData+="<table class=\"aanvullende_info_table\" >";
+            for (feature in obj[layer]){
+                tableData+="    <tr class=\"topRow\">";
+                tableData+="        <th colspan=\"2\" class=\"aanvullende_info_td\">&nbsp;";
+                tableData+=layer;
+                tableData+="        </th>";
+                tableData+="    </tr>";
+                var tellerAtt=0;
+                for (attribute in obj[layer][feature]){
+                    if (tellerAtt%2==0){
+                        tableData+="    <tr>"
+                    }else{
+                        tableData+="    <tr class=\"aanvullende_info_alternateTr\">"
+                    }
+                    tellerAtt++;
+                    tableData+="        <td>"+attribute+"</td>"
+                    tableData+="        <td>"+obj[layer][feature][attribute]+"</td>"
+                    tableData+="    </tr>";
+                }
+                tableData+="    <tr><td> </td><td> </td></tr>";
+            }
+            tableData+="</table>";
+        }
+        if (document.getElementById("content_style")!=undefined && tableData.length>0){
+            document.getElementById("content_style").style.display="none";
+        }
+       document.getElementById('getFeatureInfo').innerHTML=tableData;
+    }
+
     if (opener)
         opener.hideLoading();
     else if (parent)

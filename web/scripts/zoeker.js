@@ -254,7 +254,7 @@ function createSearchConfigurations(){
 
 // Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
 function performSearch() {
-    document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
+    $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....");
     var waarde=new Array();
     var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
     for(var i=0; i<zoekVelden.length; i++){
@@ -314,6 +314,10 @@ function createZoekStringsFromZoekResultaten(zc, zoekResultaten) {
                 newZoekStrings[i]=searchedAttribuut.waarde;
                 break;
             }
+            if (zc.zoekVelden[i].attribuutnaam == searchedAttribuut.label) {
+                newZoekStrings[i]=searchedAttribuut.waarde;
+                break;
+            }
         }
     }
     return newZoekStrings;
@@ -330,6 +334,10 @@ function createZoekStringsFromZoekVelden(zc, zoekVelden, zoekStrings) {
             for (var b=0; b < zoekVelden.length;  b++){
                 var searchedAttribuut=zoekVelden[b];
                 if (zc.zoekVelden[i].attribuutnaam == searchedAttribuut.attribuutnaam && zoekStrings[b]) {
+                    newZoekStrings[i]=zoekStrings[b];
+                    break;
+                }
+                if (zc.zoekVelden[i].label == searchedAttribuut.attribuutnaam && zoekStrings[b]) {
                     newZoekStrings[i]=zoekStrings[b];
                     break;
                 }
@@ -477,6 +485,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
         performSearch();
     }));
 
+    $j("#searchResults").empty();
     return container;
 }
 

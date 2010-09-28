@@ -303,7 +303,7 @@
             <table class="kolomtabel">
                 <tr>
                     <td valign="top">
-                        <div class="inleiding">
+                        <div id="inleiding" class="inleiding">
                             <h2><fmt:message key="admindata.geeninfo.header"/></h2>
                             <p><fmt:message key="admindata.geeninfo.tekst"/></p>
                         </div>
@@ -313,9 +313,11 @@
         </div>
         <script type="text/javascript">            
             function closeWindow() {
-                if (doClose)
+               $j("#inleiding").html("Nieuwe informatie verschijnt hier, zodra deze beschikbaar is...");
+               if (doClose) {
                     window.close();
-            }
+               }
+           }
 
             // Timeout in milliseconden
             var timeout = 5000;
@@ -324,8 +326,8 @@
         </script>
     </c:otherwise>
 </c:choose>
-<div id="getFeatureInfo">
-</div>
+<div id="getFeatureInfo"></div>
+
 <script type="text/javascript">
     //writes the obj data from flamingo to a table
     function writeFeatureInfoData(obj){

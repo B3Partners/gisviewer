@@ -170,3 +170,57 @@ function findObjectCenter(objectid) {
     
     return [top, left];
 }
+
+
+var prevpopup;
+function iFramePopup(url, newpopup, title, width, height) {
+    if(!newpopup) newpopup = false;
+    if(!title) title = "";
+    if(!width) width = 300;
+    if(!height) height = 300;
+
+    var showdiv = null;
+    if(newpopup || prevpopup == null) {
+        var $div = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
+        var $iframe = $j('<iframe></iframe>').attr({
+            src: url,
+            frameborder: 0
+        }).css({
+            border: "0px none",
+            width: "95%",
+            height: "95%"
+        });
+        $div.append($iframe);
+        if(!newpopup) {
+            prevpopup = $div;
+            showdiv = prevpopup;
+        } else {
+            showdiv = $div;
+        }
+    } else {
+        prevpopup.find('iframe').attr("src", url);
+        showdiv = prevpopup;
+    }
+
+    showdiv.dialog({
+        resizable: true,
+        draggable: true,
+        show: 'slide',
+        hide: 'slide',
+        title: title,
+        containment: 'document',
+        iframeFix: true,
+        dragStart: function(event, ui) {startDrag();},
+        dragStop: function(event, ui) {stopDrag();},
+        resizeStart: function(event, ui) {startResize();},
+        resizeStop: function(event, ui) {stopResize();}
+    });
+    showdiv.dialog("option", "title", title);
+    showdiv.dialog("option", "height", height);
+    showdiv.dialog("option", "width", width);
+    showdiv.dialog('open');
+}
+
+function closeiFramepopup() {
+    prevpopup.dialog('close');
+}

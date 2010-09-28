@@ -1995,7 +1995,8 @@ function highLightThemaObject(geom) {
     }
 
     if (analyseThemas.length > 1) {
-        popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 680, 225, true);
+        // popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 680, 225, true);
+        iFramePopup('viewerhighlight.do', false, 'Breinaald popup', 400, 300);
     }
 
     if (analyseThemas.length == 1) {

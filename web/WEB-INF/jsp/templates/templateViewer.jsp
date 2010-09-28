@@ -72,7 +72,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </head>
     <body>
         <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
-        <div id="content_viewer"><tiles:insert attribute="content" /></div>
+        <div id="content_viewer">
+            <tiles:insert attribute="infobalk" />
+            <tiles:insert attribute="content" />
+        </div>
         <tiles:insert definition="googleAnalytics"/>
     </body>
 </html:html>

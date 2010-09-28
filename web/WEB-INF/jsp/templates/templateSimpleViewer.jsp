@@ -38,7 +38,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/gisviewer_viewer.css" rel="stylesheet" type="text/css">
         <link href="styles/niftyCorners.css" rel="stylesheet" type="text/css">
         <link href="styles/gisviewer_b3p.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" type="text/css" href="styles/ui-lightness/jquery-ui-1.7.2.custom.css"/>
+        <link href="styles/gisviewer_maponly.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="styles/jquery-ui-1.7.3.custom.css"/>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>

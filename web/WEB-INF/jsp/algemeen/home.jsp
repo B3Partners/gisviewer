@@ -20,15 +20,24 @@
 
     <div class="inleiding_body">
         <p>
-            <fmt:message key="algemeen.home.introductie.content1"/>
+            De B3P GIS Suite maakt informatie van overheden integraal en snel via
+            een standaard webbrowser toegankelijk. Interne medewerkers, burgers,
+            ketenpartners en externe organisaties kunnen eenvoudig toegang
+            verkrijgen tot informatie. De B3P GIS Suite is daarom bij uitstek
+            inzetbaar als organisatiebreed webGIS.
         </p>
-        <p>
-            <fmt:message key="algemeen.home.introductie.content2"/>
-        </p>
-        <p>
-            Meer info: info@b3partners.nl en www.b3partners.nl
-        </p>
-</div>
+        
+        <table>
+            <tr>
+                <td>E-mail:</td>
+                <td><a href="mailto:info@b3partners.nl">info@b3partners.nl</a></td>
+            </tr>
+            <tr>
+                <td>Web:</td>
+                <td><a href="http://www.b3partners.nl" target="_new">www.b3partners.nl</a></td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <div class="content_block">
@@ -37,10 +46,6 @@
     <div class="inleiding_body">
         <html:img page="/images/examples/luchtfoto_heuvelrug.png" styleClass="example_image"/>
         <p>Luchtfoto van de Utrechtse heuvelrug</p>
-        <p>Inloggegevens:
-            <br>gebruikersnaam: demo
-            <br>wachtwoord: demodemo
-        </p>
     </div>
 </div>
 
@@ -50,10 +55,6 @@
     <div class="inleiding_body">
         <html:img page="/images/examples/nkn_utrecht.png" styleClass="example_image"/>
         <p>Nieuwe kaart van Nederland in de omgeving van Utrecht</p>
-        <p>Inloggegevens:
-            <br>gebruikersnaam: demo
-            <br>wachtwoord: demodemo
-        </p>
     </div>
 </div>
 
@@ -63,10 +64,6 @@
     <div class="inleiding_body">
         <html:img page="/images/examples/osm_wijken_utrecht.png" styleClass="example_image"/>
         <p>OpenStreetMap als achtergrondkaart met daarop de cbs wijkindeling in Utrecht</p>
-        <p>Inloggegevens:
-            <br>gebruikersnaam: demo
-            <br>wachtwoord: demodemo
-        </p>
     </div>
 </div>
 
@@ -76,10 +73,6 @@
     <div class="inleiding_body">
         <html:img page="/images/examples/roo_osm.png" styleClass="example_image"/>
         <p>Bestemmingsplannen van RO-Online op een achtergrond van OpenStreetMap</p>
-        <p>Inloggegevens:
-            <br>gebruikersnaam: demo
-            <br>wachtwoord: demodemo
-        </p>
     </div>
 </div>
 

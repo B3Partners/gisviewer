@@ -7,10 +7,16 @@ html, body {
 }
 
 #acknowledge {
-    border: 1px solid green;
+    border: 1px solid #357EBF;
     width: 550px;
     padding: 12px;
+    padding-left: 30px;
     margin: 10px;
+    margin-left: 0px;
+    background-color: #E0E1FF;
+    background-image: url(/gisviewer/images/icons/information.png);
+    background-repeat: no-repeat;
+    background-position: 10px 11px;
 }
 
 #error {

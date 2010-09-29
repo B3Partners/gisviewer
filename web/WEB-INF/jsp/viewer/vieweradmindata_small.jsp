@@ -144,29 +144,25 @@
     function writeFeatureInfoData(obj){
         doClose=false;
         var tableData="";
-        for (layer in obj){
-            tableData+="<table class=\"aanvullende_info_table\" >";
+         for (layer in obj){
+            tableData+="<div>";
+            tableData+="<strong class=\"admindata2_header\">";
+            tableData+=layer;
+            tableData+="</strong>";
+            var teller = 0;
             for (feature in obj[layer]){
-                tableData+="    <tr class=\"topRow\">";
-                tableData+="        <th colspan=\"2\" class=\"aanvullende_info_td\">&nbsp;";
-                tableData+=layer;
-                tableData+="        </th>";
-                tableData+="    </tr>";
-                var tellerAtt=0;
+                teller++;
+                tableData+="<strong class=\"admindataSmallCell\">[";
+                tableData+=teller;
+                tableData+="]</strong>";
                 for (attribute in obj[layer][feature]){
-                    if (tellerAtt%2==0){
-                        tableData+="    <tr>"
-                    }else{
-                        tableData+="    <tr class=\"aanvullende_info_alternateTr\">"
-                    }
-                    tellerAtt++;
-                    tableData+="        <td>"+attribute+"</td>"
-                    tableData+="        <td>"+obj[layer][feature][attribute]+"</td>"
-                    tableData+="    </tr>";
+                    tableData+="<div class=\"admindataSmallCell\"><strong>"+attribute+"</strong>&nbsp;";
+                    tableData+=obj[layer][feature][attribute];
+                    tableData+="</div>";
                 }
-                tableData+="    <tr><td> </td><td> </td></tr>";
+                tableData+="<br/>";
             }
-            tableData+="</table>";
+            tableData+="</div>";
         }
         if (document.getElementById("content_style")!=undefined && tableData.length>0){
             document.getElementById("content_style").style.display="none";

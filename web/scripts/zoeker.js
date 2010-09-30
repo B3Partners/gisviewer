@@ -414,7 +414,7 @@ function searchConfigurationsSelectChanged(element){
 //        return;
 //    } else
     if(!element ||element.val()==""){
-        clearConfigurationsSelect();
+        clearConfigurationsSelect(container);
         return;
     }
     currentSearchSelectId=element.val();
@@ -424,7 +424,7 @@ function searchConfigurationsSelectChanged(element){
     fillSearchDiv(container, zoekVelden, null);
 }
 
-function clearConfigurationsSelect() {
+function clearConfigurationsSelect(container) {
     currentSearchSelectId = "";
     container.html("");
 }

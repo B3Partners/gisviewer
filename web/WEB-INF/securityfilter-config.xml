@@ -21,10 +21,20 @@
             <url-pattern>/viewer.do</url-pattern>
             <url-pattern>/viewerdata.do</url-pattern>
             <url-pattern>/viewerlist.do</url-pattern>
-            <url-pattern>/services/*</url-pattern>
+            <url-pattern>/services/*</url-pattern>           
         </web-resource-collection>       
         <auth-constraint>
             <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Cache</web-resource-name>
+            <url-pattern>/resetCache.do</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>beheerder</role-name>
         </auth-constraint>
     </security-constraint>
 

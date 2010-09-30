@@ -28,17 +28,16 @@
         </auth-constraint>
     </security-constraint>
 
-    <!-- /config* alleen voor (organisatie)beheerders -->
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Configuratie</web-resource-name>
-            <url-pattern>/config*</url-pattern>
+            <web-resource-name>Cache</web-resource-name>
+            <url-pattern>/resetCache.do</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>beheerder</role-name>
-            <role-name>organisatiebeheerder</role-name>
         </auth-constraint>
     </security-constraint>
+	
    <login-config>
       <auth-method>FORM_COOKIE_TOKEN</auth-method>
       <form-login-config>

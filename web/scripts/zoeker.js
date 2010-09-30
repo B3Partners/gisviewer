@@ -237,7 +237,7 @@ function createSearchConfigurations(){
             searchConfigurationsSelectChanged($j(this));
         });
 
-        selectbox.append($j('<option></option>').html("Maak uw keuze ..."));
+        selectbox.append($j('<option></option>').html("Maak uw keuze ...").val(""));
 
         for (var i=0; i < zoekconfiguraties.length; i++){
             if(showZoekConfiguratie(zoekconfiguraties[i])){
@@ -254,13 +254,19 @@ function createSearchConfigurations(){
 
 // Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
 function performSearch() {
-    $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....");
-    var waarde=new Array();
     var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
+    var waarde=new Array();
     for(var i=0; i<zoekVelden.length; i++){
-        waarde[i]=$j("#"+zoekVelden[i].attribuutnaam).val();
+        var veld = $j("#"+zoekVelden[i].attribuutnaam).val();
+        if (zoekVelden[i].type==0) {
+            waarde[i]="*" + veld.replace(/^\s*/, "").replace(/\s*$/, "") + "*";
+        } else {
+            waarde[i]=veld;
+        }
     }
+
     showLoading();
+    $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
 
     JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,searchCallBack);
 }
@@ -279,15 +285,17 @@ function handleZoekResultaat(searchResultId){
         return false;
      }
 
-    // $j("#searchResults").html("<br /><strong>Verder zoeken op " + parentZc.naam + "</strong>");
     if (parentZc.zoekVelden==undefined || parentZc.zoekVelden.length==0){
         alert("Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: "+parentZc.id);
         return false;
     }
 
     for (var i=0; i < zoekconfiguraties.length; i++){
-        if(zoekconfiguraties[i].id == parentZc.id) currentSearchSelectId = i;
+        if(zoekconfiguraties[i].id == parentZc.id) {
+            currentSearchSelectId = i;
+        }
     }
+    parentZc = zoekconfiguraties[currentSearchSelectId];
 
     // Doe de volgende zoekopdracht
     var zoekStrings = createZoekStringsFromZoekResultaten(parentZc, searchResult);
@@ -365,10 +373,6 @@ function searchCallBack(values){
     for (var i=0; i < values.length; i++){
         values[i]=getBboxMinSize2(values[i]);
     }
-    if (values.length==1) {
-        handleZoekResultaat(0);
-	return;
-    }
 
     var ollist = $j("<ol></ol>");
     for (var j = 0; j < values.length; j++){
@@ -381,6 +385,11 @@ function searchCallBack(values){
         })(j);
     }
     searchResults.empty().append(ollist);
+    
+    if (values.length==1) {
+        handleZoekResultaat(0);
+	return;
+    }
 
 }
 
@@ -401,11 +410,11 @@ var currentSearchSelectId = "";
 function searchConfigurationsSelectChanged(element){
     var container=$j("#searchInputFieldsContainer");
 
-    if (currentSearchSelectId == element.val()){
-        return;
-    } else if(element.val()==""){
-        currentSearchSelectId = "";
-        container.html("");
+//    if (currentSearchSelectId == element.val()){
+//        return;
+//    } else
+    if(!element ||element.val()==""){
+        clearConfigurationsSelect();
         return;
     }
     currentSearchSelectId=element.val();
@@ -413,6 +422,11 @@ function searchConfigurationsSelectChanged(element){
     var zc = zoekconfiguraties[currentSearchSelectId];
     var zoekVelden=zc.zoekVelden;
     fillSearchDiv(container, zoekVelden, null);
+}
+
+function clearConfigurationsSelect() {
+    currentSearchSelectId = "";
+    container.html("");
 }
 
 function fillSearchDiv(container, zoekVelden, zoekStrings) {
@@ -440,6 +454,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 
         container.append('<strong>'+zoekVelden[i].label+':</strong><br />');
         var inputfield;
+
         if (zoekVeld.inputType == 1 && zoekVeld.inputZoekConfiguratie) {
 
             inputfield = $j('<select></select>').attr({

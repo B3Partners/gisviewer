@@ -124,28 +124,6 @@ function setSldOnDefaultMap(sldUrl,reload){
     }
 }
 
-function doAjaxRequest(point_x, point_y) {
-    /*if (adresThemaId!=undefined){
-        JMapData.getData(point_x, point_y, infoArray, adresThemaId, 100, 28992, handleGetData);
-    }*/
-}
-
-function handleGetData(str) {
-    /*
-    var rd = "X: " + str[0] + "<br />" + "Y: " + str[1];
-    var adres;
-    if (str[3]!=null && str[4]!=null){
-        adres = str[3] + ", " + str[4]; // + " (afstand: " + str[2] + " m.)"
-    }
-    document.getElementById('rdcoords').innerHTML = rd;
-    if (adres!=undefined){
-        document.getElementById('kadastraledata').innerHTML = adres;
-    }else{
-        document.getElementById('kadastraledata').innerHTML = "Geen adres gevonden";
-    }
-    */
-}
-
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
     if (!usePopup && !useDivPopup && !usePanelControls)
@@ -1342,20 +1320,8 @@ Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
 
 function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
-
-    /* bij identify en er is een polygon dan handleGetAdminData
-     * met polygon uitvoeren. Dit maakt de extra bulkselectie knop overbodig */
     if (toolId == 'identify') {
-
         btn_highLightSelected = false;
-        //flamingo.callMethod("b_highlight", "setVisible", false);
-
-        /*
-        var wkt = getWkt();
-
-        if (wkt != null)
-            handleGetAdminData(wkt, null);
-        */
     }   
 }
 
@@ -1395,8 +1361,6 @@ function flamingo_map1_onIdentify(movie,extend){
 
         handleGetAdminData(geom, null);
     }
-    
-    //doAjaxRequest(xp,yp);
     
     loadObjectInfo(geom);
 }
@@ -1566,220 +1530,6 @@ function callFlamingoComponent(id,func,value){
         eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
     }
 }
-
-/*Functies voor het zoeken*/
-
-/*Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
-**/
-function getCoords() {
-    document.getElementById("searchResults").innerHTML="Een ogenblik geduld, de zoek opdracht wordt uitgevoerd.....";
-    var waarde=null;
-    var zoekK=null;
-    var zoekT=null;
-    var searchFieldFound=true;
-    waarde=new Array();
-    var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
-    for(var i=0; i<zoekVelden.length; i++){
-        var searchField=document.getElementById("searchField_"+zoekVelden[i].id);
-        waarde[i]=searchField.value;        
-    }
-    showLoading();
-
-    JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,getCoordsCallbackFunction);
-//JMapData.getMapCoords(waarde, zoekK, zoekT, minBboxZoeken, maxResults, getCoordsCallbackFunction);
-}
-/**
- *De callback functie van het zoeken
- *@param values = de gevonden lijst met waarden.
- */
-var foundValues=null;
-function getCoordsCallbackFunction(values){
-    hideLoading();
-
-    foundValues=values;
-    var searchResults=document.getElementById("searchResults");
-    var sResult = "<br><b>Er zijn geen resultaten gevonden!<b>";
-    if (values==null || values.length == 0) {
-        searchResults.innerHTML=sResult;
-        return;
-    }
-    /*Controleer of de bbox groter is dan de minimale bbox van de zoeker*/
-    for (var i=0; i < values.length; i++){
-        values[i]=getBboxMinSize(values[i]);
-    }
-    var hasChilds=getChildzoekConfiguraties(foundValues[0].zoekConfiguratie).length>0;
-    if (values.length > 1){
-        //als de zoekconfiguratie nog kinderen heeft dan moet er doorgezocht worden, dus iets andere melding
-        if(hasChilds){
-            sResult="U bedoelt: ";        
-        }else{
-            if (values.length<maxResults) {
-                sResult = "<br><b>Meerdere resultaten gevonden.<b>";
-            } else {
-                sResult = "<br><b>Meer dan "+maxResults+" resultaten gevonden. Er worden slechts "+maxResults+" resultaten weergegeven:<b>";
-            }
-        }
-        sResult+="<ol>";
-        for (var i =0; i < values.length; i++){
-            sResult += "<li><a href='#' onclick='javascript: handleSearchResult("+i+")'>"+values[i].label+"</a></li>";
-        }
-        sResult += "</ol>";
-    } else {
-        sResult = "<br><b>Locatie gevonden:<br>" + values[0].label + "</b>";
-    }
-    searchResults.innerHTML=sResult;
-    if (values.length==1)
-        handleSearchResult(0);
-}
-
-function getBboxMinSize(feature){
-    if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
-        var addX=Number((minBboxZoeken-(feature.maxx-feature.minx))/2);
-        var addY=Number((minBboxZoeken-(feature.maxy-feature.miny))/2);
-        feature.minx=Number(feature.minx-addX);
-        feature.maxx=Number(Number(feature.maxx)+Number(addX));
-        feature.miny=Number(feature.miny-addY);
-        feature.maxy=Number(Number(feature.maxy)+Number(addY));
-    }
-    return feature;
-}
-/*Handel het resultaat af*/
-function handleSearchResult(searchResultId){
-    var searchResult=foundValues[searchResultId];
-    //zoom naar het gevonden object.(als er een bbox is)
-    if (searchResult.minx)
-        moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
-    var zoekConfiguratie=searchResult.zoekConfiguratie;
-    //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan nog kinderen heeft.
-    var childs=getChildzoekConfiguraties(zoekConfiguratie);
-    if (childs.length==0){
-        return;
-    }else if (childs.length > 1){
-        alert("Zoekconfiguratie heeft meerdere kinderen. Dit is momenteel niet mogelijk. De eerste wordt gebruikt voor het verder zoeken");
-    }
-    var child=childs[0];
-    document.getElementById("searchResults").innerHTML="<br><b>Bezig met zoeken op: \""+child.naam +"\" voor \""+searchResult.label+"\"</b>";
-    if (child.zoekVelden==undefined || child.zoekVelden.length==0){
-        alert("Geen zoekvelden geconfigureerd voor zoekconfiguratie child met id: "+child.id);
-    }
-    
-    /*Maak een nieuwe zoekopdracht voor het kind.
-     *Haal eerst de door de gebruiker ingevulde zoekvelden op.
-     *Als er niks is ingevuld (of er is geen zoekveld geplaatst), 
-     *vergelijk dan de gevondenAttributen met de zoekvelden van het kind.
-     *Als het type gelijk is van beide vul dan de gevonden waarde in voor het zoekveld.
-     */
-    var zoekStrings= new Array();
-    var gevondenResultIds=new Array();
-    for (var i=0; i < child.zoekVelden.length; i++){        
-        zoekStrings[i]="";               
-        var zoekVeld=child.zoekVelden[i];
-        //haal de waarde van het ingevulde zoekveld op dat bij dit zoekveld hoort 
-        /* Doe dit niet meer, zie xxxChildZoekVeldenxxx op deze pagina.
-        if(document.getElementById("searchField_"+zoekVeld.id)){
-            zoekStrings[i]=document.getElementById("searchField_"+zoekVeld.id).value;
-        }
-        */
-        //als het zoekveld leeg was probeer dan een waarde uit de vorige zoekopdracht te halen.
-        if (zoekStrings[i].length==0){
-            for (var b=0; b  < searchResult.attributen.length;  b++){
-                var searchedAttribuut=searchResult.attributen[b];
-                //als een resultaat al gebruikt is niet nogmaals gebruiken. Controleer tevens op type.
-                if (!arrayContains(gevondenResultIds,searchedAttribuut.id) && zoekVeld.type == searchedAttribuut.type){
-                    gevondenResultIds.push(searchedAttribuut.id);
-                    zoekStrings[i]=searchedAttribuut.waarde;
-                }
-            }
-        }
-    }
-    JZoeker.zoek(child.id,zoekStrings,maxResults,getCoordsCallbackFunction);
-}
-/*Geeft de kinderen van deze zoekconfiguratie terug (als die er zijn)*/
-function getChildzoekConfiguraties(zoekconfiguratie){
-    var childs= new Array();
-    for (var i=0; i < zoekconfiguraties.length; i++){
-        if (zoekconfiguraties[i].parentZoekConfiguratieId && zoekconfiguratie.id==zoekconfiguraties[i].parentZoekConfiguratieId){
-            childs.push(zoekconfiguraties[i]);
-        }
-    }
-
-    return childs;
-}
-/**
- *Maak voor de meegegeven zoekconfiguratie een string met daarin html voor de zoekvelden.
- *Bepaalde typen moeten niet getoond worden zoals: Geometry (3)
- */
-function createZoekConfiguratieVelden(zc){
-    var zoekVelden=zc.zoekVelden;
-    var s="";
-    if (zoekVelden){
-        for (var i=0; i < zoekVelden.length; i++){
-            if (zoekVelden[i].type!=3){
-                s+='<b>'+zoekVelden[i].label+':</b><br/>';
-                s+='<input type="text" id="searchField_'+zoekVelden[i].id+'" name="'+zoekVelden[i].attribuutnaam+'" size="40"/><br/>'
-            }
-        }
-    }
-    return s;
-}
-var currentSearchSelectId;
-function searchSelectChanged(element){
-    var container=document.getElementById("searchInputFieldsContainer");
-    if (currentSearchSelectId == element.value){
-        return;
-    }else if(element.value==""){
-        currentSearchSelectId="";
-        container.innerHTML="";
-        return;
-    }
-    currentSearchSelectId=element.value;
-    var s="";
-    s+=createZoekConfiguratieVelden(zoekconfiguraties[currentSearchSelectId]);
-    var childs=getChildzoekConfiguraties(zoekconfiguraties[currentSearchSelectId]);
-    /*xxxChildZoekVeldenxxx Hier worden ook de child zoekvelden aangemaakt maar dat lijkt me nog niet erg handig.
-     *for (var i=0; i < childs.length; i++){
-        s+=createZoekConfiguratieVelden(childs[i]);
-    }*/
-    s+='<input type="button" value=" Zoek " onclick="getCoords();" class="knop" />';
-    container.innerHTML=s;
-    var searchFieldFound=true;
-    //add a onkeyup event on the created input fields
-    var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
-    for(i=0; i<zoekVelden.length; i++){
-        var searchField=document.getElementById("searchField_"+zoekVelden[i].id);
-        if (searchField){
-            searchField.onkeyup=function(ev){
-                getCoordsOnEnterKey(ev);
-            };
-        }
-    }
-}
-
-function getCoordsOnEnterKey(ev){
-    var sourceEvent;
-    if(ev)			//Moz
-    {
-        sourceEvent= ev.target;
-    }
-
-    if(window.event)	//IE
-    {
-        sourceEvent=window.event.srcElement;
-    }
-    var keycode;
-    if(ev)			//Moz
-    {
-        keycode= ev.keyCode;
-    }
-    if(window.event)	//IE
-    {
-        keycode = window.event.keyCode;
-    }
-    if (keycode==13){
-        getCoords();
-    }
-}
-/*Einde zoek functies*/
 
 /*Get de flash movie*/
 function getMovie(movieName) {

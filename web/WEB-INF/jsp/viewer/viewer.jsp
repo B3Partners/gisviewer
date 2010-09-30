@@ -382,32 +382,12 @@
             op de kaart voor administratieve informatie<br/>
             van het object.
         </p>
-
-        <!-- input fields for search -->
         <div>
             <div id="searchConfigurationsContainer"></div>
             <div id="searchInputFieldsContainer"></div>
-             <!--
-            <script type="text/javascript">
-                if (zoekconfiguraties!=null) {
-                    document.write('<b>Zoek op:</b><br>')
-                    document.write('<SELECT id="searchSelect" onchange="searchSelectChanged(this)">');
-                    document.write('<OPTION value="">Kies waar op u wilt zoeken.....</OPTION>')
-                    for (var i=0; i < zoekconfiguraties.length; i++){
-                        //ZOEKCONFIGURATIEWEG : if statement weg (inhoud behouden)
-                        if (showZoekConfiguratie(zoekconfiguraties[i])){
-                            document.write('<OPTION value="'+i+'">'+zoekconfiguraties[i].naam+'</OPTION>');
-                        }
-                    }
-                    document.write('</SELECT>');
-                    
-                    document.write('<DIV id="searchInputFieldsContainer">&nbsp;</DIV>')
-                }
-            </script> -->
             <br>
             <div class="searchResultsClass" id="searchResults"></div>
         </div>
-        <!-- end of search -->
     </div>
 
     <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>

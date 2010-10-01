@@ -486,6 +486,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             inputfield.attr({
                 id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
                 name: zoekVeld.attribuutnaam,
+                size: 40,
                 maxlength: zoekVeld.inputSize
             }).keyup(function(ev) {
                 performSearchOnEnterKey(ev);
@@ -503,8 +504,6 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
         container.append($j('<input type="button" />').attr("value", " Zoek ").addClass("knop").click(function() {
             performSearch();
         }));
-
-        
 
         container.append($j('<input type="button" />').attr("value", " Opnieuw zoeken").addClass("knop").click(function() {
             searchConfigurationsSelectChanged(inputSearchDropdown);

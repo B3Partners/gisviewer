@@ -226,6 +226,7 @@ af aan.
 
 //var zoekconfiguraties = [{"id":1,"zoekVelden":[{"id":1,"attribuutnaam":"fid","label":"Plannen","type":0,"naam":""}],"featureType":"app:Plangebied","resultaatVelden":[{"id":1,"attribuutnaam":"naam","label":"plan naam","type":2,"naam":"plannaam"},{"id":2,"attribuutnaam":"identificatie","label":"plan id","type":1,"naam":"planid"},{"id":3,"attribuutnaam":"verwijzingNaarTekst","label":"documenten","type":0,"naam":"documenten"},{"id":4,"attribuutnaam":"typePlan","label":"plantype","type":0,"naam":"plantype"},{"id":5,"attribuutnaam":"planstatus","label":"planstatus","type":0,"naam":"planstatus"},{"id":6,"attribuutnaam":"geometrie","label":"geometry","type":3,"naam":"geometry"}],"bron":{"id":1,"naam":"nlrpp","volgorde":1,"url":"http://afnemers.ruimtelijkeplannen.nl/afnemers/services?Version=1.0.0"},"naam":"iets"}];
 
+var inputSearchDropdown = null;
 
 function createSearchConfigurations(){
     var container=$j("#searchConfigurationsContainer");
@@ -250,6 +251,8 @@ function createSearchConfigurations(){
     } else {
         container.html("Geen zoekingangen geconfigureerd.");
     }
+
+    inputSearchDropdown = selectbox;
 }
 
 // Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
@@ -495,12 +498,21 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             inputfield.val(zoekString);
         }
     }
-    
-    container.append($j('<input type="button" />').attr("value", " Zoek ").addClass("knop").click(function() {
-        performSearch();
-    }));
+
+    if (zoekVelden.length > 0) {
+        container.append($j('<input type="button" />').attr("value", " Zoek ").addClass("knop").click(function() {
+            performSearch();
+        }));
+
+        
+
+        container.append($j('<input type="button" />').attr("value", " Opnieuw zoeken").addClass("knop").click(function() {
+            searchConfigurationsSelectChanged(inputSearchDropdown);
+        }));        
+    }
 
     $j("#searchResults").empty();
+
     return container;
 }
 

@@ -78,7 +78,11 @@
         bottom="bottom" visible="true" extenthistory="10" extent="21000,357000,283000,615000"
         movequality="BEST" fadesteps="3" movesteps="20" movetime="100">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>
-            <fmc:LayerImage id="Limburg_achtergrond2" imageurl="assets/limburg/limburg_achtergrond2.png" extent="118739,290740,268450,436514" minscale="40" maxscale="400"/>
-        </fmc:Map>                
+
+            <fmc:LayerImage id="Limburg_achtergrond" imageurl="assets/limburg/limburg_achtergrond.png" extent="-11920,221334,398981,506050" minscale="200" maxscale="400"/>
+            <fmc:LayerImage id="Limburg_achtergrond1" imageurl="assets/limburg/limburg_achtergrond1.png" extent="62089,257649,325039,469667" minscale="100" maxscale="200"/>
+            <fmc:LayerImage id="Limburg_achtergrond2" imageurl="assets/limburg/limburg_achtergrond2.png" extent="118739,290740,268450,436514" minscale="15" maxscale="100"/>
+
+        </fmc:Map>
     </fmc:Container>
 </FLAMINGO>

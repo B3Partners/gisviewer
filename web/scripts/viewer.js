@@ -30,7 +30,7 @@ var flamingoController= new FlamingoController(flamingo,'flamingoController');
 flamingoController.createMap("map1");
 flamingoController.createEditMap("editMap");
 //flamingoController.setRequestListener("requestIsDone");
-//flamingoController.getMap().enableLayerRequestListener();
+flamingoController.getMap().enableLayerRequestListener();
 
 var mapInitialized=false;
 var searchExtent=null;
@@ -890,57 +890,86 @@ function doRefreshLayer(){
     }
 
 }
+
+var fmclayerseq = 0;
 function refreshLayer(){
+        fmclayerseq++;
 
     refreshLegendBox();
 
-    if (layerUrl!=undefined && layerUrl!=null) {
-        var backgroundLayers="";
-        var topLayers="";
-        var queryLayers="";
-        // last in list will be on top in map
-        for (var i=0; i<enabledLayerItems.length; i++){
-            var item = enabledLayerItems[i];
-            if (useInheritCheckbox) {
-                var object = document.getElementById(item.id);
-                /* Item alleen toevoegen aan de layers indien
+    if (layerUrl==undefined || layerUrl==null) {
+        return;
+    }
+
+    if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
+        if(layerUrl.indexOf('?')> 0)
+            layerUrl+='&';
+        else
+            layerUrl+='?';
+        layerUrl+="SERVICE=WMS";
+    }
+
+    var topLayerItems= new Array();
+    var backgroundLayerItems= new Array();
+    for (var i=0; i<enabledLayerItems.length; i++){
+        var item = enabledLayerItems[i];
+        if (useInheritCheckbox) {
+            var object = document.getElementById(item.id);
+            /* Item alleen toevoegen aan de layers indien
                  * parent cluster(s) allemaal aangevinkt staan of
                  * geen cluster heeft */
-                    if (!itemHasAllParentsEnabled(object))
-                        continue;
-            }
-            if (item.wmslayers){
-                if (item.background){
-                    if (backgroundLayers.length>0)
-                        backgroundLayers+=",";
-                    backgroundLayers+=item.wmslayers;
-                }else{
-                    if(topLayers.length > 0)
-                        topLayers+=",";
-                    topLayers+=item.wmslayers;
-                }
-            }
-            if (item.wmsquerylayers){
-                if (queryLayers.length > 0)
-                    queryLayers+=",";
-                queryLayers+=item.wmsquerylayers
+            if (!itemHasAllParentsEnabled(object))
+                continue;
+        }
+        if (item.wmslayers){
+            if (item.background){
+                backgroundLayerItems.push(item)
+            }else{
+                 topLayerItems.push(item);
             }
         }
-        var layersToAdd=backgroundLayers;
-        if (layersToAdd.length>0)
-            layersToAdd+=",";
-        layersToAdd+=topLayers;
-        if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
-            if(layerUrl.indexOf('?')> 0)
-                layerUrl+='&';
-            else
-                layerUrl+='?';
-            layerUrl+="SERVICE=WMS";
+    }
+//    flamingoController.getMap().removeAllLayers();
+    var shownLayers=flamingoController.getMap().getLayers();
+    for (var j=0; j < shownLayers.length; j++){
+        var lid = shownLayers[j].getId();
+        var found = false;
+        for (i=0; i<enabledLayerItems.length; i++){
+            item = enabledLayerItems[i];
+            if (lid == "fmc" + item.id) {
+                found = true;
+            }
         }
-        
+        if (!found) {
+            flamingoController.getMap().removeLayerById(lid, true);
+        }
+    }
+//    flamingoController.getMap().update();
+
+    var localLayerItems;
+//    addLayerToFlamingo("fmctop", layerUrl, backgroundLayerItems);
+    for (i=0; i<backgroundLayerItems.length; i++){
+        item = backgroundLayerItems[i];
+        localLayerItems = new Array();
+        localLayerItems.push(item);
+        addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+    }
+//    addLayerToFlamingo("fmcback", layerUrl, topLayerItems);
+    for (i=0; i<topLayerItems.length; i++){
+        item = topLayerItems[i];
+        localLayerItems = new Array();
+        localLayerItems.push(item);
+        addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+    }
+
+    flamingoController.getMap().update();
+}
+
+function addLayerToFlamingo(lname, layerUrl, layerItems) {
+//        alert("addLayerToFlamingo: " + lname);
         var capLayerUrl=layerUrl;
-        //maak layer
-        var newLayer= new FlamingoWMSLayer("fmcLayer");
+
+        var newLayer= new FlamingoWMSLayer(lname);
         newLayer.setTimeOut("30");
         newLayer.setRetryOnError("10");
         newLayer.setFormat("image/png")
@@ -948,32 +977,47 @@ function refreshLayer(){
         newLayer.setUrl(layerUrl);
         newLayer.setExceptions("application/vnd.ogc.se_inimage");
         newLayer.setGetcapabilitiesUrl(capLayerUrl);
-        newLayer.setLayers(layersToAdd);
-        newLayer.setQuerylayers(queryLayers);
         newLayer.setSrs("EPSG:28992");
         newLayer.setVersion("1.1.1");
         newLayer.setShowerros(true);
 
+        var theLayers="";
+        var queryLayers="";
         var maptipLayers="";
-        for (var i=0; i < enabledLayerItems.length; i++){
-            if (enabledLayerItems[i].maptipfield){
+        // last in list will be on top in map
+        for (var i=0; i<layerItems.length; i++){
+            var item = layerItems[i];
+            if (item.wmslayers){
+                if (theLayers.length>0) {
+                    theLayers+=",";
+                }
+                theLayers+=item.wmslayers;
+            }
+            if (item.wmsquerylayers){
+                if (queryLayers.length > 0) {
+                    queryLayers+=",";
+                }
+                queryLayers+=item.wmsquerylayers
+            }
+            if (layerItems[i].maptipfield){
                 if (maptipLayers.length!=0)
                     maptipLayers+=",";
-                maptipLayers+=enabledLayerItems[i].wmslayers;
-                var aka=enabledLayerItems[i].wmslayers;
+                maptipLayers+=layerItems[i].wmslayers;
+                var aka=layerItems[i].wmslayers;
                 /*Als de gebruiker ingelogd is dan zal het waarschijnlijk een kaartenbalie service zijn
                  *Daarom moet er een andere aka worden gemaakt voor de map tip.
                 */
                 if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
                     aka=aka.substring(aka.indexOf("_")+1);
                 }
-                newLayer.addLayerProperty(new LayerProperty(enabledLayerItems[i].wmslayers, enabledLayerItems[i].maptipfield, aka));
+                newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
             }
         }
+
+        newLayer.setLayers(theLayers);
+        newLayer.setQuerylayers(queryLayers);
         newLayer.setMaptiplayers(maptipLayers);
-        flamingoController.getMap().addLayer(newLayer, true,true);
-        
-    }
+        flamingoController.getMap().addLayer(newLayer, true, true, false);
 }
 
 function loadObjectInfo(geom) {
@@ -1563,16 +1607,22 @@ function searchThemaValue(themaList,themaId,val){
 
 var exportMapWindow;
 var lastGetMapRequest="";
-function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
-    if(requestObject && requestObject.url){
-        if (requestObject.requesttype=="GetMap"){
-            //if (requestObject.url.toLowerCase().indexOf("getmap")){
-            lastGetMapRequest=requestObject.url;
-        //}
-        }
-    }
-}
+//function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
+//    if(requestObject && requestObject.url){
+//        if (requestObject.requesttype=="GetMap"){
+//            //if (requestObject.url.toLowerCase().indexOf("getmap")){
+//            lastGetMapRequest=requestObject.url;
+//        //}
+//        }
+//    }
+//}
 function exportMap(){
+    // ipv flamingo_map1_fmcLayer_onRequest(mc, type, requestObject)
+    var layers=flamingoController.getMap().getLayers();
+    for (var i=0; i < layers.length; i++){
+        alert(layers[i].getLastGetMapRequest());
+    }
+
     if (lastGetMapRequest.length==0){
         alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
         return;

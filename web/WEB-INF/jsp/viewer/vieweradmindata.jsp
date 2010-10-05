@@ -26,8 +26,8 @@
     var maxExtraInfo=100;
     var styleObjects = new Array();
 
-    function editFeature(value) {
-        getParent().drawWkt(value);
+    function editFeature(themaId, attrName, attrVal) {
+        getParent().drawFeature(themaId, attrName, attrVal);
     };
     function popUp(link, title, width, heigth) {
         getParent().popUp(link, title, width, heigth);
@@ -137,7 +137,7 @@
                                 <c:if test="${counter.count < 501}">
                                     <tr class="row" onclick="colorRow(this);">
                                         <td style="width: 50px;" valign="top">
-                                            &nbsp;<html:image src="./images/icons/wand.png" onclick="editFeature('${regel.wkt}');" style="cursor: pointer;" />
+                                            &nbsp;<html:image src="./images/icons/wand.png" onclick="editFeature('${themaId}','${adminPk}','${regel.primaryKey}');" style="cursor: pointer;" />
                                             &nbsp;${counter.count}
                                         </td>
                                         <c:set var="totale_breedte_onder" value="50" />

@@ -948,6 +948,7 @@ function refreshLayer(){
 
     var localLayerItems;
 //    addLayerToFlamingo("fmctop", layerUrl, backgroundLayerItems);
+//alert("background");
     for (i=0; i<backgroundLayerItems.length; i++){
         item = backgroundLayerItems[i];
         localLayerItems = new Array();
@@ -955,14 +956,15 @@ function refreshLayer(){
         addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
     }
 //    addLayerToFlamingo("fmcback", layerUrl, topLayerItems);
+//alert("top");
     for (i=0; i<topLayerItems.length; i++){
         item = topLayerItems[i];
         localLayerItems = new Array();
         localLayerItems.push(item);
         addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
     }
-
-    flamingoController.getMap().update();
+    flamingoController.getMap().refreshLayerOrder();
+//    flamingoController.getMap().update();
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {
@@ -1017,7 +1019,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         newLayer.setLayers(theLayers);
         newLayer.setQuerylayers(queryLayers);
         newLayer.setMaptiplayers(maptipLayers);
-        flamingoController.getMap().addLayer(newLayer, true, true, false);
+        flamingoController.getMap().addLayer(newLayer, false, true, false);
 }
 
 function loadObjectInfo(geom) {

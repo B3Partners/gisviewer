@@ -124,7 +124,19 @@ function setSldOnDefaultMap(sldUrl,reload){
     }
 }
 
+function loadBusyJSP() {
+    document.getElementById("popupWindow_Title").innerHTML = 'Bezig...';
+
+    dataframepopupHandle.src='admindatabusy.do';
+
+    alert("alert");
+}
+
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
+
+    alert("handleGetAdminData");
+
+    //dataframepopupHandle.src='admindatabusy.do';
 
     if (!usePopup && !useDivPopup && !usePanelControls)
         return;
@@ -176,16 +188,20 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) {
 
-            if(useDivPopup)
+            alert("dataframepopupHandle null or closed");
+
+            if(useDivPopup) {
                 dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
-            else
+            } else {
                 dataframepopupHandle = popUpData('dataframepopup', 680, 225, false);
-        
+            }
         }
 
         if(useDivPopup) {
-            $j("#popupWindow").show();
+            //$j("#popupWindow").show();
             document.forms[0].target = 'dataframedivpopup';
+
+            loadBusyJSP();
         } else {
             document.forms[0].target = 'dataframepopup';
         }
@@ -1407,10 +1423,10 @@ function flamingo_map1_onIdentify(movie,extend){
         geom += "POINT(";
         geom += extend.minx +" "+ extend.miny;
         geom += ")";
-    }
+    }    
 
     flamingo.callMethod("editMap", 'removeAllFeatures');
-
+    
     if (btn_highLightSelected) {
         flamingo.call("toolGroup", "setTool", "breinaald");
 

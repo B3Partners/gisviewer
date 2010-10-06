@@ -7,6 +7,7 @@
 <script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
 <script type="text/javascript">
     var doClose=true;
+
     function toggleList(nr) {
         var obj = document.getElementById('fullTable' + nr);
         var plusmin = document.getElementById('plusMin' + nr);
@@ -36,6 +37,7 @@
 <tiles:insert definition="specialMessages"/>
 <c:choose>
     <c:when test="${not empty thema_items_list and not empty regels_list}">
+
         <c:set value="0" var="nuOfTables" />
         <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
 
@@ -313,7 +315,7 @@
         </div>
         <script type="text/javascript">            
             function closeWindow() {
-               $j("#inleiding").html("Nieuwe informatie verschijnt hier, zodra deze beschikbaar is...");
+               //$j("#inleiding").html("Nieuwe informatie verschijnt hier, zodra deze beschikbaar is...");
                if (doClose) {
                     window.close();
                }

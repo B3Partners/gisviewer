@@ -70,10 +70,12 @@
             <forward name="objectdata" path="viewerobjectdata"/>
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
         </action>
+
+        <action path="/admindatabusy" forward="vieweradmindatabusy"/>
+
         <action path="/viewerwelkom" forward="viewerwelkom"/>
         <action path="/vieweranalysedata" forward="vieweranalysedata"/>
 
-        
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>
             <forward name="continue" path="/index.do"/>

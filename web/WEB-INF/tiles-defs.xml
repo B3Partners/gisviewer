@@ -88,6 +88,10 @@
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata3.jsp" />
     </definition>
+    <definition name="vieweradmindatabusy" extends="popup">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindatabusy.jsp" />
+    </definition>
     <definition name="vieweraanvullendeinfo" extends="popup">
         <put name="title" value="Aanvullende informatie" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>

@@ -230,6 +230,11 @@
     if (typeof showNeedleTool === 'undefined') {
         showNeedleTool = false;
     }
+
+    var seperateIntoBackgroundAndNormalLayers = catchEmpty(${configMap["seperateIntoBackgroundAndNormalLayers"]});
+    if (typeof seperateIntoBackgroundAndNormalLayers === 'undefined') {
+        seperateIntoBackgroundAndNormalLayers = false;
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

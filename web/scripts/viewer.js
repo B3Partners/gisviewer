@@ -892,8 +892,9 @@ function doRefreshLayer(){
 }
 
 var fmclayerseq = 0;
-function refreshLayer(){
-        fmclayerseq++;
+
+function refreshLayer() {
+    fmclayerseq++;
 
     refreshLegendBox();
 
@@ -901,16 +902,20 @@ function refreshLayer(){
         return;
     }
 
-    if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1){
-        if(layerUrl.indexOf('?')> 0)
+    if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1) {
+        
+        if (layerUrl.indexOf('?')> 0) {
             layerUrl+='&';
-        else
+        } else {
             layerUrl+='?';
+        }
+
         layerUrl+="SERVICE=WMS";
     }
 
     var topLayerItems= new Array();
     var backgroundLayerItems= new Array();
+    
     for (var i=0; i<enabledLayerItems.length; i++){
         var item = enabledLayerItems[i];
         if (useInheritCheckbox) {
@@ -929,8 +934,10 @@ function refreshLayer(){
             }
         }
     }
-//    flamingoController.getMap().removeAllLayers();
+
+    // flamingoController.getMap().removeAllLayers();
     var shownLayers=flamingoController.getMap().getLayers();
+
     for (var j=0; j < shownLayers.length; j++){
         var lid = shownLayers[j].getId();
         var found = false;
@@ -944,27 +951,34 @@ function refreshLayer(){
             flamingoController.getMap().removeLayerById(lid, true);
         }
     }
-//    flamingoController.getMap().update();
 
-    var localLayerItems;
-//    addLayerToFlamingo("fmctop", layerUrl, backgroundLayerItems);
-//alert("background");
-    for (i=0; i<backgroundLayerItems.length; i++){
-        item = backgroundLayerItems[i];
-        localLayerItems = new Array();
-        localLayerItems.push(item);
-        addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+    // flamingoController.getMap().update();
+
+    /* Lagen opsplitsen in alleen alle achtergrondlagen en alle voorgrondlagen
+     * in 2 addlayers of alles apart adden */
+    if (seperateIntoBackgroundAndNormalLayers) {
+        addLayerToFlamingo("fmctop", layerUrl, backgroundLayerItems);
+        addLayerToFlamingo("fmcback", layerUrl, topLayerItems);
+    } else {
+        var localLayerItems;
+
+        for (i=0; i<backgroundLayerItems.length; i++){
+            item = backgroundLayerItems[i];
+            localLayerItems = new Array();
+            localLayerItems.push(item);
+            addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+        }
+
+        for (i=0; i<topLayerItems.length; i++){
+            item = topLayerItems[i];
+            localLayerItems = new Array();
+            localLayerItems.push(item);
+            addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+        }
     }
-//    addLayerToFlamingo("fmcback", layerUrl, topLayerItems);
-//alert("top");
-    for (i=0; i<topLayerItems.length; i++){
-        item = topLayerItems[i];
-        localLayerItems = new Array();
-        localLayerItems.push(item);
-        addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
-    }
+    
     flamingoController.getMap().refreshLayerOrder();
-//    flamingoController.getMap().update();
+    // flamingoController.getMap().update();
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {

@@ -136,16 +136,16 @@ function loadBusyJSP(handle, type) {
     if($iframebody != null) {
         $iframebody.html('<div id="content_style">'+
             '<table class="kolomtabel">'+
-                '<tr>'+
-                    '<td valign="top">'+
-                        '<div id="inleiding" class="inleiding">'+
-                            '<h2>Bezig met laden ...</h2>'+
-                            '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
-                        '</div>'+
-                    '</td>'+
-                '</tr>'+
+            '<tr>'+
+            '<td valign="top">'+
+            '<div id="inleiding" class="inleiding">'+
+            '<h2>Bezig met laden ...</h2>'+
+            '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
+            '</div>'+
+            '</td>'+
+            '</tr>'+
             '</table>'+
-        '</div>');
+            '</div>');
     }
 }
 
@@ -977,10 +977,18 @@ function refreshLayer() {
         for (var j=0; j < shownLayers.length; j++){
             var lid = shownLayers[j].getId();
             var found = false;
-            for (i=0; i<enabledLayerItems.length; i++){
-                item = enabledLayerItems[i];
+            for (i=0; i<backgroundLayerItems.length; i++){
+                item = backgroundLayerItems[i];
                 if (lid == "fmc" + item.id) {
                     found = true;
+                    break;
+                }
+            }
+            for (i=0; i<topLayerItems.length; i++){
+                item = topLayerItems[i];
+                if (lid == "fmc" + item.id) {
+                    found = true;
+                    break;
                 }
             }
             if (!found) {
@@ -1361,43 +1369,11 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {
-         alert ("enabledLayerItems length: " + enabledLayerItems.length);
-    var reorderedLayerItems = new Array();
-    var totalLength = orderLayerBox.childNodes.length;
-    for(var i = (totalLength - 1); i > -1; i--) {
-        var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
-         alert ("orderLayerBox: " + itemId);
-        orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
-        for (var m=0; m < enabledLayerItems.length; m++){
-            if (enabledLayerItems[m].id==itemId){
-                var foundLayerItem = enabledLayerItems[m];
-                reorderedLayerItems.push(foundLayerItem);
-         alert ("reorderedLayerItems: " + itemId);
-         break;
-            }
-        }
-    }
- 
+    var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
-    var newEnabledLayerItems = new Array();
     for (var k=0; k<enabledLayerItems.length; k++){
         var item = enabledLayerItems[k];
-         alert ("enabledLayerItems: " + item.id);
-        // bestaat layer al in legenda?
         var found = false;
-        for (var v=0; v<reorderedLayerItems.length; v++){
-            if (reorderedLayerItems[v].id==item.id){
-                found = true;
-         alert ("reorderedLayerItems found: " + item.id);
-               break;
-            }
-        }
-        if (found) {
-            continue;
-        }
-        
-        // is nieuwe laag onzichtbaar?
-        found =  false;
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
             //Item alleen toevoegen aan de layers indien
@@ -1405,30 +1381,42 @@ function refreshLegendBox() {
             //geen cluster heeft
             if (!itemHasAllParentsEnabled(object)) {
                 found = true;
-         alert ("invisibleLayerItems: " + item.id);
                 invisibleLayerItems.push(item);
             }
         }
         if (!found) {
-         alert ("newEnabledLayerItems: " + item.id);
-           newEnabledLayerItems.push(item);
+            visibleLayerItems.push(item);
         }
     }
 
-    for (var j=0; j<newEnabledLayerItems.length; j++){
-        var item = newEnabledLayerItems[j];
-        addLayerToLegendBox(item, false);
+    var reorderedLayerItems = new Array();
+    var totalLength = orderLayerBox.childNodes.length;
+    for(var i = (totalLength - 1); i > -1; i--) {
+        var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
+        orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
+        for (var m=0; m < visibleLayerItems.length; m++){
+            if (visibleLayerItems[m].id==itemId){
+                var foundLayerItem = visibleLayerItems[m];
+                reorderedLayerItems.push(foundLayerItem);
+                visibleLayerItems.splice(m, 1);
+                break;
+            }
+        }
     }
-
+ 
     enabledLayerItems = new Array();
     if (reorderedLayerItems.length>0) {
-        enabledLayerItems.push(reorderedLayerItems);
+        enabledLayerItems = enabledLayerItems.concat(reorderedLayerItems);
     }
-    if (newEnabledLayerItems.length>0) {
-        enabledLayerItems.push(newEnabledLayerItems);
+    if (visibleLayerItems.length>0) {
+        enabledLayerItems = enabledLayerItems.concat(visibleLayerItems);
+    }
+    for (var j=0; j<enabledLayerItems.length; j++){
+        var item = enabledLayerItems[j];
+        addLayerToLegendBox(item, false);
     }
     if (invisibleLayerItems.length>0) {
-        enabledLayerItems.push(invisibleLayerItems);
+        enabledLayerItems = enabledLayerItems.concat(invisibleLayerItems);
     }
 }
 
@@ -1731,10 +1719,10 @@ function exportMap(){
     for (var i=0; i < layers.length; i++){
         alert(layers[i].getLastGetMapRequest());
     }
-//    if (lastGetMapRequest.length==0){
-//        alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
-//        return;
-//    }
+    //    if (lastGetMapRequest.length==0){
+    //        alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
+    //        return;
+    //    }
     if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
         // exportMapWindow=popUp("createmappdf.do", "exportMapWindow", 620, 620, false);
         exportMapWindow=window.open("createmappdf.do", "exportMapWindowNaam");
@@ -1742,24 +1730,24 @@ function exportMap(){
     }else{
         exportMapWindow.setMapImageSrc(lastGetMapRequest);
     }
-createFormAndSubmit();
+    createFormAndSubmit();
 
 }
 
 function createFormAndSubmit(){
- var submitForm = document.createElement("FORM");
- document.body.appendChild(submitForm);
- submitForm.method = "GET";
+    var submitForm = document.createElement("FORM");
+    document.body.appendChild(submitForm);
+    submitForm.method = "GET";
 
-var name = "bla";
-var val = "bla";
- var newElement = document.createElement("<input name='"+name+"' type='hidden'>");
- newElement.value = val;
- submitForm.appendChild(newElement);
+    var name = "bla";
+    var val = "bla";
+    var newElement = document.createElement("<input name='"+name+"' type='hidden'>");
+    newElement.value = val;
+    submitForm.appendChild(newElement);
 
- submitForm.target="exportMapWindowNaam";
- submitForm.action= "http://www.google.nl";
- submitForm.submit();
+    submitForm.target="exportMapWindowNaam";
+    submitForm.action= "http://www.google.nl";
+    submitForm.submit();
 }
 
 
@@ -1854,7 +1842,7 @@ function flamingo_b_buffer_onEvent(id, event) {
 }
 
 function drawFeature(themaId, attrName, attrVal) {
-    alert(themaId+" , "+attrName+" , "+attrVal);
+//    alert(themaId+" , "+attrName+" , "+attrVal);
     JMapData.getWkt(themaId, attrName, attrVal, drawWkt);
 }
 

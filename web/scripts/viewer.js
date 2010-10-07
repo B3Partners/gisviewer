@@ -126,17 +126,32 @@ function setSldOnDefaultMap(sldUrl,reload){
     }
 }
 
-function loadBusyJSP() {
-    document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer informatie';
-
-    dataframepopupHandle.src='admindatabusy.do';
-
-    alert("alert");
+function loadBusyJSP(handle, type) {
+    var $iframebody = null;
+    if(type == 'div') $iframebody = $j(handle).contents().find("body");
+    if(type == 'panel') $iframebody = $j('#'+handle).contents().find("body");
+    if(type == 'window') $iframebody = $j(handle.document.body);
+    
+    // "Gewoon" popup window (dus geen DIV) geeft nog niet helemaal het gewenste resultaat
+    if($iframebody != null) {
+        $iframebody.html('<div id="content_style">'+
+            '<table class="kolomtabel">'+
+                '<tr>'+
+                    '<td valign="top">'+
+                        '<div id="inleiding" class="inleiding">'+
+                            '<h2>Bezig met laden ...</h2>'+
+                            '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
+                        '</div>'+
+                    '</td>'+
+                '</tr>'+
+            '</table>'+
+        '</div>');
+    }
 }
 
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
-    //alert("handleGetAdminData");
+    // alert("handleGetAdminData");
 
     //dataframepopupHandle.src='admindatabusy.do';
 
@@ -190,7 +205,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) {
 
-            //alert("dataframepopupHandle null or closed");
+            // alert("dataframepopupHandle null or closed");
 
             if(useDivPopup) {
                 dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
@@ -202,15 +217,17 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         if(useDivPopup) {
             //$j("#popupWindow").show();
             document.forms[0].target = 'dataframedivpopup';
-
-            loadBusyJSP();
+            loadBusyJSP(dataframepopupHandle, 'div');
         } else {
             document.forms[0].target = 'dataframepopup';
+            loadBusyJSP(dataframepopupHandle, 'window');
         }
 
     } else {
         document.forms[0].target = 'dataframe';
+        loadBusyJSP('dataframe', 'panel');
     }
+
     
     document.forms[0].submit();
 }
@@ -2050,7 +2067,7 @@ popUpData = function(naam, width, height, useDiv) {
         "top = " + popuptop + ", " +
         "left = " + popupleft;
 
-        return window.open('', naam, properties);
+        return window.open('admindatabusy.do', naam, properties);
     }
 }
 
@@ -2084,7 +2101,7 @@ buildPopup = function() {
     }
     popupIframe.styleClass = 'popup_Iframe';
     popupIframe.id = 'dataframedivpopup';
-    popupIframe.src = '';
+    popupIframe.src = 'admindatabusy.do';
     var popupResizediv = document.createElement('div');
     popupResizediv.id = 'popupWindow_Resizediv';
     popupContent.appendChild(popupIframe);

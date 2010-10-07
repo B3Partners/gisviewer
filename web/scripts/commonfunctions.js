@@ -131,8 +131,9 @@ function showHelpDialog(divid) {
 }
 
 var loadingDivCounter = 0;
-
+var loadingTimer = null;
 function showLoading(parentdiv) {
+    if(loadingTimer != null) clearTimeout(loadingTimer);
     if(!document.getElementById('loadingDiv')) {
         var loadingDiv = document.createElement('div');
         loadingDiv.id = 'loadingDiv';
@@ -149,15 +150,21 @@ function showLoading(parentdiv) {
 
     loadingDivCounter++;
     $j('#loadingDiv').show();
+
+    loadingTimer = setTimeout("removeLoading()", 90000);
 }
 
 function hideLoading() {
-    
     if(loadingDivCounter > 0)
         loadingDivCounter--;
 
     if(loadingDivCounter == 0)
         $j('#loadingDiv').hide();
+}
+
+function removeLoading() {
+    $j('#loadingDiv').hide();
+    loadingDivCounter = 0;
 }
 
 function findObjectCenter(objectid) {

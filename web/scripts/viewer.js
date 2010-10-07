@@ -1361,22 +1361,74 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {
+         alert ("enabledLayerItems length: " + enabledLayerItems.length);
+    var reorderedLayerItems = new Array();
     var totalLength = orderLayerBox.childNodes.length;
     for(var i = (totalLength - 1); i > -1; i--) {
+        var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
+         alert ("orderLayerBox: " + itemId);
         orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
+        for (var m=0; m < enabledLayerItems.length; m++){
+            if (enabledLayerItems[m].id==itemId){
+                var foundLayerItem = enabledLayerItems[m];
+                reorderedLayerItems.push(foundLayerItem);
+         alert ("reorderedLayerItems: " + itemId);
+         break;
+            }
+        }
     }
-
-    for (var i=0; i<enabledLayerItems.length; i++){
-        var item = enabledLayerItems[i];
+ 
+    var invisibleLayerItems = new Array();
+    var newEnabledLayerItems = new Array();
+    for (var k=0; k<enabledLayerItems.length; k++){
+        var item = enabledLayerItems[k];
+         alert ("enabledLayerItems: " + item.id);
+        // bestaat layer al in legenda?
+        var found = false;
+        for (var v=0; v<reorderedLayerItems.length; v++){
+            if (reorderedLayerItems[v].id==item.id){
+                found = true;
+         alert ("reorderedLayerItems found: " + item.id);
+               break;
+            }
+        }
+        if (found) {
+            continue;
+        }
+        
+        // is nieuwe laag onzichtbaar?
+        found =  false;
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
-            /* Item alleen toevoegen aan de layers indien
-                 * parent cluster(s) allemaal aangevinkt staan of
-                 * geen cluster heeft */
-            if (!itemHasAllParentsEnabled(object))
-                continue;
+            //Item alleen toevoegen aan de layers indien
+            //parent cluster(s) allemaal aangevinkt staan of
+            //geen cluster heeft
+            if (!itemHasAllParentsEnabled(object)) {
+                found = true;
+         alert ("invisibleLayerItems: " + item.id);
+                invisibleLayerItems.push(item);
+            }
         }
+        if (!found) {
+         alert ("newEnabledLayerItems: " + item.id);
+           newEnabledLayerItems.push(item);
+        }
+    }
+
+    for (var j=0; j<newEnabledLayerItems.length; j++){
+        var item = newEnabledLayerItems[j];
         addLayerToLegendBox(item, false);
+    }
+
+    enabledLayerItems = new Array();
+    if (reorderedLayerItems.length>0) {
+        enabledLayerItems.push(reorderedLayerItems);
+    }
+    if (newEnabledLayerItems.length>0) {
+        enabledLayerItems.push(newEnabledLayerItems);
+    }
+    if (invisibleLayerItems.length>0) {
+        enabledLayerItems.push(invisibleLayerItems);
     }
 }
 
@@ -1672,25 +1724,44 @@ var lastGetMapRequest="";
 //        }
 //    }
 //}
+
 function exportMap(){
     // ipv flamingo_map1_fmcLayer_onRequest(mc, type, requestObject)
     var layers=flamingoController.getMap().getLayers();
     for (var i=0; i < layers.length; i++){
         alert(layers[i].getLastGetMapRequest());
     }
-
-    if (lastGetMapRequest.length==0){
-        alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
-        return;
-    }
+//    if (lastGetMapRequest.length==0){
+//        alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
+//        return;
+//    }
     if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
         // exportMapWindow=popUp("createmappdf.do", "exportMapWindow", 620, 620, false);
-        exportMapWindow=window.open("createmappdf.do", "exportMapWindow");
+        exportMapWindow=window.open("createmappdf.do", "exportMapWindowNaam");
         exportMapWindow.focus();
     }else{
         exportMapWindow.setMapImageSrc(lastGetMapRequest);
     }
+createFormAndSubmit();
+
 }
+
+function createFormAndSubmit(){
+ var submitForm = document.createElement("FORM");
+ document.body.appendChild(submitForm);
+ submitForm.method = "GET";
+
+var name = "bla";
+var val = "bla";
+ var newElement = document.createElement("<input name='"+name+"' type='hidden'>");
+ newElement.value = val;
+ submitForm.appendChild(newElement);
+
+ submitForm.target="exportMapWindowNaam";
+ submitForm.action= "http://www.google.nl";
+ submitForm.submit();
+}
+
 
 function checkboxClickById(id){
     var el2=document.getElementById(id);

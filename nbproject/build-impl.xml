@@ -525,6 +525,9 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.Base64Encoder}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+        <ant antfile="${project.b3p-combineImageTool}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
         <ant antfile="${project.b3p-commons-core}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -552,6 +555,9 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init" if="dist.ear.dir" name="deps-ear-jar" unless="no.deps">
         <ant antfile="${project.Base64Encoder}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.b3p-combineImageTool}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.b3p-commons-core}/build.xml" inheritall="false" target="jar">
@@ -739,6 +745,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.GeotoolsJdbc.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.GeotoolsCommon.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.GeotoolsPostgis.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.b3p-combineImageTool.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
@@ -768,6 +775,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.GeotoolsJdbc.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsCommon.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsPostgis.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.b3p-combineImageTool.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
         <delete dir="${build.web.dir}/WEB-INF/lib"/>
@@ -1074,6 +1082,7 @@ exists or setup the property manually. For example like this:
             -->
     <target depends="init" if="no.dist.ear.dir" name="deps-clean" unless="no.deps">
         <ant antfile="${project.Base64Encoder}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.b3p-combineImageTool}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-commons-core}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-commons-gis}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-commons-hibernate}/build.xml" inheritall="false" target="clean"/>

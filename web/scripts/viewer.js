@@ -127,7 +127,7 @@ function setSldOnDefaultMap(sldUrl,reload){
 }
 
 function loadBusyJSP() {
-    document.getElementById("popupWindow_Title").innerHTML = 'Bezig...';
+    document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer informatie';
 
     dataframepopupHandle.src='admindatabusy.do';
 
@@ -136,7 +136,7 @@ function loadBusyJSP() {
 
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
-    alert("handleGetAdminData");
+    //alert("handleGetAdminData");
 
     //dataframepopupHandle.src='admindatabusy.do';
 
@@ -190,7 +190,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) {
 
-            alert("dataframepopupHandle null or closed");
+            //alert("dataframepopupHandle null or closed");
 
             if(useDivPopup) {
                 dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);

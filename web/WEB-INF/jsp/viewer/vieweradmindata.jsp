@@ -24,6 +24,7 @@
         }
     }
     var usePopup = true;
+    var autoPopupRedirect = false;
     var maxExtraInfo=100;
     var styleObjects = new Array();
 
@@ -67,8 +68,8 @@
 
                     <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()"><html:image src="./images/icons/page_white_csv.png" title="Exporteer naar csv" alt="Exporteer naar csv" /></a>
                     <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()"><html:image src="./images/icons/page_white_info.png" title="Exporteer naar infobox" alt="Exporteer naar infobox" /></a>
-                   
-                    
+
+
                     <form action="services/Data2CSV" name="data2csv${tStatus.count}" id="data2csv${tStatus.count}" target="_blank" method="post">
                         <input name="themaId" type="hidden" value="${themaId}"/>
                         <input name="objectIds" type="hidden" value=""/>
@@ -124,65 +125,65 @@
                             <c:set var="refreshURL" value="" />
                             <c:set value="0" var="nuOfRegels" />
                             <c:forEach var="regel" items="${regels}" varStatus="counter">
-                                <script>
-                                    if (document.data2csv${tStatus.count}.objectIds.value.length > 0){
-                                        document.data2csv${tStatus.count}.objectIds.value+=",";
+                            <script>
+                                if (document.data2csv${tStatus.count}.objectIds.value.length > 0){
+                                    document.data2csv${tStatus.count}.objectIds.value+=",";
+                                }
+                                document.data2csv${tStatus.count}.objectIds.value+="${regel.primaryKey}";
+                                if (${counter.count} < maxExtraInfo+1){
+                                    if (document.data2info${tStatus.count}.primaryKeys.value.length > 0){
+                                        document.data2info${tStatus.count}.primaryKeys.value+=",";
                                     }
-                                    document.data2csv${tStatus.count}.objectIds.value+="${regel.primaryKey}";
-                                    if (${counter.count} < maxExtraInfo+1){
-                                        if (document.data2info${tStatus.count}.primaryKeys.value.length > 0){
-                                            document.data2info${tStatus.count}.primaryKeys.value+=",";
-                                        }
-                                        document.data2info${tStatus.count}.primaryKeys.value+="${regel.primaryKey}";
-                                    }
-                                </script>
-                                <c:if test="${counter.count < 501}">
-                                    <tr class="row" onclick="colorRow(this);">
-                                        <td style="width: 50px;" valign="top">
-                                            &nbsp;<html:image src="./images/icons/wand.png" onclick="editFeature('${themaId}','${adminPk}','${regel.primaryKey}');" style="cursor: pointer;" />
-                                            &nbsp;${counter.count}
-                                        </td>
-                                        <c:set var="totale_breedte_onder" value="50" />
-                                    	<c:set value="0" var="nuOfColumns" />
-                                        <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
-                                            <c:if test="${thema_items[kolom.count - 1] != null}">
+                                    document.data2info${tStatus.count}.primaryKeys.value+="${regel.primaryKey}";
+                                }
+                            </script>
+                            <c:if test="${counter.count < 501}">
+                                <tr class="row" onclick="colorRow(this);">
+                                    <td style="width: 50px;" valign="top">
+                                        &nbsp;<html:image src="./images/icons/wand.png" onclick="editFeature('${themaId}','${adminPk}','${regel.primaryKey}');" style="cursor: pointer;" />
+                                        &nbsp;${counter.count}
+                                    </td>
+                                    <c:set var="totale_breedte_onder" value="50" />
+                                    <c:set value="0" var="nuOfColumns" />
+                                    <c:forEach var="waarde" items="${regel.values}" varStatus="kolom">
+                                        <c:if test="${thema_items[kolom.count - 1] != null}">
+                                            <c:choose>
+                                                <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
+                                                    <c:set var="breedte" value="${thema_items[kolom.count - 1].kolombreedte}" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:set var="breedte" value="150" />
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:choose>
+                                                <c:when test="${kolom.last}">
+                                                    <c:set var="last_id" value=" class=\"lastThClass${tStatus.count}\" id=\"footer_last_item${counter.count}\"" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:set var="last_id" value=" style=\"width: ${breedte}px;\"" />
+                                                    <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <c:set var="noOfRegels" value="${counter.count}" />
+                                            <td${last_id} valign="top">
                                                 <c:choose>
-                                                    <c:when test="${thema_items[kolom.count - 1].kolombreedte != 0}">
-                                                        <c:set var="breedte" value="${thema_items[kolom.count - 1].kolombreedte}" />
+                                                    <c:when test="${waarde eq '' or  waarde eq null}">
+                                                        &nbsp;
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <c:set var="breedte" value="150" />
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <c:choose>
-                                                    <c:when test="${kolom.last}">
-                                                        <c:set var="last_id" value=" class=\"lastThClass${tStatus.count}\" id=\"footer_last_item${counter.count}\"" />
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <c:set var="last_id" value=" style=\"width: ${breedte}px;\"" />
-                                                        <c:set var="totale_breedte_onder" value="${totale_breedte_onder + breedte}" />
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <c:set var="noOfRegels" value="${counter.count}" />
-                                                <td${last_id} valign="top">
-                                                    <c:choose>
-                                                        <c:when test="${waarde eq '' or  waarde eq null}">
-                                                            &nbsp;
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <c:choose>
-                                                                <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                                                		<c:set var="refreshURL" value="${waarde}" />
-                                                                    <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" style="cursor: pointer;" />
-                                                                </c:when>
-                                                                <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
-                                                                    <c:forEach var="listWaarde" items="${waarde}">
-                                                                	<c:set var="refreshURL" value="${listWaarde}" />
-                                                                        <html:image src="./images/icons/world_link.png" onclick="popUp('${listWaarde}', 'externe_link', 600, 500);" style="cursor: pointer;" />
-                                                                    </c:forEach>
-                                                                </c:when>
-                                                                <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
-                                                                	<c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
+                                                                <c:set var="refreshURL" value="${waarde}" />
+                                                                <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" style="cursor: pointer;" />
+                                                            </c:when>
+                                                            <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
+                                                                <c:forEach var="listWaarde" items="${waarde}">
+                                                                    <c:set var="refreshURL" value="${listWaarde}" />
+                                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${listWaarde}', 'externe_link', 600, 500);" style="cursor: pointer;" />
+                                                                </c:forEach>
+                                                            </c:when>
+                                                            <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
+                                                                <c:choose>
                                                                     <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
                                                                         <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}" title="${fn:split(waarde, '###')[0]}">
                                                                             <img src="./images/icons/flag_blue.png" alt="Flag" style="border: 0px none;" />
@@ -191,22 +192,22 @@
                                                                     <c:otherwise>
                                                                         -
                                                                     </c:otherwise>
-                                                                	</c:choose>
-                                                            		</c:when>
-                                                            		<c:otherwise>
+                                                                </c:choose>
+                                                            </c:when>
+                                                            <c:otherwise>
                                                                 ${waarde}
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                            </c:if>
-                                            <c:set value="${kolom.count}" var="nuOfColumns" />
-                                        </c:forEach>
-                                    </tr>
-                                    <c:set value="${counter.count}" var="nuOfRegels" />
-                                </c:if>
-                            </c:forEach>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </c:if>
+                                        <c:set value="${kolom.count}" var="nuOfColumns" />
+                                    </c:forEach>
+                                </tr>
+                                <c:set value="${counter.count}" var="nuOfRegels" />
+                            </c:if>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -269,7 +270,6 @@
             if(parent && parent.autoRedirect) noOfColumnsRedirect = parent.autoRedirect;
             if(opener && opener.autoRedirect) noOfColumnsRedirect = opener.autoRedirect;
             if(isNaN(noOfColumnsRedirect)) noOfColumnsRedirect = 1;
-            var autoPopupRedirect = false;
             if(${nuOfTables} == 1 && ${nuOfRegels} == 1 && ${nuOfColumns} == noOfColumnsRedirect && '${refreshURL}' != '') {
                 if(opener && opener.usePopup) {
                     window.location = '${refreshURL}';
@@ -290,41 +290,25 @@
             <input type="button" value="Ok" id="opmOkButton" />
             <input type="button" value="Cancel" id="opmCancelButton" />
         </div>
-        <script type="text/javascript">
-            if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
-                if(parent) {
-                    if(parent.panelBelowCollapsed) {
-                        parent.panelResize('below');
-                    }
-                }
-            }
-        </script>
     </c:when>
     <c:otherwise>
+        <!-- nog een keer loading melden, omdat via GetFeatureInfo nog data
+        binnen kan komen, later beter oplossen -->
         <div id="content_style">
             <table class="kolomtabel">
                 <tr>
                     <td valign="top">
                         <div id="inleiding" class="inleiding">
-                            <h2><fmt:message key="admindata.geeninfo.header"/></h2>
-                            <p><fmt:message key="admindata.geeninfo.tekst"/></p>
+                            <h2>Bezig met laden ...</h2>
+                            <p>Bezig met zoeken naar administratieve gegevens.</p>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
-        <script type="text/javascript">            
-            function closeWindow() {
-               //$j("#inleiding").html("Nieuwe informatie verschijnt hier, zodra deze beschikbaar is...");
-               if (doClose) {
-                    window.close();
-               }
-           }
-
-            // Timeout in milliseconden
-            var timeout = 5000;
-            window.setTimeout(closeWindow, timeout);
-
+        <script type="text/javascript">
+            var timeout = 3000;
+            window.setTimeout("writeNoResults();", timeout);
         </script>
     </c:otherwise>
 </c:choose>
@@ -362,15 +346,40 @@
         if (document.getElementById("content_style")!=undefined && tableData.length>0){
             document.getElementById("content_style").style.display="none";
         }
-       document.getElementById('getFeatureInfo').innerHTML=tableData;
+        document.getElementById('getFeatureInfo').innerHTML=tableData;
     }
 
+    function writeNoResults() {
+        var tableData="";
+        tableData+="<table class=\"kolomtabel\">";
+        tableData+="<tr>";
+        tableData+="<td valign=\"top\">";
+        tableData+="<div id=\"inleiding\" class=\"inleiding\">";
+        tableData+="<h2><fmt:message key="admindata.geeninfo.header"/></h2>";
+        tableData+="<p><fmt:message key="admindata.geeninfo.tekst"/></p>";
+        tableData+="</div>";
+        tableData+="</td>";
+        tableData+="</tr>";
+        tableData+="</table>";
+        if (document.getElementById("content_style")!=undefined){
+            document.getElementById('content_style').innerHTML=tableData;
+        }
+    }
+</script>
+
+<script type="text/javascript">
     if (opener) {
         opener.hideLoading();
     } else if (parent) {
         parent.hideLoading();
-    } else {
-        alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
     }
-    
+
+    if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
+        if(parent) {
+            if(parent.panelBelowCollapsed) {
+                parent.panelResize('below');
+            }
+        }
+    }
 </script>
+

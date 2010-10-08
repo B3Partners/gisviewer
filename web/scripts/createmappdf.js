@@ -1,8 +1,6 @@
 function setMapImageSrc(url){
     document.getElementById("mapImage").style.width = '474px';
     document.getElementById("mapImage").style.height = 'auto';
-    document.getElementById("mapImage").src=url;
-    document.getElementById("mapUrl").value=url;
     if(setDefaultImageSizeFromMap){
         if (url.toLowerCase().indexOf("width=")>=0){
             var beginIndex=url.toLowerCase().indexOf("width=")+6;
@@ -31,13 +29,7 @@ function resetImageSize() {
 }
 
 mapImageLoad = function() {
-    //doe bij de eerste keer laden:
-    if (window.opener){
-        if (window.opener.lastGetMapRequest!=undefined)
-            setMapImageSrc(window.opener.lastGetMapRequest);
-        if(window.opener.activeAnalyseThemaTitle!=undefined){
-            document.getElementById('title').value=window.opener.activeAnalyseThemaTitle;
-        }
-    }
+    //doe bij de eerste keer laden om slider te initialiseren
+    setMapImageSrc(firstUrl);
 }
 attachOnload(mapImageLoad);

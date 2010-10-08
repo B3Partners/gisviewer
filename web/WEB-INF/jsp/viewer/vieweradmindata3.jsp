@@ -3,6 +3,8 @@
 
 <script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
 <script type="text/javascript">
+    var autoPopupRedirect = false;
+
     function editFeature(value) {
         getParent().drawWkt(value);
     };
@@ -23,18 +25,18 @@
 
 <tiles:insert definition="specialMessages"/>
 
-    <c:choose>
-        <c:when test="${not empty thema_items_list and not empty regels_list}">
+<c:choose>
+    <c:when test="${not empty thema_items_list and not empty regels_list}">
 
-            <c:set var="themanaam" value="" />
-            <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
+        <c:set var="themanaam" value="" />
+        <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
 
-                <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
-                    <c:if test="${ThemaItem.thema.naam != themanaam}">
-                        <c:set var="themanaam" value="${ThemaItem.thema.naam}" />                        
+            <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
+                <c:if test="${ThemaItem.thema.naam != themanaam}">
+                    <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
 
-                        <strong class="admindata3_header">${themanaam}</strong>
-                    </c:if>
+                    <strong class="admindata3_header">${themanaam}</strong>
+                </c:if>
             </c:forEach>
 
             <div class="topRowThemaData" id="fullTable${tStatus.count}">
@@ -106,45 +108,31 @@
     </c:when>
 
     <c:otherwise>
+        <!-- nog een keer loading melden, omdat via GetFeatureInfo nog data
+        binnen kan komen, later beter oplossen -->
         <div id="content_style">
-            <table class="kolomtabel" style="width: 230px;">
+            <table class="kolomtabel">
                 <tr>
                     <td valign="top">
-                        <div class="inleiding" style="width: 242px;">
-
-                            <h2><fmt:message key="admindata.geeninfo.header"/></h2>
-                            <p><fmt:message key="admindata.geeninfo.tekst"/></p>
+                        <div id="inleiding" class="inleiding">
+                            <h2>Bezig met laden ...</h2>
+                            <p>Bezig met zoeken naar administratieve gegevens.</p>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
-
-        <!--
         <script type="text/javascript">
-            function closeWindow() {
-                if (doClose) {               
-                    $j("#popupWindow").hide();
-                }
-            }
-    
-            var timeout = 5000; // Timeout in milliseconden
-
-            if (opener)
-                opener.setTimeout(closeWindow, timeout);
-            else if (parent)
-                parent.window.setTimeout(closeWindow, timeout);
-            else
-                alert("Er is een fout opgetreden tijdens het afsluiten van deze popup");
+            var timeout = 3000;
+            window.setTimeout("writeNoResults();", timeout);
         </script>
-        -->
     </c:otherwise>
 </c:choose>
 
 <div id="getFeatureInfo"></div>
-                        
+
 <script type="text/javascript">
-   //writes the obj data from flamingo to a table
+    //writes the obj data from flamingo to a table
     function writeFeatureInfoData(obj){
         doClose=false;
         var tableData="";
@@ -175,13 +163,39 @@
         if (document.getElementById("content_style")!=undefined && tableData.length>0){
             document.getElementById("content_style").style.display="none";
         }
-       document.getElementById('getFeatureInfo').innerHTML=tableData;
+        document.getElementById('getFeatureInfo').innerHTML=tableData;
     }
 
+    function writeNoResults() {
+        var tableData="";
+        tableData+="<table class=\"kolomtabel\">";
+        tableData+="<tr>";
+        tableData+="<td valign=\"top\">";
+        tableData+="<div id=\"inleiding\" class=\"inleiding\">";
+        tableData+="<h2><fmt:message key="admindata.geeninfo.header"/></h2>";
+        tableData+="<p><fmt:message key="admindata.geeninfo.tekst"/></p>";
+        tableData+="</div>";
+        tableData+="</td>";
+        tableData+="</tr>";
+        tableData+="</table>";
+        if (document.getElementById("content_style")!=undefined){
+            document.getElementById('content_style').innerHTML=tableData;
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
     if (opener)
         opener.hideLoading();
     else if (parent)
         parent.window.hideLoading();
-    else
-        alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
+
+    if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
+        if(parent) {
+            if(parent.panelBelowCollapsed) {
+                parent.panelResize('below');
+            }
+        }
+    }
 </script>

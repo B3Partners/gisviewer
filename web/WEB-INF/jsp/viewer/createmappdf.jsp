@@ -1,8 +1,15 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
+
+<c:set var="psettingsName" value="${imageId}"/>
+<c:set var="psettings" value='${sessionScope[psettingsName]}'/>
+<c:set var="firstUrl" value="${psettings.urls[0]}"/>
+
 <script type="text/javascript">
     var setDefaultImageSizeFromMap=true;
+    var firstUrl = "${firstUrl}";
 </script>
+
 
 <div class="createMapPDFBody">
     <h1><fmt:message key="createmappdf"/></h1><br />
@@ -14,9 +21,9 @@
             </td>
             <td>
                 <div id="imageContainer">        
-                    <img src="" id="mapImage" alt="Preview" style="width: 474px; height:1px;" />
+                    <img src="CreateImage?keepAlive=true&imageId=${imageId}" id="mapImage" alt="Preview" style="width: 474px; height: 1px;" />
                 </div>
-                <input type="hidden" name="mapUrl" id="mapUrl"/>
+                <input type="hidden" name="imageId" id="imageId" value="${imageId}"/>
             </td>            
         </tr>
         <tr class="aanvullende_info_alternateTr">

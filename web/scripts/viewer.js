@@ -1702,51 +1702,36 @@ function searchThemaValue(themaList,themaId,val){
 }
 
 var exportMapWindow;
-var lastGetMapRequest="";
-//function flamingo_map1_fmcLayer_onRequest(mc, type, requestObject){
-//    if(requestObject && requestObject.url){
-//        if (requestObject.requesttype=="GetMap"){
-//            //if (requestObject.url.toLowerCase().indexOf("getmap")){
-//            lastGetMapRequest=requestObject.url;
-//        //}
-//        }
-//    }
-//}
-
 function exportMap(){
-    // ipv flamingo_map1_fmcLayer_onRequest(mc, type, requestObject)
-    var layers=flamingoController.getMap().getLayers();
-    for (var i=0; i < layers.length; i++){
-        alert(layers[i].getLastGetMapRequest());
-    }
-    //    if (lastGetMapRequest.length==0){
-    //        alert("Nog geen kaart geladen, wacht tot de kaart geladen is.");
-    //        return;
-    //    }
     if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
         // exportMapWindow=popUp("createmappdf.do", "exportMapWindow", 620, 620, false);
-        exportMapWindow=window.open("createmappdf.do", "exportMapWindowNaam");
+        exportMapWindow=window.open("", "exportMapWindowNaam");
         exportMapWindow.focus();
-    }else{
-        exportMapWindow.setMapImageSrc(lastGetMapRequest);
     }
-    createFormAndSubmit();
-
-}
-
-function createFormAndSubmit(){
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);
     submitForm.method = "GET";
 
-    var name = "bla";
-    var val = "bla";
+    var name = "urls";
+    var val = "";
+    var layers=flamingoController.getMap().getLayers();
+    for (var i=0; i < layers.length; i++){
+        val += layers[i].getLastGetMapRequest() + ";";
+    }
     var newElement = document.createElement("<input name='"+name+"' type='hidden'>");
     newElement.value = val;
     submitForm.appendChild(newElement);
 
+//    newElement = document.createElement("<input name='title' type='hidden'>");
+//    if (activeAnalyseThemaTitle) {
+//        newElement.value = activeAnalyseThemaTitle;
+//    } else {
+//        newElement.value = "";
+//    }
+//    submitForm.appendChild(newElement);
+
     submitForm.target="exportMapWindowNaam";
-    submitForm.action= "http://www.google.nl";
+    submitForm.action= "printmap.do";
     submitForm.submit();
 }
 

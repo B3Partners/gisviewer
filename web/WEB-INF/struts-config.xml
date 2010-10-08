@@ -51,8 +51,6 @@
         
         <action path="/viewerlist" forward="/index.do?list=t"/>
         
-        <action path="/createmappdf" forward="createmappdf"/>
-
         <action path="/viewerhighlight" forward="viewerhighlight"/>
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
@@ -69,6 +67,11 @@
             <forward name="metadata" path="viewermetadata"/>
             <forward name="objectdata" path="viewerobjectdata"/>
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
+        </action>
+
+        <action path="/printmap" type="nl.b3p.gis.viewer.PrintAction">
+            <forward name="success" path="createmappdf"/>
+            <forward name="failure" path="createmappdf"/>
         </action>
 
         <action path="/admindatabusy" forward="vieweradmindatabusy"/>

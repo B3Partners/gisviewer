@@ -23,6 +23,15 @@
             <form-property name="zoekopties_object" type="java.lang.String"/>
             <form-property name="zoekopties_waarde" type="java.lang.String"/>
         </form-bean>
+        <form-bean name="printForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="title" type="java.lang.String"/>
+            <form-property name="imageId" type="java.lang.String"/>
+            <form-property name="imageSize" type="java.lang.String" initial="2048"/>
+            <form-property name="landscape" type="java.lang.String" initial="true"/>
+            <form-property name="pageSize" type="java.lang.String" initial="A4"/>
+            <form-property name="outputType" type="java.lang.String" initial="PDF_PRINT"/>
+           <form-property name="remark" type="java.lang.String"/>
+        </form-bean>
         
     </form-beans>
     
@@ -69,7 +78,7 @@
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
         </action>
 
-        <action path="/printmap" type="nl.b3p.gis.viewer.PrintAction">
+        <action path="/printmap" type="nl.b3p.gis.viewer.PrintAction" name="printForm" scope="request" validate="false">
             <forward name="success" path="createmappdf"/>
             <forward name="failure" path="createmappdf"/>
         </action>

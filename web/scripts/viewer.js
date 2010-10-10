@@ -1712,29 +1712,44 @@ function exportMap(){
     document.body.appendChild(submitForm);
     submitForm.method = "GET";
 
-    var name = "urls";
-    var val = "";
-    var layers=flamingoController.getMap().getLayers();
+    var urlString="";
+    var firstURL = true;
+    var layers=flamingoController.getMap("map1").getLayers();
     for (var i=0; i < layers.length; i++){
-        val += layers[i].getLastGetMapRequest() + ";";
+        if(layers[i].getLastGetMapRequest() != null){
+            if(!firstURL){
+                urlString+=";";
+            }else{
+                firstURL = false;
+            }
+            urlString+=layers[i].getLastGetMapRequest();
+            if(layers[i].getAlpha() != null){
+                urlString+="#"+layers[i].getAlpha();
+            }
+        }
     }
-    var newElement = document.createElement("<input name='"+name+"' type='hidden'>");
-    newElement.value = val;
+    var newElement = document.createElement("<input name='urls' type='hidden'>");
+    newElement.value = urlString;
     submitForm.appendChild(newElement);
 
-//    newElement = document.createElement("<input name='title' type='hidden'>");
-//    if (activeAnalyseThemaTitle) {
-//        newElement.value = activeAnalyseThemaTitle;
-//    } else {
-//        newElement.value = "";
-//    }
-//    submitForm.appendChild(newElement);
+    var features=flamingoController.getEditMap().getAllFeatures();
+    var wktString="";
+    for (var b=0; b < features.length; b++){
+        wktString+=features[b].wktgeom;
+        wktString+="#ff0000";
+        if (features[b].label) {
+            wktString+="|"+features[b].label;
+        }
+        wktString+=";";
+    }
+    newElement = document.createElement("<input name='wkts' type='hidden'>");
+    newElement.value = wktString;
+    submitForm.appendChild(newElement);
 
     submitForm.target="exportMapWindowNaam";
     submitForm.action= "printmap.do";
     submitForm.submit();
 }
-
 
 function checkboxClickById(id){
     var el2=document.getElementById(id);

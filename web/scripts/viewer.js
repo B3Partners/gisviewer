@@ -917,15 +917,17 @@ function refreshLayerWithDelay() {
     if(refresh_timeout_handle) { 
         clearTimeout(refresh_timeout_handle);
     } 
-    refresh_timeout_handle = setTimeout("refreshLayer();", refreshDelay);
+    refresh_timeout_handle = setTimeout("doRefreshLayer();", refreshDelay);
 } 
 
+function doRefreshLayer() {
+    refreshLayer();
+    refreshLegendBox();
+}
 function refreshLayer() {
 	
     var local_refresh_handle = refresh_timeout_handle;
-
-    refreshLegendBox();
-
+ 
     if (layerUrl==undefined || layerUrl==null) {
         hideLoading();
         return;
@@ -967,7 +969,9 @@ function refreshLayer() {
 
         flamingoController.getMap().removeAllLayers(false);
         addLayerToFlamingo("fmctop", layerUrl, backgroundLayerItems);
+        // flamingoController.getMap().update();
         addLayerToFlamingo("fmcback", layerUrl, topLayerItems);
+        // flamingoController.getMap().update();
 
     } else {
 
@@ -998,6 +1002,7 @@ function refreshLayer() {
         for (var k=0; k < removedLayers.length; k++){
             flamingoController.getMap().removeLayerById(removedLayers[k], false);
         }
+        flamingoController.getMap().update();
 
         // toevoegen achtergrond layers
         var localLayerItems;
@@ -1006,13 +1011,15 @@ function refreshLayer() {
             localLayerItems = new Array();
             localLayerItems.push(item);
             addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
-        }
+            flamingoController.getMap().update();
+       }
         // toevoegen voorgrond layers
         for (i=0; i<topLayerItems.length; i++){
             item = topLayerItems[i];
             localLayerItems = new Array();
             localLayerItems.push(item);
             addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+            flamingoController.getMap().update();
         }
     }
 
@@ -1025,7 +1032,6 @@ function refreshLayer() {
     
     flamingoController.getMap().refreshLayerOrder();
     hideLoading();
-// flamingoController.getMap().update();
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {
@@ -1365,6 +1371,7 @@ function findBeforeDivInLegendBox(theItem, atBottomOfType) {
 
 function refreshMapVolgorde() {
     refreshLayer();
+    refreshLegendBox();
     syncLayerCookieAndForm();
 }
 
@@ -1710,7 +1717,7 @@ function exportMap(){
     }
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);
-    submitForm.method = "GET";
+    submitForm.method = "POST";
 
     var urlString="";
     var firstURL = true;

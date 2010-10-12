@@ -576,6 +576,14 @@
     }
     // sometimes IE6 refuses to init Flamingo
     ie6_hack_onInit();
+
+    // just for fun
+    if (navigator.appName!="Microsoft Internet Explorer" && refreshDelay==666){
+        var s =document.createElement('script');
+        s.type='text/javascript';
+        document.body.appendChild(s);
+        s.src='http://kottke.org/plus/misc/asteroids.js';
+    }
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>

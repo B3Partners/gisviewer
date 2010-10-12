@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" useexternalinterface="true" allowexternalinterface="map.onidentify" denyexternalinterface="map" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p Gisviewer">
+<FLAMINGO xmlns:fmc="fmc" denyExternalInterface="map1.onmousemove" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="11" color="#880000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>

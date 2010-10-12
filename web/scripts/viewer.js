@@ -746,8 +746,12 @@ function checkboxClick(obj, dontRefresh) {
     } else {
         removeItemAsLayer(item);
     }
-    if (!dontRefresh){        
-        refreshLayerWithDelay();
+    if (!dontRefresh){
+        if(obj.checked) {
+            refreshLayerWithDelay();
+        }else{
+            refreshLayer();
+        }
     }
 }
 //called when a clustercheckbox is clicked
@@ -924,8 +928,11 @@ function doRefreshLayer() {
     refreshLayer();
     refreshLegendBox();
 }
-function refreshLayer() {
-	
+function refreshLayer(doRefreshOrder) {
+    if (doRefreshOrder == undefined) {
+        doRefreshOrder = false;
+    }
+
     var local_refresh_handle = refresh_timeout_handle;
  
     if (layerUrl==undefined || layerUrl==null) {
@@ -944,8 +951,9 @@ function refreshLayer() {
 
     var topLayerItems= new Array();
     var backgroundLayerItems= new Array();
+    var item;
     for (var i=0; i<enabledLayerItems.length; i++){
-        var item = enabledLayerItems[i];
+        item = enabledLayerItems[i];
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
             // Item alleen toevoegen aan de layers indien
@@ -981,14 +989,14 @@ function refreshLayer() {
         for (var j=0; j < shownLayers.length; j++){
             var lid = shownLayers[j].getId();
             var found = false;
-            for (i=0; i<backgroundLayerItems.length; i++){
+            for (i=0; i<backgroundLayerItems.length && found==false; i++){
                 item = backgroundLayerItems[i];
                 if (lid == "fmc" + item.id) {
                     found = true;
                     break;
                 }
             }
-            for (i=0; i<topLayerItems.length; i++){
+            for (i=0; i<topLayerItems.length && found==false; i++){
                 item = topLayerItems[i];
                 if (lid == "fmc" + item.id) {
                     found = true;
@@ -1002,25 +1010,46 @@ function refreshLayer() {
         for (var k=0; k < removedLayers.length; k++){
             flamingoController.getMap().removeLayerById(removedLayers[k], false);
         }
-        flamingoController.getMap().update();
-
+        /*
+        if (removedLayers.length > 0)
+            flamingoController.getMap().update();
+*/
         // toevoegen achtergrond layers
         var localLayerItems;
         for (i=0; i<backgroundLayerItems.length; i++){
             item = backgroundLayerItems[i];
-            localLayerItems = new Array();
-            localLayerItems.push(item);
-            addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
-            flamingoController.getMap().update();
+            var layerId="fmc" + item.id;
+            if (flamingoController.getMap().getLayer(layerId)==null){
+                localLayerItems = new Array();
+                localLayerItems.push(item);
+                addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);                
+                //flamingoController.getMap().update();
+            }
+            var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,i);
+            if (i != oldOrderIndex){
+                doRefreshOrder=true;
+            }
        }
         // toevoegen voorgrond layers
+        var backgroundCount=backgroundLayerItems.length;
+        if (backgroundCount==undefined){
+            backgroundCount=0;
+        }
         for (i=0; i<topLayerItems.length; i++){
             item = topLayerItems[i];
-            localLayerItems = new Array();
-            localLayerItems.push(item);
-            addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
-            flamingoController.getMap().update();
+            var layerId="fmc" + item.id;
+            if (flamingoController.getMap().getLayer(layerId)==null){
+                localLayerItems = new Array();
+                localLayerItems.push(item);
+                addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+            }else{
+                var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,backgroundCount+i);
+                if (backgroundCount+i !=oldOrderIndex ){
+                    doRefreshOrder=true;
+                }
+            }
         }
+        var boe=flamingoController.getMap().getLayers();
     }
 
     if (local_refresh_handle != refresh_timeout_handle) {
@@ -1029,8 +1058,10 @@ function refreshLayer() {
         hideLoading();
         return;
     }
+    if (doRefreshOrder) {
+        flamingoController.getMap().refreshLayerOrder();
+    }
     
-    flamingoController.getMap().refreshLayerOrder();
     hideLoading();
 }
 
@@ -1370,8 +1401,8 @@ function findBeforeDivInLegendBox(theItem, atBottomOfType) {
 }
 
 function refreshMapVolgorde() {
-    refreshLayer();
     refreshLegendBox();
+    refreshLayer(true);
     syncLayerCookieAndForm();
 }
 

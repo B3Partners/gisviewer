@@ -750,7 +750,7 @@ function checkboxClick(obj, dontRefresh) {
         if(obj.checked) {
             refreshLayerWithDelay();
         }else{
-            refreshLayer();
+            doRefreshLayer();
         }
     }
 }
@@ -1466,7 +1466,7 @@ function deleteAllLayers() {
     }
     enabledLayerItems=new Array();
     syncLayerCookieAndForm();
-    refreshLayer();
+    doRefreshLayer();
 }
 
 function splitValue(val) {
@@ -1571,8 +1571,6 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
 var firstTimeOninit = true;
 
 function flamingo_map1_onInit(){
-    //    showLoading();
-    
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
@@ -1615,7 +1613,7 @@ function flamingo_map1_onInit(){
             else {
                 setFullExtent(12000,304000,280000,620000);
             }
-            refreshLayer();
+            doRefreshLayer();
         }
     }
     mapInitialized=true;

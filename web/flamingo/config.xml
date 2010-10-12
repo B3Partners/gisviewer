@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" denyExternalInterface="map1.onmousemove" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" useexternalinterface="true" allowexternalinterface="map.onidentify" denyexternalinterface="map" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p Gisviewer">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="11" color="#880000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
@@ -76,7 +76,7 @@
         <fmc:Maptip listento="map1"/>
         <fmc:Map maptipdelay="1000" id="map1" left="0" top="0%" height="100%" width="100%"
         bottom="bottom" visible="true" extenthistory="10" extent="21000,357000,283000,615000"
-        holdonidentify="true" holdonupdate="false" movesteps="10" movetime="30">
+        movesteps="20" movetime="100">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>
 
             <fmc:LayerImage id="Limburg_achtergrond" imageurl="assets/limburg/limburg_achtergrond.png" extent="-11920,221334,398981,506050" minscale="250" maxscale="500"/>

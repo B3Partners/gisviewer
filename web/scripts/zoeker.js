@@ -25,7 +25,7 @@ var planEigenaarId = planIds[0];
 var planId = planIds[1];
 
 /*Hier begint het zoeken:*/
-JZoeker.zoek(new Array(planEigenaarId),"*",0,handleGetEigenaar);
+JZoeker.zoek(new Array(planEigenaarId),"*",maxResults,handleGetEigenaar);
 
 function handleGetEigenaar(list){
     eigenaarSelect.disabled=false;
@@ -47,7 +47,7 @@ function eigenaarchanged(element){
         dwr.util.addOptions(statusSelectName,[ "Bezig met ophalen..."]);
         dwr.util.addOptions(planSelectName,[ "Bezig met ophalen..."]);
 
-        JZoeker.zoek(new Array(planId),element.value,0,handleGetPlannen);
+        JZoeker.zoek(new Array(planId),element.value,maxResults,handleGetPlannen);
         //geen nieuwe eigenaar kiezen tijdens de zoek opdracht
         eigenaarSelect.disabled=true;
         setSelectedPlan(null);
@@ -478,7 +478,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             var optionListStrings = createZoekStringsFromZoekVelden(optionListZc, zoekVelden, zoekStrings);
             var ida = new Array(1);
             ida[0] = optionListZc.id;
-            JZoeker.zoek(ida, optionListStrings, 0, handleZoekVeldinputList);
+            JZoeker.zoek(ida, optionListStrings, maxResults, handleZoekVeldinputList);
 
         } else {
 

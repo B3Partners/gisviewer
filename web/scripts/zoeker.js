@@ -275,12 +275,13 @@ function performSearch() {
 }
 
 function handleZoekResultaat(searchResultId){
-    var searchResult=foundValues[searchResultId];
+    var searchResult = foundValues[searchResultId];
 
     //zoom naar het gevonden object.(als er een bbox is)
-    if (searchResult.minx)
+    if (searchResult.minx != 0 && searchResult.miny != 0 && searchResult.maxx != 0 && searchResult.maxy) {
         moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
-
+    }
+    
     //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan een ouder heeft.
     var zoekConfiguratie=searchResult.zoekConfiguratie;
     var parentZc = zoekConfiguratie.parentZoekConfiguratie;
@@ -374,7 +375,9 @@ function searchCallBack(values){
 
     // Controleer of de bbox groter is dan de minimale bbox van de zoeker
     for (var i=0; i < values.length; i++){
-        values[i]=getBboxMinSize2(values[i]);
+        if (values[i].minx != 0 && values[i].miny != 0 && values[i].maxx != 0 && values[i].maxy) {
+            values[i]=getBboxMinSize2(values[i]);
+        }
     }
 
     var ollist = $j("<ol></ol>");

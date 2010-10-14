@@ -101,28 +101,20 @@ html, body {
 }
 
 .orderLayerBox {
-    border: 1px solid #606060;
-    background-color: White;
-    color: #175480;
     overflow: auto;
 }
 
 .orderLayerClass{
     cursor: pointer;
-    background-color: White;
-    color: #175480;
     overflow: hidden;
 }
 
 .orderLayerClassSelected{
-    background-color: #bbbbbb;
     cursor: pointer;
-    color: #175480;
 }
 
 .orderLayerClass span, .orderLayerClassSelected span {
     padding-top: 4px;
-    color: #175480;
 }
 
 /* voor plan select tab */
@@ -142,10 +134,7 @@ html, body {
 }
 
 #kopTekst {
-    background-color: #E5352C;
-    color: White;
-	font-weight: bold;
-	padding: 4px 0px 5px 23px;
+    padding: 4px 0px 5px 23px;
     margin-bottom: 0px;
     margin-top: 0px;
     cursor: pointer;
@@ -197,16 +186,12 @@ html, body {
 }
 
 .treeLegendClass {
-    border: 1px solid Black;
-    background-color: white;
     padding: 5px;
     margin-left: 5px;
     margin-top: 2px;
-    color: Black;
 }
 
 #searchConfigurationsContainer {
     padding-bottom: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid White;
 }

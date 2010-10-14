@@ -70,7 +70,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </script>
         <![endif]-->
     </head>
-    <body>
+    <body class="viewerbodyelement">
         <div id="content_viewer"><tiles:insert attribute="content" /></div>
         <tiles:insert definition="googleAnalytics"/>
     </body>

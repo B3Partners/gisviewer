@@ -391,6 +391,42 @@ a:hover{
     background-color: White;
 }
 
+.orderLayerBox {
+    border: 1px solid #606060;
+    background-color: White;
+    color: #175480;
+}
+
+.orderLayerClass {
+    background-color: White;
+    color: #175480;
+}
+
+.orderLayerClassSelected {
+    color: #175480;
+    background-color: #bbbbbb;
+}
+
+.orderLayerClass span, .orderLayerClassSelected span {
+    color: #175480;
+}
+
+#kopTekst {
+    background-color: #E5352C;
+    color: White;
+    font-weight: bold;
+}
+
+.treeLegendClass {
+    border: 1px solid Black;
+    background-color: white;
+    color: Black;
+}
+
+#searchConfigurationsContainer {
+    border-bottom: 1px solid White;
+}
+
 #popupWindow {
     border: 3px solid #A0D9FF;
     background-color: #A0D9FF;

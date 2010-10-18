@@ -979,7 +979,7 @@ function refreshLayer(doRefreshOrder) {
         addLayerToFlamingo("fmctop", layerUrl, backgroundLayerItems);
         // flamingoController.getMap().update();
         addLayerToFlamingo("fmcback", layerUrl, topLayerItems);
-        // flamingoController.getMap().update();
+    // flamingoController.getMap().update();
 
     } else {
 
@@ -1023,13 +1023,13 @@ function refreshLayer(doRefreshOrder) {
                 localLayerItems = new Array();
                 localLayerItems.push(item);
                 addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);                
-                //flamingoController.getMap().update();
+            //flamingoController.getMap().update();
             }
             var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,i);
             if (i != oldOrderIndex){
                 doRefreshOrder=true;
             }
-       }
+        }
         // toevoegen voorgrond layers
         var backgroundCount=backgroundLayerItems.length;
         if (backgroundCount==undefined){
@@ -1049,7 +1049,7 @@ function refreshLayer(doRefreshOrder) {
                 }
             }
         }
-        var boe=flamingoController.getMap().getLayers();
+        
     }
 
     if (local_refresh_handle != refresh_timeout_handle) {
@@ -1084,9 +1084,25 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     var theLayers="";
     var queryLayers="";
     var maptipLayers="";
+    var smallestMinscale = null;
+    var largestMaxscale = null;
+
     // last in list will be on top in map
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
+
+        if (item.scalehintmin != null && item.scalehintmin > 0) {
+            if (smallestMinscale == null || item.scalehintmin < smallestMinscale) {
+                smallestMinscale = item.scalehintmin;
+            }
+        }
+
+        if (item.scalehintmax != null && item.scalehintmax > 0) {
+            if (largestMaxscale == null || item.scalehintmax > largestMaxscale) {
+                largestMaxscale = item.scalehintmax;
+            }
+        }
+
         if (item.wmslayers){
             if (theLayers.length>0) {
                 theLayers+=",";
@@ -1109,14 +1125,39 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
                 aka=aka.substring(aka.indexOf("_")+1);
             }
+
             newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
+    }
+
+    /* TODO
+     * Lijkt erop alsof er nog iets misgaat in Flamingo bij
+     * layers waarbij er wel een scalehint wordt ingevuld
+     * maar in de viewer nog buiten de scale vallen. De layer
+     * wordt dan niet getoond en er gebeurt ook geen request echter
+     * komt flamingo wel met een laadbalk
+    */
+
+    /* 321 is extend limburg, 24 is ver ingezoomed */
+    if (smallestMinscale != null) {       
+        newLayer.setMinScale(smallestMinscale);
+        //newLayer.setMinScale(0);
+    }
+
+    if (largestMaxscale != null) {       
+        newLayer.setMaxScale(largestMaxscale);
+        //newLayer.setMaxScale(325);
     }
 
     newLayer.setLayers(theLayers);
     newLayer.setQuerylayers(queryLayers);
     newLayer.setMaptiplayers(maptipLayers);
+
+    alert(newLayer.toXml("fmc"));
+
     flamingoController.getMap().addLayer(newLayer, false, true, false);
+
+
 }
 
 function loadObjectInfo(geom) {
@@ -1878,7 +1919,7 @@ function flamingo_b_buffer_onEvent(id, event) {
 }
 
 function drawFeature(themaId, attrName, attrVal) {
-//    alert(themaId+" , "+attrName+" , "+attrVal);
+    //    alert(themaId+" , "+attrName+" , "+attrVal);
     JMapData.getWkt(themaId, attrName, attrVal, drawWkt);
 }
 

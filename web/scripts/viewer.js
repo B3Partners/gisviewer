@@ -950,13 +950,6 @@ function refreshLayer(doRefreshOrder) {
         layerUrl+="SERVICE=WMS";
     }
 
-var layerGrouping;
-layerGrouping = "lg_cluster";
-//"lg_forebackground"
-//"lg_layer"
-//"lg_cluster"
-//"lg_all"
-
     var topLayerItems= new Array();
     var backgroundLayerItems= new Array();
     var item;

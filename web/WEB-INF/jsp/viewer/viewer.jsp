@@ -231,9 +231,9 @@
         showNeedleTool = false;
     }
 
-    var seperateIntoBackgroundAndNormalLayers = catchEmpty(${configMap["seperateIntoBackgroundAndNormalLayers"]});
-    if (typeof seperateIntoBackgroundAndNormalLayers === 'undefined') {
-        seperateIntoBackgroundAndNormalLayers = false;
+    var layerGrouping = catchEmpty("${configMap["layerGrouping"]}");
+     if(typeof layerGrouping === 'undefined' || !layerGrouping) {
+        layerGrouping = "lg_forebackground";
     }
 </script>
 <!--[if lte IE 6]>
@@ -400,7 +400,7 @@
     <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 
 </div>
-
+        
 <script type="text/javascript">
     if(!usePopup) {
         document.write('<div class="infobalk" id="informatiebalk" style="display: none;">'

@@ -928,13 +928,14 @@ function doRefreshLayer() {
     refreshLayer();
     refreshLegendBox();
 }
+
 function refreshLayer(doRefreshOrder) {
     if (doRefreshOrder == undefined) {
         doRefreshOrder = false;
     }
 
     var local_refresh_handle = refresh_timeout_handle;
- 
+
     if (layerUrl==undefined || layerUrl==null) {
         hideLoading();
         return;
@@ -948,6 +949,13 @@ function refreshLayer(doRefreshOrder) {
         }
         layerUrl+="SERVICE=WMS";
     }
+
+var layerGrouping;
+layerGrouping = "lg_cluster";
+//"lg_forebackground"
+//"lg_layer"
+//"lg_cluster"
+//"lg_all"
 
     var topLayerItems= new Array();
     var backgroundLayerItems= new Array();
@@ -971,85 +979,88 @@ function refreshLayer(doRefreshOrder) {
         }
     }
 
-    // Lagen opsplitsen in alleen alle achtergrondlagen en alle voorgrondlagen
-    // in 2 addlayers of alles apart adden
-    if (seperateIntoBackgroundAndNormalLayers) {
-
-        flamingoController.getMap().removeAllLayers(false);
-        addLayerToFlamingo("fmctop", layerUrl, backgroundLayerItems);
-        // flamingoController.getMap().update();
-        addLayerToFlamingo("fmcback", layerUrl, topLayerItems);
-    // flamingoController.getMap().update();
-
-    } else {
-
-        // verwijderen ontbrekende layers
-        var shownLayers=flamingoController.getMap().getLayers();
-        var removedLayers = new Array();
-        for (var j=0; j < shownLayers.length; j++){
-            var lid = shownLayers[j].getId();
-            var found = false;
-            for (i=0; i<backgroundLayerItems.length && found==false; i++){
-                item = backgroundLayerItems[i];
-                if (lid == "fmc" + item.id) {
-                    found = true;
-                    break;
-                }
-            }
-            for (i=0; i<topLayerItems.length && found==false; i++){
-                item = topLayerItems[i];
-                if (lid == "fmc" + item.id) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                removedLayers.push(lid);
-            }
-        }
-        for (var k=0; k < removedLayers.length; k++){
-            flamingoController.getMap().removeLayerById(removedLayers[k], false);
-        }
-        /*
-        if (removedLayers.length > 0)
-            flamingoController.getMap().update();
-*/
-        // toevoegen achtergrond layers
-        var localLayerItems;
-        for (i=0; i<backgroundLayerItems.length; i++){
-            item = backgroundLayerItems[i];
-            var layerId="fmc" + item.id;
-            if (flamingoController.getMap().getLayer(layerId)==null){
-                localLayerItems = new Array();
-                localLayerItems.push(item);
-                addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);                
-            //flamingoController.getMap().update();
-            }
-            var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,i);
-            if (i != oldOrderIndex){
-                doRefreshOrder=true;
-            }
-        }
-        // toevoegen voorgrond layers
-        var backgroundCount=backgroundLayerItems.length;
-        if (backgroundCount==undefined){
-            backgroundCount=0;
-        }
-        for (i=0; i<topLayerItems.length; i++){
-            item = topLayerItems[i];
-            var layerId="fmc" + item.id;
-            if (flamingoController.getMap().getLayer(layerId)==null){
-                localLayerItems = new Array();
-                localLayerItems.push(item);
-                addLayerToFlamingo("fmc" + item.id, layerUrl, localLayerItems);
+    var orderedLayerItems = new Array();
+    orderedLayerItems = orderedLayerItems.concat(backgroundLayerItems);
+    orderedLayerItems = orderedLayerItems.concat(topLayerItems);
+    var layerGroups = new Array();
+    var layerGroup;
+    var lastGroupName = "";
+    var localGroupName = "";
+    for (var i=0; i<orderedLayerItems.length; i++){
+        item = orderedLayerItems[i];
+        if (layerGrouping == "lg_layer") {
+            localGroupName = "fmc" + item.id;
+        } else if (layerGrouping == "lg_cluster") {
+            localGroupName = "fmc" + item.clusterid;
+        } else if (layerGrouping == "lg_forebackground") {
+            if (item.background){
+                localGroupName = "fmcback";
             }else{
-                var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,backgroundCount+i);
-                if (backgroundCount+i !=oldOrderIndex ){
-                    doRefreshOrder=true;
+                localGroupName = "fmctop";
+            }
+        } else {
+            localGroupName = "fmcall";
+        }
+        if (lastGroupName == "" || localGroupName != lastGroupName) {
+            layerGroup = new Array();
+            if (layerGrouping == "lg_cluster") {
+                layerGroup.push(localGroupName + "_" + item.id);
+            } else {
+                layerGroup.push(localGroupName);
+            }
+            layerGroups.push(layerGroup);
+
+        }
+        layerGroup.push(item);
+        lastGroupName = localGroupName;
+    }
+
+    // verwijderen ontbrekende layers
+    var shownLayers=flamingoController.getMap().getLayers();
+    var removedLayers = new Array();
+    for (var j=0; j < shownLayers.length; j++){
+        var lid = shownLayers[j].getId();
+        var ls = shownLayers[j].getLayers();
+        var found = false;
+        for (i=0; i<layerGroups.length && found==false; i++){
+            layerGroup = layerGroups[i];
+            if (lid == layerGroup[0]) {
+                // controleren of laagvolgorde hetzelfde is
+                var lsreq = "";
+                for (var k=1; k < layerGroup.length; k++){
+                    item = layerGroup[k];
+                    if (lsreq.length>0) {
+                        lsreq+=",";
+                    }
+                    lsreq+=item.wmslayers;
+                }
+                if (ls == lsreq) {
+                    found = true;
+                    break;
                 }
             }
         }
-        
+        if (!found) {
+            removedLayers.push(lid);
+        }
+    }
+    for (var k=0; k < removedLayers.length; k++){
+        flamingoController.getMap().removeLayerById(removedLayers[k], false);
+    }
+
+    // toevoegen lagen
+    for (i=0; i<layerGroups.length; i++){
+        layerGroup = layerGroups[i];
+        var layerId = layerGroup[0];
+        if (flamingoController.getMap().getLayer(layerId)==null){
+            layerGroup.splice(0,1);
+            addLayerToFlamingo(layerId, layerUrl, layerGroup);
+//            alert("layerId new: " + layerId);
+        }
+        var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,i);
+        if (i != oldOrderIndex){
+            doRefreshOrder=true;
+        }
     }
 
     if (local_refresh_handle != refresh_timeout_handle) {
@@ -1061,7 +1072,7 @@ function refreshLayer(doRefreshOrder) {
     if (doRefreshOrder) {
         flamingoController.getMap().refreshLayerOrder();
     }
-    
+
     hideLoading();
 }
 
@@ -1130,33 +1141,23 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         }
     }
 
-    /* TODO
-     * Lijkt erop alsof er nog iets misgaat in Flamingo bij
-     * layers waarbij er wel een scalehint wordt ingevuld
-     * maar in de viewer nog buiten de scale vallen. De layer
-     * wordt dan niet getoond en er gebeurt ook geen request echter
-     * komt flamingo wel met een laadbalk
-    */
-
-    /* 321 is extend limburg, 24 is ver ingezoomed */
     if (smallestMinscale != null) {       
         newLayer.setMinScale(smallestMinscale);
-        //newLayer.setMinScale(0);
     }
 
     if (largestMaxscale != null) {       
         newLayer.setMaxScale(largestMaxscale);
-        //newLayer.setMaxScale(325);
     }
 
     newLayer.setLayers(theLayers);
     newLayer.setQuerylayers(queryLayers);
     newLayer.setMaptiplayers(maptipLayers);
 
+    //alert(newLayer.toXml("fmc"));
+
     flamingoController.getMap().addLayer(newLayer, false, true, false);
-    
-    // alert(newLayer.toXml("fmc"));
-    //setTimeout(function(){flamingoController.getMap().addLayer(newLayer, false, true, false);}, 250);
+
+
 }
 
 function loadObjectInfo(geom) {
@@ -2070,6 +2071,17 @@ function checkDisplayButtons() {
     op het scherm mogelijk maakt */
     if (showRedliningTools || showNeedleTool)
         flamingo.callMethod("b_removePolygons", "setVisible", true);
+}
+
+function dispatchEventJS(event, comp) {
+    
+    if (event=="onGetCapabilities") {
+        hideLoading();
+    }
+
+    if (event=="onConfigComplete") {
+        checkDisplayButtons();
+    }
 }
 
 /* build popup functions */

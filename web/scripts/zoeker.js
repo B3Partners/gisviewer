@@ -25,7 +25,10 @@ var planEigenaarId = planIds[0];
 var planId = planIds[1];
 
 /*Hier begint het zoeken:*/
-JZoeker.zoek(new Array(planEigenaarId),"*",maxResults,handleGetEigenaar);
+
+if (planEigenaarId != null && planEigenaarId > 0 && planId !=null && planId > 0) {
+    JZoeker.zoek(new Array(planEigenaarId),"*",maxResults,handleGetEigenaar);
+}
 
 function handleGetEigenaar(list){
     eigenaarSelect.disabled=false;

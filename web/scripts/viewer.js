@@ -1153,11 +1153,10 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     newLayer.setQuerylayers(queryLayers);
     newLayer.setMaptiplayers(maptipLayers);
 
-    alert(newLayer.toXml("fmc"));
-
     flamingoController.getMap().addLayer(newLayer, false, true, false);
-
-
+    
+    // alert(newLayer.toXml("fmc"));
+    //setTimeout(function(){flamingoController.getMap().addLayer(newLayer, false, true, false);}, 250);
 }
 
 function loadObjectInfo(geom) {
@@ -2071,17 +2070,6 @@ function checkDisplayButtons() {
     op het scherm mogelijk maakt */
     if (showRedliningTools || showNeedleTool)
         flamingo.callMethod("b_removePolygons", "setVisible", true);
-}
-
-function dispatchEventJS(event, comp) {
-    
-    if (event=="onGetCapabilities") {
-        hideLoading();
-    }
-
-    if (event=="onConfigComplete") {
-        checkDisplayButtons();
-    }
 }
 
 /* build popup functions */

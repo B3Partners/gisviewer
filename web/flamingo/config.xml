@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc"
-allowExternalInterface="toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,
-map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent"
-id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p Gisviewer" useexternalinterface="true">
-    <style id=".tooltip" font-family="arial, sans-serif" font-size="11" color="#880000" display="block"/>
+<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+    <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
-    
     <fmc:MonitorMap id="monitorl" left="25%" top="10%" width="35%" listento="map1">
         <string id="waiting"  en="Making... [layer] [percentage]%..." nl="Kaart aan het maken..."/>
         <string id="loading"  en="Making... [layer] [percentage]%..." nl="Kaart aan het laden. [percentage]%"/>
@@ -33,6 +29,8 @@ id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p G
             <fmc:ButtonPrev id="toolPrevExtent" left="180" listento="map1" skin="f2" />
             <fmc:ButtonNext id="toolNextExtent" left="210" listento="map1" skin="f2" />
 
+            <fmc:ZoomerV listento="map1" left="30" top="75" height="150" skin="f2"/>
+
             <!-- stukje knoppen voor redlining/ editing -->
             <fmc:Container id="redLiningContainer" visible="false">
                 <!-- fmc:EditInfoPanel id="editInfoPanel" left="0%" top="50" listento="editMap" nrdigits="2"/ -->
@@ -55,7 +53,7 @@ id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p G
 
                 <fmc:JsButton id="b_removePolygons" left="410" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/remove_polygon.png" iconurl_over="flamingo/assets/jsbtn/remove_polygon_over.png" iconurl_sel="flamingo/assets/jsbtn/remove_polygon_down.png" iconurl_dis="flamingo/assets/jsbtn/remove_polygon.png" label="" toggle="false" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="remove polygon" nl="verwijder het tekenobject"/>
-                </fmc:JsButton>              
+                </fmc:JsButton>
             </fmc:Container>
 
         </fmc:ToolGroup>
@@ -64,9 +62,9 @@ id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p G
             <string id="xy" nl="X: [x]     Y: [y]" />
         </fmc:Coordinates>
     </fmc:Container>
-    
+
     <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">
-        <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>        
+        <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>
 
         <!-- het 'canvas' waar op getekend kan worden-->
         <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
@@ -86,7 +84,7 @@ id="flamingo" lang="nl" languages="nl,en" tooltipdelay="300" preloadtitle="B3p G
             <!--
             <fmc:LayerImage id="Limburg_achtergrond" imageurl="assets/limburg/limburg_achtergrond.png" extent="-11920,221334,398981,506050" minscale="250" maxscale="500"/>
             <fmc:LayerImage id="Limburg_achtergrond1" imageurl="assets/limburg/limburg_achtergrond1.png" extent="62089,257649,325039,469667" minscale="100" maxscale="250"/>
-            <fmc:LayerImage id="Limburg_achtergrond2" imageurl="assets/limburg/limburg_achtergrond2.png" extent="118739,290740,268450,436514" minscale="15" maxscale="100"/>         
+            <fmc:LayerImage id="Limburg_achtergrond2" imageurl="assets/limburg/limburg_achtergrond2.png" extent="118739,290740,268450,436514" minscale="15" maxscale="100"/>
             -->
         </fmc:Map>
     </fmc:Container>

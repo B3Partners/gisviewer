@@ -10,14 +10,14 @@ body {
 }
 
 #header_content {
-    background-image: url(/gisviewer/images/limburg/bovenbalk.gif);
+    background-image: url(../images/limburg/bovenbalk.gif);
     background-repeat: no-repeat;
     background-color: #9E3A56;
     height: 70px;
 }
 
 .viewerbodyelement #header {
-    background-image: url(/gisviewer/images/limburg/bovenbalk_links.gif);
+    background-image: url(../images/limburg/bovenbalk_links.gif);
     background-repeat: no-repeat;
     background-position: left;
     background-color: #9E3A56;
@@ -28,7 +28,7 @@ body {
     left: 0px;
     margin-left: 0px;
     background-position: right;
-    background-image: url(/gisviewer/images/limburg/bovenbalk_rechts.gif);
+    background-image: url(../images/limburg/bovenbalk_rechts.gif);
     background-repeat: no-repeat;
     background-color: transparent;
 }
@@ -69,7 +69,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 
 .infobalk {
     background-color: #76B6D1;
-    background-image: url(/gisviewer/images/limburg/balk_links_175.gif);
+    background-image: url(../images/limburg/balk_links_175.gif);
     background-repeat: no-repeat;
     background-position: 0% 0%;
 }
@@ -122,7 +122,7 @@ ul#nav li.activelink a,ul#nav li.activelink a:hover {
 }
 
 #footer_content {
-    background-image: url(/gisviewer/images/limburg/onderbalk.gif);
+    background-image: url(../images/limburg/onderbalk.gif);
     background-repeat: no-repeat;
 }
 
@@ -304,7 +304,7 @@ a:hover{
 }
 
 .topRow {
-    background-image: url(/gisviewer/images/patroon_kaartenbalie.gif);
+    background-image: url(../images/patroon_kaartenbalie.gif);
     background-repeat: repeat;
 }
 
@@ -399,7 +399,7 @@ a:hover{
 
 /*
 .tabvak_body {
-    background-image: url(/gisviewer/images/tabvak_bg.gif);
+    background-image: url(../images/tabvak_bg.gif);
     background-color: #19619B;
     background-repeat: repeat-x;
     background-attachment: fixed;
@@ -532,53 +532,53 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
         background-color: #76B6D1;
 }
 table.tablesorter thead tr .header {
-	background-image: url(/gisviewer/images/icons/bg.gif);
+	background-image: url(../images/icons/bg.gif);
 }
 table.tablesorter thead tr .headerSortUp {
-	background-image: url(/gisviewer/images/icons/asc.gif);
+	background-image: url(../images/icons/asc.gif);
 }
 table.tablesorter thead tr .headerSortDown {
-	background-image: url(/gisviewer/images/icons/desc.gif);
+	background-image: url(../images/icons/desc.gif);
 }
 
 /* Panel controls */
 #panelControls .left_closed, #panelControls .right_open {
-    background-image: url(/gisviewer/images/icons/panel_leftright.png);
+    background-image: url(../images/icons/panel_leftright.png);
     background-position: 0px 20px;
 }
 
 #panelControls .left_closed:hover, #panelControls .right_open:hover {
-    background-image: url(/gisviewer/images/icons/panel_leftright.png);
+    background-image: url(../images/icons/panel_leftright.png);
     background-position: 20px 20px;
 }
 
 #panelControls .right_closed, #panelControls .left_open {
-    background-image: url(/gisviewer/images/icons/panel_leftright.png);
+    background-image: url(../images/icons/panel_leftright.png);
     background-position: 0px 0px;
 }
 
 #panelControls .right_closed:hover, #panelControls .left_open:hover {
-    background-image: url(/gisviewer/images/icons/panel_leftright.png);
+    background-image: url(../images/icons/panel_leftright.png);
     background-position: 20px 0px;
 }
 
 #panelControls .bottom_closed {
-    background-image: url(/gisviewer/images/icons/panel_updown.png);
+    background-image: url(../images/icons/panel_updown.png);
     background-position: 20px 0px;
 }
 
 #panelControls .bottom_closed:hover {
-    background-image: url(/gisviewer/images/icons/panel_updown.png);
+    background-image: url(../images/icons/panel_updown.png);
     background-position: 20px 20px;
 }
 
 #panelControls .bottom_open {
-    background-image: url(/gisviewer/images/icons/panel_updown.png);
+    background-image: url(../images/icons/panel_updown.png);
     background-position: 0px 0px;
 }
 
 #panelControls .bottom_open:hover {
-    background-image: url(/gisviewer/images/icons/panel_updown.png);
+    background-image: url(../images/icons/panel_updown.png);
     background-position: 0px 20px;
 }
 

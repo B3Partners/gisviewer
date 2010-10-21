@@ -2043,32 +2043,43 @@ function returnHighlight(wkt) {
 }
 
 function checkDisplayButtons() {
-
-    if (showRedliningTools)
+    if (showRedliningTools) {
         flamingo.callMethod("redLiningContainer", "setVisible", true);
+    } else {
+        flamingo.callMethod("redLiningContainer", "setVisible", false);
+    }
 
-    if (showBufferTool)       
+    if (showBufferTool) {
         flamingo.callMethod("b_buffer", "setVisible", true);
-
-    if (showSelectBulkTool)
+    } else {
+        flamingo.callMethod("b_buffer", "setVisible", false);
+    }
+        
+    if (showSelectBulkTool) {
         flamingo.callMethod("b_getfeatures", "setVisible", true);
+    } else {
+        flamingo.callMethod("b_getfeatures", "setVisible", false);
+    }
 
-    if (showNeedleTool)
+    if (showNeedleTool) {
         flamingo.callMethod("b_highlight", "setVisible", true);
+    } else {
+        flamingo.callMethod("b_highlight", "setVisible", false);
+    }
 
-    /* verwijder polygoon alleen tonen als er een tool is die polygoon
-    op het scherm mogelijk maakt */
-    if (showRedliningTools || showNeedleTool)
+    if (showRedliningTools || showNeedleTool) {
         flamingo.callMethod("b_removePolygons", "setVisible", true);
+    } else {
+        flamingo.callMethod("b_removePolygons", "setVisible", false);
+    }
 }
 
-function dispatchEventJS(event, comp) {
-    
+function dispatchEventJS(event, comp) {    
     if (event=="onGetCapabilities") {
         hideLoading();
     }
 
-    if (event=="onConfigComplete") {
+    if (event=="onUpdateComplete") {
         checkDisplayButtons();
     }
 }

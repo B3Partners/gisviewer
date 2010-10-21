@@ -33,8 +33,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <meta http-equiv="Cache-Control" content="max-age=0, no-store">
 
         <title>B3P GIS Viewer</title>
-        <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
-        <link href="styles/gisviewer_design.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_basisimport.css" rel="stylesheet" type="text/css">
     </head>
     <body class="tabvak_body">
         <div class="tabvak_content">

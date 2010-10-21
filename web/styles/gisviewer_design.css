@@ -238,49 +238,8 @@ a:hover{
     padding-left: 18px;
 }
 
-/* Config styles */
-#content_style .config_tab {
-    border: 1px solid #1C6CA7;
-}
-
-#content_style .config_tab_header {
-    border: 1px solid #1C6CA7;
-    color: #1C6CA7;
-    background-color: White;
-    border-bottom: 0px none;
-}
-
-#content_style .active_tab {
-    background-color: #1C6CA7;
-    color: White;
-}
-
-#adminqueryrow {
-    color: #196299;
-}
-
 .messages {
     color: #000000;
-}
-
-.maintable {
-    background-color: #FFF;
-}
-
-.helptekstDiv {
-    background-color: #eeeeee;
-    color: #19619b;
-    border: 1px solid #19619b;
-}
-
-.topbar {
-    background-color: #FFD96B;
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 11px;
-    font-weight: bold;
-    color: #1C6CA7;
-    border-top: solid 1px #1C6CA7;
-    border-left: solid 1px #1C6CA7;
 }
 
 .topRow {
@@ -352,43 +311,6 @@ a:hover{
 .scroll {
     border: solid 1px #1C6CA7;
 }
-
-.regel_odd {
-    background-color: #FFF;
-}
-
-.regel_even {
-    background-color: #EEE;
-}
-
-.regel_over {
-    background-color: #DEDEDE;
-}
-
-.regel_selected, #regel_selected {
-    background-color: #FFEEBE;
-}
-
-.bar_item {
-    border-right: solid 1px #1C6CA7;
-}
-
-.c_item {
-    border-right: solid 1px #1C6CA7;
-}
-
-/*
-.tabvak_body {
-    background-image: url(../images/tabvak_bg.gif);
-    background-color: #19619B;
-    background-repeat: repeat-x;
-    background-attachment: fixed;
-    padding-left: 6px;
-    padding-top: 6px;
-    color: white;
-}
-*/
-
 
 .tabvak_body, .tabvak_body div {
     background-color: transparent;
@@ -480,45 +402,6 @@ body.pdfExportClass {
 
 .createmappdftd {
     border: 1px solid #000;
-}
-
-table.tablesorter {
-	background-color: #CDCDCD;
-}
-table.tablesorter tbody td {
-	color: #3D3D3D;
-}
-table.tablesorter tbody tr.odd td {
-	background-color: #F0F0F6;
-}
-table.tablesorter tbody tr.hover td {
-	background-color: #DEDEDE;
-        cursor: pointer;
-}
-table.tablesorter tbody tr.selected td {
-	background-color: #FFEEBE;
-        cursor: pointer;
-}
-table.tablesorter tbody td a {
-    color: #196299;
-}
-
-/* Belangrijkste kleuren (blauw) en sorteerpijltjes */
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6EEEE;
-        border: 1px solid #FFF;
-}
-table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
-        background-color: #8dbdd8;
-}
-table.tablesorter thead tr .header {
-	background-image: url(../images/icons/bg.gif);
-}
-table.tablesorter thead tr .headerSortUp {
-	background-image: url(../images/icons/asc.gif);
-}
-table.tablesorter thead tr .headerSortDown {
-	background-image: url(../images/icons/desc.gif);
 }
 
 /* Panel controls */

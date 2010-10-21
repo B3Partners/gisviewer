@@ -34,11 +34,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <meta http-equiv=”X-UA-Compatible” content=”IE=edge” />
 
         <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
-        <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
-        <link href="styles/gisviewer_viewer.css" rel="stylesheet" type="text/css">
-        <link href="styles/niftyCorners.css" rel="stylesheet" type="text/css">
-        <link href="styles/gisviewer_design.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" type="text/css" href="styles/jquery-ui-1.7.3.custom.css"/>
+        <link href="styles/gisviewer_viewerimport.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>

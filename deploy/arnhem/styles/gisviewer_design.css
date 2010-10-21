@@ -1,129 +1,108 @@
 body {
     font-size: 8pt;
-    background: #ffffff;
-    color: #000000;
+    background: #C4DB0D;
+    color: #363636;
     font-family: arial, sans-serif;
 }
 
 #header {
-    height: 70px;
+    background-color: #002469;
 }
 
 #header_content {
-    background-image: url(../images/limburg/bovenbalk.gif);
+    background-image: url(../images/arnhem/logo.gif);
     background-repeat: no-repeat;
-    background-color: #9E3A56;
-    height: 70px;
-}
-
-.viewerbodyelement #header {
-    background-image: url(../images/limburg/bovenbalk_links.gif);
-    background-repeat: no-repeat;
-    background-position: left;
-    background-color: #9E3A56;
-}
-
-.viewerbodyelement #header_content {
-    width: 100%;
-    left: 0px;
-    margin-left: 0px;
-    background-position: right;
-    background-image: url(../images/limburg/bovenbalk_rechts.gif);
-    background-repeat: no-repeat;
-    background-color: transparent;
-}
-
-#topmenu {
-    float: left;
-    margin-top: 5px;
-    margin-left: 10px;
-}
-
-.viewerbodyelement #topmenu {
-    float: left;
-    margin-top: 53px;
-    margin-left: 500px;
 }
 
 a.menulink, a.menulink:visited, a.menulink:active, a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     display: block;
-    color: #FFFFFF;
-    float: left;
-    margin-right: 25px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 21px;
+    border-bottom: 0px none White;
+    border-left: 1px solid White;
+    border-top: 1px solid White;
+    border-right: 1px solid White;
+    color: White;
+    background-color: #E6086E;
+    float: right;
 }
 
 a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
-    
+    border-bottom: 0px none White;
+    border-left: 1px solid #E6086E;
+    border-top: 1px solid #E6086E;
+    border-right: 1px solid #E6086E;
+    background-color: White;
+    color: #E6086E;
+    margin-right: 5px;
+    float: left;
 }
 
 #content_normal {
     background-color: White;
-    background-repeat: repeat-y;
-    top: 70px;
 }
 
 #content_viewer {
     background-color: White;
-    top: 70px;
 }
 
 .infobalk {
-    background-color: #76B6D1;
-    background-image: url(../images/limburg/balk_links_175.gif);
+    background-color: #FDECF4;
+    background-image: url(../images/arnhem/balk_links.gif);
     background-repeat: no-repeat;
     background-position: 0% 0%;
 }
 
 .infobalk .infobalk_description {
-    color: #FFFFFF;
+    color: White;
     font-size: 14px;
     font-weight: bold;
-    width: 160px;
 }
 
 .infobalk .infobalk_actions {
     font-size: 8pt;
     font-weight: bold;
-    color: #7e2b42;
+    color: #002469;
 }
 
 .infobalk a {
-    color: #FFFFFF;
-    font-weight: bold;
+    color: #002469;
+        font-weight: bold;
 }
 
 ul#nav a {
-    background: #D6E9F1;
-    color: #000000;
+    background: #E6086E;
+    color: #FDECF4;
 }
 
 ul#nav a:hover {
-    background: #76B6D1;
-    color: #FFFFFF;
+    background: #FDECF4;
+    color: #E6086E;
 }
 
 ul#nav li.activelink a,ul#nav li.activelink a:hover {
-    background: #76B6D1;
-    color: #FFFFFF
+    background: #FDECF4;
+    color: #E6086E;
 }
 
 #tab_container, #leftcontent {
-    background-color: #76B6D1;
-    color: #000000;
+    background-color: #FDECF4;
+    color: #363636;
 }
 
-#tab_container div, #tab_container td, #tab_container span,
-#leftcontent div, #leftcontent td, #leftcontent span {
-    color: #000000;;
+#tab_container div, #tab_container td, #tab_container span, #tab_container hr,
+#leftcontent div, #leftcontent td, #leftcontent span,  #leftcontent hr {
+    color: #363636;
 }
 
 #footer {
-    
+    background-color: #002469;
 }
 
 #footer_content {
-    background-image: url(../images/limburg/onderbalk.gif);
-    background-repeat: no-repeat;
+    
 }
 
 #footer_content div {
@@ -144,18 +123,18 @@ th {
 
 div, td, th, span, input, textarea, select, option, button {
     font-size: 8pt;
-    color: #000000;
+    color: #363636;
     font-family: arial, sans-serif;
 }
 
 h1{
     font-weight: bold;
     font-size: 11pt;
-    color: #7e2b42;
+    color: #E6086E;
 }
 
 a, a:visited, a:active {
-    color: #000000;
+    color: #E6086E;
     font-weight: bold;
     text-decoration: none;
 }
@@ -166,12 +145,12 @@ a:hover{
 
 /* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
 #content_style, #content_style h1, #content_style h2, #content_style div, #content_style td, #content_style th, #content_style a, #content_style li {
-    color: #000000;
+    color: #363636;
 }
 
 #content_style hr {
-    color: #7e2b42;
-    background-color: #7e2b42;
+    color: #363636;
+    background-color: #363636;
     border: 0px none;
     height: 1px;
     width: 100%;
@@ -188,7 +167,7 @@ a:hover{
 }
 
 #content_style div.inleiding {
-    background-color: #D6E9F1;
+    background-color: #FDECF4;
     padding: 15px;
     font-weight: bold;
     margin-top: 5px;
@@ -220,34 +199,35 @@ a:hover{
 }
 
 #content_style img {
-    border: 1px solid #7e2b42;
+    border: 1px solid #196096;
     padding: 4px;
 }
 
 #content_style a {
     text-decoration: underline;
     font-weight: bold;
+    color: #196096;
 }
 
 #content_style a:hover {
-    color: #7e2b42;
+    text-decoration: none;
 }
 
 #content_style .presentation_table {
-    border: 1px solid #7e2b42;
+    border: 1px solid #196096;
     border-collapse: collapse;
     width: 100%;
 }
 
 #content_style .presentation_table td {
-    border: 1px solid #7e2b42;
+    border: 1px solid #196096;
     padding: 5px;
-    background-color: #FFFFFF;
+    background-color: #E7EEF4;
     width: auto;
 }
 
 #content_style .presentation_table th {
-    background-color: #7e2b42;
+    background-color: #196096;
     color: White;
     font-weight: bold;
     padding: 5px;
@@ -263,7 +243,7 @@ a:hover{
 }
 
 .topRow {
-    background-image: url(../images/patroon_kaartenbalie.gif);
+        background-image: url(../images/arnhem/patroon_kaartenbalie.gif);
     background-repeat: repeat;
 }
 
@@ -334,13 +314,13 @@ a:hover{
 
 .tabvak_body, .tabvak_body div {
     background-color: transparent;
-    color: #000000;
+    color: #363636;
 }
 
 .tabvak_content {
     margin-left: 5px;
     margin-top: 2px;
-    color: #000000;
+    color: #363636;
 }
 
 .tabvak_with_iframe, .tabvak_with_iframe iframe {
@@ -389,7 +369,7 @@ a:hover{
 }
 
 #searchConfigurationsContainer {
-    border-bottom: 1px solid White;
+    border-bottom: 1px solid #363636;
 }
 
 #popupWindow {
@@ -398,7 +378,7 @@ a:hover{
 }
 
 #popupWindow_Handle {
-    background-color: #196299;
+    background-color: #E6086E;
     color: White;
 }
 
@@ -477,7 +457,7 @@ body.pdfExportClass {
 }
 
 .admindataSmallCell a {
-    color: #000000;
+    color: #363636;
 }
 
 /* nieuwe divs voor gebruik op Home pagina Gisviewer */
@@ -490,25 +470,25 @@ body.pdfExportClass {
 
 .content_block a {
     padding-top: 5px;
-    color: #000000;
+    color: #363636;
     text-decoration: underline;
 }
 
 .content_title {
     font-size: 1.5em;
     font-weight: bold;
-    color: #000000;
+    color: #363636;
     margin-top: 15px;
     padding-bottom: 10px;
 }
 
 .inleiding_body {
-    background-color: #D6E9F1;
+    background-color: #FDECF4;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 2px;
     padding-bottom: 2px;
-    color: #000000;
+    color: #363636;
     font-weight: bold;
     min-height: 180px;
 }
@@ -526,7 +506,7 @@ body.pdfExportClass {
 
 .content_body a {
     padding-top: 5px;
-    color: #000000;
+    color: #363636;
     text-decoration: underline;
 }
 
@@ -542,7 +522,7 @@ body.pdfExportClass {
     margin-bottom: 5px;
     display: block;
     padding: 3px;
-    border: solid 1px #000000;
+    border: solid 1px #363636;
     width: 200px;
 }
 
@@ -566,7 +546,7 @@ body.pdfExportClass {
 }
 
 .uitloggen a {
-    color: #000000;
+    color: #363636;
     text-decoration: underline;
 }
 

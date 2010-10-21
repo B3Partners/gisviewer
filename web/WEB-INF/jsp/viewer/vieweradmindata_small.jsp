@@ -65,7 +65,7 @@
                                         <c:otherwise>
                                             <c:choose>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
-                                                    <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" style="cursor: pointer;" />
+                                                    <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" styleClass="cursorpointer" />
                                                 </c:when>
                                                 <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
                                                     <c:forEach var="listWaarde" items="${waarde}">
@@ -76,7 +76,7 @@
                                                     <c:choose>
                                                         <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
                                                             <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}" title="${fn:split(waarde, '###')[0]}">
-                                                                <img src="./images/icons/flag_blue.png" alt="Flag" style="border: 0px none;" />
+                                                                <img src="./images/icons/flag_blue.png" alt="Flag" class="imagenoborder" />
                                                             </a>
                                                         </c:when>
                                                         <c:otherwise>

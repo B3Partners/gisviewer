@@ -17,10 +17,9 @@
     <html:form action="/printmap" focus="title">
     <table>
         <tr>
-            <td colspan="2" style="border: 1px solid #000">
+            <td colspan="2" class="createmappdftd">
                 <div id="imageContainer">
-                    <html:img page="/printmap.do?image=t&keepAlive=true&imageId=${imageId}"
-                              styleId="mapImage" alt="Preview" styleClass="width: 474px; height: 1px;" />
+                    <html:img page="/printmap.do?image=t&keepAlive=true&imageId=${imageId}" styleId="mapImage" alt="Preview" styleClass="width: 474px; height: 1px;" />
                 </div>
                 <html:hidden property="imageId" styleId="imageId"/>
             </td>

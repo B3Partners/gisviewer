@@ -51,9 +51,9 @@
                 </c:if>
             </c:forEach>
 
-            <div class="topRow" style="margin-bottom: 0px; cursor: pointer; width: 100%; height: 20px; clear: both; font-weight: bold; background-repeat: repeat;" onclick="toggleList(${tStatus.count})" id="topRow${tStatus.count}">
+            <div class="topRow topRowHeader" onclick="toggleList(${tStatus.count})" id="topRow${tStatus.count}">
                 <div style="margin-left: 5px; margin-top: 3px;">
-                    <div style="background-color: white; padding: 0px; margin-top: 1px; height: 10px; width: 10px; border: 1px solid black; margin-right: 5px; float: left;">
+                    <div class="openclosediv">
                         <c:set var="plusmin" value="+" />
                         <c:set var="margins" value="2" />
                         <c:if test="${tStatus.count == 1}">
@@ -66,8 +66,8 @@
                     </div>
                     ${themanaam}
 
-                    <a id="ahref_data2csv${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2csv${tStatus.count}.submit()"><html:image src="./images/icons/page_white_csv.png" title="Exporteer naar csv" alt="Exporteer naar csv" /></a>
-                    <a id="ahref_data2info${tStatus.count}" style="color: #000000; margin-left: 10px; visibility: hidden;" href="#" onclick="data2info${tStatus.count}.submit()"><html:image src="./images/icons/page_white_info.png" title="Exporteer naar infobox" alt="Exporteer naar infobox" /></a>
+                    <a id="ahref_data2csv${tStatus.count}" class="toprowbuttons" href="#" onclick="data2csv${tStatus.count}.submit()"><html:image src="./images/icons/page_white_csv.png" title="Exporteer naar csv" alt="Exporteer naar csv" /></a>
+                    <a id="ahref_data2info${tStatus.count}" class="toprowbuttons" href="#" onclick="data2info${tStatus.count}.submit()"><html:image src="./images/icons/page_white_info.png" title="Exporteer naar infobox" alt="Exporteer naar infobox" /></a>
 
 
                     <form action="services/Data2CSV" name="data2csv${tStatus.count}" id="data2csv${tStatus.count}" target="_blank" method="post">
@@ -87,7 +87,7 @@
                 <c:set var="display" value="block" />
             </c:if>
 
-            <div class="topRow" style="width: 100%; clear: both; margin-bottom: 5px; border-bottom: 1px solid #EAEEF2; background-repeat: repeat-x; display: ${display};" id="fullTable${tStatus.count}">
+            <div class="topRow topHeader" style="display: ${display};" id="fullTable${tStatus.count}">
                 <table id="admindata_table${tStatus.count}" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
                     <thead>
                         <tr class="topRow" style="height: 20px;">
@@ -140,7 +140,7 @@
                             <c:if test="${counter.count < 501}">
                                 <tr class="row" onclick="colorRow(this);">
                                     <td style="width: 50px;" valign="top">
-                                        &nbsp;<html:image src="./images/icons/wand.png" onclick="editFeature('${themaId}','${adminPk}','${regel.primaryKey}');" style="cursor: pointer;" />
+                                        &nbsp;<html:image src="./images/icons/wand.png" onclick="editFeature('${themaId}','${adminPk}','${regel.primaryKey}');" styleClass="cursorpointer" />
                                         &nbsp;${counter.count}
                                     </td>
                                     <c:set var="totale_breedte_onder" value="50" />
@@ -174,19 +174,19 @@
                                                         <c:choose>
                                                             <c:when test="${thema_items[kolom.count - 1].dataType.id == 2}">
                                                                 <c:set var="refreshURL" value="${waarde}" />
-                                                                <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" style="cursor: pointer;" />
+                                                                <html:image src="./images/icons/information.png" onclick="popUp('${waarde}', 'aanvullende_info_scherm', 600, 500);" styleClass="cursorpointer" />
                                                             </c:when>
                                                             <c:when test="${thema_items[kolom.count - 1].dataType.id == 3}">
                                                                 <c:forEach var="listWaarde" items="${waarde}">
                                                                     <c:set var="refreshURL" value="${listWaarde}" />
-                                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${listWaarde}', 'externe_link', 600, 500);" style="cursor: pointer;" />
+                                                                    <html:image src="./images/icons/world_link.png" onclick="popUp('${listWaarde}', 'externe_link', 600, 500);" styleClass="cursorpointer" />
                                                                 </c:forEach>
                                                             </c:when>
                                                             <c:when test="${thema_items[kolom.count - 1].dataType.id == 4}">
                                                                 <c:choose>
                                                                     <c:when test="${fn:length(fn:split(waarde, '###')) > 1}">
                                                                         <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${fn:split(waarde, '###')[1]}" title="${fn:split(waarde, '###')[0]}">
-                                                                            <img src="./images/icons/flag_blue.png" alt="Flag" style="border: 0px none;" />
+                                                                            <img src="./images/icons/flag_blue.png" alt="Flag" class="imagenoborder" />
                                                                         </a>
                                                                     </c:when>
                                                                     <c:otherwise>

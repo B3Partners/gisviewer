@@ -475,7 +475,6 @@ function createInvisibleDiv(id) {
     div.style.width='0';
     div.height=0;
     div.width=0;
-
     div.style.display="none";
     return div;
 }
@@ -585,10 +584,9 @@ function createLabel(container, item) {
 function createTreeLegendIcon() {
     var legendicon = document.createElement("img");
     legendicon.src = imageBaseUrl + "icons/application_view_list.png";
-    legendicon.style.border = '0px none White';
     legendicon.alt = "Legenda tonen";
     legendicon.title = "Legenda tonen";
-    legendicon.className = 'treeLegendIcon';
+    legendicon.className = 'treeLegendIcon imagenoborder';
     $j(legendicon).click(function(){
         loadTreeLegendImage($j(this).siblings("div").attr("id"));
     });
@@ -604,10 +602,9 @@ function loadTreeLegendImage(divid) {
     if(found.length == 0) {
         var legendloading = document.createElement("img");
         legendloading.src = imageBaseUrl + "icons/loadingsmall.gif";
-        legendloading.style.border = '0px none White';
         legendloading.alt = "Loading";
         legendloading.title = "Loading";
-        legendloading.className = 'legendLoading';
+        legendloading.className = 'legendLoading imagenoborder';
 
         divobj.appendChild(legendloading);
     }
@@ -1316,8 +1313,7 @@ function createLegendDiv(item) {
 
     var spanEl = document.createElement("span");
     spanEl.innerHTML = ' ' + item.title + '<br />';
-    spanEl.style.color = 'Black';
-    spanEl.style.fontWeight = 'bold';
+    spanEl.className = 'orderLayerSpanClass';
 
     var div = document.createElement("div");
     div.name=id;
@@ -1355,7 +1351,7 @@ function imageOnload(){
         var legendimg = document.createElement("img");
         legendimg.src = this.src;
         legendimg.onerror=this.onerror;
-        legendimg.style.border = '0px none White';
+        legendimg.className = "imagenoborder";
         legendimg.alt = this.name;
         legendimg.title = this.name;
         var legendImage = document.getElementById(this.id);

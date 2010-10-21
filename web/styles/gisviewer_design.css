@@ -6,7 +6,7 @@ body {
 }
 
 #header {
-	background-image: url(/gisviewer/images/bovenbalk.gif);
+    background-image: url(/gisviewer/images/bovenbalk.gif);
     background-repeat: repeat-x;
 }
 
@@ -288,6 +288,24 @@ a:hover{
     background-repeat: repeat;
 }
 
+.topRow.topRowHeader {
+    font-weight: bold;
+}
+
+.topRow.topHeader {
+    border-bottom: 1px solid #EAEEF2;
+    background-repeat: repeat-x;
+}
+
+.openclosediv {
+    background-color: white;
+    border: 1px solid black;
+}
+
+.toprowbuttons {
+    color: #000000;
+}
+
 .row {
     color: Black;
     font-weight: normal;
@@ -397,6 +415,11 @@ a:hover{
     color: #175480;
 }
 
+.orderLayerSpanClass {
+    color: #000000;
+    font-weight: bold;
+}
+
 .orderLayerClass {
     background-color: White;
     color: #175480;
@@ -453,6 +476,10 @@ body.pdfExportClass {
 .createMapPDFBody{
     margin: 10px;
     overflow: visible;
+}
+
+.createmappdftd {
+    border: 1px solid #000;
 }
 
 table.tablesorter {
@@ -670,4 +697,17 @@ a.highlightlink:hover{
     color: #fff;
     font-size: 1.1em;
     margin-bottom: 5px;
+}
+
+.noflamingoerror {
+    color: Red;
+}
+
+.cursorpointer {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.imagenoborder {
+    border: 0px none;
 }

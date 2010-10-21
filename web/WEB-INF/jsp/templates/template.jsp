@@ -35,7 +35,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
         <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
         <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
-        <link href="styles/gisviewer_b3p.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_design.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/ui-lightness/jquery-ui-1.7.2.custom.css"/>
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>

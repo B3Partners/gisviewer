@@ -37,7 +37,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
         <link href="styles/gisviewer_config.css" rel="stylesheet" type="text/css">
         <link href="styles/gisviewer_tables.css" rel="stylesheet" type="text/css">
-        <link href="styles/gisviewer_b3p.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_design.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="styles/tablesorter-style.css"/>
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>

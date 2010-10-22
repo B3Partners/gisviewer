@@ -1089,23 +1089,29 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     var theLayers="";
     var queryLayers="";
     var maptipLayers="";
-    var smallestMinscale = null;
-    var largestMaxscale = null;
+    var smallestMinscale = -1;
+    var largestMaxscale = -1;
 
     // last in list will be on top in map
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
 
-        if (item.scalehintmin != null && item.scalehintmin > 0) {
-            if (smallestMinscale == null || item.scalehintmin < smallestMinscale) {
-                smallestMinscale = item.scalehintmin;
+        var minscale = Number(item.scalehintmin);
+        if (!isNaN(minscale) && smallestMinscale != 0) {
+            if (smallestMinscale == -1 || minscale < smallestMinscale) {
+                    smallestMinscale = minscale;
             }
+        } else {
+            smallestMinscale = 0;
         }
 
-        if (item.scalehintmax != null && item.scalehintmax > 0) {
-            if (largestMaxscale == null || item.scalehintmax > largestMaxscale) {
-                largestMaxscale = item.scalehintmax;
+        var maxscale = Number(item.scalehintmax);
+        if (!isNaN(maxscale) && largestMaxscale != 0) {
+            if (largestMaxscale == -1 || maxscale > largestMaxscale) {
+                    largestMaxscale = maxscale;
             }
+        } else {
+            largestMaxscale = 0;
         }
 
         if (item.wmslayers){
@@ -1135,11 +1141,11 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         }
     }
 
-    if (smallestMinscale != null) {       
+    if (smallestMinscale != null && smallestMinscale > 0) {
         newLayer.setMinScale(smallestMinscale);
     }
 
-    if (largestMaxscale != null) {       
+    if (largestMaxscale != null && largestMaxscale > 0) {
         newLayer.setMaxScale(largestMaxscale);
     }
 
@@ -1150,8 +1156,6 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     //alert(newLayer.toXml("fmc"));
 
     flamingoController.getMap().addLayer(newLayer, false, true, false);
-
-
 }
 
 function loadObjectInfo(geom) {

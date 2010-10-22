@@ -51,8 +51,8 @@
         <html:img page="/images/examples/nkn_utrecht.png" styleClass="example_image"/>
         <p>Nieuwe kaart van Nederland in de omgeving van Utrecht</p>
         <p>Inloggegevens:
-            <br>gebruikersnaam: demo
-            <br>wachtwoord: demodemo
+            <br>gebruikersnaam: utrecht
+            <br>wachtwoord: utrecht
         </p>
     </div>
 </div>
@@ -77,8 +77,8 @@
         <html:img page="/images/examples/roo_osm.png" styleClass="example_image"/>
         <p>Bestemmingsplannen van RO-Online op een achtergrond van OpenStreetMap</p>
         <p>Inloggegevens:
-            <br>gebruikersnaam: demo
-            <br>wachtwoord: demodemo
+            <br>gebruikersnaam: rodemo
+            <br>wachtwoord: rodemo
         </p>
     </div>
 </div>

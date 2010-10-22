@@ -157,15 +157,10 @@ function loadBusyJSP(handle, type) {
 }
 
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
-
-    // alert("handleGetAdminData");
-
-    //dataframepopupHandle.src='admindatabusy.do';
-
-    if (!usePopup && !useDivPopup && !usePanelControls)
+    
+    if (!usePopup && !useDivPopup && !usePanelControls) {
         return;
-
-    //showLoading();
+    }
 
     var checkedThemaIds;
     if (!multipleActiveThemas){
@@ -173,8 +168,8 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     } else {
         checkedThemaIds = getLayerIdsAsString();
     }
-    if(checkedThemaIds == null || checkedThemaIds == '') {
-        
+
+    if (checkedThemaIds == null || checkedThemaIds == '') {
         hideLoading();
         return;
     }
@@ -204,11 +199,11 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
     document.forms[0].tolerance.value=tolerance;
 
-    if (highlightThemaId != null)
+    if (highlightThemaId != null) {
         document.forms[0].themaid.value = highlightThemaId;
+    }
 
     if (usePopup) {
-
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) {
 
@@ -1568,7 +1563,7 @@ function flamingo_map1_onIdentify(movie,extend){
     
     if (btn_highLightSelected) {
         flamingo.call("toolGroup", "setTool", "breinaald");
-
+        
         highLightThemaObject(geom);
     } else {
         btn_highLightSelected = false;
@@ -1957,15 +1952,6 @@ function flamingo_b_highlight_onEvent(id, event) {
     {
         btn_highLightSelected = true;
         flamingo.call("toolGroup", "setTool", "breinaald");
-
-    /*
-        if (!event["selected"]) {
-            flamingo.callMethod("editMap", 'removeAllFeatures');
-            btn_highLightSelected = false;
-            flamingo.call("toolGroup", "setTool", "identify");
-        } else {
-            
-        }*/
     }
 }
 
@@ -1974,8 +1960,7 @@ var highLightGeom = null;
 
 var analyseThemas = new Array();
 
-function highLightThemaObject(geom) {
-    
+function highLightThemaObject(geom) {    
     analyseThemas = new Array();
 
     /* geom bewaren voor callbaack van popup */
@@ -1996,8 +1981,9 @@ function highLightThemaObject(geom) {
                 continue;
         }
 
-        if (item.analyse == 'on' || item.analyse=="active")
+        if (item.analyse == 'on' || item.analyse=="active") {
             analyseThemas.push(item);
+        }
     }
 
     if (analyseThemas.length > 1) {
@@ -2031,8 +2017,7 @@ function handlePopupValue(value) {
 }
 
 /* backend heeft wkt teruggegeven */
-function returnHighlight(wkt) {
-
+function returnHighlight(wkt) {    
     if (wkt.length > 0)
     {        
         var polyObject = new Object();

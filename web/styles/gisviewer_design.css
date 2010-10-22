@@ -169,10 +169,11 @@ a:hover{
 
 #content_style div.inleiding {
     background-color: #FFF0C5;
-    padding: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
     font-weight: bold;
-    margin-top: 5px;
-    margin-bottom: 5px;
     width: 440px;
     margin-left: -15px;
 }

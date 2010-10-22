@@ -195,15 +195,6 @@
 
     var enabledtabs = [${configMap["tabs"]}];
 
-    var tempWkt = "";
-    function getWkt() {
-        tempWkt= getWktActiveFeature();
-        alert(tempWkt);
-    }
-    function setWkt() {
-        drawWkt(tempWkt);
-    }
-
     /* planselectie gebruikt 2 zoekingangen (id's) */
     var planSelectieIds = catchEmpty(${configMap["planSelectieIds"]});
     if(typeof planSelectieIds === 'undefined' || !planSelectieIds) {
@@ -403,11 +394,11 @@
         
 <script type="text/javascript">
     if(!usePopup) {
-        document.write('<div class="infobalk" id="informatiebalk" style="display: none;">'
+        document.write('<div class="infobalk" id="informatiebalk" style="display: block;">'
             +'     <div class="infobalk_description">INFORMATIE</div>'
             +'     <div class="infobalk_actions">&nbsp;</div>'
             +' </div>'
-            +' <div id="dataframediv" class="dataframediv" style="display: none;">'
+            +' <div id="dataframediv" class="dataframediv" style="display: block;">'
             +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
             +' </div>');
     }
@@ -429,7 +420,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
-    var dataframehoogte = 0;
+    var dataframehoogte = 150;
     if(usePopup) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
@@ -471,7 +462,7 @@
             switchTab(document.getElementById("${activeTab}"));
         }
     </c:if>
-    var panelBelowCollapsed = true;
+    var panelBelowCollapsed = false;
     var panelLeftCollapsed = true;
     var panelRightCollapsed = false;
     function panelResize(dir)

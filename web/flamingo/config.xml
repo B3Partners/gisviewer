@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1_fmcback.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" allowExternalInterface=".onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>

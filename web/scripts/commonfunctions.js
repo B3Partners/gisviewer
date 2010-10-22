@@ -162,6 +162,10 @@ function hideLoading() {
         $j('#loadingDiv').hide();
 }
 
+function adjustLoadingCounter(adjustment) {
+    loadingDivCounter+=adjustment;
+}
+
 function removeLoading() {
     $j('#loadingDiv').hide();
     loadingDivCounter = 0;

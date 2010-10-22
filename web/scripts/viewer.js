@@ -917,6 +917,7 @@ function refreshLayerWithDelay() {
 
     if(refresh_timeout_handle) { 
         clearTimeout(refresh_timeout_handle);
+        hideLoading();
     } 
     refresh_timeout_handle = setTimeout("doRefreshLayer();", refreshDelay);
 } 
@@ -927,11 +928,11 @@ function doRefreshLayer() {
 }
 
 function refreshLayer(doRefreshOrder) {
+    var local_refresh_handle = refresh_timeout_handle;
+
     if (doRefreshOrder == undefined) {
         doRefreshOrder = false;
     }
-
-    var local_refresh_handle = refresh_timeout_handle;
 
     if (layerUrl==undefined || layerUrl==null) {
         hideLoading();
@@ -1045,7 +1046,6 @@ function refreshLayer(doRefreshOrder) {
         if (flamingoController.getMap().getLayer(layerId)==null){
             layerGroup.splice(0,1);
             addLayerToFlamingo(layerId, layerUrl, layerGroup);
-//            alert("layerId new: " + layerId);
         }
         var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,i);
         if (i != oldOrderIndex){
@@ -1053,17 +1053,19 @@ function refreshLayer(doRefreshOrder) {
         }
     }
 
+    hideLoading();
+
     if (local_refresh_handle != refresh_timeout_handle) {
         // check of dit een goed idee is
         // alleen refresh als er intussen geen nieuwe timeout gezet is
-        hideLoading();
         return;
+    } else {
+        refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
         flamingoController.getMap().refreshLayerOrder();
     }
 
-    hideLoading();
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {

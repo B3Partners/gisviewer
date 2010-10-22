@@ -2079,7 +2079,7 @@ function dispatchEventJS(event, comp) {
         hideLoading();
     }
 
-    if (event=="onUpdateComplete") {
+    if (event=="onConfigComplete") {
         checkDisplayButtons();
     }
 }

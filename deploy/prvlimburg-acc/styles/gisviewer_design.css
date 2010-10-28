@@ -384,8 +384,8 @@ a:hover{
 }
 
 .treeLegendClass {
-    border: 1px solid Black;
-    background-color: white;
+    border: 0px none;
+    background-color: transparent;
     color: Black;
 }
 

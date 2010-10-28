@@ -500,7 +500,7 @@ function createLabel(container, item) {
             if(clusterPos!=0) {
                 checkboxChecked = true;
             }
-            var checkbox = createCheckboxCluster(item, checkboxChecked );
+            var checkbox = createCheckboxCluster(item, checkboxChecked);
 
             checkbox.theItem=item;
             container.appendChild(checkbox);
@@ -582,6 +582,20 @@ function createLabel(container, item) {
     }
 }
 
+function disableLayer(itemid) {
+    var $item = $j("#layermaindiv_item_" + itemid);
+    $item.addClass("layerdisabled");
+    $item.find("input").attr("disabled", "disabled");
+    $item.find(".treeLegendIcon").addClass("disabledLegendIcon");
+}
+
+function enableLayer(itemid) {
+    var $item = $j("#layermaindiv_item_" + itemid);
+    $item.removeClass("layerdisabled");
+    $item.find("input").removeAttr("disabled");
+    $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");
+}
+
 // var legendimg = null;
 function createTreeLegendIcon() {
     var legendicon = document.createElement("img");
@@ -590,7 +604,7 @@ function createTreeLegendIcon() {
     legendicon.title = "Legenda tonen";
     legendicon.className = 'treeLegendIcon imagenoborder';
     $j(legendicon).click(function(){
-        loadTreeLegendImage($j(this).siblings("div").attr("id"));
+        if(!$j(this).hasClass("disabledLegendIcon")) loadTreeLegendImage($j(this).siblings("div").attr("id"));
     });
     return legendicon;
 }
@@ -2245,6 +2259,13 @@ buildPopup = function() {
     var popupWindowBackground = document.createElement('div');
     popupWindowBackground.styleClass = 'popupWindow_Windowbackground';
     popupWindowBackground.id = 'popupWindow_Windowbackground';
+
+    $j(popupDiv).css({
+        "height": popupHeight,
+        "width": popupWidth,
+        "left": popupLeft,
+        "top": popupTop
+    })
 
     document.body.appendChild(popupDiv);
     document.body.appendChild(popupWindowBackground);

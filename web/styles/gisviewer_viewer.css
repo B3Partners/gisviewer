@@ -32,6 +32,10 @@ html, body {
     bottom: 203px;
 }
 
+.layerdisabled, .layerdisabled a, .layerdisabled a:visited, .layerdisabled a:active {
+    color: #999999;
+}
+
 #flashcontent {
     position: absolute;
     top: 28px;

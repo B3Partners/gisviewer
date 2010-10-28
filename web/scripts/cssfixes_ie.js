@@ -109,21 +109,21 @@ fixViewer = function() {
             }
        } else {
            if(dataframediv) {
-               dataframediv.style.height = dataframehoogte + 'px';
+               dataframediv.style.height = defaultdataframehoogte + 'px';
                dataframediv.style.width = (contentwidth - 6) + 'px';
            }
            if(tab_container) {
-               tab_container.style.height = (contentheight - viewerinfobalkheight - (dataframehoogte + viewerinfobalkheight + 20)) + 'px';
+               tab_container.style.height = (contentheight - viewerinfobalkheight - (defaultdataframehoogte + viewerinfobalkheight + 20)) + 'px';
            }
            if(leftcontent) {
-                leftcontent.style.height = (contentheight - viewerinfobalkheight - (dataframehoogte + viewerinfobalkheight)) + 'px';
+                leftcontent.style.height = (contentheight - viewerinfobalkheight - (defaultdataframehoogte + viewerinfobalkheight)) + 'px';
             }
            if(flashcontent) {
-               flashcontent.style.height = (contentheight - viewerinfobalkheight - (dataframehoogte + viewerinfobalkheight)) + 'px';
+               flashcontent.style.height = (contentheight - viewerinfobalkheight - (defaultdataframehoogte + viewerinfobalkheight)) + 'px';
                flashcontent.style.width = (contentwidth - ((tab_container_width==0?0:tab_container_width+9)) - ((leftcontent_width==0?0:leftcontent_width+9))) + 'px';
            }
            if(informatiebalk) {
-               informatiebalk.style.bottom = (dataframehoogte + 3) + 'px';
+               informatiebalk.style.bottom = (defaultdataframehoogte + 3) + 'px';
                informatiebalk.style.width = (contentwidth - 6) + 'px';
            }
         }

@@ -226,6 +226,12 @@
      if(typeof layerGrouping === 'undefined' || !layerGrouping) {
         layerGrouping = "lg_forebackground";
     }
+
+    var popupHeight = '20%';
+    var popupWidth = '90%';
+    var popupLeft = '5%';
+    var popupTop = '75%';
+    var defaultdataframehoogte = 150;
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">
@@ -420,7 +426,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
-    var dataframehoogte = 150;
+    
     if(usePopup) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
@@ -429,11 +435,11 @@
         //document.getElementById('informatiebalk').style.display = 'none';
     } else {
         // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
-        document.getElementById('dataframediv').style.height = dataframehoogte + 'px';
-        document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-        document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-        document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-        document.getElementById('informatiebalk').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 3)) + 'px';
+        document.getElementById('dataframediv').style.height = defaultdataframehoogte + 'px';
+        document.getElementById('tab_container').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
+        document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
+        document.getElementById('flashcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
+        document.getElementById('informatiebalk').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px';
     }
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
@@ -477,8 +483,8 @@
         }
         if(dir == 'below') {
             if(!usePopup && !useDivPopup) {
+                var dataframehoogte = defaultdataframehoogte;
                 if(panelBelowCollapsed) {
-                    dataframehoogte = 150;
                     $j("#informatiebalk").css("display", "block");
                     $j("#dataframediv").css("display", "block");
                     $j("#onderbalkControl").addClass("bottom_open");

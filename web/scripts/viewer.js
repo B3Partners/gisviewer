@@ -206,9 +206,6 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     if (usePopup) {
         // open popup when not opened en submit form to popup
         if(dataframepopupHandle == null || dataframepopupHandle.closed) {
-
-            // alert("dataframepopupHandle null or closed");
-
             if(useDivPopup) {
                 dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
             } else {
@@ -1085,7 +1082,7 @@ function refreshLayer(doRefreshOrder) {
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {
-    //        alert("addLayerToFlamingo: " + lname);
+    
     var capLayerUrl=layerUrl;
 
     var newLayer= new FlamingoWMSLayer(lname);
@@ -1166,8 +1163,6 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     newLayer.setLayers(theLayers);
     newLayer.setQuerylayers(queryLayers);
     newLayer.setMaptiplayers(maptipLayers);
-
-    //alert(newLayer.toXml("fmc"));
 
     flamingoController.getMap().addLayer(newLayer, false, true, false);
 }
@@ -1930,7 +1925,7 @@ function flamingo_b_buffer_onEvent(id, event) {
 }
 
 function drawFeature(themaId, attrName, attrVal) {
-    //    alert(themaId+" , "+attrName+" , "+attrVal);
+    
     JMapData.getWkt(themaId, attrName, attrVal, drawWkt);
 }
 

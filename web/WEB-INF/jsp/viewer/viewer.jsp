@@ -225,13 +225,33 @@
     var layerGrouping = catchEmpty("${configMap["layerGrouping"]}");
      if(typeof layerGrouping === 'undefined' || !layerGrouping) {
         layerGrouping = "lg_forebackground";
+     }
+
+    var popupWidth = catchEmpty("${configMap["popupWidth"]}");
+    if(typeof popupWidth === 'undefined' || !popupWidth) {
+        popupWidth = "90%";
     }
 
-    var popupHeight = '20%';
-    var popupWidth = '90%';
-    var popupLeft = '5%';
-    var popupTop = '75%';
-    var defaultdataframehoogte = 150;
+    var popupHeight = catchEmpty("${configMap["popupHeight"]}");
+    if(typeof popupHeight === 'undefined' || !popupHeight) {
+        popupHeight = "20%";
+    }
+
+    var popupLeft = catchEmpty("${configMap["popupLeft"]}");
+    if(typeof popupLeft === 'undefined' || !popupLeft) {
+        popupLeft = "5%";
+    }
+
+    var popupTop = catchEmpty("${configMap["popupTop"]}");
+    if(typeof popupTop === 'undefined' || !popupTop) {
+        popupTop = "75%";
+    }
+
+    var defaultdataframehoogte = catchEmpty(${configMap["defaultdataframehoogte"]});
+    if(typeof popupTop === 'undefined' || !defaultdataframehoogte) {
+        defaultdataframehoogte = 150;
+    }
+    
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

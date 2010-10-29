@@ -940,7 +940,54 @@ function doRefreshLayer() {
     refreshLegendBox();
 }
 
-function refreshLayer(doRefreshOrder) {
+var oldScale = null;
+function flamingo_map1_onChangeExtent() {
+    var currentscale = flamingo.callMethod("map1", 'getScale');
+
+    /* rekening houden met kleine scale verandering bij in en uitzoomen
+     * alleen uitvoeren als schaal voldoende is veranderd */
+    var moveinterval = 12; // approximate scale change per movestep
+    var movesteps = 20;
+    var movestep = moveinterval * movesteps;
+
+    //alert("currentscale=" + currentscale + " oldScale=" + oldScale);
+
+    if (oldScale < (currentscale - movestep) || oldScale > (currentscale + movestep)) {
+        
+        //alert("checkScaleForLayers");
+        checkScaleForLayers(currentscale);
+
+        oldScale = currentscale;
+    }
+} 
+
+function checkScaleForLayers(currentscale) {    
+    for (var i=0; i < enabledLayerItems.length; i++) {
+        var item = enabledLayerItems[i];
+        var itemid = item.id;
+
+        var minscale = 0;
+        if (item.scalehintmin != null) {
+            minscale = Number(item.scalehintmin.replace(",", "."));
+        }
+
+        var maxscale = 0;
+
+        if (item.scalehintmax != null) {
+            maxscale = Number(item.scalehintmax.replace(",", "."));
+        }
+
+        if (minscale > 0 && maxscale > 0) {
+            if (currentscale <= maxscale && currentscale >= minscale) {
+                enableLayer(itemid);               
+            } else {
+                disableLayer(itemid);
+            }
+        }
+    }
+}
+
+function refreshLayer(doRefreshOrder) {    
     var local_refresh_handle = refresh_timeout_handle;
 
     if (doRefreshOrder == undefined) {
@@ -964,8 +1011,10 @@ function refreshLayer(doRefreshOrder) {
     var topLayerItems= new Array();
     var backgroundLayerItems= new Array();
     var item;
+
     for (var i=0; i<enabledLayerItems.length; i++){
         item = enabledLayerItems[i];
+
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
             // Item alleen toevoegen aan de layers indien
@@ -1107,7 +1156,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
 
-        var minscale = Number(item.scalehintmin);
+        var minscale = Number(item.scalehintmin.replace(",", "."));
         if (!isNaN(minscale) && smallestMinscale != 0) {
             if (smallestMinscale == -1 || minscale < smallestMinscale) {
                     smallestMinscale = minscale;
@@ -1116,7 +1165,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             smallestMinscale = 0;
         }
 
-        var maxscale = Number(item.scalehintmax);
+        var maxscale = Number(item.scalehintmax.replace(",", "."));
         if (!isNaN(maxscale) && largestMaxscale != 0) {
             if (largestMaxscale == -1 || maxscale > largestMaxscale) {
                     largestMaxscale = maxscale;
@@ -1545,7 +1594,7 @@ var orderLayerBox= document.getElementById("orderLayerBox");
 function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
     if (toolId == 'identify') {
         btn_highLightSelected = false;
-    }   
+    }
 }
 
 //always call this script after the SWF object script has called the flamingo viewer.
@@ -2081,7 +2130,9 @@ function checkDisplayButtons() {
     }
 }
 
-function dispatchEventJS(event, comp) {    
+function dispatchEventJS(event, comp) {
+    console.log(event + "comp=" + comp);
+
     if (event=="onGetCapabilities") {
         hideLoading();
     }

@@ -1143,8 +1143,11 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     // last in list will be on top in map
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
+        
+        if (item.scalehintmin != null) {
+            var minscale = Number(item.scalehintmin.replace(",", "."));
+        }
 
-        var minscale = Number(item.scalehintmin.replace(",", "."));
         if (!isNaN(minscale) && smallestMinscale != 0) {
             if (smallestMinscale == -1 || minscale < smallestMinscale) {
                     smallestMinscale = minscale;
@@ -1153,7 +1156,10 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             smallestMinscale = 0;
         }
 
-        var maxscale = Number(item.scalehintmax.replace(",", "."));
+        if (item.scalehintmax != null) {
+            var maxscale = Number(item.scalehintmax.replace(",", "."));
+        }
+        
         if (!isNaN(maxscale) && largestMaxscale != 0) {
             if (largestMaxscale == -1 || maxscale > largestMaxscale) {
                     largestMaxscale = maxscale;
@@ -1909,10 +1915,7 @@ function flamingo_b_getfeatures_onEvent(id,event) {
         var wkt = getWktActiveFeature();
 
         if (wkt) {          
-            if (btn_highLightSelected)
-                highLightThemaObject(wkt);
-            else
-                handleGetAdminData(wkt, null);
+            handleGetAdminData(wkt, null);
         }
     }
 }
@@ -2048,7 +2051,7 @@ function highLightThemaObject(geom) {
     if (analyseThemas.length == 1) {
         EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
         
-        handleGetAdminData(geom, analyseThemas[0].id);
+        //handleGetAdminData(geom, analyseThemas[0].id);
     }
 }
 

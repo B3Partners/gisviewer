@@ -163,6 +163,18 @@ html, body {
     margin-left: 3px;
  }
 
+/* voor meldignen tab */
+
+.meldingencontainer{
+    margin-left: 5px;
+    margin-top: 2px;
+    width: 230px;
+}
+
+.meldingenoptie{
+    margin-left: 3px;
+ }
+
 /* Panel controls */
 #panelControls div {
     z-index: 200;

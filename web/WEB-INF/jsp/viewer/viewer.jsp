@@ -190,7 +190,8 @@
         "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse" },
         "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
         "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
-        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" }
+        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" },
+        "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -415,6 +416,7 @@
     <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div> <%--<html:rewrite page='/vieweranalysedata.do'/>--%>
     <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    <div id="meldingenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="meldingenframeViewer" name="meldingenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 
 </div>
         

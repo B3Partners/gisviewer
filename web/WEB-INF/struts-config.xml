@@ -87,6 +87,7 @@
 
         <action path="/viewerwelkom" forward="viewerwelkom"/>
         <action path="/vieweranalysedata" forward="vieweranalysedata"/>
+        <action path="/viewermeldingen" forward="viewermeldingen"/>
 
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>

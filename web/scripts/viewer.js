@@ -40,6 +40,8 @@ var highlightThemaId = null;
 
 var multiPolygonBufferWkt = null;
 
+var alleLayers = new Array();
+
 function doInitSearch(){
     if (searchConfigId.length>0 && search.length>0){
         showLoading();
@@ -489,6 +491,7 @@ function createMetadatLink(item){
 }
 
 function createLabel(container, item) {
+    
     if(item.cluster) {
         //if callable
         if (item.callable) {
@@ -528,8 +531,10 @@ function createLabel(container, item) {
         }
 
     } else if (!item.hide_tree) {
-        
         if(item.wmslayers){
+
+            alleLayers.push(item);
+
             var checkboxChecked = false;
             var layerPos = getLayerPosition(item);
             if(layerPos!=0) {
@@ -940,46 +945,29 @@ function doRefreshLayer() {
     refreshLegendBox();
 }
 
-var oldScale = null;
-function flamingo_map1_onChangeExtent() {
+function checkScaleForLayers() {    
     var currentscale = flamingo.callMethod("map1", 'getScale');
 
-    /* rekening houden met kleine scale verandering bij in en uitzoomen
-     * alleen uitvoeren als schaal voldoende is veranderd */
-    var moveinterval = 12; // approximate scale change per movestep
-    var movesteps = 20;
-    var movestep = moveinterval * movesteps;
-
-    //alert("currentscale=" + currentscale + " oldScale=" + oldScale);
-
-    if (oldScale < (currentscale - movestep) || oldScale > (currentscale + movestep)) {
-        
-        //alert("checkScaleForLayers");
-        checkScaleForLayers(currentscale);
-
-        oldScale = currentscale;
-    }
-} 
-
-function checkScaleForLayers(currentscale) {    
-    for (var i=0; i < enabledLayerItems.length; i++) {
-        var item = enabledLayerItems[i];
+    var minscale = 0;
+    var maxscale = 0;
+    
+    for (var i=0; i < alleLayers.length; i++) {
+        var item = alleLayers[i];
         var itemid = item.id;
 
-        var minscale = 0;
         if (item.scalehintmin != null) {
             minscale = Number(item.scalehintmin.replace(",", "."));
         }
-
-        var maxscale = 0;
 
         if (item.scalehintmax != null) {
             maxscale = Number(item.scalehintmax.replace(",", "."));
         }
 
+        /* als er min en maxscale is dan laag aanzetten indien currentscale binnen
+         * min en max valt */
         if (minscale > 0 && maxscale > 0) {
             if (currentscale <= maxscale && currentscale >= minscale) {
-                enableLayer(itemid);               
+                enableLayer(itemid);
             } else {
                 disableLayer(itemid);
             }
@@ -1758,20 +1746,24 @@ function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
     nextIdentifyExtent.maxx=maxx;
     nextIdentifyExtent.maxy=maxy;
 }
+
 function moveAndIdentify(minx,miny,maxx,maxy){
     moveToExtent(minx,miny,maxx,maxy);
     var centerX=Number(Number(Number(minx)+Number(maxx))/2);
     var centerY=Number(Number(Number(miny)+Number(maxy))/2);
     //doIdentify(centerX,centerY,centerX,centerY);
     doIdentifyAfterUpdate(centerX,centerY,centerX,centerY);
-
 }
+
 function flamingo_map1_onUpdateComplete(mapId){
+    checkScaleForLayers();
+
     if(nextIdentifyExtent!=null){
         doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
         nextIdentifyExtent=null;
-    }
+    }   
 }
+
 if(useSortableFunction) {
     document.getElementById("orderLayerBox").sortable({
         stop:function(){
@@ -2131,8 +2123,8 @@ function checkDisplayButtons() {
 }
 
 function dispatchEventJS(event, comp) {
-    console.log(event + "comp=" + comp);
-
+    //console.log(event + " | " + comp);
+    
     if (event=="onGetCapabilities") {
         hideLoading();
     }

@@ -2320,6 +2320,10 @@ $j(document).ready(function(){
     if(document.getElementById('analyseframeViewer')) {
         document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
     }
+    /* vullen inhoud meldingen tab */
+    if(document.getElementById('meldingenframeViewer')) {
+        document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do';
+    }
 
     if(!document.getElementById('popupWindow') && !getParent().document.getElementById('popupWindow')) {
         buildPopup();

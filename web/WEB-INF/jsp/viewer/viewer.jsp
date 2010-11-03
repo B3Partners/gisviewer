@@ -160,6 +160,21 @@
         zoekConfigIds = "";
     }
 
+    var voorzieningConfigIds = catchEmpty(${configMap["voorzieningConfigIds"]});
+    if(typeof voorzieningConfigIds === 'undefined' || !voorzieningConfigIds) {
+        voorzieningConfigIds = "";
+    }
+
+    var voorzieningConfigStraal = catchEmpty(${configMap["voorzieningConfigStraal"]});
+    if(typeof voorzieningConfigStraal === 'undefined' || !voorzieningConfigStraal) {
+        voorzieningConfigStraal = "";
+    }
+
+    var voorzieningConfigTypes = catchEmpty(${configMap["voorzieningConfigTypes"]});
+    if(typeof voorzieningConfigTypes === 'undefined' || !voorzieningConfigTypes) {
+        voorzieningConfigTypes = "";
+    }
+
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
@@ -191,7 +206,8 @@
         "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
         "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" },
-        "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" }
+        "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
+        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -253,6 +269,22 @@
         defaultdataframehoogte = 150;
     }
     
+    function getZoekconfiguraties(){
+        return zoekconfiguraties;
+    }
+    function getVoorzieningConfigIds(){
+        return voorzieningConfigIds;
+    }
+    function getMaxResults(){
+        return maxResults;
+    }
+    function getVoorzieningConfigStraal(){
+        return voorzieningConfigStraal;
+    }
+    function getVoorzieningConfigTypes(){
+        return voorzieningConfigTypes;
+    }
+
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">
@@ -411,6 +443,10 @@
             <br>
             <div class="searchResultsClass" id="searchResults"></div>
         </div>
+    </div>
+
+    <div id="voorzieningzoeker" style="display: none; overflow: auto;" class="tabvak_with_iframe">
+        <iframe id="voorzieningZoeker" name="voorzieningZoeker" frameborder="0" src="<html:rewrite page="/zoekVoorziening.do"/>"></iframe>
     </div>
 
     <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
@@ -603,6 +639,7 @@
         document.body.appendChild(s);
         s.src='http://kottke.org/plus/misc/asteroids.js';
     }
+
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>

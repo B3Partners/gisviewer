@@ -104,6 +104,11 @@
         <put name="content" value="/WEB-INF/jsp/viewer/createmappdf.jsp"/>
     </definition>
 
+    <definition name="voorzieningzoeker" extends="tab">
+        <put name="title" value="Voorziening Zoeken" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/voorzieningzoeker.jsp"/>
+    </definition>
+
     <!-- tiles met herbruikbare onderdelen die in de content pagina's kunnen worden ge-insert  -->
     <definition name="loginblock" path="/WEB-INF/jsp/commons/userAndLogout.jsp"/>
     <definition name="googleAnalytics" path="/WEB-INF/jsp/commons/googleAnalytics.jsp"/>

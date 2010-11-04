@@ -445,10 +445,7 @@
         </div>
     </div>
 
-    <div id="voorzieningzoeker" style="display: none; overflow: auto;" class="tabvak_with_iframe">
-        <iframe id="voorzieningZoeker" name="voorzieningZoeker" frameborder="0" src="<html:rewrite page="/zoekVoorziening.do"/>"></iframe>
-    </div>
-
+    <div id="voorzieningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="voorzieningZoeker" name="voorzieningZoeker" frameborder="0" src="<html:rewrite page="/zoekVoorziening.do"/>"></iframe></div>
     <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div> <%--<html:rewrite page='/vieweranalysedata.do'/>--%>
     <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>

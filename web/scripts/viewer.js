@@ -1969,7 +1969,7 @@ function flamingo_b_buffer_onEvent(id, event) {
 }
 
 function drawFeature(themaId, attrName, attrVal) {
-    
+
     JMapData.getWkt(themaId, attrName, attrVal, drawWkt);
 }
 

@@ -705,11 +705,11 @@ function switchTab(obj) {
     eraseCookie('activetab');
     createCookie('activetab', obj.id, '7');
     currentActiveTab = obj.id;
-    obj.className="activelink";
+    $j(obj).addClass("activelink");
     for(i in tabbladen) {
         var tabobj = tabbladen[i];
         if(tabobj.id != obj.id) {
-            document.getElementById(tabobj.id).className = '';
+            $j("#" + tabobj.id).removeClass("activelink");
             if(cloneTabContentId == null || cloneTabContentId != tabobj.contentid) {
                 document.getElementById(tabobj.contentid).style.display = 'none';
                 if(tabobj.extracontent != undefined) {

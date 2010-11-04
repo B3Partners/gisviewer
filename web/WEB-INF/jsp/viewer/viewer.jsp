@@ -475,7 +475,7 @@
         document.write('<div id="panelControls">');
         if(showLeftPanel != null && cloneTabContentId != null) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"></div>');
         document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>'
-            + '<div id="onderbalkControl" class="bottom_closed" onclick="panelResize(\'below\');"></div>'
+            + '<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div>'
             + '</div>');
     }
 
@@ -498,6 +498,10 @@
         document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('flashcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('informatiebalk').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px';
+
+        if(usePanelControls) {
+            $j("#onderbalkControl").css("bottom", (defaultdataframehoogte==0?3:(defaultdataframehoogte + 5)));
+        }
     }
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
@@ -545,17 +549,19 @@
                 if(panelBelowCollapsed) {
                     $j("#informatiebalk").css("display", "block");
                     $j("#dataframediv").css("display", "block");
+                    $j("#onderbalkControl").removeClass("bottom_closed");
                     $j("#onderbalkControl").addClass("bottom_open");
                     panelBelowCollapsed = false;
                 } else {
                     dataframehoogte = 0;
                     $j("#informatiebalk").css("display", "none");
                     $j("#dataframediv").css("display", "none");
+                    $j("#onderbalkControl").removeClass("bottom_open");
                     $j("#onderbalkControl").addClass("bottom_closed");
                     panelBelowCollapsed = true;
                 }
                 $j("#dataframediv").animate({ height: dataframehoogte }, 400);
-                $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 4)) }, 400);
+                $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 5)) }, 400);
                 $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
                 if(ieVersion <= 6 && ieVersion != -1) {
                     var divheighs = contentheight - 29 - (dataframehoogte==0?0:(dataframehoogte + 29));

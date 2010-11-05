@@ -44,10 +44,10 @@
 
             <c:set var="themanaam" value="" />
             <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
-                <c:if test="${ThemaItem.thema.naam != themanaam}">
-                    <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
-                    <c:set var="themaId" value="${ThemaItem.thema.id}"/>
-                    <c:set var="adminPk" value="${ThemaItem.thema.admin_pk}"/>
+                <c:if test="${ThemaItem.gegevensbron.naam != themanaam}">
+                    <c:set var="themanaam" value="${ThemaItem.gegevensbron.naam}" />
+                    <c:set var="themaId" value="${ThemaItem.gegevensbron.id}"/>
+                    <c:set var="adminPk" value="${ThemaItem.gegevensbron.admin_pk}"/>
                 </c:if>
             </c:forEach>
 
@@ -111,8 +111,8 @@
                                 <th style="width: ${breedte}px;"${kol_id} class="table-sortable:default" onclick="Table.sort(document.getElementById('data_table${tStatus.count}'), {sorttype:Sort['default'], col:${topRowStatus.count}});">
                                     ${ThemaItem.label}
                                 </th>
-                                <c:if test="${ThemaItem.thema.naam != themanaam}">
-                                    <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
+                                <c:if test="${ThemaItem.gegevensbron.naam != themanaam}">
+                                    <c:set var="themanaam" value="${ThemaItem.gegevensbron.naam}" />
                                 </c:if>
                             </c:forEach>
                         </tr>

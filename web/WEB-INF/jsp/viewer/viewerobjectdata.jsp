@@ -32,8 +32,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:forEach var="thema_items" items="${thema_items_list}" varStatus="tStatus">
                 <p>
                 <c:forEach var="ThemaItem" items="${thema_items}" varStatus="topRowStatus">
-                    <c:if test="${ThemaItem.thema.naam != themanaam}">
-                        <c:set var="themanaam" value="${ThemaItem.thema.naam}" />
+                    <c:if test="${ThemaItem.gegevensbron.naam != themanaam}">
+                        <c:set var="themanaam" value="${ThemaItem.gegevensbron.naam}" />
                         <strong>${themanaam}</strong>
                     </c:if>
                 </c:forEach>

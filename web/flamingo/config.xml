@@ -20,9 +20,9 @@
             <fmc:ToolIdentify id="identify" left="120" skin="f2" />
 
             <fmc:ToolIdentify id="breinaald" left="120" skin="f2" visible="false">
-                    <cursor id='cursor' url='assets/jsbtn/selectobject.png' xoffset="0" yoffset="0"/>
-                    <cursor id='click' url='assets/jsbtn/selectobject.png' xoffset="0" yoffset="0"/>
-                    <cursor id='busy' url='assets/jsbtn/selectobject.png' xoffset="0" yoffset="0"/>
+                    <cursor id='cursor' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
+                    <cursor id='click' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
+                    <cursor id='busy' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
             </fmc:ToolIdentify>
 
             <fmc:ButtonFull id="toolFullExtent" left="150" listento="map1" skin="f2" />
@@ -39,19 +39,19 @@
             </fmc:Container>
 
             <fmc:Container left="20">
-                <fmc:JsButton id="b_buffer" left="320" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/buffer.png" iconurl_over="flamingo/assets/jsbtn/buffer_over.png" iconurl_sel="flamingo/assets/jsbtn/buffer_down.png" iconurl_dis="flamingo/assets/jsbtn/buffer.png" label="" toggle="false" visible="false" enabled="false" selected="false">
+                <fmc:JsButton id="b_buffer" left="320" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/buffer_tool.png" iconurl_over="flamingo/assets/jsbtn/buffer_tool.png" iconurl_sel="flamingo/assets/jsbtn/buffer_tool.png" iconurl_dis="flamingo/assets/jsbtn/buffer_tool_disabled.png" label="" toggle="false" visible="false" enabled="false" selected="false">
                     <string id="tooltip" en="buffer polygon" nl="buffer het tekenobject"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_highlight" left="350" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/selectobject.png" iconurl_over="flamingo/assets/jsbtn/selectobject.png" iconurl_sel="flamingo/assets/jsbtn/selectobject.png" iconurl_dis="flamingo/assets/jsbtn/selectobject.png" label="" toggle="true" visible="false" enabled="true" selected="false">
+                <fmc:JsButton id="b_highlight" left="350" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/polygon_select.png" iconurl_over="flamingo/assets/jsbtn/polygon_select.png" iconurl_sel="flamingo/assets/jsbtn/polygon_select.png" iconurl_dis="flamingo/assets/jsbtn/polygon_select_disabled.png" label="" toggle="true" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="select object" nl="selecteer een object in de kaart"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_getfeatures" left="380" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/getfeatures.png" iconurl_over="flamingo/assets/jsbtn/getfeatures.png" iconurl_sel="flamingo/assets/jsbtn/getfeatures.png" iconurl_dis="flamingo/assets/jsbtn/getfeatures.png" label="" toggle="false" visible="false" enabled="true" selected="false">
+                <fmc:JsButton id="b_getfeatures" left="380" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/polygon_info.png" iconurl_over="flamingo/assets/jsbtn/polygon_info.png" iconurl_sel="flamingo/assets/jsbtn/polygon_info.png" iconurl_dis="flamingo/assets/jsbtn/polygon_info_disabled.png" label="" toggle="false" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="select within features" nl="selecteer binnen geselecteerd kaartobject"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_removePolygons" left="410" top="0" width="25" height="25" iconurl_up="flamingo/assets/jsbtn/remove_polygon.png" iconurl_over="flamingo/assets/jsbtn/remove_polygon_over.png" iconurl_sel="flamingo/assets/jsbtn/remove_polygon_down.png" iconurl_dis="flamingo/assets/jsbtn/remove_polygon.png" label="" toggle="false" visible="false" enabled="true" selected="false">
+                <fmc:JsButton id="b_removePolygons" left="410" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/polygon_delete.png" iconurl_over="flamingo/assets/jsbtn/polygon_delete.png" iconurl_sel="flamingo/assets/jsbtn/polygon_delete.png" iconurl_dis="flamingo/assets/jsbtn/polygon_delete_disabled.png" label="" toggle="false" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="remove polygon" nl="verwijder het tekenobject"/>
                 </fmc:JsButton>
             </fmc:Container>

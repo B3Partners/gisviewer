@@ -58,6 +58,7 @@
         <action path="/help" forward="help"/>
         <action path="/home" forward="home"/>
         <action path="/zoekVoorziening" forward="voorzieningzoeker"/>
+        <action path="/zoekVergunning" forward="vergunningzoeker"/>
         
         <action path="/viewerlist" forward="/index.do?list=t"/>
         

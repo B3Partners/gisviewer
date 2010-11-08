@@ -160,6 +160,7 @@
         zoekConfigIds = "";
     }
 
+    /* Voorzieningen */
     var voorzieningConfigIds = catchEmpty(${configMap["voorzieningConfigIds"]});
     if(typeof voorzieningConfigIds === 'undefined' || !voorzieningConfigIds) {
         voorzieningConfigIds = "";
@@ -173,6 +174,22 @@
     var voorzieningConfigTypes = catchEmpty(${configMap["voorzieningConfigTypes"]});
     if(typeof voorzieningConfigTypes === 'undefined' || !voorzieningConfigTypes) {
         voorzieningConfigTypes = "";
+    }
+
+    /* Vergunningen */
+    var vergunningConfigIds = catchEmpty(${configMap["vergunningConfigIds"]});
+    if(typeof vergunningConfigIds === 'undefined' || !vergunningConfigIds) {
+        vergunningConfigIds = "";
+    }
+
+    var vergunningConfigStraal = catchEmpty(${configMap["vergunningConfigStraal"]});
+    if(typeof vergunningConfigStraal === 'undefined' || !vergunningConfigStraal) {
+        vergunningConfigStraal = "";
+    }
+
+    var vergunningConfigTypes = catchEmpty(${configMap["vergunningConfigTypes"]});
+    if(typeof vergunningConfigTypes === 'undefined' || !vergunningConfigTypes) {
+        vergunningConfigTypes = "";
     }
 
     /*
@@ -207,7 +224,8 @@
         "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" },
         "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
-        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" }
+        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
+        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -283,6 +301,15 @@
     }
     function getVoorzieningConfigTypes(){
         return voorzieningConfigTypes;
+    }
+    function getVergunningConfigIds(){
+        return vergunningConfigIds;
+    }
+    function getVergunningConfigStraal(){
+        return vergunningConfigStraal;
+    }
+    function getVergunningConfigTypes(){
+        return vergunningConfigTypes;
     }
 
 </script>
@@ -446,6 +473,7 @@
     </div>
 
     <div id="voorzieningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="voorzieningZoeker" name="voorzieningZoeker" frameborder="0" src="<html:rewrite page="/zoekVoorziening.do"/>"></iframe></div>
+    <div id="vergunningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="vergunningZoeker" name="vergunningZoeker" frameborder="0" src="<html:rewrite page="/zoekVergunning.do"/>"></iframe></div>
     <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div> <%--<html:rewrite page='/vieweranalysedata.do'/>--%>
     <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>

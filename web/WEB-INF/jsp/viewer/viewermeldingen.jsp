@@ -44,14 +44,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         if(ouder) {
             var wkt = ouder.getWktActiveFeature();
             var meldingtekst = document.getElementById('meldingtekst').value;
-             if (wkt && meldingtekst){
+            if (wkt && meldingtekst){
                 document.getElementById('meldingresult').innerHTML = "<p>Informatie verzenden, een ogenblik aub ...</p>";
                 JMapData.zendMelding(wkt, meldingtekst, handleVerzending);
             }else{
-                
-                document.getElementById('meldingresult').innerHTML =
-                    "<p>Er kan geen melding verzonden worden, omdat er \n"+
-                    "geen vlak getekend is in de kaart of geen tekst is ingegeven.</p>";
+                if (wkt){
+                    document.getElementById('meldingresult').innerHTML =
+                        "<p>Er kan geen melding verzonden worden, omdat er \n"+
+                        "geen tekst is ingegeven.</p>";
+                } else {
+                    document.getElementById('meldingresult').innerHTML =
+                        "<p>Er kan geen melding verzonden worden, omdat er \n"+
+                        "geen stip getekend is in de kaart.</p>";
+                }
             }
 
         } else {
@@ -61,31 +66,41 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     function handleVerzending(message) {
         if (message!=undefined){
-             document.getElementById('meldingresult').innerHTML = message;
+            document.getElementById('meldingresult').innerHTML = message;
         }else{
             document.getElementById('meldingresult').innerHTML =
                 "Er is iets mis gegaan met de verzending, neem contact op met B3Partners BV";
         }
     }
+
+    function zetPuntMelding() {
+        getParent().flamingo.call("editMap", 'removeAllFeatures');
+        getParent().flamingo.callMethod("editMap","editMapDrawNewGeometry","layer1","Point");
+    }
+
 </script>
 
 <div style="margin: 5px;">
-<div class="meldingencontainer">
-    <p>
-        Kies de tekentool boven de kaart en teken een vlak op de kaart waarop uw melding
-        betrekking heeft. Voer daarna de tekst van uw melding hieronder in en
-        klik op "Verzenden".
-    </p>
-    <div class="meldingenoptie">
-        <textarea id="meldingtekst" name="meldingtekst" rows="10" cols="45"></textarea>
-    </div>
-    <div class="meldingenoptie">
-        <input type="button" value="Verzenden" class="zoek_knop" id="meldingen" name="meldingen" onclick="doAjaxRequest();" />
-    </div>
+    <div class="meldingencontainer">
+        <p>
+            Navigeer in de kaart naar de plaats waarop uw melding betrekking heeft en<br>
+            zet daarna een stip door op "Teken"-knop te klikken.
+            <input type="button" value="Teken" class="zoek_knop" id="puntMelding" name="puntMelding" onclick="zetPuntMelding();" />
+        </p>
+        <p>
+            Voer daarna de tekst van uw melding hieronder in en
+            klik op "Verzenden".
+        </p>
+        <div class="meldingenoptie">
+            <textarea id="meldingtekst" name="meldingtekst" rows="10" cols="45"></textarea>
+        </div>
+        <div class="meldingenoptie">
+            <input type="button" value="Verzenden" class="zoek_knop" id="meldingen" name="meldingen" onclick="doAjaxRequest();" />
+        </div>
 
-    <div class="meldingresult" id="meldingresult" style="height: 10px;">
-        <p>Nog geen melding verzonden</p>
+        <div class="meldingresult" id="meldingresult" style="height: 10px;">
+            <p>Nog geen melding verzonden</p>
+        </div>
     </div>
-</div>
 </div>
 

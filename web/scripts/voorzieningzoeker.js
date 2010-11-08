@@ -3,6 +3,7 @@ var voorzieningConfigIds = null;
 var inputSearchDropdown = null;
 var maxResults = null;
 var voorzieningConfigTypes = null;
+var voorzieningConfigStraal = null;
 
 var viewerDocument=null;
 if (window.parent){
@@ -164,7 +165,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 
         var straalWaardes = voorzieningConfigStraal.split(",");
         for (var i=0; i < straalWaardes.length; i++){
-            straalInput.append($j('<option></option>').html(straalWaardes[i]).val(i));
+            straalInput.append($j('<option></option>').html(straalWaardes[i]).val(straalWaardes[i]));
         }
         container.append(straalInput).append('<br /><br />');
     }

@@ -390,7 +390,11 @@ function doZoekOpdracht(adresIndex){
     for(var i = 0; i < zoekvelden.length; i++ ){
         var label = zoekvelden[i].label;
         if(label != "Geometry"){
-            waarden[i] = document.getElementById(label).value;
+            if(zoekvelden[i].type == 0){
+                waarden[i] = "*"+document.getElementById(label).value+"*";
+            }else{
+                waarden[i] = document.getElementById(label).value;
+            }
         }else{
             waarden[i]=geom;
         }
@@ -403,9 +407,9 @@ function doZoekOpdracht(adresIndex){
     }else{
         zoekerConfigIds[0]=typeId;
         if(typeId == 1){
-            waarden[10]="Milieu";
+            waarden[10]="*Milieu*";
         }else if(typeId == 2){
-            waarden[10]="Bouwen";
+            waarden[10]="*Bouwen*";
         }
     }
     JZoeker.zoek(zoekerConfigIds,waarden,1000,handleSearchResults);

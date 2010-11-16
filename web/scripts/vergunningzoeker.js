@@ -4,6 +4,8 @@ var inputSearchDropdown = null;
 var maxResults = null;
 var vergunningConfigTypes = null;
 var vergunningConfigStraal = null;
+var vergunningConfigVeld = null;
+var vergunningConfigTerm = null;
 
 var viewerDocument=null;
 if (window.parent){
@@ -19,6 +21,8 @@ $j(document).ready(function(){
         maxResults = window.parent.getMaxResults();
         vergunningConfigStraal = window.parent.getVergunningConfigStraal();
         vergunningConfigTypes = window.parent.getVergunningConfigTypes();
+        vergunningConfigVeld = window.parent.getVergunningConfigVelden();
+        vergunningConfigTerm = window.parent.getVergunningConfigTermen();
     }
 
     var container=$j("#vergunningConfigurationsContainer");
@@ -368,28 +372,29 @@ function doZoekOpdracht(adresIndex){
     var zoekerConfigIds=new Array();
     var vergunningsType=document.getElementById("typeSelect").value;
 
-    var typeId = getSearchCinfigId(vergunningsType);
+    var typeId = getSearchConfigId(vergunningsType);
 
     var zoekconfig = zoekconfiguraties[vergunningsType];
 
     var waarden = new Array();
-    
-    waarden[0]="";
-    waarden[1]="";
-    waarden[2]="";
-    waarden[3]="";
-    waarden[4]="";
-    waarden[5]="";
-    waarden[6]="";
-    waarden[7]="";
-    waarden[8]="";
-    waarden[9]="";
-    waarden[10]="";
+
+    var veld = getVeldNaam(vergunningsType);
+    var term = getTerm(vergunningsType);
 
     var zoekvelden = zoekconfig.zoekVelden;
     for(var i = 0; i < zoekvelden.length; i++ ){
+        waarden[i] = "";
         var label = zoekvelden[i].label;
-        if(label != "Geometry"){
+        var attribuutnaam = zoekvelden[i].attribuutnaam;
+
+        if(attribuutnaam == veld){
+            var soort = document.getElementById(label).value;
+            if(soort != ""){
+                waarden[i]="*"+soort+"*";
+            }else{
+                waarden[i]="*"+term+"*";
+            }
+        }else if(label != "Geometry"){
             if(zoekvelden[i].type == 0){
                 waarden[i] = "*"+document.getElementById(label).value+"*";
             }else{
@@ -400,25 +405,34 @@ function doZoekOpdracht(adresIndex){
         }
     }
     
-    if (typeId==""){
-        zoekerConfigIds[0]=1;
-        zoekerConfigIds[0]=2;
-        waarden[10]="";
-    }else{
-        zoekerConfigIds[0]=typeId;
-        if(typeId == 1){
-            waarden[10]="*Milieu*";
-        }else if(typeId == 2){
-            waarden[10]="*Bouwen*";
-        }
-    }
+    zoekerConfigIds[0]=typeId;
     JZoeker.zoek(zoekerConfigIds,waarden,1000,handleSearchResults);
 }
 
-function getSearchCinfigId(pos){
+function getSearchConfigId(pos){
     var ids = vergunningConfigTypes.split(",");
 
     return zoekconfiguraties[pos].id;
+}
+
+function getVeldNaam(pos){
+    var velden = vergunningConfigVeld.split(",");
+
+    if(velden.length >= pos){
+        return velden[pos];
+    }else{
+        return "";
+    }
+}
+
+function getTerm(pos){
+    var Termen = vergunningConfigTerm.split(",");
+
+    if(Termen.length >= pos){
+        return Termen[pos];
+    }else{
+        return "";
+    }
 }
 
 function handleSearchResults(results){

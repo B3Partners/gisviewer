@@ -192,6 +192,16 @@
         vergunningConfigTypes = "";
     }
 
+    var vergunningConfigVelden = catchEmpty(${configMap["vergunningConfigVeld"]});
+    if(typeof vergunningConfigVelden === 'undefined' || !vergunningConfigVelden) {
+        vergunningConfigVelden = "";
+    }
+
+    var vergunningConfigTermen = catchEmpty(${configMap["vergunningConfigTerm"]});
+    if(typeof vergunningConfigTermen === 'undefined' || !vergunningConfigTermen) {
+        vergunningConfigTermen = "";
+    }
+
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
@@ -310,6 +320,12 @@
     }
     function getVergunningConfigTypes(){
         return vergunningConfigTypes;
+    }
+    function getVergunningConfigVelden(){
+        return vergunningConfigVelden;
+    }
+    function getVergunningConfigTermen(){
+        return vergunningConfigTermen;
     }
 
 </script>

@@ -146,7 +146,7 @@ function planchanged(element){
             ext.maxx=plan.maxx;
             ext.maxy=plan.maxy;
 
-            flamingoController.getMap("map1").moveToExtent(ext);
+            webMapController.getMap("map1").zoomToExtent(ext);
         }
     }
 }

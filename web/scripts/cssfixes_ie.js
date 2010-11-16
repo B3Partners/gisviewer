@@ -71,7 +71,7 @@ fixViewer = function() {
     var content = document.getElementById('content');
     var viewerinfobalk = document.getElementById('viewerinfobalk');
     var informatiebalk = document.getElementById('informatiebalk');
-    var flashcontent = document.getElementById('flashcontent');
+    var mapcontent = document.getElementById('mapcontent');
     var dataframediv = document.getElementById('dataframediv');
     var tab_container = document.getElementById('tab_container');
     var leftcontent = document.getElementById('leftcontent');
@@ -103,9 +103,9 @@ fixViewer = function() {
             if(leftcontent) {
                 leftcontent.style.height = (contentheight - 20 - viewerinfobalkheight) + 'px';
             }
-            if(flashcontent) {
-                flashcontent.style.width = (contentwidth - ((tab_container_width==0?0:tab_container_width+9)) - ((leftcontent_width==0?0:leftcontent_width+9))) + 'px';
-                flashcontent.style.height = (contentheight - viewerinfobalkheight) + 'px';
+            if(mapcontent) {
+                mapcontent.style.width = (contentwidth - ((tab_container_width==0?0:tab_container_width+9)) - ((leftcontent_width==0?0:leftcontent_width+9))) + 'px';
+                mapcontent.style.height = (contentheight - viewerinfobalkheight) + 'px';
             }
        } else {
            if(dataframediv) {
@@ -118,9 +118,9 @@ fixViewer = function() {
            if(leftcontent) {
                 leftcontent.style.height = (contentheight - viewerinfobalkheight - (defaultdataframehoogte + viewerinfobalkheight)) + 'px';
             }
-           if(flashcontent) {
-               flashcontent.style.height = (contentheight - viewerinfobalkheight - (defaultdataframehoogte + viewerinfobalkheight)) + 'px';
-               flashcontent.style.width = (contentwidth - ((tab_container_width==0?0:tab_container_width+9)) - ((leftcontent_width==0?0:leftcontent_width+9))) + 'px';
+           if(mapcontent) {
+               mapcontent.style.height = (contentheight - viewerinfobalkheight - (defaultdataframehoogte + viewerinfobalkheight)) + 'px';
+               mapcontent.style.width = (contentwidth - ((tab_container_width==0?0:tab_container_width+9)) - ((leftcontent_width==0?0:leftcontent_width+9))) + 'px';
            }
            if(informatiebalk) {
                informatiebalk.style.bottom = (defaultdataframehoogte + 3) + 'px';

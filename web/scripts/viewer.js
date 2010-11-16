@@ -25,12 +25,18 @@ var clustersAan = new Array();
 
 var featureInfoTimeOut=30;
 
-var flamingoController= new FlamingoController(flamingo,'flamingoController');
-flamingoController.createMap("map1");
-flamingoController.createEditMap("editMap");
-//flamingoController.setRequestListener("requestIsDone");
-flamingoController.getMap().enableLayerRequestListener();
-
+var webMapController= null;
+if (mapviewer== "flamingo"){
+    webMapController=new FlamingoController(flamingo,'webMapController');
+    var map=webMapController.createMap("map1");
+    webMapController.addMap(map);
+    //TODO: WebMapController
+    //webMapController.createEditMap("editMap");
+    //webMapController.setRequestListener("requestIsDone");
+    //webMapController.getMap().enableLayerRequestListener();
+}else if (mapviewer=="openlayers"){
+    webMapController= new OpenLayersController();
+}
 var mapInitialized=false;
 var searchExtent=null;
 var sldSearchServlet=null;
@@ -76,7 +82,7 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
         ext.maxx=result.maxx;
         ext.maxy=result.maxy;
         if(mapInitialized){
-            flamingoController.getMap("map1").moveToExtent(ext);
+            webMapController.getMap("map1").moveToExtent(ext);
         }else{
             searchExtent=ext;
         }
@@ -120,11 +126,11 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
 /*because a simple reload won't change the url in flamingo. Remove the layer and add it again.
  *Maybe a getCap is done but with a little luck the browser cached the last request.*/
 function setSldOnDefaultMap(sldUrl,reload){
-    var kbLayer=flamingoController.getMap("map1").getLayer("fmcLayer");
+    var kbLayer=webMapController.getMap("map1").getLayer("fmcLayer");
     kbLayer.setSld(escape(sldUrl));
     if (reload){
-        flamingoController.getMap("map1").removeLayerById(kbLayer.getId(), false);
-        flamingoController.getMap("map1").addLayer(kbLayer, true, true);
+        webMapController.getMap("map1").removeLayerById(kbLayer.getId(), false);
+        webMapController.getMap("map1").addLayer(kbLayer);//, true, true
     }
 }
 
@@ -530,7 +536,7 @@ function createLabel(container, item) {
             return true; //hide
         }
 
-    } else if (!item.hide_tree) {
+    }else if (!item.hide_tree) {
         if(item.wmslayers){
 
             alleLayers.push(item);
@@ -968,7 +974,7 @@ function checkScaleForLayers() {
         if (minscale > 0 && maxscale > 0) {
             if (currentscale <= maxscale && currentscale >= minscale) {
                 enableLayer(itemid);
-            } else {
+            }else {
                 disableLayer(itemid);
             }
         }
@@ -1057,11 +1063,11 @@ function refreshLayer(doRefreshOrder) {
     }
 
     // verwijderen ontbrekende layers
-    var shownLayers=flamingoController.getMap().getLayers();
+    var shownLayers=webMapController.getMap().getLayers();
     var removedLayers = new Array();
     for (var j=0; j < shownLayers.length; j++){
         var lid = shownLayers[j].getId();
-        var ls = shownLayers[j].getLayers();
+        var ls = shownLayers[j].getOption("layers");
         var found = false;
         for (i=0; i<layerGroups.length && found==false; i++){
             layerGroup = layerGroups[i];
@@ -1086,20 +1092,23 @@ function refreshLayer(doRefreshOrder) {
         }
     }
     for (var k=0; k < removedLayers.length; k++){
-        flamingoController.getMap().removeLayerById(removedLayers[k], false);
+        webMapController.getMap().removeLayerById(removedLayers[k]);//false
     }
 
     // toevoegen lagen
     for (i=0; i<layerGroups.length; i++){
         layerGroup = layerGroups[i];
         var layerId = layerGroup[0];
-        if (flamingoController.getMap().getLayer(layerId)==null){
+        if (webMapController.getMap().getLayer(layerId)==null){
             layerGroup.splice(0,1);
             addLayerToFlamingo(layerId, layerUrl, layerGroup);
         }
-        var oldOrderIndex=flamingoController.getMap().setLayerPosition(layerId,i);
-        if (i != oldOrderIndex){
-            doRefreshOrder=true;
+        var layer=webMapController.getMap().getLayer(layerId);
+        if (layer!=null){
+            var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i);
+            if (i != oldOrderIndex){
+                doRefreshOrder=true;
+            }
         }
     }
 
@@ -1113,7 +1122,8 @@ function refreshLayer(doRefreshOrder) {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-        flamingoController.getMap().refreshLayerOrder();
+        //TODO:WebMapController
+        //webMapController.getMap().refreshLayerOrder();
     }
 
 }
@@ -1122,18 +1132,21 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     
     var capLayerUrl=layerUrl;
 
-    var newLayer= new FlamingoWMSLayer(lname);
-    newLayer.setTimeOut("30");
-    newLayer.setRetryOnError("10");
-    newLayer.setFormat("image/png")
-    newLayer.setTransparent(true);
-    newLayer.setUrl(layerUrl);
-    newLayer.setExceptions("application/vnd.ogc.se_inimage");
-    newLayer.setGetcapabilitiesUrl(capLayerUrl);
-    newLayer.setSrs("EPSG:28992");
-    newLayer.setVersion("1.1.1");
-    newLayer.setShowerros(true);
-
+    //var newLayer= new FlamingoWMSLayer(lname);
+    var options={
+        id: lname,
+        timeout: 30,
+        retryonerror: 10,
+        getcapabilitiesurl: capLayerUrl,
+        showerrors: true
+    };
+    var ogcOptions={
+        format: "image/png",
+        transparent: true,
+        exceptions: "application/vnd.ogc.se_inimage",
+        srs: "EPSG:28992",
+        version: "1.1.1"
+    };
     var theLayers="";
     var queryLayers="";
     var maptipLayers="";
@@ -1152,7 +1165,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             if (smallestMinscale == -1 || minscale < smallestMinscale) {
                     smallestMinscale = minscale;
             }
-        } else {
+        }else {
             smallestMinscale = 0;
         }
 
@@ -1190,24 +1203,25 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
                 aka=aka.substring(aka.indexOf("_")+1);
             }
-
-            newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
+            //TODO:WebMapController
+            //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
     }
 
     if (smallestMinscale != null && smallestMinscale > 0) {
-        newLayer.setMinScale(smallestMinscale);
+        options["minscale"]=smallestMinscale;
     }
 
     if (largestMaxscale != null && largestMaxscale > 0) {
-        newLayer.setMaxScale(largestMaxscale);
-    }
-
-    newLayer.setLayers(theLayers);
-    newLayer.setQuerylayers(queryLayers);
-    newLayer.setMaptiplayers(maptipLayers);
-
-    flamingoController.getMap().addLayer(newLayer, false, true, false);
+        options["maxscale"]=largestMaxscale;
+    }    
+    ogcOptions["layers"]=theLayers;
+    ogcOptions["queryLayers"]=queryLayers;
+    var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+    //TODO:WebMapController
+    /*options["maptiplayers"]=maptiplayers;
+    newLayer.setMaptiplayers(maptipLayers);*/
+    webMapController.getMap().addLayer(newLayer);//false, true, false
 }
 
 function loadObjectInfo(geom) {
@@ -1681,11 +1695,11 @@ function flamingo_map1_onInit(){
 
         //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
         if (searchExtent!=null){
-            flamingoController.getMap("map1").moveToExtent(searchExtent);
+            webMapController.getMap("map1").moveToExtent(searchExtent);
         }else{
             //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
             if (searchExtent!=null){
-                flamingoController.getMap("map1").moveToExtent(searchExtent);
+                webMapController.getMap("map1").moveToExtent(searchExtent);
             }else{
                 if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
                     moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
@@ -1720,7 +1734,7 @@ function ie6_hack_onInit(){
     }
 }
 function moveToExtent(minx,miny,maxx,maxy){
-    flamingoController.getMap().moveToExtent({
+    webMapController.getMap().zoomToExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
@@ -1728,7 +1742,7 @@ function moveToExtent(minx,miny,maxx,maxy){
     }, 0);
 }
 function setFullExtent(minx,miny,maxx,maxy){
-    flamingoController.getMap().setFullExtent({
+    webMapController.getMap().setMaxExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
@@ -1736,13 +1750,12 @@ function setFullExtent(minx,miny,maxx,maxy){
     });
 }
 function doIdentify(minx,miny,maxx,maxy){
-    flamingoController.getMap().doIdentify({
+    webMapController.getMap().doIdentify({
         minx:minx,
-        miny:miny,
-        maxx:maxx,
-        maxy:maxy
+        miny:miny        
     });
-    flamingoController.getFlamingo().callMethod("toolGroup","setTool","identify");
+    //todo:WebMapController
+    webMapController.getFlamingo().callMethod("toolGroup","setTool","identify");
 }
 var nextIdentifyExtent=null;
 function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
@@ -1844,7 +1857,7 @@ function exportMap(){
 
     var urlString="";
     var firstURL = true;
-    var layers=flamingoController.getMap("map1").getLayers();
+    var layers=webMapController.getMap("map1").getLayers();
     for (var i=0; i < layers.length; i++){
         if(layers[i].getLastGetMapRequest() != null){
             if(!firstURL){
@@ -1861,8 +1874,8 @@ function exportMap(){
     var newElement = document.createElement("<input name='urls' type='hidden'>");
     newElement.value = urlString;
     submitForm.appendChild(newElement);
-
-    var features=flamingoController.getEditMap().getAllFeatures();
+    //todo:WebMapController
+    var features=webMapController.getEditMap().getAllFeatures();
     var wktString="";
     for (var b=0; b < features.length; b++){
         wktString+=features[b].wktgeom;
@@ -1890,7 +1903,8 @@ function checkboxClickById(id){
 }
 
 function getWktActiveFeature() {
-    var object = flamingoController.getEditMap().getActiveFeature();
+    //todo:WebMapController
+    var object = webMapController.getEditMap().getActiveFeature();
 
     if (object == null)
     {
@@ -1902,7 +1916,8 @@ function getWktActiveFeature() {
 }
 
 function getWkt() {
-    var object = flamingoController.getEditMap().getActiveFeature();
+    //todo:WebMapController
+    var object = webMapController.getEditMap().getActiveFeature();
 
     if (object == null)
         return null;

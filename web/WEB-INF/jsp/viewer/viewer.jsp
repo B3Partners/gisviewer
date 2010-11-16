@@ -13,7 +13,7 @@
     function catchEmpty(defval){
         return defval
     }
-
+    var mapviewer="flamingo";
     var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
     var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
@@ -349,13 +349,13 @@
     &nbsp;
 </div>
 
-<div id="flashcontent">
+<div id="mapcontent">
     <strong class="noflamingoerror"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>
 </div>
 <script type="text/javascript">
     var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "100%", "100%", "8", "#FFFFFF");
     so.addParam("wmode", "transparent");
-    so.write("flashcontent");
+    so.write("mapcontent");
     var flamingo = document.getElementById("flamingo");
 </script>
 
@@ -507,13 +507,17 @@
 </script>
 
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
     
     if(usePopup) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
-        document.getElementById('flashcontent').style.bottom = '3px';
+        document.getElementById('mapcontent').style.bottom = '3px';
         //document.getElementById('dataframediv').style.display = 'none';
         //document.getElementById('informatiebalk').style.display = 'none';
     } else {
@@ -521,7 +525,7 @@
         document.getElementById('dataframediv').style.height = defaultdataframehoogte + 'px';
         document.getElementById('tab_container').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        document.getElementById('flashcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
+        document.getElementById('mapcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('informatiebalk').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px';
 
         if(usePanelControls) {
@@ -592,11 +596,11 @@
                     var divheighs = contentheight - 29 - (dataframehoogte==0?0:(dataframehoogte + 29));
                     document.getElementById('leftcontent').style.height = divheighs + 'px';
                     document.getElementById('tab_container').style.height = divheighs - 20 + 'px';
-                    document.getElementById('flashcontent').style.height = divheighs + 'px';
+                    document.getElementById('mapcontent').style.height = divheighs + 'px';
                 } else {
                     document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
                     document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-                    document.getElementById('flashcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+                    document.getElementById('mapcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
                 }
                 resizeTabContents();
             }
@@ -620,10 +624,10 @@
             if(ieVersion <= 6 && ieVersion != -1) {
                 var leftcontent_width = 0;
                 if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
-                document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
+                document.getElementById('mapcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
             } else {
                 $j("#tabjes").animate({ width: panelbreedte }, 200);
-                document.getElementById('flashcontent').style.right = (panelbreedte==0?0:(panelbreedte + 6)) + 'px';
+                document.getElementById('mapcontent').style.right = (panelbreedte==0?0:(panelbreedte + 6)) + 'px';
             }
         }
         if(dir == 'left') {
@@ -643,10 +647,10 @@
             if(ieVersion <= 6 && ieVersion != -1) {
                 var tab_container_width = 0;
                 if(tab_container) tab_container_width = tab_container.offsetWidth;
-                document.getElementById('flashcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((tab_container_width==0?0:tab_container_width+6))) + 'px';
-                document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
+                document.getElementById('mapcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((tab_container_width==0?0:tab_container_width+6))) + 'px';
+                document.getElementById('mapcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
             } else {
-                document.getElementById('flashcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
+                document.getElementById('mapcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
             }
         }
     }

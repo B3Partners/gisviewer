@@ -147,13 +147,13 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     var sldstring=window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";//"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
     
     var ouder = getParent();
-    var fmco = getParent().flamingoController;
+    var fmco = getParent().webMapController;
     if(fmco == undefined){
         ouder = getParent().getParent();
-        fmco = ouder.flamingoController;
+        fmco = ouder.webMapController;
     }
     var mapje = fmco.getMap();
-    var existingLayer = mapje.getLayer("fmcLayer");
+    var existingLayer = mapje.getLayerById("fmcLayer");
     var wmsLayer=ouder.searchThemaValue(ouder.themaTree,themaid,"wmslayers");
     var visValue=trim(waardepk);
     if (waardeingevuldekolom!=null && waardeingevuldekolom.length>0){
@@ -163,26 +163,29 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     sldstring += "?visibleValue=" + visValue;
     sldstring += "&id=" + themaid;
     var beginChar = "?";
-    if(existingLayer.getUrl().indexOf("?") != -1){
+    if(existingLayer.getOption("url").indexOf("?") != -1){
         beginChar = "&";
     }
 
     sldstring= escape(sldstring);
 
-    var sldUrl = existingLayer.getUrl() + beginChar + "SLD=" + sldstring;
-    var sldLayer= new FlamingoWMSLayer("sldLayer");
-    sldLayer.setTimeOut("30");
-    sldLayer.setRetryOnError("10");
-    sldLayer.setFormat(existingLayer.getFormat());
-    sldLayer.setTransparent(true);
-    sldLayer.setUrl(sldUrl);
-    sldLayer.setGetcapabilitiesUrl(existingLayer.getUrl());
-    sldLayer.setGetfeatureinfoUrl(existingLayer.getUrl());
-    sldLayer.setLayers(wmsLayer);
-    sldLayer.setExceptions(existingLayer.getExceptions());
-    sldLayer.setSrs(existingLayer.getSrs());
-    sldLayer.setVersion(existingLayer.getVersion());
-    sldLayer.setShowerros(true);
-    
-    fmco.getMap().addLayer(sldLayer, true,true);
+    var sldUrl = existingLayer.getOption("url") + beginChar + "SLD=" + sldstring;
+    var ogcOptions={
+        transparent: true,
+        format: existingLayer.getFormat(),
+        layers: wmsLayer,
+        exceptions: existingLayer.getExceptions(),
+        srs: existingLayer.getSrs(),
+        version: existingLayer.getVersion()
+    }
+    var options={
+        id: "sldLayer",
+        timeout: "30",
+        retryonerror: "10",
+        getcapabilitiesurl: existingLayer.getUrl(),
+        getfeatureinfourl: existingLayer.getUrl(),
+        showerrors: true
+    };
+    var sldLayer=webMapController.createWMSLayer("sldLayer", sldUrl, ogcOptions, options);
+    fmco.getMap().addLayer(sldLayer);//true,true
 }

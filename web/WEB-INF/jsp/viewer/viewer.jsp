@@ -369,10 +369,7 @@
     <strong class="noflamingoerror"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>
 </div>
 <script type="text/javascript">
-    var so = new SWFObject("flamingo/flamingo.swf?config=/config.xml", "flamingo", "100%", "100%", "8", "#FFFFFF");
-    so.addParam("wmode", "transparent");
-    so.write("mapcontent");
-    var flamingo = document.getElementById("flamingo");
+    
 </script>
 
 <div id="tabjes">
@@ -524,6 +521,7 @@
 
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
+<!--script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js"/>"></script-->
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>

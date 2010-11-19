@@ -61,6 +61,10 @@ if (mapviewer== "flamingo"){
     //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
     webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
 
+    $j(document).ready(function() {
+        flamingo_map1_onInit();
+    });
+
 }
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
 webMapController.getMap().zoomToMaxExtent();*/

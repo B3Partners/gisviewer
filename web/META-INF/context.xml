@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/gisviewer">
-<!-- Resource PG b3p-demo
+<!-- Resource PG b3p-demo-->
 <Resource
     auth="Container"
     driverClassName="org.postgresql.Driver"
@@ -9,18 +9,18 @@
     maxIdle="30"
     maxWait="10000"
     name="jdbc/gisviewer"
-    username="dev"
-    password="b3p"
+    username="amsterdam"
+    password="***REMOVED***"
     removeAbandoned="true"
     removeAbandonedTimeout="60"
     type="javax.sql.DataSource"
-    url="jdbc:postgresql://b3p-demoserver/barneveld_gisviewer"
+    url="jdbc:postgresql://b3p-demoserver/amsterdam_gisviewer"
     validationQuery="select 1"
     minEvictableIdleTimeMillis="10000"
     timeBetweenEvictionRunsMillis="60000"
-/> -->
+/>
 
-<!-- Resource Oracle b3p-demo -->
+<!-- Resource Oracle b3p-demo 
 <Resource
     auth="Container"
     driverClassName="oracle.jdbc.driver.OracleDriver"
@@ -37,5 +37,5 @@
     url="jdbc:oracle:thin:@b3p-demoserver:1521:ORCL"
     minEvictableIdleTimeMillis="10000"
     timeBetweenEvictionRunsMillis="60000"
-/>
+/>-->
 </Context>

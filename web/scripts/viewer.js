@@ -24,10 +24,11 @@ var layersAan= new Array();
 var clustersAan = new Array();
 
 var featureInfoTimeOut=30;
-
 var webMapController= null;
-if (mapviewer== "flamingo"){
-    webMapController=new FlamingoController(flamingo,'webMapController');
+
+mapviewer="openlayers";
+if (mapviewer== "flamingo"){    
+    webMapController=new FlamingoController('mapcontent');
     var map=webMapController.createMap("map1");
     webMapController.addMap(map);
     //TODO: WebMapController
@@ -36,7 +37,34 @@ if (mapviewer== "flamingo"){
     //webMapController.getMap().enableLayerRequestListener();
 }else if (mapviewer=="openlayers"){
     webMapController= new OpenLayersController();
+    var opt={
+        projection:"EPSG:28992",
+        maxExtent: new OpenLayers.Bounds(0, 304000, 280000, 628000),
+        resolutions: [512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125]
+    };
+    $j("#mapcontent").html(" ");
+    var olmap=webMapController.createMap('mapcontent',opt);
+    $j("#mapcontent").css("border","1px solid black");
+    webMapController.addMap(olmap);
+    var rp=webMapController.createWMSLayer("Ruimtelijke plannen",
+        "http://b3p-demoserver/cgi-bin/ms4w/mapserv.exe",
+        {
+            map: "E:/maps/pbadam.map",
+            layers: 'plannenbankadam',
+            format: 'image/png'
+        },
+        {
+            isBaseLayer: true
+        }
+    );
+    webMapController.getMap().addLayer(rp);
+    //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
+    webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
+
 }
+/*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
+webMapController.getMap().zoomToMaxExtent();*/
+
 var mapInitialized=false;
 var searchExtent=null;
 var sldSearchServlet=null;
@@ -225,7 +253,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
             //$j("#popupWindow").show();
             document.forms[0].target = 'dataframedivpopup';
             loadBusyJSP(dataframepopupHandle, 'div');
-        } else {
+        }else {
             document.forms[0].target = 'dataframepopup';
             loadBusyJSP(dataframepopupHandle, 'window');
         }
@@ -560,7 +588,7 @@ function createLabel(container, item) {
                 if (!multipleActiveThemas){
                     var labelRadio = createRadioThema(item);
                     container.appendChild(labelRadio);
-                } else {
+                }else {
                     isActiveItem(item);
                 }
             }
@@ -788,7 +816,7 @@ function clusterCheckboxClick(element,dontRefresh){
     if (useCookies) {      
         if (element.checked) {
             addClusterIdToCookie(cluster.id);
-        } else {
+        }else {
             removeClusterIdFromCookie(cluster.id);
         }
     }

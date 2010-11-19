@@ -19,7 +19,9 @@ var statusSelect=document.getElementById(statusSelectName);
 
 /* de geconfigureerde planselectie id's staan als volgt in db
  * 3,1 waarbij eerste id voor eigenaren is en tweede voor plannen */
-var planIds = planSelectieIds.split(",");
+var planIds = null;
+if (planSelectieIds)
+    planIds=(""+planSelectieIds).split(",");
 
 var planEigenaarId = planIds[0];
 var planId = planIds[1];

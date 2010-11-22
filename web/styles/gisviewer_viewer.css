@@ -211,3 +211,13 @@ html, body {
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
+
+/*OpenLayers*/
+.olControlPanel{
+    float: left;
+    margin-left: 100px;
+}
+.olControlNavigationHistory{
+    float: left;
+    margin: 5px;
+}

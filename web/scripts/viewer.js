@@ -46,22 +46,11 @@ if (mapviewer== "flamingo"){
     var olmap=webMapController.createMap('mapcontent',opt);
     $j("#mapcontent").css("border","1px solid black");
     webMapController.addMap(olmap);
-    var rp=webMapController.createWMSLayer("Ruimtelijke plannen",
-        "http://b3p-demoserver/cgi-bin/ms4w/mapserv.exe",
-        {
-            map: "E:/maps/pbadam.map",
-            layers: 'plannenbankadam',
-            format: 'image/png'
-        },
-        {
-            isBaseLayer: true
-        }
-    );
-    webMapController.getMap().addLayer(rp);
+    
     //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
-    webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
-
+    //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
     $j(document).ready(function() {
+        /*TODO: WebMapController Renamen*/
         flamingo_map1_onInit();
     });
 
@@ -363,6 +352,7 @@ function setActiveThema(id, label, overrule) {
                 maxx=minx;
                 maxy=miny;
             }
+            /*TODO: WebMapController Renamen*/
             flamingo_map1_onIdentify('',{
                 minx:minx,
                 miny:miny,
@@ -1154,7 +1144,7 @@ function refreshLayer(doRefreshOrder) {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-        //TODO:WebMapController
+        //TODO: WebMapController
         //webMapController.getMap().refreshLayerOrder();
     }
 
@@ -1235,7 +1225,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
                 aka=aka.substring(aka.indexOf("_")+1);
             }
-            //TODO:WebMapController
+            //TODO: WebMapController
             //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
     }
@@ -1250,7 +1240,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     ogcOptions["layers"]=theLayers;
     ogcOptions["queryLayers"]=queryLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
-    //TODO:WebMapController
+    //TODO: WebMapController
     /*options["maptiplayers"]=maptiplayers;
     newLayer.setMaptiplayers(maptipLayers);*/
     webMapController.getMap().addLayer(newLayer);//false, true, false
@@ -1630,7 +1620,7 @@ if(activeTab != null) {
 }
 Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
-
+/*TODO: WebMapController hoe gaan we dit oplossen?*/
 function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
     if (toolId == 'identify') {
         btn_highLightSelected = false;
@@ -1639,6 +1629,7 @@ function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
 
 //always call this script after the SWF object script has called the flamingo viewer.
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
+/*TODO: WebMapController event bij klikken in kaart*/
 function flamingo_map1_onIdentify(movie,extend){
 
     var xp = (extend.minx + extend.maxx)/2;
@@ -1700,12 +1691,14 @@ function updateGetFeatureInfo(data){
         },1000);
     }
 }
+/*TODO: WebMapController bij het terugkrijgen van data vanuit het framework*/
 function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLayers,totalLayers){
     teller=0;
     updateGetFeatureInfo(data);
 }
 var firstTimeOninit = true;
 
+/*TODO: WebMapController zodra het framework geladen is*/
 function flamingo_map1_onInit(){
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
@@ -1729,6 +1722,7 @@ function flamingo_map1_onInit(){
         if (searchExtent!=null){
             webMapController.getMap("map1").moveToExtent(searchExtent);
         }else{
+            doRefreshLayer();
             //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
             if (searchExtent!=null){
                 webMapController.getMap("map1").moveToExtent(searchExtent);
@@ -1749,7 +1743,6 @@ function flamingo_map1_onInit(){
             else {
                 setFullExtent(12000,304000,280000,620000);
             }
-            doRefreshLayer();
         }
     }
     mapInitialized=true;
@@ -1786,7 +1779,7 @@ function doIdentify(minx,miny,maxx,maxy){
         minx:minx,
         miny:miny        
     });
-    //todo:WebMapController
+    //TODO: WebMapController
     webMapController.getFlamingo().callMethod("toolGroup","setTool","identify");
 }
 var nextIdentifyExtent=null;
@@ -1806,6 +1799,7 @@ function moveAndIdentify(minx,miny,maxx,maxy){
     doIdentifyAfterUpdate(centerX,centerY,centerX,centerY);
 }
 
+/*TODO: WebMapController bij klaar zijn met laden event*/
 function flamingo_map1_onUpdateComplete(mapId){
     checkScaleForLayers();
 
@@ -1906,7 +1900,7 @@ function exportMap(){
     var newElement = document.createElement("<input name='urls' type='hidden'>");
     newElement.value = urlString;
     submitForm.appendChild(newElement);
-    //todo:WebMapController
+    //TODO: WebMapController
     var features=webMapController.getEditMap().getAllFeatures();
     var wktString="";
     for (var b=0; b < features.length; b++){
@@ -1935,7 +1929,7 @@ function checkboxClickById(id){
 }
 
 function getWktActiveFeature() {
-    //todo:WebMapController
+    //TODO: WebMapController
     var object = webMapController.getEditMap().getActiveFeature();
 
     if (object == null)
@@ -1948,7 +1942,7 @@ function getWktActiveFeature() {
 }
 
 function getWkt() {
-    //todo:WebMapController
+    //TODO: WebMapController
     var object = webMapController.getEditMap().getActiveFeature();
 
     if (object == null)
@@ -1956,7 +1950,7 @@ function getWkt() {
 
     return object.wktgeom;
 }
-
+/*TODO: WebMapController tools*/
 function flamingo_b_getfeatures_onEvent(id,event) {
     if (event["down"]) {
         var wkt = getWktActiveFeature();
@@ -1966,7 +1960,7 @@ function flamingo_b_getfeatures_onEvent(id,event) {
         }
     }
 }
-
+/*TODO: WebMapController tools*/
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
 function flamingo_b_buffer_onEvent(id, event) {
     if (event["down"])
@@ -2040,7 +2034,7 @@ function drawObject(geom) {
     flamingo.call("editMap", 'removeAllFeatures');
     flamingo.callMethod("editMap", "addFeature", "layer1", geom);
 }
-
+/*TODO: WebMapController tools*/
 function flamingo_b_removePolygons_onEvent(id, event) {
     if (event["down"])
     {
@@ -2049,7 +2043,7 @@ function flamingo_b_removePolygons_onEvent(id, event) {
 }
 
 var btn_highLightSelected = false;
-
+/*TODO: WebMapController tools*/
 /* er is net op de highlight knop gedrukt */
 function flamingo_b_highlight_onEvent(id, event) {
     if (event["down"])

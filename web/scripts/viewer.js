@@ -27,7 +27,7 @@ var featureInfoTimeOut=30;
 var webMapController= null;
 
 mapviewer="openlayers";
-if (window.location.href.indexOf("flamingo"))
+if (window.location.href.indexOf("flamingo")>0)
     mapviewer="flamingo";
 if (mapviewer== "flamingo"){    
     webMapController=new FlamingoController('mapcontent');
@@ -49,7 +49,7 @@ if (mapviewer== "flamingo"){
     var olmap=webMapController.createMap('mapcontent',opt);
     $j("#mapcontent").css("border","1px solid black");
     webMapController.addMap(olmap);
-    
+
     //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
     //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
     $j(document).ready(function() {
@@ -58,6 +58,8 @@ if (mapviewer== "flamingo"){
     });
 
 }
+webMapController.addTool(webMapController.createTool(Tool.NAVIGATION_HISTORY));
+
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
 webMapController.getMap().zoomToMaxExtent();*/
 

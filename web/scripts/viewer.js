@@ -50,12 +50,6 @@ if (mapviewer== "flamingo"){
     $j("#mapcontent").css("border","1px solid black");
     webMapController.addMap(olmap);
 
-    var editLayer = webMapController.createVectorLayer("edit",pipo);
-    olmap.addLayer(editLayer);
-    var params = new Object();
-
-    var edittingtb = webMapController.createTool(Tool.DRAW_FEATURE, editLayer, params);
-    webMapController.addTool(edittingtb);
 
     
     //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
@@ -67,9 +61,14 @@ if (mapviewer== "flamingo"){
 
 }
 webMapController.addTool(webMapController.createTool(Tool.NAVIGATION_HISTORY));
+var editLayer = webMapController.createVectorLayer("edit",onGeometryDrawFinished);
+webMapController.getMap().addLayer(editLayer);
+webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
 
+var edittingtb = webMapController.createTool(Tool.DRAW_FEATURE, editLayer);
+webMapController.addTool(edittingtb);
 
-function pipo(event){
+function onGeometryDrawFinished(event){
     console.log("Event:",event);
 }
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
@@ -1102,7 +1101,7 @@ function refreshLayer(doRefreshOrder) {
     }
 
     // verwijderen ontbrekende layers
-    var shownLayers=webMapController.getMap().getLayers();
+    var shownLayers=webMapController.getMap().getAllWMSLayers();
     var removedLayers = new Array();
     for (var j=0; j < shownLayers.length; j++){
         var lid = shownLayers[j].getId();
@@ -1165,6 +1164,12 @@ function refreshLayer(doRefreshOrder) {
         //webMapController.getMap().refreshLayerOrder();
     }
 
+    var lagen = webMapController.getMap().getAllVectorLayers();
+    var totalLayers = webMapController.getMap().getLayers().length;
+    for(var i = 0 ; i < lagen.length;i++){
+        var laag = lagen[i];
+        webMapController.getMap().setLayerIndex(laag,totalLayers);
+    }
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {

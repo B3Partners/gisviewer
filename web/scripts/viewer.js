@@ -50,6 +50,14 @@ if (mapviewer== "flamingo"){
     $j("#mapcontent").css("border","1px solid black");
     webMapController.addMap(olmap);
 
+    var editLayer = webMapController.createVectorLayer("edit",pipo);
+    olmap.addLayer(editLayer);
+    var params = new Object();
+
+    var edittingtb = webMapController.createTool(Tool.DRAW_FEATURE, editLayer, params);
+    webMapController.addTool(edittingtb);
+
+    
     //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
     //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
     $j(document).ready(function() {
@@ -60,6 +68,10 @@ if (mapviewer== "flamingo"){
 }
 webMapController.addTool(webMapController.createTool(Tool.NAVIGATION_HISTORY));
 
+
+function pipo(event){
+    console.log("Event:",event);
+}
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
 webMapController.getMap().zoomToMaxExtent();*/
 

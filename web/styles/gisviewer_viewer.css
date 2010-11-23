@@ -221,3 +221,8 @@ html, body {
     float: left;
     margin: 5px;
 }
+.olControlEditingToolbar{
+    float: left;
+    left: 150px;
+
+}

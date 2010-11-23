@@ -13,7 +13,7 @@
     function catchEmpty(defval){
         return defval
     }
-    var mapviewer="flamingo";
+    var mapviewer="openlayers";
     var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
     var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;

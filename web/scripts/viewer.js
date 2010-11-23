@@ -27,6 +27,8 @@ var featureInfoTimeOut=30;
 var webMapController= null;
 
 mapviewer="openlayers";
+if (window.location.href.indexOf("flamingo"))
+    mapviewer="flamingo";
 if (mapviewer== "flamingo"){    
     webMapController=new FlamingoController('mapcontent');
     var map=webMapController.createMap("map1");

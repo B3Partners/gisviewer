@@ -26,50 +26,75 @@ var clustersAan = new Array();
 var featureInfoTimeOut=30;
 var webMapController= null;
 
-mapviewer="openlayers";
-if (window.location.href.indexOf("flamingo")>0)
-    mapviewer="flamingo";
-if (mapviewer== "flamingo"){    
-    webMapController=new FlamingoController('mapcontent');
-    var map=webMapController.createMap("map1");
-    webMapController.addMap(map);
+
+function initMapComponent(){
+
+    mapviewer="openlayers";
+    if (window.location.href.indexOf("flamingo")>0)
+        mapviewer="flamingo";
+    if (mapviewer== "flamingo"){
+        webMapController=new FlamingoController('mapcontent');
+        var map=webMapController.createMap("map1");
+        webMapController.addMap(map);
     //TODO: WebMapController
     //webMapController.createEditMap("editMap");
     //webMapController.setRequestListener("requestIsDone");
     //webMapController.getMap().enableLayerRequestListener();
-}else if (mapviewer=="openlayers"){
-    webMapController= new OpenLayersController();
-    var opt={
-        projection:"EPSG:28992",
-        maxExtent: new OpenLayers.Bounds(0, 304000, 280000, 628000),
-        allOverlays: true,
-        resolutions: [512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125]
-    };
-    $j("#mapcontent").html(" ");
-    var olmap=webMapController.createMap('mapcontent',opt);
-    $j("#mapcontent").css("border","1px solid black");
-    webMapController.addMap(olmap);
+    }else if (mapviewer=="openlayers"){
+        webMapController= new OpenLayersController();
+        var opt={
+            projection:"EPSG:28992",
+            maxExtent: new OpenLayers.Bounds(0, 304000, 280000, 628000),
+            allOverlays: true,
+            resolutions: [512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125]
+        };
+        $j("#mapcontent").html(" ");
+        var olmap=webMapController.createMap('mapcontent',opt);
+        $j("#mapcontent").css("border","1px solid black");
+        webMapController.addMap(olmap);
 
 
-    
-    //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
-    //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
-    $j(document).ready(function() {
-        /*TODO: WebMapController Renamen*/
-        flamingo_map1_onInit();
-    });
 
+        //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
+        //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
+        $j(document).ready(function() {
+            /*TODO: WebMapController Renamen*/
+            flamingo_map1_onInit();
+        });
+
+    }
+    //webMapController.addTool(webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY));
+
+    var editLayer = webMapController.createVectorLayer("edit");
+    webMapController.getMap().addLayer(editLayer);
+    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
 }
-webMapController.addTool(webMapController.createTool(Tool.NAVIGATION_HISTORY));
-var editLayer = webMapController.createVectorLayer("edit",onGeometryDrawFinished);
-webMapController.getMap().addLayer(editLayer);
-webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
 
-var edittingtb = webMapController.createTool(Tool.DRAW_FEATURE, editLayer);
-webMapController.addTool(edittingtb);
+function initializeButtons(){
+ 
+    var editLayer = webMapController.getMap().getLayer("edit");
+    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(edittingtb);
 
+    var b_buffer = webMapController.createTool("b_buffer",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(b_buffer);
+
+
+    var b_getfeatures = webMapController.createTool("b_getfeatures",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(b_getfeatures);
+
+
+    var b_highlight = webMapController.createTool("b_highlight",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(b_highlight);
+
+
+    var b_removePolygons = webMapController.createTool("b_removePolygons",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(b_removePolygons);
+}
+
+initMapComponent();
 function onGeometryDrawFinished(event){
-    console.log("Event:",event);
+// console.log("Event:",event);
 }
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
 webMapController.getMap().zoomToMaxExtent();*/
@@ -185,13 +210,13 @@ function loadBusyJSP(handle, type) {
             '<td valign="top">'+
             '<div class="inleiding">'+
             '<table>'+
-                '<tr>'+
-                    '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+
-                    '<td>'+
-                        '<h2>Bezig met laden ...</h2>'+
-                        '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
-                    '</td>'+
-                '</tr>'+
+            '<tr>'+
+            '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+
+            '<td>'+
+            '<h2>Bezig met laden ...</h2>'+
+            '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
+            '</td>'+
+            '</tr>'+
             '</table>'+
             '</div>'+
             '</td>'+
@@ -1160,8 +1185,8 @@ function refreshLayer(doRefreshOrder) {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-        //TODO: WebMapController
-        //webMapController.getMap().refreshLayerOrder();
+    //TODO: WebMapController
+    //webMapController.getMap().refreshLayerOrder();
     }
 
     var lagen = webMapController.getMap().getAllVectorLayers();
@@ -1207,7 +1232,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
 
         if (!isNaN(minscale) && smallestMinscale != 0) {
             if (smallestMinscale == -1 || minscale < smallestMinscale) {
-                    smallestMinscale = minscale;
+                smallestMinscale = minscale;
             }
         }else {
             smallestMinscale = 0;
@@ -1219,7 +1244,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         
         if (!isNaN(maxscale) && largestMaxscale != 0) {
             if (largestMaxscale == -1 || maxscale > largestMaxscale) {
-                    largestMaxscale = maxscale;
+                largestMaxscale = maxscale;
             }
         } else {
             largestMaxscale = 0;
@@ -1247,8 +1272,8 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
                 aka=aka.substring(aka.indexOf("_")+1);
             }
-            //TODO: WebMapController
-            //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
+        //TODO: WebMapController
+        //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
     }
 
@@ -2114,7 +2139,7 @@ function highLightThemaObject(geom) {
     if (analyseThemas.length == 1) {
         EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
         
-        //handleGetAdminData(geom, analyseThemas[0].id);
+    //handleGetAdminData(geom, analyseThemas[0].id);
     }
 }
 
@@ -2158,33 +2183,34 @@ function returnHighlight(wkt) {
 
 function checkDisplayButtons() {
     if (showRedliningTools) {
-        flamingo.callMethod("redLiningContainer", "setVisible", true);
+
+        webMapController.addTool(webMapController.getToolById("redLiningContainer"));
     } else {
-        flamingo.callMethod("redLiningContainer", "setVisible", false);
+        webMapController.removeToolById("redLiningContainer");
     }
 
     if (showBufferTool) {
-        flamingo.callMethod("b_buffer", "setVisible", true);
+        webMapController.addTool(webMapController.getToolById("b_buffer"));
     } else {
-        flamingo.callMethod("b_buffer", "setVisible", false);
+        webMapController.removeToolById("b_buffer");
     }
         
     if (showSelectBulkTool) {
-        flamingo.callMethod("b_getfeatures", "setVisible", true);
+        webMapController.addTool(webMapController.getToolById("b_getfeatures"));
     } else {
-        flamingo.callMethod("b_getfeatures", "setVisible", false);
+        webMapController.removeToolById("b_getfeatures");
     }
 
     if (showNeedleTool) {
-        flamingo.callMethod("b_highlight", "setVisible", true);
+        webMapController.addTool(webMapController.getToolById("b_highlight"));
     } else {
-        flamingo.callMethod("b_highlight", "setVisible", false);
+       webMapController.removeToolById("b_highlight");
     }
 
     if (showRedliningTools || showNeedleTool) {
-        flamingo.callMethod("b_removePolygons", "setVisible", true);
+        webMapController.addTool(webMapController.getToolById("b_removePolygons"));
     } else {
-        flamingo.callMethod("b_removePolygons", "setVisible", false);
+        webMapController.removeToolById("b_removePolygons");
     }
 }
 
@@ -2196,6 +2222,7 @@ function dispatchEventJS(event, comp) {
     }
 
     if (event=="onConfigComplete") {
+        initializeButtons();
         checkDisplayButtons();
     }
 }

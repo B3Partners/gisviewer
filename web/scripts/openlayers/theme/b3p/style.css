@@ -2,11 +2,16 @@
 /*OpenLayers*/
 .olControlPanel{
     float: left;
-    margin-left: 100px;
+    margin-left: 75px;
+    margin-top: 5px;
+    border: 1px solid grey;
+    padding: 2px;
+    background-color: #EEE;
 }
 .olControlNavigationHistory{
     float: left;
     margin: 5px;
+    background-color: white;
 }
 .olControlEditingToolbar{
     float: left;
@@ -18,7 +23,6 @@
     width:  24px;
     height: 22px;
     margin: 5px;
-    background-color: white;
     background-repeat: no-repeat;
 }
 .olControlPanel .olControlNavigationItemActive {
@@ -29,16 +33,20 @@
     background-color: orange;
     background-image: url("../default/img/pan_off.png");
 }
-.olControlPanel .olControlZoomBoxItemInactive {
-    background-color: red;
+.olControlPanel .olControlZoomBoxItemInactive {    
     background-image: url("img/zoom_box_off.png");
 }
-.olControlPanel .olControlZoomBoxItemActive {
-    background-color: black;
+.olControlPanel .olControlZoomBoxItemActive {    
     background-image: url("img/zoom_box_on.png");
 }
 .olControlPanel .olControlZoomToMaxExtentItemInactive {
     width:  18px;
     height: 18px;
     background-image: url("../img/zoom-world-mini.png");
+}
+.olControlPanel .olControlb_bufferItemInactive{
+    background-image: url("img/bomb.png");
+}
+.olControlPanel .olControlb_bufferItemActive{
+    background-image: url("img/bomb.png");
 }

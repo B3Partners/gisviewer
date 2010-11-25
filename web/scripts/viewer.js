@@ -64,6 +64,9 @@ function initMapComponent(){
 
     }
     //webMapController.addTool(webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY));
+    webMapController.initEvents();
+    webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
+    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
 
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
@@ -84,13 +87,13 @@ function initializeButtons(){
     webMapController.addTool(b_getfeatures);
 
 
-    var b_highlight = webMapController.createTool("b_highlight",Tool.DRAW_FEATURE, editLayer);
-    webMapController.addTool(b_highlight);
+    var bu_highlight = webMapController.createTool("b_highlight",Tool.DRAW_FEATURE, editLayer);
+    webMapController.registerEvent(Event.ON_EVENT,bu_highlight,b_highlight);
+    webMapController.addTool(bu_highlight);
 
-
-    var b_removePolygons = webMapController.createTool("b_removePolygons",Tool.DRAW_FEATURE, editLayer);
-    webMapController.registerEvent('onEvent',b_removePolygons,onEventHandler);
-    webMapController.addTool(b_removePolygons);
+    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.DRAW_FEATURE, editLayer);
+    webMapController.registerEvent(Event.ON_EVENT,bu_removePolygons,b_removePolygons);
+    webMapController.addTool(bu_removePolygons);
 }
 
 initMapComponent();
@@ -2084,34 +2087,25 @@ function drawObject(geom) {
     flamingo.call("editMap", 'removeAllFeatures');
     flamingo.callMethod("editMap", "addFeature", "layer1", geom);
 }
-/*TODO: WebMapController tools
-function flamingo_b_removePolygons_onEvent(id, event) {
-    if (event["down"])
-    {
-        flamingo.call("editMap", 'removeAllFeatures');
-    }
-}*/
 
-
-function onEventHandler(id,params){
-    if(id== "b_removePolygons"){
-        if (params["down"])
-        {
-            webMapController.getMap().getLayer("editMap").removeAllFeatures();
-        //
-        }
+/**
+ * Alle geïmplementeerde eventhandling functies
+ */
+function b_removePolygons(id,params){
+    if (params["down"]){
+        webMapController.getMap().getLayer("editMap").removeAllFeatures();
     }
 }
-var btn_highLightSelected = false;
-/*TODO: WebMapController tools*/
+
 /* er is net op de highlight knop gedrukt */
-function flamingo_b_highlight_onEvent(id, event) {
-    if (event["down"])
-    {
+function b_highlight( id,params) {
+    if (params["down"]){
         btn_highLightSelected = true;
         flamingo.call("toolGroup", "setTool", "breinaald");
     }
 }
+
+var btn_highLightSelected = false;
 
 var popupWindowRef = null;
 var highLightGeom = null;
@@ -2226,16 +2220,23 @@ function checkDisplayButtons() {
         webMapController.removeToolById("b_removePolygons");
     }
 }
+
+function onGetCapabilities (id,params){
+        hideLoading();
+}
+
+function onConfigComplete(id,params){
+        initializeButtons();
+        checkDisplayButtons();    
+}
+/*
 function tempDispatcher(event,comp){
     if (event=="onGetCapabilities") {
-        hideLoading();
     }
 
     if (event=="onConfigComplete") {
-        initializeButtons();
-        checkDisplayButtons();
     }
-}/*
+}*//*
 function dispatchEventJS(event, comp) {
     //console.log(event + " | " + comp);
   

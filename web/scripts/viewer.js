@@ -63,7 +63,7 @@ function initMapComponent(){
         });
 
     }
-    //webMapController.addTool(webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY));
+    //
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
@@ -71,6 +71,15 @@ function initMapComponent(){
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
+
+    var zoomBox = webMapController.createTool("b_zoomBox",Tool.ZOOM_BOX);
+    webMapController.addTool(zoomBox);
+    
+    var pan = webMapController.createTool("b_zoomBox",Tool.PAN);
+    webMapController.addTool(pan);
+
+    webMapController.addTool(webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY));
+
 }
 
 function initializeButtons(){
@@ -94,6 +103,8 @@ function initializeButtons(){
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.DRAW_FEATURE, editLayer);
     webMapController.registerEvent(Event.ON_EVENT,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
+
+    
 }
 
 initMapComponent();

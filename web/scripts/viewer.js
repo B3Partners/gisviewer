@@ -65,7 +65,7 @@ function initMapComponent(){
     }
     //webMapController.addTool(webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY));
 
-    var editLayer = webMapController.createVectorLayer("edit");
+    var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
 }
@@ -89,12 +89,13 @@ function initializeButtons(){
 
 
     var b_removePolygons = webMapController.createTool("b_removePolygons",Tool.DRAW_FEATURE, editLayer);
+    webMapController.registerEvent('onEvent',b_removePolygons,onEventHandler);
     webMapController.addTool(b_removePolygons);
 }
 
 initMapComponent();
 function onGeometryDrawFinished(event){
-// console.log("Event:",event);
+    alert('sdhfasohflsflsdhnf');
 }
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
 webMapController.getMap().zoomToMaxExtent();*/
@@ -312,10 +313,12 @@ function openUrlInIframe(url){
 function getLayerPosition(item) {
 
     if((cookieArray == null) || !useCookies) {
-        if (item.visible=="on" || item.analyse=="active")
+        if (item.visible=="on" || item.analyse=="active"){
             return -1;
-        else
+        }
+        else{
             return 0;
+        }
     }
 
     var arr = cookieArray.split(',');
@@ -2081,14 +2084,24 @@ function drawObject(geom) {
     flamingo.call("editMap", 'removeAllFeatures');
     flamingo.callMethod("editMap", "addFeature", "layer1", geom);
 }
-/*TODO: WebMapController tools*/
+/*TODO: WebMapController tools
 function flamingo_b_removePolygons_onEvent(id, event) {
     if (event["down"])
     {
         flamingo.call("editMap", 'removeAllFeatures');
     }
-}
+}*/
 
+
+function onEventHandler(id,params){
+    if(id== "b_removePolygons"){
+        if (params["down"])
+        {
+            webMapController.getMap().getLayer("editMap").removeAllFeatures();
+        //
+        }
+    }
+}
 var btn_highLightSelected = false;
 /*TODO: WebMapController tools*/
 /* er is net op de highlight knop gedrukt */
@@ -2204,7 +2217,7 @@ function checkDisplayButtons() {
     if (showNeedleTool) {
         webMapController.addTool(webMapController.getToolById("b_highlight"));
     } else {
-       webMapController.removeToolById("b_highlight");
+        webMapController.removeToolById("b_highlight");
     }
 
     if (showRedliningTools || showNeedleTool) {
@@ -2213,10 +2226,7 @@ function checkDisplayButtons() {
         webMapController.removeToolById("b_removePolygons");
     }
 }
-
-function dispatchEventJS(event, comp) {
-    //console.log(event + " | " + comp);
-    
+function tempDispatcher(event,comp){
     if (event=="onGetCapabilities") {
         hideLoading();
     }
@@ -2225,7 +2235,12 @@ function dispatchEventJS(event, comp) {
         initializeButtons();
         checkDisplayButtons();
     }
-}
+}/*
+function dispatchEventJS(event, comp) {
+    //console.log(event + " | " + comp);
+  
+    
+}*/
 
 /* build popup functions */
 var currentpopupleft = null;

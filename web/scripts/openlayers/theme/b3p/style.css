@@ -49,4 +49,5 @@
 }
 .olControlPanel .olControlb_bufferItemActive{
     background-image: url("img/bomb.png");
+    background-color: black;
 }

@@ -13,43 +13,32 @@
     left: 150px;
 }
 .olControlPanel div {
-          display:block;
-          width:  24px;
-          height: 24px;
-          margin: 5px;
-          background-color: white;
-          background-repeat: no-repeat;
-        }
-.olControlPanel .olControlMouseDefaultsItemActive {
-  background-color: blue;
-  background-image: url("../default/img/pan_on.png");
+    float: left;
+    display:block;
+    width:  24px;
+    height: 22px;
+    margin: 5px;
+    background-color: white;
+    background-repeat: no-repeat;
 }
-.olControlPanel .olControlMouseDefaultsItemInactive {
-  background-color: orange;
-  background-image: url("../default/img/pan_off.png");
+.olControlPanel .olControlNavigationItemActive {
+    background-color: blue;
+    background-image: url("../default/img/pan_on.png");
 }
-.olControlPanel .olControlDrawFeatureItemActive {
-  width:  22px;
-  height: 22px;
-  background-image: url("../default/img/draw_line_on.png");
-}
-.olControlPanel .olControlDrawFeatureItemInactive {
-  width:  22px;
-  height: 22px;
-  background-image: url("../default/img/draw_line_off.png");
+.olControlPanel .olControlNavigationItemInactive {
+    background-color: orange;
+    background-image: url("../default/img/pan_off.png");
 }
 .olControlPanel .olControlZoomBoxItemInactive {
-  height: 22px;
-  background-color: red;
-  background-image: url("img/zoom_box_off.png");
+    background-color: red;
+    background-image: url("img/zoom_box_off.png");
 }
 .olControlPanel .olControlZoomBoxItemActive {
-  height: 22px;
-  background-color: black;
-  background-image: url("img/zoom_box_on.png");
+    background-color: black;
+    background-image: url("img/zoom_box_on.png");
 }
 .olControlPanel .olControlZoomToMaxExtentItemInactive {
-  width:  18px;
-  height: 18px;
-  background-image: url("../img/zoom-world-mini.png");
+    width:  18px;
+    height: 18px;
+    background-image: url("../img/zoom-world-mini.png");
 }

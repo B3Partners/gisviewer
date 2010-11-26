@@ -26,7 +26,7 @@ var clustersAan = new Array();
 var featureInfoTimeOut=30;
 var webMapController= null;
 
-var b_buffer,zoomBox,pan,prevExtent;
+var b_buffer,zoomBox,pan,prevExtent,identify;
 function initMapComponent(){
 
     mapviewer="openlayers";
@@ -74,7 +74,9 @@ function initMapComponent(){
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
 
-
+    identify = webMapController.createTool("b_identify",Tool.CLICK);
+    webMapController.addTool(identify);
+    webMapController.registerEvent(Event.ON_CLICK,identify,test);
 }
 
 function geometryDrawFinished(feature){
@@ -89,8 +91,8 @@ function initializeButtons(){
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
     webMapController.registerEvent(Event.ON_FEATURE_ADDED, editLayer, onGeometryDrawFinished);
     
-    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
-    webMapController.addTool(edittingtb);
+   /* var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(edittingtb);*/
 
     var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
     webMapController.addTool(b_buffer);

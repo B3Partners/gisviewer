@@ -76,7 +76,8 @@ function initMapComponent(){
 
 
 }
-function geometryDrawFinished(objectid,wkt){
+
+function geometryDrawFinished(feature){
     
 }
 

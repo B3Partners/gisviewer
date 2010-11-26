@@ -26,7 +26,7 @@ var clustersAan = new Array();
 var featureInfoTimeOut=30;
 var webMapController= null;
 
-
+var b_buffer,zoomBox,pan,prevExtent;
 function initMapComponent(){
 
     mapviewer="openlayers";
@@ -68,22 +68,21 @@ function initMapComponent(){
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
 
-    var editLayer = webMapController.createVectorLayer("editMap");
+    editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
 
-    var zoomBox = webMapController.createTool("b_zoomBox",Tool.ZOOM_BOX);
+    zoomBox = webMapController.createTool("b_zoomBox",Tool.ZOOM_BOX);
     webMapController.addTool(zoomBox);
     
-    var pan = webMapController.createTool("b_zoomBox",Tool.PAN);
+    pan = webMapController.createTool("b_pan",Tool.PAN);
     webMapController.addTool(pan);
 
-    var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON);
-    webMapController.addTool(b_buffer);
-
+    b_buffer = webMapController.createTool("b_buffer",Tool.TOGGLE);
+    webMapController.addTool(b_buffer);    
     webMapController.registerEvent(Event.ON_EVENT, b_buffer,aap);
 
-    var prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
+    prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
     webMapController.registerEvent(Event.ON_EVENT, prevExtent,aap);
 

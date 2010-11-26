@@ -81,8 +81,17 @@ function initMapComponent(){
     var b_buffer = webMapController.createTool("b_buffer",Tool.TOGGLE);
     webMapController.addTool(b_buffer);
 
-    webMapController.addTool(webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY));
+    webMapController.registerEvent(Event.ON_EVENT, b_buffer,aap);
 
+    var prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
+    webMapController.addTool(prevExtent);
+    webMapController.registerEvent(Event.ON_EVENT, prevExtent,aap);
+
+
+}
+
+function aap (){
+    alert("apekop");
 }
 
 function initializeButtons(){
@@ -2236,12 +2245,12 @@ function checkDisplayButtons() {
 }
 
 function onGetCapabilities (id,params){
-        hideLoading();
+    hideLoading();
 }
 
 function onConfigComplete(id,params){
-        initializeButtons();
-        checkDisplayButtons();    
+    initializeButtons();
+    checkDisplayButtons();
 }
 /*
 function tempDispatcher(event,comp){

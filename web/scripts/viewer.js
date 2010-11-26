@@ -78,7 +78,7 @@ function initMapComponent(){
     var pan = webMapController.createTool("b_zoomBox",Tool.PAN);
     webMapController.addTool(pan);
 
-    var b_buffer = webMapController.createTool("b_buffer",Tool.TOGGLE);
+    var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON);
     webMapController.addTool(b_buffer);
 
     webMapController.registerEvent(Event.ON_EVENT, b_buffer,aap);

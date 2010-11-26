@@ -1969,10 +1969,10 @@ function exportMap(){
     newElement.value = urlString;
     submitForm.appendChild(newElement);
     //TODO: WebMapController
-    var features=webMapController.getEditMap().getAllFeatures();
+    var features=webMapController.getMap().getLayer("editMap").getAllFeatures();
     var wktString="";
     for (var b=0; b < features.length; b++){
-        wktString+=features[b].wktgeom;
+        wktString+=features[b].getWkt();
         wktString+="#ff0000";
         if (features[b].label) {
             wktString+="|"+features[b].label;

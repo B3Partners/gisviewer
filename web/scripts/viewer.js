@@ -62,14 +62,20 @@ function initMapComponent(){
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
 
-    zoomBox = webMapController.createTool("b_zoomBox",Tool.ZOOM_BOX);
+
+
+}
+
+function initializeButtons(){
+
+    zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX);
     webMapController.addTool(zoomBox);
-    
+
     pan = webMapController.createTool("b_pan",Tool.PAN);
     webMapController.addTool(pan);
 
     b_buffer = webMapController.createTool("b_buffer",Tool.TOGGLE);
-    webMapController.addTool(b_buffer);    
+    webMapController.addTool(b_buffer);
 
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
@@ -77,15 +83,6 @@ function initMapComponent(){
     identify = webMapController.createTool("b_identify",Tool.CLICK);
     webMapController.addTool(identify);
     webMapController.registerEvent(Event.ON_CLICK,identify,test);
-}
-
-function geometryDrawFinished(feature){
-    
-}
-
-function initializeButtons(){
-
-
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
@@ -96,22 +93,24 @@ function initializeButtons(){
 
     var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
     webMapController.addTool(b_buffer);
-    webMapController.registerEvent(Event.ON_EVENT, b_buffer,test);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, b_buffer,test);
 
     var b_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, editLayer);
     webMapController.addTool(b_getfeatures);
 
     var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, editLayer);
-    webMapController.registerEvent(Event.ON_EVENT,bu_highlight,b_highlight);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
     webMapController.addTool(bu_highlight);
 
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
-    webMapController.registerEvent(Event.ON_EVENT,bu_removePolygons,b_removePolygons);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
+    webMapController.registerEvent(Event.ON_EVENT_UP,bu_removePolygons,test);
     webMapController.addTool(bu_removePolygons);
 }
 
 initMapComponent();
 function onGeometryDrawFinished(objectid,wkt){
+    alert("wkt");
 }
 
 function test(){

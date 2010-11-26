@@ -52,25 +52,15 @@ function initMapComponent(){
         var olmap=webMapController.createMap('mapcontent',opt);
         $j("#mapcontent").css("border","1px solid black");
         webMapController.addMap(olmap);
-
-
-
         //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
-        //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
-        $j(document).ready(function() {
-            /*TODO: WebMapController Renamen*/
-            flamingo_map1_onInit();
-        });
+     
+   //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
 
     }
     //
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
-
-    editLayer = webMapController.createVectorLayer("editMap");
-    webMapController.getMap().addLayer(editLayer);
-    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
 
     zoomBox = webMapController.createTool("b_zoomBox",Tool.ZOOM_BOX);
     webMapController.addTool(zoomBox);
@@ -80,47 +70,49 @@ function initMapComponent(){
 
     b_buffer = webMapController.createTool("b_buffer",Tool.TOGGLE);
     webMapController.addTool(b_buffer);    
-    webMapController.registerEvent(Event.ON_EVENT, b_buffer,aap);
 
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
-    webMapController.registerEvent(Event.ON_EVENT, prevExtent,aap);
 
 
 }
-
-function aap (){
-    alert("apekop");
-}
-
-function initializeButtons(){
- 
-    var editLayer = webMapController.getMap().getLayer("edit");
-    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
-    webMapController.addTool(edittingtb);
-
-    var b_buffer = webMapController.createTool("b_buffer",Tool.DRAW_FEATURE, editLayer);
-    webMapController.addTool(b_buffer);
-
-
-    var b_getfeatures = webMapController.createTool("b_getfeatures",Tool.DRAW_FEATURE, editLayer);
-    webMapController.addTool(b_getfeatures);
-
-
-    var bu_highlight = webMapController.createTool("b_highlight",Tool.DRAW_FEATURE, editLayer);
-    webMapController.registerEvent(Event.ON_EVENT,bu_highlight,b_highlight);
-    webMapController.addTool(bu_highlight);
-
-    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.DRAW_FEATURE, editLayer);
-    webMapController.registerEvent(Event.ON_EVENT,bu_removePolygons,b_removePolygons);
-    webMapController.addTool(bu_removePolygons);
-
+function geometryDrawFinished(objectid,wkt){
     
 }
 
+function initializeButtons(){
+
+
+    var editLayer = webMapController.createVectorLayer("editMap");
+    webMapController.getMap().addLayer(editLayer);
+    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
+    webMapController.registerEvent(Event.ON_FEATURE_ADDED, editLayer, onGeometryDrawFinished);
+    
+    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(edittingtb);
+
+    var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
+    webMapController.addTool(b_buffer);
+    webMapController.registerEvent(Event.ON_EVENT, b_buffer,test);
+
+    var b_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, editLayer);
+    webMapController.addTool(b_getfeatures);
+
+    var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, editLayer);
+    webMapController.registerEvent(Event.ON_EVENT,bu_highlight,b_highlight);
+    webMapController.addTool(bu_highlight);
+
+    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
+    webMapController.registerEvent(Event.ON_EVENT,bu_removePolygons,b_removePolygons);
+    webMapController.addTool(bu_removePolygons);
+}
+
 initMapComponent();
-function onGeometryDrawFinished(event){
-    alert('sdhfasohflsflsdhnf');
+function onGeometryDrawFinished(objectid,wkt){
+}
+
+function test(){
+    alert("Test");
 }
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
 webMapController.getMap().zoomToMaxExtent();*/
@@ -2114,9 +2106,9 @@ function drawObject(geom) {
  * Alle geïmplementeerde eventhandling functies
  */
 function b_removePolygons(id,params){
-    if (params["down"]){
+   // if (params["down"]){
         webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    }
+  //  }
 }
 
 /* er is net op de highlight knop gedrukt */
@@ -2213,31 +2205,31 @@ function returnHighlight(wkt) {
 function checkDisplayButtons() {
     if (showRedliningTools) {
 
-        webMapController.addTool(webMapController.getToolById("redLiningContainer"));
+       // webMapController.addTool(webMapController.getToolById("redLiningContainer"));
     } else {
         webMapController.removeToolById("redLiningContainer");
     }
 
     if (showBufferTool) {
-        webMapController.addTool(webMapController.getToolById("b_buffer"));
+      //  webMapController.addTool(webMapController.getToolById("b_buffer"));
     } else {
         webMapController.removeToolById("b_buffer");
     }
         
     if (showSelectBulkTool) {
-        webMapController.addTool(webMapController.getToolById("b_getfeatures"));
+      //  webMapController.addTool(webMapController.getToolById("b_getfeatures"));
     } else {
         webMapController.removeToolById("b_getfeatures");
     }
 
     if (showNeedleTool) {
-        webMapController.addTool(webMapController.getToolById("b_highlight"));
+      //  webMapController.addTool(webMapController.getToolById("b_highlight"));
     } else {
         webMapController.removeToolById("b_highlight");
     }
 
     if (showRedliningTools || showNeedleTool) {
-        webMapController.addTool(webMapController.getToolById("b_removePolygons"));
+  //      webMapController.addTool(webMapController.getToolById("b_removePolygons"));
     } else {
         webMapController.removeToolById("b_removePolygons");
     }
@@ -2250,6 +2242,7 @@ function onGetCapabilities (id,params){
 function onConfigComplete(id,params){
     initializeButtons();
     checkDisplayButtons();
+    flamingo_map1_onInit(); // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(), nu niet meer met flamingoevent
 }
 /*
 function tempDispatcher(event,comp){

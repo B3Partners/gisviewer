@@ -1996,8 +1996,7 @@ function checkboxClickById(id){
 }
 
 function getWktActiveFeature() {
-    //TODO: WebMapController
-    var object = webMapController.getEditMap().getActiveFeature();
+    var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
 
     if (object == null)
     {
@@ -2005,17 +2004,16 @@ function getWktActiveFeature() {
         return null;
     }
 
-    return object.wktgeom;
+    return object.getWkt();
 }
 
 function getWkt() {
-    //TODO: WebMapController
-    var object = webMapController.getEditMap().getActiveFeature();
+    var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
 
     if (object == null)
         return null;
 
-    return object.wktgeom;
+    return object.getWkt();
 }
 /*TODO: WebMapController tools*/
 function flamingo_b_getfeatures_onEvent(id,event) {

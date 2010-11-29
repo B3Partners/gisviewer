@@ -2083,7 +2083,6 @@ function flamingo_b_buffer_onEvent(id, event) {
 }
 
 function drawFeature(themaId, attrName, attrVal) {
-
     JMapData.getWkt(themaId, attrName, attrVal, drawWkt);
 }
 
@@ -2094,18 +2093,15 @@ function returnBuffer(wkt) {
 function drawWkt(wkt) {
     if (wkt.length > 0)
     {
-        var polyObject = new Object();
-
-        polyObject["id"]=61502;
-        polyObject["wktgeom"]=wkt;
+        var polyObject = new Feature(61502,wkt);
 
         drawObject(polyObject);
     }
 }
 
-function drawObject(geom) {
-    flamingo.call("editMap", 'removeAllFeatures');
-    flamingo.callMethod("editMap", "addFeature", "layer1", geom);
+function drawObject(feature) {
+    webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    webMapController.getMap().getLayer("editMap").addFeature( feature);
 }
 
 /**

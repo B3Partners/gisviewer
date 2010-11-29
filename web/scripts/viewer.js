@@ -79,7 +79,7 @@ function initializeButtons(){
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
 
-    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, { "handler" : pipo});
+    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, { "handlerGetFeatureHandler" : pipo, "handlerBeforeGetFeatureHandler": test});
     webMapController.addTool(identify);
     //webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
     
@@ -114,7 +114,7 @@ function onGeometryDrawFinished(objectid,wkt){
     alert("wkt");
 }
 
-function test(){
+function test(a,b,c,d){
     alert("Test");
 }
 

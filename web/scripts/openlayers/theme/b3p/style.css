@@ -71,3 +71,27 @@
 .olControlPanel .olControlb_removePolygonsItemActive{
     background-color: orchid;
 }
+
+.olControlPanel .olControlDrawFeaturePointItemInactive{
+    background-image: url("../default/img/draw_point_off.png");
+}
+
+.olControlPanel .olControlDrawFeaturePointItemActive{
+    background-image: url("../default/img/draw_point_on.png");
+}
+
+.olControlPanel .olControlDrawFeaturePathItemInactive{
+    background-image: url("../default/img/draw_line_off.png");
+}
+
+.olControlPanel .olControlDrawFeaturePathItemActive{
+    background-image: url("../default/img/draw_line_on.png");
+}
+
+.olControlPanel .olControlDrawFeaturePolygonItemInactive{
+    background-image: url("../default/img/draw_polygon_off.png");
+}
+
+.olControlPanel .olControlDrawFeaturePolygonItemActive{
+    background-image: url("../default/img/draw_polygon_on.png");
+}

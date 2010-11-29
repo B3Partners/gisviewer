@@ -91,7 +91,7 @@ function initializeButtons(){
 
     var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
     webMapController.addTool(b_buffer);
-    
+
     var b_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, editLayer);
     webMapController.addTool(b_getfeatures);
 
@@ -2109,10 +2109,10 @@ function b_removePolygons(id,params){
 
 /* er is net op de highlight knop gedrukt */
 function b_highlight( id,params) {
-    btn_highLightSelected = true;
-    flamingo.call("toolGroup", "setTool", "breinaald");
+        btn_highLightSelected = true;
+        flamingo.call("toolGroup", "setTool", "breinaald");
     
-}
+    }
 
 var btn_highLightSelected = false;
 

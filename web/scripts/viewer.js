@@ -61,9 +61,6 @@ function initMapComponent(){
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
-
-
-
 }
 
 function initializeButtons(){
@@ -83,18 +80,18 @@ function initializeButtons(){
     identify = webMapController.createTool("b_identify",Tool.CLICK);
     webMapController.addTool(identify);
     webMapController.registerEvent(Event.ON_CLICK,identify,test);
+    
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
     webMapController.registerEvent(Event.ON_FEATURE_ADDED, editLayer, onGeometryDrawFinished);
     
-   /* var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
-    webMapController.addTool(edittingtb);*/
+    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
+    webMapController.addTool(edittingtb);
 
     var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
     webMapController.addTool(b_buffer);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN, b_buffer,test);
-
+    
     var b_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, editLayer);
     webMapController.addTool(b_getfeatures);
 
@@ -104,7 +101,6 @@ function initializeButtons(){
 
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
-    webMapController.registerEvent(Event.ON_EVENT_UP,bu_removePolygons,test);
     webMapController.addTool(bu_removePolygons);
 }
 
@@ -2113,10 +2109,9 @@ function b_removePolygons(id,params){
 
 /* er is net op de highlight knop gedrukt */
 function b_highlight( id,params) {
-    if (params["down"]){
-        btn_highLightSelected = true;
-        flamingo.call("toolGroup", "setTool", "breinaald");
-    }
+    btn_highLightSelected = true;
+    flamingo.call("toolGroup", "setTool", "breinaald");
+    
 }
 
 var btn_highLightSelected = false;

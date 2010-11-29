@@ -12,11 +12,11 @@
     float: left;
     margin: 5px;
     background-color: white;
-}
+}/*
 .olControlEditingToolbar{
     float: left;
     left: 150px;
-}
+}*/
 .olControlPanel div {
     float: left;
     display:block;
@@ -56,4 +56,18 @@
 }
 .olControlb_identifyButtonItemInactive{
     background-color: blue;
+}
+
+.olControlPanel .olControlb_highlightItemInactive{
+    background-color: yellow;
+}
+.olControlPanel .olControlb_highlightItemActive{
+    background-color: black;
+}
+
+.olControlPanel .olControlb_removePolygonsItemInactive{
+    background-color: orange;
+}
+.olControlPanel .olControlb_removePolygonsItemActive{
+    background-color: orchid;
 }

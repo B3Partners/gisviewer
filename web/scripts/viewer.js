@@ -79,9 +79,9 @@ function initializeButtons(){
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
 
-    identify = webMapController.createTool("b_identify",Tool.CLICK);
+    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, { "handler" : pipo});
     webMapController.addTool(identify);
-    webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
+    //webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
     
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
@@ -106,6 +106,7 @@ function initializeButtons(){
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
+
 }
 
 initMapComponent();
@@ -1318,6 +1319,10 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     /*options["maptiplayers"]=maptiplayers;
     newLayer.setMaptiplayers(maptipLayers);*/
     webMapController.getMap().addLayer(newLayer);//false, true, false
+}
+
+function pipo(a,b,c,d){
+    alert("pipo");
 }
 
 function loadObjectInfo(geom) {

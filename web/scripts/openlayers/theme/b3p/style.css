@@ -51,10 +51,10 @@
     background-image: url("img/bomb.png");
     background-color: black;
 }
-.olControlb_identifyButtonItemActive{
+.olControlPanel .olControlb_identifyItemActive{
     background-color: red;
 }
-.olControlb_identifyButtonItemInactive{
+.olControlPanel .olControlb_identifyItemInactive{
     background-color: blue;
 }
 

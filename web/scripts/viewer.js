@@ -61,6 +61,8 @@ function initMapComponent(){
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
+
+    webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 }
 
 function initializeButtons(){

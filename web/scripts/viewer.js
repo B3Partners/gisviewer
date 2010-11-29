@@ -89,11 +89,13 @@ function initializeButtons(){
     var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
     webMapController.addTool(edittingtb);
 
-    var b_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
-    webMapController.addTool(b_buffer);
+    var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
+    webMapController.addTool(bu_buffer);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_buffer,b_buffer);
 
-    var b_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, editLayer);
-    webMapController.addTool(b_getfeatures);
+    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, editLayer);
+    webMapController.addTool(bu_getfeatures);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
 
     var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, editLayer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
@@ -1724,8 +1726,7 @@ function flamingo_map1_onIdentify(movie,extend){
         geom += extend.minx +" "+ extend.miny;
         geom += ")";
     }    
-    //todo: webmapcontroller vervangen
-    //flamingo.callMethod("editMap", 'removeAllFeatures');
+    webMapController.getMap().getLayer("editMap").removeAllFeatures();
     
     if (btn_highLightSelected) {
         //todo: webmapcontroller vervangen
@@ -1773,8 +1774,7 @@ function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLaye
 }
 var firstTimeOninit = true;
 
-/*TODO: WebMapController zodra het framework geladen is*/
-function flamingo_map1_onInit(){
+function onFrameworkLoaded(){
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
@@ -1829,7 +1829,7 @@ function ie6_hack_onInit(){
         version = parseFloat(navigator.appVersion.split("MSIE")[1]);
         
         if (version == 6) {
-            setTimeout("doOnInit=true; flamingo_map1_onInit();",5000);
+            setTimeout("doOnInit=true; onFrameworkLoaded();",5000);
         }
     }
 }
@@ -1975,7 +1975,7 @@ function exportMap(){
     var newElement = document.createElement("<input name='urls' type='hidden'>");
     newElement.value = urlString;
     submitForm.appendChild(newElement);
-    //TODO: WebMapController
+
     var features=webMapController.getMap().getLayer("editMap").getAllFeatures();
     var wktString="";
     for (var b=0; b < features.length; b++){
@@ -2023,63 +2023,57 @@ function getWkt() {
 
     return object.getWkt();
 }
-/*TODO: WebMapController tools*/
-function flamingo_b_getfeatures_onEvent(id,event) {
-    if (event["down"]) {
-        var wkt = getWktActiveFeature();
 
-        if (wkt) {          
-            handleGetAdminData(wkt, null);
-        }
+function b_getfeatures(id,event) {
+    var wkt = getWktActiveFeature();
+
+    if (wkt) {
+        handleGetAdminData(wkt, null);
     }
 }
-/*TODO: WebMapController tools*/
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
-function flamingo_b_buffer_onEvent(id, event) {
-    if (event["down"])
+function b_buffer(id, event) {
+    var wkt;
+
+    /* Indien door highlight de global var is gevuld deze
+     * dan gebruiken bij buffer als deze niet null is
+     * De getWktActiveFeature geeft bij sommige multipolygons niet
+     * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
+     * mis gaat. Deze is dus alleen gevuld na een highlight
+     * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
+    if (multiPolygonBufferWkt != null)
+        wkt = multiPolygonBufferWkt;
+    else
+        wkt = getWktActiveFeature();
+
+    multiPolygonBufferWkt = null;
+
+    if (wkt==null)
     {
-        var wkt;
-
-        /* Indien door highlight de global var is gevuld deze
-         * dan gebruiken bij buffer als deze niet null is
-         * De getWktActiveFeature geeft bij sommige multipolygons niet
-         * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
-         * mis gaat. Deze is dus alleen gevuld na een highlight
-         * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
-        if (multiPolygonBufferWkt != null)
-            wkt = multiPolygonBufferWkt;
-        else
-            wkt = getWktActiveFeature();
-
-        multiPolygonBufferWkt = null;
-        
-        if (wkt==null)
-        {
-            return;
-        }
-
-        var str = prompt('Geef de bufferafstand in meters');
-        var afstand = 0;
-
-        if((str == '') || ( str == 'undefined') || ( str == null))
-            return;
-
-        if( !isNaN( str) ) {
-            str = str.replace( ",", ".");
-            afstand = str;
-        } else {
-            handler( "Geen getal" );
-            return;
-        }
-
-        if (afstand == 0)
-        {
-            handler("Buffer mag niet 0 zijn");
-            return;
-        }
-
-        EditUtil.buffer(wkt, afstand, returnBuffer);
+        return;
     }
+
+    var str = prompt('Geef de bufferafstand in meters');
+    var afstand = 0;
+
+    if((str == '') || ( str == 'undefined') || ( str == null))
+        return;
+
+    if( !isNaN( str) ) {
+        str = str.replace( ",", ".");
+        afstand = str;
+    } else {
+        handler( "Geen getal" );
+        return;
+    }
+
+    if (afstand == 0)
+    {
+        handler("Buffer mag niet 0 zijn");
+        return;
+    }
+
+    EditUtil.buffer(wkt, afstand, returnBuffer);
 }
 
 function drawFeature(themaId, attrName, attrVal) {
@@ -2108,9 +2102,7 @@ function drawObject(feature) {
  * Alle geïmplementeerde eventhandling functies
  */
 function b_removePolygons(id,params){
-   // if (params["down"]){
         webMapController.getMap().getLayer("editMap").removeAllFeatures();
-  //  }
 }
 
 /* er is net op de highlight knop gedrukt */
@@ -2243,7 +2235,7 @@ function onGetCapabilities (id,params){
 function onConfigComplete(id,params){
     initializeButtons();
     checkDisplayButtons();
-    flamingo_map1_onInit(); // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(), nu niet meer met flamingoevent
+    onFrameworkLoaded(); // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(), nu niet meer met flamingoevent
 }
 /*
 function tempDispatcher(event,comp){

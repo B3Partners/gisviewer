@@ -79,7 +79,7 @@ function initializeButtons(){
 
     identify = webMapController.createTool("b_identify",Tool.CLICK);
     webMapController.addTool(identify);
-    webMapController.registerEvent(Event.ON_CLICK,identify,test);
+    webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
     
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
@@ -111,6 +111,10 @@ function onGeometryDrawFinished(objectid,wkt){
 
 function test(){
     alert("Test");
+}
+
+function testIdentify(evt){
+    alert(evt);
 }
 /*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
 webMapController.getMap().zoomToMaxExtent();*/
@@ -282,7 +286,8 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     }
 
     document.forms[0].geom.value=geom;
-    document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
+    //TODO: webmapcontroller vervangen flamingo.call
+    //document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
     document.forms[0].tolerance.value=tolerance;
 
     if (highlightThemaId != null) {
@@ -1696,7 +1701,10 @@ function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 /*TODO: WebMapController event bij klikken in kaart*/
 function flamingo_map1_onIdentify(movie,extend){
-
+    //todo: nog weghalen... Dit moet uniform werken.
+    if (extend==undefined){
+        extend=movie;
+    }
     var xp = (extend.minx + extend.maxx)/2;
     var yp = (extend.miny + extend.maxy)/2;
 
@@ -1716,16 +1724,18 @@ function flamingo_map1_onIdentify(movie,extend){
         geom += extend.minx +" "+ extend.miny;
         geom += ")";
     }    
-
-    flamingo.callMethod("editMap", 'removeAllFeatures');
+    //todo: webmapcontroller vervangen
+    //flamingo.callMethod("editMap", 'removeAllFeatures');
     
     if (btn_highLightSelected) {
-        flamingo.call("toolGroup", "setTool", "breinaald");
+        //todo: webmapcontroller vervangen
+        //flamingo.call("toolGroup", "setTool", "breinaald");
         
         highLightThemaObject(geom);
     } else {
         btn_highLightSelected = false;
-        flamingo.call("toolGroup", "setTool", "identify");
+        //todo: webmapcontroller vervangen
+        //flamingo.call("toolGroup", "setTool", "identify");
 
         handleGetAdminData(geom, null);
     }

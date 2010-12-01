@@ -1712,9 +1712,7 @@ function onChangeTool(toolgroupId, toolId) {
     }
 }
 
-//always call this script after the SWF object script has called the flamingo viewer.
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
-/*TODO: WebMapController event bij klikken in kaart*/
 function onIdentify(movie,extend){
     
     //todo: nog weghalen... Dit moet uniform werken.
@@ -1781,7 +1779,7 @@ function updateGetFeatureInfo(data){
         },1000);
     }
 }
-/*TODO: WebMapController bij het terugkrijgen van data vanuit het framework*/
+
 function onIdentifyData(id,data){
     teller=0;
     updateGetFeatureInfo(data);

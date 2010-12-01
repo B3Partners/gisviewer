@@ -2238,11 +2238,15 @@ function checkDisplayButtons() {
 function onGetCapabilities (id,params){
     hideLoading();
 }
-
+//do only ones.
+var initialized=false;
 function onConfigComplete(id,params){
-    initializeButtons();
-    checkDisplayButtons();
-    onFrameworkLoaded(); // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(), nu niet meer met flamingoevent
+    if (!initialized){
+        initialized=true;
+        initializeButtons();
+        checkDisplayButtons();
+        onFrameworkLoaded(); // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(), nu niet meer met flamingoevent
+    }
 }
 /*
 function tempDispatcher(event,comp){

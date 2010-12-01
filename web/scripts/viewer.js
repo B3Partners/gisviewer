@@ -60,10 +60,12 @@ function initMapComponent(){
     //
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
-    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);    
+    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
+
 }
 
 function initializeButtons(){
+    webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
     zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX);
     webMapController.addTool(zoomBox);
@@ -77,7 +79,11 @@ function initializeButtons(){
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
 
-    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, {"handlerGetFeatureHandler" : pipo, "handlerBeforeGetFeatureHandler": test});
+    var options = new Object();
+    options["handlerGetFeatureHandler"] = onIdentifyData;
+    options["handlerBeforeGetFeatureHandler"] = onIdentify;
+
+    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, options);
     webMapController.addTool(identify);
     //webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
     
@@ -115,7 +121,7 @@ function onGeometryDrawFinished(objectid,wkt){
 }
 
 function test(a,b,c,d){
-    alert("Test");
+   // alert("Test");
 }
 
 function testIdentify(evt){
@@ -1313,7 +1319,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         options["maxscale"]=largestMaxscale;
     }    
     ogcOptions["layers"]=theLayers;
-    ogcOptions["queryLayers"]=queryLayers;
+    ogcOptions["query_layers"]=queryLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
     //TODO: WebMapController
     /*options["maptiplayers"]=maptiplayers;
@@ -1709,7 +1715,8 @@ function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
 //always call this script after the SWF object script has called the flamingo viewer.
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 /*TODO: WebMapController event bij klikken in kaart*/
-function flamingo_map1_onIdentify(movie,extend){
+function onIdentify(movie,extend){
+    
     //todo: nog weghalen... Dit moet uniform werken.
     if (extend==undefined){
         extend=movie;
@@ -1775,7 +1782,7 @@ function updateGetFeatureInfo(data){
     }
 }
 /*TODO: WebMapController bij het terugkrijgen van data vanuit het framework*/
-function flamingo_map1_onIdentifyData(mapId,layerId,data,extent,nrIdentifiedLayers,totalLayers){
+function onIdentifyData(id,data){
     teller=0;
     updateGetFeatureInfo(data);
 }

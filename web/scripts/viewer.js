@@ -60,9 +60,7 @@ function initMapComponent(){
     //
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
-    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
-
-    webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
+    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);    
 }
 
 function initializeButtons(){
@@ -79,7 +77,7 @@ function initializeButtons(){
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
 
-    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, { "handlerGetFeatureHandler" : pipo, "handlerBeforeGetFeatureHandler": test});
+    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, {"handlerGetFeatureHandler" : pipo, "handlerBeforeGetFeatureHandler": test});
     webMapController.addTool(identify);
     //webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
     
@@ -106,6 +104,8 @@ function initializeButtons(){
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
+    
+    webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
 }
 
@@ -2205,33 +2205,33 @@ function returnHighlight(wkt) {
 function checkDisplayButtons() {
     if (showRedliningTools) {
 
-       // webMapController.addTool(webMapController.getToolById("redLiningContainer"));
+        webMapController.getTool("redLiningContainer").setVisible(true);
     } else {
-        webMapController.removeToolById("redLiningContainer");
+        webMapController.getTool("redLiningContainer").setVisible(false);
     }
 
     if (showBufferTool) {
-      //  webMapController.addTool(webMapController.getToolById("b_buffer"));
+        webMapController.getTool("b_buffer").setVisible(true);
     } else {
-        webMapController.removeToolById("b_buffer");
+        webMapController.getTool("b_buffer").setVisible(false);
     }
         
     if (showSelectBulkTool) {
-      //  webMapController.addTool(webMapController.getToolById("b_getfeatures"));
+        webMapController.getTool("b_getfeatures").setVisible(true);
     } else {
-        webMapController.removeToolById("b_getfeatures");
+        webMapController.getTool("b_getfeatures").setVisible(false);
     }
 
     if (showNeedleTool) {
-      //  webMapController.addTool(webMapController.getToolById("b_highlight"));
+        webMapController.getTool("b_highlight").setVisible(true);
     } else {
-        webMapController.removeToolById("b_highlight");
+        webMapController.getTool("b_highlight").setVisible(false);
     }
 
     if (showRedliningTools || showNeedleTool) {
-  //      webMapController.addTool(webMapController.getToolById("b_removePolygons"));
+        webMapController.getTool("b_removePolygons").setVisible(true);
     } else {
-        webMapController.removeToolById("b_removePolygons");
+        webMapController.getTool("b_removePolygons").setVisible(false);
     }
 }
 

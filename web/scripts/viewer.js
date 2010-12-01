@@ -61,7 +61,7 @@ function initMapComponent(){
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
-
+    webMapController.registerEvent(Event.ON_CHANGE_TOOL,webMapController,onChangeTool);
 }
 
 function initializeButtons(){
@@ -428,7 +428,7 @@ function setActiveThema(id, label, overrule) {
                 maxy=miny;
             }
             /*TODO: WebMapController Renamen*/
-            flamingo_map1_onIdentify('',{
+            onIdentify('',{
                 minx:minx,
                 miny:miny,
                 maxx:maxx,
@@ -1706,7 +1706,7 @@ if(activeTab != null) {
 Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
 /*TODO: WebMapController hoe gaan we dit oplossen?*/
-function flamingo_toolGroup_onSetTool(toolgroupId, toolId) {
+function onChangeTool(toolgroupId, toolId) {
     if (toolId == 'identify') {
         btn_highLightSelected = false;
     }

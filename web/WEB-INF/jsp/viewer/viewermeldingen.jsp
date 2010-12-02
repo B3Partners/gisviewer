@@ -60,8 +60,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     function tekenMelding(geomType) {
-        getParent().flamingo.call("editMap", 'removeAllFeatures');
-        getParent().flamingo.callMethod("editMap","editMapDrawNewGeometry","layer1",geomType);
+        getParent().webMapController.getMap().getLayer("editMap").removeAllFeatures();
+        var feature = new Feature("51306",geomType);
+        getParent().webMapController.getMap().getLayer("editMap").addFeature(feature);
+        //getParent().flamingo.callMethod("editMap","editMapDrawNewGeometry","layer1",geomType);
     }
 </script>
 
@@ -89,7 +91,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <script type="text/javascript">
                             var ouder = getParent();
                             if(ouder) {
-                                ouder.flamingo.call("editMap", 'removeAllFeatures');
+                                ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                             }
                         </script>
                     </c:if>
@@ -157,8 +159,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 var yend = point.indexOf(")", xstart);
                                 var coords = point.substring(xstart+1, yend).split(" ");
                                 if (coords.length == 2) {
-                                    ouder.flamingo.call("map1", 'setMarker', "${kenmerk}","",Number(coords[0]),Number(coords[1]));
-                                    ouder.flamingo.call("editMap", 'removeAllFeatures');
+                                    ouder.webMapController.getMap().setMarker("${kenmerk}", Number(coords[0]),Number(coords[1]), "");
+                                    ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                                 }
                             }
                         }

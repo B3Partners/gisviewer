@@ -2082,7 +2082,7 @@ function b_buffer(id, event) {
 
         EditUtil.buffer(wkt, afstand, returnBuffer);
     }
-}
+
 
 function drawFeature(ggbId, attrName, attrVal) {
 

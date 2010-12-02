@@ -1,44 +1,51 @@
-var zoekconfiguraties = null;
-var vergunningConfigIds = null;
+/*
+De zoekconfiguratie wordt op 2 manieren gebruikt. Als echte zoekactie,
+maar ook om opzoeklijstjes te vormen. In beide gevallen worden zoveel mogelijk
+zoekvelden vooringevuld op basis van resultaatvelden van vorige zoekacties.
+
+Zoekvelden die geen waarde hebben worden bij een normale zoekactie opgevraagd
+bij de gebruiker middels een geschikte control die bij het zoekveld gedefinieerd
+is.
+
+Bij het maken van opzoeklijstjes worden de onbekende zoekvelden gevuld met een
+wildkaart(*), waarmee alle mogelijkheden worden opgehaald (het opzoeklijstje).
+Het is vooralsnog niet mogelijk te filteren op unieke records via het
+daadwerkelijke datastore request, dus de zoeker filtert bij opzoeklijstjes
+achteraf de unieke velden (klopt het we dit dus altijd gaan bij wildcard
+zoekacties???). In de toekomst wordt aan de zoekconfiguratie een caching
+mechanisme toegevoegd, waardoor de traagheid van WFS bij grote datasets
+omzeild kan worden.
+
+Na het uitvoeren van een zoekconfiguratie (plus eventuele extra zoekacties
+voor de opzoeklijstjes) wordt gecontroleerd of de zoekactie een parent-
+zoekactie heeft (dus niet child zoals nu). Hierna begint het weer van voor
+af aan.
+ */
+
+/*
+    document.write('<div id="searchConfigurationsContainer">&nbsp;</div>')
+    document.write('<div id="searchInputFieldsContainer">&nbsp;</div>')
+*/
+
+//var zoekconfiguraties = [{"id":1,"zoekVelden":[{"id":1,"attribuutnaam":"fid","label":"Plannen","type":0,"naam":""}],"featureType":"app:Plangebied","resultaatVelden":[{"id":1,"attribuutnaam":"naam","label":"plan naam","type":2,"naam":"plannaam"},{"id":2,"attribuutnaam":"identificatie","label":"plan id","type":1,"naam":"planid"},{"id":3,"attribuutnaam":"verwijzingNaarTekst","label":"documenten","type":0,"naam":"documenten"},{"id":4,"attribuutnaam":"typePlan","label":"plantype","type":0,"naam":"plantype"},{"id":5,"attribuutnaam":"planstatus","label":"planstatus","type":0,"naam":"planstatus"},{"id":6,"attribuutnaam":"geometrie","label":"geometry","type":3,"naam":"geometry"}],"bron":{"id":1,"naam":"nlrpp","volgorde":1,"url":"http://afnemers.ruimtelijkeplannen.nl/afnemers/services?Version=1.0.0"},"naam":"iets"}];
+
 var inputSearchDropdown = null;
-var maxResults = null;
-var vergunningConfigTypes = null;
-var vergunningConfigStraal = null;
-var vergunningConfigVeld = null;
-var vergunningConfigTerm = null;
 
-var viewerDocument=null;
-if (window.parent){
-    viewerDocument=window.parent;
-}else if (window.opener){
-    viewerDocument=window.opener;
-}
-
-$j(document).ready(function(){
-    if (window.parent){
-        zoekconfiguraties = window.parent.getZoekconfiguraties();
-        vergunningConfigIds = window.parent.getVergunningConfigIds();
-        maxResults = window.parent.getMaxResults();
-        vergunningConfigStraal = window.parent.getVergunningConfigStraal();
-        vergunningConfigTypes = window.parent.getVergunningConfigTypes();
-        vergunningConfigVeld = window.parent.getVergunningConfigVelden();
-        vergunningConfigTerm = window.parent.getVergunningConfigTermen();
-    }
-
+function createSearchConfigurations(){
     var container=$j("#vergunningConfigurationsContainer");
-    if (zoekconfiguraties!=null) {
+    if (parent.zoekconfiguraties!=null) {
 
         var selectbox = $j('<select></select>');
-        selectbox.attr("id", "vergunningSelect");
+        selectbox.attr("id", "searchSelect");
         selectbox.change(function() {
-            vergunningConfigurationsSelectChanged($j(this));
+            searchConfigurationsSelectChanged($j(this));
         });
 
         selectbox.append($j('<option></option>').html("Maak uw keuze ...").val(""));
 
-        for (var i=0; i < zoekconfiguraties.length; i++){
-            if(showVergunningConfiguratie(zoekconfiguraties[i])){
-                selectbox.append($j('<option></option>').html(zoekconfiguraties[i].naam).val(i));
+        for (var i=0; i < parent.zoekconfiguraties.length; i++){
+            if(showZoekConfiguratie(parent.zoekconfiguraties[i])){
+                selectbox.append($j('<option></option>').html(parent.zoekconfiguraties[i].naam).val(i));
             }
         }
 
@@ -49,146 +56,203 @@ $j(document).ready(function(){
     }
 
     inputSearchDropdown = selectbox;
-});
+}
 
-function showVergunningConfiguratie(zoekconfiguratie){
-    var visibleIds = vergunningConfigIds.split(",");
-
-    for (var i=0; i < visibleIds.length; i++){
-        if (zoekconfiguratie.id == visibleIds[i]){
-            return true;
+// Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
+function performSearch() {
+    var zoekConfig = parent.zoekconfiguraties[currentSearchSelectId];
+    var zoekVelden=zoekConfig.zoekVelden;
+    var bron = zoekConfig.bron.url;
+    var searchOp = "%";
+    if(bron.indexOf("http") != -1) searchOp = "*";
+    var waarde=new Array();
+    for(var i=0; i<zoekVelden.length; i++){
+        if (zoekVelden[i].type != -1) { // alleen tonen niet doorgeven
+            var veld = $j("#"+zoekVelden[i].attribuutnaam).val();
+            if(veld == '') {
+                waarde[i] = "";
+            } else {
+                if (zoekVelden[i].type==0) {
+                    waarde[i]=searchOp + veld.replace(/^\s*/, "").replace(/\s*$/, "") + searchOp;
+                } else {
+                    waarde[i]=veld;
+                }
+            }
+        } else {
+            waarde[i] = "";
         }
     }
+
+    showLoading();
+    $j("#vergunningResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
+
+    JZoeker.zoek(parent.zoekconfiguraties[currentSearchSelectId].id,waarde,parent.maxResults,searchCallBack);
+}
+
+function handleZoekResultaat(searchResultId){
+    var searchResult = foundValues[searchResultId];
+
+    //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan een ouder heeft.
+    var zoekConfiguratie=searchResult.zoekConfiguratie;
+    var parentZc = zoekConfiguratie.parentZoekConfiguratie;
+    if (parentZc == null){
+        //zoom naar het gevonden object.(als er een bbox is)
+        if (searchResult.minx != 0 && searchResult.miny != 0 && searchResult.maxx != 0 && searchResult.maxy) {
+            parent.moveAndIdentify(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
+        }
+        return false;
+     }
+
+    if (parentZc.zoekVelden==undefined || parentZc.zoekVelden.length==0){
+        alert("Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: "+parentZc.id);
+        return false;
+    }
+
+    for (var i=0; i < parent.zoekconfiguraties.length; i++){
+        if(parent.zoekconfiguraties[i].id == parentZc.id) {
+            currentSearchSelectId = i;
+        }
+    }
+    parentZc = parent.zoekconfiguraties[currentSearchSelectId];
+
+    // Doe de volgende zoekopdracht
+    var zoekStrings = createZoekStringsFromZoekResultaten(parentZc, searchResult);
+    //
+    // toon de gevonden invoervelden en creeer inputboxen voor de strings met
+    // een * want die moeten nog ingevuld worden.
+    fillSearchDiv($j("#vergunningInputFieldsContainer"), parentZc.zoekVelden, zoekStrings);
+
     return false;
 }
 
-function showVergunningTypeConfiguratie(zoekconfiguratie){
-    var visibleIds = vergunningConfigTypes.split(",");
-
-    for (var i=0; i < visibleIds.length; i++){
-        if (zoekconfiguratie.id == visibleIds[i]){
-            return true;
+// Maak een volgende zoekopdracht voor de ouder.
+// vergelijk de gevondenAttributen met de zoekvelden van het kind.
+// Als het type gelijk is van beide vul dan de gevonden waarde in voor het zoekveld.
+function createZoekStringsFromZoekResultaten(zc, zoekResultaten) {
+    var newZoekStrings= new Array();
+    if(typeof zc === 'undefined' || !zc) return newZoekStrings;
+    for (var i=0; i < zc.zoekVelden.length; i++){
+        // * wordt evt later dmv van inputvelden ingevuld.
+        newZoekStrings[i] = "*";
+        for (var b=0; b < zoekResultaten.attributen.length;  b++){
+            var searchedAttribuut=zoekResultaten.attributen[b];
+            if (searchedAttribuut.type != -1) { // alleen tonen, niet doorgeven
+                if (zc.zoekVelden[i].attribuutnaam == searchedAttribuut.attribuutnaam) {
+                    newZoekStrings[i]=searchedAttribuut.waarde;
+                    break;
+                }
+                if (zc.zoekVelden[i].attribuutnaam == searchedAttribuut.label) {
+                    newZoekStrings[i]=searchedAttribuut.waarde;
+                    break;
+                }
+            }
         }
     }
-    return false;
+    return newZoekStrings;
 }
 
-var currentVergunningSelectId = "";
-function vergunningConfigurationsSelectChanged(element){
+function createZoekStringsFromZoekVelden(zc, zoekVelden, zoekStrings) {
+    var newZoekStrings= new Array();
+    if(typeof zc === 'undefined' || !zc) return newZoekStrings;
+
+    for (var i=0; i < zc.zoekVelden.length; i++){
+        // * wordt evt later dmv van inputvelden ingevuld.
+        newZoekStrings[i] = "*";
+        if(zoekStrings) {
+            for (var b=0; b < zoekVelden.length;  b++){
+                var searchedAttribuut=zoekVelden[b];
+                if (zc.zoekVelden[i].attribuutnaam == searchedAttribuut.attribuutnaam && zoekStrings[b]) {
+                    newZoekStrings[i]=zoekStrings[b];
+                    break;
+                }
+                if (zc.zoekVelden[i].label == searchedAttribuut.attribuutnaam && zoekStrings[b]) {
+                    newZoekStrings[i]=zoekStrings[b];
+                    break;
+                }
+            }
+        }
+    }
+    return newZoekStrings;
+}
+
+// De callback functie van het zoeken
+// @param values = de gevonden lijst met waarden.
+var foundValues=null;
+function searchCallBack(values){
+    hideLoading();
+
+    foundValues=values;
+    var searchResults=$j("#vergunningResults");
+
+    if (values==null || values.length == 0) {
+	searchResults.html("<br /><strong>Er zijn geen resultaten gevonden!</strong>");
+        return;
+    }
+
+    // Controleer of de bbox groter is dan de minimale bbox van de zoeker
+    for (var i=0; i < values.length; i++){
+        if (values[i].minx != 0 && values[i].miny != 0 && values[i].maxx != 0 && values[i].maxy) {
+            values[i]=getBboxMinSize2(values[i]);
+        }
+    }
+
+    var ollist = $j("<ol></ol>");
+    for (var j = 0; j < values.length; j++){
+        (function(tmp){
+            var li = $j('<li></li>');
+            var link = $j('<a></a>').attr("href", "#").html(values[tmp].label).click(function() {
+                handleZoekResultaat(tmp);
+            });
+            ollist.append(li.append(link));
+        })(j);
+    }
+    searchResults.empty().append(ollist);
+
+    if (values.length==1) {
+        handleZoekResultaat(0);
+	return;
+    }
+
+}
+
+
+function getBboxMinSize2(feature){
+    if ((Number(feature.maxx-feature.minx) < parent.minBboxZoeken)){
+        var addX=Number((parent.minBboxZoeken-(feature.maxx-feature.minx))/2);
+        var addY=Number((parent.minBboxZoeken-(feature.maxy-feature.miny))/2);
+        feature.minx=Number(feature.minx-addX);
+        feature.maxx=Number(Number(feature.maxx)+Number(addX));
+        feature.miny=Number(feature.miny-addY);
+        feature.maxy=Number(Number(feature.maxy)+Number(addY));
+    }
+    return feature;
+}
+
+var currentSearchSelectId = "";
+function searchConfigurationsSelectChanged(element){
     var container=$j("#vergunningInputFieldsContainer");
-    var container2=$j("#buttonContainer");
-    container2.html("");
 
+//    if (currentSearchSelectId == element.val()){
+//        return;
+//    } else
     if(!element ||element.val()==""){
         clearConfigurationsSelect(container);
         return;
     }
-    currentVergunningSelectId=element.val();
+    currentSearchSelectId=element.val();
 
-    var zc = zoekconfiguraties[currentVergunningSelectId];
+    var zc = parent.zoekconfiguraties[currentSearchSelectId];
     var zoekVelden=zc.zoekVelden;
     fillSearchDiv(container, zoekVelden, null);
 }
 
-var currentVergunningSelectType = "";
-function vergunningTypeConfigurationsSelectChanged(element){
-    var container=$j("#typeInputFieldsContainer");
-
-    if(!element ||element.val()==""){
-        clearConfigurationsTypeSelect(container);
-        return;
-    }
-    currentVergunningSelectType=element.val();
-
-    var zc = zoekconfiguraties[currentVergunningSelectType];
-    var zoekVelden=zc.zoekVelden;
-    fillSearchTypeDiv(container, zoekVelden, null);
-}
-
 function clearConfigurationsSelect(container) {
-    currentVergunningSelectType = "";
+    currentSearchSelectId = "";
     container.html("");
-}
-
-function clearConfigurationsTypeSelect(container) {
-    currentVergunningSelectId = "";
-    container.html("");
-}
-
-function fillSearchTypeDiv(container, zoekVelden, zoekStrings) {
-    if (!zoekVelden){
-            container.html("Geen zoekvelden");
-            return container;
-    }
-    if (zoekStrings && zoekStrings.length!=zoekVelden.length){
-            container.html("lengte van zoekvelden en te zoeken strings komt niet overeen");
-            return container;
-    }
-    container.empty();
-    for (var i=0; i < zoekVelden.length; i++){
-        var zoekVeld=zoekVelden[i];
-        if (zoekVeld.type==3){
-            // Bepaalde typen moeten niet getoond worden zoals: Geometry (3)
-            continue;
-        }
-
-        if (zoekVeld.type==100){
-            // Bepaalde typen moeten niet getoond worden zoals: Straal (100)
-            continue;
-        }
-
-        var zoekString = "*";
-        if (zoekStrings) {
-            zoekString = zoekStrings[i];
-        }
-
-        container.append('<strong>'+zoekVelden[i].label+':</strong><br />');
-        var inputfield;
-
-        if (zoekVeld.inputType == 1 && zoekVeld.inputType == 100) {
-
-            inputfield = $j('<select></select>').attr({
-                id: zoekVeld.attribuutnaam, //'searchField_ ' + zoekVeld.id,
-                name: zoekVeld.attribuutnaam,
-                size: zoekVeld.inputSize,
-                disabled: "disabled"
-            });
-            inputfield.append($j('<option></option>').html("Bezig met laden..."));
-            container.append(inputfield).append('<br /><br />');
-
-            //option lijst ophalen
-            var optionZcId = zoekVeld.inputZoekConfiguratie;
-            var optionListZc;
-            for (k=0; k < zoekconfiguraties.length; k++){
-                if(zoekconfiguraties[k].id == optionZcId) optionListZc = zoekconfiguraties[k];
-            }
-            var optionListStrings = createZoekStringsFromZoekVelden(optionListZc, zoekVelden, zoekStrings);
-            var ida = new Array(1);
-            ida[0] = optionListZc.id;
-            JZoeker.zoek(ida, optionListStrings, maxResults, handleZoekVeldinputList);
-
-        } else {
-
-            inputfield = $j('<input type="text" />');
-            inputfield.attr({
-                id: zoekVeld.label, //.attribuutnaam, //'searchField_' + zoekVeld.id,
-                name: zoekVeld.label, //.attribuutnaam,
-                size: 40,
-                maxlength: zoekVeld.inputSize
-            }).keyup(function(ev) {
-                performSearchOnEnterKey(ev);
-            });
-            container.append(inputfield).append('<br /><br />');
-
-         }
-
-        if (zoekString != "*") {
-            inputfield.val(zoekString);
-        }
-    }
 }
 
 function fillSearchDiv(container, zoekVelden, zoekStrings) {
+    
     if (!zoekVelden){
             container.html("Geen zoekvelden");
             return container;
@@ -201,20 +265,30 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
     container.empty();
     for (var i=0; i < zoekVelden.length; i++){
         var zoekVeld=zoekVelden[i];
-        if (zoekVeld.type==3){
-            // Bepaalde typen moeten niet getoond worden zoals: Geometry (3)
-            continue;
-        }
 
         var zoekString = "*";
         if (zoekStrings) {
             zoekString = zoekStrings[i];
         }
 
+        if (zoekVeld.type==3){
+            // Bepaalde typen moeten niet getoond worden zoals: Geometry (3)
+            var inputfield = $j('<input type="hidden" />');
+            inputfield.attr({
+                id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
+                name: zoekVeld.attribuutnaam
+            });
+            if (zoekString != "*") {
+                inputfield.val(zoekString);
+            }
+            container.append(inputfield);
+            continue;
+        }
+
         container.append('<strong>'+zoekVelden[i].label+':</strong><br />');
         var inputfield;
 
-        if (zoekVeld.inputType == 1 && zoekVeld.inputZoekConfiguratie) {
+        if (zoekVeld.inputType == 1 && zoekVeld.inputZoekConfiguratie && zoekVeld.type != 100 && zoekVeld.type != 50) {
 
             inputfield = $j('<select></select>').attr({
                 id: zoekVeld.attribuutnaam, //'searchField_ ' + zoekVeld.id,
@@ -228,75 +302,76 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             //option lijst ophalen
             var optionZcId = zoekVeld.inputZoekConfiguratie;
             var optionListZc;
-            for (k=0; k < zoekconfiguraties.length; k++){
-                if(zoekconfiguraties[k].id == optionZcId) optionListZc = zoekconfiguraties[k];
+            for (k=0; k < parent.zoekconfiguraties.length; k++){
+                if(parent.zoekconfiguraties[k].id == optionZcId) optionListZc = parent.zoekconfiguraties[k];
             }
             var optionListStrings = createZoekStringsFromZoekVelden(optionListZc, zoekVelden, zoekStrings);
             var ida = new Array(1);
             ida[0] = optionListZc.id;
-            JZoeker.zoek(ida, optionListStrings, maxResults, handleZoekVeldinputList);
+            JZoeker.zoek(ida, optionListStrings, parent.maxResults, handleZoekVeldinputList);
 
         } else {
 
-            inputfield = $j('<input type="text" />');
-            inputfield.attr({
-                id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
-                name: zoekVeld.attribuutnaam,
-                size: 40,
-                maxlength: zoekVeld.inputSize
-            }).keyup(function(ev) {
-                performSearchOnEnterKey(ev);
-            });
-            container.append(inputfield).append('<br /><br />');
+            if(zoekVeld.type == 100){
+                inputfield = $j('<select></select>');
+                inputfield.attr({
+                    id: zoekVeld.attribuutnaam,
+                    name: zoekVeld.attribuutnaam
+                });
 
-         }
+                var straalWaardes = parent.vergunningConfigStraal.split(",");
+                for (var i=0; i < straalWaardes.length; i++){
+                    inputfield.append($j('<option></option>').html(straalWaardes[i]).val(straalWaardes[i]));
+                }
+                container.append(inputfield).append('<br /><br />');
+            } else {
+
+                if(zoekVeld.type == 40 || zoekVeld.type == 50){
+                    inputfield = $j('<input type="text" />');
+                    inputfield.attr({
+                        id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
+                        name: zoekVeld.attribuutnaam,
+                        size: 40,
+                        maxlength: zoekVeld.inputSize,
+                        readonly: "readonly"
+                    }).keyup(function(ev) {
+                        performSearchOnEnterKey(ev);
+                    });
+                    container.append(inputfield).append('<br /><br />');
+                    $j("#" + zoekVeld.attribuutnaam).datepicker({
+                        dateFormat: 'yy-mm-dd',
+                        changeMonth: true,
+			changeYear: true
+                    });
+                }
+                else {
+                    inputfield = $j('<input type="text" />');
+                    inputfield.attr({
+                        id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
+                        name: zoekVeld.attribuutnaam,
+                        size: 40,
+                        maxlength: zoekVeld.inputSize
+                    }).keyup(function(ev) {
+                        performSearchOnEnterKey(ev);
+                    });
+                    container.append(inputfield).append('<br /><br />');
+                }
+
+             }
+        }
 
         if (zoekString != "*") {
             inputfield.val(zoekString);
         }
     }
 
-    var straalInput;
-    if(vergunningConfigStraal != ""){
-        container.append('<strong>Straal:</strong><br />');
-        straalInput = $j('<select></select>');
-        straalInput.attr("id", "Straal");
-
-        var straalWaardes = vergunningConfigStraal.split(",");
-        for (var i=0; i < straalWaardes.length; i++){
-            straalInput.append($j('<option></option>').html(straalWaardes[i]).val(straalWaardes[i]));
-        }
-        container.append(straalInput).append('<br /><br />');
-    }
-
-    var typeInput;
-    if(vergunningConfigTypes != ""){
-        container.append('<strong>Type:</strong><br />');
-        typeInput = $j('<select></select>');
-        typeInput.attr("id", "typeSelect");
-
-        typeInput.change(function() {
-            vergunningTypeConfigurationsSelectChanged($j(this));
-        });
-
-        for (var i=0; i < zoekconfiguraties.length; i++){
-            if(showVergunningTypeConfiguratie(zoekconfiguraties[i])){
-                typeInput.append($j('<option></option>').html(zoekconfiguraties[i].naam).val(i));
-            }
-        }
-
-        container.append(typeInput).append('<br /><br />');
-    }
-    vergunningTypeConfigurationsSelectChanged(typeInput);
-
-    var container2=$j("#buttonContainer");
     if (zoekVelden.length > 0) {
-        container2.append($j('<input type="button" />').attr("value", " Zoek ").addClass("knop").click(function() {
-            zoek();
+        container.append($j('<input type="button" />').attr("value", " Zoek ").addClass("knop").click(function() {
+            performSearch();
         }));
 
-        container2.append($j('<input type="button" />').attr("value", " Opnieuw zoeken").addClass("knop").click(function() {
-            vergunningConfigurationsSelectChanged(inputSearchDropdown);
+        container.append($j('<input type="button" />').attr("value", " Opnieuw zoeken").addClass("knop").click(function() {
+            searchConfigurationsSelectChanged(inputSearchDropdown);
         }));
     }
 
@@ -305,159 +380,25 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
     return container;
 }
 
-function zoek(){
-    document.getElementById("locatieBlok").style.display="none";
-    var zoekVelden=zoekconfiguraties[currentVergunningSelectId].zoekVelden;
-    var waarde=new Array();
-
-    for(var i=0; i<zoekVelden.length; i++){
-        var veld = $j("#"+zoekVelden[i].attribuutnaam).val();
-        if (zoekVelden[i].type==0) {
-            waarde[i]="*" + veld.replace(/^\s*/, "").replace(/\s*$/, "") + "*";
-        } else {
-            waarde[i]=veld;
-        }
-    }
-
-    //showLoading();
-    $j("#vergunningResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
-
-    JZoeker.zoek(zoekconfiguraties[currentVergunningSelectId].id,waarde,maxResults,handleLocatieSearch);
-}
-
-var gevondenLocaties=null;
-function handleLocatieSearch(values){
-    gevondenLocaties=values;
-
-    document.getElementById("vergunningBlok").style.display="none";
-    document.getElementById("geenResultaatBlok").style.display="none";
-
-    if(values.length<1){
-        document.getElementById("geenLocatieBlok").style.display="block";
-    }else if (values.length>1){
-        document.getElementById("geenLocatieBlok").style.display="none";
-        document.getElementById("locatieBlok").style.display="block";
-        var locatieResultElement = document.getElementById("locatieResults");
-        var sResult="<ol>";
-        for (var i =0; i < values.length; i++){
-            sResult += "<li><a href='#' onclick='javascript: doZoekOpdracht("+i+")'>"+values[i].label+"</a></li>";
-        }
-        sResult+="</ol>";
-        document.getElementById("locatieResults").innerHTML=sResult;
-    }else{
-        doZoekOpdracht(0);
-    }
-}
-
-function handleGeometryResult(adresIndex){
-    if (adresIndex!=null && gevondenLocaties.length > 0){
-        var straal=document.getElementById("Straal").value;
-        var searchResult=gevondenLocaties[adresIndex];
-        viewerDocument.moveToExtent(Number(searchResult.minx)-straal, Number(searchResult.miny)-straal, Number(searchResult.maxx)+straal, Number(searchResult.maxy)+straal,true);
-        for (var b=0; b  < searchResult.attributen.length;  b++){
-            var searchedAttribuut=searchResult.attributen[b];
-            if (searchedAttribuut.type==3){
-                return searchedAttribuut.waarde;
+function handleZoekVeldinputList(list){
+    if (list!=null && list.length > 0){
+        var controlElementName;
+        var zc = parent.zoekconfiguraties[currentSearchSelectId];
+        var optionListZc = list[0].zoekConfiguratie;
+        for (var i=0; i < zc.zoekVelden.length; i++) {
+            var zoekVeld=zc.zoekVelden[i];
+            if (zoekVeld.inputZoekConfiguratie == optionListZc.id) {
+                // controlElementName="searchField_"+zoekVeld.id;
+                controlElementName = zoekVeld.attribuutnaam;
             }
         }
+
+        // hier lijst nog filteren, zodat alleen unieke waarden erin staan
+        var controlElement=document.getElementById(controlElementName);
+        $j(controlElement).removeAttr("disabled");
+        dwr.util.removeAllOptions(controlElementName);
+        dwr.util.addOptions(controlElementName,list,"id","label");
     }
-    return "";
-}
-
-function doZoekOpdracht(adresIndex){
-    document.getElementById("locatieBlok").style.display="none";
-    //pak de geom
-    var geom=handleGeometryResult(adresIndex);
-
-    var zoekerConfigIds=new Array();
-    var vergunningsType=document.getElementById("typeSelect").value;
-
-    var typeId = getSearchConfigId(vergunningsType);
-
-    var zoekconfig = zoekconfiguraties[vergunningsType];
-
-    var waarden = new Array();
-
-    var veld = getVeldNaam(vergunningsType);
-    var term = getTerm(vergunningsType);
-
-    var zoekvelden = zoekconfig.zoekVelden;
-    for(var i = 0; i < zoekvelden.length; i++ ){
-        waarden[i] = "";
-        var label = zoekvelden[i].label;
-        var attribuutnaam = zoekvelden[i].attribuutnaam;
-
-        if(attribuutnaam == veld){
-            var soort = document.getElementById(label).value;
-            if(soort != ""){
-                waarden[i]="*"+soort+"*";
-            }else{
-                waarden[i]="*"+term+"*";
-            }
-        }else if(label != "Geometry"){
-            if(zoekvelden[i].type == 0){
-                waarden[i] = "*"+document.getElementById(label).value+"*";
-            }else{
-                waarden[i] = document.getElementById(label).value;
-            }
-        }else{
-            waarden[i]=geom;
-        }
-    }
-    
-    zoekerConfigIds[0]=typeId;
-    JZoeker.zoek(zoekerConfigIds,waarden,1000,handleSearchResults);
-}
-
-function getSearchConfigId(pos){
-    var ids = vergunningConfigTypes.split(",");
-
-    return zoekconfiguraties[pos].id;
-}
-
-function getVeldNaam(pos){
-    var velden = vergunningConfigVeld.split(",");
-
-    if(velden.length >= pos){
-        return velden[pos];
-    }else{
-        return "";
-    }
-}
-
-function getTerm(pos){
-    var Termen = vergunningConfigTerm.split(",");
-
-    if(Termen.length >= pos){
-        return Termen[pos];
-    }else{
-        return "";
-    }
-}
-
-function handleSearchResults(results){
-    document.getElementById("geenLocatieBlok").style.display="none";
-    document.getElementById("geenResultaatBlok").style.display="none";
-
-    if (results.length>0){
-        document.getElementById("vergunningBlok").style.display="block";
-        var vergunningResultElement = document.getElementById("vergunningBlok");
-        var sResult="<ol>";
-        for (var i =0; i < results.length; i++){
-            sResult += "<li><a href='#' onclick='javascript: moveAndIdentify("+results[i].minx+","+results[i].miny+")'>"+results[i].label+"</a></li>";
-        }
-        sResult+="</ol>";
-        document.getElementById("vergunningResults").innerHTML=sResult;
-    }else{
-        document.getElementById("vergunningBlok").style.display="none";
-        document.getElementById("geenResultaatBlok").style.display="block";
-    }
-}
-
-function moveAndIdentify(x, y){
-    var straal=100;
-    viewerDocument.moveToExtent(Number(x)-straal, Number(y)-straal, Number(x)+straal, Number(y)+straal,true);
-    viewerDocument.doIdentify(x,y,x,y);
 }
 
 function performSearchOnEnterKey(ev){
@@ -481,6 +422,16 @@ function performSearchOnEnterKey(ev){
         keycode = window.event.keyCode;
     }
     if (keycode==13){
-        zoek();
+        performSearch();
     }
+}
+
+function showZoekConfiguratie(zoekconfiguratie){
+    var visibleIds = parent.vergunningConfigIds.split(",");
+    for (var i=0; i < visibleIds.length; i++){
+        if (zoekconfiguratie.id == visibleIds[i]){
+            return true;
+        }
+    }
+    return false;
 }

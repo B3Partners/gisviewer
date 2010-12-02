@@ -36,7 +36,7 @@ html, body {
     color: #999999;
 }
 
-#mapcontent {
+#flashcontent {
     position: absolute;
     top: 28px;
     left: 3px;
@@ -175,6 +175,14 @@ html, body {
     margin-left: 3px;
  }
 
+.meldinglabel{
+    margin-top: 2px;
+    float: left
+}
+.meldingwaarde{
+    margin-left: 5px;
+    margin-top: 2px;
+}
 /* Panel controls */
 #panelControls div {
     z-index: 200;

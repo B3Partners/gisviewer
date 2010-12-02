@@ -13,7 +13,7 @@
     function catchEmpty(defval){
         return defval
     }
-    var mapviewer="openlayers";
+
     var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
     var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
@@ -31,7 +31,7 @@
     var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
     var kburl="${kburl}";
     var themaTree=catchEmpty(${tree});
-     if(typeof themaTree === 'undefined' || !themaTree) {
+    if(typeof themaTree === 'undefined' || !themaTree) {
         themaTree = null;
     }
     
@@ -186,22 +186,7 @@
     if(typeof vergunningConfigStraal === 'undefined' || !vergunningConfigStraal) {
         vergunningConfigStraal = "";
     }
-
-    var vergunningConfigTypes = catchEmpty(${configMap["vergunningConfigTypes"]});
-    if(typeof vergunningConfigTypes === 'undefined' || !vergunningConfigTypes) {
-        vergunningConfigTypes = "";
-    }
-
-    var vergunningConfigVelden = catchEmpty(${configMap["vergunningConfigVeld"]});
-    if(typeof vergunningConfigVelden === 'undefined' || !vergunningConfigVelden) {
-        vergunningConfigVelden = "";
-    }
-
-    var vergunningConfigTermen = catchEmpty(${configMap["vergunningConfigTerm"]});
-    if(typeof vergunningConfigTermen === 'undefined' || !vergunningConfigTermen) {
-        vergunningConfigTermen = "";
-    }
-
+    
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
@@ -317,15 +302,6 @@
     }
     function getVergunningConfigStraal(){
         return vergunningConfigStraal;
-    }
-    function getVergunningConfigTypes(){
-        return vergunningConfigTypes;
-    }
-    function getVergunningConfigVelden(){
-        return vergunningConfigVelden;
-    }
-    function getVergunningConfigTermen(){
-        return vergunningConfigTermen;
     }
 
 </script>

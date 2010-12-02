@@ -11,29 +11,29 @@
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type='text/javascript' src='dwr/util.js'></script>
 
-<div style="margin: 5px;">
-    <div id="vergunningConfigurationsContainer"></div>
-    <div id="vergunningInputFieldsContainer"></div>
-    <div id="locatieBlok" style="display:none;">
-        Klik op de locatie die u bedoelt:
-        <div id="locatieResults">
-
+<div style="padding: 5px;">
+    <div>
+        <div>
+            Zoek vergunningen als volgt:
+            <ul>
+                <li>kies op welke manier u het adres wil zoeken
+                <li>voer (een deel van) het adres in
+                <li>klik op zoeken
+                <li>kies het juiste adres uit lijst
+                <li>voer maximale afstand tot vergunning in
+                <li>voer het soort voorziening in
+                <li>kies de gewenste vergunning uit lijst
+            </ul>
         </div>
+        <div id="vergunningConfigurationsContainer" style="padding-bottom: 10px; margin-bottom: 10px;"></div>
+        <div id="vergunningInputFieldsContainer"></div>
+        <br>
+        <div class="searchResultsClass" id="vergunningResults"></div>
     </div>
-    <div id="geenLocatieBlok" style="display:none;">
-        Er zijn geen vergunningen gevonden.
-    </div>
-
-    <div id="vergunningBlok" style="display:none;">
-        Klik op de vergunningen die u bedoelt:
-        <div id="vergunningResults">
-
-        </div>
-    </div>
-    <div id="geenResultaatBlok" style="display:none;">
-        Er zijn geen vergunningen gevonden in het door u opgegeven zoekgebied.
-    </div>
-    <div id="typeInputFieldsContainer"></div>
-    <div id="buttonContainer"></div>
 </div>
 <script type="text/javascript" src="scripts/vergunningzoeker.js"></script>
+<script type="text/javascript">
+    $j(document).ready(function() {
+        createSearchConfigurations();
+    })
+</script>

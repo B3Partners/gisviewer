@@ -19,11 +19,34 @@ html, body {
     background-position: 10px 11px;
 }
 
+#acknowledge_tab {
+    border: 1px solid #357EBF;
+    width: 215px;
+    padding: 12px;
+    padding-left: 30px;
+    margin: 10px;
+    margin-left: 0px;
+    color: #000000;
+    background-color: #E0E1FF;
+    background-image: url(/gisviewer/images/icons/information.png);
+    background-repeat: no-repeat;
+    background-position: 10px 11px;
+}
+
 #error {
     border: 1px solid red;
     width: 550px;
     padding: 12px;
     margin: 10px;
+    background: #fff5f5 url(/gisviewer/images/icons/error.gif) no-repeat;
+}
+
+#error_tab {
+    border: 1px solid red;
+    width: 215px;
+    padding: 12px;
+    margin: 10px;
+    color: #000000;
     background: #fff5f5 url(/gisviewer/images/icons/error.gif) no-repeat;
 }
 

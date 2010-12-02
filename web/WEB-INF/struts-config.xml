@@ -32,6 +32,32 @@
             <form-property name="outputType" type="java.lang.String" initial="PDF_PRINT"/>
            <form-property name="remark" type="java.lang.String"/>
         </form-bean>
+        <form-bean name="meldingForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            <form-property name="meldingID" type="java.lang.String"/>
+            <form-property name="welkomTekst" type="java.lang.String"/>
+            <form-property name="prefixKenmerk" type="java.lang.String"/>
+            <form-property name="meldingTekst" type="java.lang.String"/>
+            <form-property name="emailMelder" type="java.lang.String"/>
+            <form-property name="adresMelder" type="java.lang.String"/>
+            <form-property name="naamMelder" type="java.lang.String"/>
+            <form-property name="meldingType" type="java.lang.String"/>
+            <form-property name="meldingStatus" type="java.lang.String"/>
+            <form-property name="meldingCommentaar" type="java.lang.String"/>
+            <form-property name="zendEmailMelder" type="java.lang.Boolean"/>
+            <form-property name="layoutStylesheetMelder" type="java.lang.String"/>
+            <form-property name="naamBehandelaar" type="java.lang.String"/>
+            <form-property name="emailBehandelaar" type="java.lang.String"/>
+            <form-property name="zendEmailBehandelaar" type="java.lang.Boolean"/>
+            <form-property name="layoutStylesheetBehandelaar" type="java.lang.String"/>
+            <form-property name="objectSoort" type="java.lang.String"/>
+            <form-property name="icoonTekentool" type="java.lang.String"/>
+            <form-property name="opmerking" type="java.lang.String"/>
+            <form-property name="gegevensbron" type="java.lang.Integer"/>
+            <form-property name="wkt" type="java.lang.String"/>
+            <form-property name="kenmerk" type="java.lang.String"/>
+        </form-bean>
         
     </form-beans>
     
@@ -75,6 +101,7 @@
             <forward name="admindata1" path="vieweradmindata1"/>
             <forward name="admindata2" path="vieweradmindata2"/>
             <forward name="admindata3" path="vieweradmindata3"/>
+            <forward name="multi_admindata" path="viewer_multi_admindata"/>
             <forward name="metadata" path="viewermetadata"/>
             <forward name="objectdata" path="viewerobjectdata"/>
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
@@ -89,7 +116,12 @@
 
         <action path="/viewerwelkom" forward="viewerwelkom"/>
         <action path="/vieweranalysedata" forward="vieweranalysedata"/>
-        <action path="/viewermeldingen" forward="viewermeldingen"/>
+
+        <action path="/viewermeldingen" type="nl.b3p.gis.viewer.MeldingAction" name="meldingForm" scope="request" validate="false">
+            <forward name="success" path="viewermeldingen"/>
+            <forward name="failure" path="viewermeldingen"/>
+            <forward name="melding" path="viewermeldingen"/>
+        </action>
 
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>

@@ -1,7 +1,7 @@
 <%--
-B3P Gisviewer is an extension to Flamingo MapComponents making      
-it a complete webbased GIS viewer and configuration tool that    
-works in cooperation with B3P Kaartenbalie.  
+B3P Gisviewer is an extension to Flamingo MapComponents making
+it a complete webbased GIS viewer and configuration tool that
+works in cooperation with B3P Kaartenbalie.
 
 Copyright 2006, 2007, 2008 B3Partners BV
 
@@ -23,9 +23,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
-<script type="text/javascript" src='dwr/engine.js'></script>
-<script type='text/javascript' src='dwr/util.js'></script>
+<c:set var="form" value="${meldingForm}"/>
+<c:set var="kenmerk" value="${form.map.kenmerk}"/>
 
 <script type="text/javascript">
     function getParent() {
@@ -39,119 +38,137 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         }
     }
 
-    function doAjaxRequest() {
+    function submitForm() {
         var ouder = getParent();
         if(ouder) {
-            var inputArray = new Array();
-            var alertRequired = false;
-            var alertTekst = "<p>Er kan geen melding verzonden worden, omdat: <ul>";
-            
             var wkt = ouder.getWktActiveFeature();
-            inputArray[0] = wkt;
-            if (!wkt) {
-                alertTekst +="<li>geen stip getekend is in de kaart</li>";
-                alertRequired = true;
-            }
-            var meldingtekst = document.getElementById('melding_tekst').value;
-            inputArray[1] = meldingtekst;
-            if (!meldingtekst){
-                alertTekst +="<li>geen tekst is ingegeven.</li>";
-                alertRequired = true;
-            }
-            var naamZender = document.getElementById('naam_zender').value;
-            inputArray[2] = naamZender;
-            if (!naamZender){
-                alertTekst +="<li>geen naam is ingegeven.</li>";
-                alertRequired = true;
-            }
-            var adresZender = document.getElementById('adres_zender').value;
-            inputArray[3] = adresZender;
-            if (!adresZender){
-                alertTekst +="<li>geen adres is ingegeven.</li>";
-                alertRequired = true;
-            }
-            var emailZender = document.getElementById('email_zender').value;
-            inputArray[4] = emailZender;
-            if (!emailZender){
-                alertTekst +="<li>geen emailadres is ingegeven.</li>";
-                alertRequired = true;
-            }
-            var meldingType = document.getElementById('melding_type').value;
-            inputArray[5] = meldingType;
-            if (!meldingType){
-                alertTekst +="<li>geen type is ingegeven.</li>";
-                alertRequired = true;
-            }
-            var meldingStatus = document.getElementById('melding_status').value;
-            inputArray[6] = meldingStatus;
-            var meldingCommentaar = document.getElementById('melding_commentaar').value;
-            inputArray[7] = meldingCommentaar;
-            var naamOntvanger = document.getElementById('naam_ontvanger').value;
-            inputArray[8] = naamOntvanger;
-            
-            alertTekst +="</ul>";
-            if (alertRequired){
-                document.getElementById('meldingresult').innerHTML =alertTekst;
-            }else{
-                document.getElementById('meldingresult').innerHTML = "<p>Informatie verzenden, een ogenblik aub ...</p>";
-                JMapData.zendMelding(inputArray, handleVerzending);
+            if (wkt) {
+                document.forms[0].wkt.value = wkt;
+            } else {
+                document.forms[0].wkt.value = "";
             }
         } else {
-            document.getElementById('meldingresult').innerHTML = "werkt alleen binnen gisviewer";
+            document.forms[0].wkt.value = "";
         }
+        document.forms[0].sendMelding.value = 't';
+        document.forms[0].submit();
     }
 
-    function handleVerzending(message) {
-        if (message!=undefined){
-            document.getElementById('meldingresult').innerHTML = message;
-        }else{
-            document.getElementById('meldingresult').innerHTML =
-                "Er is iets mis gegaan met de verzending, neem contact op met B3Partners BV";
-        }
+    function prepareForm() {
+        document.forms[0].prepareMelding.value = 't';
+        document.forms[0].submit();
     }
 
-    function zetPuntMelding() {
+    function tekenMelding(geomType) {
         getParent().flamingo.call("editMap", 'removeAllFeatures');
-        getParent().flamingo.callMethod("editMap","editMapDrawNewGeometry","layer1","Point");
+        getParent().flamingo.callMethod("editMap","editMapDrawNewGeometry","layer1",geomType);
     }
-
 </script>
 
 <div style="margin: 5px;">
     <div class="meldingencontainer">
-        <p>
-            Navigeer in de kaart naar de plaats waarop uw melding betrekking heeft en<br>
-            zet daarna een stip door op "Teken"-knop te klikken.
-            <input type="button" value="Teken" class="zoek_knop" id="puntMelding" name="puntMelding" onclick="zetPuntMelding();" />
-        </p>
-        <p>
-            Voer daarna de tekst van uw melding hieronder in en
-            klik op "Verzenden".
-        </p>
-        <p>
-            <input type="text" id="naam_zender" name="naam_zender" size="20" maxlength="250">
-            <br/>
-            <input type="text" id="adres_zender" name="adres_zender" size="20" maxlength="250">
-            <br/>
-            <input type="text" id="email_zender" name="email_zender" size="20" maxlength="250">
-            <br/>
-            <select id="melding_type" name="melding_type">
-                <option value="klacht"></option>
-                <option value="suggestie"></option>
-            </select>
-            <input type="hidden" id="melding_status" name="melding_status" value="in behandeling">
-            <input type="hidden" id="melding_commentaar" name="melding_commentaar" value="">
-            <input type="hidden" id="naam_ontvanger" name="naam_ontvanger" value="balie">
-            <br/>
-            <textarea id="melding_tekst" name="melding_tekst" rows="10" cols="45"></textarea>
-        </p>
-        <p>
-            <input type="button" value="Verzenden" class="zoek_knop" id="meldingen" name="meldingen" onclick="doAjaxRequest();" />
-        </p>
-
-        <div class="meldingresult" id="meldingresult" style="height: 10px;">
-            <p>Nog geen melding verzonden</p>
+        <div class="messages">
+            <html:messages id="message" message="true" >
+                <div id="error_tab">
+                    <c:out value="${message}" escapeXml="false"/>
+                </div>
+            </html:messages>
+            <html:messages id="message" name="acknowledgeMessages">
+                <div id="acknowledge_tab">
+                    <c:out value="${message}"/>
+                </div>
+            </html:messages>
         </div>
+
+        <html:form action="/viewermeldingen">
+            <input type="hidden" name="sendMelding">
+            <input type="hidden" name="prepareMelding">
+            <c:choose>
+                <c:when test="${fn:length(kenmerk)==0}">
+                    <c:if test="${empty form.map.wkt}">
+                        <script type="text/javascript">
+                            var ouder = getParent();
+                            if(ouder) {
+                                ouder.flamingo.call("editMap", 'removeAllFeatures');
+                            }
+                        </script>
+                    </c:if>
+                    <h3><c:out value="${form.map.welkomTekst}"/></h3>
+                    <p>
+                        <fmt:message key="melding.teken.help"/>
+                        <input type="button" value="Klik hier om tekenen te starten" class="zoek_knop" onclick="tekenMelding('${form.map.objectSoort}');" />
+                    </p>
+                    <p>
+                        <fmt:message key="melding.verzenden.help"/>
+                    </p>
+
+                    <div class="meldinglabel"><fmt:message key="melding.naammelder"/></div>
+                    <div class="meldingwaarde">
+                        <html:text property="naamMelder" size="40" maxlength="250"/>
+                    </div>
+                    <div class="meldinglabel"><fmt:message key="melding.adresmelder"/></div>
+                    <div class="meldingwaarde">
+                        <html:text property="adresMelder" size="40" maxlength="250"/>
+                    </div>
+                    <div class="meldinglabel"><fmt:message key="melding.emailmelder"/></div>
+                    <div class="meldingwaarde">
+                        <html:text property="emailMelder" size="40" maxlength="250"/>
+                    </div>
+                    <div class="meldinglabel"><fmt:message key="melding.type"/></div>
+                    <div class="meldingwaarde">
+                        <html:select property="meldingType">
+                            <c:forEach var="opt" items="${meldingTypes}">
+                                <html:option value="${opt}"/>
+                            </c:forEach>
+                        </html:select>
+                    </div>
+                    <div class="meldinglabel"><fmt:message key="melding.tekst"/></div>
+                    <div class="meldingwaarde">
+                        <html:textarea property="meldingTekst" cols="40" rows="10"/>
+                    </div>
+                    <html:hidden property="meldingStatus"/>
+                    <html:hidden property="meldingCommentaar"/>
+                    <html:hidden property="zendEmailMelder"/>
+                    <html:hidden property="layoutStylesheetMelder"/>
+                    <html:hidden property="naamBehandelaar"/>
+                    <html:hidden property="emailBehandelaar"/>
+                    <html:hidden property="zendEmailBehandelaar"/>
+                    <html:hidden property="layoutStylesheetBehandelaar"/>
+                    <html:hidden property="gegevensbron"/>
+                    <html:hidden property="objectSoort"/>
+                    <html:hidden property="icoonTekentool"/>
+                    <html:hidden property="wkt"/>
+                    <html:hidden property="kenmerk"/>
+                    <html:hidden property="welkomTekst"/>
+                    <html:hidden property="prefixKenmerk"/>
+                    <p>
+                        <input type="button" value="Verzenden" class="zoek_knop" onclick="submitForm();" />
+                        <input type="button" value="Formulier wissen" class="zoek_knop" onclick="prepareForm();" />
+                    </p>
+
+                </c:when>
+                <c:otherwise>
+                    <script type="text/javascript">
+                        var ouder = getParent();
+                        if(ouder) {
+                            var point = "${form.map.wkt}".toLowerCase();
+                            if (point.indexOf("point", 0)>=0) {
+                                var xstart = point.indexOf("(", 0);
+                                var yend = point.indexOf(")", xstart);
+                                var coords = point.substring(xstart+1, yend).split(" ");
+                                if (coords.length == 2) {
+                                    ouder.flamingo.call("map1", 'setMarker', "${kenmerk}","",Number(coords[0]),Number(coords[1]));
+                                    ouder.flamingo.call("editMap", 'removeAllFeatures');
+                                }
+                            }
+                        }
+                    </script>
+                    <p>
+                        <input type="button" value="Nieuwe Melding" class="zoek_knop" onclick="prepareForm();" />
+                    </p>
+                </c:otherwise>
+            </c:choose>
+        </html:form>
+
     </div>
 </div>
-

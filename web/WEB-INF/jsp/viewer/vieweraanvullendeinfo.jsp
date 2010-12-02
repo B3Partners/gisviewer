@@ -4,7 +4,12 @@
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
 <script type="text/javascript">
-    var mapRequest;
+
+    function catchEmpty(defval){
+        return defval
+    }
+    
+    var mapRequest = null;
     if (window.opener){
         if (window.opener.lastGetMapRequest){
             mapRequest=window.opener.lastGetMapRequest;
@@ -20,6 +25,11 @@
     mapRequest=removeParam(mapRequest,"bbox");
     mapRequest=removeParam(mapRequest,"width");
     mapRequest=removeParam(mapRequest,"height");
+
+    if (typeof mapRequest === 'undefined' || !url) {
+        mapRequest = "";
+    }
+
     if (mapRequest.lastIndexOf("?")!=mapRequest.length-1 && mapRequest.lastIndexOf("&")!=mapRequest.length-1){
         if (mapRequest.indexOf("?")>0){
             mapRequest+="&";
@@ -33,7 +43,13 @@
     var maxMapImageHeight=300;
     //De ruimte om het object heen dat ook moet worden getoond in het kaartje.
     var mapSpaceAround=10;
+
     function removeParam(url,param){
+
+        if (typeof url === 'undefined' || !url) {
+            return;
+        }
+        
         var newUrl;
         var paramBeginIndex=url.toLowerCase().indexOf(param+"=", 0);
         if (paramBeginIndex == -1)
@@ -165,7 +181,9 @@
                                             imagetag+=" height='"+height;
                                         }
                                         imagetag+="' alt='"+newMapRequest+"'/>";
-                                        document.write(imagetag);
+                                        if (mapRequest!="") {
+                                            document.write(imagetag);
+                                        }
                                     </script>
                                 </div>
                             </c:if>

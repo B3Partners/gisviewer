@@ -159,7 +159,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 
     var straalInput;
     if(voorzieningConfigStraal != ""){
-        container.append('<strong>Straal:</strong><br />');
+        container.append('<strong>Afstand tot adres:</strong><br />');
         straalInput = $j('<select></select>');
         straalInput.attr("id", "straalSelect");
 
@@ -172,7 +172,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 
     var typeInput;
     if(voorzieningConfigTypes != ""){
-        container.append('<strong>Type:</strong><br />');
+        container.append('<strong>Soort voorziening:</strong><br />');
         typeInput = $j('<select></select>');
         typeInput.attr("id", "typeSelect");
         

@@ -13,6 +13,18 @@
 
 <div style="margin: 5px;">
     <div>
+        <div>
+            Zoek voorzieningen als volgt:
+            <ul>
+                <li>kies op welke manier u het adres wil zoeken
+                <li>voer (een deel van) het adres in
+                <li>voer maximale afstand tot voorziening in
+                <li>voer het soort voorziening in
+                <li>klik op zoeken
+                <li>kies het juiste adres uit lijst
+                <li>kies de gewenste voorziening uit lijst
+            </ul>
+        </div>
         <div id="voorzieningConfigurationsContainer"></div>
         <div id="voorzieningInputFieldsContainer"></div>
         <div id="locatieBlok" style="display:none;">

@@ -56,10 +56,6 @@
     </definition>
     <definition name="tab" path="/WEB-INF/jsp/templates/templateTab.jsp"/>
     <!-- viewer tab-->
-    <definition name="viewerdata" extends="tab">
-        <put name="title" value="Viewerdata" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/viewerdata.jsp"/>
-    </definition>
     <definition name="viewerobjectdata" extends="tab">
         <put name="title" value="Viewerobjectdata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerobjectdata.jsp"/>
@@ -79,7 +75,10 @@
 
     <!-- viewer popup -->
     <definition name="popup" path="/WEB-INF/jsp/templates/templatePopup.jsp"/>
-
+    <definition name="viewerdata" extends="popup">
+        <put name="title" value="Viewerdata" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerdata.jsp"/>
+    </definition>
     <definition name="vieweradmindata1" extends="popup">
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp" />
@@ -92,6 +91,10 @@
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata3.jsp" />
     </definition>
+    <definition name="viewer_multi_admindata" extends="popup">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewer_multi_admindata.jsp" />
+    </definition>
     <definition name="vieweradmindatabusy" extends="popup">
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindatabusy.jsp" />
@@ -99,7 +102,7 @@
     <definition name="vieweraanvullendeinfo" extends="popup">
         <put name="title" value="Aanvullende informatie" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>
-    </definition>    
+    </definition>
     <definition name="createmappdf" extends="templatePrint">
         <put name="content" value="/WEB-INF/jsp/viewer/createmappdf.jsp"/>
     </definition>

@@ -238,13 +238,13 @@ function loadBusyJSP(handle, type) {
             '<td valign="top">'+
             '<div class="inleiding">'+
             '<table>'+
-            '<tr>'+
-            '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+
-            '<td>'+
-            '<h2>Bezig met laden ...</h2>'+
-            '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
-            '</td>'+
-            '</tr>'+
+                '<tr>'+
+                    '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+
+                    '<td>'+
+                        '<h2>Bezig met laden ...</h2>'+
+                        '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
+                    '</td>'+
+                '</tr>'+
             '</table>'+
             '</div>'+
             '</td>'+
@@ -316,7 +316,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
             //$j("#popupWindow").show();
             document.forms[0].target = 'dataframedivpopup';
             loadBusyJSP(dataframepopupHandle, 'div');
-        }else {
+        } else {
             document.forms[0].target = 'dataframepopup';
             loadBusyJSP(dataframepopupHandle, 'window');
         }
@@ -341,12 +341,10 @@ function openUrlInIframe(url){
 function getLayerPosition(item) {
 
     if((cookieArray == null) || !useCookies) {
-        if (item.visible=="on" || item.analyse=="active"){
+        if (item.visible=="on" || item.analyse=="active")
             return -1;
-        }
-        else{
+        else
             return 0;
-        }
     }
 
     var arr = cookieArray.split(',');
@@ -630,7 +628,7 @@ function createLabel(container, item) {
             return true; //hide
         }
 
-    }else if (!item.hide_tree) {
+    } else if (!item.hide_tree) {
         if(item.wmslayers){
 
             alleLayers.push(item);
@@ -654,7 +652,7 @@ function createLabel(container, item) {
                 if (!multipleActiveThemas){
                     var labelRadio = createRadioThema(item);
                     container.appendChild(labelRadio);
-                }else {
+                } else {
                     isActiveItem(item);
                 }
             }
@@ -882,7 +880,7 @@ function clusterCheckboxClick(element,dontRefresh){
     if (useCookies) {      
         if (element.checked) {
             addClusterIdToCookie(cluster.id);
-        }else {
+        } else {
             removeClusterIdFromCookie(cluster.id);
         }
     }
@@ -1068,7 +1066,7 @@ function checkScaleForLayers() {
         if (minscale > 0 && maxscale > 0) {
             if (currentscale <= maxscale && currentscale >= minscale) {
                 enableLayer(itemid);
-            }else {
+            } else {
                 disableLayer(itemid);
             }
         }
@@ -1200,10 +1198,10 @@ function refreshLayer(doRefreshOrder) {
         var layer=webMapController.getMap().getLayer(layerId);
         if (layer!=null){
             var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i);
-            if (i != oldOrderIndex){
-                doRefreshOrder=true;
-            }
+        if (i != oldOrderIndex){
+            doRefreshOrder=true;
         }
+    }
     }
 
     hideLoading();
@@ -1225,7 +1223,7 @@ function refreshLayer(doRefreshOrder) {
     for(var i = 0 ; i < lagen.length;i++){
         var laag = lagen[i];
         webMapController.getMap().setLayerIndex(laag,totalLayers);
-    }
+}
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {
@@ -1263,9 +1261,9 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
 
         if (!isNaN(minscale) && smallestMinscale != 0) {
             if (smallestMinscale == -1 || minscale < smallestMinscale) {
-                smallestMinscale = minscale;
+                    smallestMinscale = minscale;
             }
-        }else {
+        } else {
             smallestMinscale = 0;
         }
 
@@ -1275,7 +1273,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         
         if (!isNaN(maxscale) && largestMaxscale != 0) {
             if (largestMaxscale == -1 || maxscale > largestMaxscale) {
-                largestMaxscale = maxscale;
+                    largestMaxscale = maxscale;
             }
         } else {
             largestMaxscale = 0;
@@ -1314,7 +1312,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
 
     if (largestMaxscale != null && largestMaxscale > 0) {
         options["maxscale"]=largestMaxscale;
-    }    
+    }
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
@@ -1711,7 +1709,7 @@ function onChangeTool(id, event) {
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function onIdentify(movie,extend){
-    
+
     //todo: nog weghalen... Dit moet uniform werken.
     if (extend==undefined){
         extend=movie;
@@ -1736,7 +1734,7 @@ function onIdentify(movie,extend){
         geom += ")";
     }    
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    
+
     if (btn_highLightSelected) {
         //todo: webmapcontroller vervangen
         //flamingo.call("toolGroup", "setTool", "breinaald");
@@ -2030,7 +2028,7 @@ function getWkt() {
     if (object == null)
         return null;
 
-    return object.getWkt();
+    return object.wktgeom;
 }
 
 function b_getfeatures(id,event) {
@@ -2042,51 +2040,53 @@ function b_getfeatures(id,event) {
 }
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
 function b_buffer(id, event) {
-    var wkt;
+        var wkt;
 
-    /* Indien door highlight de global var is gevuld deze
-     * dan gebruiken bij buffer als deze niet null is
-     * De getWktActiveFeature geeft bij sommige multipolygons niet
-     * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
-     * mis gaat. Deze is dus alleen gevuld na een highlight
-     * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
-    if (multiPolygonBufferWkt != null)
-        wkt = multiPolygonBufferWkt;
-    else
-        wkt = getWktActiveFeature();
+        /* Indien door highlight de global var is gevuld deze
+         * dan gebruiken bij buffer als deze niet null is
+         * De getWktActiveFeature geeft bij sommige multipolygons niet
+         * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
+         * mis gaat. Deze is dus alleen gevuld na een highlight
+         * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
+        if (multiPolygonBufferWkt != null)
+            wkt = multiPolygonBufferWkt;
+        else
+            wkt = getWktActiveFeature();
 
-    multiPolygonBufferWkt = null;
+        multiPolygonBufferWkt = null;
+        
+        if (wkt==null)
+        {
+            return;
+        }
 
-    if (wkt==null)
-    {
-        return;
+        var str = prompt('Geef de bufferafstand in meters', '100');
+        var afstand = 0;
+
+        if((str == '') || ( str == 'undefined') || ( str == null))
+            return;
+
+        if( !isNaN( str) ) {
+            str = str.replace( ",", ".");
+            afstand = str;
+        } else {
+            handler( "Geen getal" );
+            return;
+        }
+
+        if (afstand == 0)
+        {
+            handler("Buffer mag niet 0 zijn");
+            return;
+        }
+
+        EditUtil.buffer(wkt, afstand, returnBuffer);
     }
-
-    var str = prompt('Geef de bufferafstand in meters');
-    var afstand = 0;
-
-    if((str == '') || ( str == 'undefined') || ( str == null))
-        return;
-
-    if( !isNaN( str) ) {
-        str = str.replace( ",", ".");
-        afstand = str;
-    } else {
-        handler( "Geen getal" );
-        return;
-    }
-
-    if (afstand == 0)
-    {
-        handler("Buffer mag niet 0 zijn");
-        return;
-    }
-
-    EditUtil.buffer(wkt, afstand, returnBuffer);
 }
 
-function drawFeature(themaId, attrName, attrVal) {
-    JMapData.getWkt(themaId, attrName, attrVal, drawWkt);
+function drawFeature(ggbId, attrName, attrVal) {
+
+    JMapData.getWkt(ggbId, attrName, attrVal, drawWkt);
 }
 
 function returnBuffer(wkt) {
@@ -2162,7 +2162,7 @@ function highLightThemaObject(geom) {
     if (analyseThemas.length == 1) {
         EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
         
-    //handleGetAdminData(geom, analyseThemas[0].id);
+        //handleGetAdminData(geom, analyseThemas[0].id);
     }
 }
 
@@ -2449,7 +2449,7 @@ $j(document).ready(function(){
     }
     /* vullen inhoud meldingen tab */
     if(document.getElementById('meldingenframeViewer')) {
-        document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do';
+        document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
     }
 
     if(!document.getElementById('popupWindow') && !getParent().document.getElementById('popupWindow')) {

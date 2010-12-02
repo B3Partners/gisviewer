@@ -7,7 +7,7 @@ a.menulink, a.menulink:visited, a.menulink:active, a.activemenulink, a.activemen
     overflow: hidden;
 }
 
-#mapcontent {
+#flashcontent {
     right: auto;
     bottom: auto;
 }

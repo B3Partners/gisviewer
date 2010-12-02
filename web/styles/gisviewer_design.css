@@ -369,7 +369,7 @@ a:hover{
     color: Black;
 }
 
-#searchConfigurationsContainer {
+#searchConfigurationsContainer, #vergunningConfigurationsContainer {
     border-bottom: 1px solid White;
 }
 
@@ -594,4 +594,28 @@ a.highlightlink:hover{
 
 .imagenoborder {
     border: 0px none;
+}
+
+/* multi_admin css */
+
+.bronContainer {
+    border: 1px solid #D2E0EB;
+}
+
+.bronCaption {
+    background-color: #D2E0EB;
+    /* border: 1px solid gray; */
+}
+
+.bronContent bronContentOpen {
+    border: 1px solid #D2E0EB;
+}
+
+.childCaption {
+    background-color: #D2E0EB;
+    /* border: 1px solid gray; */
+}
+
+.bronChild bronChildEmpty {
+    border: 1px solid #D2E0EB;
 }

@@ -47,9 +47,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
             <script type="text/javascript" src="scripts/cssfixes_ie.js"></script>
         <![endif]-->
-        <script type="text/javascript">
-            attachOnload(checkLocation);
-        </script>
         <!--[if IE]>
         <script type="text/javascript">
             var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer'];

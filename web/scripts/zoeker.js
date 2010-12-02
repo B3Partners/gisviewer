@@ -262,14 +262,22 @@ function createSearchConfigurations(){
 
 // Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
 function performSearch() {
-    var zoekVelden=zoekconfiguraties[currentSearchSelectId].zoekVelden;
+    var zoekConfig = zoekconfiguraties[currentSearchSelectId];
+    var zoekVelden=zoekConfig.zoekVelden;
+    var bron = zoekConfig.bron.url;
+    var searchOp = "%";
+    if(bron.indexOf("http") != -1) searchOp = "*";
     var waarde=new Array();
     for(var i=0; i<zoekVelden.length; i++){
         var veld = $j("#"+zoekVelden[i].attribuutnaam).val();
-        if (zoekVelden[i].type==0) {
-            waarde[i]="*" + veld.replace(/^\s*/, "").replace(/\s*$/, "") + "*";
+        if(veld == '') {
+            waarde[i] = "";
         } else {
-            waarde[i]=veld;
+            if (zoekVelden[i].type==0) {
+                waarde[i]=searchOp + veld.replace(/^\s*/, "").replace(/\s*$/, "") + searchOp;
+            } else {
+                waarde[i]=veld;
+            }
         }
     }
 
@@ -453,14 +461,24 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
     container.empty();
     for (var i=0; i < zoekVelden.length; i++){
         var zoekVeld=zoekVelden[i];
-        if (zoekVeld.type==3){
-            // Bepaalde typen moeten niet getoond worden zoals: Geometry (3)
-            continue;
-        }
 
         var zoekString = "*";
         if (zoekStrings) {
             zoekString = zoekStrings[i];
+        }
+
+        if (zoekVeld.type==3){
+            // Bepaalde typen moeten niet getoond worden zoals: Geometry (3)
+            var inputfield = $j('<input type="hidden" />');
+            inputfield.attr({
+                id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
+                name: zoekVeld.attribuutnaam
+            });
+            if (zoekString != "*") {
+                inputfield.val(zoekString);
+            }
+            container.append(inputfield);
+            continue;
         }
 
         container.append('<strong>'+zoekVelden[i].label+':</strong><br />');

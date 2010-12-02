@@ -61,7 +61,6 @@ function initMapComponent(){
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
-    webMapController.registerEvent(Event.ON_CHANGE_TOOL,webMapController,onChangeTool);
 }
 
 function initializeButtons(){
@@ -83,8 +82,9 @@ function initializeButtons(){
     options["handlerGetFeatureHandler"] = onIdentifyData;
     options["handlerBeforeGetFeatureHandler"] = onIdentify;
 
-    identify = webMapController.createTool("b_identify",Tool.GET_FEATURE_INFO,null, options);
+    identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,null, options);
     webMapController.addTool(identify);
+    webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
     //webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
     
     var editLayer = webMapController.createVectorLayer("editMap");
@@ -110,9 +110,6 @@ function initializeButtons(){
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
-    
-    webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
-
 }
 
 initMapComponent();
@@ -1706,8 +1703,8 @@ if(activeTab != null) {
 Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
 /*TODO: WebMapController hoe gaan we dit oplossen?*/
-function onChangeTool(toolgroupId, toolId) {
-    if (toolId == 'identify') {
+function onChangeTool(id, event) {
+    if (id == 'identify') {
         btn_highLightSelected = false;
     }
 }

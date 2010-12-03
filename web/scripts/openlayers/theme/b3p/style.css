@@ -52,10 +52,10 @@
     background-color: black;
 }
 .olControlPanel .olControlidentifyItemActive{
-    background-color: red;
+    background-image: url("img/identify_on.png");
 }
 .olControlPanel .olControlidentifyItemInactive{
-    background-color: blue;
+    background-image: url("img/identify_off.png");
 }
 
 .olControlPanel .olControlb_highlightItemInactive{

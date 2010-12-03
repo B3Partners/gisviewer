@@ -1254,6 +1254,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     var smallestMinscale = -1;
     var largestMaxscale = -1;
 
+    var maptips=new Array();
     // last in list will be on top in map
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
@@ -1305,6 +1306,8 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
                 aka=aka.substring(aka.indexOf("_")+1);
             }
         //TODO: WebMapController
+            var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
+            maptips.push(maptip);
         //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
     }
@@ -1318,10 +1321,12 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     }
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
-    var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+    
     //TODO: WebMapController
-    /*options["maptiplayers"]=maptiplayers;
-    newLayer.setMaptiplayers(maptipLayers);*/
+    options["maptip_layers"]=maptipLayers;
+    var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+    //newLayer.setMaptiplayers(maptipLayers);
+    newLayer.setMapTips(maptips);
     webMapController.getMap().addLayer(newLayer);//false, true, false
 }
 

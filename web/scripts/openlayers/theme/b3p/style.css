@@ -109,3 +109,16 @@
     display: none;
 }
 
+.olControlMaptip{
+    background-color: white;
+    border: 1px solid #444;
+    padding: 2px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    opacity:0.85;
+}
+.olControlMaptip div{
+    opacity:1;
+    font-weight: bold;
+
+}

@@ -61,9 +61,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     function tekenMelding(geomType) {
         getParent().webMapController.getMap().getLayer("editMap").removeAllFeatures();
-        var feature = new Feature("51306",geomType);
-        getParent().webMapController.getMap().getLayer("editMap").addFeature(feature);
-        //getParent().flamingo.callMethod("editMap","editMapDrawNewGeometry","layer1",geomType);
+        getParent().webMapController.getMap().getLayer("editMap").drawFeature(geomType);
     }
 </script>
 

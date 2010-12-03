@@ -65,6 +65,8 @@ function initMapComponent(){
 }
 
 function initializeButtons(){
+    webMapController.createPanel("toolGroup");
+
     webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
     zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX);
@@ -295,8 +297,8 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     }
 
     document.forms[0].geom.value=geom;
-    //TODO: webmapcontroller vervangen flamingo.call
-    //document.forms[0].scale.value=flamingo.call("map1", "getCurrentScale");
+    
+    document.forms[0].scale.value=webMapController.getMap().getScale();
     document.forms[0].tolerance.value=tolerance;
 
     if (highlightThemaId != null) {
@@ -1045,7 +1047,7 @@ function doRefreshLayer() {
 }
 
 function checkScaleForLayers() {    
-    var currentscale = flamingo.callMethod("map1", 'getScale');
+    var currentscale = webMapController.getMap().getScale();
 
     var minscale = 0;
     var maxscale = 0;
@@ -1737,14 +1739,12 @@ function onIdentify(movie,extend){
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
 
     if (btn_highLightSelected) {
-        //todo: webmapcontroller vervangen
-        //flamingo.call("toolGroup", "setTool", "breinaald");
+        webMapController.activateTool("breinaald");
         
         highLightThemaObject(geom);
     } else {
         btn_highLightSelected = false;
-        //todo: webmapcontroller vervangen
-        //flamingo.call("toolGroup", "setTool", "identify");
+        webMapController.activateTool( "identify");
 
         handleGetAdminData(geom, null);
     }
@@ -1863,7 +1863,7 @@ function doIdentify(minx,miny,maxx,maxy){
         miny:miny        
     });
     //TODO: WebMapController
-    webMapController.getFlamingo().callMethod("toolGroup","setTool","identify");
+    webMapController.activateTool("identify");
 }
 var nextIdentifyExtent=null;
 function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
@@ -2118,9 +2118,8 @@ function b_removePolygons(id,params){
 /* er is net op de highlight knop gedrukt */
 function b_highlight( id,params) {
         btn_highLightSelected = true;
-        flamingo.call("toolGroup", "setTool", "breinaald");
-    
-    }
+        webMapController.activateTool( "breinaald");
+}
 
 var btn_highLightSelected = false;
 

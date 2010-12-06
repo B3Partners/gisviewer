@@ -61,11 +61,14 @@ function initMapComponent(){
     //
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
+   // webMapController.registerEvent(Event.ON_CLICK,webMapController.getMap(),onIdentify);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
+
 }
 
 function initializeButtons(){
     webMapController.createPanel("toolGroup");
+    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), flamingo_map1_onUpdateComplete);
 
     webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
@@ -1722,8 +1725,6 @@ function onIdentify(movie,extend){
     if (extend==undefined){
         extend=movie;
     }
-    var xp = (extend.minx + extend.maxx)/2;
-    var yp = (extend.miny + extend.maxy)/2;
 
     var geom = "";
     if (extend.minx!=extend.maxx && extend.miny!=extend.maxy) {

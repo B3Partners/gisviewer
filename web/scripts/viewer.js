@@ -36,10 +36,6 @@ function initMapComponent(){
         webMapController=new FlamingoController('mapcontent');
         var map=webMapController.createMap("map1");
         webMapController.addMap(map);
-    //TODO: WebMapController
-    //webMapController.createEditMap("editMap");
-    //webMapController.setRequestListener("requestIsDone");
-    //webMapController.getMap().enableLayerRequestListener();
     }else if (mapviewer=="openlayers"){
         webMapController= new OpenLayersController();
         var opt={
@@ -53,22 +49,17 @@ function initMapComponent(){
         var olmap=webMapController.createMap('mapcontent',opt);
         $j("#mapcontent").css("border","1px solid black");
         webMapController.addMap(olmap);
-        //webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
-     
-   //webMapController.getMap().zoomToExtent(new Extent(12000, 304000, 280000, 620000));
-
     }
     //
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
-   // webMapController.registerEvent(Event.ON_CLICK,webMapController.getMap(),onIdentify);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
 
 }
 
 function initializeButtons(){
     webMapController.createPanel("toolGroup");
-    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), flamingo_map1_onUpdateComplete);
+    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
 
     webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
@@ -91,7 +82,6 @@ function initializeButtons(){
     identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,null, options);
     webMapController.addTool(identify);
     webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
-    //webMapController.registerEvent(Event.ON_CLICK,identify,flamingo_map1_onIdentify);
     
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
@@ -119,19 +109,6 @@ function initializeButtons(){
 }
 
 initMapComponent();
-function onGeometryDrawFinished(objectid,wkt){
-    alert("wkt");
-}
-
-function test(a,b,c,d){
-   // alert("Test");
-}
-
-function testIdentify(evt){
-    alert(evt);
-}
-/*webMapController.getMap().setMaxExtent(new Extent(0, 292000, 304000, 628000));
-webMapController.getMap().zoomToMaxExtent();*/
 
 var mapInitialized=false;
 var searchExtent=null;
@@ -428,7 +405,6 @@ function setActiveThema(id, label, overrule) {
                 maxx=minx;
                 maxy=miny;
             }
-            /*TODO: WebMapController Renamen*/
             onIdentify('',{
                 minx:minx,
                 miny:miny,
@@ -1308,7 +1284,6 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
                 aka=aka.substring(aka.indexOf("_")+1);
             }
-        //TODO: WebMapController
             var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
             maptips.push(maptip);
         //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
@@ -1325,10 +1300,9 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
     
-    //TODO: WebMapController
     options["maptip_layers"]=maptipLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
-    //newLayer.setMaptiplayers(maptipLayers);
+
     newLayer.setMapTips(maptips);
     webMapController.getMap().addLayer(newLayer);//false, true, false
 }
@@ -1711,7 +1685,7 @@ if(activeTab != null) {
 }
 Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
-/*TODO: WebMapController hoe gaan we dit oplossen?*/
+
 function onChangeTool(id, event) {
     if (id == 'identify') {
         btn_highLightSelected = false;
@@ -1868,7 +1842,6 @@ function doIdentify(minx,miny,maxx,maxy){
         minx:minx,
         miny:miny        
     });
-    //TODO: WebMapController
     webMapController.activateTool("identify");
 }
 var nextIdentifyExtent=null;
@@ -1888,8 +1861,7 @@ function moveAndIdentify(minx,miny,maxx,maxy){
     doIdentifyAfterUpdate(centerX,centerY,centerX,centerY);
 }
 
-/*TODO: WebMapController bij klaar zijn met laden event*/
-function flamingo_map1_onUpdateComplete(mapId){
+function onAllLayersFinishedLoading(mapId){
     checkScaleForLayers();
 
     if(nextIdentifyExtent!=null){
@@ -1915,18 +1887,6 @@ function setTimerForReload() {
 
 function clearTimerForReload() {
     clearTimeout(reloadTimer);
-}
-
-/*functie controleerd of het component is geladen. Zo niet dan wordt het oninit event afgevangen en daarin
-         *wordt de functie nogmaals aangeroepen. Nu bestaat het object wel en kan de functie wel worden aangeroepen.
-         **/
-function callFlamingoComponent(id,func,value){
-    if (typeof flamingo.callMethod == 'function' && flamingo.callMethod('flamingo','exists',id)==true){
-        eval("setTimeout(\"flamingo.callMethod('"+id+"','"+func+"',"+value+")\",10);");
-    }
-    else{
-        eval("flamingo_"+id+"_onInit= function(){callFlamingoComponent('"+id+"','"+func+"','"+value+"');};");
-    }
 }
 
 /*Get de flash movie*/

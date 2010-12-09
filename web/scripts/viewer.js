@@ -29,7 +29,8 @@ var webMapController= null;
 var b_buffer,zoomBox,pan,prevExtent,identify;
 function initMapComponent(){
 
-    mapviewer="openlayers";
+    mapviewer="flamingo";
+
     if (window.location.href.indexOf("flamingo")>0)
         mapviewer="flamingo";
     if (mapviewer== "flamingo"){
@@ -2235,8 +2236,7 @@ function dispatchEventJS(event, comp) {
     
 }*/
 
-function getBookMark() {
-
+function getBookMark() {    
     /* url base */
     var protocol = window.location.protocol + "//";
     var host = window.location.host;

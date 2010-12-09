@@ -121,7 +121,7 @@
                                 var yend = point.indexOf(")", xstart);
                                 var coords = point.substring(xstart+1, yend).split(" ");
                                 if (coords.length == 2) {
-                                    ouder.webMapController.getMap().setMarker("${kenmerk}", Number(coords[0]),Number(coords[1]), "");
+                                    //ouder.webMapController.getMap().setMarker("${kenmerk}", Number(coords[0]),Number(coords[1]), "");
                                     ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                                 }
                             }

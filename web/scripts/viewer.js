@@ -29,7 +29,7 @@ var webMapController= null;
 var b_buffer,zoomBox,pan,prevExtent,identify;
 function initMapComponent(){
 
-    mapviewer="flamingo";
+    mapviewer = viewerType;
 
     if (window.location.href.indexOf("flamingo")>0)
         mapviewer="flamingo";

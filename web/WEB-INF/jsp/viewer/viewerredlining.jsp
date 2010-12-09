@@ -98,7 +98,7 @@
                         </tr>
                         <tr>
                             <td>Opmerking</td>
-                            <td><html:text property="opmerking" size="40" maxlength="80"/></td>
+                            <td><html:text property="opmerking" size="30" maxlength="80"/></td>
                         </tr>
                     </table>
 

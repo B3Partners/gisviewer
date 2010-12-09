@@ -52,6 +52,24 @@
     var searchClusterId='${searchClusterId}';
     var searchSldVisibleValue='${searchSldVisibleValue}';
 
+    /* Viewer type */
+    var viewerType = catchEmpty("${configMap["viewerType"]}");
+    if(typeof viewerType === 'undefined' || !viewerType) {
+        viewerType = 'flamingo';
+    }
+
+    /* Viewer type */
+    var viewerTemplate = catchEmpty("${configMap["viewerTemplate"]}");
+    if(typeof viewerTemplate === 'undefined' || !viewerTemplate) {
+        viewerTemplate = 'standalone';
+    }
+
+    /* ObjectInfo type */
+    var objectInfoType = catchEmpty("${configMap["objectInfoType"]}");
+    if(typeof objectInfoType === 'undefined' || !objectInfoType) {
+        objectInfoType = 'paneel';
+    }
+
     var useCookies=catchEmpty(${configMap["useCookies"]});
     if(typeof useCookies === 'undefined') {
         useCookies = true;

@@ -9,7 +9,10 @@
 <script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 
-<script type="text/javascript">  
+<script type="text/javascript">
+
+    var baseNameViewer = "${contextPath}";
+    
     function catchEmpty(defval){
         return defval
     }
@@ -220,7 +223,8 @@
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" },
         "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
         "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
-        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" }
+        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
+        "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -467,7 +471,7 @@
     <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div> <%--<html:rewrite page='/vieweranalysedata.do'/>--%>
     <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="meldingenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="meldingenframeViewer" name="meldingenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-
+    <div id="redliningvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="redliningframeViewer" name="redliningframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
         
 <script type="text/javascript">

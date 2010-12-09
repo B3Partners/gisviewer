@@ -58,6 +58,17 @@
             <form-property name="wkt" type="java.lang.String"/>
             <form-property name="kenmerk" type="java.lang.String"/>
         </form-bean>
+
+        <form-bean name="redliningForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            <form-property name="redliningID" type="java.lang.String"/>
+            <form-property name="projectid" type="java.lang.String"/>
+            <form-property name="fillcolor" type="java.lang.String"/>
+            <form-property name="opmerking" type="java.lang.String"/>
+            <form-property name="wkt" type="java.lang.String"/>
+            <form-property name="gegevensbron" type="java.lang.Integer"/>
+        </form-bean>
         
     </form-beans>
     
@@ -121,6 +132,12 @@
             <forward name="success" path="viewermeldingen"/>
             <forward name="failure" path="viewermeldingen"/>
             <forward name="melding" path="viewermeldingen"/>
+        </action>
+
+        <action path="/viewerredlining" type="nl.b3p.gis.viewer.RedliningAction" name="redliningForm" scope="request" validate="false">
+            <forward name="success" path="viewerredlining"/>
+            <forward name="failure" path="viewerredlining"/>
+            <forward name="redlining" path="viewerredlining"/>
         </action>
 
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">

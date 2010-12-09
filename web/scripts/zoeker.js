@@ -275,6 +275,20 @@ function performSearch() {
         } else {
             if (zoekVelden[i].type==0) {
                 waarde[i]=searchOp + veld.replace(/^\s*/, "").replace(/\s*$/, "") + searchOp;
+            } else if (zoekVelden[i].type==80) { // XY coord
+
+                var x = $j("#"+zoekVelden[i].id + '_x').val();
+                var y = $j("#"+zoekVelden[i].id + '_y').val();
+
+                if (x == undefined || y == undefined || x == "" || y == "") {
+                    alert('Ongeldige coordinaten opgegeven.');
+                    return;
+                }
+
+                x = x.replace(",", ".");
+                y = y.replace(",", ".");
+
+                waarde[i]= x+','+y;
             } else {
                 waarde[i]=veld;
             }
@@ -508,17 +522,46 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 
         } else {
 
-            inputfield = $j('<input type="text" />');
-            inputfield.attr({
-                id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
-                name: zoekVeld.attribuutnaam,
-                size: 40,
-                maxlength: zoekVeld.inputSize
-            }).keyup(function(ev) {
-                performSearchOnEnterKey(ev);
-            });
-            container.append(inputfield).append('<br /><br />');
+            /* XY coord type */
+            if(zoekVeld.type == 80) {
 
+                inputfield = $j('<input type="text" />');
+                inputfield.attr({
+                    id: zoekVeld.id + '_x',
+                    name: zoekVeld.id + '_x',
+                    size: '15',
+                    maxlength: '10' //zoekVeld.inputSize
+                }).keyup(function(ev) {
+                    performSearchOnEnterKey(ev);
+                });
+                container.append(inputfield).append('<br/><br/>');
+
+                inputfield = $j('<input type="text" />');
+                inputfield.attr({
+                    id: zoekVeld.id + '_y',
+                    name: zoekVeld.id + '_y',
+                    size: '15',
+                    maxlength: '10' //zoekVeld.inputSize
+                }).keyup(function(ev) {
+                    performSearchOnEnterKey(ev);
+                });
+                container.append(inputfield).append('<br/><br/>');
+
+            } else {
+
+                inputfield = $j('<input type="text" />');
+                inputfield.attr({
+                    id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
+                    name: zoekVeld.attribuutnaam,
+                    size: 40,
+                    maxlength: zoekVeld.inputSize
+                }).keyup(function(ev) {
+                    performSearchOnEnterKey(ev);
+                });
+
+                container.append(inputfield).append('<br /><br />');
+            }
+            
          }
 
         if (zoekString != "*") {

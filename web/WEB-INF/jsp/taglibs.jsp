@@ -29,3 +29,5 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 
 <%@taglib uri="http://commons.b3p.nl/jstl-functions" prefix="f" %>
+
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>

@@ -1113,7 +1113,7 @@ function refreshLayer(doRefreshOrder) {
             localGroupName = "fmc" + item.id;
         } else if (layerGrouping == "lg_cluster") {
             localGroupName = "fmc" + item.clusterid;
-        } else if (layerGrouping == "lg_forebackground") {
+        }else if (layerGrouping == "lg_forebackground") {
             if (item.background){
                 localGroupName = "fmcback";
             }else{
@@ -2078,6 +2078,7 @@ function drawObject(feature) {
  * Alle geïmplementeerde eventhandling functies
  */
 function b_removePolygons(id,params){
+		getBookMark();
         webMapController.getMap().getLayer("editMap").removeAllFeatures();
 }
 
@@ -2122,7 +2123,7 @@ function highLightThemaObject(geom) {
 
     if (analyseThemas.length > 1) {
         // popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 680, 225, true);
-        iFramePopup('viewerhighlight.do', false, 'Breinaald popup', 400, 300);
+        iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300);
     }
 
     if (analyseThemas.length == 1) {
@@ -2229,6 +2230,65 @@ function dispatchEventJS(event, comp) {
   
     
 }*/
+
+function getBookMark() {
+
+    /* url base */
+    var protocol = window.location.protocol + "//";
+    var host = window.location.host;
+    var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
+
+    /* kaartlaagIds ophalen */
+    var id = "";
+    var layerIds = getLayerIdsAsString();
+
+    if (layerIds != undefined && layerIds.length > 0) {
+        id = "id=" + layerIds;
+    }
+
+    /* extent ophalen */
+    var fullExtent = flamingoController.getMap().getExtent();
+    var minx = fullExtent.minx.toString().split('.');
+    var miny = fullExtent.miny.toString().split('.');
+    var maxx = fullExtent.maxx.toString().split('.');
+    var maxy = fullExtent.maxy.toString().split('.');
+
+    /* extent geeft number terug, casten naar string zodat split werkt
+     * als er dan een punt in zit de decimaal erafhalen */
+    if (typeof minx != 'string')
+        minx = minx[0];
+
+    if (typeof miny != 'string')
+        miny = miny[0];
+
+    if (typeof maxx != 'string')
+        maxx = maxx[0];
+
+    if (typeof maxy != 'string')
+        maxy = maxy[0];
+
+    var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
+
+    var url = urlBase + id + extent;
+    
+    addToFavorites(url);
+}
+
+function addToFavorites(url) {
+    
+    var title = "B3P Gisviewer: " + url;
+
+    if (window.sidebar) { // Firefox
+        window.sidebar.addPanel(title, url,"");
+    } else if( window.external ) { // IE 6,7 not 8?
+        /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
+        window.external.AddFavorite(url, title);       
+    } else if(window.opera && window.print) { // Opera 
+	return true;
+    }
+
+    return null;
+}
 
 /* build popup functions */
 var currentpopupleft = null;
@@ -2416,6 +2476,11 @@ $j(document).ready(function(){
     /* vullen inhoud meldingen tab */
     if(document.getElementById('meldingenframeViewer')) {
         document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
+    }
+
+    /* vullen inhoud redlining tab */
+    if(document.getElementById('redliningframeViewer')) {
+        document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
     }
 
     if(!document.getElementById('popupWindow') && !getParent().document.getElementById('popupWindow')) {

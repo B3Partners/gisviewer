@@ -45,11 +45,10 @@
     background-image: url("../img/zoom-world-mini.png");
 }
 .olControlPanel .olControlb_bufferItemInactive{
-    background-image: url("img/bomb.png");
+    background-image: url("img/buffer_tool.png");
 }
 .olControlPanel .olControlb_bufferItemActive{
-    background-image: url("img/bomb.png");
-    background-color: black;
+    background-image: url("img/buffer_tool.png");
 }
 .olControlPanel .olControlidentifyItemActive{
     background-image: url("img/identify_on.png");
@@ -59,24 +58,31 @@
 }
 
 .olControlPanel .olControlb_highlightItemInactive{
-    background-color: yellow;
+    background-image: url("img/polygon_select.png");
 }
 .olControlPanel .olControlb_highlightItemActive{
-    background-color: black;
+    background-image: url("img/polygon_select.png");
 }
 
 .olControlPanel .olControlb_removePolygonsItemInactive{
-    background-color: orange;
+    background-image: url("img/polygon_delete.png");
 }
 .olControlPanel .olControlb_removePolygonsItemActive{
-    background-color: orchid;
+    background-image: url("img/polygon_delete.png");
 }
 
 .olControlPanel .olControlb_bookMarkItemInactive{
-    background-color: black;
+    background-image: url("img/bookmark.png");
 }
 .olControlPanel .olControlb_bookMarkItemActive{
-    background-color: gray;
+    background-image: url("img/bookmark.png");
+}
+
+.olControlPanel .olControlb_getfeaturesItemInactive{
+    background-image: url("img/polygon_info.png");
+}
+.olControlPanel .olControlb_getfeaturesItemActive{
+    background-image: url("img/polygon_info.png");
 }
 
 .olControlPanel .olControlDrawFeaturePointItemInactive{

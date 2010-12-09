@@ -69,9 +69,6 @@ function initializeButtons(){
     pan = webMapController.createTool("b_pan",Tool.PAN);
     webMapController.addTool(pan);
 
-    b_buffer = webMapController.createTool("b_buffer",Tool.TOGGLE);
-    webMapController.addTool(b_buffer);
-
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
     webMapController.addTool(prevExtent);
 

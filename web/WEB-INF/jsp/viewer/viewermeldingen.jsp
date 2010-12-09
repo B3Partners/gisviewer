@@ -85,7 +85,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <input type="hidden" name="prepareMelding">
             <c:choose>
                 <c:when test="${fn:length(kenmerk)==0}">
-                    <c:if test="${empty form.map.wkt}">
+                    <c:if test="${!empty form.map.wkt}">
                         <script type="text/javascript">
                             var ouder = getParent();
                             if(ouder) {

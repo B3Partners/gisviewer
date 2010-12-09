@@ -2083,7 +2083,7 @@ function b_removePolygons(id,params){
         webMapController.getMap().getLayer("editMap").removeAllFeatures();
 }
 
-function b_bookMark() {
+function b_bookMark(id,params) {
     getBookMark();
 }
 

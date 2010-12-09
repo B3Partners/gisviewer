@@ -64,7 +64,7 @@
 
             <c:choose>
                 <c:when test="${fn:length(redliningID)==0}">
-                    <c:if test="${empty form.map.wkt}">
+                    <c:if test="${!empty form.map.wkt}">
                         <script type="text/javascript">
                             var ouder = getParent();
                             if(ouder) {

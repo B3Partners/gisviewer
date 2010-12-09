@@ -86,7 +86,7 @@ function initializeButtons(){
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
-    webMapController.registerEvent(Event.ON_FEATURE_ADDED, editLayer, onGeometryDrawFinished);
+    
     
     var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
     webMapController.addTool(edittingtb);
@@ -106,6 +106,10 @@ function initializeButtons(){
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
+
+    var bu_bookMark = webMapController.createTool("b_bookMark",Tool.BUTTON);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_bookMark,b_bookMark);
+    webMapController.addTool(bu_bookMark);
 }
 
 initMapComponent();
@@ -2078,8 +2082,11 @@ function drawObject(feature) {
  * Alle geïmplementeerde eventhandling functies
  */
 function b_removePolygons(id,params){
-		getBookMark();
         webMapController.getMap().getLayer("editMap").removeAllFeatures();
+}
+
+function b_bookMark() {
+    getBookMark();
 }
 
 /* er is net op de highlight knop gedrukt */
@@ -2247,7 +2254,8 @@ function getBookMark() {
     }
 
     /* extent ophalen */
-    var fullExtent = flamingoController.getMap().getExtent();
+    var fullExtent = webMapController.getMap().getExtent();
+    
     var minx = fullExtent.minx.toString().split('.');
     var miny = fullExtent.miny.toString().split('.');
     var maxx = fullExtent.maxx.toString().split('.');

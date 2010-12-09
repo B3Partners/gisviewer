@@ -53,7 +53,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </script>
         <!--[if IE]>
         <script type="text/javascript">
-            var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer','voorzieningZoeker','vergunningZoeker','meldingenframeViewer'];
+            var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer','voorzieningZoeker','vergunningZoeker','meldingenframeViewer','redliningframeViewer'];
             fixTransparentBackgroundIframe = function() {
                 for(i in iframes) {
                     var iframe = document.getElementById(iframes[i]);

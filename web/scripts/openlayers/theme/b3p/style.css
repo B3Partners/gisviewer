@@ -72,6 +72,13 @@
     background-color: orchid;
 }
 
+.olControlPanel .olControlb_bookMarkItemInactive{
+    background-color: black;
+}
+.olControlPanel .olControlb_bookMarkItemActive{
+    background-color: gray;
+}
+
 .olControlPanel .olControlDrawFeaturePointItemInactive{
     background-image: url("../default/img/draw_point_off.png");
 }

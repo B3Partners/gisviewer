@@ -38,8 +38,8 @@
     }
 
     function tekenMelding(geomType) {
-        getParent().flamingo.call("editMap", 'removeAllFeatures');
-        getParent().flamingo.callMethod("editMap","editMapDrawNewGeometry","layer1",geomType);
+        getParent().webMapController.getMap().getLayer("editMap").removeAllFeatures();
+        getParent().webMapController.getMap().getLayer("editMap").drawFeature(geomType);
     }
 </script>
 
@@ -68,7 +68,7 @@
                         <script type="text/javascript">
                             var ouder = getParent();
                             if(ouder) {
-                                ouder.flamingo.call("editMap", 'removeAllFeatures');
+                                ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                             }
                         </script>
                     </c:if>
@@ -121,8 +121,8 @@
                                 var yend = point.indexOf(")", xstart);
                                 var coords = point.substring(xstart+1, yend).split(" ");
                                 if (coords.length == 2) {
-                                    ouder.flamingo.call("map1", 'setMarker', "${kenmerk}","",Number(coords[0]),Number(coords[1]));
-                                    ouder.flamingo.call("editMap", 'removeAllFeatures');
+                                    ouder.webMapController.getMap().setMarker("${kenmerk}", Number(coords[0]),Number(coords[1]), "");
+                                    ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                                 }
                             }
                         }

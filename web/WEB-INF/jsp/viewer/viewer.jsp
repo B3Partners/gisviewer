@@ -67,8 +67,42 @@
     /* ObjectInfo type */
     var objectInfoType = catchEmpty("${configMap["objectInfoType"]}");
     if(typeof objectInfoType === 'undefined' || !objectInfoType) {
-        objectInfoType = 'paneel';
+        objectInfoType = 'popup';
     }
+
+
+    /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
+    var usePanelControls=catchEmpty(${configMap["usePanelControls"]});
+    if(typeof usePanelControls === 'undefined') {
+        usePanelControls = true;
+    }
+
+    /* True als de admin- of metadata in een popup wordt getoond
+     * False als deze onder de kaart moet worden getoond
+     * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
+    var useDivPopup=catchEmpty(${configMap["useDivPopup"]});
+    if(typeof useDivPopup === 'undefined') {
+        useDivPopup = false;
+    }
+
+    if(objectInfoType == "geen") {
+        usePopup = false;
+        usePanel = false;
+        usePanelControls =  false;
+        useDivPopup = false;
+    }
+    if(objectInfoType == "popup") {
+        usePopup = true;
+        usePanel = false;
+        usePanelControls =  false;
+    }
+    if(objectInfoType == "paneel") {
+        usePopup = false;
+        usePanel = true;
+        useDivPopup = false;
+    }
+
+    var dataframepopupHandle = null;
 
     var useCookies=catchEmpty(${configMap["useCookies"]});
     if(typeof useCookies === 'undefined') {
@@ -81,27 +115,10 @@
     if(typeof multipleActiveThemas === 'undefined') {
         multipleActiveThemas = true;
     }
-    
-    /* True als de admin- of metadata in een popup wordt getoond
-     * False als deze onder de kaart moet worden getoond
-     * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
-    var usePopup=catchEmpty(${configMap["usePopup"]});
-    if(typeof usePopup === 'undefined') {
-        usePopup = false;
-    }
-    var useDivPopup=catchEmpty(${configMap["useDivPopup"]});
-    if(typeof useDivPopup === 'undefined') {
-        useDivPopup = false;
-    }
-    var dataframepopupHandle = null;
 
-    /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen
-     * showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
+    /* showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
      * en op null als het leftPanel niet moet worden getoond */
-    var usePanelControls=catchEmpty(${configMap["usePanelControls"]});
-    if(typeof usePanelControls === 'undefined') {
-        usePanelControls = true;
-    }
+    
     var showLeftPanel=catchEmpty(${configMap["showLeftPanel"]});
     if(typeof showLeftPanel === 'undefined') {
         showLeftPanel = false;
@@ -300,7 +317,7 @@
     }
 
     var defaultdataframehoogte = catchEmpty(${configMap["defaultdataframehoogte"]});
-    if(typeof popupTop === 'undefined' || !defaultdataframehoogte) {
+    if(typeof defaultdataframehoogte === 'undefined' || !defaultdataframehoogte) {
         defaultdataframehoogte = 150;
     }
     
@@ -364,10 +381,14 @@
 </div>
 
 <div id="mapcontent">
-    <strong class="noflamingoerror"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>
+    <div id="flashmelding"></div>
 </div>
 <script type="text/javascript">
-    
+    if(viewerType == 'flamingo') {
+        setTimeout(function() {
+            $j("#flashmelding").html('<strong class="noflamingoerror"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>');
+        }, 2000);
+    }
 </script>
 
 <div id="tabjes">
@@ -493,7 +514,19 @@
 </div>
         
 <script type="text/javascript">
-    if(!usePopup) {
+    if(noOfTabs == 0) {
+        // Hide tabs if there are no tabs
+        document.getElementById('tab_container').style.display = 'none';
+        document.getElementById('tabjes').style.display = 'none';
+        if(ieVersion <= 6 && ieVersion != -1) {
+            var leftcontent_width = 0;
+            if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
+            document.getElementById('mapcontent').style.width = (contentwidth - (leftcontent_width==0?0:leftcontent_width+6)) + 'px';
+        } else {
+            document.getElementById('mapcontent').style.right = '0px';
+        }
+    }
+    if(usePanel) {
         document.write('<div class="infobalk" id="informatiebalk" style="display: block;">'
             +'     <div class="infobalk_description">INFORMATIE</div>'
             +'     <div class="infobalk_actions">&nbsp;</div>'
@@ -510,8 +543,8 @@
     if(usePanelControls) {
         document.write('<div id="panelControls">');
         if(showLeftPanel != null && cloneTabContentId != null) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"></div>');
-        document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>'
-            + '<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div>'
+        if(noOfTabs > 0) document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>');
+        document.write('<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div>'
             + '</div>');
     }
 
@@ -526,13 +559,14 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 <script type="text/javascript">
     
-    if(usePopup) {
+    if(usePopup || !usePanel) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
         document.getElementById('mapcontent').style.bottom = '3px';
         //document.getElementById('dataframediv').style.display = 'none';
         //document.getElementById('informatiebalk').style.display = 'none';
-    } else {
+    }
+    else {
         // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
         document.getElementById('dataframediv').style.height = defaultdataframehoogte + 'px';
         document.getElementById('tab_container').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';

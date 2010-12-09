@@ -1696,6 +1696,7 @@ function onChangeTool(id, event) {
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function onIdentify(movie,extend){
+    if(!usePopup && !usePanel) return;
 
     //todo: nog weghalen... Dit moet uniform werken.
     if (extend==undefined){
@@ -2463,8 +2464,9 @@ buildPopup = function() {
         "height": popupHeight,
         "width": popupWidth,
         "left": popupLeft,
-        "top": popupTop
-    })
+        "top": popupTop,
+        "display": "none"
+    });
 
     document.body.appendChild(popupDiv);
     document.body.appendChild(popupWindowBackground);
@@ -2525,7 +2527,7 @@ $j(document).ready(function(){
         $j("#popupWindow").mouseout(function(){
             stopDrag();
         });
-        $j("#popupWindow").hide();
+        
     }
     popupCreated = true;
 

@@ -2252,12 +2252,19 @@ function getBookMark() {
     var host = window.location.host;
     var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
 
+    /* personal code */
+    var personalCode = kburl.split('/');
+    var l = personalCode.length;
+
+    var tmp = personalCode[l-1];
+    var code = "code=" + tmp.replace('?','');
+
     /* kaartlaagIds ophalen */
     var id = "";
     var layerIds = getLayerIdsAsString();
 
     if (layerIds != undefined && layerIds.length > 0) {
-        id = "id=" + layerIds;
+        id = "&id=" + layerIds;
     }
 
     /* extent ophalen */
@@ -2283,8 +2290,8 @@ function getBookMark() {
         maxy = maxy[0];
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
-
-    var url = urlBase + id + extent;
+    
+    var url = urlBase + code + id + extent;
     
     addToFavorites(url);
 }

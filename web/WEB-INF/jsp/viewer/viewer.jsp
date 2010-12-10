@@ -95,6 +95,7 @@
         usePopup = true;
         usePanel = false;
         usePanelControls =  false;
+        useDivPopup = true;
     }
     if(objectInfoType == "paneel") {
         usePopup = false;

@@ -239,9 +239,8 @@ function loadBusyJSP(handle, type) {
     }
 }
 
-function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
-    
-    if (!usePopup && !useDivPopup && !usePanelControls) {
+function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {    
+    if (!usePopup && !usePanel) {
         return;
     }
 
@@ -1309,10 +1308,6 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     webMapController.getMap().addLayer(newLayer);//false, true, false
 }
 
-function pipo(a,b,c,d){
-    alert("pipo");
-}
-
 function loadObjectInfo(geom) {
     // vul object frame
     document.forms[0].admindata.value = '';
@@ -1696,7 +1691,10 @@ function onChangeTool(id, event) {
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function onIdentify(movie,extend){
-    if(!usePopup && !usePanel) return;
+
+    if(!usePopup && !usePanel) {
+        return;
+    }
 
     //todo: nog weghalen... Dit moet uniform werken.
     if (extend==undefined){
@@ -1718,16 +1716,29 @@ function onIdentify(movie,extend){
         geom += "POINT(";
         geom += extend.minx +" "+ extend.miny;
         geom += ")";
-    }    
+    }
+
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
 
     if (btn_highLightSelected) {
-        webMapController.activateTool("breinaald");
+        
+        /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
+         * de flamingo config een breinaald
+         * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
+         * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
+         * de gisviewer aan.*/
+        if (mapviewer== "flamingo") {
+            webMapController.activateTool("breinaald");
+        } else {
+            webMapController.activateTool("identify");
+        }
         
         highLightThemaObject(geom);
+
     } else {
         btn_highLightSelected = false;
-        webMapController.activateTool( "identify");
+        
+        webMapController.activateTool("identify");
 
         handleGetAdminData(geom, null);
     }
@@ -2074,7 +2085,7 @@ function drawWkt(wkt) {
 
 function drawObject(feature) {
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    webMapController.getMap().getLayer("editMap").addFeature( feature);
+    webMapController.getMap().getLayer("editMap").addFeature(feature);
 }
 
 /**
@@ -2084,14 +2095,24 @@ function b_removePolygons(id,params){
         webMapController.getMap().getLayer("editMap").removeAllFeatures();
 }
 
-function b_bookMark(id,params) {
+function b_bookMark(id,params) {    
     getBookMark();
 }
 
 /* er is net op de highlight knop gedrukt */
 function b_highlight( id,params) {
-        btn_highLightSelected = true;
-        webMapController.activateTool( "breinaald");
+    btn_highLightSelected = true;
+
+    /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
+         * de flamingo config een breinaald
+         * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
+         * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
+         * de gisviewer aan.*/
+    if (mapviewer== "flamingo") {
+        webMapController.activateTool("breinaald");
+    } else {
+        webMapController.activateTool("identify");
+    }
 }
 
 var btn_highLightSelected = false;
@@ -2161,11 +2182,7 @@ function handlePopupValue(value) {
 function returnHighlight(wkt) {    
     if (wkt.length > 0)
     {        
-        var polyObject = new Object();
-
-        polyObject["id"]=61501;
-        polyObject["wktgeom"]=wkt;
-
+        var polyObject = new Feature(61502,wkt);
         drawObject(polyObject);
 
         /* verkregen back-end polygon voor highlight even in global var opslaan
@@ -2223,19 +2240,6 @@ function onConfigComplete(id,params){
         onFrameworkLoaded(); // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(), nu niet meer met flamingoevent
     }
 }
-/*
-function tempDispatcher(event,comp){
-    if (event=="onGetCapabilities") {
-    }
-
-    if (event=="onConfigComplete") {
-    }
-}*//*
-function dispatchEventJS(event, comp) {
-    //console.log(event + " | " + comp);
-  
-    
-}*/
 
 function getBookMark() {    
     /* url base */

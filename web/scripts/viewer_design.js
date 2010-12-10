@@ -32,7 +32,7 @@ resizeTabContents = function() {
             }
         }
         if(ieVersion != -1 && ieVersion <= 7) totalContentsHeight += 15;
-        if(childToResize) childToResize.style.height = (totalTabHeight - totalContentsHeight) + 'px';
+        if(childToResize && childToResize.style) childToResize.style.height = (totalTabHeight - totalContentsHeight) + 'px';
     }
     if(tmpCurrentActiveTab != null) switchTab(document.getElementById(tmpCurrentActiveTab));
 }

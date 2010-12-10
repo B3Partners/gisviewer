@@ -223,13 +223,13 @@ function loadBusyJSP(handle, type) {
             '<td valign="top">'+
             '<div class="inleiding">'+
             '<table>'+
-                '<tr>'+
-                    '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+
-                    '<td>'+
-                        '<h2>Bezig met laden ...</h2>'+
-                        '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
-                    '</td>'+
-                '</tr>'+
+            '<tr>'+
+            '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+
+            '<td>'+
+            '<h2>Bezig met laden ...</h2>'+
+            '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
+            '</td>'+
+            '</tr>'+
             '</table>'+
             '</div>'+
             '</td>'+
@@ -1181,10 +1181,10 @@ function refreshLayer(doRefreshOrder) {
         var layer=webMapController.getMap().getLayer(layerId);
         if (layer!=null){
             var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i);
-        if (i != oldOrderIndex){
-            doRefreshOrder=true;
+            if (i != oldOrderIndex){
+                doRefreshOrder=true;
+            }
         }
-    }
     }
 
     hideLoading();
@@ -1206,7 +1206,7 @@ function refreshLayer(doRefreshOrder) {
     for(var i = 0 ; i < lagen.length;i++){
         var laag = lagen[i];
         webMapController.getMap().setLayerIndex(laag,totalLayers);
-}
+    }
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {
@@ -1245,7 +1245,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
 
         if (!isNaN(minscale) && smallestMinscale != 0) {
             if (smallestMinscale == -1 || minscale < smallestMinscale) {
-                    smallestMinscale = minscale;
+                smallestMinscale = minscale;
             }
         } else {
             smallestMinscale = 0;
@@ -1257,7 +1257,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         
         if (!isNaN(maxscale) && largestMaxscale != 0) {
             if (largestMaxscale == -1 || maxscale > largestMaxscale) {
-                    largestMaxscale = maxscale;
+                largestMaxscale = maxscale;
             }
         } else {
             largestMaxscale = 0;
@@ -1946,16 +1946,16 @@ function exportMap(){
 
     var urlString="";
     var firstURL = true;
-    var layers=webMapController.getMap("map1").getLayers();
+    var layers=webMapController.getMap("map1").getAllWMSLayers();
     for (var i=0; i < layers.length; i++){
-        if(layers[i].getLastGetMapRequest() != null){
+        if(layers[i].getURL() != null){
             if(!firstURL){
                 urlString+=";";
             }else{
                 firstURL = false;
             }
-            urlString+=layers[i].getLastGetMapRequest();
-            if(layers[i].getAlpha() != null){
+            urlString+=layers[i].getURL();
+            if(layers[i].getAlpha && layers[i].getAlpha() != null){
                 urlString+="#"+layers[i].getAlpha();
             }
         }
@@ -1964,15 +1964,20 @@ function exportMap(){
     newElement.value = urlString;
     submitForm.appendChild(newElement);
 
-    var features=webMapController.getMap().getLayer("editMap").getAllFeatures();
+    var vectorLayers=webMapController.getMap().getAllVectorLayers();
     var wktString="";
-    for (var b=0; b < features.length; b++){
-        wktString+=features[b].getWkt();
-        wktString+="#ff0000";
-        if (features[b].label) {
-            wktString+="|"+features[b].label;
+    for(var c = 0 ; c < vectorLayers.length ; c++){
+        var vectorLayer = vectorLayers[c];
+        var features = vectorLayer.getAllFeatures();
+        for (var b=0; b < features.length; b++){
+            wktString+=features[b].getWkt();
+            wktString+="#ff0000";
+            if (features[b].label) {
+                wktString+="|"+features[b].label;
+            }
+            wktString+=";";
         }
-        wktString+=";";
+
     }
     newElement = document.createElement("<input name='wkts' type='hidden'>");
     newElement.value = wktString;
@@ -2021,48 +2026,48 @@ function b_getfeatures(id,event) {
 }
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
 function b_buffer(id, event) {
-        var wkt;
+    var wkt;
 
-        /* Indien door highlight de global var is gevuld deze
+    /* Indien door highlight de global var is gevuld deze
          * dan gebruiken bij buffer als deze niet null is
          * De getWktActiveFeature geeft bij sommige multipolygons niet
          * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
          * mis gaat. Deze is dus alleen gevuld na een highlight
          * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
-        if (multiPolygonBufferWkt != null)
-            wkt = multiPolygonBufferWkt;
-        else
-            wkt = getWktActiveFeature();
+    if (multiPolygonBufferWkt != null)
+        wkt = multiPolygonBufferWkt;
+    else
+        wkt = getWktActiveFeature();
 
-        multiPolygonBufferWkt = null;
+    multiPolygonBufferWkt = null;
         
-        if (wkt==null)
-        {
-            return;
-        }
-
-        var str = prompt('Geef de bufferafstand in meters', '100');
-        var afstand = 0;
-
-        if((str == '') || ( str == 'undefined') || ( str == null))
-            return;
-
-        if( !isNaN( str) ) {
-            str = str.replace( ",", ".");
-            afstand = str;
-        } else {
-            handler( "Geen getal" );
-            return;
-        }
-
-        if (afstand == 0)
-        {
-            handler("Buffer mag niet 0 zijn");
-            return;
-        }
-
-        EditUtil.buffer(wkt, afstand, returnBuffer);
+    if (wkt==null)
+    {
+        return;
     }
+
+    var str = prompt('Geef de bufferafstand in meters', '100');
+    var afstand = 0;
+
+    if((str == '') || ( str == 'undefined') || ( str == null))
+        return;
+
+    if( !isNaN( str) ) {
+        str = str.replace( ",", ".");
+        afstand = str;
+    } else {
+        handler( "Geen getal" );
+        return;
+    }
+
+    if (afstand == 0)
+    {
+        handler("Buffer mag niet 0 zijn");
+        return;
+    }
+
+    EditUtil.buffer(wkt, afstand, returnBuffer);
+}
 
 
 function drawFeature(ggbId, attrName, attrVal) {
@@ -2092,7 +2097,7 @@ function drawObject(feature) {
  * Alle geïmplementeerde eventhandling functies
  */
 function b_removePolygons(id,params){
-        webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    webMapController.getMap().getLayer("editMap").removeAllFeatures();
 }
 
 function b_bookMark(id,params) {    
@@ -2156,7 +2161,7 @@ function highLightThemaObject(geom) {
     if (analyseThemas.length == 1) {
         EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
         
-        //handleGetAdminData(geom, analyseThemas[0].id);
+    //handleGetAdminData(geom, analyseThemas[0].id);
     }
 }
 
@@ -2294,7 +2299,7 @@ function addToFavorites(url) {
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
         window.external.AddFavorite(url, title);       
     } else if(window.opera && window.print) { // Opera 
-	return true;
+        return true;
     }
 
     return null;

@@ -1200,6 +1200,7 @@ function refreshLayer(doRefreshOrder) {
     //TODO: WebMapController
     //webMapController.getMap().refreshLayerOrder();
     }
+//    flamingoController.getMap().update();
 
     var lagen = webMapController.getMap().getAllVectorLayers();
     var totalLayers = webMapController.getMap().getLayers().length;

@@ -104,10 +104,6 @@ function initializeButtons(){
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
-
-    var bu_bookMark = webMapController.createTool("b_bookMark",Tool.BUTTON);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_bookMark,b_bookMark);
-    webMapController.addTool(bu_bookMark);
 }
 
 initMapComponent();
@@ -2101,10 +2097,6 @@ function b_removePolygons(id,params){
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
 }
 
-function b_bookMark(id,params) {    
-    getBookMark();
-}
-
 /* er is net op de highlight knop gedrukt */
 function b_highlight( id,params) {
     btn_highLightSelected = true;
@@ -2253,13 +2245,6 @@ function getBookMark() {
     var host = window.location.host;
     var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
 
-    /* personal code */
-    var personalCode = kburl.split('/');
-    var l = personalCode.length;
-
-    var tmp = personalCode[l-1];
-    var code = "code=" + tmp.replace('?','');
-
     /* kaartlaagIds ophalen */
     var id = "";
     var layerIds = getLayerIdsAsString();
@@ -2292,7 +2277,7 @@ function getBookMark() {
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
     
-    var url = urlBase + code + id + extent;
+    var url = urlBase + kbcode + id + extent;
     
     addToFavorites(url);
 }

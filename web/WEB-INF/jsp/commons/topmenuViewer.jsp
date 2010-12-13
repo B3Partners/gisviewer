@@ -24,6 +24,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 
 <div id="topmenu">
+    <a href="#" onclick="getBookMark();" class="menulink">
+        <img src="<html:rewrite page="/images/"/>/bookmark.png" alt="Bookmark de kaart" title="Bookmark de kaart" border="0"/>
+    </a>
+    
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
     <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
     <c:set var="kaartid" value="${param['id']}"/>
@@ -32,9 +36,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:if test="${requestJSP eq 'help.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/help.do?id=${kaartid}" target="_new" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.help"/></html:link>
+        
+    <html:link page="/help.do?id=${kaartid}" target="_new" styleClass="${stijlklasse}" module="">
+        <img src="<html:rewrite page="/images/"/>/help.png" alt="Help" title="Help" border="0"/>
+    </html:link>
 
-    <html:link href="javascript: exportMap();" styleClass="menulink" module=""><fmt:message key="commons.topmenuviewer.print"/></html:link>
+    <html:link href="javascript: exportMap();" styleClass="menulink" module="">
+        <img src="<html:rewrite page="/images/"/>/print.png" alt="Printvoorbeeld" title="Printvoorbeeld" border="0"/>
+    </html:link>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'viewer.do'}">
@@ -48,4 +57,5 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:if>
     <html:link page="/indexlist.do?id=${kaartid}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
 </div>
+
 

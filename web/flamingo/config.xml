@@ -54,10 +54,6 @@
                 <fmc:JsButton id="b_removePolygons" left="410" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/polygon_delete.png" iconurl_over="flamingo/assets/jsbtn/polygon_delete.png" iconurl_sel="flamingo/assets/jsbtn/polygon_delete.png" iconurl_dis="flamingo/assets/jsbtn/polygon_delete_disabled.png" label="" toggle="false" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="remove polygon" nl="verwijder het tekenobject"/>
                 </fmc:JsButton>
-
-                <fmc:JsButton id="b_bookMark" left="440" top="0" width="16" height="16" iconurl_up="flamingo/assets/jsbtn/bookmark.png" iconurl_over="flamingo/assets/jsbtn/bookmark.png" iconurl_sel="flamingo/assets/jsbtn/bookmark.png" iconurl_dis="flamingo/assets/jsbtn/bookmark.png" label="" toggle="false" visible="false" enabled="true" selected="false">
-                    <string id="tooltip" en="bookmark this map" nl="deze kaart bookmarken"/>
-                </fmc:JsButton>
             </fmc:Container>
 
         </fmc:ToolGroup>

@@ -33,6 +33,8 @@
 
     var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
     var kburl="${kburl}";
+    var kbcode="${kbcode}";
+
     var themaTree=catchEmpty(${tree});
     if(typeof themaTree === 'undefined' || !themaTree) {
         themaTree = null;

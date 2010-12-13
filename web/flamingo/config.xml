@@ -9,7 +9,7 @@
         <string id="loading"  en="Making... [layer] [percentage]%..." nl="Kaart aan het laden. [percentage]%"/>
     </fmc:MonitorMap>
 
-    <fmc:Container backgroundcolor="#D2E0EB" left="0" top="0" height="5%" width="100%">
+    <fmc:Container backgroundcolor="#EEEEEE" left="0" top="0" height="36" width="100%">
         <fmc:Scalebar left="530" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />

@@ -109,10 +109,7 @@
         </action>
         <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction" name="viewerForm" scope="request" validate="false">
             <forward name="failure" path="viewerdata"/>
-            <forward name="admindata1" path="vieweradmindata1"/>
-            <forward name="admindata2" path="vieweradmindata2"/>
-            <forward name="admindata3" path="vieweradmindata3"/>
-            <forward name="multi_admindata" path="viewer_multi_admindata"/>
+            <forward name="admindata" path="vieweradmindata"/>
             <forward name="metadata" path="viewermetadata"/>
             <forward name="objectdata" path="viewerobjectdata"/>
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>

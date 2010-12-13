@@ -79,25 +79,9 @@
 
     <!-- viewer popup -->
     <definition name="popup" path="/WEB-INF/jsp/templates/templatePopup.jsp"/>
-    <definition name="viewerdata" extends="popup">
-        <put name="title" value="Viewerdata" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/viewerdata.jsp"/>
-    </definition>
-    <definition name="vieweradmindata1" extends="popup">
+    <definition name="vieweradmindata" extends="popup">
         <put name="title" value="Administratieve data" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp" />
-    </definition>
-    <definition name="vieweradmindata2" extends="popup">
-        <put name="title" value="Administratieve data" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata_small.jsp" />
-    </definition>
-    <definition name="vieweradmindata3" extends="popup">
-        <put name="title" value="Administratieve data" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata3.jsp" />
-    </definition>
-    <definition name="viewer_multi_admindata" extends="popup">
-        <put name="title" value="Administratieve data" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/viewer_multi_admindata.jsp" />
     </definition>
     <definition name="vieweradmindatabusy" extends="popup">
         <put name="title" value="Administratieve data" type="string"/>

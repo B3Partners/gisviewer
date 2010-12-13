@@ -3,7 +3,7 @@
  *it a complete webbased GIS viewer and configuration tool that
  *works in cooperation with B3P Kaartenbalie.
  *
- *Copyright 2006, 2007, 2008 B3Partners BV
+ *Copyright 2006 - 2011 B3Partners BV
  *
  *This file is part of B3P Gisviewer.
  *
@@ -81,7 +81,7 @@ function writeNoResults() {
 }
 
 var idcounter = 1;
-function handleGetGegevensBronSimpleVertical(gegevensbron) {
+function handleGetGegevensBron(gegevensbron) {
     // aftellen verwerkte gegevensbron
     loop--;
     if(!gegevensbron) {
@@ -94,6 +94,18 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
     //minstens 1 gegevensbron was gevuld, nooit writeNoResults schrijven
     loop = 0;
 
+    var layout = gegevensbron.layout;
+    alert(layout);
+    if (layout == "admindata2") {
+        handleGetGegevensBronSimpleHorizontal(gegevensbron);
+    } else if (layout == "admindata3") {
+        handleGetGegevensBronSimpleVertical(gegevensbron)
+    } else {
+        handleGetGegevensBronMulti(gegevensbron);
+    }
+}
+
+function handleGetGegevensBronSimpleVertical(gegevensbron) {
     var htmlId = gegevensbron.parentHtmlId;
 
     // Create container
@@ -141,18 +153,6 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
 
 
 function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
-    // aftellen verwerkte gegevensbron
-    loop--;
-    if(!gegevensbron) {
-        if (loop==0) {
-            // geen enkele gegevensbron was gevuld!
-            window.setTimeout("writeNoResults();", timeout);
-        }
-        return;
-    }
-    //minstens 1 gegevensbron was gevuld, nooit writeNoResults schrijven
-    loop = 0;
-
     var htmlId = gegevensbron.parentHtmlId;
 
     // Create container
@@ -209,19 +209,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     $j('#' + htmlId).append(bronContainer);
 }
 
-function handleGetGegevensBron(gegevensbron) {
-    // aftellen verwerkte gegevensbron
-    loop--;
-    if(!gegevensbron) {
-        if (loop==0) {
-            // geen enkele gegevensbron was gevuld!
-            window.setTimeout("writeNoResults();", timeout);
-        }
-        return;
-    }
-    //minstens 1 gegevensbron was gevuld, nooit writeNoResults schrijven
-    loop = 0;
-
+function handleGetGegevensBronMulti(gegevensbron) {
     var htmlId = gegevensbron.parentHtmlId;
 
     // Create container
@@ -283,7 +271,7 @@ function handleGetGegevensBron(gegevensbron) {
                     var tr = $j('<tr></tr>');
                     var toggleIcon = $j('<img src="'+plusicon+'" alt="Openklappen" title="Openklappen" />')
                     .click(function(){
-                        var childLoaded = loadChild(childDivId, child.id, '${wkt}', child.cql);
+                        var childLoaded = loadChild(childDivId, child.id, child.wkt, child.cql);
                         if(!childLoaded) toggleBron(childDivId);
                     });
                     var collapse = $j('<td></td>').css({
@@ -348,7 +336,7 @@ function handleGetGegevensBron(gegevensbron) {
         if(record.childs != null && record.childs.length > 0) {
             $j.each(record.childs, function(index2, child) {
                 var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id);
-                var childLoaded = loadChild(childDivId, child.id, '${wkt}', child.cql);
+                var childLoaded = loadChild(childDivId, child.id, child.wkt, child.cql);
                 if(!childLoaded) toggleBron(childDivId);
             });
         }

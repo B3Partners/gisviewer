@@ -2245,6 +2245,9 @@ function getBookMark() {
     var host = window.location.host;
     var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
 
+    /* personal code */
+    var personalCode = "code=" + kbcode;
+
     /* kaartlaagIds ophalen */
     var id = "";
     var layerIds = getLayerIdsAsString();
@@ -2277,7 +2280,7 @@ function getBookMark() {
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
     
-    var url = urlBase + kbcode + id + extent;
+    var url = urlBase + personalCode + id + extent;
     
     addToFavorites(url);
 }

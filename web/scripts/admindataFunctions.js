@@ -95,7 +95,6 @@ function handleGetGegevensBron(gegevensbron) {
     loop = 0;
 
     var layout = gegevensbron.layout;
-    alert(layout);
     if (layout == "admindata2") {
         handleGetGegevensBronSimpleHorizontal(gegevensbron);
     } else if (layout == "admindata3") {

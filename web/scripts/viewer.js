@@ -1022,7 +1022,8 @@ function doRefreshLayer() {
     refreshLegendBox();
 }
 
-function checkScaleForLayers() {    
+/*
+function checkScaleForLayers_old() {
     var currentscale = webMapController.getMap().getScale();
 
     var minscale = 0;
@@ -1040,8 +1041,8 @@ function checkScaleForLayers() {
             maxscale = Number(item.scalehintmax.replace(",", "."));
         }
 
-        /* als er min en maxscale is dan laag aanzetten indien currentscale binnen
-         * min en max valt */
+        //als er min en maxscale is dan laag aanzetten indien currentscale binnen
+        //min en max valt
         if (minscale > 0 && maxscale > 0) {
             if (currentscale <= maxscale && currentscale >= minscale) {
                 enableLayer(itemid);
@@ -1050,6 +1051,51 @@ function checkScaleForLayers() {
             }
         }
     }
+}*/
+/*Check scale for all layers*/
+function checkScaleForLayers() {
+    var currentscale = webMapController.getMap().getScale();
+    setScaleForTree(themaTree,currentscale);
+}
+/*Controleerd of een item in de huidige schaal past.
+ * Voor een enkele layer wordt gekeken of die er in past
+ * Voor een cluster wordt gekeken of er 1 van de layers in de schaal past.
+ **/
+function setScaleForTree(item,currentScale){
+    var thisEnabled=false;
+    if (item.children){
+        for (var i=0; i < item.children.length; i++){
+            if(setScaleForTree(item.children[i],currentScale)){
+                thisEnabled=true;
+            }
+        }
+    }else{
+        var minscale=0;
+        var maxscale=0;
+
+        if (item.scalehintmin != null) {
+            minscale = Number(item.scalehintmin.replace(",", "."));
+        }
+        if (item.scalehintmax != null) {
+            maxscale = Number(item.scalehintmax.replace(",", "."));
+        }
+        /* als er min en maxscale is dan laag aanzetten indien currentscale binnen
+         * min en max valt */
+        if (minscale >= 0  && maxscale >= 0) {
+            if (currentScale <= maxscale && currentScale >= minscale) {
+                thisEnabled= true;
+            }
+        }
+    }
+    //als item zichtbaar is en callable.
+    if ((item.cluster || item.visible==true) && item.callable){
+        if (thisEnabled){
+            enableLayer(item.id);
+        }else{
+            disableLayer(item.id);
+        }
+    }
+    return thisEnabled;
 }
 
 function refreshLayer(doRefreshOrder) {    

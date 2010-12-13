@@ -662,14 +662,14 @@ function createLabel(container, item) {
 }
 
 function disableLayer(itemid) {
-    var $item = $j("#layermaindiv_item_" + itemid);
+    var $item = $j("#layermaindiv_item_" + itemid+"_label");
     $item.addClass("layerdisabled");
     $item.find("input").attr("disabled", "disabled");
     $item.find(".treeLegendIcon").addClass("disabledLegendIcon");
 }
 
 function enableLayer(itemid) {
-    var $item = $j("#layermaindiv_item_" + itemid);
+    var $item = $j("#layermaindiv_item_" + itemid+"_label");
     $item.removeClass("layerdisabled");
     $item.find("input").removeAttr("disabled");
     $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");

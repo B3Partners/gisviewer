@@ -181,7 +181,40 @@ function findObjectCenter(objectid) {
     
     return [top, left];
 }
+/*Opens a dialogpopup. DialogOptions is extra jquery.dialog options*/
+var lightBoxPopUp=null;
+function dialogPopUp(innerJqueryElement,title,width,height,dialogOptions){      
+    innerJqueryElement.width("100%").height("100%");
+    if(!title) title = "";
+    if(!width) width = 300;
+    if(!height) height = 300;
 
+    var options={resizable: true,
+        draggable: true,
+        show: 'slide',
+        hide: 'slide',
+        title: title,
+        containment: 'document',
+        iframeFix: true
+    };
+    if (dialogOptions){
+        for (var key in dialogOptions){
+            options[key]=dialogOptions[key];
+        }
+    }
+
+    if (lightBoxPopUp!=null){
+        lightBoxPopUp.dialog('close');
+        lightBoxPopUp.remove();
+    }
+    var lightBoxPopUp = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
+    lightBoxPopUp.append(innerJqueryElement);
+    lightBoxPopUp.dialog(options);
+    lightBoxPopUp.dialog("option", "title", title);
+    lightBoxPopUp.dialog("option", "height", height);
+    lightBoxPopUp.dialog("option", "width", width);
+    lightBoxPopUp.dialog('open');    
+}
 
 var prevpopup;
 function iFramePopup(url, newpopup, title, width, height) {

@@ -2287,24 +2287,26 @@ function onConfigComplete(id,params){
 
 function getBookMark() {    
     /* url base */
+    var url=createPermaLink();
+    addToFavorites(url);
+}
+
+function createPermaLink(){
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
     var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
-
-    /* personal code */
-    var personalCode = "code=" + kbcode;
 
     /* kaartlaagIds ophalen */
     var id = "";
     var layerIds = getLayerIdsAsString();
 
     if (layerIds != undefined && layerIds.length > 0) {
-        id = "&id=" + layerIds;
+        id = "id=" + layerIds;
     }
 
     /* extent ophalen */
     var fullExtent = webMapController.getMap().getExtent();
-    
+
     var minx = fullExtent.minx.toString().split('.');
     var miny = fullExtent.miny.toString().split('.');
     var maxx = fullExtent.maxx.toString().split('.');
@@ -2325,10 +2327,9 @@ function getBookMark() {
         maxy = maxy[0];
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
-    
-    var url = urlBase + personalCode + id + extent;
-    
-    addToFavorites(url);
+
+    var url = urlBase + id + extent;
+    return url;
 }
 
 function addToFavorites(url) {
@@ -2341,7 +2342,7 @@ function addToFavorites(url) {
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
         window.external.AddFavorite(url, title);       
     } else if(window.opera && window.print) { // Opera 
-        return true;
+	return true;
     }
 
     return null;

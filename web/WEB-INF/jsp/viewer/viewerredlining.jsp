@@ -33,7 +33,7 @@
     }
 
     function prepareForm() {
-        document.forms[0].sendRedlining.value = 't';
+        document.forms[0].prepareRedlining.value = 't';
         document.forms[0].submit();
     }
 
@@ -62,43 +62,36 @@
             <input type="hidden" name="sendRedlining">
             <input type="hidden" name="prepareRedlining">
 
+            <html:hidden property="gegevensbron"/>
+            <html:hidden property="groepnaam"/>
+
             <c:choose>
                 <c:when test="${fn:length(redliningID)==0}">
-                    <c:if test="${!empty form.map.wkt}">
-                        <script type="text/javascript">
-                            var ouder = getParent();
-                            if(ouder) {
-                                ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
-                            }
-                        </script>
-                    </c:if>
-                    <h3>Redlining pagina</h3>
-
-                    <p>Kies een bestaand project om de redline objecten te bekijken
-                    of teken een nieuw object en sla deze op.</p>
+                    <p>Teken een redline object op de kaart. Kies uit een bestaand project of
+                        vul een nieuw project in.</p>
 
                     <table>
                         <tr>
-                            <td>Project</td>
+                            <td class="tab-row">Bestaand project</td>
                             <td>
-
-                                <html:select property="projectid">
-                                    <%--
-                                    <c:forEach var="opt" items="${projecten}">
-                                        <html:option value="${opt}"/>
+                                <html:select property="projectnaam">
+                                    <c:forEach var="project" items="${projecten}">
+                                        <html:option value="${project}"/>
                                     </c:forEach>
-                                    --%>
-                                    <html:option value="1"/>
                                 </html:select>
                             </td>
                         </tr>
                         <tr>
-                            <td>Kleur vulling</td>
+                            <td class="tab-row">Project</td>
+                            <td><html:text property="new_projectnaam" size="20" maxlength="10"/></td>
+                        </tr>
+                        <tr>
+                            <td class="tab-row">Kleurvulling</td>
                             <td><html:text property="fillcolor" size="20" maxlength="10"/></td>
                         </tr>
                         <tr>
-                            <td>Opmerking</td>
-                            <td><html:text property="opmerking" size="30" maxlength="80"/></td>
+                            <td class="tab-row">Opmerking</td>
+                            <td><html:textarea property="opmerking" rows="4" cols="30" /></td>
                         </tr>
                     </table>
 
@@ -112,21 +105,6 @@
 
                 </c:when>
                 <c:otherwise>
-                    <script type="text/javascript">
-                        var ouder = getParent();
-                        if(ouder) {
-                            var point = "${form.map.wkt}".toLowerCase();
-                            if (point.indexOf("point", 0)>=0) {
-                                var xstart = point.indexOf("(", 0);
-                                var yend = point.indexOf(")", xstart);
-                                var coords = point.substring(xstart+1, yend).split(" ");
-                                if (coords.length == 2) {
-                                    //ouder.webMapController.getMap().setMarker("${kenmerk}", Number(coords[0]),Number(coords[1]), "");
-                                    ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
-                                }
-                            }
-                        }
-                    </script>
                     <p>
                         <input type="button" value="Nieuw" class="zoek_knop" onclick="prepareForm();" />
                     </p>

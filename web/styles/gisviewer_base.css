@@ -261,3 +261,8 @@ html, body {
     margin-left: 10px;
     visibility: hidden;
 }
+
+.tab-row {
+    color: #fff;
+    font-size: 1.0em;
+}

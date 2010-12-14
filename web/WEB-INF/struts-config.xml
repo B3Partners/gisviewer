@@ -63,8 +63,10 @@
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
             <form-property name="redliningID" type="java.lang.String"/>
-            <form-property name="projectid" type="java.lang.String"/>
+            <form-property name="groepnaam" type="java.lang.String"/>
+            <form-property name="projectnaam" type="java.lang.String"/>
             <form-property name="fillcolor" type="java.lang.String"/>
+            <form-property name="new_projectnaam" type="java.lang.String"/>
             <form-property name="opmerking" type="java.lang.String"/>
             <form-property name="wkt" type="java.lang.String"/>
             <form-property name="gegevensbron" type="java.lang.Integer"/>

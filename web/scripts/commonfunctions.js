@@ -184,7 +184,7 @@ function findObjectCenter(objectid) {
 /*Opens a dialogpopup. DialogOptions is extra jquery.dialog options*/
 var lightBoxPopUp=null;
 function dialogPopUp(innerJqueryElement,title,width,height,dialogOptions){      
-    innerJqueryElement.width("100%").height("100%");
+    innerJqueryElement.width("100%").height("95%");
     if(!title) title = "";
     if(!width) width = 300;
     if(!height) height = 300;

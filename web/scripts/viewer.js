@@ -59,6 +59,13 @@ function initMapComponent(){
 }
 
 function initializeButtons(){
+    /*ie bug fix*/
+    if (ieVersion!=undefined && ieVersion <= 7){
+        var viewport= document.getElementById('OpenLayers.Map_2_OpenLayers_ViewPort');
+        if (viewport){
+            viewport.style.position="absolute";
+        }
+    }
     webMapController.createPanel("toolGroup");
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
 

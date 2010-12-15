@@ -251,7 +251,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     if (!multipleActiveThemas){
         checkedThemaIds = activeAnalyseThemaId;
     } else {
-        checkedThemaIds = getLayerIdsAsString();
+        checkedThemaIds = getLayerIdsAsString(true);
     }
 
     if (checkedThemaIds == null || checkedThemaIds == '') {
@@ -264,12 +264,8 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     document.forms[0].objectdata.value = '';
     document.forms[0].analysedata.value = '';
 
-    if (!multipleActiveThemas){
-        document.forms[0].themaid.value = activeAnalyseThemaId;
-    } else {
-        document.forms[0].themaid.value = getLayerIdsAsString();
-    }
-
+    document.forms[0].themaid.value = checkedThemaIds;
+    
     document.forms[0].lagen.value='';
 
     //als er een init search is meegegeven (dus ook een sld is gemaakt)
@@ -1064,16 +1060,21 @@ function checkScaleForLayers() {
     var currentscale = webMapController.getMap().getScale();
     setScaleForTree(themaTree,currentscale);
 }
+
+
 /*Controleerd of een item in de huidige schaal past.
  * Voor een enkele layer wordt gekeken of die er in past
  * Voor een cluster wordt gekeken of er 1 van de layers in de schaal past.
+ * @param item json thema of cluster
+ * @param currentScale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
+ * @return boolean wel of niet zichtbaar in scale.
  **/
-function setScaleForTree(item,currentScale){
-    var thisEnabled=false;
+function isItemInScale(item,scale){
+    var itemVisible=false;
     if (item.children){
         for (var i=0; i < item.children.length; i++){
-            if(setScaleForTree(item.children[i],currentScale)){
-                thisEnabled=true;
+            if(isItemInScale(item.children[i],scale)){
+                itemVisible=true;
             }
         }
     }else{
@@ -1086,23 +1087,32 @@ function setScaleForTree(item,currentScale){
         if (item.scalehintmax != null) {
             maxscale = Number(item.scalehintmax.replace(",", "."));
         }
-        /* als er min en maxscale is dan laag aanzetten indien currentscale binnen
+        /* als er min en maxscale is dan laag aanzetten indien scale binnen
          * min en max valt */
         if (minscale >= 0  && maxscale >= 0) {
-            if (currentScale <= maxscale && currentScale >= minscale) {
-                thisEnabled= true;
+            if (scale <= maxscale && scale >= minscale) {
+                itemVisible= true;
             }
         }
     }
+    return itemVisible;
+}
+function setScaleForTree(item,scale){
+    if (item.children){
+        for (var i=0; i < item.children.length; i++){
+            setScaleForTree(item.children[i],scale);
+        }
+    }
+    var itemVisible=isItemInScale(item,scale);
     //als item zichtbaar is en callable.
     if ((item.cluster || item.visible==true) && item.callable){
-        if (thisEnabled){
+        if (itemVisible){
             enableLayer(item.id);
         }else{
             disableLayer(item.id);
         }
     }
-    return thisEnabled;
+    return itemVisible;
 }
 
 function refreshLayer(doRefreshOrder) {    
@@ -1246,10 +1256,10 @@ function refreshLayer(doRefreshOrder) {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-    //TODO: WebMapController
-    //webMapController.getMap().refreshLayerOrder();
+        //TODO: WebMapController
+        //webMapController.getMap().refreshLayerOrder();
     }
-//    flamingoController.getMap().update();
+    //    flamingoController.getMap().update();
 
     var lagen = webMapController.getMap().getAllVectorLayers();
     var totalLayers = webMapController.getMap().getLayers().length;
@@ -1337,7 +1347,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             }
             var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
             maptips.push(maptip);
-        //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
+            //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
     }
 
@@ -1350,6 +1360,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     }
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
+    ogcOptions["sld"] = "http://dev.b3p.nl/SldGenerator/rpbadam.xml";
     
     options["maptip_layers"]=maptipLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
@@ -1380,8 +1391,11 @@ function loadObjectInfo(geom) {
 
     document.forms[0].submit();
 }
-
-function getLayerIdsAsString() {
+/**
+ * Get alle enabled layer items
+ * @param onlyWithinScale Only get the visible, within currentScale items.
+ */
+function getLayerIdsAsString(onlyWithinScale) {
     var ret = "";
     var firstTime = true;
 
@@ -1395,7 +1409,12 @@ function getLayerIdsAsString() {
             if (!itemHasAllParentsEnabled(object))
                 continue;
         }
-        
+        if (onlyWithinScale){
+            var currentscale = webMapController.getMap().getScale();
+            if (!isItemInScale(enabledLayerItems[i],currentscale)){
+                continue;
+            }
+        }
         if(firstTime) {
             ret += enabledLayerItems[i].id;
             firstTime = false;
@@ -1498,10 +1517,10 @@ function getItemName(item) {
  * Indien dit niet kan dan moet deze niet meegeteld worden in de
  * berekening of alle clusters wel aangevinkt staan bij de methode
  * itemHasAllParentsEnabled()
-*/
+ */
 function parentHasCheckBox(parent) {
     /* neem hiervan eerste div erboven, dit is dan de div
-    * met eventueel input vinkje voor het cluster */
+     * met eventueel input vinkje voor het cluster */
     var parentDiv = getParentByTagName(parent, 'div');
     var name = getItemName(parentDiv);
     var checkbox = document.getElementById(name);
@@ -1963,8 +1982,8 @@ function getMovie(movieName) {
 }
 
 /**
-     *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
-     **/
+ *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
+ **/
 function searchThemaValue(themaList,themaId,val){
     for (var i in themaList){
         
@@ -2079,11 +2098,11 @@ function b_buffer(id, event) {
     var wkt;
 
     /* Indien door highlight de global var is gevuld deze
-         * dan gebruiken bij buffer als deze niet null is
-         * De getWktActiveFeature geeft bij sommige multipolygons niet
-         * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
-         * mis gaat. Deze is dus alleen gevuld na een highlight
-         * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
+     * dan gebruiken bij buffer als deze niet null is
+     * De getWktActiveFeature geeft bij sommige multipolygons niet
+     * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
+     * mis gaat. Deze is dus alleen gevuld na een highlight
+     * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
     if (multiPolygonBufferWkt != null)
         wkt = multiPolygonBufferWkt;
     else
@@ -2155,10 +2174,10 @@ function b_highlight( id,params) {
     btn_highLightSelected = true;
 
     /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
-         * de flamingo config een breinaald
-         * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
-         * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
-         * de gisviewer aan.*/
+     * de flamingo config een breinaald
+     * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
+     * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
+     * de gisviewer aan.*/
     if (mapviewer== "flamingo") {
         webMapController.activateTool("breinaald");
     } else {
@@ -2191,7 +2210,7 @@ function highLightThemaObject(geom) {
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
             if (!itemHasAllParentsEnabled(object))
-                continue;
+            continue;
         }
 
         if (item.analyse == 'on' || item.analyse=="active") {
@@ -2207,7 +2226,7 @@ function highLightThemaObject(geom) {
     if (analyseThemas.length == 1) {
         EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
         
-    //handleGetAdminData(geom, analyseThemas[0].id);
+        //handleGetAdminData(geom, analyseThemas[0].id);
     }
 }
 
@@ -2223,7 +2242,7 @@ function handlePopupValue(value) {
      * TODO
      * uitzoeken of thema onzichtbaar is en dan bovenliggend cluster gebruiken.
      * setActiveCluster(item, true);
-    */
+     */
 
     EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
     handleGetAdminData(highLightGeom, value);   
@@ -2407,15 +2426,15 @@ popUp = function(URL, naam, width, height, useDiv) {
     } else {
 
         properties = "toolbar = 0, " +
-        "scrollbars = 1, " +
-        "location = 0, " +
-        "statusbar = 1, " +
-        "menubar = 0, " +
-        "resizable = 1, " +
-        "width = " + screenwidth + ", " +
-        "height = " + screenheight + ", " +
-        "top = " + popuptop + ", " +
-        "left = " + popupleft;
+            "scrollbars = 1, " +
+            "location = 0, " +
+            "statusbar = 1, " +
+            "menubar = 0, " +
+            "resizable = 1, " +
+            "width = " + screenwidth + ", " +
+            "height = " + screenheight + ", " +
+            "top = " + popuptop + ", " +
+            "left = " + popupleft;
 
         return eval("page" + naam + " = window.open('" + URL + "', '" + naam + "', properties);");
     }
@@ -2464,15 +2483,15 @@ popUpData = function(naam, width, height, useDiv) {
     } else {
 
         properties = "toolbar = 0, " +
-        "scrollbars = 1, " +
-        "location = 0, " +
-        "statusbar = 1, " +
-        "menubar = 0, " +
-        "resizable = 1, " +
-        "width = " + screenwidth + ", " +
-        "height = " + screenheight + ", " +
-        "top = " + popuptop + ", " +
-        "left = " + popupleft;
+            "scrollbars = 1, " +
+            "location = 0, " +
+            "statusbar = 1, " +
+            "menubar = 0, " +
+            "resizable = 1, " +
+            "width = " + screenwidth + ", " +
+            "height = " + screenheight + ", " +
+            "top = " + popuptop + ", " +
+            "left = " + popupleft;
 
         return window.open('admindatabusy.do', naam, properties);
     }

@@ -2322,12 +2322,15 @@ function createPermaLink(){
     var host = window.location.host;
     var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
 
+    /* personal code */
+    var personalCode = "code=" + kbcode;
+
     /* kaartlaagIds ophalen */
     var id = "";
     var layerIds = getLayerIdsAsString();
 
     if (layerIds != undefined && layerIds.length > 0) {
-        id = "id=" + layerIds;
+        id = "&id=" + layerIds;
     }
 
     /* extent ophalen */
@@ -2354,7 +2357,7 @@ function createPermaLink(){
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
 
-    var url = urlBase + id + extent;
+    var url = urlBase + personalCode + id + extent;
     return url;
 }
 

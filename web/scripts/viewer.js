@@ -1360,7 +1360,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     }
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
-    ogcOptions["sld"] = "http://dev.b3p.nl/SldGenerator/rpbadam.xml";
+    //ogcOptions["sld"] = "http://dev.b3p.nl/SldGenerator/rpbadam.xml";
     
     options["maptip_layers"]=maptipLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);

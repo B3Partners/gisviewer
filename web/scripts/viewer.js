@@ -1064,41 +1064,41 @@ function checkScaleForLayers() {
 }
 
 
-/*Controleerd of een item in de huidige schaal past.
+/*Controleert of een item in de huidige schaal past.
  * Voor een enkele layer wordt gekeken of die er in past
  * Voor een cluster wordt gekeken of er 1 van de layers in de schaal past.
  * @param item json thema of cluster
- * @param currentScale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
+ * @param scale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
  * @return boolean wel of niet zichtbaar in scale.
  **/
 function isItemInScale(item,scale){
-    var itemVisible=false;
+    var itemVisible=true;
     if (item.children){
+        itemVisible=false;
         for (var i=0; i < item.children.length; i++){
             if(isItemInScale(item.children[i],scale)){
                 itemVisible=true;
             }
         }
     }else{
-        var minscale=0;
-        var maxscale=0;
-
         if (item.scalehintmin != null) {
-            minscale = Number(item.scalehintmin.replace(",", "."));
-        }
-        if (item.scalehintmax != null) {
-            maxscale = Number(item.scalehintmax.replace(",", "."));
-        }
-        /* als er min en maxscale is dan laag aanzetten indien scale binnen
-         * min en max valt */
-        if (minscale >= 0  && maxscale >= 0) {
-            if (scale <= maxscale && scale >= minscale) {
-                itemVisible= true;
+            var minscale = Number(item.scalehintmin.replace(",", "."));
+            if (scale<minscale){
+                itemVisible=false;
             }
         }
+        if (item.scalehintmax != null) {
+            var maxscale = Number(item.scalehintmax.replace(",", "."));
+            if (scale>maxscale){
+                itemVisible=false;
+            }
+        }       
     }
     return itemVisible;
 }
+/**
+ *Sets een tree item enabled or disabled (visually)
+ */
 function setScaleForTree(item,scale){
     if (item.children){
         for (var i=0; i < item.children.length; i++){
@@ -1107,7 +1107,7 @@ function setScaleForTree(item,scale){
     }
     var itemVisible=isItemInScale(item,scale);
     //als item zichtbaar is en callable.
-    if ((item.cluster || item.visible==true) && item.callable){
+    if (item.callable){
         if (itemVisible){
             enableLayer(item.id);
         }else{

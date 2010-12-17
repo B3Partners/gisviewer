@@ -251,10 +251,12 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     if (!multipleActiveThemas){
         checkedThemaIds = activeAnalyseThemaId;
     } else {
-        checkedThemaIds = getLayerIdsAsString(true);
+        checkedThemaIds = getLayerIdsAsString(false);
     }
 
     if (checkedThemaIds == null || checkedThemaIds == '') {
+        alert('Kan geen objectinfo ophalen. Er zijn geen kaartlagen aangevinkt.');
+        
         hideLoading();
         return;
     }

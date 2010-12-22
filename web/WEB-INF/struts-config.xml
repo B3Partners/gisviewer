@@ -88,16 +88,19 @@
             <forward name="login" path="login"/>
             <forward name="loginError" path="login"/>
             <forward name="logout" path="/index.do" redirect="true"/>
+            <forward name="help" path="help"/>
         </action>
+
         <action path="/indexlist" forward="/index.do?list=t"/>
         <action path="/login" forward="/index.do?login=t"/>
         <action path="/loginError" forward="/index.do?loginError=t"/>
         <action path="/logout" forward="/index.do?logout=t"/>
         <action path="/resetCache" forward="/index.do?resetCache=t"/>
-        <action path="/help" forward="help"/>
         <action path="/home" forward="home"/>
         <action path="/zoekVoorziening" forward="voorzieningzoeker"/>
         <action path="/zoekVergunning" forward="vergunningzoeker"/>
+
+        <action path="/help" forward="/index.do?help=t"/>
         
         <action path="/viewerlist" forward="/index.do?list=t"/>
         

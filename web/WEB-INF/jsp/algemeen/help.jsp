@@ -24,46 +24,71 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="content_style">
 
-    <hr>
+    <!-- Loop door tekstblokken heen -->
+    <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
+        <div class="content_block">
+            <div class="content_title"><c:out value="${tb.titel}"/></div>
 
-    <table class="kolomtabel">
-        <tr>
-            <td valign="top">
-                <tiles:insert definition="actionMessages"/>
-                <h1><fmt:message key="algemeen.help.titel"/></h1>
+            <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
+            <c:if test="${tb.toonUrl}">
+                <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+            </c:if>
 
-                <div class="inleiding">
-                    <h2><fmt:message key="algemeen.help.part1.title"/></h2>
-                    <fmt:message key="algemeen.help.part1.content"/>
-                </div>
+            <!-- Anders gewoon de tekst tonen van tekstblok -->
+            <c:if test="${!tb.toonUrl}">
+            <div class="inleiding_body">
+                ${tb.tekst}
 
-                <h2><fmt:message key="algemeen.help.part2.title"/></h2>
-                <fmt:message key="algemeen.help.part2.content"/>
+                <c:if test="${!empty tb.url}">
+                Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
+                </c:if>
 
-                <a name="thema"></a><h2><fmt:message key="algemeen.help.part3.title"/></h2>
-                <fmt:message key="algemeen.help.part3.content"/>
+                <c:if test="${tb.toonUrl}">
+                    <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+                </c:if>
+            </div>
+            </c:if>
+        </div>
+    </c:forEach>
 
-                <a name="legenda"></a><h2><fmt:message key="algemeen.help.part4.title"/></h2>
-                <fmt:message key="algemeen.help.part4.content"/>
+    <!-- Gewone help pagina tonen als er geen tekstblokken zijn -->
+    <c:if test="${empty tekstBlokken}">
+        <table class="kolomtabel">
+            <tr>
+                <td valign="top">
+                    <tiles:insert definition="actionMessages"/>
+                    <h1><fmt:message key="algemeen.help.titel"/></h1>
 
-            </td>
-            <td valign="top">
-                <a name="zoeker"></a><h2><fmt:message key="algemeen.help.part5.title"/></h2>
-                <fmt:message key="algemeen.help.part5.content"/>
+                    <div class="inleiding">
+                        <h2><fmt:message key="algemeen.help.part1.title"/></h2>
+                        <fmt:message key="algemeen.help.part1.content"/>
+                    </div>
 
-                <a name="gebieden"></a><h2><fmt:message key="algemeen.help.part6.title"/></h2>
-                <fmt:message key="algemeen.help.part6.content"/>
+                    <h2><fmt:message key="algemeen.help.part2.title"/></h2>
+                    <fmt:message key="algemeen.help.part2.content"/>
 
-                <a name="analyse"></a><h2><fmt:message key="algemeen.help.part7.title"/></h2>
-                <fmt:message key="algemeen.help.part7.content"/>
+                    <a name="thema"></a><h2><fmt:message key="algemeen.help.part3.title"/></h2>
+                    <fmt:message key="algemeen.help.part3.content"/>
 
-                <h2><fmt:message key="algemeen.help.part8.title"/></h2>
-                <fmt:message key="algemeen.help.part8.content"/>
+                    <a name="legenda"></a><h2><fmt:message key="algemeen.help.part4.title"/></h2>
+                    <fmt:message key="algemeen.help.part4.content"/>
 
-            </td>
-        </tr>
-    </table>
+                </td>
+                <td valign="top">
+                    <a name="zoeker"></a><h2><fmt:message key="algemeen.help.part5.title"/></h2>
+                    <fmt:message key="algemeen.help.part5.content"/>
 
-    <hr>
-    <tiles:insert name="loginblock"/>
+                    <a name="gebieden"></a><h2><fmt:message key="algemeen.help.part6.title"/></h2>
+                    <fmt:message key="algemeen.help.part6.content"/>
+
+                    <a name="analyse"></a><h2><fmt:message key="algemeen.help.part7.title"/></h2>
+                    <fmt:message key="algemeen.help.part7.content"/>
+
+                    <h2><fmt:message key="algemeen.help.part8.title"/></h2>
+                    <fmt:message key="algemeen.help.part8.content"/>
+
+                </td>
+            </tr>
+        </table>
+    </c:if>
 </div>

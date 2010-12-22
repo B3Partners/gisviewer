@@ -15,66 +15,97 @@
 
 <tiles:insert definition="actionMessages"/>
 
-<div class="content_block">
-    <div class="content_title"><fmt:message key="algemeen.home.titel"/></div>
+<!-- Loop door tekstblokken heen -->
+<c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
+    <div class="content_block">
+        <div class="content_title"><c:out value="${tb.titel}"/></div>
 
-    <div class="inleiding_body">
-        <p>
-            De B3P GIS Suite maakt informatie van overheden integraal en snel via
-            een standaard webbrowser toegankelijk. Interne medewerkers, burgers,
-            ketenpartners en externe organisaties kunnen eenvoudig toegang
-            verkrijgen tot informatie. De B3P GIS Suite is daarom bij uitstek
-            inzetbaar als organisatiebreed webGIS.
-        </p>
-        
-        <table>
-            <tr>
-                <td>E-mail:</td>
-                <td><a href="mailto:info@b3partners.nl">info@b3partners.nl</a></td>
-            </tr>
-            <tr>
-                <td>Web:</td>
-                <td><a href="http://www.b3partners.nl" target="_new">www.b3partners.nl</a></td>
-            </tr>
-        </table>
+        <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
+        <c:if test="${tb.toonUrl}">
+            <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+        </c:if>
+
+        <!-- Anders gewoon de tekst tonen van tekstblok -->
+        <c:if test="${!tb.toonUrl}">
+        <div class="inleiding_body">
+            ${tb.tekst}
+
+            <c:if test="${!empty tb.url}">
+            Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
+            </c:if>
+
+            <c:if test="${tb.toonUrl}">
+                <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+            </c:if>
+        </div>
+        </c:if>
     </div>
-</div>
+</c:forEach>
 
-<div class="content_block">
-    <div class="content_title">Luchtfoto Heuvelrug</div>
+<!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard
+blokken -->
+<c:if test="${empty tekstBlokken}">
+    <div class="content_block">
+        <div class="content_title"><fmt:message key="algemeen.home.titel"/></div>
 
-    <div class="inleiding_body">
-        <html:img page="/images/examples/luchtfoto_heuvelrug.png" styleClass="example_image"/>
-        <p>Luchtfoto van de Utrechtse heuvelrug</p>
+        <div class="inleiding_body">
+            <p>
+                De B3P GIS Suite maakt informatie van overheden integraal en snel via
+                een standaard webbrowser toegankelijk. Interne medewerkers, burgers,
+                ketenpartners en externe organisaties kunnen eenvoudig toegang
+                verkrijgen tot informatie. De B3P GIS Suite is daarom bij uitstek
+                inzetbaar als organisatiebreed webGIS.
+            </p>
+
+            <table>
+                <tr>
+                    <td>E-mail:</td>
+                    <td><a href="mailto:info@b3partners.nl">info@b3partners.nl</a></td>
+                </tr>
+                <tr>
+                    <td>Web:</td>
+                    <td><a href="http://www.b3partners.nl" target="_new">www.b3partners.nl</a></td>
+                </tr>
+            </table>
+        </div>
     </div>
-</div>
 
-<div class="content_block">
-    <div class="content_title">Nieuwe Kaart Nederland</div>
+    <div class="content_block">
+        <div class="content_title">Luchtfoto Heuvelrug</div>
 
-    <div class="inleiding_body">
-        <html:img page="/images/examples/nkn_utrecht.png" styleClass="example_image"/>
-        <p>Nieuwe kaart van Nederland in de omgeving van Utrecht</p>
+        <div class="inleiding_body">
+            <html:img page="/images/examples/luchtfoto_heuvelrug.png" styleClass="example_image"/>
+            <p>Luchtfoto van de Utrechtse heuvelrug</p>
+        </div>
     </div>
-</div>
 
-<div class="content_block">
-    <div class="content_title">OpenStreetMap</div>
+    <div class="content_block">
+        <div class="content_title">Nieuwe Kaart Nederland</div>
 
-    <div class="inleiding_body">
-        <html:img page="/images/examples/osm_wijken_utrecht.png" styleClass="example_image"/>
-        <p>OpenStreetMap als achtergrondkaart met daarop de cbs wijkindeling in Utrecht</p>
+        <div class="inleiding_body">
+            <html:img page="/images/examples/nkn_utrecht.png" styleClass="example_image"/>
+            <p>Nieuwe kaart van Nederland in de omgeving van Utrecht</p>
+        </div>
     </div>
-</div>
 
-<div class="content_block">
-    <div class="content_title">Bestemmingsplannen</div>
+    <div class="content_block">
+        <div class="content_title">OpenStreetMap</div>
 
-    <div class="inleiding_body">
-        <html:img page="/images/examples/roo_osm.png" styleClass="example_image"/>
-        <p>Bestemmingsplannen van RO-Online op een achtergrond van OpenStreetMap</p>
+        <div class="inleiding_body">
+            <html:img page="/images/examples/osm_wijken_utrecht.png" styleClass="example_image"/>
+            <p>OpenStreetMap als achtergrondkaart met daarop de cbs wijkindeling in Utrecht</p>
+        </div>
     </div>
-</div>
+
+    <div class="content_block">
+        <div class="content_title">Bestemmingsplannen</div>
+
+        <div class="inleiding_body">
+            <html:img page="/images/examples/roo_osm.png" styleClass="example_image"/>
+            <p>Bestemmingsplannen van RO-Online op een achtergrond van OpenStreetMap</p>
+        </div>
+    </div>
+</c:if>
 
 <div class="content_block">
     <c:choose>

@@ -460,6 +460,41 @@ function isActiveItem(item) {
 
     return true;
 }
+/**
+ *Create a radio cluster
+ *@param item the cluster item (json)
+ *@param checked set to true if this radio must be checked?
+ *@param groupName the groupname of this radio group (the parent cluster id in most cases)
+ */
+function createRadioCluster(item,checked,groupName){
+    var checkbox;
+    if (navigator.appName=="Microsoft Internet Explorer") {
+        var checkboxControleString = '<input type="radio" id="' + item.id + '"';
+        if (checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
+        checkboxControleString += ' name="'+groupName+'">';
+        checkbox = document.createElement(checkboxControleString);
+    }else{
+        checkbox = document.createElement('input');
+        checkbox.id = item.id;
+        checkbox.type = 'radio';
+        checkbox.value = item.id;
+        checkbox.name= groupName;
+        checkbox.onclick = function(){
+            clusterCheckboxClick(this, false);
+        }
+        if(checked) {
+            checkbox.checked = true;
+        }
+    }
+
+    return checkbox;
+}
+
+
+/*Create a checkbox for cluster*/
 function createCheckboxCluster(item, checked){
 
     var checkbox;
@@ -487,7 +522,7 @@ function createCheckboxCluster(item, checked){
     return checkbox;
 }
 
-function createRadioThema(item){
+function createRadioSingleActiveThema(item){
     var radio;
     if (navigator.appName=="Microsoft Internet Explorer") {
         var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
@@ -512,6 +547,41 @@ function createRadioThema(item){
     }
     radio.theItem=item;
     return radio;
+}
+/**
+ *Create a radio thema
+ *@param item the thema item (json)
+ *@param checked set to true if this radio must be checked?
+ *@param groupName the groupname of this radio group (the parent cluster id in most cases)
+ */
+function createRadioThema(item,checked,groupName){
+    var checkbox;
+
+    if (navigator.appName=="Microsoft Internet Explorer") {
+
+        var checkboxControleString = '<input type="radio" id="' + item.id + '"';
+        if (checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
+        checkboxControleString += ' name="'+groupName+'">';
+        checkbox = document.createElement(checkboxControleString);
+
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = item.id;
+        checkbox.type = 'radio';
+        checkbox.value = item.id;
+        checkbox.name = groupName;
+        checkbox.onclick = function() {
+            checkboxClick(this, false);
+        }
+
+        if (checked) {
+            checkbox.checked = true;
+        }
+    }
+    return checkbox;
 }
 
 function createCheckboxThema(item, checked) {
@@ -541,9 +611,6 @@ function createCheckboxThema(item, checked) {
             checkbox.checked = true;
         }
     }
-
-    checkbox.theItem=item;
-
     return checkbox;
 }
 
@@ -582,7 +649,13 @@ function createLabel(container, item) {
             if(clusterPos!=0) {
                 checkboxChecked = true;
             }
-            var checkbox = createCheckboxCluster(item, checkboxChecked);
+            var checkbox = null;
+	    var parentItem=getParentItem(themaTree,item);
+	    if (parentItem.exclusive_childs){
+		checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
+	    }else{
+		checkbox=createCheckboxCluster(item, checkboxChecked);
+            }
 
             checkbox.theItem=item;
             container.appendChild(checkbox);
@@ -622,25 +695,34 @@ function createLabel(container, item) {
             if(layerPos!=0) {
                 checkboxChecked = true;
             }
-            var labelCheckbox = createCheckboxThema(item, checkboxChecked);
+            
+	    var themaCheckbox = null;
+	    var parentItem=getParentItem(themaTree,item);
+	    if (parentItem.exclusive_childs){
+	        themaCheckbox=createRadioThema(item,checkboxChecked,parentItem.id);
+	    }else{
+	        themaCheckbox=createCheckboxThema(item, checkboxChecked);
+	    }
+            themaCheckbox.theItem=item;
+
 
             if (checkboxChecked) {
                 if (layerPos<0) {
-                    layersAan.unshift(labelCheckbox);
+                    layersAan.unshift(themaCheckbox);
                 } else {
-                    layersAan.push(labelCheckbox);
+                    layersAan.push(themaCheckbox);
                 }
             }
 
             if(item.analyse=="on" || item.analyse=="active"){
                 if (!multipleActiveThemas){
-                    var labelRadio = createRadioThema(item);
+                    var labelRadio = createRadioSingleActiveThema(item);
                     container.appendChild(labelRadio);
                 } else {
                     isActiveItem(item);
                 }
             }
-            container.appendChild(labelCheckbox);
+            container.appendChild(themaCheckbox);
         }
 
         if (item.legendurl != undefined && showLegendInTree) {
@@ -834,7 +916,6 @@ function checkboxClick(obj, dontRefresh) {
     var item = obj.theItem;
     if(obj.checked) {        
         addItemAsLayer(item);
-
         if (useInheritCheckbox) {
             //zet bovenliggende cluster vinkjes aan
             var object = document.getElementById(item.id);
@@ -843,6 +924,20 @@ function checkboxClick(obj, dontRefresh) {
     } else {
         removeItemAsLayer(item);
     }
+
+    if (obj.type=='radio'){
+        if (obj.checked){
+            var radiogroup=$j("input[name='"+obj.name+"']");
+            $j.each(radiogroup,function(key, value){
+                if (obj.id!=value.id){
+                    clusterCheckboxClick(value,dontRefresh);
+                }
+            })
+        }else{
+            disableLayer(item.id);
+        }
+    }
+
     if (!dontRefresh){
         if(obj.checked) {
             refreshLayerWithDelay();
@@ -887,7 +982,7 @@ function clusterCheckboxClick(element,dontRefresh){
                     }
                 }
             }
-        } else {
+        } else if (cluster.children){
             for (var d=0; d < cluster.children.length;d++) {
                 var child1=cluster.children[d];
                 if (!child1.cluster){
@@ -904,6 +999,33 @@ function clusterCheckboxClick(element,dontRefresh){
                 }
             }
         }     
+    }
+    /*if its a radio and checked,then disable the other radio's*/
+    if (element.type=='radio' && cluster.children){
+        var childDiv=$j("#layermaindiv_item_" + element.id+"_children");
+        if (element.checked){
+            //als er child elementen zijn dan die aanzetten en tree expanden.
+            if (childDiv){
+                childDiv.removeClass("disabledRadioChilds");
+                $j("#layermaindiv_item_" + element.id+"_children input").removeAttr("disabled");
+                treeview_expandItemChildren("layermaindiv",element.id);
+            }
+            //andere radio's uitzetten.
+            var jqueryElementString="input[name='"+element.name+"']";
+            var radiogroup=$j(jqueryElementString);
+            $j.each(radiogroup,function(key, value){
+                if (element.id!=value.id){
+                    clusterCheckboxClick(value,dontRefresh);
+                }
+            })
+        }else{
+            //als een andere van de group aan is dan deze disablen, mits er childs zijn.
+            if (childDiv){
+                childDiv.addClass("disabledRadioChilds");
+                treeview_collapseItemChildren("layermaindiv",element.id);
+                $j("#layermaindiv_item_" + element.id+"_children input").attr('disabled',true);
+            }
+        }
     }
 
     if (!dontRefresh){
@@ -1100,21 +1222,29 @@ function isItemInScale(item,scale){
  *Sets een tree item enabled or disabled (visually)
  */
 function setScaleForTree(item,scale){
-    if (item.children){
-        for (var i=0; i < item.children.length; i++){
-            setScaleForTree(item.children[i],scale);
+    var disabledRadio=false;
+    //if disabled radioinput dan zijn de layers al gedisabled.
+    var inputElement=document.getElementById(item.id);
+    disabledRadio=inputElement && inputElement.type=='radio' && !inputElement.checked;
+    if (!disabledRadio){
+        if (item.children){
+            for (var i=0; i < item.children.length; i++){
+                setScaleForTree(item.children[i],scale);
+            }
         }
-    }
-    var itemVisible=isItemInScale(item,scale);
-    //als item zichtbaar is en callable.
-    if (item.callable){
-        if (itemVisible){
-            enableLayer(item.id);
-        }else{
-            disableLayer(item.id);
+        var itemVisible=isItemInScale(item,scale);
+        //als item zichtbaar is en callable.
+        if (item.callable){
+            if (itemVisible){
+                enableLayer(item.id);
+            }else{
+                disableLayer(item.id);
+            }
         }
+        return itemVisible;
+    }else{
+    	return false;
     }
-    return itemVisible;
 }
 
 function refreshLayer(doRefreshOrder) {    
@@ -2002,6 +2132,25 @@ function searchThemaValue(themaList,themaId,val){
             }
         }
     }
+}
+/*Function to get the parent of a item
+ *@param parentCandidate a parent candidate, maybe its the parent of the imte
+ *@param the item we want the parent of.
+ **/
+function getParentItem(parentCandidate,item){
+    if (parentCandidate.children){
+        for (var i=0; i < parentCandidate.children.length;i++){
+            if(parentCandidate.children[i]==item){
+                return parentCandidate;
+            }else if (parentCandidate.children[i].children){
+                var theParent= getParentItem(parentCandidate.children[i],item);
+                if (theParent!=null){
+                    return theParent;
+                }
+            }
+        }        
+    }
+    return null;
 }
 
 var exportMapWindow;

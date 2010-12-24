@@ -109,10 +109,12 @@ function treeview_expandItemParents(treeId, treeItemId) {
 }
 
 function treeview_expandItemChildren(treeId, treeItemId) {
-	var options = globalTreeOptions[treeId];
-	var DOMItemId = treeview_getDOMItemId(options, treeItemId);
-	var itemNode = document.getElementById(DOMItemId);
-	treeview_expandItemNodeChildren(itemNode);
+	treeview_changeItemChildren(treeId,treeItemId,true);
+}
+
+function treeview_collapseItemChildren(treeId, treeItemId) {
+	treeview_changeItemChildren(treeId,treeItemId,false);
+	
 }
 
 function treeview_findItem(root, itemId) {
@@ -134,10 +136,29 @@ function treeview_findItem(root, itemId) {
 
 /*** private functies ***/
 
+function treeview_changeItemChildren(treeId, treeItemId,expand){
+    var options = globalTreeOptions[treeId];
+    var DOMItemId = treeview_getDOMItemId(options, treeItemId);
+    var itemNode = document.getElementById(DOMItemId);
+    if (expand){
+	treeview_expandItemNodeChildren(itemNode);    
+    }else{
+        treeview_collapseItemNodeChildren(itemNode);
+    }
+}
+
 function treeview_expandItemNodeChildren(itemNode) {
 	var childrenNode = document.getElementById(itemNode.id + "_children");
 	if(childrenNode != undefined) {
 		if(childrenNode.style.display == "none") {
+			treeview_toggleItemChildren(itemNode.id);
+		}
+	}
+}
+function treeview_collapseItemNodeChildren(itemNode) {
+	var childrenNode = document.getElementById(itemNode.id + "_children");
+	if(childrenNode != undefined) {
+		if(childrenNode.style.display != "none") {
 			treeview_toggleItemChildren(itemNode.id);
 		}
 	}
@@ -180,7 +201,7 @@ function treeview_toggleClick(e) {
 function treeview_toggleItemChildren(DOMItemId) {
 	var children = document.getElementById(DOMItemId + "_children");
 	var toggle = document.getElementById(DOMItemId + "_toggle");
-	if(children != undefined) {
+	if(children != undefined && toggle!= undefined) {
 		var options = treeview_getOptions(DOMItemId);
 
 		/* nieuwe state, omgekeerd van huidige state */

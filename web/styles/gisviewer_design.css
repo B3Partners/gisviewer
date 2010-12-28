@@ -611,6 +611,10 @@ a.highlightlink:hover{
     border: 1px solid #D2E0EB;
 }
 
+.bronContent table{
+    width: 100%;
+}
+
 .childCaption {
     background-color: #D2E0EB;
     /* border: 1px solid gray; */

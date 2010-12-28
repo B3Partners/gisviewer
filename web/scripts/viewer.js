@@ -71,20 +71,20 @@ function initializeButtons(){
 
     webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
-    zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX);
+    zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {title: 'Inzomen met selectie'});
     webMapController.addTool(zoomBox);
 
-    pan = webMapController.createTool("b_pan",Tool.PAN);
+    pan = webMapController.createTool("b_pan",Tool.PAN, {title: 'Pannen'});
     webMapController.addTool(pan);
 
-    prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY);
+    prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {title: 'Vorige extent'});
     webMapController.addTool(prevExtent);
 
     var options = new Object();
     options["handlerGetFeatureHandler"] = onIdentifyData;
     options["handlerBeforeGetFeatureHandler"] = onIdentify;
-
-    identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,null, options);
+    options["title"]="Ophalen gegevens";
+    identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
     webMapController.addTool(identify);
     webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
     
@@ -93,24 +93,33 @@ function initializeButtons(){
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
     
     
-    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, editLayer);
+    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {layer: editLayer});
     webMapController.addTool(edittingtb);
 
-    var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, editLayer);
+    var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, {layer: editLayer, title: 'Buffer het tekenobject'});
     webMapController.addTool(bu_buffer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_buffer,b_buffer);
 
-    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, editLayer);
+    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, {layer: editLayer, title: 'Selecteer object'});
     webMapController.addTool(bu_getfeatures);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
 
-    var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, editLayer);
+    var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, {layer: editLayer, title: 'Selecteer een object in de kaart'});
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
     webMapController.addTool(bu_highlight);
 
-    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, editLayer);
+    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, {layer: editLayer, title: 'Verwijder object'});
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
+    var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {title: 'Meten'});
+    //webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
+    webMapController.addTool(bu_measure);
+
+    var scalebar = webMapController.createTool("scalebar",Tool.SCALEBAR);
+    webMapController.addTool(scalebar);
+
+    var zoombar= webMapController.createTool("zoombar",Tool.ZOOM_BAR);
+    webMapController.addTool(zoombar);
 }
 
 initMapComponent();
@@ -251,12 +260,10 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     if (!multipleActiveThemas){
         checkedThemaIds = activeAnalyseThemaId;
     } else {
-        checkedThemaIds = getLayerIdsAsString(false);
+        checkedThemaIds = getLayerIdsAsString(true);
     }
 
     if (checkedThemaIds == null || checkedThemaIds == '') {
-        alert('Kan geen objectinfo ophalen. Er zijn geen kaartlagen aangevinkt.');
-        
         hideLoading();
         return;
     }
@@ -640,34 +647,34 @@ function createMetadatLink(item){
 }
 
 function createLabel(container, item) {
-    
     if(item.cluster) {
         //if callable
         if (item.callable) {
-            var checkboxChecked = false;
-            var clusterPos = getClusterPosition(item);
-            if(clusterPos!=0) {
-                checkboxChecked = true;
-            }
-            var checkbox = null;
-	    var parentItem=getParentItem(themaTree,item);
-	    if (parentItem.exclusive_childs){
-		checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
-	    }else{
-		checkbox=createCheckboxCluster(item, checkboxChecked);
-            }
+                var checkboxChecked = false;
+                var clusterPos = getClusterPosition(item);
+                if(clusterPos!=0) {
+                    checkboxChecked = true;
+                }
+                var checkbox = null;
+                var parentItem=getParentItem(themaTree,item);
+                if (parentItem.exclusive_childs){
+                    checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
+                }else{
+                    checkbox=createCheckboxCluster(item, checkboxChecked);
+                }
 
-            checkbox.theItem=item;
-            container.appendChild(checkbox);
+                checkbox.theItem=item;
+                container.appendChild(checkbox);
 
-            if (checkboxChecked){
-                clustersAan.push(checkbox);
-            }
+                if (checkboxChecked){
+                    clustersAan.push(checkbox);
+                }
 
-            // alleen een callable item kan active zijn
-            if (item.active){
-                setActiveCluster(item, true);
-            }
+                // alleen een callable item kan active zijn
+                if (item.active){
+                    setActiveCluster(item, true);
+                }
+
         }
         if (item.hide_tree && item.callable){
             // hack om toggle plaatje uit te zetten als
@@ -695,16 +702,15 @@ function createLabel(container, item) {
             if(layerPos!=0) {
                 checkboxChecked = true;
             }
-            
-	    var themaCheckbox = null;
-	    var parentItem=getParentItem(themaTree,item);
-	    if (parentItem.exclusive_childs){
-	        themaCheckbox=createRadioThema(item,checkboxChecked,parentItem.id);
-	    }else{
-	        themaCheckbox=createCheckboxThema(item, checkboxChecked);
-	    }
-            themaCheckbox.theItem=item;
 
+            var themaCheckbox = null;
+            var parentItem=getParentItem(themaTree,item);
+            if (parentItem.exclusive_childs){
+                themaCheckbox=createRadioThema(item,checkboxChecked,parentItem.id);
+            }else{
+                themaCheckbox=createCheckboxThema(item, checkboxChecked);
+            }
+            themaCheckbox.theItem=item;
 
             if (checkboxChecked) {
                 if (layerPos<0) {
@@ -1243,7 +1249,7 @@ function setScaleForTree(item,scale){
         }
         return itemVisible;
     }else{
-    	return false;
+        return false;
     }
 }
 
@@ -1388,8 +1394,8 @@ function refreshLayer(doRefreshOrder) {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-        //TODO: WebMapController
-        //webMapController.getMap().refreshLayerOrder();
+    //TODO: WebMapController
+    //webMapController.getMap().refreshLayerOrder();
     }
     //    flamingoController.getMap().update();
 
@@ -1411,6 +1417,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         timeout: 30,
         retryonerror: 10,
         getcapabilitiesurl: capLayerUrl,
+        ratio: 1,
         showerrors: true
     };
     var ogcOptions={
@@ -1479,7 +1486,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
             }
             var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
             maptips.push(maptip);
-            //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
+        //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
     }
 
@@ -1492,7 +1499,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     }
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
-    //ogcOptions["sld"] = "http://dev.b3p.nl/SldGenerator/rpbadam.xml";
+    ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
     
     options["maptip_layers"]=maptipLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
@@ -1684,7 +1691,9 @@ function createLegendDiv(item) {
 
     if (item.legendurl != undefined){
         var timestamp=(Math.floor(new Date().getTime()));
-        myImage.src = item.legendurl + "&timestamp=" + timestamp;
+        myImage.src = item.legendurl + "&timestamp=" + timestamp + "&SLD=" + escape("http://localhost/rpbadam/rpbadam.xml");
+
+
     } else {
         myImage.onerror();
     }
@@ -2133,6 +2142,7 @@ function searchThemaValue(themaList,themaId,val){
         }
     }
 }
+
 /*Function to get the parent of a item
  *@param parentCandidate a parent candidate, maybe its the parent of the imte
  *@param the item we want the parent of.
@@ -2361,7 +2371,7 @@ function highLightThemaObject(geom) {
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
             if (!itemHasAllParentsEnabled(object))
-            continue;
+                continue;
         }
 
         if (item.analyse == 'on' || item.analyse=="active") {
@@ -2377,7 +2387,7 @@ function highLightThemaObject(geom) {
     if (analyseThemas.length == 1) {
         EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
         
-        //handleGetAdminData(geom, analyseThemas[0].id);
+    //handleGetAdminData(geom, analyseThemas[0].id);
     }
 }
 
@@ -2481,7 +2491,7 @@ function createPermaLink(){
     var layerIds = getLayerIdsAsString();
 
     if (layerIds != undefined && layerIds.length > 0) {
-        id = "&id=" + layerIds;
+        id = "id=" + layerIds;
     }
 
     /* extent ophalen */
@@ -2522,7 +2532,7 @@ function addToFavorites(url) {
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
         window.external.AddFavorite(url, title);       
     } else if(window.opera && window.print) { // Opera 
-	return true;
+        return true;
     }
 
     return null;
@@ -2580,15 +2590,15 @@ popUp = function(URL, naam, width, height, useDiv) {
     } else {
 
         properties = "toolbar = 0, " +
-            "scrollbars = 1, " +
-            "location = 0, " +
-            "statusbar = 1, " +
-            "menubar = 0, " +
-            "resizable = 1, " +
-            "width = " + screenwidth + ", " +
-            "height = " + screenheight + ", " +
-            "top = " + popuptop + ", " +
-            "left = " + popupleft;
+        "scrollbars = 1, " +
+        "location = 0, " +
+        "statusbar = 1, " +
+        "menubar = 0, " +
+        "resizable = 1, " +
+        "width = " + screenwidth + ", " +
+        "height = " + screenheight + ", " +
+        "top = " + popuptop + ", " +
+        "left = " + popupleft;
 
         return eval("page" + naam + " = window.open('" + URL + "', '" + naam + "', properties);");
     }
@@ -2637,15 +2647,15 @@ popUpData = function(naam, width, height, useDiv) {
     } else {
 
         properties = "toolbar = 0, " +
-            "scrollbars = 1, " +
-            "location = 0, " +
-            "statusbar = 1, " +
-            "menubar = 0, " +
-            "resizable = 1, " +
-            "width = " + screenwidth + ", " +
-            "height = " + screenheight + ", " +
-            "top = " + popuptop + ", " +
-            "left = " + popupleft;
+        "scrollbars = 1, " +
+        "location = 0, " +
+        "statusbar = 1, " +
+        "menubar = 0, " +
+        "resizable = 1, " +
+        "width = " + screenwidth + ", " +
+        "height = " + screenheight + ", " +
+        "top = " + popuptop + ", " +
+        "left = " + popupleft;
 
         return window.open('admindatabusy.do', naam, properties);
     }
@@ -2765,3 +2775,5 @@ $j(document).ready(function(){
 
     createSearchConfigurations();
 });
+
+/**/

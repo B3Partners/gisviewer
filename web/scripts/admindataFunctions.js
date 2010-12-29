@@ -552,15 +552,23 @@ function createTableTd(waarde) {
                 td.append("-");
             } else {
                 var linkspan = $j('<span></span>');
-                // TODO: icon kiezen afh van extentie listWaarde
-                var icon4 = $j('<img src="'+urlicon+'" alt="Externe informatie"/>')
-                .attr({
-                    "title": listWaarde
-                })
-                .click(function() {
+                var clickable=null;
+                if (waarde.value){
+                    clickable = $j('<a href="#">'+waarde.value+'</a>')
+                    .attr({
+                        "title": listWaarde
+                    });
+                }else{
+                    // TODO: icon kiezen afh van extentie listWaarde
+                    clickable = $j('<img src="'+urlicon+'" alt="Externe informatie"/>')
+                    .attr({
+                        "title": listWaarde
+                    })
+                }
+                clickable.click(function() {
                     popUp(listWaarde, 'externe_link', 600, 500);
                 });
-                linkspan.html(icon4);
+                linkspan.html(clickable);
                 td.append(linkspan);
                 td.append(" ");
             }

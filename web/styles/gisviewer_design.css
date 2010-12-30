@@ -318,6 +318,11 @@ a:hover{
     color: White;
 }
 
+.tabvak_body .messages #error, .tabvak_body .messages #acknowledge {
+    color: White;
+    margin: 5px;
+}
+
 .tabvak_content {
     margin-left: 5px;
     margin-top: 2px;

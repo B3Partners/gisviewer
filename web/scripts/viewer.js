@@ -25,6 +25,8 @@ var clustersAan = new Array();
 
 var featureInfoTimeOut=30;
 var webMapController= null;
+//from this index the layers will be added (so its possible to leave some indexes not used)
+var startLayerIndex=0;
 
 var b_buffer,zoomBox,pan,prevExtent,identify;
 function initMapComponent(){
@@ -40,7 +42,7 @@ function initMapComponent(){
     }else if (mapviewer=="openlayers"){
         webMapController= new OpenLayersController();
         var opt={
-            projection:"EPSG:28992",
+            projection:new OpenLayers.Projection("EPSG:28992"),
             maxExtent: new OpenLayers.Bounds(0, 304000, 280000, 628000),
             allOverlays: true,
             units :'m',
@@ -90,7 +92,7 @@ function initializeButtons(){
     
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
-    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length);
+    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length+startLayerIndex);
     
     
     var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {layer: editLayer});
@@ -1377,8 +1379,8 @@ function refreshLayer(doRefreshOrder) {
         }
         var layer=webMapController.getMap().getLayer(layerId);
         if (layer!=null){
-            var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i);
-            if (i != oldOrderIndex){
+            var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i+startLayerIndex);
+            if (i+startLayerIndex != oldOrderIndex){
                 doRefreshOrder=true;
             }
         }
@@ -1403,7 +1405,7 @@ function refreshLayer(doRefreshOrder) {
     var totalLayers = webMapController.getMap().getLayers().length;
     for(var i = 0 ; i < lagen.length;i++){
         var laag = lagen[i];
-        webMapController.getMap().setLayerIndex(laag,totalLayers);
+        webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
     }
 }
 

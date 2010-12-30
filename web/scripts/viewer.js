@@ -41,9 +41,13 @@ function initMapComponent(){
         webMapController.addMap(map);
     }else if (mapviewer=="openlayers"){
         webMapController= new OpenLayersController();
+        var maxBounds=new OpenLayers.Bounds(120000,304000,280000,620000);
+        if (fullbbox){
+            maxBounds=Utils.createBounds(new Extent(fullbbox));
+        }
         var opt={
             projection:new OpenLayers.Projection("EPSG:28992"),
-            maxExtent: new OpenLayers.Bounds(0, 304000, 280000, 628000),
+            maxExtent: maxBounds,
             allOverlays: true,
             units :'m',
             resolutions: [512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125]

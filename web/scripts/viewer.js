@@ -384,7 +384,7 @@ function setActiveCluster(item,overrule){
             var atlabel = document.getElementById('actief_thema');
             if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
                 activeClusterId = item.id;
-                atlabel.innerHTML = '' + activeClusterTitle; // Actief thema weggehaald
+                atlabel.innerHTML = '' + activeClusterTitle;
             }
             if(item.metadatalink && item.metadatalink.length > 1){
                 if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
@@ -404,7 +404,7 @@ function setActiveThema(id, label, overrule) {
 
         var atlabel = document.getElementById('actief_thema');
         if (atlabel && label && atlabel!=null && label!=null) {
-            atlabel.innerHTML = '' + label; // Actief thema weggehaald
+            atlabel.innerHTML = '' + label;
         }
 
         if (document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0){
@@ -1094,7 +1094,6 @@ function removeClusterIdFromCookie(id) {
     createCookie('checkedClusters', newValues, '7');
 }
 
-//if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
 function addItemAsLayer(theItem){
     addLayerToEnabledLayerItems(theItem);
     syncLayerCookieAndForm();
@@ -1114,6 +1113,7 @@ function addItemAsLayer(theItem){
     }    
 }
 
+/* als order niet aangepast mag worden dan moet hier een sort komen */
 function addLayerToEnabledLayerItems(theItem){
     var foundLayerItem = null;
     for (var i=0; i < enabledLayerItems.length; i++){
@@ -1161,36 +1161,6 @@ function doRefreshLayer() {
     refreshLegendBox();
 }
 
-/*
-function checkScaleForLayers_old() {
-    var currentscale = webMapController.getMap().getScale();
-
-    var minscale = 0;
-    var maxscale = 0;
-    
-    for (var i=0; i < alleLayers.length; i++) {
-        var item = alleLayers[i];
-        var itemid = item.id;
-
-        if (item.scalehintmin != null) {
-            minscale = Number(item.scalehintmin.replace(",", "."));
-        }
-
-        if (item.scalehintmax != null) {
-            maxscale = Number(item.scalehintmax.replace(",", "."));
-        }
-
-        //als er min en maxscale is dan laag aanzetten indien currentscale binnen
-        //min en max valt
-        if (minscale > 0 && maxscale > 0) {
-            if (currentscale <= maxscale && currentscale >= minscale) {
-                enableLayer(itemid);
-            } else {
-                disableLayer(itemid);
-            }
-        }
-    }
-}*/
 /*Check scale for all layers*/
 function checkScaleForLayers() {
     var currentscale = webMapController.getMap().getScale();
@@ -1990,6 +1960,12 @@ function onIdentifyData(id,data){
     teller=0;
     updateGetFeatureInfo(data);
 }
+
+
+function layerBoxSort(a, b) {
+    return a.theItem.order - b.theItem.order;
+}
+
 var firstTimeOninit = true;
 
 function onFrameworkLoaded(){
@@ -2007,6 +1983,9 @@ function onFrameworkLoaded(){
         for (var i=clustersAan.length-1; i >=0 ; i--){
             clusterCheckboxClick(clustersAan[i], true);
         }
+        // layers bij opstart sorteren op order(belangnr+alfabet)
+        /* als order niet aangepast mag worden, dan kan dit weg */
+        layersAan.sort(layerBoxSort)
         for (var m=layersAan.length-1; m >=0 ; m--){
             checkboxClick(layersAan[m],true);
         }

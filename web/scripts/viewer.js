@@ -89,7 +89,7 @@ function initializeButtons(){
     var options = new Object();
     options["handlerGetFeatureHandler"] = onIdentifyData;
     options["handlerBeforeGetFeatureHandler"] = onIdentify;
-    options["title"]="Ophalen gegevens";
+    options["title"] = "Ophalen gegevens";
     identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
     webMapController.addTool(identify);
     webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
@@ -97,8 +97,7 @@ function initializeButtons(){
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length+startLayerIndex);
-    
-    
+       
     var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {layer: editLayer});
     webMapController.addTool(edittingtb);
 
@@ -117,6 +116,7 @@ function initializeButtons(){
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, {layer: editLayer, title: 'Verwijder object'});
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
+
     var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {title: 'Meten'});
     //webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
     webMapController.addTool(bu_measure);
@@ -1473,7 +1473,7 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     }
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
-    ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
+    //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
     
     options["maptip_layers"]=maptipLayers;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
@@ -2408,9 +2408,8 @@ function returnHighlight(wkt) {
     }
 }
 
-function checkDisplayButtons() {
+function checkDisplayButtons() {    
     if (showRedliningTools) {
-
         webMapController.getTool("redLiningContainer").setVisible(true);
     } else {
         webMapController.getTool("redLiningContainer").setVisible(false);
@@ -2446,7 +2445,7 @@ function onGetCapabilities (id,params){
 }
 //do only ones.
 var initialized=false;
-function onConfigComplete(id,params){
+function onConfigComplete(id,params){    
     if (!initialized){
         initialized=true;
         initializeButtons();
@@ -2474,7 +2473,7 @@ function createPermaLink(){
     var layerIds = getLayerIdsAsString();
 
     if (layerIds != undefined && layerIds.length > 0) {
-        id = "id=" + layerIds;
+        id = "&id=" + layerIds;
     }
 
     /* extent ophalen */

@@ -945,8 +945,6 @@ function checkboxClick(obj, dontRefresh) {
                     clusterCheckboxClick(value,dontRefresh);
                 }
             })
-        }else{
-            disableLayer(item.id);
         }
     }
 

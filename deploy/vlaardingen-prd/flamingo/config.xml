@@ -43,7 +43,7 @@
                     <string id="tooltip" en="buffer polygon" nl="buffer het tekenobject"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_highlight" left="350" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/polygon_select.png" iconurl_over="flamingo/assets/jsbtn/polygon_select.png" iconurl_sel="flamingo/assets/jsbtn/polygon_select.png" iconurl_dis="flamingo/assets/jsbtn/polygon_select_disabled.png" label="" toggle="true" visible="false" enabled="true" selected="false">
+                <fmc:JsButton id="b_highlight" left="350" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/polygon_select.png" iconurl_over="flamingo/assets/jsbtn/polygon_select.png" iconurl_sel="flamingo/assets/jsbtn/polygon_select.png" iconurl_dis="flamingo/assets/jsbtn/polygon_select.png" label="" toggle="true" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="select object" nl="selecteer een object in de kaart"/>
                 </fmc:JsButton>
 

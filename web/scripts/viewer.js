@@ -942,7 +942,7 @@ function checkboxClick(obj, dontRefresh) {
             var radiogroup=$j("input[name='"+obj.name+"']");
             $j.each(radiogroup,function(key, value){
                 if (obj.id!=value.id){
-                    clusterCheckboxClick(value,dontRefresh);
+                    checkboxClick(value,dontRefresh);
                 }
             })
         }

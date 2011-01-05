@@ -974,10 +974,11 @@ function clusterCheckboxClick(element,dontRefresh){
             removeClusterIdFromCookie(cluster.id);
         }
     }
-    // als hide_tree dan altijd childs aan/uit zetten, want gebruiker kan daar niet bij
+    // Als er niet naar de useInheritCheckbox wordt gekeken (dus het vinkje bij 'Kaartgroep overerving' is uit)
+    // of
+    // als een tree gehide is (gebruiker kan de layers niet aan/uit vinken)
     if (!useInheritCheckbox || cluster.hide_tree) {
-        if (element.checked) {
-            
+        if (element.checked) {       
             for (var i=0; i < cluster.children.length;i++){
                 var child=cluster.children[i];
                 if (!child.cluster){
@@ -986,7 +987,8 @@ function clusterCheckboxClick(element,dontRefresh){
                         document.getElementById(child.id).checked=true;
                     }
                 } else {
-                    if (child.callable){
+                    //if cluster is callable AND not 'kaartgroep overerving'
+                    if (child.callable && !useInheritCheckbox){
                         var elemin = document.getElementById(child.id);
                         elemin.checked=true;
                         clusterCheckboxClick(elemin,dontRefresh);
@@ -1002,7 +1004,8 @@ function clusterCheckboxClick(element,dontRefresh){
                         document.getElementById(child1.id).checked=false;
                     }
                 } else {
-                    if (child1.callable){
+                    //if cluster is callable AND not 'kaartgroep overerving'
+                    if (child1.callable && !useInheritCheckbox){
                         var elemout = document.getElementById(child1.id);
                         elemout.checked=false;
                         clusterCheckboxClick(elemout,dontRefresh);

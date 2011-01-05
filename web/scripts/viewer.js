@@ -72,6 +72,7 @@ function initializeButtons(){
             viewport.style.position="absolute";
         }
     }
+
     webMapController.createPanel("toolGroup");
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
 
@@ -1160,8 +1161,9 @@ function doRefreshLayer() {
 }
 
 /*Check scale for all layers*/
-function checkScaleForLayers() {
+function checkScaleForLayers() {    
     var currentscale = webMapController.getMap().getScale();
+    
     setScaleForTree(themaTree,currentscale);
 }
 
@@ -1213,8 +1215,11 @@ function setScaleForTree(item,scale){
             }
         }
         var itemVisible=isItemInScale(item,scale);
-        //als item zichtbaar is en callable.
-        if (item.callable){
+
+        /* Als item een cluster is en aangevinkt kan worden of het item is
+         * geen cluster, dus een kaartlaag dan mag dit wel of
+         * niet uitgegrijst worden */
+        if ((item.cluster && item.callable) || !item.cluster) {
             if (itemVisible){
                 enableLayer(item.id);
             }else{

@@ -2156,11 +2156,6 @@ function getParentItem(parentCandidate,item){
 
 var exportMapWindow;
 function exportMap(){
-    if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
-        // exportMapWindow=popUp("createmappdf.do", "exportMapWindow", 620, 620, false);
-        exportMapWindow=window.open("", "exportMapWindowNaam");
-        exportMapWindow.focus();
-    }
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);
     submitForm.method = "POST";
@@ -2181,9 +2176,13 @@ function exportMap(){
             }
         }
     }
-    var newElement = document.createElement("<input name='urls' type='hidden'>");
-    newElement.value = urlString;
-    submitForm.appendChild(newElement);
+
+    var urlInput = document.createElement('input');
+    urlInput.id = 'urls';
+    urlInput.name = 'urls';
+    urlInput.type = 'hidden';
+    urlInput.value = urlString;
+    submitForm.appendChild(urlInput);
 
     var vectorLayers=webMapController.getMap().getAllVectorLayers();
     var wktString="";
@@ -2200,13 +2199,22 @@ function exportMap(){
         }
 
     }
-    newElement = document.createElement("<input name='wkts' type='hidden'>");
-    newElement.value = wktString;
-    submitForm.appendChild(newElement);
+
+    var wktInput = document.createElement('input');
+    wktInput.id = 'wkts';
+    wktInput.name = 'wkts';
+    wktInput.type = 'hidden';
+    wktInput.value = wktString;
+    submitForm.appendChild(wktInput);
 
     submitForm.target="exportMapWindowNaam";
     submitForm.action= "printmap.do";
     submitForm.submit();
+
+    if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
+        exportMapWindow=window.open("", "exportMapWindowNaam");
+        exportMapWindow.focus();
+    }
 }
 
 function checkboxClickById(id){

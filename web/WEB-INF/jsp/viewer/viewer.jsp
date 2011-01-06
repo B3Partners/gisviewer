@@ -124,7 +124,7 @@
     
     var showLeftPanel=catchEmpty(${configMap["showLeftPanel"]});
     if(typeof showLeftPanel === 'undefined') {
-        showLeftPanel = false;
+        showLeftPanel = null;
     }
 
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar

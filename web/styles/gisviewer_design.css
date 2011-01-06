@@ -466,6 +466,11 @@ body.pdfExportClass {
     color: #196299;
 }
 
+/*CMS content blok in tab*/
+.content_block_tab{
+    float: left;
+    width: 100%;
+}
 /* nieuwe divs voor gebruik op Home pagina Gisviewer */
 .content_block {
     float: left;

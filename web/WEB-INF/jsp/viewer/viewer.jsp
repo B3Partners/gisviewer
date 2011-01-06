@@ -266,7 +266,8 @@
         "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
         //"voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
         //"vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
-        "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" }
+        "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" },
+        "cms": {id: "cms", contentid: "cmsvak", name: "Extra"}
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -511,6 +512,41 @@
         </div>
     </div>
 
+    <div id="cmsvak" style="display: none; overflow: auto;" class="tabvak">
+        <%-- als er maar 1 tekstblok is dan die titel plaatsen --%>
+        <c:if test="${fn:length(tekstBlokken)==1}">
+            <script type="text/javascript">
+                $j("#cmslink").html("${tekstBlokken[0].titel}");
+            </script>
+        </c:if>
+         <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
+        <div class="content_block_tab">
+            <div class="content_title"><c:out value="${tb.titel}"/></div>
+            <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
+            <c:choose>
+            <c:when test="${tb.toonUrl}">
+                <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+            </c:when>
+
+            <%-- Anders gewoon de tekst tonen van tekstblok --%>
+            <c:when test="${!tb.toonUrl}">
+            <div class="inleiding_body">
+                ${tb.tekst}
+
+                <c:if test="${!empty tb.url}">
+                Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
+                </c:if>
+
+                <c:if test="${tb.toonUrl}">
+                    <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+                </c:if>
+            </div>
+            </c:when>
+            </c:choose>
+        </div>
+    </c:forEach>
+    </div>
+    
     <%-- TODO: Even naar kijken of deze regels of de aanroep naar een .do
     de juiste manier is. In het Net tab van firefox zie je constant deze
     GET iframe bezig zijn.

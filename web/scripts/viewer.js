@@ -2424,9 +2424,21 @@ function returnHighlight(wkt) {
 
 function checkDisplayButtons() {    
     if (showRedliningTools) {
-        webMapController.getTool("redLiningContainer").setVisible(true);
+        if (webMapController.getTool("redLiningContainer")){
+            webMapController.getTool("redLiningContainer").setVisible(true);
+        }else{
+            webMapController.getTool("redLiningContainer_point").setVisible(true);
+            webMapController.getTool("redLiningContainer_line").setVisible(true);
+            webMapController.getTool("redLiningContainer_polygon").setVisible(true);
+        }
     } else {
-        webMapController.getTool("redLiningContainer").setVisible(false);
+        if (webMapController.getTool("redLiningContainer")){
+            webMapController.getTool("redLiningContainer").setVisible(false);
+        }else{
+            webMapController.getTool("redLiningContainer_point").setVisible(false);
+            webMapController.getTool("redLiningContainer_line").setVisible(false);
+            webMapController.getTool("redLiningContainer_polygon").setVisible(false);
+        }
     }
 
     if (showBufferTool) {

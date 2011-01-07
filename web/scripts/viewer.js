@@ -2353,7 +2353,7 @@ var highLightGeom = null;
 var analyseThemas = new Array();
 
 function highLightThemaObject(geom) {    
-    analyseThemas = new Array();
+    highlightLayers = new Array();
 
     /* geom bewaren voor callbaack van popup */
     highLightGeom = geom;
@@ -2373,20 +2373,18 @@ function highLightThemaObject(geom) {
                 continue;
         }
 
-        if (item.analyse == 'on' || item.analyse=="active") {
-            analyseThemas.push(item);
+        if (item.highlight == 'on') {
+            highlightLayers.push(item);
         }
     }
 
-    if (analyseThemas.length > 1) {
+    if (highlightLayers.length > 1) {
         // popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 680, 225, true);
         iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300);
     }
 
-    if (analyseThemas.length == 1) {
-        EditUtil.getHighlightWktForThema(analyseThemas[0].id, geom, returnHighlight);
-        
-    //handleGetAdminData(geom, analyseThemas[0].id);
+    if (highlightLayers.length == 1) {
+        EditUtil.getHighlightWktForThema(highlightLayers[0].id, geom, returnHighlight);
     }
 }
 
@@ -2405,7 +2403,7 @@ function handlePopupValue(value) {
      */
 
     EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
-    handleGetAdminData(highLightGeom, value);   
+    //handleGetAdminData(highLightGeom, value);
 }
 
 /* backend heeft wkt teruggegeven */

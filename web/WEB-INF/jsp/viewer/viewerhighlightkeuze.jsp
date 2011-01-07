@@ -48,8 +48,8 @@
         <h2>Meerdere kaartlagen actief</h2>
         <p>Kies de kaartlaag met het object die u wilt selecteren.</p>
         <script type="text/javascript">
-            for (var i=0; i < getParent().analyseThemas.length; i++) {
-                var item = getParent().analyseThemas[i];
+            for (var i=0; i < getParent().highlightLayers.length; i++) {
+                var item = getParent().highlightLayers[i];
 
                 var link = "<a href='#' onclick='getParent().handlePopupValue("+item.id+"); getParent().closeiFramepopup();'>" + item.title +"</A>";
                 document.write("<p>"+link +"</p>");

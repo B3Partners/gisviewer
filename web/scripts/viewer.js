@@ -2492,7 +2492,7 @@ function createPermaLink(){
     var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
 
     /* personal code */
-    var personalCode = "code=" + kbcode;
+    var personalCode = "code=" + kbcode + "&";
 
     /* kaartlaagIds ophalen */
     var id = "";

@@ -1420,28 +1420,34 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
         
-        if (item.scalehintmin != null) {
-            var minscale = Number(item.scalehintmin.replace(",", "."));
+        var minscale;
+        if (smallestMinscale!=0){
+            if (item.scalehintmin != null) {
+                minscale = Number(item.scalehintmin.replace(",", "."));
+                if (!isNaN(minscale)){
+                    if (smallestMinscale == -1 || minscale < smallestMinscale) {
+                        smallestMinscale = minscale;
+                    }
+                }
+            }else{
+                //geen minscale dan moet er geen minscale worden ingesteld.
+                smallestMinscale=0;
+            }            
         }
-
-        if (!isNaN(minscale) && smallestMinscale != 0) {
-            if (smallestMinscale == -1 || minscale < smallestMinscale) {
-                smallestMinscale = minscale;
+ 
+        var maxscale;
+        if (largestMaxscale!=0){
+            if (item.scalehintmax != null) {
+                maxscale = Number(item.scalehintmax.replace(",", "."));
+                if (!isNaN(maxscale)) {
+                    if (largestMaxscale == -1 || maxscale > largestMaxscale) {
+                        largestMaxscale = maxscale;
+                    }
+                }
+            }else{
+                //geen maxscale dan moet er geen maxscale worden ingesteld.
+                largestMaxscale=0;
             }
-        } else {
-            smallestMinscale = 0;
-        }
-
-        if (item.scalehintmax != null) {
-            var maxscale = Number(item.scalehintmax.replace(",", "."));
-        }
-        
-        if (!isNaN(maxscale) && largestMaxscale != 0) {
-            if (largestMaxscale == -1 || maxscale > largestMaxscale) {
-                largestMaxscale = maxscale;
-            }
-        } else {
-            largestMaxscale = 0;
         }
 
         if (item.wmslayers){
@@ -1479,6 +1485,21 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     if (largestMaxscale != null && largestMaxscale > 0) {
         options["maxscale"]=largestMaxscale;
     }
+    
+    if (webMapController instanceof FlamingoController){
+        options["maxscale"]=options["maxResolution"];
+        options["minscale"]=options["minResolution"];
+        options["maxResolution"]=undefined;
+        options["minResolution"]=undefined;
+    }else if (webMapController instanceof OpenLayersController){
+        if (options["maxResolution"]!=undefined && options["minResolution"]==undefined){
+            options["minResolution"]="auto";
+        }
+        if (options["minResolution"]!=undefined && options["maxResolution"]==undefined){
+            options["maxResolution"]="auto";
+        }
+    }
+    
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
     //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";

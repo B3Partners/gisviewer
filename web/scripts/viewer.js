@@ -61,8 +61,15 @@ function initMapComponent(){
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
+    webMapController.registerEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(),hideIdentifyIcon);
 
 }
+
+function hideIdentifyIcon(){
+    if(webMapController instanceof FlamingoController)
+        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
+}
+
 
 function initializeButtons(){
     /*ie bug fix*/

@@ -85,6 +85,7 @@
                             <td class="tab-row">Project</td>
                             <td><html:text property="new_projectnaam" size="20" maxlength="10"/></td>
                         </tr>
+						<%--
                         <tr>
                             <td class="tab-row">Kleurvulling</td>
                             <td><html:text property="fillcolor" size="20" maxlength="10"/></td>
@@ -93,6 +94,7 @@
                             <td class="tab-row">Opmerking</td>
                             <td><html:textarea property="opmerking" rows="4" cols="30" /></td>
                         </tr>
+						--%>
                     </table>
 
                     <html:hidden property="wkt"/>

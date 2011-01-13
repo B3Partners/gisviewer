@@ -8,6 +8,7 @@
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>
 
 <script type="text/javascript">
 
@@ -58,6 +59,14 @@
     var viewerType = catchEmpty("${configMap["viewerType"]}");
     if(typeof viewerType === 'undefined' || !viewerType) {
         viewerType = 'flamingo';
+    }
+
+    /* If viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
+    if(viewerType == 'flamingo') {
+        var flashVersion = ua().pv;
+        if(flashVersion[0] == 0) {
+            viewerType = 'openlayers';
+        }
     }
 
     /* Viewer type */
@@ -155,6 +164,11 @@
     
     if(typeof useInheritCheckbox === 'undefined') {
         useInheritCheckbox = true;
+    }
+
+    var tabWidth = catchEmpty(${configMap["tabWidth"]});
+    if (typeof tabWidth === 'undefined') {
+        tabWidth = 288;
     }
 
     /*
@@ -412,7 +426,7 @@
                 }
             }
             if(noOfTabs > 5) noOfTabs = 5;
-            var tabwidth = Math.floor((288 - (noOfTabs-1)) / noOfTabs);
+            var tabswidth = Math.floor((tabWidth - (noOfTabs-1)) / noOfTabs);
             var cloneTabContentId = null;
             for(i in enabledtabs) {
                 var tabid = enabledtabs[i];
@@ -422,9 +436,9 @@
                 } else {
 
                     if (useMouseOverTabs)
-                        document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
+                        document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
                     else
-                        document.write('<li id="' + tabid + '" onclick="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabwidth + 'px;">' + tabobj.name + '</a></li>');
+                        document.write('<li id="' + tabid + '" onclick="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
 
                     createdTabs[i] = enabledtabs[i];
                     if(i == 4) break;
@@ -562,6 +576,22 @@
 </div>
         
 <script type="text/javascript">
+    $j("#tab_container, #tabjes, #nav").css("width", tabWidth + 'px');
+    if(ieVersion <= 6 && ieVersion != -1) {
+        var content_viewer = document.getElementById('content_viewer');
+        var leftcontent = document.getElementById('leftcontent');
+        
+        var contentwidth = 0;
+        if(content_viewer) contentwidth = document.getElementById('content_viewer').offsetParent.offsetWidth;
+
+        var leftcontent_width = 0;
+        if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
+
+        document.getElementById('mapcontent').style.width = (contentwidth - ((tabWidth==0?0:tabWidth+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
+    } else {
+        document.getElementById('mapcontent').style.right = (tabWidth==0?0:(tabWidth + 6)) + 'px';
+    }
+
     if(noOfTabs == 0) {
         // Hide tabs if there are no tabs
         document.getElementById('tab_container').style.display = 'none';
@@ -662,7 +692,6 @@
             var headerheight = 0;
             headerheight = document.getElementById('header').offsetHeight;
             var contentheight = 0; var contentwidth = 0;
-            var content_viewer = document.getElementById('content_viewer');
             contentheight = content_viewer.offsetParent.offsetHeight - headerheight;
             contentwidth = content_viewer.offsetParent.offsetWidth;
         }
@@ -701,7 +730,7 @@
         }
         if(dir == 'right') {
             if(panelRightCollapsed) {
-                var panelbreedte = 288;
+                var panelbreedte = tabWidth;
                 document.getElementById('tab_container').style.display = 'block';
                 document.getElementById('tabjes').style.display = 'block';
                 document.getElementById('rightControl').className = 'right_open';

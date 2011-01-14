@@ -1494,10 +1494,14 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     }
     
     if (webMapController instanceof FlamingoController){
-        options["maxscale"]=options["maxResolution"];
-        options["minscale"]=options["minResolution"];
-        options["maxResolution"]=undefined;
-        options["minResolution"]=undefined;
+        if(options["maxResolution"]){
+            options["maxscale"]=options["maxResolution"];
+        }
+        if(options["minResolution"]){
+            options["minscale"]=options["minResolution"];
+        }
+        delete options["maxResolution"];
+        delete options["minResolution"];
     }else if (webMapController instanceof OpenLayersController){
         if (options["maxResolution"]!=undefined && options["minResolution"]==undefined){
             options["minResolution"]="auto";

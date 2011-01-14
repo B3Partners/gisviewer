@@ -435,33 +435,63 @@ function createBronCaption(gegevensbron, simple, index) {
         return bronCaption;
     }
 
-    bronCaption.append('<img src="'+minusicon+'" alt="Dichtklappen" title="Dichtklappen" /> ' + title)
-    .click(function() {
+    var collapseImg = $j('<img src="'+minusicon+'" alt="Dichtklappen" title="Dichtklappen" />');
+    collapseImg.click(function() {
         toggleBron("bronContent" + htmlId + gegevensbron.id)
     });
-
+    bronCaption.append(collapseImg);
+    bronCaption.append(' ' + title);
+    
     //CSV export knop
-    //TODO: post van maken en toggle uit zetten
-    var csv_export_url = "services/Data2CSV?themaId=" + gegevensbron.id + "&objectIds=" + gegevensbron.csvPks;
+    var csv_export_url = "services/Data2CSV";
+
+    var csvFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "CSVfrm";
+    var frm = $j('<form></form>').attr({
+        method: 'post',
+        action: csv_export_url,
+        target: '',
+        id: csvFrmId,
+        style: 'float: left;'
+    });
+    frm.append('<input type="hidden" name="themaId" value="' + gegevensbron.id + '" />');
+    frm.append('<input type="hidden" name="objectIds" value="' + gegevensbron.csvPks + '" />');
+    bronCaption.append(frm);
+
     var icon = $j('<img src="'+csvexporticon+'"/>').attr({
         "alt": csv_export_url,
         "title": csv_export_url
-    })
-    .click(function() {
-        popUp(csv_export_url, 'csv_export', 600, 500);
+    }).click(function() {
+        // popUp(csv_export_url, 'csv_export', 600, 500);
+        $j("#"+csvFrmId).submit();
     });
+
+    
     bronCaption.append(" ");
     bronCaption.append(icon);
 
     //Info export knop
-    //TODO: post van maken en toggle uit zetten
-    var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j"
+    var info_export_url = "viewerdata.do?aanvullendeinfo=t";
+    
+    var infoFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm";
+    frm = $j('<form></form>').attr({
+        method: 'post',
+        action: info_export_url,
+        target: 'info_export',
+        id: infoFrmId,
+        style: 'float: left;'
+    });
+    frm.append('<input type="hidden" name="themaId" value="' + gegevensbron.id + '" />');
+    frm.append('<input type="hidden" name="primaryKeys" value="' + gegevensbron.csvPks + '" />');
+    frm.append('<input type="hidden" name="addKaart" value="j" />');
+    bronCaption.append(frm);
+
     var icona = $j('<img src="'+infoexporticon+'" alt="Info Export" alt="Info Export"/>').attr({
         "alt": info_export_url,
         "title": info_export_url
     })
     .click(function() {
         popUp(info_export_url, 'info_export', 600, 500);
+        $j("#"+infoFrmId).submit();
     });
     bronCaption.append(" ");
     bronCaption.append(icona);

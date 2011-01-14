@@ -2531,7 +2531,7 @@ function createPermaLink(){
     var layerIds = getLayerIdsAsString();
 
     if (layerIds != undefined && layerIds.length > 0) {
-        id = "&id=" + layerIds;
+        id = "id=" + layerIds;
     }
 
     /* extent ophalen */

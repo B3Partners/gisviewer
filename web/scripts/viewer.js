@@ -2772,7 +2772,14 @@ $j(document).ready(function(){
         document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
     }
 
-    if(!document.getElementById('popupWindow') && !getParent().document.getElementById('popupWindow')) {
+		var popupCreated = false;
+		try {
+			if(document.getElementById('popupWindow') || getParent().document.getElementById('popupWindow')) popupCreated = true;
+		} catch(err) {
+
+		}
+
+		if(!popupCreated) {
         buildPopup();
 
         $j('#popupWindow').draggable({

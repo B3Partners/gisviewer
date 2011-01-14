@@ -278,8 +278,8 @@
         "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" },
         "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
-        //"voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
-        //"vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
+        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
+        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
         "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" },
         "cms": {id: "cms", contentid: "cmsvak", name: "Extra"}
     };
@@ -561,12 +561,8 @@
     </c:forEach>
     </div>
     
-    <%-- TODO: Even naar kijken of deze regels of de aanroep naar een .do
-    de juiste manier is. In het Net tab van firefox zie je constant deze
-    GET iframe bezig zijn.
     <div id="voorzieningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="voorzieningZoeker" name="voorzieningZoeker" frameborder="0" src="<html:rewrite page="/zoekVoorziening.do"/>"></iframe></div>
     <div id="vergunningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="vergunningZoeker" name="vergunningZoeker" frameborder="0" src="<html:rewrite page="/zoekVergunning.do"/>"></iframe></div>
-    --%>
 
     <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div> <%--<html:rewrite page='/vieweranalysedata.do'/>--%>

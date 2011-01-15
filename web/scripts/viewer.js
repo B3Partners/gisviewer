@@ -85,13 +85,19 @@ function initializeButtons(){
 
     webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
-    zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {title: 'Inzomen met selectie'});
+    zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {
+        title: 'Inzomen met selectie'
+    });
     webMapController.addTool(zoomBox);
 
-    pan = webMapController.createTool("b_pan",Tool.PAN, {title: 'Pannen'});
+    pan = webMapController.createTool("b_pan",Tool.PAN, {
+        title: 'Pannen'
+    });
     webMapController.addTool(pan);
 
-    prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {title: 'Vorige extent'});
+    prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
+        title: 'Vorige extent'
+    });
     webMapController.addTool(prevExtent);
 
     var options = new Object();
@@ -106,26 +112,42 @@ function initializeButtons(){
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length+startLayerIndex);
        
-    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {layer: editLayer});
+    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {
+        layer: editLayer
+    });
     webMapController.addTool(edittingtb);
 
-    var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, {layer: editLayer, title: 'Buffer het tekenobject'});
+    var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'Buffer het tekenobject'
+    });
     webMapController.addTool(bu_buffer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_buffer,b_buffer);
 
-    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, {layer: editLayer, title: 'Selecteer object'});
+    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'Selecteer object'
+    });
     webMapController.addTool(bu_getfeatures);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
 
-    var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, {layer: editLayer, title: 'Selecteer een object in de kaart'});
+    var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'Selecteer een object in de kaart'
+    });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
     webMapController.addTool(bu_highlight);
 
-    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, {layer: editLayer, title: 'Verwijder object'});
+    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'Verwijder object'
+    });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
 
-    var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {title: 'Meten'});
+    var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {
+        title: 'Meten'
+    });
     //webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
     webMapController.addTool(bu_measure);
 
@@ -664,30 +686,30 @@ function createLabel(container, item) {
     if(item.cluster) {
         //if callable
         if (item.callable) {
-                var checkboxChecked = false;
-                var clusterPos = getClusterPosition(item);
-                if(clusterPos!=0) {
-                    checkboxChecked = true;
-                }
-                var checkbox = null;
-                var parentItem=getParentItem(themaTree,item);
-                if (parentItem.exclusive_childs){
-                    checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
-                }else{
-                    checkbox=createCheckboxCluster(item, checkboxChecked);
-                }
+            var checkboxChecked = false;
+            var clusterPos = getClusterPosition(item);
+            if(clusterPos!=0) {
+                checkboxChecked = true;
+            }
+            var checkbox = null;
+            var parentItem=getParentItem(themaTree,item);
+            if (parentItem.exclusive_childs){
+                checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
+            }else{
+                checkbox=createCheckboxCluster(item, checkboxChecked);
+            }
 
-                checkbox.theItem=item;
-                container.appendChild(checkbox);
+            checkbox.theItem=item;
+            container.appendChild(checkbox);
 
-                if (checkboxChecked){
-                    clustersAan.push(checkbox);
-                }
+            if (checkboxChecked){
+                clustersAan.push(checkbox);
+            }
 
-                // alleen een callable item kan active zijn
-                if (item.active){
-                    setActiveCluster(item, true);
-                }
+            // alleen een callable item kan active zijn
+            if (item.active){
+                setActiveCluster(item, true);
+            }
 
         }
         if (item.hide_tree && item.callable){
@@ -2435,7 +2457,7 @@ function handlePopupValue(value) {
      */
 
     EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
-    //handleGetAdminData(highLightGeom, value);
+//handleGetAdminData(highLightGeom, value);
 }
 
 /* backend heeft wkt teruggegeven */
@@ -2772,14 +2794,17 @@ $j(document).ready(function(){
         document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
     }
 
-		var popupCreated = false;
-		try {
-			if(document.getElementById('popupWindow') || getParent().document.getElementById('popupWindow')) popupCreated = true;
-		} catch(err) {
+    var pwCreated = false;
+    if(document.getElementById('popupWindow')) {
+        pwCreated = true;
+    }
+    try {
+        if(getParent().document.getElementById('popupWindow')) {
+            pwCreated = true;
+        }
+    } catch(err) {}
 
-		}
-
-		if(!popupCreated) {
+    if(!pwCreated) {
         buildPopup();
 
         $j('#popupWindow').draggable({

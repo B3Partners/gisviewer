@@ -577,13 +577,23 @@ function createTableTd(waarde) {
     }
 
     if (waarde.type == 'TYPE_QUERY') {
+    	if(waarde.valueList.length > 1){
+	    var labels = waarde.value.split(',');
+	}
+        var i = 0;
         $j.each(waarde.valueList, function(index3, listWaarde) {
             if (!listWaarde) {
                 td.append("-");
             } else {
                 var linkspan = $j('<span></span>');
                 var clickable=null;
-                if (waarde.value){
+                if(labels){
+		    clickable = $j('<a href="#">'+labels[i]+'</a>')
+		    .attr({
+			"title": listWaarde
+		    });
+		    i++;
+                }else if (waarde.value){
                     clickable = $j('<a href="#">'+waarde.value+'</a>')
                     .attr({
                         "title": listWaarde

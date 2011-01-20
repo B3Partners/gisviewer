@@ -70,11 +70,13 @@ checkLocation = function() {
     try {
         do {
             var tmpWindow = currentWindow.parent;
-            var tmpLocation = tmpWindow.location;
-            if (tmpLocation!="") {
+            if (tmpWindow.location!=""
+                && tmpWindow.location != currentWindow.location) {
                 currentWindow = tmpWindow;
+            } else {
+                break;
             }
-         } while (tmpLocation!="");
+         } while (true);
     } catch(err) {
         // access denied: cross domain in iframe
     }

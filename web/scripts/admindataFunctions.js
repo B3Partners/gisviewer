@@ -97,8 +97,10 @@ function handleGetGegevensBron(gegevensbron) {
     var layout = gegevensbron.layout;
     if (layout == "admindata2") {
         handleGetGegevensBronSimpleHorizontal(gegevensbron);
-    } else if (layout == "admindata3") {
+    }else if (layout == "admindata3") {
         handleGetGegevensBronSimpleVertical(gegevensbron)
+    } else if (layout.search("all_vertical") != -1) {
+        handleGetGegevensAllVertical(gegevensbron, layout.replace("all_vertical_", ""));
     } else {
         handleGetGegevensBronMulti(gegevensbron);
     }
@@ -150,6 +152,90 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
     $j('#' + htmlId).append(bronContainer);
 }
 
+function handleGetGegevensAllVertical(gegevensbron, tab) {
+    var htmlId = gegevensbron.parentHtmlId;
+
+    // Create container
+    var bronContainer = $j('<div></div>').attr({
+        "id": "bronContainer" + htmlId + gegevensbron.id,
+        "class": "bronContainer tabbedContainer " + tab
+    });
+
+    var tabFieldId = "tabField_" + tab;
+    var tabField = $j('<div></div>').attr({
+        "id": tabFieldId,
+        "class": "tabField"
+    }).click(function() {
+        switchDataTab($j(this));
+    }).html(tab);
+
+    // Create table content
+    if(gegevensbron.records) {
+        $j.each(gegevensbron.records, function(index, record) {
+            // Create caption
+            var bronCaption = createBronCaption(gegevensbron, true, index+1);
+            bronCaption.append(tab);
+            // Create content table
+            var bronContent = $j('<div></div>').attr({
+                "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id,
+                "class": "bronContent"
+            });
+            var bronTable = $j('<table></table>');
+            var bronTableBody = $j('<tbody></tbody>');
+
+            $j.each(record.values, function(index2, waarde) {
+                var tr = $j('<tr></tr>');
+                var td = createTableTd(waarde);
+                tr.append(td);
+                bronTableBody.append(tr);
+            });
+
+            // Append all to DOM tree
+            bronContent.append(bronTable.append(bronTableBody));
+            bronContainer.append(bronCaption.css({"color":"#000000","background-color":"#ffffff"})).append(bronContent);
+        });
+    }
+
+    // wachtmelding weghalen
+    if (document.getElementById("content_style")!=undefined){
+        document.getElementById("content_style").style.display="none";
+    }
+
+    if($j('#' + htmlId).find("#tabHeader").length != 1) {
+        var tabHeader = $j('<div></div>').attr({
+            "id": "tabHeader",
+            "class": "tabHeader",
+            "style": "width: 100%; height: 20px;"
+        });
+        $j('#' + htmlId).append(tabHeader);
+        $j('#' + htmlId + " > #tabHeader").append(tabField.addClass("tabFieldActive"));
+    } else {
+        if($j('#' + htmlId + " > #tabHeader").find("#"+tabField.attr("id")).length != 1) {
+            $j('#' + htmlId + " > #tabHeader").append(tabField);
+        }
+    }
+
+    if($j('#' + htmlId).find("#tabContainer").length != 1)
+    {
+        var tabContainer = $j('<div></div>').attr({
+            "id": "tabContainer",
+            "class": "tabContainer"
+        });
+        $j('#' + htmlId).append(tabContainer);
+        tabContainer.append(bronContainer);
+    } else {
+        if(!$j("#"+tabFieldId).hasClass("tabFieldActive")) bronContainer.css("display", "none");
+        $j('#' + htmlId + " > #tabContainer").append(bronContainer);
+    }
+}
+
+function switchDataTab($tablink) {
+    var $tabContainer = $tablink.parent().next();
+    $tablink.parent().find(".tabFieldActive").removeClass("tabFieldActive");
+    $tabContainer.find(".tabbedContainer").hide();
+    $tabContainer.find("."+$tablink.attr("id").replace("tabField_", "")).show();
+    $tablink.addClass("tabFieldActive");
+}
 
 function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     var htmlId = gegevensbron.parentHtmlId;

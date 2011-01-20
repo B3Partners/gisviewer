@@ -5,7 +5,7 @@ ieFixes = function() {
         attachOnresize(fixAbsolutePositions);
     }
 }
-attachOnload(ieFixes);
+$j(document).ready(function() { ieFixes(); });
 
 fixMenu = function() {
     var topmenu = document.getElementById('topmenu');

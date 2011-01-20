@@ -36,6 +36,8 @@ resizeTabContents = function() {
     }
     if(tmpCurrentActiveTab != null) switchTab(document.getElementById(tmpCurrentActiveTab));
 }
-attachOnload(checkResizableContent);
-attachOnload(resizeTabContents);
+$j(document).ready(function() {
+	checkResizableContent();
+	resizeTabContents();
+});
 attachOnresize(resizeTabContents);

@@ -27,6 +27,8 @@ var featureInfoTimeOut=30;
 var webMapController= null;
 //from this index the layers will be added (so its possible to leave some indexes not used)
 var startLayerIndex=0;
+/*Balloon reference*/
+var balloon;
 
 var b_buffer,zoomBox,pan,prevExtent,identify;
 function initMapComponent(){
@@ -288,7 +290,7 @@ function loadBusyJSP(handle, type) {
 }
 
 function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {    
-    if (!usePopup && !usePanel) {
+    if (!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
 
@@ -349,6 +351,50 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
             loadBusyJSP(dataframepopupHandle, 'window');
         }
 
+    } else if(useBalloonPopup){
+        if(!balloon){
+            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon');
+        }
+        document.forms[0].target = 'dataframeballoonpopup';
+        /*Bepaal midden van vraag geometry*/      
+        //maak coord string
+        var coordString =geom.replace(/POLYGON/g,'').replace(/POINT/,'').replace(/\(/g,'').replace(/\)/g,'');
+        var xyPairs=coordString.split(",");
+        var minx;
+        var maxx;
+        var miny;
+        var maxy;
+        for (var i=0; i < xyPairs.length; i++){
+            var xy=xyPairs[i].split(" ");
+            var x=Number(xy[0]);
+            var y=Number(xy[1])
+            if (minx==undefined){
+                minx=x;
+                maxx=x;
+            }if(miny==undefined){
+                miny=y;
+                maxy=y;
+            }
+            if (x > maxx){
+                maxx=x;
+            }if (x < minx){
+                minx=x;
+            }if (y > maxy){
+                maxy=y;
+            }if (y < miny){
+                miny=y;
+            }
+        }
+        var centerX=(minx+maxx)/2;
+        var centerY=(miny+maxy)/2;
+
+        //balloon.resetPositionOfBalloon(centerX,centerY);
+        balloon.setPosition(centerX,centerY,true);
+
+        var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do">')
+        balloon.getContentElement().html(iframeElement);
+
+        loadBusyJSP($j('#dataframeballoonpopup'), 'div');
     } else {
         document.forms[0].target = 'dataframe';
         loadBusyJSP('dataframe', 'panel');
@@ -1938,7 +1984,7 @@ function onChangeTool(id, event) {
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function onIdentify(movie,extend){
 
-    if(!usePopup && !usePanel) {
+    if(!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
 
@@ -2848,4 +2894,216 @@ $j(document).ready(function(){
     createSearchConfigurations();
 });
 
-/**/
+
+/**
+ * @param mapDiv The div element where the map is in.
+ * @param webMapController the webMapController that controlles the map
+ * @param balloonId the id of the DOM element that represents the balloon.
+ * @param balloonWidth the width of the balloon (optional, default: 300);
+ * @param balloonHeight the height of the balloon (optional, default: 300);
+ * @param balloonCornerSize the size of the rounded balloon corners of the round.png image(optional, default: 20);
+ * @param balloonArrowHeight the hight of the arrowImage (optional, default: 40);
+ */
+function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight, balloonCornerSize, balloonArrowHeight){
+    this.mapDiv=mapDiv;
+    this.webMapController=webMapController;
+    this.balloonId=balloonId;
+    this.balloonWidth=300;
+    this.balloonHeight=300;
+    this.balloonCornerSize=20;
+    this.balloonArrowHeight=40;
+    this.leftOfPoint;
+    this.topOfPoint;
+    //the balloon jquery dom element.
+    this.balloon;
+    this.xCoord;
+    this.yCoord;
+
+    if (balloonWidth){
+        this.balloonWidth=balloonWidth;
+    }
+    if (balloonHeight)
+        this.balloonHeight=balloonHeight;
+    if (balloonCornerSize){
+        this.balloonCornerSize=balloonCornerSize;
+    }
+    if (balloonArrowHeight){
+        this.balloonArrowHeight=balloonArrowHeight;
+    }
+    /**
+     *Private function. Don't use.
+     */
+    this._createBalloon = function(x,y){
+        //create balloon and styling.
+        this.balloon=$j("<div class='infoBalloon' id='"+this.balloonId+"'></div>");
+        this.balloon.css('position', 'absolute');
+        this.balloon.css('width',""+this.balloonWidth+"px");
+        this.balloon.css('height',""+this.balloonHeight+"px");
+        this.balloon.css('z-index','13000');
+
+        var maxCornerSize=this.balloonHeight-(this.balloonArrowHeight*2)+2-this.balloonCornerSize;
+        this.balloon.append($j("<div class='balloonCornerTopLeft'><img style='position: absolute;' src='images/infoBalloon/round.png'/></div>")
+            .css('width',this.balloonCornerSize+'px')
+            .css('height',this.balloonCornerSize+'px')
+            .css('left', '0px')
+            .css('top', this.balloonArrowHeight-1+'px')
+            .css('width', this.balloonWidth-this.balloonCornerSize+'px')
+            .css('height',maxCornerSize+'px')
+        );
+        this.balloon.append($j("<div class='balloonCornerTopRight'><img style='position: absolute; left: -1004px;' src='images/infoBalloon/round.png'/></div>")
+            .css('width',this.balloonCornerSize+'px')
+            .css('height',maxCornerSize+'px')
+            .css('top', this.balloonArrowHeight-1+'px')
+            .css('right','0px')
+        );
+        this.balloon.append($j("<div class='balloonCornerBottomLeft'><img style='position: absolute; top: -748px;' src='images/infoBalloon/round.png'/></div>")
+            .css('height',this.balloonCornerSize+'px')
+            .css('left', '0px')
+            .css('bottom',this.balloonArrowHeight-1+'px')
+            .css('width', this.balloonWidth-this.balloonCornerSize)
+        );
+        this.balloon.append($j("<div class='balloonCornerBottomRight'><img style='position: absolute; top: -748px; left: -1004px;' src='images/infoBalloon/round.png'/></div>")
+            .css('width',this.balloonCornerSize+'px')
+            .css('height',this.balloonCornerSize+'px')
+            .css('right','0px')
+            .css('bottom',this.balloonArrowHeight-1+'px')
+
+        );
+        //arrows
+        this.balloon.append($j("<div class='balloonArrow balloonArrowTopLeft' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
+        this.balloon.append($j("<div class='balloonArrow balloonArrowTopRight' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
+        this.balloon.append($j("<div class='balloonArrow balloonArrowBottomLeft' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
+        this.balloon.append($j("<div class='balloonArrow balloonArrowBottomRight' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
+        //content
+        this.balloon.append($j("<div class='balloonContent'></div>")
+            .css('top',this.balloonArrowHeight+20+'px')
+            .css('bottom',this.balloonArrowHeight+4+'px')
+        );
+        //closing button
+        var thisObj=this;
+        this.balloon.append($j("<div class='balloonCloseButton'></div>")
+            .css('right','7px')
+            .css('top',''+(this.balloonArrowHeight+3)+'px')
+            .click(function(){
+                thisObj.remove();
+                return false;
+            })
+
+        );
+        this.xCoord=x;
+        this.yCoord=y;
+
+        //calculate position
+        this._resetPositionOfBalloon(x,y);
+        
+        //append the balloon.
+        $j(this.mapDiv).append(this.balloon);
+
+        this.webMapController.registerEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+    }
+
+    /**
+     *Private function. Use setPosition(x,y,true) to reset the position
+     *Reset the position to the point. And displays the right Arrow to the point
+     *Sets the this.leftOfPoint and this.topOfPoint
+     *@param x the x coord
+     *@param y the y coord
+     */
+    this._resetPositionOfBalloon = function(x,y){
+        //calculate position
+        var centerCoord= this.webMapController.getMap().getCenter();
+        var centerPixel= this.webMapController.getMap().coordinateToPixel(centerCoord.x,centerCoord.y);
+        var infoPixel= this.webMapController.getMap().coordinateToPixel(x,y);
+
+        //determine the left and top.
+        if (infoPixel.x > centerPixel.x){
+            this.leftOfPoint=true;
+        }else{
+            this.leftOfPoint=false;
+        }
+        if (infoPixel.y > centerPixel.y){
+            this.topOfPoint=true;
+        }else{
+            this.topOfPoint=false;
+        }
+        //display the right arrow
+        this.balloon.find(".balloonArrow").css('display','none');
+        //$j("#infoBalloon > .balloonArrow").css('display', 'block');
+        if (!this.leftOfPoint && !this.topOfPoint){
+            //popup is bottom right of the point
+            this.balloon.find(".balloonArrowTopLeft").css("display","block");
+        }else if (this.leftOfPoint && !this.topOfPoint){
+            //popup is bottom left of the point
+            this.balloon.find(".balloonArrowTopRight").css("display","block");
+        }else if (this.leftOfPoint && this.topOfPoint){
+            //popup is top left of the point
+            this.balloon.find(".balloonArrowBottomRight").css("display","block");
+        }else{
+            //pop up is top right of the point
+            this.balloon.find(".balloonArrowBottomLeft").css("display","block");
+        }
+    }
+
+    /**
+     *Set the position of this balloon. Create it if not exists
+     *@param x xcoord
+     *@param y ycoord
+     *@param resetPositionOfBalloon boolean if true the balloon arrow will be
+     *redrawn (this.resetPositionOfBalloon is called)
+     */
+    this.setPosition = function (x,y,resetPositionOfBalloon){
+        if (this.balloon==undefined){
+            this._createBalloon(x,y);
+        }else if(resetPositionOfBalloon){
+            this._resetPositionOfBalloon(x,y);
+        }
+        if (x!=undefined && y != undefined){
+            this.xCoord=x;
+            this.yCoord=y;
+        }else if (this.xCoord ==undefined || this.yCoord == undefined){
+            throw "No coords found for this balloon";
+        }else{
+            x=this.xCoord;
+            y=this.yCoord;
+        }
+        //if the point is out of the extent hide balloon
+        var curExt=this.webMapController.getMap().getExtent();
+        if (curExt.minx > x ||
+            curExt.maxx < x ||
+            curExt.miny > y ||
+            curExt.maxy < y){
+            /*TODO wat doen als hij er buiten valt.*/
+            this.balloon.css('display','none');
+            return;
+        }else{
+            /*TODO wat doen als hij er weer binnen valt*/
+            this.balloon.css('display','block');
+        }
+
+        //calculate position
+        var infoPixel= this.webMapController.getMap().coordinateToPixel(x,y);
+
+        //determine the left and top.
+        var left=infoPixel.x;
+        var top =infoPixel.y;
+        if (this.leftOfPoint){
+            left=infoPixel.x-this.balloonWidth;
+        }
+        if (this.topOfPoint){
+            top= infoPixel.y-this.balloonHeight;
+        }
+       //set position of balloon
+        this.balloon.css('left', ""+left+"px");
+        this.balloon.css('top', ""+top+"px");
+    }
+    /*Remove the balloon*/
+    this.remove = function(){
+        this.balloon.remove();
+        this.webMapController.unRegisterEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+        delete this.balloon;
+    }
+    /*Get the DOM element where the content can be placed.*/
+    this.getContentElement = function(){
+        return this.balloon.find('.balloonContent');
+    }
+}

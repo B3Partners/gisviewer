@@ -101,17 +101,26 @@
         usePanel = false;
         usePanelControls =  false;
         useDivPopup = false;
+        useBalloonPopup=false;
     }
     if(objectInfoType == "popup") {
         usePopup = true;
         usePanel = false;
         usePanelControls =  false;
         useDivPopup = true;
+        useBalloonPopup=false;
     }
     if(objectInfoType == "paneel") {
         usePopup = false;
         usePanel = true;
         useDivPopup = false;
+        useBalloonPopup=false;
+    }
+    if (objectInfoType== "balloon"){
+        usePopup=false;
+        usePanel = false;
+        useDivPopup = false;
+        useBalloonPopup=true;
     }
 
     var dataframepopupHandle = null;

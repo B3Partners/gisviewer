@@ -176,6 +176,15 @@ html, body {
     position: absolute;
 }
 
+#dataframeballoonpopup{
+    height: 100%;
+    width: 100%;
+    border: 0px;
+    z-index: 110;
+    background-color: White;
+    position: absolute;
+}
+
 #popupWindow_Resizediv {
     height: 100%;
     width: 100%;
@@ -270,4 +279,60 @@ html, body {
 .iframe_tekstblok {
     width: 450px;
     height: 180px;
+}
+
+
+/*************Balloon css:***************/
+.infoBalloon{
+    position: absolute;
+}
+.infoBalloon div{
+    position: absolute;
+    overflow: hidden;
+}
+/*Balloon Arrows*/
+.balloonArrow {
+    width: 40px;
+    height: 40px;
+}
+.balloonArrow  img{
+    position: absolute;
+}
+.balloonArrowTopLeft{
+    left: 0px;
+    top: 0px;
+}
+.balloonArrowTopRight{
+    right: 0px;
+    top: 0px;
+}
+.balloonArrowTopRight img{
+    left: -40px;
+}
+.balloonArrowBottomLeft{
+    left: 0px;
+    bottom: 0px;
+}
+.balloonArrowBottomLeft img{
+    left: -80px;
+}
+.balloonArrowBottomRight{
+    right: 0px;
+    bottom: 0px;
+}
+.balloonArrowBottomRight img{
+    left: -120px;
+}
+/*Balloon Content*/
+.balloonContent{
+    left: 7px;
+    right: 7px;
+    overflow: hidden;
+}
+.balloonCloseButton{
+    position: absolute;
+    background: url("../images/close.gif") no-repeat scroll 0 0 transparent;
+    height: 17px;
+    width: 17px;
+    cursor: pointer;
 }

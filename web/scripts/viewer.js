@@ -3105,4 +3105,12 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
     this.getContentElement = function(){
         return this.balloon.find('.balloonContent');
     }
+    this.hide = function(){
+    	if (this.balloon)
+            this.balloon.css("display",'none');
+    }
+    this.show = function(){
+    	if (this.balloon)
+            this.balloon.css("display",'block');
+    }
 }

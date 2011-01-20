@@ -64,8 +64,24 @@ attachOnresize = function(onresizefunction) {
 }
 
 checkLocation = function() {
-    if (top.location != self.location)
-        top.location = self.location;
+    var currentWindow = self;
+    var startLocation = self.location;
+
+    try {
+        do {
+            var tmpWindow = currentWindow.parent;
+            var tmpLocation = tmpWindow.location;
+            if (tmpLocation!="") {
+                currentWindow = tmpWindow;
+            }
+         } while (tmpLocation!="");
+    } catch(err) {
+        // access denied: cross domain in iframe
+    }
+
+    if (currentWindow.location != startLocation) {
+        currentWindow.location = startLocation;
+    }
 }
 
 checkLocationPopup = function() {

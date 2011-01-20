@@ -936,7 +936,6 @@ function deActivateCheckbox(id) {
         document.getElementById(id).click();
 }
 
-var currentActiveTab = null;
 function switchTab(obj) {
     if (obj==undefined || obj==null)
         return;

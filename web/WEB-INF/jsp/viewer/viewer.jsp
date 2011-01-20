@@ -351,6 +351,9 @@
     if(typeof defaultdataframehoogte === 'undefined' || !defaultdataframehoogte) {
         defaultdataframehoogte = 150;
     }
+	
+	/* Variable wordt gebruikt om de huidige active tab in op te slaan */
+    var currentActiveTab = null;
     
     function getZoekconfiguraties(){
         return zoekconfiguraties;

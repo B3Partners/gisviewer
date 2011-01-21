@@ -779,7 +779,11 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
  * handle the returned value
  */
 function handleSetAttribute(str){
-    document.getElementById(str[0]).innerHTML=str[1];
+    if (str[0] == null || str[0] == "") {
+        alert("Kon attribuut niet instellen.");
+    } else {
+        document.getElementById(str[0]).innerHTML=str[1];
+    }
 }
 
 function handleSetText(str) {
@@ -792,6 +796,11 @@ function handleSetText(str) {
     isOpen = false;
 }
 
+/* Dummy function to test Javascript function in objectdata */
+function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+    alert("elem=" + element + " themaid=" + themaid + " keyname=" + keyName + " keyval=" + keyValue + " attrname=" + attributeName + " attrval=" + attributeValue + " eenh=" + eenheid);
+}
+
 /**
  *Calculate the Area of the object.
  */
@@ -801,8 +810,12 @@ function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, 
 /**
  *Handle the returned area.
  */
-function handleGetArea(str){
-    document.getElementById(str[0]).innerHTML=str[1];
+function handleGetArea(str) {
+    if (str[0] == null || str[0] == "") {
+        alert("Kon oppervlakte niet berekenen.");
+    } else {
+        document.getElementById(str[0]).innerHTML=str[1];
+    }
 }  
 
 function trim(str, chars) {

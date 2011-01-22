@@ -392,11 +392,10 @@
 
 <script type="text/javascript" src="<html:rewrite page="/scripts/niftycube.js"/>"></script>
 <div style="display: none;">
-    <html:form action="/viewerdata">
+    <html:form action="/viewerdata?code=${kbcode}">
         <input type="hidden" name="admindata" />
         <input type="hidden" name="metadata" />
         <input type="hidden" name="objectdata"/>
-        <input type="hidden" name="analysedata"/>
         <input type="hidden" name="search"/>
         <input type="hidden" name="searchId"/>
         <input type="hidden" name="searchClusterId"/>

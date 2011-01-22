@@ -306,10 +306,11 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         return;
     }
 
+    document.forms[0].code.value = kbcode;
+
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = '';
-    document.forms[0].analysedata.value = '';
 
     document.forms[0].themaid.value = checkedThemaIds;
     
@@ -1601,6 +1602,8 @@ function loadObjectInfo(geom) {
                 document.forms[0].themaid.value = getLayerIdsAsString();
             }
 
+            document.forms[0].code.value = kbcode;
+
             document.forms[0].analysethemaid.value = activeAnalyseThemaId;
 
             document.forms[0].geom.value=geom;
@@ -1609,7 +1612,6 @@ function loadObjectInfo(geom) {
 
             // vul adressen/locatie
             document.forms[0].objectdata.value = 't';
-            document.forms[0].analysedata.value = '';
             document.forms[0].target = 'objectframeViewer';
 
             document.forms[0].submit();

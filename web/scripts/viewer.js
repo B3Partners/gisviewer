@@ -1590,26 +1590,32 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
 }
 
 function loadObjectInfo(geom) {
-    // vul object frame
-    document.forms[0].admindata.value = '';
-    document.forms[0].metadata.value = '';
-    if (!multipleActiveThemas){
-        document.forms[0].themaid.value = activeAnalyseThemaId;
-    } else {
-        document.forms[0].themaid.value = getLayerIdsAsString();
+    for(i in enabledtabs) {
+        if (enabledtabs[i] == "gebieden") {
+            // vul object frame
+            document.forms[0].admindata.value = '';
+            document.forms[0].metadata.value = '';
+            if (!multipleActiveThemas){
+                document.forms[0].themaid.value = activeAnalyseThemaId;
+            } else {
+                document.forms[0].themaid.value = getLayerIdsAsString();
+            }
+
+            document.forms[0].analysethemaid.value = activeAnalyseThemaId;
+
+            document.forms[0].geom.value=geom;
+            document.forms[0].scale.value ='';
+
+
+            // vul adressen/locatie
+            document.forms[0].objectdata.value = 't';
+            document.forms[0].analysedata.value = '';
+            document.forms[0].target = 'objectframeViewer';
+
+            document.forms[0].submit();
+            break;
+        }
     }
-
-    document.forms[0].analysethemaid.value = activeAnalyseThemaId;
-
-    document.forms[0].geom.value=geom;
-    document.forms[0].scale.value ='';
-
-    // vul adressen/locatie
-    document.forms[0].objectdata.value = 't';
-    document.forms[0].analysedata.value = '';
-    document.forms[0].target = 'objectframeViewer';
-
-    document.forms[0].submit();
 }
 /**
  * Get alle enabled layer items
@@ -1772,9 +1778,7 @@ function createLegendDiv(item) {
 
     if (item.legendurl != undefined){
         var timestamp=(Math.floor(new Date().getTime()));
-        myImage.src = item.legendurl + "&timestamp=" + timestamp + "&SLD=" + escape("http://localhost/rpbadam/rpbadam.xml");
-
-
+        myImage.src = item.legendurl + "&timestamp=" + timestamp;
     } else {
         myImage.onerror();
     }

@@ -352,6 +352,10 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
     } else if(useBalloonPopup){
         if(!balloon){
+            var offsetX=0;
+            if (webMapController instanceof FlamingoController){
+                offsetX=36; //voor de boven balk
+            }
             balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,0,0);
         }
         document.forms[0].target = 'dataframeballoonpopup';

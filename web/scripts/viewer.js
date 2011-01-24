@@ -352,7 +352,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
     } else if(useBalloonPopup){
         if(!balloon){
-            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,50,50);
+            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,0,0);
         }
         document.forms[0].target = 'dataframeballoonpopup';
         /*Bepaal midden van vraag geometry*/      

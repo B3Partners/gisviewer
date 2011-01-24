@@ -1087,6 +1087,17 @@ function clusterCheckboxClick(element,dontRefresh){
             }
         }     
     }
+    /*Als useInheritCheckbox dan grafisch in de tree aangegeven dat onderliggende layers niet zichtbaar zijn.*/
+    if (useInheritCheckbox){        
+        for (var i=0; i < cluster.children.length;i++){
+            var child=cluster.children[i];
+            if (element.checked) {
+                enableLayer(child.id);
+            }else{
+                disableLayer(child.id);
+            }
+        }
+    }
     /*if its a radio and checked,then disable the other radio's*/
     if (element.type=='radio' && cluster.children){
         var childDiv=$j("#layermaindiv_item_" + element.id+"_children");

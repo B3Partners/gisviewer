@@ -352,7 +352,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
     } else if(useBalloonPopup){
         if(!balloon){
-            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon');
+            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,50,50);
         }
         document.forms[0].target = 'dataframeballoonpopup';
         /*Bepaal midden van vraag geometry*/      
@@ -2901,10 +2901,12 @@ $j(document).ready(function(){
  * @param balloonId the id of the DOM element that represents the balloon.
  * @param balloonWidth the width of the balloon (optional, default: 300);
  * @param balloonHeight the height of the balloon (optional, default: 300);
+ * @param offsetX the offset x
+ * @param offsetY the offset y
  * @param balloonCornerSize the size of the rounded balloon corners of the round.png image(optional, default: 20);
  * @param balloonArrowHeight the hight of the arrowImage (optional, default: 40);
  */
-function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight, balloonCornerSize, balloonArrowHeight){
+function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight, offsetX,offsetY, balloonCornerSize, balloonArrowHeight){
     this.mapDiv=mapDiv;
     this.webMapController=webMapController;
     this.balloonId=balloonId;
@@ -2912,6 +2914,8 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
     this.balloonHeight=300;
     this.balloonCornerSize=20;
     this.balloonArrowHeight=40;
+    this.offsetX=0;
+    this.offsetY=0;
     this.leftOfPoint;
     this.topOfPoint;
     //the balloon jquery dom element.
@@ -2929,6 +2933,12 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
     }
     if (balloonArrowHeight){
         this.balloonArrowHeight=balloonArrowHeight;
+    }
+    if (offsetX){
+        this.offsetX=offsetX;
+    }
+    if (offsetY){
+        this.offsetY=offsetY;
     }
     /**
      *Private function. Don't use.
@@ -3084,13 +3094,13 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         var infoPixel= this.webMapController.getMap().coordinateToPixel(x,y);
 
         //determine the left and top.
-        var left=infoPixel.x;
-        var top =infoPixel.y;
+        var left=infoPixel.x+this.offsetX;
+        var top =infoPixel.y+this.offsetY;
         if (this.leftOfPoint){
-            left=infoPixel.x-this.balloonWidth;
+            left=left-this.balloonWidth;
         }
         if (this.topOfPoint){
-            top= infoPixel.y-this.balloonHeight;
+            top= top-this.balloonHeight;
         }
        //set position of balloon
         this.balloon.css('left', ""+left+"px");
@@ -3107,11 +3117,9 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         return this.balloon.find('.balloonContent');
     }
     this.hide = function(){
-    	if (this.balloon)
-            this.balloon.css("display",'none');
+        this.balloon.css("display",'none');
     }
     this.show = function(){
-    	if (this.balloon)
-            this.balloon.css("display",'block');
+        this.balloon.css("display",'block');
     }
 }

@@ -52,7 +52,7 @@ function initMapComponent(){
             maxExtent: maxBounds,
             allOverlays: true,
             units :'m',
-            resolutions: [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125]
+            resolutions: [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125]
         };
         $j("#mapcontent").html(" ");
         var olmap=webMapController.createMap('mapcontent',opt);

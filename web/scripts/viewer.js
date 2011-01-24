@@ -1243,8 +1243,8 @@ function refreshLayerWithDelay() {
 } 
 
 function doRefreshLayer() {
+    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
     refreshLayer();
-    refreshLegendBox();
 }
 
 /*Check scale for all layers*/
@@ -1898,6 +1898,7 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {
+    webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
     for (var k=0; k<enabledLayerItems.length; k++){

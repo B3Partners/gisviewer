@@ -306,8 +306,6 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
         return;
     }
 
-    document.forms[0].code.value = kbcode;
-
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = '';
@@ -1602,13 +1600,10 @@ function loadObjectInfo(geom) {
                 document.forms[0].themaid.value = getLayerIdsAsString();
             }
 
-            document.forms[0].code.value = kbcode;
-
             document.forms[0].analysethemaid.value = activeAnalyseThemaId;
 
             document.forms[0].geom.value=geom;
             document.forms[0].scale.value ='';
-
 
             // vul adressen/locatie
             document.forms[0].objectdata.value = 't';

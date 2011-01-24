@@ -399,6 +399,7 @@
         <input type="hidden" name="search"/>
         <input type="hidden" name="searchId"/>
         <input type="hidden" name="searchClusterId"/>
+
         <html:hidden property="themaid" />
         <html:hidden property="analysethemaid" />
         <html:hidden property="lagen" />

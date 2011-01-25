@@ -1846,7 +1846,7 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
 //queue of the legend objects that needs to be loaded
 var legendImageQueue = new Array();
 //slots that can be used to load the legend objects
-var legendImageLoadingSpace=1;
+var legendImageLoadingSpace=2;
 /**
 Load the next image object.
 */

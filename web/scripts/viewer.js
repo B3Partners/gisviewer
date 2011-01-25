@@ -1810,7 +1810,9 @@ function imageOnerror(){
     this.style.width='0';
     this.height=0;
     this.width=0;
-
+    //release 1 loading space
+    legendImageLoadingSpace++;
+    loadNextInLegendImageQueue();
 }
 function imageOnload(){
     if (parseInt(this.height) > 5){
@@ -1825,6 +1827,9 @@ function imageOnload(){
             legendImage.appendChild(legendimg);
         }
     }
+    //release 1 loading space
+    legendImageLoadingSpace++;
+    loadNextInLegendImageQueue();
 }
 
 //adds a layer to the legenda
@@ -1834,17 +1839,36 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
     var layerDiv = findLayerDivInLegendBox(theItem);
     if (layerDiv!=null)
         return;
-
-    var div = createLegendDiv(theItem);
     
-    var beforeChild=null;
-    if(orderLayerBox.hasChildNodes()) {
-        beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
-    }
-    if (beforeChild==null){
-        orderLayerBox.appendChild(div);
-    }else{
-        orderLayerBox.insertBefore(div,beforeChild);
+    legendImageQueue.push({theItem: theItem, atBottomOfType: atBottomOfType});
+    loadNextInLegendImageQueue();
+}
+//queue of the legend objects that needs to be loaded
+var legendImageQueue = new Array();
+//slots that can be used to load the legend objects
+var legendImageLoadingSpace=1;
+/**
+Load the next image object.
+*/
+function loadNextInLegendImageQueue(){
+    if (legendImageLoadingSpace>0 && legendImageQueue.length > 0){
+        //consume 1 loading place
+        legendImageLoadingSpace--;
+        var nextLegend=legendImageQueue.shift();
+        var theItem=nextLegend.theItem;
+        var atBottomOfType=nextLegend.nextLegend;
+
+        var div = createLegendDiv(theItem);
+
+        var beforeChild=null;
+        if(orderLayerBox.hasChildNodes()) {
+            beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
+        }
+        if (beforeChild==null){
+            orderLayerBox.appendChild(div);
+        }else{
+            orderLayerBox.insertBefore(div,beforeChild);
+        }
     }
 }
 

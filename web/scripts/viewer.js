@@ -1244,9 +1244,10 @@ function refreshLayerWithDelay() {
         hideLoading();
     } 
     refresh_timeout_handle = setTimeout("doRefreshLayer();", refreshDelay);
-} 
+}     
 
 function doRefreshLayer() {
+    //register after loading
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
     refreshLayer();
 }
@@ -1902,7 +1903,7 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {
-    webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
+    webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
     for (var k=0; k<enabledLayerItems.length; k++){

@@ -271,7 +271,7 @@ function loadBusyJSP(handle, type) {
             '<table class="kolomtabel">'+
             '<tr>'+
             '<td valign="top">'+
-            '<div class="inleiding">'+
+            '<div class="loadingMessage">'+
             '<table>'+
             '<tr>'+
             '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+

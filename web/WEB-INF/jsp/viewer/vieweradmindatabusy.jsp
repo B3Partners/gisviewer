@@ -4,7 +4,7 @@
     <table class="kolomtabel">
         <tr>
             <td valign="top">
-                <div class="inleiding" style="width:100%;">
+                <div class="loadingMessage" style="width:100%;">
                     <table>
                         <tr>
                             <td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>

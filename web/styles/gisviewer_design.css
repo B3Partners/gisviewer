@@ -178,6 +178,18 @@ a:hover{
     margin-left: -15px;
 }
 
+.loadingMessage{
+    background-color: #FFF0C5;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-weight: bold;
+    width: 100%;
+    margin-left: -15px;
+
+}
+
 #content_style h1 {
     font-size: 18px;
     font-weight: bold;
@@ -640,6 +652,10 @@ a.highlightlink:hover{
     background: #FFF0C4;
     color: #19619B;
     font-weight: bold;
+    -moz-border-radius-topleft:10px;
+    border-radius-topleft: 10px;
+    -moz-border-radius-topright:10px;
+    border-radius-topright: 10px;
 }
 .tabField.tabFieldActive {
     background: #19619B;

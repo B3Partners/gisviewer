@@ -68,7 +68,7 @@ function writeNoResults() {
     tableData+="<table class=\"kolomtabel\">";
     tableData+="<tr>";
     tableData+="<td valign=\"top\">";
-    tableData+="<div id=\"inleiding\" class=\"inleiding\">";
+    tableData+="<div id=\"inleiding\" class=\"loadingMessage\">";
     tableData+="<h2>" + noResultsHeader + "</h2>";
     tableData+="<p>" + noResultsTekst + "</p>";
     tableData+="</div>";
@@ -169,6 +169,18 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
         switchDataTab($j(this));
     }).html(tab);
 
+    if (tab=='tab1'){
+        tabField.html('1');
+    }else if (tab=='tab2'){
+        tabField.html('2');
+    }else if (tab=='tab3'){
+        tabField.html('3');
+    }else if (tab=='tab4'){
+        tabField.html('4');
+    }else if (tab=='tab5'){
+        tabField.html('5');
+    }
+
     // Create table content
     if(gegevensbron.records) {
         $j.each(gegevensbron.records, function(index, record) {
@@ -184,12 +196,16 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
             var bronTableBody = $j('<tbody></tbody>');
 
             $j.each(record.values, function(index2, waarde) {
-                var tr = $j('<tr></tr>');
+                var tr2 = $j('<tr></tr>');
+                var th = createTableTh(gegevensbron.labels[index2]);
+                tr2.append(th);
+                var tr = $j('<tr></tr>');                
                 var td = createTableTd(waarde);
                 tr.append(td);
+                bronTableBody.append(tr2);
                 bronTableBody.append(tr);
             });
-
+            
             // Append all to DOM tree
             bronContent.append(bronTable.append(bronTableBody));
             bronContainer.append(bronCaption.css({"color":"#000000","background-color":"#ffffff"})).append(bronContent);

@@ -352,11 +352,15 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
 
     } else if(useBalloonPopup){
         if(!balloon){
-            var offsetX=0;
+            var offsetX = 0;
+            var offsetY = 0;
+
+            /* offsetY nodig voor de flamingo toolbalk boven de kaart */
             if (webMapController instanceof FlamingoController){
-                offsetX=36; //voor de boven balk
+                offsetY=36;
             }
-            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,0,0);
+            
+            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,offsetX,offsetY);
         }
         document.forms[0].target = 'dataframeballoonpopup';
         /*Bepaal midden van vraag geometry*/      

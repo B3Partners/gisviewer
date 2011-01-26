@@ -11,7 +11,7 @@ function setMapImageSrc(url){
             var imageSize=url.substring(beginIndex, endIndex);
             if(document.getElementById("imageSize")!=undefined){
                 document.getElementById("imageSize").value=imageSize;
-                $("#slider").slider("option", "value", parseInt(imageSize));
+                $j("#slider").slider("option", "value", parseInt(imageSize));
             }
             if(document.getElementById("startImageSize")!=undefined){
                 document.getElementById("startImageSize").value=imageSize;
@@ -23,7 +23,7 @@ function setMapImageSrc(url){
 function resetImageSize() {
     if(document.getElementById("startImageSize")!=undefined){
         var startSize = document.getElementById("startImageSize").value;
-        $("#slider").slider("option", "value", parseInt(startSize));
+        $j("#slider").slider("option", "value", parseInt(startSize));
         document.getElementById("imageSize").value=startSize;
     }
 }

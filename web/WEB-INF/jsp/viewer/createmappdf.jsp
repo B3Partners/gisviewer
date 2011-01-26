@@ -90,13 +90,13 @@
     <br />
 </div>
 <script type="text/javascript">
-    $(function() {
-        $("#slider").slider({
+    $j(function() {
+        $j("#slider").slider({
             min: 0,
             max: 2048,
             value: 2048,
             animate: true,
-            change: function(event, ui) { $("#imageSize").val(ui.value); }
+            change: function(event, ui) { $j("#imageSize").val(ui.value); }
         });
     });
 </script>

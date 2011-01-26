@@ -41,15 +41,24 @@
             <tr class="aanvullende_info_alternateTr">
                 <td><fmt:message key="createmappdf.imageSize"/></td>
                 <td>
-                    <div style="padding-top: 2px; margin-right: 90px; margin-left: 5px; float: left; padding-bottom: 10px;">Laag</div>
-                    <div style="padding-top: 2px; float: left; padding-bottom: 10px;">Medium</div>
-                    <div style="padding-top: 2px; margin-left: 90px; float: left; padding-bottom: 10px;">Hoog</div>
 
-                    <div id="orgineelKnop" style="padding-top: 10px; margin-left: 10px; float: left; padding-bottom: 5px;">
-                        <input type="button" onclick="resetImageSize();" value="Orginele kwaliteit"/>
+                    <!-- Slider div -->
+                    <div id="kwaliteitsbalk" style="width: 600px">
+                        <div id="kwaliteitsbalk_labels" style="margin-left: 0px; padding-top: 0px;">
+                            <span style="padding-top: 2px; margin-right: 90px; margin-left: 5px; padding-bottom: 10px;">Laag</span>
+                            <span style="padding-top: 2px; padding-bottom: 10px;">Medium</span>
+                            <span style="padding-top: 2px; margin-left: 90px; padding-bottom: 10px;">Hoog</span>
+                        </div>
+
+                        <div id="kwaliteitsbalk_slider" style="margin-left: 15px; padding-top: 10px;">
+                            <div id="slider" style="width: 250px; float: left;"></div>
+
+                            <div id="orgineelKnop" style="float: left; margin-left: 10px;">
+                                <input type="button" onclick="resetImageSize();" value="Orginele kwaliteit"/>
+                            </div>
+                        </div>    
+                                            
                     </div>
-
-                    <div id="slider" style="width: 250px; margin-left: 10px; margin-top: 20px;"></div>
 
                     <html:hidden property="imageSize" styleId="imageSize"/>
                     <input type="hidden" name="startImageSize" id="startImageSize" value="2048"/> 

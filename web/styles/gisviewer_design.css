@@ -656,10 +656,12 @@ a.highlightlink:hover{
     border-radius-topleft: 10px;
     -moz-border-radius-topright:10px;
     border-radius-topright: 10px;
+    cursor: pointer;
 }
 .tabField.tabFieldActive {
     background: #19619B;
     color: #FFF0C4;
+    cursor: auto;
 }
 
 .childCaption {

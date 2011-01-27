@@ -585,6 +585,8 @@
         
 <script type="text/javascript">
     $j("#tab_container, #tabjes, #nav").css("width", tabWidth + 'px');
+    if(tabWidth == 0) $j("#tab_container, #tabjes, #nav").css("visibility", "hidden");
+    
     if(ieVersion <= 6 && ieVersion != -1) {
         var content_viewer = document.getElementById('content_viewer');
         var leftcontent = document.getElementById('leftcontent');
@@ -595,9 +597,9 @@
         var leftcontent_width = 0;
         if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
 
-        document.getElementById('mapcontent').style.width = (contentwidth - ((tabWidth==0?0:tabWidth+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
+        document.getElementById('mapcontent').style.width = (contentwidth - ((tabWidth==0?3:tabWidth+6)) - ((leftcontent_width==0?3:leftcontent_width+6))) + 'px';
     } else {
-        document.getElementById('mapcontent').style.right = (tabWidth==0?0:(tabWidth + 6)) + 'px';
+        document.getElementById('mapcontent').style.right = (tabWidth==0?3:(tabWidth + 6)) + 'px';
     }
 
     if(noOfTabs == 0) {

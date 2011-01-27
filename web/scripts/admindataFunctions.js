@@ -375,7 +375,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
                     });
                     tr.append(collapse);
                     var childTd = $j('<td></td>').attr({
-                        "colspan": record.values.length
+                        "colSpan": record.values.length
                     });
                     var childCaption = $j('<div></div>').attr({
                         "id": "childCaption" + childDivId,
@@ -717,7 +717,7 @@ function createTableTd(waarde) {
 function createEmptyRow(size) {
     var tr = $j('<tr></tr>');
     var td = $j('<td></td>').attr({
-        "colspan": size
+        "colSpan": size
     })
     .html("leeg");
     tr.append(td);

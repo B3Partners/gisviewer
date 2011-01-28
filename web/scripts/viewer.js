@@ -1601,6 +1601,8 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
     //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
     
     options["maptip_layers"]=maptipLayers;
+    //disable getCap
+    options["initservice"]=false;
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 
     newLayer.setMapTips(maptips);

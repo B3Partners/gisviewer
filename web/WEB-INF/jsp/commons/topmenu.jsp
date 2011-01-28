@@ -10,7 +10,7 @@
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
     <html:link page="/help.do?id=${kaartid}" target="_new" styleClass="${stijlklasse}" module="">
-        <img src="<html:rewrite page="/images/"/>/help.png" alt="Help" title="Help" border="0"/>
+        <img src="<html:rewrite page="/images/"/>help.png" alt="Help" title="Help" border="0" width="20" height="20"/>
     </html:link>
 
     <c:set var="stijlklasse" value="menulink" />

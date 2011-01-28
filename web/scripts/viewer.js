@@ -863,6 +863,8 @@ function createTreeLegendIcon() {
     legendicon.src = imageBaseUrl + "icons/application_view_list.png";
     legendicon.alt = "Legenda tonen";
     legendicon.title = "Legenda tonen";
+    legendicon.width="15";
+    legendicon.height="13";
     legendicon.className = 'treeLegendIcon imagenoborder';
     $j(legendicon).click(function(){
         if(!$j(this).hasClass("disabledLegendIcon")) loadTreeLegendImage($j(this).siblings("div").attr("id"));

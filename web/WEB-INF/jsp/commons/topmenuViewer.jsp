@@ -25,7 +25,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="topmenu">
     <a href="#" onclick="getBookMark();" class="menulink">
-        <img src="<html:rewrite page="/images/"/>/bookmark.png" alt="Bookmark de kaart" title="Bookmark de kaart" border="0"/>
+        <img src="<html:rewrite page="/images/"/>bookmark.png" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" width="20" height="20"/>
     </a>
     
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
@@ -38,11 +38,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:if>
         
     <html:link page="/help.do?id=${kaartid}" target="_new" styleClass="${stijlklasse}" module="">
-        <img src="<html:rewrite page="/images/"/>/help.png" alt="Help" title="Help" border="0"/>
+        <img src="<html:rewrite page="/images/"/>help.png" alt="Help" title="Help" border="0" width="20" height="20"/>
     </html:link>
 
     <html:link href="javascript: exportMap();" styleClass="menulink" module="">
-        <img src="<html:rewrite page="/images/"/>/print.png" alt="Printvoorbeeld" title="Printvoorbeeld" border="0"/>
+        <img src="<html:rewrite page="/images/"/>print.png" alt="Printvoorbeeld" title="Printvoorbeeld" border="0" width="20" height="20"/>
     </html:link>
 
     <c:set var="stijlklasse" value="menulink" />

@@ -28,11 +28,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html:html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv="Expires" content="-1">
-        <meta http-equiv="Cache-Control" content="max-age=0, no-store">
-        <meta http-equiv=”X-UA-Compatible” content=”IE=edge” />
-
+        <%@include file="/WEB-INF/jsp/metatags.jsp" %>
+        
         <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
         <link href="styles/gisviewer_simpleviewerimport.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>

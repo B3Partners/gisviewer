@@ -893,9 +893,8 @@ function loadTreeLegendImage(divid) {
         legendimg.alt = "Legenda " + item.title;
         legendimg.onerror=treeImageError;
         legendimg.onload=treeImageOnload;
-        legendimg.className = 'treeLegendImage';
-        var timestamp=(Math.floor(new Date().getTime()));
-        legendimg.src = item.legendurl + "&timestamp=" + timestamp;
+        legendimg.className = 'treeLegendImage';        
+        legendimg.src = item.legendurl;
 
         divobj.appendChild(legendimg);
     }
@@ -1793,9 +1792,8 @@ function createLegendDiv(item) {
     div.appendChild(spanEl);
     div.theItem=item;
 
-    if (item.legendurl != undefined){
-        var timestamp=(Math.floor(new Date().getTime()));
-        myImage.src = item.legendurl + "&timestamp=" + timestamp;
+    if (item.legendurl != undefined){        
+        myImage.src = item.legendurl;
     } else {
         myImage.onerror();
     }

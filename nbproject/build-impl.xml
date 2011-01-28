@@ -522,9 +522,6 @@ exists or setup the property manually. For example like this:
                 COMPILATION SECTION
             -->
     <target depends="init" if="no.dist.ear.dir" name="deps-module-jar" unless="no.deps">
-        <ant antfile="${project.Base64Encoder}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
         <ant antfile="${project.b3p-combineImageTool}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -554,9 +551,6 @@ exists or setup the property manually. For example like this:
         </ant>
     </target>
     <target depends="init" if="dist.ear.dir" name="deps-ear-jar" unless="no.deps">
-        <ant antfile="${project.Base64Encoder}/build.xml" inheritall="false" target="jar">
-            <property name="deploy.on.save" value="false"/>
-        </ant>
         <ant antfile="${project.b3p-combineImageTool}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -735,7 +729,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.JTS.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.IText.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.Security.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${reference.Base64Encoder.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.b3p-gisviewer.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.HibernateEntityManager.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
@@ -766,7 +759,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.JTS.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.IText.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.Security.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${reference.Base64Encoder.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-gisviewer.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.HibernateEntityManager.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -1083,7 +1075,6 @@ exists or setup the property manually. For example like this:
                 CLEANUP SECTION
             -->
     <target depends="init" if="no.dist.ear.dir" name="deps-clean" unless="no.deps">
-        <ant antfile="${project.Base64Encoder}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-combineImageTool}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-commons-core}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-commons-gis}/build.xml" inheritall="false" target="clean"/>

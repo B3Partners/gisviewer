@@ -67,10 +67,6 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${reference.Base64Encoder.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
                     <file>${reference.b3p-gisviewer.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -127,14 +123,6 @@
             <definitions>..\libs\nblibraries.properties</definitions>
         </libraries>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/1">
-            <reference>
-                <foreign-project>Base64Encoder</foreign-project>
-                <artifact-type>jar</artifact-type>
-                <script>build.xml</script>
-                <target>jar</target>
-                <clean-target>clean</clean-target>
-                <id>jar</id>
-            </reference>
             <reference>
                 <foreign-project>b3p-combineImageTool</foreign-project>
                 <artifact-type>jar</artifact-type>

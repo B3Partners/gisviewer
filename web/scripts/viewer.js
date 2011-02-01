@@ -2680,7 +2680,7 @@ function createPermaLink(){
 
 function addToFavorites(url) {
     
-    var title = "B3P Gisviewer: " + url;
+    var title = "B3P Gisviewer bookmark"
 
     if (window.sidebar) { // Firefox
         window.sidebar.addPanel(title, url,"");

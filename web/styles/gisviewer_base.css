@@ -3,7 +3,74 @@ html, body {
     height: 100%;
     margin: 0px;
     padding: 0px;
-    overflow: auto;
+}
+
+body.homebody {
+    text-align: center;
+}
+
+#wrapper {
+    height: auto;
+    min-height: 100%;
+    width: 100%;
+    min-width: 960px;
+}
+
+#header {
+    height: 50px;
+    width: 100%;
+}
+
+#header_content {
+    width: 960px;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+#topmenu {
+    float: right;
+    margin-top: 23px;
+}
+
+#content_normal {
+    min-height: 500px;
+    width: 100%;
+    display: block;
+    padding-bottom: 50px;
+}
+
+#content {
+    width: 960px;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+#footer {
+    clear: both;
+    margin-top: -50px;
+    height: 50px;
+    width: 100%;
+}
+
+#footer_content {
+    width: 960px;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+#footer_tekst_links {
+    float: left;
+}
+
+#footer_tekst_rechts {
+    float: right;
+    margin-right: 125px;
 }
 
 #acknowledge {
@@ -50,55 +117,20 @@ html, body {
     background: #fff5f5 url(/gisviewer/images/icons/error.gif) no-repeat;
 }
 
-#header {
-	position: absolute;
-	height: 50px;
-	width: 100%;
-	left: 0px;
-	top: 0px;
-}
-
-#header_content {
-    width: 960px;
-    position: absolute;
-	left: 50%;
-    margin-left: -480px;
-    height: 50px;
-}
-
-#topmenu {
-    float: right;
-    margin-top: 23px;
-}
-
-#content_normal {
-    position: absolute;
-	left: 50%;
-    margin-left: -490px;
-    width: 980px;
-	top: 50px;
-	bottom: 50px;
-}
-
-#content {
-    margin-left: 15px;
-    margin-right: 10px;
-    height: 100%;
-    overflow: auto;
-}
-
 #content_viewer {
     position: absolute;
-	left: 0px;
-	top: 50px;
-	bottom: 0px;
-	right: 0px;
+    left: 0px;
+    top: 50px;
+    bottom: 0px;
+    right: 0px;
+    background-color: White;
 }
 
 .infobalk {
     height: 20px;
     padding-top: 3px;
     margin: 0px;
+    margin-left: 5px;
     margin-top: 5px;
     margin-bottom: 8px;
     width: 940px;
@@ -116,34 +148,6 @@ html, body {
     width: 780px;
     float: left;
     margin-top: 1px;
-}
-
-#footer {
-	position: absolute;
-	height: 50px;
-	width: 100%;
-	left: 0px;
-	bottom: 0px;
-}
-
-#footer_content {
-    width: 960px;
-    position: absolute;
-	left: 50%;
-    margin-left: -480px;
-    height: 50px;
-}
-
-#footer_tekst_links {
-    position: absolute;
-    left: 12px;
-    top: 18px;
-}
-
-#footer_tekst_rechts {
-    position: absolute;
-    right: 126px;
-    top: 18px;
 }
 
 #popupWindow {

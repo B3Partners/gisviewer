@@ -1,10 +1,5 @@
-a.menulink, a.menulink:visited, a.menulink:active, a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
-    height: 27px;
-}
-
-#content {
-    height: 1px;
-    overflow: hidden;
+#wrapper {
+    height: 100%;
 }
 
 #mapcontent {

@@ -38,13 +38,14 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
     color: #144264;
 }
 
-#content_normal {
-    background-color: White;
+#wrapper {
     background-image: url(../images/maindiv_bg.gif);
+    background-position: center center;
     background-repeat: repeat-y;
+    color: White;
 }
 
-#content_viewer {
+#content {
     background-color: White;
 }
 
@@ -113,6 +114,7 @@ ul#nav li.activelink a,ul#nav li.activelink a:hover {
 .footer_tekst {
     color: #7891A5;
     font-size: 11px;
+    margin-top: 18px;
 }
 
 /* Common styles */

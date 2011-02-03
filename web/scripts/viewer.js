@@ -2555,8 +2555,12 @@ function handlePopupValue(value) {
 
 /* backend heeft wkt teruggegeven */
 function returnHighlight(wkt) {
-    /* alleen polygoon tekenen als het geen POINT is */
-    if (wkt.length > 0 && wkt.indexOf("POINT") == -1 )
+    /* Fout in back-end of wkt is een POINT */
+    if (wkt.length > 0 && wkt == "-1") {
+        alert("Geen kaartobject geselecteerd.");
+    }
+
+    if (wkt.length > 0 && wkt != "-1")
     {        
         var polyObject = new Feature(61502,wkt);
         drawObject(polyObject);

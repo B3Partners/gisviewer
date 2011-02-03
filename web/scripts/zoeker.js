@@ -295,7 +295,7 @@ function performSearch() {
         }
     }
 
-    showLoading();
+    showTabvakLoading('Bezig met zoeken');
     $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
 
     JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,searchCallBack);
@@ -390,7 +390,7 @@ function createZoekStringsFromZoekVelden(zc, zoekVelden, zoekStrings) {
 // @param values = de gevonden lijst met waarden.
 var foundValues=null;
 function searchCallBack(values){
-    hideLoading();
+    hideTabvakLoading();
 
     foundValues=values;
     var searchResults=$j("#searchResults");

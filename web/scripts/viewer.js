@@ -3176,3 +3176,13 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         this.balloon.css("display",'block');
     }
 }
+
+// Aanroepen voor een loading screen in de tabs.
+function showTabvakLoading(message) {
+    $j("#tab_container").append('<div class="tabvakloading"><div>'+message+'<br /><br /><img src="/gisviewer/images/icons/loadingsmall.gif" alt="Bezig met laden..." /></div></div>');
+    $j("#tab_container").find(".tabvakloading").fadeTo(0, 0.8);
+}
+
+function hideTabvakLoading() {
+    $j("#tab_container").find(".tabvakloading").remove();
+}

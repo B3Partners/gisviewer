@@ -556,8 +556,8 @@ function createBronCaption(gegevensbron, simple, index) {
     bronCaption.append(frm);
 
     var icon = $j('<img src="'+csvexporticon+'"/>').attr({
-        "alt": csv_export_url,
-        "title": csv_export_url
+        "alt": "Exporteer naar CSV bestand",
+        "title": "Exporteer naar CSV bestand"
     }).click(function() {
         // popUp(csv_export_url, 'csv_export', 600, 500);
         $j("#"+csvFrmId).submit();
@@ -568,7 +568,7 @@ function createBronCaption(gegevensbron, simple, index) {
     bronCaption.append(icon);
 
     //Info export knop
-    var info_export_url = "viewerdata.do?aanvullendeinfo=t";
+    var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j";
     
     var infoFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm";
     frm = $j('<form></form>').attr({
@@ -584,8 +584,8 @@ function createBronCaption(gegevensbron, simple, index) {
     bronCaption.append(frm);
 
     var icona = $j('<img src="'+infoexporticon+'" alt="Info Export" alt="Info Export"/>').attr({
-        "alt": info_export_url,
-        "title": info_export_url
+        "alt": "Toon aanvullende informatie in popup",
+        "title": "Toon aanvullende informatie in popup"
     })
     .click(function() {
         popUp(info_export_url, 'info_export', 600, 500);

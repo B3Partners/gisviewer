@@ -352,7 +352,12 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 "width": "50px"
             });
 
-            
+            var icon = $j('<img src="'+wandicon+'" alt="Selecteer object in kaart" title="Selecteer object in kaart" />')
+            .click(function() {
+                editFeature(gegevensbron.id,gegevensbron.adminPk,record.id);
+            });
+            volgnr.append(icon);
+            volgnr.append(" ");
             volgnr.append(index+1);
 
             tr.append(volgnr);
@@ -562,7 +567,6 @@ function createBronCaption(gegevensbron, simple, index) {
         // popUp(csv_export_url, 'csv_export', 600, 500);
         $j("#"+csvFrmId).submit();
     });
-
     
     bronCaption.append(" ");
     bronCaption.append(icon);

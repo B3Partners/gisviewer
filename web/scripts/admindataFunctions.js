@@ -27,7 +27,8 @@ function editFeature(ggbId, attrName, attrVal) {
 }
 
 function popUp(link, title, width, heigth) {
-    getParent().popUp(link, title, width, heigth);
+    var pu = getParent().popUp(link, title, width, heigth);
+    if(window.focus) pu.focus();
 }
 
 //writes the obj data from flamingo to a table

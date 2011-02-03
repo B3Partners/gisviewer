@@ -730,7 +730,8 @@ function createMetadatLink(item){
     lnk.href = '#';
     if (item.metadatalink && item.metadatalink.length > 1)
         lnk.onclick = function(){
-            popUp(item.metadatalink, "metadata", 600, 500, useDivPopup)
+            var pu = popUp(item.metadatalink, "metadata", 600, 500, useDivPopup);
+            if(window.focus) pu.focus();
         };
     return lnk;
 }

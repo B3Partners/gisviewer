@@ -97,7 +97,7 @@
                                                 </c:when>
                                                 <c:when test="${ThemaItem.dataType.id == 3}">
                                                     <c:forEach var="listWaarde" items="${regel.values[counter.count - 1]}">
-                                                        <html:image src="./images/icons/world_link.png" onclick="popUp('${listWaarde}', 'externe_link', 1024, 768);" styleClass="cursorpointer" />
+                                                        <html:image src="./images/icons/world_link.png" onclick="var pu = popUp('${listWaarde}', 'externe_link', 1024, 768); if(window.focus) pu.focus();" styleClass="cursorpointer" />
                                                     </c:forEach>
                                                 </c:when>
                                                 <c:when test="${ThemaItem.dataType.id == 4}">

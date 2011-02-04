@@ -59,19 +59,18 @@ function initMapComponent(){
         $j("#mapcontent").css("border","1px solid black");
         webMapController.addMap(olmap);
     }
-    //
+   
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
-    webMapController.registerEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(),hideIdentifyIcon);
-
+    //webMapController.registerEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(),hideIdentifyIcon);
+    webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(),hideIdentifyIcon);
 }
 
 function hideIdentifyIcon(){
     if(webMapController instanceof FlamingoController)
         webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
 }
-
 
 function initializeButtons(){
     /*ie bug fix*/
@@ -2531,8 +2530,11 @@ function highLightThemaObject(geom) {
         iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300);
     }
 
+    var scale = webMapController.getMap().getScale();
+    var tol = tolerance;
+
     if (highlightLayers.length == 1) {
-        EditUtil.getHighlightWktForThema(highlightLayers[0].id, geom, returnHighlight);
+        EditUtil.getHighlightWktForThema(highlightLayers[0].id, geom, scale, tol, returnHighlight);
     }
 }
 
@@ -2550,7 +2552,9 @@ function handlePopupValue(value) {
      * setActiveCluster(item, true);
      */
 
-    EditUtil.getHighlightWktForThema(value, highLightGeom, returnHighlight);
+    var scale = webMapController.getMap().getScale();
+    var tol = tolerance;
+    EditUtil.getHighlightWktForThema(value, highLightGeom, scale, tol, returnHighlight);
 //handleGetAdminData(highLightGeom, value);
 }
 

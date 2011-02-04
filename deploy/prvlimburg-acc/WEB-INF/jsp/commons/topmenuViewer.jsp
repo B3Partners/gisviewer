@@ -24,7 +24,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 
 <div id="topmenu">
-    <a href="mailto:support@b3partners.nl" class="menulink">
+    <a href="mailto:geoloket@prvlimburg.nl" class="menulink">
         <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
     </a>
 

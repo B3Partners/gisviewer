@@ -5,7 +5,7 @@
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
     <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
 
-    <a href="mailto:support@b3partners.nl" class="menulink">
+    <a href="mailto:geoloket@prvlimburg.nl" class="menulink">
         <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
     </a>
 

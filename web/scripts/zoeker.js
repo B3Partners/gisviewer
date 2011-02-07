@@ -293,19 +293,14 @@ function performSearch() {
             } else if (zoekVelden[i].type== 90) { // Schaal zoekveld
                 var invoer = $j("#"+zoekVelden[i].id + '_schaal').val();
 
-                if (invoer == undefined || invoer == "") {
+                if (invoer == undefined || invoer == "" || invoer <= 0) {
                     alert('Ongeldige schaal opgegeven.');
                     return;
                 }
 
                 /* zoom naar ingevoerde schaal */
-                var scale = webMapController.getMap().getScale();
-                var extent = webMapController.getMap().getExtent();
-
                 var schaal = invoer * 0.000498;
-
-                // zoom functie aanroepen
-
+                webMapController.getMap().zoomToScale(schaal);
             } else {
                 waarde[i]=veld;
             }

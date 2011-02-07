@@ -289,6 +289,23 @@ function performSearch() {
                 y = y.replace(",", ".");
 
                 waarde[i]= x+','+y;
+
+            } else if (zoekVelden[i].type== 90) { // Schaal zoekveld
+                var invoer = $j("#"+zoekVelden[i].id + '_schaal').val();
+
+                if (invoer == undefined || invoer == "") {
+                    alert('Ongeldige schaal opgegeven.');
+                    return;
+                }
+
+                /* zoom naar ingevoerde schaal */
+                var scale = webMapController.getMap().getScale();
+                var extent = webMapController.getMap().getExtent();
+
+                var schaal = invoer * 0.000498;
+
+                // zoom functie aanroepen
+
             } else {
                 waarde[i]=veld;
             }
@@ -523,7 +540,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
         } else {
 
             /* XY coord type */
-            if(zoekVeld.type == 80) {
+            if (zoekVeld.type == 80) {
 
                 inputfield = $j('<input type="text" />');
                 inputfield.attr({
@@ -547,8 +564,20 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
                 });
                 container.append(inputfield).append('<br/><br/>');
 
-            } else {
+            } else if (zoekVeld.type == 90) {
+                
+                inputfield = $j('<input type="text" />');
+                inputfield.attr({
+                    id: zoekVeld.id + '_schaal',
+                    name: zoekVeld.id + '_schaal',
+                    size: '15',
+                    maxlength: '10' //zoekVeld.inputSize
+                }).keyup(function(ev) {
+                    performSearchOnEnterKey(ev);
+                });
+                container.append(inputfield).append('<br/><br/>');
 
+            } else {
                 inputfield = $j('<input type="text" />');
                 inputfield.attr({
                     id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,

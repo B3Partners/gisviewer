@@ -30,7 +30,7 @@ var startLayerIndex=0;
 /*Balloon reference*/
 var balloon;
 
-var b_buffer,zoomBox,pan,prevExtent,identify;
+var zoomBox,pan,prevExtent,identify;
 function initMapComponent(){
 
     mapviewer = viewerType;

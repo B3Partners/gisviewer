@@ -736,7 +736,13 @@ function createMetadatLink(item){
 }
 
 function createLabel(container, item) {
-    if(item.cluster) {
+//    if (true) {  // voor test
+//        var spanEl = document.createElement("span");
+//        spanEl.innerHTML = ' ' + item.title + '<br />';
+//        container.appendChild(spanEl);
+//        return false;
+//    } else
+    if (item.cluster) {
         //if callable
         if (item.callable) {
             var checkboxChecked = false;

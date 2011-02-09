@@ -68,8 +68,14 @@ function initMapComponent(){
 }
 
 function hideIdentifyIcon(){
-    if(webMapController instanceof FlamingoController)
+    if(webMapController instanceof FlamingoController) {
         webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
+
+        /* TODO: Hoort eigenlijk bij een onUpdateComplete aangeroepen
+         * te worden maar event lijkt niet meer te triggeren in Flamingo */
+        checkScaleForLayers();
+    }
+        
 }
 
 function initializeButtons(){
@@ -295,7 +301,7 @@ function loadBusyJSP(handle, type) {
     }
 }
 
-function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {    
+function handleGetAdminData(/*coords,*/ geom, highlightThemaId, selectionWithinObject) {
     if (!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
@@ -332,6 +338,12 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId) {
     
     document.forms[0].scale.value=webMapController.getMap().getScale();
     document.forms[0].tolerance.value=tolerance;
+
+    if (selectionWithinObject) {
+        document.forms[0].withinObject.value = "1";
+    } else {
+        document.forms[0].withinObject.value = "-1";
+    }
 
     if (highlightThemaId != null) {
         document.forms[0].themaid.value = highlightThemaId;
@@ -2092,7 +2104,7 @@ function onIdentify(movie,extend){
         
         webMapController.activateTool("identify");
 
-        handleGetAdminData(geom, null);
+        handleGetAdminData(geom, null, false);
     }
     
     loadObjectInfo(geom);
@@ -2410,7 +2422,7 @@ function b_getfeatures(id,event) {
     var wkt = getWktActiveFeature();
 
     if (wkt) {
-        handleGetAdminData(wkt, null);
+        handleGetAdminData(wkt, null, true);
     }
 }
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */

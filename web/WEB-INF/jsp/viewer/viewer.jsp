@@ -404,6 +404,7 @@
         <input type="hidden" name="search"/>
         <input type="hidden" name="searchId"/>
         <input type="hidden" name="searchClusterId"/>
+        <input type="hidden" name="withinObject"/>
 
         <html:hidden property="themaid" />
         <html:hidden property="analysethemaid" />

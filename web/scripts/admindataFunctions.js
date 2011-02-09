@@ -588,8 +588,8 @@ function createBronCaption(gegevensbron, simple, index) {
     bronCaption.append(frm);
 
     var icona = $j('<img src="'+infoexporticon+'" alt="Info Export" alt="Info Export"/>').attr({
-        "alt": "Toon aanvullende informatie in popup",
-        "title": "Toon aanvullende informatie in popup"
+        "alt": "Toon info van alle objecten in de kaartlaag",
+        "title": "Toon info van alle objecten in de kaartlaag"
     })
     .click(function() {
         popUp(info_export_url, 'info_export', 600, 500);

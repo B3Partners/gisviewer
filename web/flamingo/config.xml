@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface=".onReallyChangedExtent,.onChangeExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" allowExternalInterface=".onReallyChangedExtent,.onChangeExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
@@ -53,6 +53,10 @@
 
                 <fmc:JsButton id="b_removePolygons" left="410" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/polygon_delete.png" iconurl_over="flamingo/assets/jsbtn/polygon_delete.png" iconurl_sel="flamingo/assets/jsbtn/polygon_delete.png" iconurl_dis="flamingo/assets/jsbtn/polygon_delete_disabled.png" label="" toggle="false" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="remove polygon" nl="verwijder het tekenobject"/>
+                </fmc:JsButton>
+
+                <fmc:JsButton id="b_printMap" left="440" top="0" width="21" height="21" iconurl_up="images/print.png" iconurl_over="images/print.png" iconurl_sel="images/print.png" iconurl_dis="images/print.png" label="" toggle="false" visible="false" enabled="true" selected="false">
+                    <string id="tooltip" en="Print example" nl="Printvoorbeeld"/>
                 </fmc:JsButton>
             </fmc:Container>
 

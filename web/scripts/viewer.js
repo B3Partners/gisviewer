@@ -146,6 +146,13 @@ function initializeButtons(){
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
 
+    var bu_print = webMapController.createTool("b_printMap",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'Printvoorbeeld'
+    });
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_print,b_print);
+    webMapController.addTool(bu_print);
+
     var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {
         title: 'Meten'
     });
@@ -2451,6 +2458,9 @@ function b_buffer(id, event) {
     EditUtil.buffer(wkt, afstand, returnBuffer);
 }
 
+function b_print(id, event) {    
+    exportMap();
+}
 
 function drawFeature(ggbId, attrName, attrVal) {
 
@@ -2626,6 +2636,12 @@ function checkDisplayButtons() {
         webMapController.getTool("b_removePolygons").setVisible(true);
     } else {
         webMapController.getTool("b_removePolygons").setVisible(false);
+    }
+
+    if (showPrintTool) {
+        webMapController.getTool("b_printMap").setVisible(true);
+    } else {
+        webMapController.getTool("b_printMap").setVisible(false);
     }
 }
 

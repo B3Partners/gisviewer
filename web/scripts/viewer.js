@@ -70,12 +70,7 @@ function initMapComponent(){
 function hideIdentifyIcon(){
     if(webMapController instanceof FlamingoController) {
         webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
-
-        /* TODO: Hoort eigenlijk bij een onUpdateComplete aangeroepen
-         * te worden maar event lijkt niet meer te triggeren in Flamingo */
-        //checkScaleForLayers();
     }
-        
 }
 
 function initializeButtons(){

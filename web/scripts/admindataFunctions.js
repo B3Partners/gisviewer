@@ -21,6 +21,9 @@
  *along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+function showCsvError() {
+    getParent().messagePopup('Foutmelding', 'Het is niet gelukt om de CSV data op te halen', 'error');
+}
 
 function editFeature(ggbId, attrName, attrVal) {
     getParent().drawFeature(ggbId, attrName, attrVal);

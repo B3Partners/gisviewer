@@ -80,3 +80,7 @@ reguliere admindata of GetFeatureInfo --%>
         </c:otherwise>
     </c:choose>
 </script>
+
+<div style="display: none;">
+    <iframe id="csvIframe" name="csvIframe"></iframe>
+</div>

@@ -552,7 +552,7 @@ function createBronCaption(gegevensbron, simple, index) {
     var frm = $j('<form></form>').attr({
         method: 'post',
         action: csv_export_url,
-        target: '',
+        target: 'csvIframe',
         id: csvFrmId,
         style: 'float: left;'
     });

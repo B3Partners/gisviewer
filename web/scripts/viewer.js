@@ -3095,7 +3095,7 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         //append the balloon.
         $j(this.mapDiv).append(this.balloon);
 
-        this.webMapController.registerEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+        this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
     }
 
     /**
@@ -3195,7 +3195,7 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
     /*Remove the balloon*/
     this.remove = function(){
         this.balloon.remove();
-        this.webMapController.unRegisterEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+        this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
         delete this.balloon;
     }
     /*Get the DOM element where the content can be placed.*/

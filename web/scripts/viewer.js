@@ -73,7 +73,7 @@ function hideIdentifyIcon(){
 
         /* TODO: Hoort eigenlijk bij een onUpdateComplete aangeroepen
          * te worden maar event lijkt niet meer te triggeren in Flamingo */
-        checkScaleForLayers();
+        //checkScaleForLayers();
     }
         
 }

@@ -2585,7 +2585,7 @@ function handlePopupValue(value) {
 function returnHighlight(wkt) {
     /* Fout in back-end of wkt is een POINT */
     if (wkt.length > 0 && wkt == "-1") {
-        alert("Geen kaartobject geselecteerd.");
+        messagePopup("", "Geen object gevonden.", "information");
     }
 
     if (wkt.length > 0 && wkt != "-1")

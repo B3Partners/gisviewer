@@ -271,7 +271,7 @@ function iFramePopup(url, newpopup, title, width, height) {
         hide: 'slide',
         title: title,
         containment: 'document',
-        iframeFix: true,
+        autoOpen: false,
         dragStart: function(event, ui) {startDrag();},
         dragStop: function(event, ui) {stopDrag();},
         resizeStart: function(event, ui) {startResize();},
@@ -285,4 +285,41 @@ function iFramePopup(url, newpopup, title, width, height) {
 
 function closeiFramepopup() {
     prevpopup.dialog('close');
+}
+
+var $messageDialog = null;
+var messageDialogCreated = false;
+/* msgType = (help, information, error) */
+function messagePopup(title, message, msgType) {
+    if(!messageDialogCreated) {
+        $messageDialog = $j('<div></div>')
+        .html('<div class="msgIcon" style="float: left; padding: 10px;"></div><div class="msgText" style="float: left; padding: 10px; padding-left: 0px;"></div>')
+        .dialog({
+            autoOpen: false,
+            resizable: false,
+            buttons: {
+                "Sluiten": function() {
+                    $j(this).dialog("close");
+                }
+            }
+        });
+        
+        // Center sluiten button
+        $j(".ui-dialog-buttonpane").css({
+            "text-align": "center",
+            "border": "0px none",
+            "padding-left": "0px",
+            "padding-right": "0px"
+        });
+        $j(".ui-dialog-buttonpane button").css({
+            "float": "none",
+            "margin-left": "0px",
+            "margin-right": "0px"
+        });
+        messageDialogCreated = true;
+    }
+    if(msgType) $messageDialog.find(".msgIcon").html('<img src="images/icons/'+msgType+'.png" alt="'+msgType+'" />');
+    $messageDialog.find(".msgText").html(message);
+    $messageDialog.dialog("option", "title", title);
+    $messageDialog.dialog('open');
 }

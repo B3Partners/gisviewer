@@ -615,3 +615,56 @@ a.highlightlink:hover{
 .imagenoborder {
     border: 0px none;
 }
+
+.bronContainer {
+    border: 1px solid #D2E0EB;
+}
+
+#tabContainer .bronContainer {
+    border-top: 1px solid #19619B;
+    padding: 2px;
+}
+
+.bronCaption {
+    background-color: #D2E0EB;
+    /* border: 1px solid gray; */
+}
+
+.bronContent bronContentOpen {
+    border: 1px solid #D2E0EB;
+}
+
+.bronContent table{
+    width: 100%;
+}
+
+.tabField {
+    float: left;
+    margin-left: 2px;
+    padding-top: 3px;
+    height: 17px;
+    padding-left: 6px;
+    padding-right: 6px;
+    background: #FFF0C4;
+    color: #19619B;
+    font-weight: bold;
+    -moz-border-radius-topleft:10px;
+    border-radius-topleft: 10px;
+    -moz-border-radius-topright:10px;
+    border-radius-topright: 10px;
+    cursor: pointer;
+}
+.tabField.tabFieldActive {
+    background: #19619B;
+    color: #FFF0C4;
+    cursor: auto;
+}
+
+.childCaption {
+    background-color: #D2E0EB;
+    /* border: 1px solid gray; */
+}
+
+.bronChild bronChildEmpty {
+    border: 1px solid #D2E0EB;
+}

@@ -21,7 +21,7 @@
                 }
             }
         </script>
-        <style>
+        <style type="text/css">
             body {
                 color: #000000;
                 font-family: Arial, sans-serif;
@@ -35,14 +35,12 @@
                 text-decoration: underline;
                 font-weight: bold;
             }
-
             a:hover {
                 text-decoration: none;
             }
         </style>
     </head>
     <body>
-    
         <h2>Meerdere kaartlagen actief</h2>
         <p>Kies de kaartlaag met het object die u wilt selecteren.</p>
         <script type="text/javascript">
@@ -53,6 +51,5 @@
                 document.write("<p>"+link +"</p>");
             }
         </script>
-       
     </body>
 </html:html>

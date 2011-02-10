@@ -8,17 +8,13 @@ ieFixes = function() {
 $j(document).ready(function() { ieFixes(); });
 
 fixMenu = function() {
-    var topmenu = document.getElementById('topmenu');
+    var topmenu = $j('topmenu');
     if(topmenu) {
-        var menuitems = topmenu.getElementsByTagName('a');
         var totalmenuwidth = 0;
-        var x = 0;
-        for(x in menuitems) {
-            if(menuitems[x].className == 'activemenulink' || menuitems[x].className == 'menulink') {
-                totalmenuwidth += menuitems[x].offsetWidth;
-            }
-        }
-        topmenu.style.width = (totalmenuwidth + 5) + 'px';
+        topmenu.find("a").each(function () {
+            if($j(this).hasClass("activemenulink") || $j(this).hasClass("menulink"))totalmenuwidth += $j(this).outerWidth(true);
+        });
+        topmenu.css("width", (totalmenuwidth + 5) + 'px');
     }
 }
 

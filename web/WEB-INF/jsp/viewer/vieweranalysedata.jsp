@@ -34,7 +34,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         }else if (window.parent){
             return window.parent;
         }else{
-            alert("No parent found");
+            messagePopup("", "No parent found", "error");
+
             return null;
         }
     }

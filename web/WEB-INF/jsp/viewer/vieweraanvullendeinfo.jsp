@@ -209,7 +209,7 @@
     } else if (parent) {
         parent.hideLoading();
     } else {
-        alert("Er is een fout opgetreden bij het sluiten van de laadbalk.");
+        messagePopup("", "Er is een fout opgetreden bij het sluiten van de laadbalk.", "error");
     }
 
 </script>

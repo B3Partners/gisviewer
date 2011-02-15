@@ -281,7 +281,8 @@ function performSearch() {
                 var y = $j("#"+zoekVelden[i].id + '_y').val();
 
                 if (x == undefined || y == undefined || x == "" || y == "") {
-                    alert('Ongeldige coordinaten opgegeven.');
+                    messagePopup("Zoeken", "Ongeldige coordinaten opgegeven.", "error");
+
                     return;
                 }
 
@@ -294,7 +295,8 @@ function performSearch() {
                 var invoer = $j("#"+zoekVelden[i].id + '_schaal').val();
 
                 if (invoer == undefined || invoer == "" || invoer <= 0) {
-                    alert('Ongeldige schaal opgegeven.');
+                    messagePopup("Zoeken", "Ongeldige schaal opgegeven.", "error");
+
                     return;
                 }
 
@@ -329,7 +331,10 @@ function handleZoekResultaat(searchResultId){
      }
 
     if (parentZc.zoekVelden==undefined || parentZc.zoekVelden.length==0){
-        alert("Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: "+parentZc.id);
+
+        var msg = "Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: "+parentZc.id;
+        messagePopup("Zoeken", msg, "error");
+
         return false;
     }
 

@@ -5,7 +5,7 @@ function handler(msg) {
 
     if (message != '')
     {
-        alert(message);
+        messagePopup("Foutmelding", message, "error");
     }
 }
 // // main list that holds current visible layers

@@ -10,7 +10,6 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 
 <script type="text/javascript">
-
     var baseNameViewer = "${contextPath}";
     
     function catchEmpty(defval){
@@ -720,7 +719,7 @@
     </c:if>
     if(expandNodes!=null){
         for (var i=0; i < expandNodes.length; i++){
-            alert(expandNodes[i]);
+            messagePopup("", expandNodes[i], "information");
             treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
         }
     }

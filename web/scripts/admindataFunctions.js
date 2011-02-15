@@ -799,7 +799,7 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
  */
 function handleSetAttribute(str){
     if (str[0] == null || str[0] == "") {
-        alert("Kon attribuut niet instellen.");
+        messagePopup("", "Kon attribuut niet instellen.", "error");
     } else {
         document.getElementById(str[0]).innerHTML=str[1];
     }
@@ -817,7 +817,9 @@ function handleSetText(str) {
 
 /* Dummy function to test Javascript function in objectdata */
 function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
-    alert("elem=" + element + " themaid=" + themaid + " keyname=" + keyName + " keyval=" + keyValue + " attrname=" + attributeName + " attrval=" + attributeValue + " eenh=" + eenheid);
+    var msg = "elem=" + element + " themaid=" + themaid + " keyname=" + keyName + " keyval=" + keyValue + " attrname=" + attributeName + " attrval=" + attributeValue + " eenh=" + eenheid;
+
+    messagePopup("doDummy", msg, "information");
 }
 
 /**
@@ -831,7 +833,7 @@ function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, 
  */
 function handleGetArea(str) {
     if (str[0] == null || str[0] == "") {
-        alert("Kon oppervlakte niet berekenen.");
+        messagePopup("", "Kon oppervlakte niet berekenen.", "error");
     } else {
         document.getElementById(str[0]).innerHTML=str[1];
     }
@@ -857,7 +859,8 @@ function getParent(){
     }else if (window.parent){
         return window.parent;
     }else{
-        alert("No parent found");
+        messagePopup("", "No parent found", "error");
+
         return null;
     }
 }

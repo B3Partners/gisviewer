@@ -5,7 +5,7 @@ function handler(msg) {
 
     if (message != '')
     {
-        messagePopup("Foutmelding", message, "error");
+        messagePopup("", message, "information");
     }
 }
 // // main list that holds current visible layers
@@ -2050,7 +2050,6 @@ function onChangeTool(id, event) {
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function onIdentify(movie,extend){
-
     if(!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }

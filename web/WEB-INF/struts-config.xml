@@ -30,7 +30,7 @@
             <form-property name="landscape" type="java.lang.String" initial="true"/>
             <form-property name="pageSize" type="java.lang.String" initial="A4"/>
             <form-property name="outputType" type="java.lang.String" initial="PDF_PRINT"/>
-           <form-property name="remark" type="java.lang.String"/>
+            <form-property name="remark" type="java.lang.String"/>
         </form-bean>
         <form-bean name="meldingForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>
@@ -89,6 +89,11 @@
             <forward name="loginError" path="login"/>
             <forward name="logout" path="/index.do" redirect="true"/>
             <forward name="help" path="help"/>
+        </action>
+
+        <action path="/reset" type="nl.b3p.gis.viewer.services.ResetAction">
+            <forward name="success" path="reset"/>
+            <forward name="login" path="login"/>
         </action>
 
         <action path="/indexlist" forward="/index.do?list=t"/>

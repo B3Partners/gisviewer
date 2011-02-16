@@ -19,6 +19,10 @@
         <put name="title" value="Inlogscherm" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/login.jsp"/>
     </definition>
+     <definition name="reset" extends="algemeen">
+        <put name="title" value="Reset" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/reset.jsp"/>
+    </definition>
     <definition name="loginError" extends="algemeen">
         <put name="title" value="Fout bij inloggen" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/loginError.jsp"/>

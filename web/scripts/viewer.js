@@ -783,8 +783,8 @@ function createLabel(container, item) {
             if (item.active){
                 setActiveCluster(item, true);
             }
-
         }
+        var hasChildsWithLegend=false;
         if (item.hide_tree && item.callable){
             // hack om toggle plaatje uit te zetten als
             // cluster onzichtbare onderliggende kaartlagen heeft
@@ -793,11 +793,29 @@ function createLabel(container, item) {
             img.src = globalTreeOptions["layermaindiv"].toggleImages["leaf"]
             img.theItem=item;
             container.togglea = img;
+
+            // als een cluster childs heeft en legend moet in tree worden getoond.
+            if (showLegendInTree && item.children){
+                //controleer of er een NIET cluster child een legend heeft.
+                var hasChildsWithLegend=false;
+                for (var i=0; i < item.children.length && !hasChildsWithLegend; i++){
+                    var child=item.children[i];
+                    if (!child.cluster && child.legendurl!=undefined){
+                        hasChildsWithLegend=true;
+                    }
+                }
+                if (hasChildsWithLegend){
+                    container.appendChild(document.createTextNode('  '));
+                    container.appendChild(createTreeLegendIcon());                    
+                }
+            }
         }
         if (!item.hide_tree || item.callable){
             container.appendChild(document.createTextNode('  '));
             container.appendChild(createMetadatLink(item));
-        } else {
+        }
+        container.appendChild(createTreeLegendDiv(item));
+        if (item.hide_tree && !item.callable){
             return true; //hide
         }
 
@@ -910,20 +928,35 @@ function loadTreeLegendImage(divid) {
 
     var foundlegend = $divobj.find("img.treeLegendImage");
     if(foundlegend.length == 0) {
-        var legendimg = document.createElement("img");
-        legendimg.name = item.title;
-        legendimg.alt = "Legenda " + item.title;
-        legendimg.onerror=treeImageError;
-        legendimg.onload=treeImageOnload;
-        legendimg.className = 'treeLegendImage';        
-        legendimg.src = item.legendurl;
-
-        divobj.appendChild(legendimg);
+        if (item.cluster){
+            var addedImages=0;
+            for (var i=0; i < item.children.length; i++){
+                var child=item.children[i];
+                if (child.legendurl!=undefined){
+                    if (addedImages>0)
+                        divobj.appendChild(document.createElement("br"));
+                    var legendimg=createTreeLegendImage(child);
+                    divobj.appendChild(legendimg);
+                    addedImages++;
+                }
+            }
+        }else{
+            var legendimg=createTreeLegendImage(item);
+            divobj.appendChild(legendimg);
+        }
     }
-
     $j(divobj).toggle();
 }
-
+function createTreeLegendImage(item){
+    var legendimg = document.createElement("img");
+    legendimg.name = item.title;
+    legendimg.alt = "Legenda " + item.title;
+    legendimg.onerror=treeImageError;
+    legendimg.onload=treeImageOnload;
+    legendimg.className = 'treeLegendImage';
+    legendimg.src = item.legendurl;
+    return legendimg;
+}
 function createTreeLegendDiv(item) {
     var id=item.id + '#tree#' + item.wmslayers;
 

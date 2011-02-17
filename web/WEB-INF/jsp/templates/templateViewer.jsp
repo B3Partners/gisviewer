@@ -71,7 +71,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     Bezig met laden van GIS viewer<br /><br />
                 </div>
             </div>
-            <img src="images/loadingmaplimburg.jpg" alt="Bezig met laden" id="loadingimage" />
+            <img src="images/loadingmap.jpg" alt="Bezig met laden" id="loadingimage" />
         </div>
         
         <div id="content_viewer">

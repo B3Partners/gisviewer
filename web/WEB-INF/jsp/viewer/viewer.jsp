@@ -481,9 +481,11 @@
 <div id="tab_container">
 
     <div id="treevak" style="display: none;" class="tabvak">
+        <div>
         <form id="treeForm">
             <div id="layermaindiv" style="display: none;"></div>
-        </form>
+        </form></div>
+        <div id="timings"></div>
     </div>
 
     <form id="volgordeForm">

@@ -84,6 +84,7 @@ function writeNoResults() {
     }
 }
 
+var rootBronContainer = true;
 var idcounter = 1;
 function handleGetGegevensBron(gegevensbron) {
     // aftellen verwerkte gegevensbron
@@ -118,6 +119,10 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
         "id": "bronContainer" + htmlId + gegevensbron.id,
         "class": "bronContainer"
     });
+    if(rootBronContainer) {
+        bronContainer.addClass("rootBronContainer");
+        rootBronContainer = false;
+    }
 
     // Create table content
     if(gegevensbron.records) {
@@ -164,6 +169,10 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
         "id": "bronContainer" + htmlId + gegevensbron.id,
         "class": "bronContainer tabbedContainer " + tab
     });
+    if(rootBronContainer) {
+        bronContainer.addClass("rootBronContainer");
+        rootBronContainer = false;
+    }
 
     var tabFieldId = "tabField_" + tab;
     var tabField = $j('<div></div>').attr({
@@ -265,6 +274,10 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
         "id": "bronContainer" + htmlId + gegevensbron.id,
         "class": "bronContainer"
     });
+    if(rootBronContainer) {
+        bronContainer.addClass("rootBronContainer");
+        rootBronContainer = false;
+    }
 
     // Create caption
     var bronCaption = createBronCaption(gegevensbron, true, null);
@@ -314,7 +327,6 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     $j('#' + htmlId).append(bronContainer);
 }
 
-var rootBronContainer = true;
 function handleGetGegevensBronMulti(gegevensbron) {
     var htmlId = gegevensbron.parentHtmlId;
 

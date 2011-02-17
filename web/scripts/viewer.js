@@ -160,6 +160,13 @@ function initializeButtons(){
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_print,b_print);
     webMapController.addTool(bu_print);
 
+    var bu_overview = webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'Overzichtskaart'
+    });
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_overview,b_overview);
+    webMapController.addTool(bu_overview);
+
     var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {
         title: 'Meten'
     });
@@ -2510,6 +2517,12 @@ function b_buffer(id, event) {
 
 function b_print(id, event) {    
     exportMap();
+}
+
+function b_overview(id,event) {
+    if(webMapController instanceof FlamingoController) {
+        webMapController.getMap().getFrameworkMap().callMethod('overviewwindow','show');
+    }
 }
 
 function drawFeature(ggbId, attrName, attrVal) {

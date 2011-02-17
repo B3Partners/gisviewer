@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_showOverzicht.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
@@ -58,6 +58,10 @@
                 <fmc:JsButton id="b_printMap" left="440" top="0" width="21" height="21" iconurl_up="images/print.png" iconurl_over="images/print.png" iconurl_sel="images/print.png" iconurl_dis="images/print.png" label="" toggle="false" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="Print example" nl="Printvoorbeeld"/>
                 </fmc:JsButton>
+
+                <fmc:JsButton id="b_showOverzicht" left="470" top="0" width="21" height="21" iconurl_up="images/map.png" iconurl_over="images/map.png" iconurl_sel="images/map.png" iconurl_dis="images/map.png" label="" toggle="true" visible="true" enabled="true" selected="false">
+                    <string id="tooltip" en="Show map overview" nl="Toon overzichtskaart"/>
+                </fmc:JsButton>
             </fmc:Container>
 
         </fmc:ToolGroup>
@@ -86,4 +90,12 @@
             <fmc:LayerIdentifyIcon  id="identifyicon"/>          
         </fmc:Map>
     </fmc:Container>
+
+<fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="true" canclose="true" title="Overzicht" defocusalpha="75">
+    <fmc:Map id="map_overview" left="0" top="0" width="150" height="350" minscale="80" extent="168000,305000,214000,422000" fullextent="168000,305000,214000,422000">
+        <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
+        <fmc:LayerImage id="oimage" imageurl="assets/limburg/limburg.swf" extent="168000,305000,214000,422000" listento="map1"/>
+    </fmc:Map>
+</fmc:Window>
+
 </FLAMINGO>

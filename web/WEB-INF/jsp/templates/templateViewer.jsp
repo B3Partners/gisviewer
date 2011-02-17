@@ -65,6 +65,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </head>
     <body class="viewerbodyelement">
         <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
+        <div id="loadingscreen">
+            <div id="loadingfilter">
+                <div id="loadingmessage">
+                    Bezig met laden van GIS viewer<br /><br />
+                </div>
+            </div>
+            <img src="images/loadingmaplimburg.jpg" alt="Bezig met laden" id="loadingimage" />
+        </div>
+        
         <div id="content_viewer">
             <tiles:insert attribute="infobalk" />
             <tiles:insert attribute="content" />

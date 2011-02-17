@@ -840,6 +840,10 @@
         s.src='http://kottke.org/plus/misc/asteroids.js';
     }
 
+    $j(document).ready(function(){
+        $j("#loadingscreen").hide();
+    });
+
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>

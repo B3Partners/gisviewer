@@ -620,6 +620,10 @@ a.highlightlink:hover{
     border: 1px solid #D2E0EB;
 }
 
+.bronContainer.rootBronContainer {
+    float: left;
+}
+
 #tabContainer .bronContainer {
     border-top: 1px solid #19619B;
     padding: 2px;
@@ -630,11 +634,11 @@ a.highlightlink:hover{
     /* border: 1px solid gray; */
 }
 
-.bronContent bronContentOpen {
+.bronContent, .bronContentOpen {
     border: 1px solid #D2E0EB;
 }
 
-.bronContent table{
+.bronContent table {
     width: 100%;
 }
 

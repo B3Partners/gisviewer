@@ -314,6 +314,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     $j('#' + htmlId).append(bronContainer);
 }
 
+var rootBronContainer = true;
 function handleGetGegevensBronMulti(gegevensbron) {
     var htmlId = gegevensbron.parentHtmlId;
 
@@ -322,6 +323,10 @@ function handleGetGegevensBronMulti(gegevensbron) {
         "id": "bronContainer" + htmlId + gegevensbron.id,
         "class": "bronContainer"
     });
+    if(rootBronContainer) {
+        bronContainer.addClass("rootBronContainer");
+        rootBronContainer = false;
+    }
 
     // Create caption
     var bronCaption = createBronCaption(gegevensbron, false, null);
@@ -413,9 +418,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
                     .append(childDiv);
                     tr.append(childTd);
                     bronTableBody.append(tr);
-
-                    toggleIcon.click();
-
+                    // toggleIcon.click();
                 });
             }
         });
@@ -430,14 +433,14 @@ function handleGetGegevensBronMulti(gegevensbron) {
     bronContent.append(bronTable.append(bronTableHead).append(bronTableBody));
     bronContainer
     .append(bronCaption)
-    .append(bronContent);
+    .append(bronContent)
     $j('#' + htmlId).append(bronContainer);
 
     // child loading weghalen indien aanwezig
     $j('#'+htmlId).siblings('.childLoading').hide();
 
     // alle childs pre-loaden
-    $j.each(gegevensbron.records, function(index, record) {
+    /* $j.each(gegevensbron.records, function(index, record) {
         if(record.childs != null && record.childs.length > 0) {
             $j.each(record.childs, function(index2, child) {
                 var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id);
@@ -445,7 +448,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 if(!childLoaded) toggleBron(childDivId);
             });
         }
-    });
+    }); */
 
 }
 
@@ -455,7 +458,7 @@ function loadChild(bronContentId, beanId, wkt, beanCql) {
     if($bronContentDiv.hasClass("bronChildEmpty"))
     {
         JCollectAdmindata.fillGegevensBronBean(beanId, 0, wkt, beanCql, bronContentId, handleGetGegevensBron);
-        $bronContentDiv.removeClass("bronChildEmpty").addClass("bronContentOpen");
+        $bronContentDiv.removeClass("bronChildEmpty").addClass("bronContentClosed");
         $j("#childCaption"+bronContentId).hide();
         $j('#childLoading'+bronContentId).show();
         window.setTimeout(function() {

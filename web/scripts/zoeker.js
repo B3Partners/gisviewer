@@ -599,7 +599,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
     }
 
     if (zoekVelden.length > 0) {
-        container.append($j('<input type="button" />').attr("value", " Zoek ").addClass("knop").click(function() {
+        container.append($j('<input type="button" />').attr("value", " Zoek ").attr("id","searchButton").addClass("knop").click(function() {
             performSearch();
         }));
 
@@ -630,7 +630,18 @@ function handleZoekVeldinputList(list){
         var controlElement=document.getElementById(controlElementName);
         $j(controlElement).removeAttr("disabled");
         dwr.util.removeAllOptions(controlElementName);
+        /*maak een leeg object en voeg die toe*/
+        var kiesObj=new Array();
+        kiesObj.push({id:" ", label: "Maak uw keuze ..."});        
+        dwr.util.addOptions(controlElementName,kiesObj,'id','label');
+
         dwr.util.addOptions(controlElementName,list,"id","label");
+        //als er maar 1 zoekveld is gelijk zoeken bij selecteren dropdown.
+        if (zc.zoekVelden.length==1){
+            $j(controlElement).change(function(){
+                $j("#searchButton").click();
+            });
+        }
     }
 }
 

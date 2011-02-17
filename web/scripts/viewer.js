@@ -73,6 +73,12 @@ function hideIdentifyIcon(){
     }
 }
 
+function showIdentifyIcon(){
+    if(webMapController instanceof FlamingoController) {
+        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','show');
+    }
+}
+
 function initializeButtons(){
     /*ie bug fix*/
     if (ieVersion!=undefined && ieVersion <= 7){
@@ -2078,6 +2084,7 @@ var orderLayerBox= document.getElementById("orderLayerBox");
 function onChangeTool(id, event) {
     if (id == 'identify') {
         btn_highLightSelected = false;
+        hideIdentifyIcon();
     }
 }
 
@@ -2123,13 +2130,17 @@ function onIdentify(movie,extend){
         } else {
             webMapController.activateTool("identify");
         }
-        
+
+        hideIdentifyIcon();
+
         highLightThemaObject(geom);
 
     } else {
         btn_highLightSelected = false;
         
         webMapController.activateTool("identify");
+
+        showIdentifyIcon();
 
         handleGetAdminData(geom, null, false);
     }

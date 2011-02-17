@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var showTimings = true;
+    var showTimings = false;
 
     var startViewer = null;
     var endViewer = null;

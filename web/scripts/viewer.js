@@ -31,6 +31,7 @@ var startLayerIndex=0;
 var balloon;
 
 var zoomBox,pan,prevExtent,identify;
+
 function initMapComponent(){
 
     mapviewer = viewerType;
@@ -63,8 +64,6 @@ function initMapComponent(){
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
-    //webMapController.registerEvent(Event.ON_CHANGE_EXTENT,webMapController.getMap(),hideIdentifyIcon);
-    //webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(),hideIdentifyIcon);
 }
 
 function hideIdentifyIcon(){
@@ -79,7 +78,14 @@ function showIdentifyIcon(){
     }
 }
 
-function initializeButtons(){
+function initializeButtons() {
+    var startButtons = null;
+    var endButtons = null;
+
+    if (showTimings) {
+        startButtons = new Date();
+    }
+
     /*ie bug fix*/
     if (ieVersion!=undefined && ieVersion <= 7){
         var viewport= document.getElementById('OpenLayers.Map_2_OpenLayers_ViewPort');
@@ -178,6 +184,13 @@ function initializeButtons(){
 
     var zoombar= webMapController.createTool("zoombar",Tool.ZOOM_BAR);
     webMapController.addTool(zoombar);
+
+    if (showTimings) {
+        endButtons = new Date();
+
+        var timeButtons = endButtons.getTime() - startButtons.getTime();
+        $j("#timings").append("Init buttons: " + timeButtons + "<br />");
+    }
 }
 
 initMapComponent();
@@ -193,10 +206,24 @@ var multiPolygonBufferWkt = null;
 
 var alleLayers = new Array();
 
-function doInitSearch(){
+function doInitSearch() {
+    var startSearch = null;
+    var endSearch = null;
+
+    if (showTimings) {
+        startSearch = new Date();
+    }
+
     if (searchConfigId.length>0 && search.length>0){
         showLoading();
         JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
+    }
+
+    if (showTimings) {
+        endSearch = new Date();
+
+        var timeSearch = endSearch.getTime() - startSearch.getTime();
+        $j("#timings").append("Search init: " + timeSearch + "<br />");
     }
 }
 function handleInitSearch(list){
@@ -1395,7 +1422,14 @@ function setScaleForTree(item,scale){
     }
 }
 
-function refreshLayer(doRefreshOrder) {    
+function refreshLayer(doRefreshOrder) {
+    var startRefresh = null;
+    var endRefresh = null;
+
+    if (showTimings) {
+        startRefresh = new Date();
+    }
+
     var local_refresh_handle = refresh_timeout_handle;
 
     if (doRefreshOrder == undefined) {
@@ -1546,6 +1580,13 @@ function refreshLayer(doRefreshOrder) {
     for(var i = 0 ; i < lagen.length;i++){
         var laag = lagen[i];
         webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
+    }
+
+    if (showTimings) {
+        endRefresh = new Date();
+
+        var timeRefresh = endRefresh.getTime() - startRefresh.getTime();
+        $j("#timings").append("Refresh layer: " + timeRefresh + "<br />");
     }
 }
 
@@ -2192,6 +2233,13 @@ function layerBoxSort(a, b) {
 var firstTimeOninit = true;
 
 function onFrameworkLoaded(){
+    var startFrame = null;
+    var endFrame = null;
+
+    if (showTimings) {
+        startFrame = new Date();
+    }
+
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
@@ -2242,6 +2290,13 @@ function onFrameworkLoaded(){
     }
     mapInitialized=true;
     doInitSearch();
+
+    if (showTimings) {
+        endFrame = new Date();
+
+        var timeFrame = endFrame.getTime() - startFrame.getTime();
+        $j("#timings").append("Framework loaded: " + timeFrame + "<br />");
+    }
 }
 
 function ie6_hack_onInit(){
@@ -2658,7 +2713,14 @@ function returnHighlight(wkt) {
     }
 }
 
-function checkDisplayButtons() {    
+function checkDisplayButtons() {
+    var startDisplay = null;
+    var endDisplay = null;
+
+    if (showTimings) {
+        startDisplay = new Date();
+    }
+
     if (showRedliningTools) {
         if (webMapController.getTool("redLiningContainer")){
             webMapController.getTool("redLiningContainer").setVisible(true);
@@ -2706,6 +2768,13 @@ function checkDisplayButtons() {
     } else {
         webMapController.getTool("b_printMap").setVisible(false);
     }
+
+    if (showTimings) {
+        endDisplay = new Date();
+
+        var timeDisplay = endDisplay.getTime() - startDisplay.getTime();
+        $j("#timings").append("Check display: " + timeDisplay + "<br />");
+    }
 }
 
 function onGetCapabilities (id,params){
@@ -2713,12 +2782,16 @@ function onGetCapabilities (id,params){
 }
 //do only ones.
 var initialized=false;
-function onConfigComplete(id,params){    
+function onConfigComplete(id,params){
     if (!initialized){
         initialized=true;
+
         initializeButtons();
         checkDisplayButtons();
-        onFrameworkLoaded(); // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(), nu niet meer met flamingoevent
+
+        // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(),
+        // nu niet meer met flamingoevent
+        onFrameworkLoaded();
     }
 }
 

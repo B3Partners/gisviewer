@@ -1,3 +1,14 @@
+<script type="text/javascript">
+    var showTimings = true;
+
+    var startViewer = null;
+    var endViewer = null;
+
+    if (showTimings) {
+        startViewer = new Date();
+    }
+</script>
+
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
@@ -680,6 +691,13 @@
         expandAll = false;
     }
 
+    var startTree = null;
+    var endTree = null;
+
+    if (showTimings) {
+        startTree = new Date();
+    }
+
     treeview_create({
         "id": "layermaindiv",
         "root": themaTree,
@@ -694,6 +712,13 @@
         "saveScrollState": true,
         "expandAll": expandAll
     });
+
+    if (showTimings) {
+        endTree = new Date();
+
+        var timeTree = endTree.getTime() - startTree.getTime();
+        $j("#timings").append("Tree create: " + timeTree + "<br />");
+    }
 
     <c:if test="${not empty activeTab}">
         if (document.getElementById("${activeTab}")){
@@ -818,3 +843,12 @@
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>
+
+<script type="text/javascript">
+if (showTimings) {
+    endViewer = new Date();
+
+    var timeViewer = endViewer.getTime() - startViewer.getTime();
+    $j("#timings").append("Viewer.jsp: " + timeViewer + "<br />");
+}
+</script>

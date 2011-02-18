@@ -79,13 +79,6 @@ function showIdentifyIcon(){
 }
 
 function initializeButtons() {
-    var startButtons = null;
-    var endButtons = null;
-
-    if (showTimings) {
-        startButtons = new Date();
-    }
-
     /*ie bug fix*/
     if (ieVersion!=undefined && ieVersion <= 7){
         var viewport= document.getElementById('OpenLayers.Map_2_OpenLayers_ViewPort');
@@ -183,13 +176,6 @@ function initializeButtons() {
 
     var zoombar= webMapController.createTool("zoombar",Tool.ZOOM_BAR);
     webMapController.addTool(zoombar);
-
-    if (showTimings) {
-        endButtons = new Date();
-
-        var timeButtons = endButtons.getTime() - startButtons.getTime();
-        $j("#timings").append("Init buttons: " + timeButtons + "<br />");
-    }
 }
 
 initMapComponent();
@@ -206,23 +192,9 @@ var multiPolygonBufferWkt = null;
 var alleLayers = new Array();
 
 function doInitSearch() {
-    var startSearch = null;
-    var endSearch = null;
-
-    if (showTimings) {
-        startSearch = new Date();
-    }
-
     if (searchConfigId.length>0 && search.length>0){
         showLoading();
         JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
-    }
-
-    if (showTimings) {
-        endSearch = new Date();
-
-        var timeSearch = endSearch.getTime() - startSearch.getTime();
-        $j("#timings").append("Search init: " + timeSearch + "<br />");
     }
 }
 function handleInitSearch(list){
@@ -1351,23 +1323,9 @@ function doRefreshLayer() {
 
 /*Check scale for all layers*/
 function checkScaleForLayers() {
-    var startScale = null;
-    var endScale = null;
-
-    if (showTimings) {
-        startScale = new Date();
-    }
-
     var currentscale = webMapController.getMap().getScale();
     
     setScaleForTree(themaTree,currentscale);
-
-    if (showTimings) {
-        endScale = new Date();
-
-        var timeScale = endScale.getTime() - startScale.getTime();
-        $j("#timings").append("Check scale: " + timeScale + "<br />");
-    }
 }
 
 
@@ -1436,13 +1394,6 @@ function setScaleForTree(item,scale){
 }
 
 function refreshLayer(doRefreshOrder) {
-    var startRefresh = null;
-    var endRefresh = null;
-
-    if (showTimings) {
-        startRefresh = new Date();
-    }
-
     var local_refresh_handle = refresh_timeout_handle;
 
     if (doRefreshOrder == undefined) {
@@ -1593,13 +1544,6 @@ function refreshLayer(doRefreshOrder) {
     for(var i = 0 ; i < lagen.length;i++){
         var laag = lagen[i];
         webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
-    }
-
-    if (showTimings) {
-        endRefresh = new Date();
-
-        var timeRefresh = endRefresh.getTime() - startRefresh.getTime();
-        $j("#timings").append("Refresh layer: " + timeRefresh + "<br />");
     }
 }
 
@@ -2053,13 +1997,6 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {
-    var startLegend = null;
-    var endLegend = null;
-
-    if (showTimings) {
-        startLegend = new Date();
-    }
-
     webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
@@ -2109,13 +2046,6 @@ function refreshLegendBox() {
     }
     if (invisibleLayerItems.length>0) {
         enabledLayerItems = enabledLayerItems.concat(invisibleLayerItems);
-    }
-
-    if (showTimings) {
-        endLegend = new Date();
-
-        var timeLegend = endLegend.getTime() - startLegend.getTime();
-        $j("#timings").append("Legend box: " + timeLegend + "<br />");
     }
 }
 
@@ -2260,13 +2190,6 @@ function layerBoxSort(a, b) {
 var frameWorkInitialized = false;
 
 function onFrameworkLoaded(){
-    var startFrame = null;
-    var endFrame = null;
-
-    if (showTimings) {
-        startFrame = new Date();
-    }
-
     if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
         document.getElementById("treeForm").reset();
     }
@@ -2319,13 +2242,6 @@ function onFrameworkLoaded(){
     mapInitialized=true;
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     doInitSearch();
-
-    if (showTimings) {
-        endFrame = new Date();
-
-        var timeFrame = endFrame.getTime() - startFrame.getTime();
-        $j("#timings").append("Framework loaded: " + timeFrame + "<br />");
-    }
 }
 
 function ie6_hack_onInit(){
@@ -2378,13 +2294,6 @@ function moveAndIdentify(minx,miny,maxx,maxy){
 }
 
 function onAllLayersFinishedLoading(mapId){
-    var startLayers = null;
-    var endLayers = null;
-
-    if (showTimings) {
-        startLayers = new Date();
-    }
-
     checkScaleForLayers();
 
     if(nextIdentifyExtent!=null){
@@ -2393,13 +2302,6 @@ function onAllLayersFinishedLoading(mapId){
     }
 
     $j("#loadingscreen").hide();
-
-    if (showTimings) {
-        endLayers = new Date();
-
-        var timeLayers = endLayers.getTime() - startLayers.getTime();
-        $j("#timings").append("Layers finished loading: " + timeLayers + "<br />");
-    }
 }
 
 if(useSortableFunction) {
@@ -2759,13 +2661,6 @@ function returnHighlight(wkt) {
 }
 
 function checkDisplayButtons() {
-    var startDisplay = null;
-    var endDisplay = null;
-
-    if (showTimings) {
-        startDisplay = new Date();
-    }
-
     if (showRedliningTools) {
         if (webMapController.getTool("redLiningContainer")){
             webMapController.getTool("redLiningContainer").setVisible(true);
@@ -2812,13 +2707,6 @@ function checkDisplayButtons() {
         webMapController.getTool("b_printMap").setVisible(true);
     } else {
         webMapController.getTool("b_printMap").setVisible(false);
-    }
-
-    if (showTimings) {
-        endDisplay = new Date();
-
-        var timeDisplay = endDisplay.getTime() - startDisplay.getTime();
-        $j("#timings").append("Check display: " + timeDisplay + "<br />");
     }
 }
 

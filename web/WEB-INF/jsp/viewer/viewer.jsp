@@ -1,14 +1,3 @@
-<script type="text/javascript">
-    var showTimings = true;
-
-    var startViewer = null;
-    var endViewer = null;
-
-    if (showTimings) {
-        startViewer = new Date();
-    }
-</script>
-
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
@@ -689,14 +678,7 @@
     var expandAll=catchEmpty(${configMap["expandAll"]});
     if(typeof expandAll === 'undefined') {
         expandAll = false;
-    }
-
-    var startTree = null;
-    var endTree = null;
-
-    if (showTimings) {
-        startTree = new Date();
-    }
+    }    
 
     treeview_create({
         "id": "layermaindiv",
@@ -711,14 +693,7 @@
         "saveExpandedState": true,
         "saveScrollState": true,
         "expandAll": expandAll
-    });
-
-    if (showTimings) {
-        endTree = new Date();
-
-        var timeTree = endTree.getTime() - startTree.getTime();
-        $j("#timings").append("Tree create: " + timeTree + "<br />");
-    }
+    });    
 
     <c:if test="${not empty activeTab}">
         if (document.getElementById("${activeTab}")){
@@ -838,17 +813,15 @@
         s.type='text/javascript';
         document.body.appendChild(s);
         s.src='http://kottke.org/plus/misc/asteroids.js';
-    }    
+    }
 
+    function hideLoadingScreen() {
+        $j("#loadingscreen").hide();
+    }
+
+    // Laadscherm na 60 seconden zelf weghalen
+    // Hij zou weg moeten gaan in onAllLayersFinishedLoading in viewer.js
+    var hideScreen = setTimeout("hideLoadingScreen();", 60000);
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>
-
-<script type="text/javascript">
-if (showTimings) {
-    endViewer = new Date();
-
-    var timeViewer = endViewer.getTime() - startViewer.getTime();
-    $j("#timings").append("Viewer.jsp: " + timeViewer + "<br />");
-}
-</script>

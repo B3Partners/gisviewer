@@ -1351,10 +1351,24 @@ function doRefreshLayer() {
 }
 
 /*Check scale for all layers*/
-function checkScaleForLayers() {    
+function checkScaleForLayers() {
+    var startScale = null;
+    var endScale = null;
+
+    if (showTimings) {
+        startScale = new Date();
+    }
+
     var currentscale = webMapController.getMap().getScale();
     
     setScaleForTree(themaTree,currentscale);
+
+    if (showTimings) {
+        endScale = new Date();
+
+        var timeScale = endScale.getTime() - startScale.getTime();
+        $j("#timings").append("Check scale: " + timeScale + "<br />");
+    }
 }
 
 
@@ -2040,6 +2054,13 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {
+    var startLegend = null;
+    var endLegend = null;
+
+    if (showTimings) {
+        startLegend = new Date();
+    }
+
     webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
@@ -2089,6 +2110,13 @@ function refreshLegendBox() {
     }
     if (invisibleLayerItems.length>0) {
         enabledLayerItems = enabledLayerItems.concat(invisibleLayerItems);
+    }
+
+    if (showTimings) {
+        endLegend = new Date();
+
+        var timeLegend = endLegend.getTime() - startLegend.getTime();
+        $j("#timings").append("Legend box: " + timeLegend + "<br />");
     }
 }
 
@@ -2230,7 +2258,7 @@ function layerBoxSort(a, b) {
     return a.theItem.order - b.theItem.order;
 }
 
-var firstTimeOninit = true;
+var frameWorkInitialized = false;
 
 function onFrameworkLoaded(){
     var startFrame = null;
@@ -2244,9 +2272,7 @@ function onFrameworkLoaded(){
         document.getElementById("treeForm").reset();
     }
 
-    if (firstTimeOninit) {
-
-        firstTimeOninit=false;
+    if (!frameWorkInitialized) {
 
         // layer added in reverse order
         // layer with lowest order number should be on top
@@ -2288,6 +2314,9 @@ function onFrameworkLoaded(){
             }
         }
     }
+
+    frameWorkInitialized = true;
+    
     mapInitialized=true;
     doInitSearch();
 
@@ -2349,12 +2378,28 @@ function moveAndIdentify(minx,miny,maxx,maxy){
 }
 
 function onAllLayersFinishedLoading(mapId){
+    var startLayers = null;
+    var endLayers = null;
+
+    if (showTimings) {
+        startLayers = new Date();
+    }
+
     checkScaleForLayers();
 
     if(nextIdentifyExtent!=null){
         doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
         nextIdentifyExtent=null;
-    }   
+    }
+
+    $j("#loadingscreen").hide();
+
+    if (showTimings) {
+        endLayers = new Date();
+
+        var timeLayers = endLayers.getTime() - startLayers.getTime();
+        $j("#timings").append("Layers finished loading: " + timeLayers + "<br />");
+    }
 }
 
 if(useSortableFunction) {
@@ -2780,12 +2825,11 @@ function checkDisplayButtons() {
 function onGetCapabilities (id,params){
     hideLoading();
 }
+
 //do only ones.
 var initialized=false;
 function onConfigComplete(id,params){
-    if (!initialized){
-        initialized=true;
-
+    if (!initialized) {        
         initializeButtons();
         checkDisplayButtons();
 
@@ -2793,6 +2837,8 @@ function onConfigComplete(id,params){
         // nu niet meer met flamingoevent
         onFrameworkLoaded();
     }
+
+    initialized=true;
 }
 
 function getBookMark() {    

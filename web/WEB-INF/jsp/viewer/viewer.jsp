@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var showTimings = false;
+    var showTimings = true;
 
     var startViewer = null;
     var endViewer = null;
@@ -838,11 +838,7 @@
         s.type='text/javascript';
         document.body.appendChild(s);
         s.src='http://kottke.org/plus/misc/asteroids.js';
-    }
-
-    $j(document).ready(function(){
-        $j("#loadingscreen").hide();
-    });
+    }    
 
 </script>
 

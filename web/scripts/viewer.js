@@ -94,8 +94,7 @@ function initializeButtons() {
         }
     }
 
-    webMapController.createPanel("toolGroup");
-    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
+    webMapController.createPanel("toolGroup");    
 
     webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
 
@@ -2318,6 +2317,7 @@ function onFrameworkLoaded(){
     frameWorkInitialized = true;
     
     mapInitialized=true;
+    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     doInitSearch();
 
     if (showTimings) {

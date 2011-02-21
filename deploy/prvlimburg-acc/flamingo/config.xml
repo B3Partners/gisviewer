@@ -94,7 +94,7 @@
 <fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="true" canclose="true" title="Overzicht" defocusalpha="75">
     <fmc:Map id="map_overview" left="0" top="0" width="150" height="350" minscale="80" extent="168000,305000,214000,422000" fullextent="168000,305000,214000,422000">
         <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
-        <fmc:LayerImage id="oimage" imageurl="assets/limburg/limburg.swf" extent="168000,305000,214000,422000" listento="map1"/>
+        <fmc:LayerImage id="oimage" imageurl="flamingo/assets/limburg/limburg.swf" extent="168000,305000,214000,422000" listento="map1"/>
     </fmc:Map>
 </fmc:Window>
 

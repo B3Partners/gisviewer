@@ -24,7 +24,7 @@
             if (wkt) {
                 document.forms[0].wkt.value = wkt;
             } else {
-                document.forms[0].wkt.value = "";
+                return false;
             }
         } else {
             document.forms[0].wkt.value = "";

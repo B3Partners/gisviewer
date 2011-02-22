@@ -109,6 +109,8 @@ function handleGetGegevensBron(gegevensbron) {
     } else {
         handleGetGegevensBronMulti(gegevensbron);
     }
+
+    $j("#adminDataContainer > div").addClass("rootBronContainer");
 }
 
 function handleGetGegevensBronSimpleVertical(gegevensbron) {

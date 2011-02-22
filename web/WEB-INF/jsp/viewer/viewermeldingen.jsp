@@ -46,7 +46,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             if (wkt) {
                 document.forms[0].wkt.value = wkt;
             } else {
-                document.forms[0].wkt.value = "";
+                return false;
             }
         } else {
             document.forms[0].wkt.value = "";

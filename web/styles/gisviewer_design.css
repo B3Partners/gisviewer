@@ -631,6 +631,7 @@ a.highlightlink:hover{
     min-width: 100%;
     border-left: 0px;
     border-right: 0px;
+    clear: left;
 }
 
 #tabContainer .bronCaption, #tabContainer .bronContent {

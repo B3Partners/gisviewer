@@ -68,14 +68,16 @@
 
             <c:choose>
                 <c:when test="${fn:length(redliningID)==0}">
-                    <p>Teken een redline object op de kaart. Kies uit een bestaand project of
-                        vul een nieuw project in.</p>
-
+                    <p>
+                        Teken een object op de kaart. Kies vervolgens een project
+                        uit de lijst of vul een nieuwe projectnaam in.
+                    </p>
                     <table>
                         <tr>
                             <td class="tab-row">Bestaand project</td>
                             <td>
                                 <html:select property="projectnaam">
+                                    <html:option value="Maak uw keuze..."/>
                                     <c:forEach var="project" items="${projecten}">
                                         <html:option value="${project}"/>
                                     </c:forEach>

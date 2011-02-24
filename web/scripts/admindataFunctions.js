@@ -110,7 +110,17 @@ function handleGetGegevensBron(gegevensbron) {
         handleGetGegevensBronMulti(gegevensbron);
     }
 
-    $j("#adminDataContainer > div").addClass("rootBronContainer");
+    $j("#adminDataWrapper > .bronContainer").addClass("rootBronContainer");
+    if(ieVersion <= 7 && ieVersion != -1) {
+        resizeWidthIE();
+    }
+}
+
+function resizeWidthIE() {
+    var totalwidth = $j("#adminDataWrapper").outerWidth(true);
+    $j("#adminDataWrapper > .rootBronContainer").each(function() {
+        if($j(this).outerWidth(true) < totalwidth) $j(this).width(totalwidth);
+    });
 }
 
 function handleGetGegevensBronSimpleVertical(gegevensbron) {

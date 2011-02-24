@@ -7,7 +7,7 @@ html, body {
     position: absolute;
     z-index: 9999999;
     left: 0px;
-    top: 98px; /* header height + infobalkheight */
+    top: 78px; /* header height + infobalkheight */
     bottom: 0px;
 }
 

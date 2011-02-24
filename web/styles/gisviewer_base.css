@@ -285,6 +285,83 @@ body.homebody {
     height: 180px;
 }
 
+.bronContainer {
+    border: 1px solid #D2E0EB;
+}
+
+.bronCaption {
+    background-color: #D2E0EB;
+    /* border: 1px solid gray; */
+}
+
+.bronContent, .bronContentOpen {
+    border: 1px solid #D2E0EB;
+}
+
+#adminDataWrapper {
+    float: left;
+    min-width: 100%;
+}
+
+.bronContainer.rootBronContainer {
+    float: left;
+    min-width: 100%;
+    border-left: 0px;
+    border-right: 0px;
+    clear: left;
+}
+
+.bronContainer .bronCaption {
+    padding-left: 2px;
+}
+
+#tabContainer .bronCaption, #tabContainer .bronContent {
+    margin: 2px;
+}
+
+#tabContainer .bronCaption {
+    margin-bottom: 0px;
+    padding: 2px;
+}
+
+#tabContainer .bronContent {
+    margin-top: 0px;
+}
+
+.bronContent table {
+    min-width: 100%;
+}
+
+.tabField {
+    float: left;
+    margin-left: 2px;
+    padding-top: 3px;
+    height: 17px;
+    padding-left: 6px;
+    padding-right: 6px;
+    background: #FFF0C4;
+    color: #19619B;
+    font-weight: bold;
+    -moz-border-radius-topleft:10px;
+    border-radius-topleft: 10px;
+    -moz-border-radius-topright:10px;
+    border-radius-topright: 10px;
+    cursor: pointer;
+}
+.tabField.tabFieldActive {
+    background: #19619B;
+    color: #FFF0C4;
+    cursor: auto;
+}
+
+.childCaption {
+    background-color: #D2E0EB;
+    /* border: 1px solid gray; */
+}
+
+.bronChild bronChildEmpty {
+    border: 1px solid #D2E0EB;
+}
 
 /*************Balloon css:***************/
 .infoBalloon{

@@ -54,7 +54,10 @@ reguliere admindata of GetFeatureInfo --%>
     </table>
 </div>
 
-<div id="adminDataContainer"></div>
+<div id="adminDataContainer">
+    <div id="adminDataWrapper"></div>
+    <div style="clear: both;"></div>
+</div>
 <%-- div id="childLoadingadminDataContainer" class="childLoading"><img src="images/icons/loading.gif" alt="Loading" title="Loading" /></div --%>
 <div id="getFeatureInfo"></div>
 
@@ -68,7 +71,7 @@ reguliere admindata of GetFeatureInfo --%>
                     // optellen aantal gegevensbronnen
                     loop++;
                     // haal gegevens op van gegevensbron
-                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', '${bean.cql}', 'adminDataContainer', handleGetGegevensBron);
+                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', '${bean.cql}', 'adminDataWrapper', handleGetGegevensBron);
             </c:forEach>
                 });
         </c:when>

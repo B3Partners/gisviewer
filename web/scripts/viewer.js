@@ -1839,7 +1839,8 @@ function parentHasCheckBox(parent) {
     }
     return false;
 }
-
+//the loading legend images (needed to abort loading)
+var loadingLegendImages= new Object();
 function createLegendDiv(item) {
     var id=item.id + '##' + item.wmslayers;
     var myImage = new Image();
@@ -1862,6 +1863,8 @@ function createLegendDiv(item) {
 
     if (item.legendurl != undefined){        
         myImage.src = item.legendurl;
+        //from now the image is loading
+        loadingLegendImages[id]=myImage;
     } else {
         myImage.onerror();
     }
@@ -1885,21 +1888,26 @@ function imageOnerror(){
     loadNextInLegendImageQueue();
 }
 function imageOnload(){
-    if (parseInt(this.height) > 5){
-        var legendimg = document.createElement("img");
-        legendimg.src = this.src;
-        legendimg.onerror=this.onerror;
-        legendimg.className = "imagenoborder";
-        legendimg.alt = this.name;
-        legendimg.title = this.name;
-        var legendImage = document.getElementById(this.id);
-        if (legendImage) {
-            legendImage.appendChild(legendimg);
+    //if not is a loading image then don't add to the DOM
+    if (loadingLegendImages[this.id]!=undefined){
+        if (parseInt(this.height) > 5){
+            var legendimg = document.createElement("img"); 
+            legendimg.src = this.src;
+            legendimg.onerror=this.onerror;
+            legendimg.className = "imagenoborder";
+            legendimg.alt = this.name;
+            legendimg.title = this.name;
+            var legendImage = document.getElementById(this.id);
+            if (legendImage) {
+                legendImage.appendChild(legendimg);
+            }
         }
+        //done loading remove
+        delete loadingLegendImages[this.id];
+        //release 1 loading space
+        legendImageLoadingSpace++;
+        loadNextInLegendImageQueue();
     }
-    //release 1 loading space
-    legendImageLoadingSpace++;
-    loadNextInLegendImageQueue();
 }
 
 //adds a layer to the legenda
@@ -1941,7 +1949,11 @@ function loadNextInLegendImageQueue(){
         }
     }
 }
-
+function resetLegendImageQueue(){
+    loadingLegendImages= new Object();
+    legendImageQueue = new Array();
+    legendImageLoadingSpace=2;
+}
 function findLayerDivInLegendBox(theItem) {
     var id=theItem.id + '##' + theItem.wmslayers;
     for(var i=0; i < orderLayerBox.childNodes.length; i++){
@@ -2040,6 +2052,7 @@ function refreshLegendBox() {
     if (visibleLayerItems.length>0) {
         enabledLayerItems = enabledLayerItems.concat(visibleLayerItems);
     }
+    resetLegendImageQueue();
     for (var j=0; j<enabledLayerItems.length; j++){
         var item = enabledLayerItems[j];
         addLayerToLegendBox(item, false);

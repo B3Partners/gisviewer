@@ -422,7 +422,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId, selectionWithinO
         //balloon.resetPositionOfBalloon(centerX,centerY);
         balloon.setPosition(centerX,centerY,true);
 
-        var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do">')
+        var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
         balloon.getContentElement().html(iframeElement);
 
         loadBusyJSP($j('#dataframeballoonpopup'), 'div');

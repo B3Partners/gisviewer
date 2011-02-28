@@ -181,10 +181,6 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
         "id": "bronContainer" + htmlId + gegevensbron.id,
         "class": "bronContainer tabbedContainer " + tab
     });
-    if(rootBronContainer) {
-        bronContainer.addClass("rootBronContainer");
-        rootBronContainer = false;
-    }
 
     var tabFieldId = "tabField_" + tab;
     var tabField = $j('<div></div>').attr({
@@ -224,13 +220,13 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
                 var tr2 = $j('<tr></tr>');
                 var th = createTableTh(gegevensbron.labels[index2]);
                 tr2.append(th);
-                var tr = $j('<tr></tr>');                
+                var tr = $j('<tr></tr>');
                 var td = createTableTd(waarde);
                 tr.append(td);
                 bronTableBody.append(tr2);
                 bronTableBody.append(tr);
             });
-            
+
             // Append all to DOM tree
             bronContent.append(bronTable.append(bronTableBody));
             bronContainer.append(bronCaption.css({"color":"#000000","background-color":"#ffffff"})).append(bronContent);
@@ -255,6 +251,7 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
             $j('#' + htmlId + " > #tabHeader").append(tabField);
         }
     }
+    bronContainerOrder[bronContainer.attr("id")]=gegevensbron.order;
 
     if($j('#' + htmlId).find("#tabContainer").length != 1)
     {
@@ -266,7 +263,20 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
         tabContainer.append(bronContainer);
     } else {
         if(!$j("#"+tabFieldId).hasClass("tabFieldActive")) bronContainer.css("display", "none");
-        $j('#' + htmlId + " > #tabContainer").append(bronContainer);
+        var diff=0;
+        var beforeElement=null;
+        $j.each($j('#' + htmlId + " > #tabContainer").children(), function(index, domElement) {
+            var elemOrder=bronContainerOrder[domElement.id];
+            if (elemOrder > gegevensbron.order && (diff == 0 || diff > elemOrder-gegevensbron.order)){
+                beforeElement=domElement;
+                diff=elemOrder-gegevensbron.order;
+            }
+        });
+        if (beforeElement!=null){
+            bronContainer.insertBefore(beforeElement);
+        }else{
+            $j('#' + htmlId + " > #tabContainer").append(bronContainer);
+        }
     }
 }
 

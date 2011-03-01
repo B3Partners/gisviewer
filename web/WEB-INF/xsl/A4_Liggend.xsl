@@ -152,14 +152,9 @@
 
         <xsl:variable name="map">
             <xsl:value-of select="imageUrl"/>
-            <xsl:value-of select="id"/>
-            <xsl:text>&amp;width=</xsl:text>
-            <xsl:value-of select="$map-width-px-corrected"/>
-            <xsl:text>&amp;height=</xsl:text>
-            <xsl:value-of select="$map-height-px-corrected"/>
-            <xsl:text>&amp;bbox=</xsl:text>
-            <xsl:value-of select="$bbox-corrected"/>
         </xsl:variable>
+
+        <xsl:variable name="map-height" select="610 * $px-ratio"/>
 
         <fo:block margin-left="0.1cm" margin-top="0.05cm">
             <fo:external-graphic
@@ -168,7 +163,7 @@
                 content-height="scale-to-fit"
                 scaling="uniform"
                 width="610"
-                height="610 * $px-ratio"
+                height="{$map-height}"
             />
         </fo:block>
     </xsl:template>

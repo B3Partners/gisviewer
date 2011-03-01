@@ -238,44 +238,46 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
         document.getElementById("content_style").style.display="none";
     }
 
-    if($j('#' + htmlId).find("#tabHeader").length != 1) {
-        var tabHeader = $j('<div></div>').attr({
-            "id": "tabHeader",
-            "class": "tabHeader",
-            "style": "width: 100%; height: 20px;"
-        });
-        $j('#' + htmlId).append(tabHeader);
-        $j('#' + htmlId + " > #tabHeader").append(tabField.addClass("tabFieldActive"));
-    } else {
-        if($j('#' + htmlId + " > #tabHeader").find("#"+tabField.attr("id")).length != 1) {
-            $j('#' + htmlId + " > #tabHeader").append(tabField);
-        }
-    }
-    bronContainerOrder[bronContainer.attr("id")]=gegevensbron.order;
-
-    if($j('#' + htmlId).find("#tabContainer").length != 1)
-    {
-        var tabContainer = $j('<div></div>').attr({
-            "id": "tabContainer",
-            "class": "tabContainer"
-        });
-        $j('#' + htmlId).append(tabContainer);
-        tabContainer.append(bronContainer);
-    } else {
-        if(!$j("#"+tabFieldId).hasClass("tabFieldActive")) bronContainer.css("display", "none");
-        var diff=0;
-        var beforeElement=null;
-        $j.each($j('#' + htmlId + " > #tabContainer").children(), function(index, domElement) {
-            var elemOrder=bronContainerOrder[domElement.id];
-            if (elemOrder > gegevensbron.order && (diff == 0 || diff > elemOrder-gegevensbron.order)){
-                beforeElement=domElement;
-                diff=elemOrder-gegevensbron.order;
+    if (gegevensbron.records) {
+        if($j('#' + htmlId).find("#tabHeader").length != 1) {
+            var tabHeader = $j('<div></div>').attr({
+                "id": "tabHeader",
+                "class": "tabHeader",
+                "style": "width: 100%; height: 20px;"
+            });
+            $j('#' + htmlId).append(tabHeader);
+            $j('#' + htmlId + " > #tabHeader").append(tabField.addClass("tabFieldActive"));
+        } else {
+            if($j('#' + htmlId + " > #tabHeader").find("#"+tabField.attr("id")).length != 1) {
+                $j('#' + htmlId + " > #tabHeader").append(tabField);
             }
-        });
-        if (beforeElement!=null){
-            bronContainer.insertBefore(beforeElement);
-        }else{
-            $j('#' + htmlId + " > #tabContainer").append(bronContainer);
+        }
+        bronContainerOrder[bronContainer.attr("id")]=gegevensbron.order;
+
+        if($j('#' + htmlId).find("#tabContainer").length != 1)
+        {
+            var tabContainer = $j('<div></div>').attr({
+                "id": "tabContainer",
+                "class": "tabContainer"
+            });
+            $j('#' + htmlId).append(tabContainer);
+            tabContainer.append(bronContainer);
+        } else {
+            if(!$j("#"+tabFieldId).hasClass("tabFieldActive")) bronContainer.css("display", "none");
+            var diff=0;
+            var beforeElement=null;
+            $j.each($j('#' + htmlId + " > #tabContainer").children(), function(index, domElement) {
+                var elemOrder=bronContainerOrder[domElement.id];
+                if (elemOrder > gegevensbron.order && (diff == 0 || diff > elemOrder-gegevensbron.order)){
+                    beforeElement=domElement;
+                    diff=elemOrder-gegevensbron.order;
+                }
+            });
+            if (beforeElement!=null){
+                bronContainer.insertBefore(beforeElement);
+            }else{
+                $j('#' + htmlId + " > #tabContainer").append(bronContainer);
+            }
         }
     }
 }

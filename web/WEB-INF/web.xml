@@ -127,11 +127,12 @@
 
     <servlet>
         <servlet-name>PrintServlet</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>
+        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>        
         <init-param>
             <param-name>xsl_A4_Liggend</param-name>
             <param-value>/WEB-INF/xsl/A4_Liggend.xsl</param-value>
         </init-param>
+        <load-on-startup>4</load-on-startup>
     </servlet>
 
     <servlet-mapping>

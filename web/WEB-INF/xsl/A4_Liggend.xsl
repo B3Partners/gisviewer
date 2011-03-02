@@ -5,6 +5,17 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
+    <!-- formatter -->
+    <xsl:decimal-format decimal-separator="," grouping-separator="." name="MyFormat" NaN="&#160;" infinity="&#160;"/>
+
+    <!-- vars  -->
+    <xsl:variable name="ratio" select="mapHeight div mapWidth"/>
+
+    <!-- arbitrair gekozen map breedte zodat deze mooi in map block komt
+    mogelijk aanpassen bij staande orientatie en a3 template -->
+    <xsl:variable name="map-width">610</xsl:variable>
+    <xsl:variable name="map-height" select="format-number($map-width * $ratio,'0','MyFormat')"/>
+
     <!-- includes -->
     <xsl:include href="calc.xsl"/>
 
@@ -119,7 +130,7 @@
                             <xsl:with-param name="bbox" select="bbox"/>
                         </xsl:call-template>
                     </xsl:with-param>
-                    <xsl:with-param name="px-width" select="mapWidth"/>
+                    <xsl:with-param name="px-width" select="$map-width"/>
                 </xsl:call-template>
             </fo:block>
 
@@ -146,15 +157,9 @@
             </xsl:call-template>
         </xsl:variable>
 
-        <xsl:variable name="px-ratio" select="mapHeight div mapWidth"/>
-        <xsl:variable name="map-width-px-corrected" select="kwaliteit"/>
-        <xsl:variable name="map-height-px-corrected" select="format-number(kwaliteit * $px-ratio,'0','MyFormat')"/>
-
         <xsl:variable name="map">
             <xsl:value-of select="imageUrl"/>
         </xsl:variable>
-
-        <xsl:variable name="map-height" select="610 * $px-ratio"/>
 
         <fo:block margin-left="0.1cm" margin-top="0.05cm">
             <fo:external-graphic
@@ -162,7 +167,7 @@
                 content-width="scale-to-fit"
                 content-height="scale-to-fit"
                 scaling="uniform"
-                width="610"
+                width="{$map-width}"
                 height="{$map-height}"
             />
         </fo:block>

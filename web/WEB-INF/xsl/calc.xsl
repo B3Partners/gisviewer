@@ -3,9 +3,6 @@
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" exclude-result-prefixes="fo">
     <xsl:output method="xml" version="1.0" omit-xml-declaration="no" indent="yes"/>
 
-    <!-- formatter -->
-    <xsl:decimal-format decimal-separator="," grouping-separator="." name="MyFormat" NaN="&#160;" infinity="&#160;"/>
-
     <!-- berekent de breedte van de kaart in meters na correctie vanwege verschil
 	in verhouding hoogte/breedte kaart op scherm en van kaart in template -->
     <xsl:template name="calc-bbox-width-m-corrected">
@@ -19,7 +16,7 @@
         <xsl:variable name="ymax" select="substring-after($bbox2, ',')"/>
         <xsl:variable name="bbox-width-m" select="$xmax - $xmin"/>
         <xsl:variable name="bbox-height-m" select="$ymax - $ymin"/>
-        <xsl:variable name="bbox-ratio" select="(mapWidth * $bbox-height-m) div (mapHeight * $bbox-width-m)"/>
+        <xsl:variable name="bbox-ratio" select="($map-width * $bbox-height-m) div ($map-height * $bbox-width-m)"/>
         <xsl:choose>
             <xsl:when test="$bbox-ratio &gt; 1">
                 <xsl:value-of select="$bbox-width-m * $bbox-ratio"/>
@@ -46,7 +43,7 @@
         <xsl:variable name="ymid" select="($ymin + $ymax) div 2"/>
         <xsl:variable name="bbox-width-m" select="$xmax - $xmin"/>
         <xsl:variable name="bbox-height-m" select="$ymax - $ymin"/>
-        <xsl:variable name="bbox-ratio" select="(mapWidth * $bbox-height-m) div (mapHeight * $bbox-width-m)"/>
+        <xsl:variable name="bbox-ratio" select="($map-width * $bbox-height-m) div ($map-height * $bbox-width-m)"/>
         <xsl:choose>
             <xsl:when test="$bbox-ratio = 1">
                 <xsl:value-of select="$bbox"/>
@@ -144,7 +141,8 @@
             <xsl:with-param name="value" select="$tmp-length-guess"/>
         </xsl:call-template>
     </xsl:variable>
-		<!-- lengte van schaalbalk in meters -->
+
+    <!-- lengte van schaalbalk in meters -->
     <xsl:variable name="tmp-length-rounded" select="format-number($tmp-length,'0','MyFormat')"/>
     <xsl:choose>
         <xsl:when test="$tmp-length-rounded > $tmp-length">
@@ -252,7 +250,7 @@
     </xsl:variable>
 
     <fo:instream-foreign-object font-size="7pt" xsl:use-attribute-sets="default-font">
-        <svg xmlns="http://www.w3.org/2000/svg" width="3cm" height="0.6cm" preserveAspectRatio="xMaxYMax meet">
+        <svg xmlns="http://www.w3.org/2000/svg" width="4.5cm" height="0.6cm" preserveAspectRatio="xMaxYMax meet">
             <g font-size="7pt" xsl:use-attribute-sets="default-font">
                 <polygon points="{$scale-1}" fill="black" stroke="black" stroke-width="0.5"/>
                 <polygon points="{$scale-2}" fill="white" stroke="black" stroke-width="0.5"/>

@@ -13,7 +13,7 @@
 
     <!-- arbitrair gekozen map breedte zodat deze mooi in map block komt
     mogelijk aanpassen bij andere orientatie en paginaformaat -->
-    <xsl:variable name="map-width">610</xsl:variable>
+    <xsl:variable name="map-width">965</xsl:variable>
     <xsl:variable name="map-height" select="format-number($map-width * $ratio,'0','MyFormat')"/>
 
     <!-- includes -->
@@ -22,7 +22,7 @@
     <!-- master set -->
     <xsl:template name="layout-master-set">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="a4-liggend" page-height="210mm" page-width="297mm" margin-top="0.4cm" margin-bottom="0.4cm" margin-left="0.4cm" margin-right="0.4cm">
+            <fo:simple-page-master master-name="a3-liggend" page-height="297mm" page-width="420mm" margin-top="0.4cm" margin-bottom="0.4cm" margin-left="0.4cm" margin-right="0.4cm">
                 <fo:region-body region-name="body"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
@@ -69,13 +69,13 @@
         <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:xlink="http://www.w3.org/1999/xlink">
             <xsl:call-template name="layout-master-set"/>
             
-            <fo:page-sequence master-reference="a4-liggend">
+            <fo:page-sequence master-reference="a3-liggend">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="26.9cm" height="1.5cm" top="0cm" left="0cm" background-color="#9E3A56" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="39.5cm" height="1.5cm" top="0cm" left="0cm" background-color="#9E3A56" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="26.9cm" background-color="#76B6D1" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="39.5cm" background-color="#76B6D1" xsl:use-attribute-sets="column-block">
                         <fo:block />
                     </fo:block-container>
 
@@ -85,19 +85,19 @@
                         </fo:block>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="15.4cm" top="2.35cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="24.9cm" top="2.35cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="info-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="21.7cm" height="16.2cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
+                    <fo:block-container width="34.4cm" height="24.9cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="20.8cm" height="2.3cm" top="17.9cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="33.4cm" height="2.3cm" top="27.0cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="7.6cm" height="2.3cm" top="17.9cm" left="20.8cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="7.6cm" height="2.3cm" top="27.0cm" left="33.4cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                 </fo:flow>

@@ -129,8 +129,20 @@
         <servlet-name>PrintServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>        
         <init-param>
+            <param-name>xsl_A4_Staand</param-name>
+            <param-value>/WEB-INF/xsl/A4_Staand.xsl</param-value>
+        </init-param>
+        <init-param>
             <param-name>xsl_A4_Liggend</param-name>
             <param-value>/WEB-INF/xsl/A4_Liggend.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A3_Liggend</param-name>
+            <param-value>/WEB-INF/xsl/A3_Liggend.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A3_Staand</param-name>
+            <param-value>/WEB-INF/xsl/A3_Staand.xsl</param-value>
         </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>

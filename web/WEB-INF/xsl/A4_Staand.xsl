@@ -71,15 +71,15 @@
             
             <fo:page-sequence master-reference="a4-staand">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="18.2cm" height="1.5cm" top="0cm" left="0cm" background-color="#9E3A56" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="18.2cm" height="1.5cm" top="0cm" left="0cm" background-color="#166299" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="18.2cm" background-color="#76B6D1" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="18.2cm" background-color="#166299" xsl:use-attribute-sets="column-block">
                         <fo:block />
                     </fo:block-container>
 
-                    <fo:block-container width="6.0cm" height="0.75cm" top="1.6cm" left="0cm" background-color="#76B6D1" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.0cm" height="0.75cm" top="1.6cm" left="0cm" background-color="#FFD203" xsl:use-attribute-sets="column-block">
                         <fo:block margin-left="0.2cm" margin-top="0.2cm" xsl:use-attribute-sets="default-font">
                             Info
                         </fo:block>
@@ -93,11 +93,11 @@
                         <xsl:call-template name="map-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="12.6cm" height="2.3cm" top="26.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="12.0cm" height="2.3cm" top="26.5cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="7.6cm" height="2.3cm" top="26.5cm" left="12.6cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="7.6cm" height="2.3cm" top="26.5cm" left="12.0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                 </fo:flow>
@@ -115,7 +115,7 @@
     <xsl:template name="info-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
             <fo:block>
-                <fo:external-graphic src="url('limburg_noordpijl.jpg')" width="45px" height="46px"/>
+                <fo:external-graphic src="url('b3p_noordpijl.png')" width="84px" height="77px"/>
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">
@@ -139,11 +139,7 @@
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="10pt">
-                bureau Geo en Administraties
-            </fo:block>
-
-            <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="10pt" color="#9E3A56" font-weight="bold">
-                sector GIS
+                U bekijkt een demo ontwerp.
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt" font-style="italic">
@@ -185,7 +181,7 @@
 
     <xsl:template name="logo-block">
         <fo:block>
-            <fo:external-graphic src="url('limburg_logo.jpg')" width="283px" height="57px"/>
+            <fo:external-graphic src="url('b3p_logo.png')" width="231px" height="56px"/>
         </fo:block>
     </xsl:template>    
 </xsl:stylesheet>

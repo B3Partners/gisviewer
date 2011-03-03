@@ -117,23 +117,45 @@ function findPos(obj) {
     return [curleft,curtop];
 }
 
+function blockViewerUI() {
+    $j('#content_viewer, #header').block({
+        message: null,
+        baseZ: 100,
+        overlayCSS: {
+            backgroundColor: '#000',
+            opacity: 0.3
+        }
+    });
+}
+
+function unblockViewerUI() {
+    // small timeout to prevent accidental mouseclicks
+    setTimeout(function() {
+        $j('#content_viewer, #header').unblock();
+    }, 30);
+}
+
 function startDrag() {
-    document.getElementById('popupWindow_Windowbackground').style.display = 'block';
+    // $j("#popupWindow_Windowbackground").show();
+    blockViewerUI();
 }
 
 function stopDrag() {
-    document.getElementById('popupWindow_Windowbackground').style.display = 'none';
+    // $j("#popupWindow_Windowbackground").hide();
+    unblockViewerUI();
 }
 
 function startResize() {
-    document.getElementById('popupWindow_Windowbackground').style.display = 'block';
-    document.getElementById('popupWindow_Resizediv').style.display = 'block';
+    // $j("#popupWindow_Windowbackground").show();
+    blockViewerUI();
+    $j("#popupWindow_Resizediv").show();
     if(ieVersion <= 7 && ieVersion != -1) fixPopup();
 }
 
 function stopResize() {
-    document.getElementById('popupWindow_Windowbackground').style.display = 'none';
-    document.getElementById('popupWindow_Resizediv').style.display = 'none';
+    // $j("#popupWindow_Windowbackground").hide();
+    unblockViewerUI();
+    $j("#popupWindow_Resizediv").hide();
     if(ieVersion <= 7 && ieVersion != -1) fixPopup();
 }
 

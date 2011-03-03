@@ -3043,12 +3043,12 @@ $j(document).ready(function(){
 
             $j("#popupWindow").hide();
         });
-        $j("#popupWindow").mouseover(function(){
+        /* $j("#popupWindow").mouseover(function(){
             startDrag();
         });
         $j("#popupWindow").mouseout(function(){
             stopDrag();
-        });
+        }); */
         
     }
     popupCreated = true;

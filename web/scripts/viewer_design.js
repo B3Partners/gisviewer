@@ -1,6 +1,7 @@
 var resizableTabs = new Array();
 var checkResizableContent = function() {
-    for(i in tabbladen) {             
+    for(i in tabbladen) {
+        
         var tabid = tabbladen[i].id;
         var contentid = tabbladen[i].contentid;
         var tabcontent = document.getElementById(contentid);
@@ -19,7 +20,6 @@ resizeTabContents = function() {
     var totalTabHeight = document.getElementById('tab_container').offsetHeight - 15; // Minus margin
     for(var i = 0; i < resizableTabs.length; i++) {
         switchTab(document.getElementById(resizableTabs[i]));
-
         i = i+1;
         var tabcontent = document.getElementById(resizableTabs[i]);
         var tabChilds = tabcontent.childNodes;
@@ -32,7 +32,10 @@ resizeTabContents = function() {
             }
         }
         if(ieVersion != -1 && ieVersion <= 7) totalContentsHeight += 15;
-        if(childToResize && childToResize.style) childToResize.style.height = (totalTabHeight - totalContentsHeight) + 'px';
+        if(childToResize && childToResize.style) {
+            var childContentHeight = totalTabHeight - totalContentsHeight;
+            if(childContentHeight >= 0) childToResize.style.height = childContentHeight + 'px';
+        }
     }
     if(tmpCurrentActiveTab != null) switchTab(document.getElementById(tmpCurrentActiveTab));
 }

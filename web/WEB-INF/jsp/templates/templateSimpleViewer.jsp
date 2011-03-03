@@ -35,6 +35,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>
+        <script type="text/javascript" src="scripts/jquery.blockUI.js"></script>
         
 
         <!--[if lte IE 6]>
@@ -46,7 +47,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <![endif]-->
         <!--[if IE]>
         <script type="text/javascript">
-            var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer','voorzieningZoeker','vergunningZoeker','meldingenframeViewer','redliningframeViewer'];
+            var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer','voorzieningframeZoeker','vergunningframeZoeker','meldingenframeViewer','redliningframeViewer'];
             fixTransparentBackgroundIframe = function() {
                 for(i in iframes) {
                     var iframe = document.getElementById(iframes[i]);

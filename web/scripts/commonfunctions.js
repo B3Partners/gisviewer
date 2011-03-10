@@ -117,22 +117,29 @@ function findPos(obj) {
     return [curleft,curtop];
 }
 
+var uiBlocked = false;
 function blockViewerUI() {
-    $j('#content_viewer, #header').block({
-        message: null,
-        baseZ: 100,
-        overlayCSS: {
-            backgroundColor: '#000',
-            opacity: 0.3
-        }
-    });
+    if(!uiBlocked) {
+        $j('#content_viewer, #header').block({
+            message: null,
+            baseZ: 100,
+            overlayCSS: {
+                backgroundColor: '#000',
+                opacity: 0.3
+            }
+        });
+        uiBlocked = true;
+    }
 }
 
 function unblockViewerUI() {
     // small timeout to prevent accidental mouseclicks
-    setTimeout(function() {
-        $j('#content_viewer, #header').unblock();
-    }, 30);
+    if(uiBlocked) {
+        setTimeout(function() {
+            $j('#content_viewer, #header').unblock();
+            uiBlocked = false;
+        }, 30);
+    }
 }
 
 function startDrag() {

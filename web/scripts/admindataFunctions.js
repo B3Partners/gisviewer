@@ -128,7 +128,7 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
 
     // Create container
     var bronContainer = $j('<div></div>').attr({
-        "id": "bronContainer" + htmlId + gegevensbron.id,
+        "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer"
     });
     if(rootBronContainer) {
@@ -143,7 +143,7 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
             var bronCaption = createBronCaption(gegevensbron, true, index+1);
             // Create content table
             var bronContent = $j('<div></div>').attr({
-                "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id,
+                "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
                 "class": "bronContent"
             });
             var bronTable = $j('<table></table>');
@@ -178,7 +178,7 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
 
     // Create container
     var bronContainer = $j('<div></div>').attr({
-        "id": "bronContainer" + htmlId + gegevensbron.id,
+        "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer tabbedContainer " + tab
     });
 
@@ -210,7 +210,7 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
             bronCaption.append(tab);
             // Create content table
             var bronContent = $j('<div></div>').attr({
-                "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id,
+                "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
                 "class": "bronContent"
             });
             var bronTable = $j('<table></table>');
@@ -295,7 +295,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
 
     // Create container
     var bronContainer = $j('<div></div>').attr({
-        "id": "bronContainer" + htmlId + gegevensbron.id,
+        "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer"
     });
     if(rootBronContainer) {
@@ -308,7 +308,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
 
     // Create content table
     var bronContent = $j('<div></div>').attr({
-        "id": "bronContent" + htmlId + gegevensbron.id,
+        "id": "bronContent" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContent"
     });
     var bronTable = $j('<table></table>');
@@ -356,7 +356,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
 
     // Create container
     var bronContainer = $j('<div></div>').attr({
-        "id": "bronContainer" + htmlId + gegevensbron.id,
+        "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer"
     });
     if(rootBronContainer) {
@@ -369,7 +369,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
 
     // Create content table
     var bronContent = $j('<div></div>').attr({
-        "id": "bronContent" + htmlId + gegevensbron.id,
+        "id": "bronContent" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContent bronContentOpen"
     });
     var bronTable = $j('<table></table>');
@@ -413,7 +413,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
             // Check if there are childs
             if(record.childs != null && record.childs.length > 0) {
                 $j.each(record.childs, function(index2, child) {
-                    var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id);
+                    var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id) + idcounter++;
                     var tr = $j('<tr></tr>');
                     var toggleIcon = $j('<img src="'+plusicon+'" alt="Openklappen" title="Openklappen" />')
                     .click(function(){
@@ -571,7 +571,7 @@ function createBronCaption(gegevensbron, simple, index) {
 
     // Create caption
     var bronCaption = $j('<div></div>').attr({
-        "id": "bronCaption" + htmlId + gegevensbron.id + index,
+        "id": "bronCaption" + htmlId + gegevensbron.id + index + idcounter++,
         "class": "bronCaption"
     });
 
@@ -590,7 +590,7 @@ function createBronCaption(gegevensbron, simple, index) {
     //CSV export knop
     var csv_export_url = "services/Data2CSV";
 
-    var csvFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "CSVfrm";
+    var csvFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "CSVfrm" + idcounter++;
     var frm = $j('<form></form>').attr({
         method: 'post',
         action: csv_export_url,
@@ -616,7 +616,7 @@ function createBronCaption(gegevensbron, simple, index) {
     //Info export knop
     var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j";
     
-    var infoFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm";
+    var infoFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm" + idcounter++;
     frm = $j('<form></form>').attr({
         method: 'post',
         action: info_export_url,

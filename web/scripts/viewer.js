@@ -948,12 +948,14 @@ function loadTreeLegendImage(divid) {
                         divobj.appendChild(document.createElement("br"));
                     var legendimg=createTreeLegendImage(child);
                     divobj.appendChild(legendimg);
+                    legendimg.src = child.legendurl;
                     addedImages++;
                 }
             }
         }else{
             var legendimg=createTreeLegendImage(item);
             divobj.appendChild(legendimg);
+            legendimg.src = item.legendurl;
         }
     }
     $j(divobj).toggle();
@@ -965,7 +967,8 @@ function createTreeLegendImage(item){
     legendimg.onerror=treeImageError;
     legendimg.onload=treeImageOnload;
     legendimg.className = 'treeLegendImage';
-    legendimg.src = item.legendurl;
+    // Set src after the img element is appended to make sure onload gets called, even when image is in cache
+    // legendimg.src = item.legendurl;
     return legendimg;
 }
 function createTreeLegendDiv(item) {

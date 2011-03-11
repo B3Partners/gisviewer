@@ -2110,7 +2110,7 @@ function onChangeTool(id, event) {
 }
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
-function onIdentify(movie,extend){
+function onIdentify(movie,extend) {
     if(!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
@@ -2138,6 +2138,13 @@ function onIdentify(movie,extend){
     }
 
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
+
+    /* kijken of bezig met editen redline objecten */
+    if (editingRedlining) {
+        hideIdentifyIcon();
+        selectRedlineObject(geom);
+        return;
+    }
 
     if (btn_highLightSelected) {
         
@@ -2633,6 +2640,27 @@ function highLightThemaObject(geom) {
     if (highlightLayers.length == 1) {
         EditUtil.getHighlightWktForThema(highlightLayers[0].id, geom, scale, tol, returnHighlight);
     }
+}
+
+function selectRedlineObject(geom) {
+    /* Params
+     * geom: Klikpunt op de kaart. Een POINT wkt string.
+     * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
+    */
+    var scale = webMapController.getMap().getScale();
+    var tol = tolerance;
+
+    EditUtil.getIdAndWktForRedliningObject(geom, redLineGegevensbronId, scale, tol, returnRedlineObject);
+}
+
+function returnRedlineObject(jsonObject) {
+
+    if (jsonObject == "-1")
+        messagePopup("Redlining bewerken", "Geen object gevonden.", "error");
+    else
+        messagePopup("Redlining bewerken", jsonObject, "information");
+
+    editingRedlining = false;
 }
 
 function handlePopupValue(value) {    
@@ -3297,4 +3325,14 @@ function showTabvakLoading(message) {
 
 function hideTabvakLoading() {
     $j("#tab_container").find(".tabvakloading").remove();
+}
+
+var editingRedlining = false;
+var redLineGegevensbronId = -1;
+
+function enableEditRedlining(id) {
+    editingRedlining = true;
+    redLineGegevensbronId = id;
+
+    webMapController.activateTool("breinaald");
 }

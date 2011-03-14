@@ -347,7 +347,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId, selectionWithinO
 
     if (selectionWithinObject) {
         document.forms[0].withinObject.value = "1";
-    } else {
+    }else {
         document.forms[0].withinObject.value = "-1";
     }
 
@@ -1119,7 +1119,7 @@ function clusterCheckboxClick(element,dontRefresh){
     if (useCookies) {      
         if (element.checked) {
             addClusterIdToCookie(cluster.id);
-        } else {
+        }else {
             removeClusterIdFromCookie(cluster.id);
         }
     }
@@ -1533,7 +1533,7 @@ function refreshLayer(doRefreshOrder) {
         // check of dit een goed idee is
         // alleen refresh als er intussen geen nieuwe timeout gezet is
         return;
-    } else {
+    }else {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
@@ -2653,12 +2653,24 @@ function selectRedlineObject(geom) {
     EditUtil.getIdAndWktForRedliningObject(geom, redLineGegevensbronId, scale, tol, returnRedlineObject);
 }
 
-function returnRedlineObject(jsonObject) {
-
-    if (jsonObject == "-1")
+function returnRedlineObject(jsonString) {
+    if (jsonString == "-1") {
         messagePopup("Redlining bewerken", "Geen object gevonden.", "error");
-    else
-        messagePopup("Redlining bewerken", jsonObject, "information");
+    }
+
+    var redlineObj = eval('(' + jsonString + ')');
+    var wkt = redlineObj.wkt;
+
+    if (wkt.length > 0 && wkt != "-1")
+    {
+        var polyObject = new Feature(61502,wkt);
+        drawObject(polyObject);
+    }
+
+    var id = redlineObj.id;
+    var projectnaam = redlineObj.projectnaam;
+
+    /* formulier op redline tabblad aanpassen */
 
     editingRedlining = false;
 }
@@ -2832,7 +2844,7 @@ function addToFavorites(url) {
     } else if( window.external ) { // IE 6,7 not 8?
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
         window.external.AddFavorite(url, title);       
-    } else if(window.opera && window.print) { // Opera 
+    }else if(window.opera && window.print) { // Opera 
         return true;
     }
 

@@ -2671,6 +2671,12 @@ function returnRedlineObject(jsonString) {
     var projectnaam = redlineObj.projectnaam;
 
     /* formulier op redline tabblad aanpassen */
+    var iframe = document.getElementById('redliningframeViewer');
+    var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
+
+    innerDoc.getElementById("redliningID").value = id;
+    innerDoc.getElementById("projectnaam").value = projectnaam;
+    innerDoc.getElementById("new_projectnaam").value = '';
 
     editingRedlining = false;
 }

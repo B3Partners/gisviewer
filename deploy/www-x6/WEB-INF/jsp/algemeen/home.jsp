@@ -15,6 +15,37 @@
 
 <tiles:insert definition="actionMessages"/>
 
+<!-- Loop door tekstblokken heen -->
+<c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
+    <div class="content_block">
+        <div class="content_title"><c:out value="${tb.titel}"/></div>
+
+        <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
+        <c:if test="${tb.toonUrl}">
+            <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+        </c:if>
+
+        <!-- Anders gewoon de tekst tonen van tekstblok -->
+        <c:if test="${!tb.toonUrl}">
+        <div class="inleiding_body">
+            ${tb.tekst}
+
+            <c:if test="${!empty tb.url}">
+            Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
+            </c:if>
+
+            <c:if test="${tb.toonUrl}">
+                <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+            </c:if>
+        </div>
+        </c:if>
+    </div>
+</c:forEach>
+
+<!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard
+blokken -->
+<c:if test="${empty tekstBlokken}">
+
 <div class="content_block">
     <div class="content_title"><fmt:message key="algemeen.home.titel"/></div>
 
@@ -82,6 +113,7 @@
         </p>
     </div>
 </div>
+</c:if>
 
 <div class="content_block">
     <c:choose>

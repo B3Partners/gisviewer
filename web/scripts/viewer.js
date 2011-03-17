@@ -2669,6 +2669,8 @@ function returnRedlineObject(jsonString) {
 
     var id = redlineObj.id;
     var projectnaam = redlineObj.projectnaam;
+    var ontwerp = redlineObj.ontwerp;
+    var opmerking = redlineObj.opmerking;
 
     /* formulier op redline tabblad aanpassen */
     var iframe = document.getElementById('redliningframeViewer');
@@ -2677,6 +2679,8 @@ function returnRedlineObject(jsonString) {
     innerDoc.getElementById("redliningID").value = id;
     innerDoc.getElementById("projectnaam").value = projectnaam;
     innerDoc.getElementById("new_projectnaam").value = '';
+    innerDoc.getElementById("ontwerp").value = ontwerp;
+    innerDoc.getElementById("opmerking").value = opmerking;
 
     editingRedlining = false;
 }

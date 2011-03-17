@@ -48,10 +48,28 @@
                     <td class="tab-row">Project</td>
                     <td><html:text styleId="new_projectnaam" property="new_projectnaam" size="20" maxlength="10"/></td>
                 </tr>
+                <tr>
+                    <td class="tab-row">Ontwerp</td>
+                    <td>
+                        <html:select styleId="ontwerp" property="ontwerp">
+                            <html:option value="Maak uw keuze..."/>
+                            <html:option value="Ontwerp 1"/>
+                            <html:option value="Ontwerp 2"/>
+                            <html:option value="Ontwerp 3"/>
+                        </html:select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tab-row">Opmerking</td>
+                    <td>
+                        <html:textarea cols="20" rows="7" styleId="opmerking" property="opmerking"></html:textarea>
+                    </td>
+                </tr>
             </table>
 
             <p>
                 <input type="button" value="Opslaan" class="zoek_knop" onclick="submitForm();" />
+                <input type="button" value="Wissen" class="zoek_knop" onclick="submitRemoveForm();" />
                 <input type="button" value="Leegmaken" class="zoek_knop" onclick="emptyForm();" />
             </p>
         </html:form>

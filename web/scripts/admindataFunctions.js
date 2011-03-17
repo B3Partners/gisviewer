@@ -414,16 +414,16 @@ function handleGetGegevensBronMulti(gegevensbron) {
             if(record.childs != null && record.childs.length > 0) {
                 $j.each(record.childs, function(index2, child) {
                     var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id) + idcounter++;
-                    var tr = $j('<tr></tr>');
+                    var childTr = $j('<tr></tr>');
                     var toggleIcon = $j('<img src="'+plusicon+'" alt="Openklappen" title="Openklappen" />')
                     .click(function(){
                         var childLoaded = loadChild(childDivId, child.id, child.wkt, child.cql);
-                        if(!childLoaded) toggleBron(childDivId);
+                        if(!childLoaded) toggleBron($j(this));
                     });
                     var collapse = $j('<td></td>').css({
                         "width": "50px"
                     });
-                    tr.append(collapse);
+                    childTr.append(collapse);
                     var childTd = $j('<td></td>').attr({
                         "colSpan": record.values.length
                     });
@@ -452,8 +452,8 @@ function handleGetGegevensBronMulti(gegevensbron) {
                     .append(childCaption)
                     .append(childLoading)
                     .append(childDiv);
-                    tr.append(childTd);
-                    bronTableBody.append(tr);
+                    childTr.append(childTd);
+                    bronTableBody.append(childTr);
                     // toggleIcon.click();
                 });
             }
@@ -476,16 +476,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
     $j('#'+htmlId).siblings('.childLoading').hide();
 
     // alle childs pre-loaden
-    /* $j.each(gegevensbron.records, function(index, record) {
-        if(record.childs != null && record.childs.length > 0) {
-            $j.each(record.childs, function(index2, child) {
-                var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id);
-                var childLoaded = loadChild(childDivId, child.id, child.wkt, child.cql);
-                if(!childLoaded) toggleBron(childDivId);
-            });
-        }
-    }); */
-
+    // $j('.childCaption', bronContainer).find('img').click();
 }
 
 function loadChild(bronContentId, beanId, wkt, beanCql) {
@@ -507,41 +498,31 @@ function loadChild(bronContentId, beanId, wkt, beanCql) {
     return false;
 }
 
-function toggleBron(bronContentId) {
-    var $bronContentDiv = $j('#'+bronContentId);
-
-    if($bronContentDiv) {
-        // Toggle function
-        var $parent = $bronContentDiv.parent().parent();
-        if($bronContentDiv.hasClass("bronContentOpen")) {
-            $bronContentDiv.removeClass("bronContentOpen").addClass("bronContentClosed");
-            $bronContentDiv.hide();
-
-            // If parent has bronChild -> is a child
-            if($parent.hasClass("bronChild")) {
-                $parent.siblings('.childCaption').show();
-                $parent.removeClass("bronContentOpen").addClass("bronContentClosed");
-                $bronContentDiv.siblings('.bronCaption').hide();
+function toggleBron(toggleIcon) {
+    // toggleIcon = plus/min icon clicked
+    // Test first if clicked icon is part of childCaption (-> hide child caption, show child)
+    if(toggleIcon.parent().hasClass("childCaption")) {
+        var $childBron = toggleIcon.parent().siblings(".bronChild").children();
+        $childBron.children(".bronCaption").show();
+        $childBron.children(".bronContent").show().removeClass("bronContentClosed").addClass("bronContentOpen");
+        toggleIcon.parent().hide();
+    } else {
+        var $bronContent = toggleIcon.parent().siblings('.bronContent');
+        // Check if clicked icon is part of rootElement
+        if($bronContent.parent().hasClass("rootBronContainer")) {
+            if($bronContent.hasClass("bronContentOpen")) {
+                $bronContent.hide().removeClass("bronContentOpen").addClass("bronContentClosed");
+                toggleIcon.attr("src", plusicon);
+            } else {
+                $bronContent.show().removeClass("bronContentClosed").addClass("bronContentOpen");
+                toggleIcon.attr("src", minusicon);
             }
-            if($bronContentDiv.hasClass("bronChild")) {
-                $bronContentDiv.siblings('.childCaption').show();
-                $bronContentDiv.find('.bronContainer').find('div').hide();
-                $bronContentDiv.find('.bronContainer').find('.bronContent').removeClass("bronContentOpen").addClass("bronContentClosed");
-            }
+        // It is a child element (-> Hide child, show child caption)
         } else {
-            $bronContentDiv.removeClass("bronContentClosed").addClass("bronContentOpen");
-            $bronContentDiv.show();
-
-            // If parent has bronChild -> is a child
-            if($parent.hasClass("bronChild")) {
-                $parent.siblings('.childCaption').hide();
-                $parent.removeClass("bronContentClosed").addClass("bronContentOpen");
-                $bronContentDiv.siblings('.bronCaption').show();
-            }
-            if($bronContentDiv.hasClass("bronChild")) {
-                $bronContentDiv.siblings('.childCaption').hide();
-                $bronContentDiv.find('.bronContainer').find('div').show();
-                $bronContentDiv.find('.bronContainer').find('.bronContent').removeClass("bronContentClosed").addClass("bronContentOpen");
+            if($bronContent.hasClass("bronContentOpen")) {
+                $bronContent.parent().parent().siblings('.childCaption').show();
+                $bronContent.hide().removeClass("bronContentOpen").addClass("bronContentClosed");
+                $bronContent.siblings(".bronCaption").hide();
             }
         }
     }
@@ -582,7 +563,7 @@ function createBronCaption(gegevensbron, simple, index) {
 
     var collapseImg = $j('<img src="'+minusicon+'" alt="Dichtklappen" title="Dichtklappen" />');
     collapseImg.click(function() {
-        toggleBron("bronContent" + htmlId + gegevensbron.id)
+        toggleBron($j(this));
     });
     bronCaption.append(collapseImg);
     bronCaption.append(' ' + title);

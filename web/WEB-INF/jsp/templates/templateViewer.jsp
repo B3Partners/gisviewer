@@ -33,7 +33,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
         <link href="styles/gisviewer_viewerimport.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
-        <script type="text/javascript" src="scripts/jquery-ui-1.7.2.custom.min.js"></script>
+        <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>
         <script type="text/javascript" src="scripts/jquery.blockUI.js"></script>
         
@@ -49,7 +49,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript">
             attachOnload(checkLocation);
         </script>
-        <!--[if IE]>
+        <!--[if  lte IE 8]>
         <script type="text/javascript">
             var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer','voorzieningframeZoeker','vergunningframeZoeker','meldingenframeViewer','redliningframeViewer'];
             fixTransparentBackgroundIframe = function() {

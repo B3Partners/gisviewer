@@ -588,7 +588,7 @@ function isActiveItem(item) {
  */
 function createRadioCluster(item,checked,groupName){
     var checkbox;
-    if (navigator.appName=="Microsoft Internet Explorer") {
+    if (ieVersion <= 8 && ieVersion != -1) {
         var checkboxControleString = '<input type="radio" id="' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
@@ -618,7 +618,7 @@ function createRadioCluster(item,checked,groupName){
 function createCheckboxCluster(item, checked){
 
     var checkbox;
-    if (navigator.appName=="Microsoft Internet Explorer") {
+    if (ieVersion <= 8 && ieVersion != -1) {
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
@@ -644,7 +644,7 @@ function createCheckboxCluster(item, checked){
 
 function createRadioSingleActiveThema(item){
     var radio;
-    if (navigator.appName=="Microsoft Internet Explorer") {
+    if (ieVersion <= 8 && ieVersion != -1) {
         var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
         if (isActiveItem(item)) {
             radioControleString += ' checked="checked"';
@@ -677,7 +677,7 @@ function createRadioSingleActiveThema(item){
 function createRadioThema(item,checked,groupName){
     var checkbox;
 
-    if (navigator.appName=="Microsoft Internet Explorer") {
+    if (ieVersion <= 8 && ieVersion != -1) {
 
         var checkboxControleString = '<input type="radio" id="' + item.id + '"';
         if (checked) {
@@ -707,7 +707,7 @@ function createRadioThema(item,checked,groupName){
 function createCheckboxThema(item, checked) {
     var checkbox;
 
-    if (navigator.appName=="Microsoft Internet Explorer") {
+    if (ieVersion <= 8 && ieVersion != -1) {
 
         var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
         if (checked) {
@@ -2213,7 +2213,7 @@ function layerBoxSort(a, b) {
 var frameWorkInitialized = false;
 
 function onFrameworkLoaded(){
-    if (document.getElementById("treeForm") && navigator.appName=="Microsoft Internet Explorer"){
+    if (document.getElementById("treeForm") && (ieVersion <= 8 && ieVersion != -1)){
         document.getElementById("treeForm").reset();
     }
 

@@ -285,3 +285,8 @@ html, body {
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
+
+/* CURSOR DEFINITIONS OPENLAYERS */
+.olControlidentifyActive {
+    cursor: url(../images/cursors/identify.png), default;
+}

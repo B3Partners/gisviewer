@@ -326,11 +326,12 @@ function messagePopup(title, message, msgType) {
         .dialog({
             autoOpen: false,
             resizable: false,
-            buttons: {
-                "Sluiten": function() {
-                    $j(this).dialog("close");
+            buttons: [
+                {
+                    text: "Sluiten",
+                    click: function() { $j(this).dialog("close"); }
                 }
-            }
+            ]
         });
         
         // Center sluiten button
@@ -340,11 +341,11 @@ function messagePopup(title, message, msgType) {
             "padding-left": "0px",
             "padding-right": "0px"
         });
-        $j(".ui-dialog-buttonpane button").css({
+        $j(".ui-dialog-buttonpane button, .ui-dialog-buttonset").css({
             "float": "none",
             "margin-left": "0px",
             "margin-right": "0px"
-        });
+        }).find("span").html("Sluiten");
         messageDialogCreated = true;
     }
     if(msgType) $messageDialog.find(".msgIcon").html('<img src="images/icons/'+msgType+'.png" alt="'+msgType+'" />');

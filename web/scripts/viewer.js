@@ -1235,6 +1235,15 @@ function addClusterIdToCookie(id) {
     createCookie('checkedClusters', newValues, '7');
 }
 
+function removeAllFeatures() {
+    webMapController.getMap().getLayer("editMap").removeAllFeatures();
+}
+
+function startDrawPolygon(geomType) {
+    webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    webMapController.getMap().getLayer("editMap").drawFeature(geomType);
+}
+
 function removeClusterIdFromCookie(id) {
     var str = readCookie('checkedClusters');
     var arr = new Array();
@@ -2656,6 +2665,8 @@ function selectRedlineObject(geom) {
 function returnRedlineObject(jsonString) {
     if (jsonString == "-1") {
         messagePopup("Redlining bewerken", "Geen object gevonden.", "error");
+
+        return;
     }
 
     var redlineObj = eval('(' + jsonString + ')');
@@ -2680,7 +2691,10 @@ function returnRedlineObject(jsonString) {
     innerDoc.getElementById("projectnaam").value = projectnaam;
     innerDoc.getElementById("new_projectnaam").value = '';
     innerDoc.getElementById("ontwerp").value = ontwerp;
-    innerDoc.getElementById("opmerking").value = opmerking;
+
+    if (opmerking != null && opmerking != "undefined") {
+        innerDoc.getElementById("opmerking").value = opmerking;
+    }
 
     editingRedlining = false;
 }

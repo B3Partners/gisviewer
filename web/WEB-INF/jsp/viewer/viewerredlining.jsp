@@ -19,19 +19,26 @@
             </html:messages>
         </div>
 
-        <p>
-            Teken een object op de kaart. Kies vervolgens een project
-            uit de lijst of vul een nieuwe projectnaam in.
-        </p>
-
         <html:form styleId="redliningForm" action="/viewerredlining">
             <input type="hidden" name="sendRedlining">
+            <input type="hidden" name="removeRedlining">
             <input type="hidden" name="prepareRedlining">
 
             <html:hidden property="wkt"/>
             <html:hidden property="gegevensbron"/>
             <html:hidden styleId="redliningID" property="redliningID"/>
-                    
+
+            <p>
+                Maak een nieuw redline object aan of bewerk een reeds bestaand redline object.
+            </p>
+
+            <p>
+                <input type="button" value="Nieuw" class="zoek_knop" onclick="startDrawRedlineObject();" />
+                <input type="button" value="Bewerken" class="zoek_knop" onclick="startEditRedlining();" />
+            </p>
+
+            <hr>
+
             <table>
                 <tr>
                     <td class="tab-row">Bestaand project</td>
@@ -52,7 +59,6 @@
                     <td class="tab-row">Ontwerp</td>
                     <td>
                         <html:select styleId="ontwerp" property="ontwerp">
-                            <html:option value="Maak uw keuze..."/>
                             <html:option value="Ontwerp 1"/>
                             <html:option value="Ontwerp 2"/>
                             <html:option value="Ontwerp 3"/>
@@ -69,21 +75,11 @@
 
             <p>
                 <input type="button" value="Opslaan" class="zoek_knop" onclick="submitForm();" />
-                <input type="button" value="Wissen" class="zoek_knop" onclick="submitRemoveForm();" />
                 <input type="button" value="Leegmaken" class="zoek_knop" onclick="emptyForm();" />
+                <input type="button" value="Wissen" class="zoek_knop" onclick="submitRemoveForm();" />
             </p>
         </html:form>
-
-        <hr>
-       
-        <p>
-            Om een bestaand redline object te bewerken klikt u op de knop bewerken. Selecteer
-            een redline object in de kaart. Na de aanpassingen drukt u op Opslaan.
-        </p>
-
-        <p>
-            <input type="button" value="Bewerken" class="zoek_knop" onclick="editRedline();" />
-        </p>
+        
     </div>
 </div>
 

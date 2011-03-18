@@ -2155,8 +2155,7 @@ function onIdentify(movie,extend) {
         return;
     }
 
-    if (btn_highLightSelected) {
-        
+    if (btn_highLightSelected) {        
         /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
          * de flamingo config een breinaald
          * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
@@ -2169,16 +2168,13 @@ function onIdentify(movie,extend) {
         }
 
         hideIdentifyIcon();
-
         highLightThemaObject(geom);
-
     } else {
         btn_highLightSelected = false;
         
         webMapController.activateTool("identify");
 
         showIdentifyIcon();
-
         handleGetAdminData(geom, null, false);
     }
     
@@ -2694,6 +2690,8 @@ function returnRedlineObject(jsonString) {
 
     if (opmerking != null && opmerking != "undefined") {
         innerDoc.getElementById("opmerking").value = opmerking;
+    } else {
+        innerDoc.getElementById("opmerking").value = "";
     }
 
     editingRedlining = false;

@@ -60,13 +60,15 @@ function submitRemoveForm() {
     document.forms[0].removeRedlining.value = 't';
     document.forms[0].submit();
 
+    emptyForm();
+
     return null;
 }
 
 /* In de ouder wordt editingRedlining op true gezet en de breinaald tool
  * geactiveerd. Als de gebruiker op de kaart klikt wordt door de onIdentify
  * de selectRedlining aangeroepen waaran het klikpunt wordt meegegeven */
-function startEditRedlining() {
+function startEditRedlining() {    
     var ouder = getParent();
 
     if (ouder) {
@@ -78,6 +80,8 @@ function startEditRedlining() {
 }
 
 function startDrawRedlineObject() {
+    emptyForm();
+    
     var ouder = getParent();
 
     if (ouder) {

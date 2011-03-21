@@ -78,7 +78,7 @@ function startEditRedlining() {
 }
 
 function startDrawRedlineObject() {
-    emptyForm();
+    //emptyForm();
     
     var ouder = getParent();
 

@@ -60,8 +60,6 @@ function submitRemoveForm() {
     document.forms[0].removeRedlining.value = 't';
     document.forms[0].submit();
 
-    emptyForm();
-
     return null;
 }
 

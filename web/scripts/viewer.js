@@ -1284,6 +1284,20 @@ function addItemAsLayer(theItem){
     }    
 }
 
+var originalLayerUrl = layerUrl;
+
+function reloadRedliningLayer(themaId, projectnaam) {
+    var kolomnaam = "PROJECTNAAM";
+    layerUrl = originalLayerUrl + kolomnaam + "=" + projectnaam;
+
+    /* tekenobject van kaart afhalen */
+    removeAllFeatures();
+
+    /* vinkje uit- en aanzetten */
+    deActivateCheckbox(themaId);
+    activateCheckbox(themaId);
+}
+
 /* als order niet aangepast mag worden dan moet hier een sort komen */
 function addLayerToEnabledLayerItems(theItem){
     var foundLayerItem = null;
@@ -1557,6 +1571,16 @@ function refreshLayer(doRefreshOrder) {
         var laag = lagen[i];
         webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
     }
+}
+
+function getLayerById(id) {
+    var layer = webMapController.getMap().getLayer(id);
+
+    if (layer != null) {
+        return layer;
+    }
+
+    return null;
 }
 
 function addLayerToFlamingo(lname, layerUrl, layerItems) {

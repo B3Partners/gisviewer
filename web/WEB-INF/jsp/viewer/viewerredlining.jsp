@@ -4,6 +4,26 @@
 <c:set var="form" value="${redliningForm}"/>
 <c:set var="redliningID" value="${form.map.redliningID}"/>
 
+<script type="text/javascript">
+/* Als er ander project wordt gekozen in de bestaande projecten dropdown dan
+ * opnieuw een verzoek doen voor de redlining kaartlaag */
+function projectChanged(project) { 
+    var projectnaam = project.value;
+
+    if (projectnaam == null || projectnaam == "" || projectnaam == "Maak uw keuze...") {
+        return false;
+    }
+    
+    var ouder = getParent();
+
+    /* gebruik id van redlining kaartlaag om deze aan te zetten in de boom */
+    if (ouder) {
+        var kaartlaagId = document.forms[0].kaartlaagId.value;
+        ouder.reloadRedliningLayer(kaartlaagId, projectnaam);
+    }
+}
+</script>
+
 <div style="margin: 5px;">
     <div id="redliningcontainer" class="redliningcontainer">
         <div class="messages">
@@ -26,6 +46,7 @@
 
             <html:hidden property="wkt"/>
             <html:hidden property="gegevensbron"/>
+            <html:hidden property="kaartlaagId"/>
             <html:hidden styleId="redliningID" property="redliningID"/>
 
             <p>
@@ -43,7 +64,7 @@
                 <tr>
                     <td class="tab-row">Bestaand project</td>
                     <td>
-                        <html:select styleId="projectnaam" property="projectnaam">
+                        <html:select styleId="projectnaam" property="projectnaam" onchange="projectChanged(this);" >
                             <html:option value="Maak uw keuze..."/>
                             <c:forEach var="project" items="${projecten}">
                                 <html:option value="${project}"/>

@@ -68,6 +68,7 @@
             <form-property name="redliningID" type="java.lang.String"/>
             <form-property name="wkt" type="java.lang.String"/>
             <form-property name="gegevensbron" type="java.lang.Integer"/>
+            <form-property name="kaartlaagId" type="java.lang.Integer"/>
 
             <!-- formulier -->
             <form-property name="groepnaam" type="java.lang.String"/>

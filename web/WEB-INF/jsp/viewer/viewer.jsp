@@ -11,6 +11,8 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>
 
 <script type="text/javascript">
+    var waitUntillFullyLoaded = false;
+
     var baseNameViewer = "${contextPath}";
     
     function catchEmpty(defval){
@@ -819,9 +821,20 @@
         $j("#loadingscreen").hide();
     }
 
-    // Laadscherm na 60 seconden zelf weghalen
-    // Hij zou weg moeten gaan in onAllLayersFinishedLoading in viewer.js
-    var hideScreen = setTimeout("hideLoadingScreen();", 60000);
+    /* Laadscherm na 60 seconden zelf weghalen
+     * Hij zou weg moeten gaan in onAllLayersFinishedLoading in viewer.js */
+    if (waitUntillFullyLoaded) {
+        var hideScreen = setTimeout("hideLoadingScreen();", 60000);
+    }
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>
+
+<script type="text/javascript">
+    /* Weghalen als viewer.jsp klaar is */
+    if (!waitUntillFullyLoaded) {
+        $j(document).ready(function(){
+            $j("#loadingscreen").hide();
+        });
+    }
+</script>

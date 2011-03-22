@@ -2352,8 +2352,10 @@ function onAllLayersFinishedLoading(mapId){
         doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
         nextIdentifyExtent=null;
     }
-
-    $j("#loadingscreen").hide();
+    
+    if (waitUntillFullyLoaded) {
+        $j("#loadingscreen").hide();
+    }
 }
 
 if(useSortableFunction) {

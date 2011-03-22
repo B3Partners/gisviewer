@@ -18,6 +18,7 @@
 
     <!-- includes -->
     <xsl:include href="calc.xsl"/>
+    <xsl:include href="styles.xsl"/>
 
     <!-- master set -->
     <xsl:template name="layout-master-set">
@@ -27,42 +28,6 @@
             </fo:simple-page-master>
         </fo:layout-master-set>
     </xsl:template>
-
-    <!-- styles -->
-    <xsl:attribute-set name="title-font">
-        <xsl:attribute name="font-size">15pt</xsl:attribute>
-        <xsl:attribute name="color">#ffffff</xsl:attribute>
-    </xsl:attribute-set>
-
-    <xsl:attribute-set name="default-font">
-        <xsl:attribute name="font-size">12pt</xsl:attribute>
-        <xsl:attribute name="color">#000000</xsl:attribute>
-    </xsl:attribute-set>
-    
-    <xsl:attribute-set name="simple-border">
-        
-        <xsl:attribute name="border-bottom-color">#000000</xsl:attribute>
-        <xsl:attribute name="border-bottom-style">solid</xsl:attribute>
-        <xsl:attribute name="border-bottom-width">medium</xsl:attribute>
-        <xsl:attribute name="border-left-color">#000000</xsl:attribute>
-        <xsl:attribute name="border-left-style">solid</xsl:attribute>
-        <xsl:attribute name="border-left-width">medium</xsl:attribute>
-        
-    </xsl:attribute-set>
-
-    <xsl:attribute-set name="column-block">
-        <xsl:attribute name="position">absolute</xsl:attribute>
-        <xsl:attribute name="top">0cm</xsl:attribute>
-        <xsl:attribute name="left">0cm</xsl:attribute>
-        <xsl:attribute name="width">100%</xsl:attribute>
-    </xsl:attribute-set>
-
-    <xsl:attribute-set name="column-block-border" use-attribute-sets="simple-border">
-        <xsl:attribute name="position">absolute</xsl:attribute>
-        <xsl:attribute name="top">0cm</xsl:attribute>
-        <xsl:attribute name="left">0cm</xsl:attribute>
-        <xsl:attribute name="width">100%</xsl:attribute>
-    </xsl:attribute-set>
 
     <!-- root -->
     <xsl:template match="info">
@@ -93,7 +58,7 @@
                         <xsl:call-template name="map-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="12.6cm" height="2.3cm" top="26.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="11.5cm" height="2.3cm" top="25.6cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
@@ -179,7 +144,28 @@
     
     <xsl:template name="disclaimer-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" color="#000000" xsl:use-attribute-sets="default-font">
-            Aan deze kaart kunnen geen rechten worden ontleend.
+            <fo:block xsl:use-attribute-sets="disclaimer-font" font-weight="bold">
+                Disclaimer
+            </fo:block>
+            <fo:block xsl:use-attribute-sets="disclaimer-font">
+                Op het gebruik van de door de provincie Limburg aan u verstrekte
+                gegevens zijn de volgende gebruiksvoorwaarden van toepassing.
+            </fo:block>
+            <fo:block xsl:use-attribute-sets="disclaimer-font" margin-left="0.7cm">
+                1. De juistheid, volledigheid en actualiteit van de gegevens kan
+                niet worden gegarandeerd.
+            </fo:block>
+            <fo:block xsl:use-attribute-sets="disclaimer-font" margin-left="0.7cm">
+                2. Het gebruik van de verstrekte gegevens geschiedt op eigen risico,
+                de provincie Limburg kan niet aansprakelijk worden gesteld voor
+                schade van welke aard dan ook die voortvloeit uit of in verband
+                staat met het gebruik van de verstrekte gegevens.
+            </fo:block>
+            <fo:block xsl:use-attribute-sets="disclaimer-font" margin-left="0.7cm">
+                3. De verstrekte gegevens mogen ter beschikking worden gesteld
+                aan derden, onder voorwaarde dat deze gebruiksvoorwaarden door
+                u aan de betreffende derden worden verstrekt.
+            </fo:block>
         </fo:block>
     </xsl:template>
 

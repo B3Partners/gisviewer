@@ -84,7 +84,7 @@
         </fmc:GIS>
 
         <fmc:Maptip listento="map1"/>
-        <fmc:Map maptipdelay="500" id="map1" left="0" top="0%" height="100%" width="100%"
+        <fmc:Map maptipdelay="150" id="map1" left="0" top="0%" height="100%" width="100%"
         bottom="bottom" visible="true" extenthistory="10" extent="168000,305000,214000,422000"
         movesteps="20" movetime="100">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>          

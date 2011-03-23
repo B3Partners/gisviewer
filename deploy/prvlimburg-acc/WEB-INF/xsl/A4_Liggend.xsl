@@ -6,17 +6,15 @@
     <xsl:param name="versionParam" select="'1.0'"/>
 
     <!-- formatter -->
-    <xsl:decimal-format name="MyFormat" decimal-separator=',' grouping-separator='.' />
+    <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
+    infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"
+    zero-digit="0" digit="#" pattern-separator=";" />
 
     <!-- vars -->
-    <xsl:variable name="ratio" select="format-number(mapHeight div mapWidth,'#.#,00','MyFormat')" />
-    
-    <!-- arbitrair gekozen map breedte zodat deze mooi in map block komt
-    mogelijk aanpassen bij andere orientatie en paginaformaat -->
-    <xsl:variable name="map-height">420</xsl:variable>
-    <xsl:variable name="map-width">600</xsl:variable>
-    
-    <xsl:variable name="testvar" select="format-number($map-height div $ratio,'0','MyFormat')"/>
+    <xsl:variable name="ratio" select="format-number(info/mapHeight div info/mapWidth,'0.##','MyFormat')" />
+
+    <xsl:variable name="map-height">455</xsl:variable>
+    <xsl:variable name="map-width" select="format-number($map-height div $ratio,'####','MyFormat')" />
 
     <!-- includes -->
     <xsl:include href="calc.xsl"/>
@@ -79,7 +77,7 @@
         </fo:block>
     </xsl:template>
 
-    <xsl:template name="info-block">
+    <xsl:template name="info-block">        
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
             <fo:block>
                 <fo:external-graphic src="url('limburg_noordpijl.jpg')" width="45px" height="46px"/>
@@ -110,7 +108,7 @@
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="10pt" color="#9E3A56" font-weight="bold">
-                sector GIS | <xsl:value-of select="$ratio"/> | <xsl:value-of select="$testvar"/>
+                sector GIS
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt" font-style="italic">

@@ -6,18 +6,19 @@
     <xsl:param name="versionParam" select="'1.0'"/>
 
     <!-- formatter -->
-    <xsl:decimal-format decimal-separator="," grouping-separator="." name="MyFormat" NaN="&#160;" infinity="&#160;"/>
+    <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
+    infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"
+    zero-digit="0" digit="#" pattern-separator=";" />
 
-    <!-- vars  -->
-    <xsl:variable name="ratio" select="mapHeight div mapWidth"/>
+    <!-- vars -->
+    <xsl:variable name="ratio" select="format-number(info/mapHeight div info/mapWidth,'0.##','MyFormat')" />
 
-    <!-- arbitrair gekozen map breedte zodat deze mooi in map block komt
-    mogelijk aanpassen bij andere orientatie en paginaformaat -->
-    <xsl:variable name="map-width">965</xsl:variable>
-    <xsl:variable name="map-height" select="format-number($map-width * $ratio,'0','MyFormat')"/>
+    <xsl:variable name="map-height">700</xsl:variable>
+    <xsl:variable name="map-width" select="format-number($map-height div $ratio,'####','MyFormat')" />
 
     <!-- includes -->
     <xsl:include href="calc.xsl"/>
+    <xsl:include href="styles.xsl"/>
 
     <!-- master set -->
     <xsl:template name="layout-master-set">
@@ -27,42 +28,6 @@
             </fo:simple-page-master>
         </fo:layout-master-set>
     </xsl:template>
-
-    <!-- styles -->
-    <xsl:attribute-set name="title-font">
-        <xsl:attribute name="font-size">15pt</xsl:attribute>
-        <xsl:attribute name="color">#ffffff</xsl:attribute>
-    </xsl:attribute-set>
-
-    <xsl:attribute-set name="default-font">
-        <xsl:attribute name="font-size">12pt</xsl:attribute>
-        <xsl:attribute name="color">#000000</xsl:attribute>
-    </xsl:attribute-set>
-    
-    <xsl:attribute-set name="simple-border">
-        
-        <xsl:attribute name="border-bottom-color">#000000</xsl:attribute>
-        <xsl:attribute name="border-bottom-style">solid</xsl:attribute>
-        <xsl:attribute name="border-bottom-width">medium</xsl:attribute>
-        <xsl:attribute name="border-left-color">#000000</xsl:attribute>
-        <xsl:attribute name="border-left-style">solid</xsl:attribute>
-        <xsl:attribute name="border-left-width">medium</xsl:attribute>
-        
-    </xsl:attribute-set>
-
-    <xsl:attribute-set name="column-block">
-        <xsl:attribute name="position">absolute</xsl:attribute>
-        <xsl:attribute name="top">0cm</xsl:attribute>
-        <xsl:attribute name="left">0cm</xsl:attribute>
-        <xsl:attribute name="width">100%</xsl:attribute>
-    </xsl:attribute-set>
-
-    <xsl:attribute-set name="column-block-border" use-attribute-sets="simple-border">
-        <xsl:attribute name="position">absolute</xsl:attribute>
-        <xsl:attribute name="top">0cm</xsl:attribute>
-        <xsl:attribute name="left">0cm</xsl:attribute>
-        <xsl:attribute name="width">100%</xsl:attribute>
-    </xsl:attribute-set>
 
     <!-- root -->
     <xsl:template match="info">

@@ -287,6 +287,34 @@ html, body {
 }
 
 /* CURSOR DEFINITIONS OPENLAYERS */
-.olControlidentifyActive {
-    cursor: url(../images/cursors/identify.png), default;
+#mapcontent .olControlidentifyActive, #mapcontent .olDragDown.olControlidentifyActive {
+    cursor: url(./styles/cursors/identify.cur), url(cursors/identify.cur), pointer;
+}
+
+#mapcontent .olControlDragPanActive {
+    cursor: url(./styles/cursors/pan.cur), url(cursors/pan.cur), default;
+}
+
+#mapcontent .olDragDown {
+    cursor: url(./styles/cursors/pan_drag.cur), url(cursors/pan_drag.cur), move;
+}
+
+#mapcontent .olControlZoomBoxActive {
+    cursor: url(./styles/cursors/zoom.cur), url(cursors/zoom.cur), default;
+}
+
+#mapcontent .olControlMeasureActive {
+    cursor: url(./styles/cursors/measure.cur), url(cursors/measure.cur), default;
+}
+
+#mapcontent .olControlb_highlightActive {
+    cursor: url(./styles/cursors/highlight.cur), url(cursors/highlight.cur), default;
+}
+
+#content_viewer #mapcontent .olControlDrawFeaturePolygonActive, #content_viewer #mapcontent .olControlDrawFeaturePathActive, #content_viewer #mapcontent .olControlDrawFeaturePointActive {
+    cursor: pointer;
+}
+
+#mapcontent .olControlPanel, #mapcontent .olControlPanZoomBar {
+    cursor: default;
 }

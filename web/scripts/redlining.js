@@ -25,6 +25,7 @@ function submitForm() {
     }
 
     var projectnaam = document.forms[0].projectnaam.value;
+    
     var new_projectnaam = document.forms[0].new_projectnaam.value;
     var ontwerp = document.forms[0].ontwerp.value;
 
@@ -36,6 +37,12 @@ function submitForm() {
     document.forms[0].sendRedlining.value = 't';
     document.forms[0].submit();
 
+    if (new_projectnaam != null || new_projectnaam != "") {
+        projectnaam = document.forms[0].new_projectnaam.value;
+    }
+
+    document.getElementById('projectnaam').onchange(projectnaam);
+
     return false;
 }
 
@@ -43,6 +50,7 @@ function submitRemoveForm() {
     var ouder = getParent();
 
     var id = document.forms[0].redliningID.value;
+    var projectnaam = document.forms[0].projectnaam.value;
 
     if (id == null || id == "" || id == "undefined") {
         if (ouder) {

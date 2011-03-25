@@ -192,9 +192,11 @@ var multiPolygonBufferWkt = null;
 var alleLayers = new Array();
 
 function doInitSearch() {
-    if (searchConfigId.length>0 && search.length>0){
+    if (searchConfigId.length > 0 && search.length > 0){
         showLoading();
-        JZoeker.zoek(new Array(searchConfigId),search,0,handleInitSearch);
+
+        var termen = search.split(",");
+        JZoeker.zoek(new Array(searchConfigId),termen,0,handleInitSearch);
     }
 }
 function handleInitSearch(list){
@@ -218,14 +220,14 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
             doFilter=true;
     }
     if (doZoom){
-        result=getBboxMinSize(result);
+        result=getBboxMinSize2(result);
         var ext= new Object();
         ext.minx=result.minx;
         ext.miny=result.miny;
         ext.maxx=result.maxx;
         ext.maxy=result.maxy;
-        if(mapInitialized){
-            webMapController.getMap("map1").moveToExtent(ext);
+        if(mapInitialized) {
+            moveToExtent(ext.minx, ext.miny, ext.maxx, ext.maxy);
         }else{
             searchExtent=ext;
         }
@@ -266,6 +268,19 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
         }
     }
 }
+
+function getBboxMinSize2(feature){
+    if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
+        var addX=Number((minBboxZoeken-(feature.maxx-feature.minx))/2);
+        var addY=Number((minBboxZoeken-(feature.maxy-feature.miny))/2);
+        feature.minx=Number(feature.minx-addX);
+        feature.maxx=Number(Number(feature.maxx)+Number(addX));
+        feature.miny=Number(feature.miny-addY);
+        feature.maxy=Number(Number(feature.maxy)+Number(addY));
+    }
+    return feature;
+}
+
 /*because a simple reload won't change the url in flamingo. Remove the layer and add it again.
  *Maybe a getCap is done but with a little luck the browser cached the last request.*/
 function setSldOnDefaultMap(sldUrl,reload){

@@ -752,11 +752,13 @@ function createMetadatLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
     lnk.href = '#';
-    if (item.metadatalink && item.metadatalink.length > 1)
-        lnk.onclick = function(){
-            var pu = popUp(item.metadatalink, "metadata", 600, 500, useDivPopup);
-            if(window.focus) pu.focus();
+
+    if (item.metadatalink && item.metadatalink.length > 1) {
+        lnk.onclick = function() {
+            iFramePopup(item.metadatalink, false, 'Informatie', 665, 500);
         };
+    }
+
     return lnk;
 }
 

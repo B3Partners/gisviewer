@@ -4,26 +4,6 @@
 <c:set var="form" value="${redliningForm}"/>
 <c:set var="redliningID" value="${form.map.redliningID}"/>
 
-<script type="text/javascript">
-/* Als er ander project wordt gekozen in de bestaande projecten dropdown dan
- * opnieuw een verzoek doen voor de redlining kaartlaag */
-function projectChanged(project) { 
-    var projectnaam = project.value;
-
-    if (projectnaam == null || projectnaam == "" || projectnaam == "Maak uw keuze...") {
-        return false;
-    }
-    
-    var ouder = getParent();
-
-    /* gebruik id van redlining kaartlaag om deze aan te zetten in de boom */
-    if (ouder) {
-        var kaartlaagId = document.forms[0].kaartlaagId.value;
-        ouder.reloadRedliningLayer(kaartlaagId, projectnaam);
-    }
-}
-</script>
-
 <div style="margin: 5px;">
     <div id="redliningcontainer" class="redliningcontainer">
         <div class="messages">
@@ -50,16 +30,10 @@ function projectChanged(project) {
             <html:hidden styleId="redliningID" property="redliningID"/>
 
             <p>
-                Maak een nieuw redline object aan of bewerk een reeds bestaand redline object.
+                Kies een bestaand project uit de lijst om hiervan de redline
+                objecten op de kaart te bekijken.
             </p>
-
-            <p>
-                <input type="button" value="Nieuw" class="zoek_knop" onclick="startDrawRedlineObject();" />
-                <input type="button" value="Bewerken" class="zoek_knop" onclick="startEditRedlining();" />
-            </p>
-
-            <hr>
-
+            
             <table>
                 <tr>
                     <td class="tab-row">Bestaand project</td>
@@ -72,6 +46,23 @@ function projectChanged(project) {
                         </html:select>
                     </td>
                 </tr>
+            </table>
+
+            <hr>
+            <p>
+                Nieuw object intekenen of een bestaande selecteren en bewerken.
+            </p>
+
+            <p>
+                <input type="button" value="Nieuw" class="zoek_knop" onclick="startDrawRedlineObject();" />
+                <input type="button" value="Bewerken" class="zoek_knop" onclick="startEditRedlining();" />
+            </p>
+
+            <hr>
+
+            <p>Sla het object op of verwijder deze.
+
+            <table>
                 <tr>
                     <td class="tab-row">Project</td>
                     <td><html:text styleId="new_projectnaam" property="new_projectnaam" size="20" maxlength="10"/></td>
@@ -95,10 +86,10 @@ function projectChanged(project) {
             </table>
 
             <p>
-                <input type="button" value="Opslaan" class="zoek_knop" onclick="submitForm();" />
-                <input type="button" value="Leegmaken" class="zoek_knop" onclick="emptyForm();" />
-                <input type="button" value="Wissen" class="zoek_knop" onclick="submitRemoveForm();" />
+                <input type="button" value="Opslaan" class="zoek_knop" onClick="if(confirm('U wilt het object opslaan?')) submitForm(); else return false;" />
+                <input type="button" value="Verwijderen" class="zoek_knop" onClick="if(confirm('U wilt het object verwijderen?')) submitRemoveForm(); else return false;" />
             </p>
+            
         </html:form>
         
     </div>

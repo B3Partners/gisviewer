@@ -1301,16 +1301,37 @@ function addItemAsLayer(theItem){
     }    
 }
 
+function isStringEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
 var originalLayerUrl = layerUrl;
 
-function reloadRedliningLayer(themaId, projectnaam) {
-    var kolomnaam = "PROJECTNAAM";
-    layerUrl = originalLayerUrl + kolomnaam + "=" + projectnaam;
+function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
+    var groepParam = "GROEPNAAM";
+    var projectParam = "PROJECTNAAM";
+
+    if (!isStringEmpty(organizationcode)) {
+        layerUrl = originalLayerUrl + groepParam + "=" + organizationcode;
+    }
+
+    if (!isStringEmpty(projectnaam)) {
+        layerUrl = originalLayerUrl + projectParam + "=" + projectnaam;
+    }
+
+    if (!isStringEmpty(organizationcode) && !isStringEmpty(projectnaam)) {
+        layerUrl = originalLayerUrl + groepParam + "=" + organizationcode + "&"
+            + projectParam + "=" + projectnaam;
+    }
 
     /* tekenobject van kaart afhalen */
-    removeAllFeatures();
+    if (removeFeatures) {
+        removeAllFeatures();
+    }
 
-    /* vinkje uit- en aanzetten */
+    /* TODO: Beetje lelijk gewoon vinkje aan uitzetten om redlining laag te refreshen
+     * wellicht een keer methode schrijven voor de webmapcontroller die
+     * iets dergelijks kan doen */
     deActivateCheckbox(themaId);
     activateCheckbox(themaId);
 }
@@ -1618,7 +1639,8 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
         transparent: true,
         exceptions: "application/vnd.ogc.se_inimage",
         srs: "EPSG:28992",
-        version: "1.1.1"
+        version: "1.1.1",
+        noCache: true // TODO: Voor achtergrond kaartlagen wel cache gebruiken
     };
     var theLayers="";
     var queryLayers="";

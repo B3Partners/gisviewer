@@ -13,6 +13,7 @@ function getParent() {
  * wordt door de back-end opgeslagen */
 function submitForm() {
     var ouder = getParent();
+
     if(ouder) {
         var wkt = ouder.getWktActiveFeature();
         if (wkt) {
@@ -25,23 +26,22 @@ function submitForm() {
     }
 
     var projectnaam = document.forms[0].projectnaam.value;
+    var kaartlaagId = document.forms[0].kaartlaagId.value;
     
     var new_projectnaam = document.forms[0].new_projectnaam.value;
     var ontwerp = document.forms[0].ontwerp.value;
 
     if (ouder && projectnaam == "Maak uw keuze..." && new_projectnaam == "") {
-        ouder.messagePopup("", "Vul een projectnaam in.", "error");        
+        ouder.messagePopup("", "Vul een projectnaam in.", "information");
         return false;
     }
 
     document.forms[0].sendRedlining.value = 't';
     document.forms[0].submit();
 
-    if (new_projectnaam != null || new_projectnaam != "") {
-        projectnaam = document.forms[0].new_projectnaam.value;
+    if (ouder) {        
+        ouder.reloadRedliningLayer(kaartlaagId, null, true);
     }
-
-    document.getElementById('projectnaam').onchange(projectnaam);
 
     return false;
 }
@@ -51,10 +51,11 @@ function submitRemoveForm() {
 
     var id = document.forms[0].redliningID.value;
     var projectnaam = document.forms[0].projectnaam.value;
+    var kaartlaagId = document.forms[0].kaartlaagId.value;
 
     if (id == null || id == "" || id == "undefined") {
         if (ouder) {
-            ouder.messagePopup("", "Selecteer eerst een redlining object.", "error");
+            ouder.messagePopup("", "Selecteer eerst een redlining object.", "information");
             return false;
         }
     }
@@ -68,7 +69,11 @@ function submitRemoveForm() {
     document.forms[0].removeRedlining.value = 't';
     document.forms[0].submit();
 
-    return null;
+    if (ouder) {        
+        ouder.reloadRedliningLayer(kaartlaagId, null, true);
+    }
+
+    return false;
 }
 
 /* In de ouder wordt editingRedlining op true gezet en de breinaald tool
@@ -85,18 +90,16 @@ function startEditRedlining() {
     }
 }
 
-function startDrawRedlineObject() {
-    //emptyForm();
-    
+function startDrawRedlineObject() {    
     var ouder = getParent();
 
     if (ouder) {
+        emptyForm();
         ouder.startDrawPolygon("Polygon");
     }
 }
 
 function emptyForm() {
-
     var ouder = getParent();
 
     if (ouder) {
@@ -105,10 +108,30 @@ function emptyForm() {
 
     document.forms[0].wkt.value = "";
     document.forms[0].redliningID.value = "";
-    document.forms[0].projectnaam.value = "Maak uw keuze...";
+    //document.forms[0].projectnaam.value = "Maak uw keuze...";
     document.forms[0].new_projectnaam.value = "";
-    document.forms[0].ontwerp.value = "Ontwerp 1";
+    //document.forms[0].ontwerp.value = "Ontwerp 1";
     document.forms[0].opmerking.value = "";
 
     return false;
+}
+
+/* Als er ander project wordt gekozen in de bestaande projecten dropdown dan
+ * opnieuw een verzoek doen voor de redlining kaartlaag */
+function projectChanged(project) {
+    var projectnaam = project.value;
+
+    if (projectnaam == null || projectnaam == "" || projectnaam == "Maak uw keuze...") {
+        return false;
+    }
+
+    var ouder = getParent();
+
+    /* gebruik id van redlining kaartlaag om deze aan te zetten in de boom */
+    if (ouder) {
+        var kaartlaagId = document.forms[0].kaartlaagId.value;
+        ouder.reloadRedliningLayer(kaartlaagId, projectnaam, true);
+    }
+
+    return true;
 }

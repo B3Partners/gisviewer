@@ -266,13 +266,15 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
             if(!$j("#"+tabFieldId).hasClass("tabFieldActive")) bronContainer.css("display", "none");
             var diff=0;
             var beforeElement=null;
-            $j.each($j('#' + htmlId + " > #tabContainer").children(), function(index, domElement) {
-                var elemOrder=bronContainerOrder[domElement.id];
-                if (elemOrder > gegevensbron.order && (diff == 0 || diff > elemOrder-gegevensbron.order)){
-                    beforeElement=domElement;
-                    diff=elemOrder-gegevensbron.order;
-                }
-            });
+            if (gegevensbron.order!=null){
+                $j.each($j('#' + htmlId + " > #tabContainer").children(), function(index, domElement) {
+                    var elemOrder=bronContainerOrder[domElement.id];
+                    if (elemOrder > gegevensbron.order && (diff == 0 || diff > elemOrder-gegevensbron.order)){
+                        beforeElement=domElement;
+                        diff=elemOrder-gegevensbron.order;
+                    }
+                });
+	    }
             if (beforeElement!=null){
                 bronContainer.insertBefore(beforeElement);
             }else{

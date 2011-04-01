@@ -50,15 +50,19 @@
                         </fo:block>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="36.4cm" top="2.35cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="32.6cm" top="2.35cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="info-block"/>
+                    </fo:block-container>
+
+                    <fo:block-container width="6.6cm" height="3.7cm" top="35.4cm" left="0cm" xsl:use-attribute-sets="column-block">
+                        <xsl:call-template name="scale-block"/>
                     </fo:block-container>
 
                     <fo:block-container width="21.7cm" height="37.2cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="19.0cm" height="2.3cm" top="38.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="19.0cm" height="2.3cm" top="38.9cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
@@ -79,12 +83,35 @@
 
     <xsl:template name="info-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
+            <fo:block margin-left="0.2cm" margin-top="1.5cm" font-size="8pt" font-style="italic">
+                <xsl:value-of select="opmerking"/>
+            </fo:block>
+
+        </fo:block>
+    </xsl:template>
+
+    <xsl:template name="scale-block">
+        <fo:block vertical-align="bottom" margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
             <fo:block>
                 <fo:external-graphic src="url('limburg_noordpijl.jpg')" width="45px" height="46px"/>
             </fo:block>
 
-            <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">
-                schaal
+            <fo:block margin-left="0.2cm" font-size="9pt">
+                <fo:table margin-left="-0.2cm">
+                    <fo:table-column column-width="2.7cm"/>
+                    <fo:table-column column-width="2.7cm"/>
+
+                    <fo:table-body>
+                        <fo:table-row>
+                            <fo:table-cell>
+                                <fo:block>schaal</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell>
+                                <fo:block><xsl:value-of select="datum"/></fo:block>
+                            </fo:table-cell>
+                        </fo:table-row>
+                    </fo:table-body>
+                </fo:table>
             </fo:block>
 
             <!-- create scalebar -->
@@ -98,23 +125,6 @@
                     <xsl:with-param name="px-width" select="$map-width"/>
                 </xsl:call-template>
             </fo:block>
-
-            <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="10pt">
-                <xsl:value-of select="datum"/>
-            </fo:block>
-
-            <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="10pt">
-                bureau Geo en Administraties
-            </fo:block>
-
-            <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="10pt" color="#9E3A56" font-weight="bold">
-                sector GIS
-            </fo:block>
-
-            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt" font-style="italic">
-                <xsl:value-of select="opmerking"/>
-            </fo:block>
-
         </fo:block>
     </xsl:template>
 

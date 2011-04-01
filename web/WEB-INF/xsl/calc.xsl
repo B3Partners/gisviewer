@@ -16,7 +16,7 @@
         <xsl:variable name="ymax" select="substring-after($bbox2, ',')"/>
         <xsl:variable name="bbox-width-m" select="$xmax - $xmin"/>
         <xsl:variable name="bbox-height-m" select="$ymax - $ymin"/>
-        <xsl:variable name="bbox-ratio" select="($map-width * $bbox-height-m) div ($map-height * $bbox-width-m)"/>
+        <xsl:variable name="bbox-ratio" select="($map-width-px * $bbox-height-m) div ($map-height-px * $bbox-width-m)"/>
         <xsl:choose>
             <xsl:when test="$bbox-ratio &gt; 1">
                 <xsl:value-of select="$bbox-width-m * $bbox-ratio"/>
@@ -43,7 +43,7 @@
         <xsl:variable name="ymid" select="($ymin + $ymax) div 2"/>
         <xsl:variable name="bbox-width-m" select="$xmax - $xmin"/>
         <xsl:variable name="bbox-height-m" select="$ymax - $ymin"/>
-        <xsl:variable name="bbox-ratio" select="($map-width * $bbox-height-m) div ($map-height * $bbox-width-m)"/>
+        <xsl:variable name="bbox-ratio" select="($map-width-px * $bbox-height-m) div ($map-height-px * $bbox-width-m)"/>
         <xsl:choose>
             <xsl:when test="$bbox-ratio = 1">
                 <xsl:value-of select="$bbox"/>

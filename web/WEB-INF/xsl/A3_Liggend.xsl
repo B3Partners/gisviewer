@@ -5,16 +5,13 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
+    <xsl:variable name="map-width-px" select="'970'"/>
+    <xsl:variable name="map-height-px" select="'700'"/>
+
     <!-- formatter -->
     <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
     infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"
     zero-digit="0" digit="#" pattern-separator=";" />
-
-    <!-- vars -->
-    <xsl:variable name="ratio" select="format-number(info/mapHeight div info/mapWidth,'0.##','MyFormat')" />
-
-    <xsl:variable name="map-height">700</xsl:variable>
-    <xsl:variable name="map-width" select="format-number($map-height div $ratio,'####','MyFormat')" />
 
     <!-- includes -->
     <xsl:include href="calc.xsl"/>
@@ -95,7 +92,7 @@
                             <xsl:with-param name="bbox" select="bbox"/>
                         </xsl:call-template>
                     </xsl:with-param>
-                    <xsl:with-param name="px-width" select="$map-width"/>
+                    <xsl:with-param name="px-width" select="$map-width-px"/>
                 </xsl:call-template>
             </fo:block>
 
@@ -116,26 +113,29 @@
 
     <!-- create map -->    
     <xsl:template name="map-block">
-        <xsl:variable name="bbox-corrected">
-            <xsl:call-template name="correct-bbox">
-                <xsl:with-param name="bbox" select="bbox"/>
-            </xsl:call-template>
-        </xsl:variable>
-
-        <xsl:variable name="map">
-            <xsl:value-of select="imageUrl"/>
-        </xsl:variable>
-
-        <fo:block margin-left="0.1cm" margin-top="0.05cm">
-            <fo:external-graphic
-                src="{$map}"
-                content-width="scale-to-fit"
-                content-height="scale-to-fit"
-                scaling="uniform"
-                width="{$map-width}"
-                height="{$map-height}"
-            />
-        </fo:block>
+            <xsl:variable name="bbox-corrected">
+                <xsl:call-template name="correct-bbox">
+                    <xsl:with-param name="bbox" select="bbox"/>
+                </xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="px-ratio" select="format-number($map-height-px div $map-width-px,'0.##','MyFormat')" />
+            <xsl:variable name="map-width-px-corrected" select="kwaliteit"/>
+            <xsl:variable name="map-height-px-corrected" select="format-number(kwaliteit * $px-ratio,'0','MyFormat')"/>
+            <xsl:variable name="map">
+                <xsl:value-of select="imageUrl"/>
+                <xsl:value-of select="id"/>
+                <xsl:text>&amp;width=</xsl:text>
+                <xsl:value-of select="$map-width-px-corrected"/>
+                <xsl:text>&amp;height=</xsl:text>
+                <xsl:value-of select="$map-height-px-corrected"/>
+                <xsl:text>&amp;bbox=</xsl:text>
+                <xsl:value-of select="$bbox-corrected"/>
+            </xsl:variable>
+            <fo:block-container margin-top="0.5cm" height="17cm" xsl:use-attribute-sets="column-block">
+                <fo:block margin-left="0.05cm" margin-right="0.05cm">
+                    <fo:external-graphic src="{$map}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$map-width-px}" height="{$map-height-px}"/>
+                </fo:block>
+            </fo:block-container>
     </xsl:template>
     
     <xsl:template name="disclaimer-block">

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" exclude-result-prefixes="fo">
     <xsl:output method="xml" version="1.0" omit-xml-declaration="no" indent="yes"/>
 
@@ -123,7 +122,6 @@
             <xsl:variable name="map-height-px-corrected" select="format-number(kwaliteit * $px-ratio,'0','MyFormat')"/>
             <xsl:variable name="map">
                 <xsl:value-of select="imageUrl"/>
-                <xsl:value-of select="id"/>
                 <xsl:text>&amp;width=</xsl:text>
                 <xsl:value-of select="$map-width-px-corrected"/>
                 <xsl:text>&amp;height=</xsl:text>
@@ -131,6 +129,7 @@
                 <xsl:text>&amp;bbox=</xsl:text>
                 <xsl:value-of select="$bbox-corrected"/>
             </xsl:variable>
+
             <fo:block-container margin-top="0.5cm" height="17cm" xsl:use-attribute-sets="column-block">
                 <fo:block margin-left="0.05cm" margin-right="0.05cm">
                     <fo:external-graphic src="{$map}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$map-width-px}" height="{$map-height-px}"/>

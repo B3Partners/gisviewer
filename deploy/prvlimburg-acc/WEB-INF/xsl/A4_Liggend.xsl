@@ -5,7 +5,7 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 	
-	<xsl:variable name="map-width-px" select="'612'"/>
+    <xsl:variable name="map-width-px" select="'613'"/>
     <xsl:variable name="map-height-px" select="'457'"/>
 
     <!-- formatter -->
@@ -136,7 +136,6 @@
             <xsl:variable name="map-height-px-corrected" select="format-number(kwaliteit * $px-ratio,'0','MyFormat')"/>
             <xsl:variable name="map">
                 <xsl:value-of select="imageUrl"/>
-                <xsl:value-of select="id"/>
                 <xsl:text>&amp;width=</xsl:text>
                 <xsl:value-of select="$map-width-px-corrected"/>
                 <xsl:text>&amp;height=</xsl:text>
@@ -144,6 +143,7 @@
                 <xsl:text>&amp;bbox=</xsl:text>
                 <xsl:value-of select="$bbox-corrected"/>
             </xsl:variable>
+
             <fo:block-container margin-top="0.5cm" height="17cm" xsl:use-attribute-sets="column-block">
                 <fo:block margin-left="0.05cm" margin-right="0.05cm">
                     <fo:external-graphic src="{$map}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$map-width-px}" height="{$map-height-px}"/>

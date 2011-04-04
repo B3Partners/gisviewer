@@ -11,6 +11,7 @@
         <web-resource-collection>
             <web-resource-name>Index</web-resource-name>
             <url-pattern>/indexlist.do</url-pattern>
+            <url-pattern>/services/PrintServlet</url-pattern>
         </web-resource-collection>
     </security-constraint>
 

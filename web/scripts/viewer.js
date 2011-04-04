@@ -1383,6 +1383,8 @@ function doRefreshLayer() {
     //register after loading
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
     refreshLayer();
+
+    refreshLegendBox();
 }
 
 /*Check scale for all layers*/

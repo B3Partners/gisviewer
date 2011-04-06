@@ -33,11 +33,11 @@
             
             <fo:page-sequence master-reference="a3-liggend">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="39.5cm" height="1.5cm" top="0cm" left="0cm" background-color="#9E3A56" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="39.61cm" height="1.5cm" top="0cm" left="0cm" background-color="#9E3A56" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="39.5cm" background-color="#76B6D1" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="39.61cm" background-color="#76B6D1" xsl:use-attribute-sets="column-block">
                         <fo:block />
                     </fo:block-container>
 

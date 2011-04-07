@@ -1009,9 +1009,10 @@ function treeImageError(){
 }
 
 function treeImageOnload(){
-    if (parseInt(this.height) > 5){
-        $j(this).parent().find("img.legendLoading").hide();
-    }
+    // TODO: Hoogte check wegehaald, ging niet altijd goed in IE7 waardoor laadicoontje niet werd weggehaald
+    // if (parseInt(this.height) > 5){
+    $j(this).parent().find("img.legendLoading").hide();
+    // }
 }
 
 function activateCheckbox(id) {

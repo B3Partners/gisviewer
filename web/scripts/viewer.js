@@ -1131,7 +1131,25 @@ function clusterCheckboxClick(element,dontRefresh){
     if (layerUrl==null){
         layerUrl=""+kburl;
     }
-
+    var status=element.checked;
+    if (status){
+        var found=false;
+        for (var i=0; i < clustersAan.length; i++){
+            if (clustersAan[i].id==element.id){
+                found=true;
+            }
+        }
+        if (!found)
+            clustersAan.push(element);
+    }else{
+        var newClustersAan = new Array();
+        for (var i=0; i < clustersAan.length; i++){
+            if (clustersAan[i].id!=element.id){
+                newClustersAan.push(clustersAan[i]);
+            }
+        }
+        clustersAan=newClustersAan;
+    }
     /* indien cookies aan dan cluster id in cookie stoppen */
     var cluster=element.theItem;
     if (useCookies) {      
@@ -2896,6 +2914,17 @@ function createPermaLink(){
     if (layerIds != undefined && layerIds.length > 0) {
         id = "id=" + layerIds;
     }
+    var clusterIds="";
+    if (clustersAan!=undefined && clustersAan.length> 0){
+        for (var i=0; i < clustersAan.length; i++){
+            if (clusterIds.length > 0){
+                clusterIds+=",";
+            }
+            clusterIds+=clustersAan[i].theItem.id.substring(1);
+        }
+
+    }
+
 
     /* extent ophalen */
     var fullExtent = webMapController.getMap().getExtent();
@@ -2921,7 +2950,7 @@ function createPermaLink(){
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
 
-    var url = urlBase + personalCode + id + extent;
+    var url = urlBase + personalCode + id +"&clusterId="+clusterIds+ extent;
     return url;
 }
 

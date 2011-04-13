@@ -73,6 +73,13 @@ body.homebody {
     margin-right: 125px;
 }
 
+.footer_tekst a.gpl_link{
+    color: #7891A5;
+    font-size: 11px;
+    margin-top: 18px;
+    text-decoration: underline;
+}
+
 #acknowledge {
     border: 1px solid #357EBF;
     width: 550px;

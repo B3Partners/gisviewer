@@ -14,7 +14,6 @@
 </script>
 
 <tiles:insert definition="actionMessages"/>
-
 <!-- Loop door tekstblokken heen -->
 <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
     <div class="content_block">
@@ -40,6 +39,9 @@
         </div>
         </c:if>
     </div>
+    <c:if test="${status.count % 2 == 0}">
+        <div style="clear: both;"></div>
+    </c:if>
 </c:forEach>
 
 <!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard
@@ -78,6 +80,8 @@ blokken -->
             <p>Luchtfoto van de Utrechtse heuvelrug</p>
         </div>
     </div>
+            
+    <div style="clear: both;"></div>
 
     <div class="content_block">
         <div class="content_title">Nieuwe Kaart Nederland</div>
@@ -96,6 +100,8 @@ blokken -->
             <p>OpenStreetMap als achtergrondkaart met daarop de cbs wijkindeling in Utrecht</p>
         </div>
     </div>
+            
+    <div style="clear: both;"></div>
 
     <div class="content_block">
         <div class="content_title">Bestemmingsplannen</div>

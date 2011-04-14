@@ -201,3 +201,5 @@ blokken -->
         <p><tiles:insert name="loginblock"/></p>
     </div>
 </c:if>
+
+<div style="clear: both; padding-bottom: 25px;"></div>

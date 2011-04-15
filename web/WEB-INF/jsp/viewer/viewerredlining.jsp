@@ -71,9 +71,9 @@
                     <td class="tab-row">Ontwerp</td>
                     <td>
                         <html:select styleId="ontwerp" property="ontwerp">
-                            <html:option value="Ontwerp 1"/>
-                            <html:option value="Ontwerp 2"/>
-                            <html:option value="Ontwerp 3"/>
+                            <html:option value="Constatering"/>
+                            <html:option value="Vraag"/>
+                            <html:option value="Bezwaar"/>
                         </html:select>
                     </td>
                 </tr>

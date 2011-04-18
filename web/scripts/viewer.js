@@ -1279,6 +1279,11 @@ function removeAllFeatures() {
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
 }
 
+function stopDrawPolygon() {
+    webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    webMapController.getMap().getLayer("editMap").stopDrawDrawFeature();
+}
+
 function startDrawPolygon(geomType) {
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
     webMapController.getMap().getLayer("editMap").drawFeature(geomType);

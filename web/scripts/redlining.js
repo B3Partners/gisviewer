@@ -90,12 +90,23 @@ function startEditRedlining() {
     }
 }
 
-function startDrawRedlineObject() {    
+var startedDraw = false;
+
+function startDrawRedlineObject() {
     var ouder = getParent();
 
     if (ouder) {
-        emptyForm();
-        ouder.startDrawPolygon("Polygon");
+        if (startedDraw) {
+            ouder.stopDrawPolygon();
+        } else {
+            emptyForm();
+            ouder.startDrawPolygon("Polygon");
+        }
+
+        if (startedDraw)
+            startedDraw = false;
+        else
+            startedDraw = true;
     }
 }
 

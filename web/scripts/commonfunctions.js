@@ -278,8 +278,8 @@ function iFramePopup(url, newpopup, title, width, height) {
             frameborder: 0
         }).css({
             border: "0px none",
-            width: "95%",
-            height: "95%"
+            width: "100%",
+            height: "100%"
         });
         $div.append($iframe);
         if(!newpopup) {

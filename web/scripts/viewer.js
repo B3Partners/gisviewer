@@ -53,7 +53,10 @@ function initMapComponent(){
             maxExtent: maxBounds,
             allOverlays: true,
             units :'m',
-            resolutions: [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125]
+            resolutions: [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125],
+            controls : [new OpenLayers.Control.Navigation({
+                    zoomBoxEnabled: false
+                }),new OpenLayers.Control.ArgParser()]
         };
         $j("#mapcontent").html(" ");
         var olmap=webMapController.createMap('mapcontent',opt);
@@ -100,6 +103,9 @@ function initializeButtons() {
         title: 'Pannen'
     });
     webMapController.addTool(pan);
+    //set default tool pan so the cursor is ok.
+    if (mapviewer=="openlayers")
+        webMapController.activateTool("b_pan");
 
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
         title: 'Vorige extent'

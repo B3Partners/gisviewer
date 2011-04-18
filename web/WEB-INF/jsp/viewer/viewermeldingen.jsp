@@ -39,7 +39,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         }
     }
 
-    function submitForm() {
+    function submitForm() {        
         var ouder = getParent();
         if(ouder) {
             var wkt = ouder.getWktActiveFeature();
@@ -90,7 +90,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <script type="text/javascript">
                             var ouder = getParent();
                             if(ouder) {
-                                ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+                                //ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                             }
                         </script>
                     </c:if>

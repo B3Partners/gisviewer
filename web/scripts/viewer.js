@@ -439,8 +439,6 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId, selectionWithinO
 
         var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
         balloon.getContentElement().html(iframeElement);
-
-        loadBusyJSP($j('#dataframeballoonpopup'), 'div');
     } else {
         document.forms[0].target = 'dataframe';
         loadBusyJSP('dataframe', 'panel');

@@ -2911,8 +2911,14 @@ function getBookMark() {
     addToFavorites(url);
 }
 
-function getCenterWkt() {
+function getFullExtent() {
     var fullExtent = webMapController.getMap().getExtent();
+
+    return fullExtent;
+}
+
+function getCenterWkt() {
+    var fullExtent = getFullExtent();
 
     var minx = Math.round(Number(fullExtent.minx)+1);
     var miny = Math.round(Number(fullExtent.miny)+1);
@@ -2925,17 +2931,42 @@ function getCenterWkt() {
     return "POINT(" + x + " " + y + ");";
 }
 
-function getLatLonForGoogleMaps() {
-    /* ophalen wkt midden van kaartbeeld */
-    var wkt = getCenterWkt(); //"POINT(161009 470567)";
+function getMinWkt() {
+    var fullExtent = getFullExtent();
 
-    JMapData.getLatLonForRDPoint(wkt, openGoogleMaps);
+    var minx = Math.round(Number(fullExtent.minx)+1);
+    var miny = Math.round(Number(fullExtent.miny)+1);
+
+    return "POINT(" + minx + " " + miny + ");";
 }
 
+function getMaxWkt() {
+    var fullExtent = getFullExtent();
+
+    var maxx = Math.round(Number(fullExtent.maxx)-1);
+    var maxy = Math.round(Number(fullExtent.maxy)-1);
+
+    return "POINT(" + maxx + " " + maxy + ");";
+}
+
+/* Berekenen lattitude en longitude waardes voor gebruik in Google
+ * maps aanroep */
+function getLatLonForGoogleMaps() {
+    var centerWkt = getCenterWkt();
+    var minWkt = getMinWkt();
+    var maxWkt = getMaxWkt();
+
+    JMapData.getLatLonForRDPoint(centerWkt, minWkt, maxWkt, openGoogleMaps);
+}
+
+/* Zie: http://mapki.com/wiki/Google_Map_Parameters */
 function openGoogleMaps(values) {
-    var latlon = "&ll=" + values[0] + "," + values[1];
-    var zoom = "&z=13";
-    var url = "http://www.google.nl/maps?ie=UTF8" + latlon + zoom;
+    var ll = "&ll=" + values[0] + "," + values[1];
+    var spn = "&spn=" + values[2] + "," + values[3];
+    
+    var options = "&hl=nl&om=0";
+
+    var url = "http://www.google.nl/maps?ie=UTF8" + ll + spn + options;
 
     window.open(url);
 }

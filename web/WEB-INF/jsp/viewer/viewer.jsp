@@ -45,6 +45,7 @@
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
     var bbox='${extent}';
+    var scale=catchEmpty(${scale});
 
     /* init search */
     var searchConfigId='${searchConfigId}';

@@ -2356,6 +2356,9 @@ function onFrameworkLoaded(){
                 setFullExtent(12000,304000,280000,620000);
             }
         }
+        if (scale){
+            webMapController.getMap().zoomToScale(scale);
+        }        
     }
 
     frameWorkInitialized = true;
@@ -2934,32 +2937,18 @@ function createPermaLink(){
 
     }
 
-
     /* extent ophalen */
     var fullExtent = webMapController.getMap().getExtent();
-
-    var minx = fullExtent.minx.toString().split('.');
-    var miny = fullExtent.miny.toString().split('.');
-    var maxx = fullExtent.maxx.toString().split('.');
-    var maxy = fullExtent.maxy.toString().split('.');
-
-    /* extent geeft number terug, casten naar string zodat split werkt
-     * als er dan een punt in zit de decimaal erafhalen */
-    if (typeof minx != 'string')
-        minx = minx[0];
-
-    if (typeof miny != 'string')
-        miny = miny[0];
-
-    if (typeof maxx != 'string')
-        maxx = maxx[0];
-
-    if (typeof maxy != 'string')
-        maxy = maxy[0];
+    
+    var minx = Math.round(Number(fullExtent.minx)+1);
+    var miny = Math.round(Number(fullExtent.miny)+1);
+    var maxx = Math.round(Number(fullExtent.maxx)-1);
+    var maxy = Math.round(Number(fullExtent.maxy)-1);
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
-
-    var url = urlBase + personalCode + id +"&clusterId="+clusterIds+ extent;
+    var scale=webMapController.getMap().getScale();
+    scale="&scale="+scale;
+    var url = urlBase + personalCode + id +"&clusterId="+clusterIds+ extent+scale;
     return url;
 }
 

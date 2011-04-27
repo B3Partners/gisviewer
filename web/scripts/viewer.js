@@ -363,7 +363,7 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId, selectionWithinO
 
     document.forms[0].geom.value=geom;
     
-    document.forms[0].scale.value=webMapController.getMap().getScale();
+    document.forms[0].scale.value=webMapController.getMap().getResolution();
     document.forms[0].tolerance.value=tolerance;
 
     if (selectionWithinObject) {
@@ -1417,7 +1417,7 @@ function doRefreshLayer() {
 
 /*Check scale for all layers*/
 function checkScaleForLayers() {
-    var currentscale = webMapController.getMap().getScale();
+    var currentscale = webMapController.getMap().getResolution();
     
     setScaleForTree(themaTree,currentscale);
 }
@@ -1825,7 +1825,7 @@ function getLayerIdsAsString(onlyWithinScale) {
                 continue;
         }
         if (onlyWithinScale){
-            var currentscale = webMapController.getMap().getScale();
+            var currentscale = webMapController.getMap().getResolution();
             if (!isItemInScale(enabledLayerItems[i],currentscale)){
                 continue;
             }
@@ -2356,8 +2356,8 @@ function onFrameworkLoaded(){
                 setFullExtent(12000,304000,280000,620000);
             }
         }
-        if (scale){
-            webMapController.getMap().zoomToScale(scale);
+        if (resolution){
+            webMapController.getMap().zoomToResolution(resolution);
         }        
     }
 
@@ -2737,7 +2737,7 @@ function highLightThemaObject(geom) {
         iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300);
     }
 
-    var scale = webMapController.getMap().getScale();
+    var scale = webMapController.getMap().getResolution();
     var tol = tolerance;
 
     if (highlightLayers.length == 1) {
@@ -2750,7 +2750,7 @@ function selectRedlineObject(geom) {
      * geom: Klikpunt op de kaart. Een POINT wkt string.
      * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
     */
-    var scale = webMapController.getMap().getScale();
+    var scale = webMapController.getMap().getResolution();
     var tol = tolerance;
 
     EditUtil.getIdAndWktForRedliningObject(geom, redLineGegevensbronId, scale, tol, returnRedlineObject);
@@ -2809,7 +2809,7 @@ function handlePopupValue(value) {
      * setActiveCluster(item, true);
      */
 
-    var scale = webMapController.getMap().getScale();
+    var scale = webMapController.getMap().getResolution();
     var tol = tolerance;
     EditUtil.getHighlightWktForThema(value, highLightGeom, scale, tol, returnHighlight);
 //handleGetAdminData(highLightGeom, value);
@@ -2946,8 +2946,8 @@ function createPermaLink(){
     var maxy = Math.round(Number(fullExtent.maxy)-1);
 
     var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
-    var scale=webMapController.getMap().getScale();
-    scale="&scale="+scale;
+    var scale=webMapController.getMap().getResolution();
+    scale="&resolution="+scale;
     var url = urlBase + personalCode + id +"&clusterId="+clusterIds+ extent+scale;
     return url;
 }

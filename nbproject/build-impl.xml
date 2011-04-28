@@ -716,8 +716,8 @@ exists or setup the property manually. For example like this:
     <target depends="init" if="dist.ear.dir" name="library-inclusion-in-manifest">
         <copyfiles files="${libs.Struts.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.jstl11.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${libs.Hibernate.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.Commons.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${libs.Hibernate3.6.3.Final.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.DWR.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.b3p-commons-core.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.jump-b3p.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
@@ -731,7 +731,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.Security.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.b3p-gisviewer.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${libs.HibernateEntityManager.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.b3p-zoeker.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.GeotoolsOracle.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.GeotoolsOgc.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
@@ -747,8 +746,8 @@ exists or setup the property manually. For example like this:
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
         <copyfiles files="${libs.Struts.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.jstl11.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${libs.Hibernate.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.Commons.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${libs.Hibernate3.6.3.Final.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.DWR.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-commons-core.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.jump-b3p.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
@@ -762,7 +761,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${libs.Security.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-gisviewer.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-geotools-filterImpl2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copyfiles files="${libs.HibernateEntityManager.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${reference.b3p-zoeker.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsOracle.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsOgc.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>

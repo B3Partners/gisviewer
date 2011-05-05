@@ -1607,7 +1607,7 @@ function refreshLayer(doRefreshOrder) {
         var layerId = layerGroup[0];
         if (webMapController.getMap().getLayer(layerId)==null){
             layerGroup.splice(0,1);
-            addLayerToFlamingo(layerId, layerUrl, layerGroup);
+            addLayerToViewer(layerId, layerUrl, layerGroup);
         }
         var layer=webMapController.getMap().getLayer(layerId);
         if (layer!=null){
@@ -1651,8 +1651,7 @@ function getLayerById(id) {
     return null;
 }
 
-function addLayerToFlamingo(lname, layerUrl, layerItems) {
-    
+function addLayerToViewer(lname, layerUrl, layerItems) {
     var capLayerUrl=layerUrl;
 
     //var newLayer= new FlamingoWMSLayer(lname);
@@ -1718,6 +1717,18 @@ function addLayerToFlamingo(lname, layerUrl, layerItems) {
                 theLayers+=",";
             }
             theLayers+=item.wmslayers;
+
+            /* 
+             * Achtergrond optie toevoegen voor gebruik bij Print. Anders
+             * komt de laatst aangevinkte laag bovenop ook als dit een 
+             * achtergrond laag is.
+            */
+            if (item.background) {
+                options["background"] = true;
+            } else {
+                options["background"] = false;
+            }
+
         }
         if (item.wmsquerylayers){
             if (queryLayers.length > 0) {
@@ -2499,38 +2510,69 @@ function getParentItem(parentCandidate,item){
     return null;
 }
 
-var exportMapWindow;
-function exportMap(){
-    var submitForm = document.createElement("FORM");
-    document.body.appendChild(submitForm);
-    submitForm.method = "POST";
+function getWMSLayersUrls() {
+    var background;
+
+    var bgLayers = new Array();
+    var fgLayers = new Array();
 
     var urlString="";
     var firstURL = true;
-    var layers=webMapController.getMap("map1").getAllWMSLayers();
+
+    var layers = webMapController.getMap("map1").getAllWMSLayers();
+
+    /* eerst layers verdelen in achtergrond en voorgrond */
     for (var i=0; i < layers.length; i++){
         if(layers[i].getURL() != null){
+            background = layers[i].getOption("background");
+
+            if (background) {
+                bgLayers.push(layers[i]);
+            } else {
+                fgLayers.push(layers[i]);
+            }
+        }
+    }
+
+    /* eerst achtergrond url's toevoegen */
+    for (var j=0; j < bgLayers.length; j++){
+        if(bgLayers[j].getURL() != null){
             if(!firstURL){
                 urlString+=";";
             }else{
                 firstURL = false;
             }
-            urlString+=layers[i].getURL();
-            if(layers[i].getAlpha && layers[i].getAlpha() != null){
-                urlString+="#"+layers[i].getAlpha();
+
+            urlString+=bgLayers[j].getURL();
+            if(bgLayers[j].getAlpha && bgLayers[j].getAlpha() != null){
+                urlString+="#"+bgLayers[j].getAlpha();
             }
         }
     }
 
-    var urlInput = document.createElement('input');
-    urlInput.id = 'urls';
-    urlInput.name = 'urls';
-    urlInput.type = 'hidden';
-    urlInput.value = urlString;
-    submitForm.appendChild(urlInput);
+    /* dan voorgrond url's toevoegen */
+    for (var k=0; k < fgLayers.length; k++){
+        if(fgLayers[k].getURL() != null){
+            if(!firstURL){
+                urlString+=";";
+            }else{
+                firstURL = false;
+            }
 
+            urlString+=fgLayers[k].getURL();
+            if(fgLayers[k].getAlpha && fgLayers[k].getAlpha() != null){
+                urlString+="#"+fgLayers[k].getAlpha();
+            }
+        }
+    }
+
+    return urlString;
+}
+
+function getWktStringForPrint() {
     var vectorLayers=webMapController.getMap().getAllVectorLayers();
     var wktString="";
+
     for(var c = 0 ; c < vectorLayers.length ; c++){
         var vectorLayer = vectorLayers[c];
         var features = vectorLayer.getAllFeatures();
@@ -2542,8 +2584,27 @@ function exportMap(){
             }
             wktString+=";";
         }
-
     }
+
+    return wktString;
+}
+
+var exportMapWindow;
+function exportMap(){    
+    var submitForm = document.createElement("FORM");
+    document.body.appendChild(submitForm);
+    submitForm.method = "POST";
+
+    var urlString = getWMSLayersUrls();
+
+    var urlInput = document.createElement('input');
+    urlInput.id = 'urls';
+    urlInput.name = 'urls';
+    urlInput.type = 'hidden';
+    urlInput.value = urlString;
+    submitForm.appendChild(urlInput);
+
+    var wktString = getWktStringForPrint();
 
     var wktInput = document.createElement('input');
     wktInput.id = 'wkts';

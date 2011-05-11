@@ -36,7 +36,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://192.168.1.14:8084/kaartenbalie/services/</param-value>
+            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -146,6 +146,11 @@
         </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>
+    
+    <servlet>
+        <servlet-name>SearchAutocomplete</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.SearchAutocomplete</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>PrintServlet</servlet-name>
@@ -189,6 +194,10 @@
     <servlet-mapping>
         <servlet-name>CreateSLD</servlet-name>
         <url-pattern>/services/CreateSLD</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchAutocomplete</servlet-name>
+        <url-pattern>/viewer/SearchAutocomplete.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

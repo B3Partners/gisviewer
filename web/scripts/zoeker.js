@@ -537,6 +537,35 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             ida[0] = optionListZc.id;
             JZoeker.zoek(ida, optionListStrings, maxResults, handleZoekVeldinputList);
 
+        }else if (zoekVeld.inputType == 3 && zoekVeld.inputZoekConfiguratie) {
+            inputfield = $j('<input type="text" />');
+            inputfield.attr({
+                id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
+                name: zoekVeld.attribuutnaam,
+                size: 40,
+                maxlength: zoekVeld.inputSize
+            }).keyup(function(ev) {
+                performSearchOnEnterKey(ev);
+            });
+
+            var zoekUrl="viewer/SearchAutocomplete.do?zoekConfiguratieId="+zoekVeld.inputZoekConfiguratie+"&maxResults=10";
+            if (zoekVelden.length==1){
+                inputfield.autocomplete({
+                    minLength: 2,
+                    source: zoekUrl,
+                    select: function(event, ui){
+                        this.value=ui.item.value;
+                        $j("#zoekKnop").click();
+                    }
+                });
+            }else{
+                inputfield.autocomplete({
+                    minLength: 2,
+                    source: zoekUrl
+                });
+            }
+            container.append(inputfield).append('<br /><br />');
+
         } else {
 
             /* XY coord type */

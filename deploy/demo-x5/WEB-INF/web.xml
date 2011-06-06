@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
     <!-- Localization context voor o.a. de <fmt:message> JSTL tag -->
     <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
@@ -33,7 +36,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://www.kaartenbalie.nl/kaartenbalie/services/</param-value>
+            <param-value>http://demo.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -72,23 +75,11 @@
         <servlet-class>nl.b3p.gis.viewer.services.Data2CSV</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreateMapPDF</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.services.CreateMapPDF</servlet-class>
+        <servlet-name>CreateImageServlet</servlet-name>
+        <servlet-class>nl.b3p.combineimages.CreateImageServlet</servlet-class>
         <init-param>
-            <param-name>addFooter</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>logoPath</param-name>
-            <param-value>/images/barneveld/bg_top_bv.gif</param-value>
-        </init-param>
-        <init-param>
-            <param-name>extraImagePath</param-name>
-            <param-value>/images/barneveld/noordpijl.png</param-value>
-        </init-param>
-        <init-param>
-            <param-name>disclaimer</param-name>
-            <param-value>- Aan deze afdruk kunnen geen rechten worden ontleend -</param-value>
+            <param-name>maxResponseTime</param-name>
+            <param-value>30000</param-value>
         </init-param>
     </servlet>
     <servlet>
@@ -132,9 +123,9 @@
             <param-name>defaultSld</param-name>
             <param-value>/WEB-INF/defaultSld.xml</param-value>
         </init-param>
-     </servlet>    
-	 
-	 <servlet>
+     </servlet>
+
+    <servlet>
         <servlet-name>PrintServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>        
         <init-param>
@@ -160,7 +151,7 @@
         <servlet-name>PrintServlet</servlet-name>
         <url-pattern>/services/PrintServlet</url-pattern>
     </servlet-mapping>
-	
+
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
@@ -179,30 +170,29 @@
         <servlet-name>dwr-invoker</servlet-name>
         <url-pattern>/dwr/*</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>    
     <servlet-mapping>
-        <servlet-name>CreateMapPDF</servlet-name>
-        <url-pattern>/services/CreateMapPDF</url-pattern>
+        <servlet-name>CreateImageServlet</servlet-name>
+        <url-pattern>/CreateImage</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DocFetcher</servlet-name>
-        <url-pattern>/docfetcher</url-pattern>
+        <url-pattern>/services/docfetcher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CycloramaFetcher</servlet-name>
-        <url-pattern>/cycloramafetcher</url-pattern>
+        <url-pattern>/services/cycloramafetcher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreateSLD</servlet-name>
-        <url-pattern>/CreateSLD</url-pattern>
+        <url-pattern>/services/CreateSLD</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            480
         </session-timeout>
     </session-config>
     <welcome-file-list>

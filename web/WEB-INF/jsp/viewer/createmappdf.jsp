@@ -83,9 +83,9 @@
             <tr class="aanvullende_info_alternateTr">
                 <td><fmt:message key="createmappdf.outputtype"/></td>
                 <td>
-                    <html:select property="outputType">
-                        <html:option value="PDF_PRINT">Print</html:option>
+                    <html:select property="outputType">                        
                         <html:option value="PDF">Maak PDF</html:option>
+                        <html:option value="PDF_PRINT">Print</html:option>
                         <html:option value="RTF">Maak RTF</html:option>
                     </html:select>
                 </td>

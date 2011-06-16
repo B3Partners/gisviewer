@@ -336,3 +336,59 @@ function performSearchOnEnterKey(ev){
         zoek();
     }
 }
+
+function createZoekStringsFromZoekVelden(zc, zoekVelden, zoekStrings) {
+    var newZoekStrings= new Array();
+    if(typeof zc === 'undefined' || !zc) return newZoekStrings;
+
+    for (var i=0; i < zc.zoekVelden.length; i++){
+        // * wordt evt later dmv van inputvelden ingevuld.
+        newZoekStrings[i] = "*";
+        if(zoekStrings) {
+            for (var b=0; b < zoekVelden.length;  b++){
+                var searchedAttribuut=zoekVelden[b];
+                if (zc.zoekVelden[i].attribuutnaam == searchedAttribuut.attribuutnaam && zoekStrings[b]) {
+                    newZoekStrings[i]=zoekStrings[b];
+                    break;
+                }
+                if (zc.zoekVelden[i].label == searchedAttribuut.attribuutnaam && zoekStrings[b]) {
+                    newZoekStrings[i]=zoekStrings[b];
+                    break;
+                }
+            }
+        }
+    }
+    return newZoekStrings;
+}
+
+function handleZoekVeldinputList(list){
+    if (list!=null && list.length > 0){
+        var controlElementName;
+        var zc = zoekconfiguraties[currentSearchSelectId];
+        var optionListZc = list[0].zoekConfiguratie;
+        for (var i=0; i < zc.zoekVelden.length; i++) {
+            var zoekVeld=zc.zoekVelden[i];
+            if (zoekVeld.inputZoekConfiguratie == optionListZc.id) {
+                // controlElementName="searchField_"+zoekVeld.id;
+                controlElementName = zoekVeld.attribuutnaam;
+            }
+        }
+
+        // hier lijst nog filteren, zodat alleen unieke waarden erin staan
+        var controlElement=document.getElementById(controlElementName);
+        $j(controlElement).removeAttr("disabled");
+        dwr.util.removeAllOptions(controlElementName);
+        /*maak een leeg object en voeg die toe*/
+        var kiesObj=new Array();
+        kiesObj.push({id:" ", label: "Maak uw keuze ..."});
+        dwr.util.addOptions(controlElementName,kiesObj,'id','label');
+
+        dwr.util.addOptions(controlElementName,list,"id","label");
+        //als er maar 1 zoekveld is gelijk zoeken bij selecteren dropdown.
+        if (zc.zoekVelden.length==1){
+            $j(controlElement).change(function(){
+                $j("#searchButton").click();
+            });
+        }
+    }
+}

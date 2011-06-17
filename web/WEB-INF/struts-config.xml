@@ -157,6 +157,11 @@
             <forward name="view" path="/index.do"/>
             <forward name="continue" path="/index.do"/>
         </action>
+
+        <action path="/kaartselectie" type="nl.b3p.gis.viewer.KaartSelectieAction" scope="request">
+            <forward name="success" path="kaartselectie"/>
+            <forward name="failure" path="kaartselectie"/>
+        </action>
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

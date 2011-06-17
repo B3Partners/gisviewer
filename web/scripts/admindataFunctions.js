@@ -712,8 +712,13 @@ function createTableTd(waarde) {
         var i = 0;
         $j.each(waarde.valueList, function(index3, listWaarde) {
 
-            var splitWaardes = waarde.value.split(".");
-            var ext = splitWaardes[splitWaardes.length-1];
+            var splitWaardes = "";
+            var ext = "";
+
+            if (waarde.value != null && waarde.value != '') {
+                splitWaardes = waarde.value.split(".");
+                ext = splitWaardes[splitWaardes.length-1];
+            }
 
             if (!listWaarde) {
                 td.append("-");

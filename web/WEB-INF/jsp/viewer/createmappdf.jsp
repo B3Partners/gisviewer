@@ -84,9 +84,9 @@
                 <td><fmt:message key="createmappdf.outputtype"/></td>
                 <td>
                     <html:select property="outputType">                        
-                        <html:option value="PDF">Maak PDF</html:option>
-                        <html:option value="PDF_PRINT">Print</html:option>
-                        <html:option value="RTF">Maak RTF</html:option>
+                        <html:option value="PDF">Toon PDF</html:option>
+                        <html:option value="PDF_PRINT">Printen</html:option>
+                        <html:option value="RTF">Toon RTF</html:option>
                     </html:select>
                 </td>
             </tr>

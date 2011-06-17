@@ -29,7 +29,7 @@
             <form-property name="imageSize" type="java.lang.String" initial="2048"/>
             <form-property name="landscape" type="java.lang.String" initial="true"/>
             <form-property name="pageSize" type="java.lang.String" initial="A4"/>
-            <form-property name="outputType" type="java.lang.String" initial="PDF_PRINT"/>
+            <form-property name="outputType" type="java.lang.String" initial="PDF"/>
             <form-property name="remark" type="java.lang.String"/>
         </form-bean>
         <form-bean name="meldingForm" type="org.apache.struts.validator.DynaValidatorForm">

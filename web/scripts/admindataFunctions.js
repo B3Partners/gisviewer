@@ -732,12 +732,12 @@ function createTableTd(waarde) {
 		    });
 		    i++;
                 } else if (ext == 'pdf'){
-                    clickable = $j('<a href="#"><img src="'+pdficon+'" alt="Bekijk PDF"/></a>')
+                    clickable = $j('<a href="#"><img src="'+pdficon+'" alt="Bekijk PDF" border="0" /></a>')
                     .attr({
                         "title": listWaarde
                     });
                 } else if (splitWaardes.length > 1 && ext != 'pdf') {
-                    clickable = $j('<a href="#"><img src="'+docicon+'" alt="Bekijk document"/></a>')
+                    clickable = $j('<a href="#"><img src="'+docicon+'" alt="Bekijk document" border="0" /></a>')
                     .attr({
                         "title": listWaarde
                     });
@@ -748,7 +748,7 @@ function createTableTd(waarde) {
                     });
                 }else{
                     // TODO: icon kiezen afh van extentie listWaarde
-                    clickable = $j('<img src="'+urlicon+'" alt="Externe informatie"/>')
+                    clickable = $j('<img src="'+urlicon+'" alt="Externe informatie" border="0"/>')
                     .attr({
                         "title": listWaarde
                     })

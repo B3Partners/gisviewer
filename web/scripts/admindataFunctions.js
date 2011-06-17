@@ -711,6 +711,10 @@ function createTableTd(waarde) {
 	}
         var i = 0;
         $j.each(waarde.valueList, function(index3, listWaarde) {
+
+            var splitWaardes = waarde.value.split(".");
+            var ext = splitWaardes[splitWaardes.length-1];
+
             if (!listWaarde) {
                 td.append("-");
             } else {
@@ -722,6 +726,16 @@ function createTableTd(waarde) {
 			"title": listWaarde
 		    });
 		    i++;
+                } else if (ext == 'pdf'){
+                    clickable = $j('<a href="#"><img src="'+pdficon+'" alt="Bekijk PDF"/></a>')
+                    .attr({
+                        "title": listWaarde
+                    });
+                } else if (splitWaardes.length > 1 && ext != 'pdf') {
+                    clickable = $j('<a href="#"><img src="'+docicon+'" alt="Bekijk document"/></a>')
+                    .attr({
+                        "title": listWaarde
+                    });
                 }else if (waarde.value){
                     clickable = $j('<a href="#">'+waarde.value+'</a>')
                     .attr({

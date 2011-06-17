@@ -15,6 +15,9 @@
     var wandicon = '<html:rewrite href="./images/icons/wand.png" />';
     var loadingicon = '<html:rewrite href="./images/icons/loading.gif" />';
 
+    var pdficon = '<html:rewrite href="./images/icons/pdf.png" />';
+    var docicon = '<html:rewrite href="./images/icons/document.png" />';
+
     var csvexporticon = '<html:rewrite href="./images/icons/page_white_csv.png" />';
     var infoexporticon = '<html:rewrite href="./images/icons/page_white_info.png" />';
 

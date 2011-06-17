@@ -657,6 +657,8 @@ function createTableTh(label) {
     return th;
 }
 
+var idcounterJsFunctions = 1;
+
 function createTableTd(waarde) {
     var kolomBreedte = (waarde.kolomBreedte == 0) ? 150 : waarde.kolomBreedte;
     var td = $j('<td></td>')
@@ -689,11 +691,11 @@ function createTableTd(waarde) {
             td.html("-");
         } else if(waarde.value.search('###') != -1) {
             var funcarray = waarde.value.split('###');
-            var icon2 = $j('<img src="'+flagicon+'" alt="'+funcarray[0]+'" title="'+funcarray[0]+'" />')
+            var fLink = $j('<a href="#" id="jsFunction_'+(idcounterJsFunctions++)+'">'+funcarray[0]+'</a>')
             .click(function() {
                 eval(funcarray[1]);
             });
-            td.html(icon2);
+            td.html(fLink);
         } else {
             var icon3 = $j('<img src="'+flagicon+'" alt="Voer functie uit" title="Voer functie uit" />')
             .click(function() {
@@ -755,32 +757,91 @@ function createEmptyRow(size) {
 }
 
 /*
- *Hier staan alle javascriptfuncties. Deze kunnen worden aangeroepen door bij
- *de themadata aan te geven dat het veld van het type javascript is. Het commando 
- *wat je dan invult is de naam van de functie.
- *De functie wordt altijd met de volgende parameters aangeroepen:
- *element: het html element dat is aangeklikt
- *themaid: id van het thema
- *keyName: primairy key name
- *keyValue: waarde van de primairy key
- *attributeName: gekozen (in themadata) attribuut naam
- *attributeValue: waarde van het attribuut
- *eenheid: eventueel eenheid voor omrekenen
- *
- */
-
-/**set attributevalue
- * change the value
- */
+ * Hier staan alle javascriptfuncties. Deze kunnen worden aangeroepen door bij
+ * de themadata aan te geven dat het veld van het type javascript is. Het commando
+ * wat je dan invult is de naam van de functie.
+ * De functie wordt altijd met de volgende parameters aangeroepen:
+ * 
+ * element: het html element dat is aangeklikt
+ * themaid: id van het thema
+ * keyName: primairy key name
+ * keyValue: waarde van de primairy key
+ * attributeName: gekozen (in themadata) attribuut naam
+ * attributeValue: waarde van het attribuut
+ * eenheid: eventueel eenheid voor omrekenen
+*/
 function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
-    // Leeg -> Ja
-    // Nee -> Ja
-    // Ja -> Nee
-    var oldValue = element.innerHTML; // Nu wordt er gegeken naar wat de waarde is die in de link staat, deze wordt gebruikt, niet attributeValue
-    var newValue = 'Nee';
-    if(oldValue == 'Leeg' || oldValue == 'Nee' || oldValue == 'Nieuw')
-        newValue = 'Ja';
+    var oldValue = element.innerHTML;
+    var newValue;
+
+    if (oldValue == '0' || oldValue == 0) {
+        newValue = 1;
+    } else if (oldValue == '1' || oldValue == 1) {
+        newValue = 0;
+    }
+
+    if (oldValue == 'Nee' || oldValue == 'nee') {
+        newValue = 'ja';
+    } else if (oldValue == 'Ja' || oldValue == 'ja') {
+        newValue = 'nee';
+    }
+
     JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
+}
+
+function setAttributeStringValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+    var oldValue = element.innerHTML;
+    var newValue;
+
+    if (oldValue == '0') {
+        newValue = '1';
+    } else if (oldValue == '1') {
+        newValue = '0';
+    }
+
+    if (oldValue == 'Nee' || oldValue == 'nee') {
+        newValue = 'ja';
+    } else if (oldValue == 'Ja' || oldValue == 'ja') {
+        newValue = 'nee';
+    }
+
+    if (oldValue == 'TRUE' || oldValue == 'true') {
+        newValue = 'false';
+    } else if (oldValue == 'FALSE' || oldValue == 'false') {
+        newValue = 'true';
+    }
+
+    JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
+}
+
+function setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+    var oldValue = element.innerHTML;
+
+    if(oldValue == '' || oldValue == 'Nieuw' || oldValue == 'nieuw') {
+        var newValue = 'afgemeld';
+    } else {
+        var newValue = 'nieuw';
+    }
+
+    JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
+}
+
+function setStatusValueDigitree(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+    /* Nu wordt er gegeken naar wat de waarde is die in de link staat,
+     * deze wordt gebruikt, niet attributeValue */
+    var oldValue = element.innerHTML;
+
+    if(oldValue == 'Leeg' || oldValue == 'Nee' || oldValue == 'Nieuw' || oldValue == 'nieuw') {
+        var newValue = 'Ja';
+        JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
+    }
+
+    /* TODO: Nadenken over hoe data terug te wijzigen als record niet meer voorkomt
+     * in view na eerste wijziging. Bijvoorbeeld een view die alleen statussen Nieuw
+     * toont zal het record na deze setValue niet meer teruggeven */
+    if (oldValue == 'Ja') {
+        messagePopup("Informatie", "Waarde is al gewijzigd.", "information");
+    }
 }
 
 var currentThemaid, currentKeyName, currentKeyValue, currentAttributeName, currentEenheid;

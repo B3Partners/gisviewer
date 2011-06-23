@@ -504,7 +504,7 @@ body.pdfExportClass {
 	color: #fff;
 }
 
-.content_block td {
+.content_block td a{
 	color: #fff;
 }
 

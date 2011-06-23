@@ -501,11 +501,16 @@ body.pdfExportClass {
     width: 450px;
     margin-left: 15px;
     min-height: 180px;
+	color: #fff;
+}
+
+.content_block td {
+	color: #fff;
 }
 
 .content_block a {
     padding-top: 5px;
-    color: #000000;
+    color: #fff;
     text-decoration: underline;
 }
 

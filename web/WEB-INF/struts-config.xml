@@ -77,6 +77,16 @@
             <form-property name="new_projectnaam" type="java.lang.String"/>
             <form-property name="opmerking" type="java.lang.String"/>
         </form-bean>
+
+        <!-- kaartselectie formulier -->
+        <form-bean name="kaartselectieForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+
+            <form-property name="kaartgroepenAan" type="java.lang.String[]"/>
+            <form-property name="kaartlagenAan" type="java.lang.String[]"/>
+        </form-bean>
         
     </form-beans>
     
@@ -158,7 +168,7 @@
             <forward name="continue" path="/index.do"/>
         </action>
 
-        <action path="/kaartselectie" type="nl.b3p.gis.viewer.KaartSelectieAction" scope="request">
+        <action path="/kaartselectie" type="nl.b3p.gis.viewer.KaartSelectieAction" name="kaartselectieForm" scope="request">
             <forward name="success" path="kaartselectie"/>
             <forward name="failure" path="kaartselectie"/>
         </action>

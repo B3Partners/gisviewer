@@ -86,6 +86,8 @@
 
             <form-property name="kaartgroepenAan" type="java.lang.String[]"/>
             <form-property name="kaartlagenAan" type="java.lang.String[]"/>
+            <form-property name="kaartgroepenDefaultAan" type="java.lang.String[]"/>
+            <form-property name="kaartlagenDefaultAan" type="java.lang.String[]"/>
         </form-bean>
         
     </form-beans>

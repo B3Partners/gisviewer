@@ -17,6 +17,8 @@
 <p>Vaste kaartlagen</p>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
+    <input type="hidden" name="save" value="t" />
+
     <div id="layermaindiv"></div>
 
     <html:submit property="save">Opslaan</html:submit>

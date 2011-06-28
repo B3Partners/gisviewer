@@ -22,11 +22,19 @@
 </div>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
-    <input type="hidden" name="save" value="t" />
-
     <div id="layermaindiv"></div>
 
     <html:submit property="save">Opslaan</html:submit>
+
+    <hr>
+
+    <p>Nieuwe WMS Service</p>
+
+    Groep: <html:text property="groupName" size="20"></html:text><BR>
+    Url: <html:text property="serviceUrl" size="40"></html:text><BR>
+    Sld url: <html:text property="sldUrl" size="40"></html:text><BR>
+
+    <html:submit property="saveWMSService">Service opslaan</html:submit>
 </html:form>
 
 <script type="text/javascript">

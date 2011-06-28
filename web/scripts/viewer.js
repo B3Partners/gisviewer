@@ -164,6 +164,13 @@ function initializeButtons() {
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_print,b_print);
     webMapController.addTool(bu_print);
 
+    var bu_layerSelection = webMapController.createTool("b_layerSelection",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'Kaartselectie'
+    });
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_layerSelection,b_layerSelection);
+    webMapController.addTool(bu_layerSelection);
+
     var bu_overview = webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
         layer: editLayer,
         title: 'Overzichtskaart'
@@ -2708,6 +2715,10 @@ function b_print(id, event) {
     exportMap();
 }
 
+function b_layerSelection(id, event) {
+    iFramePopup('kaartselectie.do', false, 'Kaartselectie', 600, 400);
+}
+
 function b_overview(id,event) {
     if(webMapController instanceof FlamingoController) {
         webMapController.getMap().getFrameworkMap().callMethod('overviewwindow','show');
@@ -2944,6 +2955,12 @@ function checkDisplayButtons() {
         webMapController.getTool("b_printMap").setVisible(true);
     } else {
         webMapController.getTool("b_printMap").setVisible(false);
+    }
+
+    if (showLayerSelectionTool) {
+        webMapController.getTool("b_layerSelection").setVisible(true);
+    } else {
+        webMapController.getTool("b_layerSelection").setVisible(false);
     }
 }
 

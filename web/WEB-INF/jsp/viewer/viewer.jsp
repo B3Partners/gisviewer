@@ -329,6 +329,11 @@
         showPrintTool = false;
     }
 
+    var showLayerSelectionTool = catchEmpty(${configMap["showLayerSelectionTool"]});
+    if (typeof showLayerSelectionTool === 'undefined') {
+        showLayerSelectionTool = false;
+    }
+
     var layerGrouping = catchEmpty("${configMap["layerGrouping"]}");
      if(typeof layerGrouping === 'undefined' || !layerGrouping) {
         layerGrouping = "lg_forebackground";

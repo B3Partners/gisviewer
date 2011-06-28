@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
@@ -10,7 +10,7 @@
     </fmc:MonitorMap>
 
     <fmc:Container backgroundcolor="#EEEEEE" left="0" top="0" height="36" width="100%">
-        <fmc:Scalebar left="530" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
+        <fmc:Scalebar left="560" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
@@ -56,7 +56,11 @@
                 </fmc:JsButton>
 
                 <fmc:JsButton id="b_printMap" left="440" top="0" width="21" height="21" iconurl_up="images/print.png" iconurl_over="images/print.png" iconurl_sel="images/print.png" iconurl_dis="images/print.png" label="" toggle="false" visible="false" enabled="true" selected="false">
-                    <string id="tooltip" en="Print example" nl="Printvoorbeeld"/>
+                    <string id="tooltip" en="print example" nl="printvoorbeeld"/>
+                </fmc:JsButton>
+
+                <fmc:JsButton id="b_layerSelection" left="470" top="0" width="21" height="21" iconurl_up="images/book_open.png" iconurl_over="images/book_open.png" iconurl_sel="images/book_open.png" iconurl_dis="images/book_open.png" label="" toggle="false" visible="false" enabled="true" selected="false">
+                    <string id="tooltip" en="layer selection" nl="kaartselectie"/>
                 </fmc:JsButton>
             </fmc:Container>
 

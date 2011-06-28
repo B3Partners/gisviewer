@@ -1,20 +1,25 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
-<%@ page isELIgnored="false"%>
-
-<c:set var="form" value="${kaartselectieForm}"/>
-
-<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
-<script type="text/javascript" src='dwr/interface/JCollectAdmindata.js'></script>
-<script type="text/javascript" src='dwr/engine.js'></script>
+<%@include file="/WEB-INF/jsp/metatags.jsp" %>
 
 <script type="text/javascript" src="<html:rewrite page='/scripts/kaartselectie.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 
 <tiles:insert definition="specialMessages"/>
 
-<h2>Kaartselectie</h2>
-
 <p>Vaste kaartlagen</p>
+
+<div class="messages">
+    <html:messages id="message" message="true" >
+        <div id="error_tab">
+            <c:out value="${message}" escapeXml="false"/>
+        </div>
+    </html:messages>
+    <html:messages id="message" name="acknowledgeMessages">
+        <div id="acknowledge_tab">
+            <c:out value="${message}"/>
+        </div>
+    </html:messages>
+</div>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
     <input type="hidden" name="save" value="t" />
@@ -28,7 +33,7 @@
     function catchEmpty(defval){
         return defval
     }
-    
+
     var themaTree = catchEmpty(${tree});
     if(typeof themaTree === 'undefined' || !themaTree) {
         themaTree = null;
@@ -46,6 +51,6 @@
         },
         "saveExpandedState": true,
         "streeaveScrollState": true,
-        "expandAll": false
-    }); 
+        "expandAll": true
+    });
 </script>

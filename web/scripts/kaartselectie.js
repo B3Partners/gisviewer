@@ -7,13 +7,7 @@ function createLeaf(container, item) {
     container.appendChild(document.createTextNode(item.title));
 
     // aan/uit vinkjes
-    if (item.cluster) {
-        if (item.groepSelected) {
-            container.appendChild(createCheckboxCluster(item, true));
-        } else {
-            container.appendChild(createCheckboxCluster(item, false));
-        }
-    } else {
+    if (!item.cluster) {
         if (item.kaartSelected) {
             container.appendChild(createCheckboxThema(item, true));
         } else {
@@ -24,13 +18,7 @@ function createLeaf(container, item) {
     container.appendChild(document.createTextNode(' '));
 
     // default visible vinkjes
-    if (item.cluster) {
-        if (item.groupDefaultOn) {
-            container.appendChild(createCheckboxDefaultOnCluster(item, true));
-        } else {
-            container.appendChild(createCheckboxDefaultOnCluster(item, false));
-        }
-    } else {
+    if (!item.cluster) {
         if (item.kaartDefaultOn) {
             container.appendChild(createCheckboxDefaultOnThema(item, true));
         } else {

@@ -132,3 +132,73 @@ function createCheckboxDefaultOnThema(item, checked) {
     }
     return checkbox;
 }
+
+function createCheckboxLayer(item, checked) {
+    var checkbox;
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+        var checkboxControleString = '<input name="layersAan" type="checkbox" id="l_' + item.id + '"';
+        if (checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = 'l_' +item.id;
+        checkbox.type = 'checkbox';
+        checkbox.name = 'layersAan'
+        checkbox.value = item.id;
+
+        if (checked) {
+            checkbox.checked = true;
+        }
+    }
+    return checkbox;
+}
+
+function createCheckboxDefaultOnLayer(item, checked) {
+    var checkbox;
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+
+        var checkboxControleString = '<input name="layersDefaultAan" type="checkbox" id="lOn_' + item.id + '"';
+        if (checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = 'lOn_' + item.id;
+        checkbox.type = 'checkbox';
+        checkbox.name = 'layersDefaultAan'
+        checkbox.value = item.id;
+
+        if (checked) {
+            checkbox.checked = true;
+        }
+    }
+    return checkbox;
+}
+
+function createServiceLeaf(container, item) {
+    container.appendChild(document.createTextNode(item.name));
+    container.appendChild(document.createTextNode(' '));
+
+    if (item.show)
+        container.appendChild(createCheckboxLayer(item, true));
+    else
+        container.appendChild(createCheckboxLayer(item, false));
+
+    container.appendChild(document.createTextNode(' '));
+    
+    if (item.default_on)
+        container.appendChild(createCheckboxDefaultOnLayer(item, true));
+    else
+        container.appendChild(createCheckboxDefaultOnLayer(item, false));
+}

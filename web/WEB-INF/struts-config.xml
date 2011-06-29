@@ -88,6 +88,8 @@
             <form-property name="kaartlagenAan" type="java.lang.String[]"/>
             <form-property name="kaartgroepenDefaultAan" type="java.lang.String[]"/>
             <form-property name="kaartlagenDefaultAan" type="java.lang.String[]"/>
+            <form-property name="layersAan" type="java.lang.String[]"/>
+            <form-property name="layersDefaultAan" type="java.lang.String[]"/>
 
             <form-property name="groupName" type="java.lang.String"/>
             <form-property name="serviceUrl" type="java.lang.String"/>

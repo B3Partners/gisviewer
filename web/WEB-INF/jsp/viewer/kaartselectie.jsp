@@ -22,43 +22,65 @@
 </div>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
-    <div id="layermaindiv"></div>
+    <div id="mainTreeDiv"></div>
 
-    <html:submit property="save">Opslaan</html:submit>
+    <script type="text/javascript">
+        treeview_create({
+            "id": "mainTreeDiv",
+            "root": ${tree},
+            "rootChildrenAsRoots": true,
+            "itemLabelCreatorFunction": createLeaf,
+            "toggleImages": {
+                "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
+                "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
+                "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
+            },
+            "saveExpandedState": true,
+            "streeaveScrollState": true,
+            "expandAll": true
+        });
+    </script>
 
-    <hr>
+    <p>Eigen WMS Services</p>
+
+    <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
+        <div id="layerTreeDiv_${status.count}"></div>
+
+        <script type="text/javascript">            
+        treeview_create({
+            "id": 'layerTreeDiv_${status.count}',
+            "root": ${serviceTree},
+            "rootChildrenAsRoots": true,
+            "itemLabelCreatorFunction": createServiceLeaf,
+            "toggleImages": {
+                "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
+                "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
+                "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
+            },
+            "saveExpandedState": true,
+            "streeaveScrollState": true,
+            "expandAll": true
+        });
+        </script>
+    </c:forEach>
 
     <p>Nieuwe WMS Service</p>
 
-    Groep: <html:text property="groupName" size="20"></html:text><BR>
-    Url: <html:text property="serviceUrl" size="40"></html:text><BR>
-    Sld url: <html:text property="sldUrl" size="40"></html:text><BR>
+    <table>
+        <tr>
+            <td>Groep</td>
+            <td><html:text property="groupName" size="20" /></td>
+        </tr>
+        <tr>
+            <td>Url</td>
+            <td><html:text property="serviceUrl" size="40" /></td>
+        </tr>
+        <tr>
+            <td>Sld url</td>
+            <td><html:text property="sldUrl" size="40" /></td>
+        </tr>
+    </table>
 
-    <html:submit property="saveWMSService">Service opslaan</html:submit>
+    <html:submit property="saveWMSService">Service toevoegen</html:submit>
+    <html:submit property="save">Alles opslaan</html:submit>
 </html:form>
-
-<script type="text/javascript">
-    function catchEmpty(defval){
-        return defval
-    }
-
-    var themaTree = catchEmpty(${tree});
-    if(typeof themaTree === 'undefined' || !themaTree) {
-        themaTree = null;
-    }
-
-    treeview_create({
-        "id": "layermaindiv",
-        "root": themaTree,
-        "rootChildrenAsRoots": true,
-        "itemLabelCreatorFunction": createLeaf,
-        "toggleImages": {
-            "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
-            "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
-            "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
-        },
-        "saveExpandedState": true,
-        "streeaveScrollState": true,
-        "expandAll": true
-    });
-</script>

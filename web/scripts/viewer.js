@@ -3603,3 +3603,20 @@ function enableEditRedlining(id) {
 
     webMapController.activateTool("breinaald");
 }
+
+function createServiceLeaf(container, item) {
+    /* root item. alleen groepname tonen en geen vinkjes */
+    if (item.id == 0) {
+        container.appendChild(document.createTextNode(item.name));
+        return;
+    }
+
+    if (item.default_on) {
+        container.appendChild(createCheckboxThema(item, true));
+    } else {
+        container.appendChild(createCheckboxThema(item, false));
+    }
+
+    container.appendChild(document.createTextNode(' '));
+    container.appendChild(document.createTextNode(item.name));
+}

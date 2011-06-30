@@ -29,6 +29,28 @@ function createLeaf(container, item) {
     return false;
 }
 
+function createServiceLeaf(container, item) {
+    container.appendChild(document.createTextNode(item.name));
+    container.appendChild(document.createTextNode(' '));
+
+    /* root item. alleen groepname tonen en geen vinkjes */
+    if (item.id == 0) {
+        return;
+    }
+
+    if (item.show)
+        container.appendChild(createCheckboxLayer(item, true));
+    else
+        container.appendChild(createCheckboxLayer(item, false));
+
+    container.appendChild(document.createTextNode(' '));
+
+    if (item.default_on)
+        container.appendChild(createCheckboxDefaultOnLayer(item, true));
+    else
+        container.appendChild(createCheckboxDefaultOnLayer(item, false));
+}
+
 function createCheckboxCluster(item, checked){
 
     var checkbox;
@@ -184,21 +206,4 @@ function createCheckboxDefaultOnLayer(item, checked) {
         }
     }
     return checkbox;
-}
-
-function createServiceLeaf(container, item) {
-    container.appendChild(document.createTextNode(item.name));
-    container.appendChild(document.createTextNode(' '));
-
-    if (item.show)
-        container.appendChild(createCheckboxLayer(item, true));
-    else
-        container.appendChild(createCheckboxLayer(item, false));
-
-    container.appendChild(document.createTextNode(' '));
-    
-    if (item.default_on)
-        container.appendChild(createCheckboxDefaultOnLayer(item, true));
-    else
-        container.appendChild(createCheckboxDefaultOnLayer(item, false));
 }

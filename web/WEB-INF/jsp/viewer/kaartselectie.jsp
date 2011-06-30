@@ -50,7 +50,7 @@
         treeview_create({
             "id": 'layerTreeDiv_${status.count}',
             "root": ${serviceTree},
-            "rootChildrenAsRoots": true,
+            "rootChildrenAsRoots": false,
             "itemLabelCreatorFunction": createServiceLeaf,
             "toggleImages": {
                 "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",

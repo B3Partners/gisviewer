@@ -3612,11 +3612,44 @@ function createServiceLeaf(container, item) {
     }
 
     if (item.default_on) {
-        container.appendChild(createCheckboxThema(item, true));
+        container.appendChild(createCheckboxUserLayer(item, true));
     } else {
-        container.appendChild(createCheckboxThema(item, false));
+        container.appendChild(createCheckboxUserLayer(item, false));
     }
 
     container.appendChild(document.createTextNode(' '));
     container.appendChild(document.createTextNode(item.name));
+}
+
+function createCheckboxUserLayer(item, checked) {
+    var checkbox;
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+        var checkboxControleString = '<input name="userLayers" type="checkbox" id="ul_' + item.id + '"';
+        if (checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '" onclick="checkboxUserLayerClick(this)"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = 'ul_' +item.id;
+        checkbox.type = 'checkbox';
+        checkbox.name = 'userLayers'
+        checkbox.value = item.id;
+
+        checkbox.onclick = function() {
+            checkboxUserLayerClick(this);
+        }
+
+        if (checked) {
+            checkbox.checked = true;
+        }
+    }
+    return checkbox;
+}
+
+function checkboxUserLayerClick(obj) {
 }

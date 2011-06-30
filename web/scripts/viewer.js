@@ -3648,8 +3648,21 @@ function createCheckboxUserLayer(item, checked) {
             checkbox.checked = true;
         }
     }
+
+    /* json item toevoegen aan element zodat later makkelijk
+     * gebruikt kan worden */
+    checkbox.theItem = item;
+
     return checkbox;
 }
 
-function checkboxUserLayerClick(obj) {
+function checkboxUserLayerClick(checkbox) {
+    var item = checkbox.theItem;
+    var checked = checkbox.checked;
+
+    /* testen laag toevoegen aan viewer */
+    if (checked) {
+        //addLayerToViewer(item.name, item.service_url, item);
+        //doRefreshLayer();
+    }
 }

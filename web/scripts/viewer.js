@@ -1613,9 +1613,24 @@ function refreshLayer(doRefreshOrder) {
         layerGroup = layerGroups[i];
         var layerId = layerGroup[0];
         if (webMapController.getMap().getLayer(layerId)==null){
-            layerGroup.splice(0,1);
-            addLayerToViewer(layerId, layerUrl, layerGroup);
+            layerGroup.splice(0,1); // verwijder eerste element
+            
+            for (k=0; k < layerGroup.length; k++) {
+                /* eigen wms layer */
+                if (layerGroup[k].serviceid != undefined) {
+                    var lName = layerGroup[k].name;
+                    var lUrl = layerGroup[k].service_url;
+                    var layers = new Array();
+                    layers[0] = layerGroup[k];
+
+                    addLayerToViewer(lName, lUrl, layers);
+                    layerId = getValidLayerId(lName);
+                } else {
+                    addLayerToViewer(layerId, layerUrl, layerGroup);
+                }
+            }
         }
+
         var layer=webMapController.getMap().getLayer(layerId);
         if (layer!=null){
             var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i+startLayerIndex);
@@ -1661,15 +1676,18 @@ function getLayerById(id) {
 function addLayerToViewer(lname, layerUrl, layerItems) {
     var capLayerUrl=layerUrl;
 
-    //var newLayer= new FlamingoWMSLayer(lname);
+    var validId = getValidLayerId(lname);
+
     var options={
-        id: lname,
+        id: validId,
         timeout: 30,
         retryonerror: 10,
         getcapabilitiesurl: capLayerUrl,
         ratio: 1,
-        showerrors: true
+        showerrors: true,
+        initService: false
     };
+
     var ogcOptions={
         format: "image/png",
         transparent: true,
@@ -1678,6 +1696,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         version: "1.1.1",
         noCache: true // TODO: Voor achtergrond kaartlagen wel cache gebruiken
     };
+    
     var theLayers="";
     var queryLayers="";
     var maptipLayers="";
@@ -1790,8 +1809,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
     //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
     
     options["maptip_layers"]=maptipLayers;
-    //disable getCap
-    options["initservice"]=false;
+    
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 
     newLayer.setMapTips(maptips);
@@ -3660,9 +3678,46 @@ function checkboxUserLayerClick(checkbox) {
     var item = checkbox.theItem;
     var checked = checkbox.checked;
 
-    /* testen laag toevoegen aan viewer */
-    if (checked) {
-        //addLayerToViewer(item.name, item.service_url, item);
-        //doRefreshLayer();
+    /* laagnaam aan wmslayers toevoegen */
+    var wmslayers = new Array();
+    wmslayers[0] = item.name;
+    item.wmslayers = wmslayers;
+
+    /* laagnaam aan wmsquerylayers toevoegen */
+    if (item.queryable) {
+        var wmsquerylayers = new Array();
+        wmsquerylayers[0] = item.name;
+
+        item.wmsquerylayers = wmsquerylayers;
     }
+
+    /* item als laag klaarzetten */
+    var layers = new Array();
+    layers[0] = item;
+
+    /* laag toevoegen aan viewer */
+    if (checked) {
+        addItemAsLayer(item);
+    } else {
+        removeItemAsLayer(item);
+    }
+
+    if (checked) {
+        refreshLayerWithDelay();
+    } else{
+        doRefreshLayer();
+    }
+}
+
+function getValidLayerId(lname) {
+    /* In de Flamingo xml mag geen : zitten voor id */
+    var layerId = lname;
+    var arr = lname.split(":");
+    var len = arr.length;
+
+    if (arr.length > 0) {
+        layerId = 'flam_' + arr[len-1];
+    }
+
+    return layerId;
 }

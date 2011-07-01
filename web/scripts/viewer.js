@@ -3710,14 +3710,9 @@ function checkboxUserLayerClick(checkbox) {
 }
 
 function getValidLayerId(lname) {
-    /* In de Flamingo xml mag geen : zitten voor id */
-    var layerId = lname;
-    var arr = lname.split(":");
-    var len = arr.length;
+    /* Replace illegal chars for Flamingo xml in id */
+    lname = lname.replace(":", "_");
+    lname = lname.replace(".", "_");
 
-    if (arr.length > 0) {
-        layerId = 'flam_' + arr[len-1];
-    }
-
-    return layerId;
+    return lname;
 }

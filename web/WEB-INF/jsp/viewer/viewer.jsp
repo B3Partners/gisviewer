@@ -494,11 +494,13 @@
                 <div id="layermaindiv" style="display: none;"></div>
             </form></div>
         <div id="timings"></div>
+
+        <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
+            <div id="layerTreeDiv_${status.count}"></div>
+        </c:forEach>
     </div>
 
-    <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
-        <div id="layerTreeDiv_${status.count}" class="tabvak"></div>
-    </c:forEach>
+    
 
     <form id="volgordeForm">
         <div id="volgordevak" style="display: none;" class="tabvak">

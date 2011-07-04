@@ -3714,6 +3714,11 @@ function createServiceLayerLink(item){
     lnk.innerHTML = item.title ? item.title : item.id;
     lnk.href = '#';
 
+    if (item.service_url != undefined) {
+        lnk.title = "WMS Service url " + item.service_url;
+        lnk.alt = "WMS Service url " + item.service_url;
+    }
+
     return lnk;
 }
 

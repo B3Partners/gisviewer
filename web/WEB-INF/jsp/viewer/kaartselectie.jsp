@@ -4,8 +4,6 @@
 <script type="text/javascript" src="<html:rewrite page='/scripts/kaartselectie.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 
-<tiles:insert definition="specialMessages"/>
-
 <p>Vaste kaartlagen</p>
 
 <div class="messages">

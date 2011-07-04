@@ -3629,14 +3629,20 @@ function createServiceLeaf(container, item) {
         return;
     }
 
+    var checkBox;
     if (item.default_on) {
-        container.appendChild(createCheckboxUserLayer(item, true));
+        checkBox = createCheckboxUserLayer(item, true);
+        container.appendChild(checkBox);
     } else {
         container.appendChild(createCheckboxUserLayer(item, false));
     }
 
     container.appendChild(document.createTextNode(' '));
     container.appendChild(createServiceLayerLink(item));
+
+    if (item.default_on) {
+        checkboxUserLayerClick(checkBox);
+    }
 }
 
 function createCheckboxUserLayer(item, checked) {

@@ -3625,7 +3625,7 @@ function enableEditRedlining(id) {
 function createServiceLeaf(container, item) {
     /* root item. alleen groepname tonen en geen vinkjes */
     if (item.id == 0) {
-        container.appendChild(document.createTextNode(item.name));
+        container.appendChild(createServiceLayerLink(item));
         return;
     }
 
@@ -3636,7 +3636,7 @@ function createServiceLeaf(container, item) {
     }
 
     container.appendChild(document.createTextNode(' '));
-    container.appendChild(document.createTextNode(item.name));
+    container.appendChild(createServiceLayerLink(item));
 }
 
 function createCheckboxUserLayer(item, checked) {
@@ -3707,6 +3707,14 @@ function checkboxUserLayerClick(checkbox) {
     } else{
         doRefreshLayer();
     }
+}
+
+function createServiceLayerLink(item){
+    var lnk = document.createElement('a');
+    lnk.innerHTML = item.title ? item.title : item.id;
+    lnk.href = '#';
+
+    return lnk;
 }
 
 function getValidLayerId(lname) {

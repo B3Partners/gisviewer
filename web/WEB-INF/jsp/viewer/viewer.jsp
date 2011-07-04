@@ -497,7 +497,7 @@
     </div>
 
     <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
-        <div id="layerTreeDiv_${status.count}"></div>
+        <div id="layerTreeDiv_${status.count}" class="tabvak"></div>
     </c:forEach>
 
     <form id="volgordeForm">

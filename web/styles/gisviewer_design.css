@@ -507,6 +507,10 @@ body.pdfExportClass {
     padding-bottom: 10px;
 }
 
+.content_block_tab .content_title {
+    color: #ffffff;
+}
+
 .inleiding_body {
     background-color: #FFF0C5;
     padding-left: 10px;
@@ -528,6 +532,18 @@ body.pdfExportClass {
     background: -ms-linear-gradient(top, #FFF0C5, #FFE1A3);
     background: -o-linear-gradient(top, #FFF0C5, #FFE1A3);
     background: linear-gradient(#FFF0C5, #FFE1A3);
+}
+
+.content_block_tab .inleiding_body {
+    color: #ffffff;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px 0px 0px 0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background: none;
+    background-color: transparent;
 }
 
 .example_image {

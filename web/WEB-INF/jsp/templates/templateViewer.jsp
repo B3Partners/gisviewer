@@ -51,14 +51,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </script>
         <!--[if  lte IE 8]>
         <script type="text/javascript">
-            var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer','voorzieningframeZoeker','vergunningframeZoeker','meldingenframeViewer','redliningframeViewer'];
             fixTransparentBackgroundIframe = function() {
-                for(i in iframes) {
-                    var iframe = document.getElementById(iframes[i]);
-                    if(iframe) {
-                        iframe.allowTransparency = 'allowtransparency';
-                    }
-                }
+                $j("#tab_container iframe").each(function() {
+                    alert(this.name);
+                    this.allowTransparency = 'allowtransparency';
+                });
             }
             attachOnload(fixTransparentBackgroundIframe);
         </script>

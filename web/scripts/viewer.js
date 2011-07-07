@@ -2001,6 +2001,14 @@ function createLegendDiv(item) {
     div.className="orderLayerClass";
     div.appendChild(spanEl);
     div.theItem=item;
+	
+	/* nieuw */
+    div.onclick=function(){
+        selectLayer(this);
+    };
+    if (item.hide_legend){
+        div.style.display="none";
+    } // end
 
     if (item.legendurl != undefined){        
         myImage.src = item.legendurl;
@@ -2056,8 +2064,24 @@ function imageOnload(){
 function addLayerToLegendBox(theItem,atBottomOfType) {
     //check if already exists in legend
     var layerDiv = findLayerDivInLegendBox(theItem);
-    if (layerDiv!=null)
+    if (layerDiv!=null) {
+        if($j(layerDiv).css("display")=="none"){
+            var beforeChild=findBeforeDivInLegendBox(theItem,atBottomOfType);
+            if (beforeChild==null){
+                $j(orderLayerBox).append($j(layerDiv));
+            }else{
+                /* TODO: Nagaan of bovenin toevoegen kan. */
+                if(beforeChild.id == layerDiv.id) {
+                    $j(orderLayerBox).prepend($j(layerDiv));
+                } else {
+                    $j(beforeChild).before($j(layerDiv));
+                }
+                //$j(orderLayerBox).insertBefore($j(layerDiv),beforeChild);
+            }
+        }
+        $j(layerDiv).css("display","block");
         return;
+    }
     
     legendImageQueue.push({theItem: theItem, atBottomOfType: atBottomOfType});
     loadNextInLegendImageQueue();
@@ -2150,6 +2174,7 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {
+	resetLegendImageQueue();
     webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
@@ -2161,7 +2186,7 @@ function refreshLegendBox() {
             //Item alleen toevoegen aan de layers indien
             //parent cluster(s) allemaal aangevinkt staan of
             //geen cluster heeft
-            if (!itemHasAllParentsEnabled(object)) {
+            if (!itemHasAllParentsEnabled(object) || (!isItemInScale(item,webMapController.getMap().getResolution()))) {
                 found = true;
                 invisibleLayerItems.push(item);
             }
@@ -2170,25 +2195,25 @@ function refreshLegendBox() {
             visibleLayerItems.push(item);
         }
     }
-
-    var reorderedLayerItems = new Array();
+	enabledLayerItems = new Array();
     var totalLength = orderLayerBox.childNodes.length;
+    //Kijk of ze al bestaan en in die volgorde staan.
     for(var i = (totalLength - 1); i > -1; i--) {
+        var stillVisible=false;
         var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
-        orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
         for (var m=0; m < visibleLayerItems.length; m++){
             if (visibleLayerItems[m].id==itemId){
                 var foundLayerItem = visibleLayerItems[m];
-                reorderedLayerItems.push(foundLayerItem);
+                enabledLayerItems.push(foundLayerItem);
                 visibleLayerItems.splice(m, 1);
-                break;
+                stillVisible=true;
             }
         }
-    }
- 
-    enabledLayerItems = new Array();
-    if (reorderedLayerItems.length>0) {
-        enabledLayerItems = enabledLayerItems.concat(reorderedLayerItems);
+        if (!stillVisible){
+            //orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
+            //$j(orderLayerBox.childNodes[i]).remove();
+            $j(orderLayerBox.childNodes[i]).css("display","none");
+        }
     }
     if (visibleLayerItems.length>0) {
         enabledLayerItems = enabledLayerItems.concat(visibleLayerItems);

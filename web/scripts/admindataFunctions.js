@@ -398,11 +398,14 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 "width": "50px"
             });
 
-            var icon = $j('<img src="'+wandicon+'" alt="Selecteer object in kaart" title="Selecteer object in kaart" />')
-            .click(function() {
-                editFeature(gegevensbron.id,gegevensbron.adminPk,record.id);
-            });
-            volgnr.append(icon);
+            if (record.showMagicWand) {
+                var icon = $j('<img src="'+wandicon+'" alt="Selecteer object in kaart" title="Selecteer object in kaart" />')
+                .click(function() {
+                    editFeature(gegevensbron.id,gegevensbron.adminPk,record.id);
+                });
+                volgnr.append(icon);
+            }
+            
             volgnr.append(" ");
             volgnr.append(index+1);
 

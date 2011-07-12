@@ -4,7 +4,7 @@
 <script type="text/javascript" src="<html:rewrite page='/scripts/kaartselectie.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 
-<p>Vaste kaartlagen</p>
+<p><b>Vaste kaartlagen</b></p>
 
 <div class="messages">
     <html:messages id="message" message="true" >
@@ -39,7 +39,7 @@
         });
     </script>
 
-    <p>Eigen WMS Services</p>
+    <p><b>Eigen WMS services</b></p>
 
     <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
         <div id="layerTreeDiv_${status.count}"></div>
@@ -62,10 +62,12 @@
         </script>
     </c:forEach>
 
-    <html:submit property="save">Alles opslaan</html:submit>
-    <html:submit property="deleteWMSServices">Services wissen</html:submit>
+    <p>
+        <html:submit property="save">Alles opslaan</html:submit>
+        <html:submit property="deleteWMSServices">Services wissen</html:submit>
+    </p>
 
-    <p>Nieuwe WMS Service</p>
+    <p><b>Nieuwe WMS Service toevoegen</b></p>
 
     <table>
         <tr>
@@ -82,5 +84,8 @@
         </tr>
     </table>
 
-    <html:submit property="saveWMSService">Service toevoegen</html:submit>
+    <p>
+        <html:submit property="saveWMSService">Service toevoegen</html:submit>
+    </p>
+    
 </html:form>

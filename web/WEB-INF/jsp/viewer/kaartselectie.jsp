@@ -62,6 +62,9 @@
         </script>
     </c:forEach>
 
+    <html:submit property="save">Alles opslaan</html:submit>
+    <html:submit property="deleteWMSServices">Services wissen</html:submit>
+
     <p>Nieuwe WMS Service</p>
 
     <table>
@@ -80,5 +83,4 @@
     </table>
 
     <html:submit property="saveWMSService">Service toevoegen</html:submit>
-    <html:submit property="save">Alles opslaan</html:submit>
 </html:form>

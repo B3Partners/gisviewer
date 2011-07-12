@@ -30,13 +30,17 @@ function createLeaf(container, item) {
 }
 
 function createServiceLeaf(container, item) {
-    container.appendChild(document.createTextNode(item.name));
-    container.appendChild(document.createTextNode(' '));
-
-    /* root item. alleen groepname tonen en geen vinkjes */
+    /* Root item. For the service leaf this is the groupname. */
     if (item.id == 0) {
+        container.appendChild(createCheckboxService(item));
+        container.appendChild(document.createTextNode(' '));
+        container.appendChild(document.createTextNode(item.name));
+
         return;
     }
+
+    container.appendChild(document.createTextNode(item.name));
+    container.appendChild(document.createTextNode(' '));
 
     if (item.show)
         container.appendChild(createCheckboxLayer(item, true));
@@ -205,5 +209,25 @@ function createCheckboxDefaultOnLayer(item, checked) {
             checkbox.checked = true;
         }
     }
+    return checkbox;
+}
+
+function createCheckboxService(item) {
+    var checkbox;
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+        var checkboxControleString = '<input name="servicesAan" type="checkbox" id="' + item.id + '"';
+
+        checkboxControleString += ' value="' + item.serviceid + '"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = item.id;
+        checkbox.type = 'checkbox';
+        checkbox.name = 'servicesAan'
+        checkbox.value = item.serviceid;
+    }
+
     return checkbox;
 }

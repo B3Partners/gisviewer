@@ -60,6 +60,9 @@ function createServiceLeaf(container, item) {
             container.appendChild(createSelectBoxLayerStyles(item));
         }
     }
+
+    container.appendChild(document.createTextNode(' '));
+    container.appendChild(createInputLayerSldPart(item));
 }
 
 function createCheckboxCluster(item, checked){
@@ -248,8 +251,6 @@ function createSelectBoxLayerStyles(item) {
         useStyle = item.use_style;
     }
 
-    /* Todo: Controleren of een van de options al geselecteerd moet zijn */
-
     if (ieVersion <= 8 && ieVersion != -1) {
         var controleStr = '<select name="useLayerStyles" id="selStyle_' + item.id + '"';
 
@@ -289,7 +290,7 @@ function createSelectBoxLayerStyles(item) {
                 objOption.text = item.styles[j];
                 objOption.value = layerId + '@' + item.styles[j];
 
-                if (useStyle ==  item.styles[j]) {
+                if (useStyle == item.styles[j]) {
                     objOption.selected = true;
                 }
 
@@ -299,4 +300,32 @@ function createSelectBoxLayerStyles(item) {
     }
 
     return selectItem;
+}
+
+function createInputLayerSldPart(item) {
+    var input;
+
+    var layerId = item.id;
+    var sld_part = "";
+
+    if (item.sld_part != undefined && item.sld_part != '') {
+        sld_part = item.sld_part;
+    }
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+        var inputString = '<textarea rows=1 cols=15 name="useLayerSldParts" id="' + item.id + '"';
+
+        inputString += ' value="' + sld_part + '"';
+        inputString += '>';
+        input = document.createElement(inputString);
+    } else {
+        input = document.createElement('textarea');
+        input.id = item.id;
+        input.name = 'useLayerSldParts'
+        input.value = sld_part;
+        input.rows = 1;
+        input.cols = 15;
+    }
+
+    return input;
 }

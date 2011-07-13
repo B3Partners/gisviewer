@@ -53,6 +53,13 @@ function createServiceLeaf(container, item) {
         container.appendChild(createCheckboxDefaultOnLayer(item, true));
     else
         container.appendChild(createCheckboxDefaultOnLayer(item, false));
+
+    /* Alleen selectbox tonen als er meer dan alleen een default style is */
+    if (item.styles) {
+        if (item.styles[0] != "default") {
+            container.appendChild(createSelectBoxLayerStyles(item));
+        }
+    }
 }
 
 function createCheckboxCluster(item, checked){
@@ -230,4 +237,66 @@ function createCheckboxService(item) {
     }
 
     return checkbox;
+}
+
+function createSelectBoxLayerStyles(item) {
+    var selectItem;
+    var layerId = item.id;
+
+    var useStyle = "default";
+    if (item.use_style != undefined && item.use_style != "default") {
+        useStyle = item.use_style;
+    }
+
+    /* Todo: Controleren of een van de options al geselecteerd moet zijn */
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+        var controleStr = '<select name="useLayerStyles" id="selStyle_' + item.id + '"';
+
+        controleStr += '<option value="' + layerId + '@default">-Kies style-</option>';
+
+        for (var i=0; i < item.styles.length; i++) {            
+            if (item.styles[i] != "default") {
+
+                if (useStyle ==  item.styles[i]) {
+                    controleStr += '<option SELECTED value=' + layerId + '@' + item.styles[i] + '>' + item.styles[i] + '</option>';
+                } else {
+                    controleStr += '<option value=' + layerId + '@' + item.styles[i] + '>' + item.styles[i] + '</option>';
+                }
+            }
+        }
+
+        controleStr += '>';
+        selectItem = document.createElement(controleStr);
+
+    } else {
+        selectItem = document.createElement('select');
+
+        selectItem.id = 'selStyle_' + item.id;
+        selectItem.name = 'useLayerStyles';
+
+        var defOption = document.createElement("option");
+
+        defOption.text = '-Kies style-';
+        defOption.value = layerId + '@default';
+
+        selectItem.options.add(defOption);
+
+        for (var j=0; j < item.styles.length; j++) {
+            if (item.styles[j] != "default") {
+                var objOption = document.createElement("option");
+
+                objOption.text = item.styles[j];
+                objOption.value = layerId + '@' + item.styles[j];
+
+                if (useStyle ==  item.styles[j]) {
+                    objOption.selected = true;
+                }
+
+                selectItem.options.add(objOption);
+            }
+        } 
+    }
+
+    return selectItem;
 }

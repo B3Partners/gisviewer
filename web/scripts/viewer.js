@@ -1696,6 +1696,15 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         version: "1.1.1",
         noCache: true // TODO: Voor achtergrond kaartlagen wel cache gebruiken
     };
+
+    /* Indien gekozen dan styles zetten van USerLayer */
+    if (layerItems.length == 1) {
+        var style = layerItems[0].use_style;
+
+        if (style != undefined && style != "" && style != "default") {
+            ogcOptions["styles"] = style;
+        }
+    }
     
     var theLayers="";
     var queryLayers="";

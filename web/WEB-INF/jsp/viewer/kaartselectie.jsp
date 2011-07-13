@@ -6,6 +6,12 @@
 
 <p><b>Vaste kaartlagen</b></p>
 
+<p>
+Maak een selectie van de kaartlagen die u beschikbaar wilt hebben binnen de viewer.
+Deze kaartlagen zijn van te voren klaargezet door de beheerder. Ook kunt u aangeven
+welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
+</p>
+
 <div class="messages">
     <html:messages id="message" message="true" >
         <div id="error_tab">
@@ -39,7 +45,13 @@
         });
     </script>
 
-    <p><b>Eigen WMS services</b></p>
+    <p><b>Zelf toegevoegde kaartlagen</b></p>
+
+    <p>
+    U kunt ook zelf kaartlagen toevoegen aan de viewer door een wms service toe te
+    voegen en daarna de kaartlagen die u beschikbaar wilt hebben aan te vinken.
+    De nieuwe lagen worden in de kaartboom onder de ingevulde groepnaam getoond.
+    </p>
 
     <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
         <div id="layerTreeDiv_${status.count}"></div>

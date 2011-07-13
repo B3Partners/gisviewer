@@ -91,6 +91,7 @@
             <form-property name="layersAan" type="java.lang.String[]"/>
             <form-property name="layersDefaultAan" type="java.lang.String[]"/>
             <form-property name="servicesAan" type="java.lang.String[]"/>
+            <form-property name="useLayerStyles" type="java.lang.String[]"/>
 
             <form-property name="groupName" type="java.lang.String"/>
             <form-property name="serviceUrl" type="java.lang.String"/>

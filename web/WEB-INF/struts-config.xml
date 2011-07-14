@@ -90,8 +90,12 @@
             <form-property name="kaartlagenDefaultAan" type="java.lang.String[]"/>
             <form-property name="layersAan" type="java.lang.String[]"/>
             <form-property name="layersDefaultAan" type="java.lang.String[]"/>
-            <form-property name="servicesAan" type="java.lang.String[]"/>
+            <form-property name="servicesAan" type="java.lang.String[]"/>            
             <form-property name="useLayerStyles" type="java.lang.String[]"/>
+
+            <!-- userLayerIds wordt gebruikt om de layerid's te kunnen
+            koppelen aan de textarea's -->
+            <form-property name="userLayerIds" type="java.lang.String[]"/>
             <form-property name="useLayerSldParts" type="java.lang.String[]"/>
 
             <form-property name="groupName" type="java.lang.String"/>

@@ -39,6 +39,8 @@ function createServiceLeaf(container, item) {
         return;
     }
 
+    container.appendChild(createInputHiddenLayerId(item));
+
     container.appendChild(document.createTextNode(item.name));
     container.appendChild(document.createTextNode(' '));
 
@@ -325,6 +327,30 @@ function createInputLayerSldPart(item) {
         input.value = sld_part;
         input.rows = 1;
         input.cols = 15;
+    }
+
+    return input;
+}
+
+/* userLayerIds wordt gebruikt om de layerid's te kunnen koppelen
+ * aan de textarea's */
+function createInputHiddenLayerId(item) {
+    var input;
+
+    var layerId = item.id;
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+        var inputString = '<input type=hidden name="userLayerIds" id="' + item.id + '"';
+
+        inputString += ' value="' + layerId + '"';
+        inputString += '>';
+        input = document.createElement(inputString);
+    } else {
+        input = document.createElement('input');
+        input.id = item.id;
+        input.name = 'userLayerIds';
+        input.type = 'hidden';
+        input.value = layerId;
     }
 
     return input;

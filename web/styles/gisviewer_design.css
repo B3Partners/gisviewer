@@ -647,3 +647,18 @@ a.highlightlink:hover{
 .imagenoborder {
     border: 0px none;
 }
+
+.kaartselectie {
+    /* background-color: #eee; */
+}
+
+.kaartselectie .checkboxThema {
+    margin-top: -12px;
+    margin-left: 200px;
+    float: left;
+}
+
+.kaartselectie .checkboxThemaOn {
+    margin-top: -12px;
+    float: left;
+}

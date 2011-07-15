@@ -122,7 +122,7 @@ function createCheckboxThema(item, checked) {
 
     if (ieVersion <= 8 && ieVersion != -1) {
 
-        var checkboxControleString = '<input name="kaartlagenAan" type="checkbox" id="' + item.id + '"';
+        var checkboxControleString = '<input class="checkboxThema" name="kaartlagenAan" type="checkbox" id="' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -133,9 +133,11 @@ function createCheckboxThema(item, checked) {
     } else {
         checkbox = document.createElement('input');
         checkbox.id = item.id;
+        checkbox.className = "checkboxThema";
         checkbox.type = 'checkbox';
         checkbox.name = 'kaartlagenAan'
         checkbox.value = item.id;
+        
 
         if (checked) {
             checkbox.checked = true;
@@ -149,7 +151,7 @@ function createCheckboxDefaultOnThema(item, checked) {
 
     if (ieVersion <= 8 && ieVersion != -1) {
 
-        var checkboxControleString = '<input name="kaartlagenDefaultAan" type="checkbox" id="on_' + item.id + '"';
+        var checkboxControleString = '<input class="checkboxThemaOn" name="kaartlagenDefaultAan" type="checkbox" id="on_' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -160,6 +162,7 @@ function createCheckboxDefaultOnThema(item, checked) {
     } else {
         checkbox = document.createElement('input');
         checkbox.id = 'on_' + item.id;
+        checkbox.className = "checkboxThemaOn";
         checkbox.type = 'checkbox';
         checkbox.name = 'kaartlagenDefaultAan'
         checkbox.value = item.id;

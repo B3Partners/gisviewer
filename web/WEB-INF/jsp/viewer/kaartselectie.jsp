@@ -26,7 +26,9 @@ welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
 </div>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
-    <div id="mainTreeDiv"></div>
+    <div class="kaartselectie">
+        <div id="mainTreeDiv"></div>
+    </div>
 
     <script type="text/javascript">
         treeview_create({

@@ -836,7 +836,7 @@ function createLabel(container, item) {
             // als een cluster childs heeft en legend moet in tree worden getoond.
             if (showLegendInTree && item.children){
                 //controleer of er een NIET cluster child een legend heeft.
-                var hasChildsWithLegend=false;
+                hasChildsWithLegend=false;
                 for (var i=0; i < item.children.length && !hasChildsWithLegend; i++){
                     var child=item.children[i];
                     if (!child.cluster && child.legendurl!=undefined){
@@ -863,14 +863,14 @@ function createLabel(container, item) {
 
             alleLayers.push(item);
 
-            var checkboxChecked = false;
+            checkboxChecked = false;
             var layerPos = getLayerPosition(item);
             if(layerPos!=0) {
                 checkboxChecked = true;
             }
 
             var themaCheckbox = null;
-            var parentItem=getParentItem(themaTree,item);
+            parentItem=getParentItem(themaTree,item);
             if (parentItem.exclusive_childs){
                 themaCheckbox=createRadioThema(item,checkboxChecked,parentItem.id);
             }else{
@@ -918,6 +918,8 @@ function createLabel(container, item) {
         }
         return true;//hide
     }
+
+    return true;
 }
 
 function disableLayer(itemid) {
@@ -981,7 +983,7 @@ function loadTreeLegendImage(divid) {
                 }
             }
         }else{
-            var legendimg=createTreeLegendImage(item);
+            legendimg=createTreeLegendImage(item);
             divobj.appendChild(legendimg);
             legendimg.src = item.legendurl;
         }
@@ -1154,9 +1156,9 @@ function clusterCheckboxClick(element,dontRefresh){
             clustersAan.push(element);
     }else{
         var newClustersAan = new Array();
-        for (var i=0; i < clustersAan.length; i++){
-            if (clustersAan[i].id!=element.id){
-                newClustersAan.push(clustersAan[i]);
+        for (var j=0; j < clustersAan.length; j++){
+            if (clustersAan[j].id!=element.id){
+                newClustersAan.push(clustersAan[j]);
             }
         }
         clustersAan=newClustersAan;
@@ -1175,8 +1177,8 @@ function clusterCheckboxClick(element,dontRefresh){
     // als een tree gehide is (gebruiker kan de layers niet aan/uit vinken)
     if (!useInheritCheckbox || cluster.hide_tree) {
         if (element.checked) {       
-            for (var i=0; i < cluster.children.length;i++){
-                var child=cluster.children[i];
+            for (var k=0; k < cluster.children.length;k++){
+                var child=cluster.children[k];
                 if (!child.cluster){
                     addItemAsLayer(child);
                     if (!cluster.hide_tree){
@@ -1212,8 +1214,8 @@ function clusterCheckboxClick(element,dontRefresh){
     }
     /*Als useInheritCheckbox dan grafisch in de tree aangegeven dat onderliggende layers niet zichtbaar zijn.*/
     if (useInheritCheckbox){        
-        for (var i=0; i < cluster.children.length;i++){
-            var child=cluster.children[i];
+        for (var m=0; m < cluster.children.length;m++){
+            child=cluster.children[m];
             if (element.checked) {
                 enableLayer(child.id);
             }else{
@@ -1546,8 +1548,8 @@ function refreshLayer(doRefreshOrder) {
     var layerGroup;
     var lastGroupName = "";
     var localGroupName = "";
-    for (var i=0; i<orderedLayerItems.length; i++){
-        item = orderedLayerItems[i];
+    for (var j=0; j<orderedLayerItems.length; j++){
+        item = orderedLayerItems[j];
         if (layerGrouping == "lg_layer") {
             localGroupName = "fmc" + item.id;
         } else if (layerGrouping == "lg_cluster") {
@@ -1578,17 +1580,17 @@ function refreshLayer(doRefreshOrder) {
     // verwijderen ontbrekende layers
     var shownLayers=webMapController.getMap().getAllWMSLayers();
     var removedLayers = new Array();
-    for (var j=0; j < shownLayers.length; j++){
-        var lid = shownLayers[j].getId();
-        var ls = shownLayers[j].getOption("layers");
+    for (var k=0; k < shownLayers.length; k++){
+        var lid = shownLayers[k].getId();
+        var ls = shownLayers[k].getOption("layers");
         var found = false;
         for (i=0; i<layerGroups.length && found==false; i++){
             layerGroup = layerGroups[i];
             if (lid == layerGroup[0]) {
                 // controleren of laagvolgorde hetzelfde is
                 var lsreq = "";
-                for (var k=1; k < layerGroup.length; k++){
-                    item = layerGroup[k];
+                for (var m=1; m < layerGroup.length; m++){
+                    item = layerGroup[m];
                     if (lsreq.length>0) {
                         lsreq+=",";
                     }
@@ -1604,8 +1606,8 @@ function refreshLayer(doRefreshOrder) {
             removedLayers.push(lid);
         }
     }
-    for (var k=0; k < removedLayers.length; k++){
-        webMapController.getMap().removeLayerById(removedLayers[k]);//false
+    for (var n=0; n < removedLayers.length; n++){
+        webMapController.getMap().removeLayerById(removedLayers[n]);//false
     }
 
     // toevoegen lagen
@@ -1657,8 +1659,8 @@ function refreshLayer(doRefreshOrder) {
 
     var lagen = webMapController.getMap().getAllVectorLayers();
     var totalLayers = webMapController.getMap().getLayers().length;
-    for(var i = 0 ; i < lagen.length;i++){
-        var laag = lagen[i];
+    for(var p = 0 ; p < lagen.length;p++){
+        var laag = lagen[p];
         webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
     }
 }
@@ -2164,15 +2166,15 @@ function findBeforeDivInLegendBox(theItem, atBottomOfType) {
     }else{
         if (atBottomOfType){
             var previousChild=null;
-            for(var i=0; i < orderLayerBox.childNodes.length; i++){
-                var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
+            for(var j=0; j < orderLayerBox.childNodes.length; j++){
+                orderLayerItem=orderLayerBox.childNodes.item(j).theItem;
                 if (orderLayerItem){
                     if (orderLayerItem.background){
                         beforeChild=previousChild;
                         break;
                     }
                 }
-                previousChild=orderLayerBox.childNodes.item(i);
+                previousChild=orderLayerBox.childNodes.item(j);
             }
         }else{
             beforeChild=orderLayerBox.firstChild;
@@ -2234,7 +2236,7 @@ function refreshLegendBox() {
     }
     resetLegendImageQueue();
     for (var j=0; j<enabledLayerItems.length; j++){
-        var item = enabledLayerItems[j];
+        item = enabledLayerItems[j];
         addLayerToLegendBox(item, false);
     }
     if (invisibleLayerItems.length>0) {
@@ -2537,11 +2539,11 @@ function getMovie(movieName) {
  *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
  **/
 function searchThemaValue(themaList,themaId,val){
-    for (var i in themaList){
-        
+    for (var i in themaList){        
         if (i=="id" && themaList[i]==themaId){
             return themaList[val];
         }
+
         if (i=="children"){
             for (var ichild in themaList[i]){
                 var returnValue=searchThemaValue(themaList[i][ichild],themaId,val);
@@ -2552,12 +2554,14 @@ function searchThemaValue(themaList,themaId,val){
             }
         }
     }
+
+    return null;
 }
 
-/*Function to get the parent of a item
- *@param parentCandidate a parent candidate, maybe its the parent of the imte
- *@param the item we want the parent of.
- **/
+/**
+ * @param parentCandidate A parent candidate, maybe its the parent of the imte
+ * @param item The item we want the parent of.
+ */
 function getParentItem(parentCandidate,item){
     if (parentCandidate.children){
         for (var i=0; i < parentCandidate.children.length;i++){
@@ -3227,6 +3231,8 @@ popUp = function(URL, naam, width, height, useDiv) {
 
         return eval("page" + naam + " = window.open('" + URL + "', '" + naam + "', properties);");
     }
+
+    return null;
 }
 
 popUpData = function(naam, width, height, useDiv) {
@@ -3433,12 +3439,13 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
     this.balloonArrowHeight=40;
     this.offsetX=0;
     this.offsetY=0;
-    this.leftOfPoint;
-    this.topOfPoint;
+    //this.leftOfPoint;
+    //this.topOfPoint;
+    
     //the balloon jquery dom element.
-    this.balloon;
-    this.xCoord;
-    this.yCoord;
+    //this.balloon;
+    //this.xCoord;
+    //this.yCoord;
 
     if (balloonWidth){
         this.balloonWidth=balloonWidth;

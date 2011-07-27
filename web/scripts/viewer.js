@@ -1696,15 +1696,6 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         version: "1.1.1",
         noCache: true // TODO: Voor achtergrond kaartlagen wel cache gebruiken
     };
-
-    /* Indien gekozen dan styles zetten van USerLayer */
-    if (layerItems.length == 1) {
-        var style = layerItems[0].use_style;
-
-        if (style != undefined && style != "" && style != "default") {
-            ogcOptions["styles"] = style;
-        }
-    }
     
     var theLayers="";
     var queryLayers="";
@@ -1712,10 +1703,22 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
     var smallestMinscale = -1;
     var largestMaxscale = -1;
 
+    var allStyles = "";
+
     var maptips=new Array();
     // last in list will be on top in map
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
+
+        /* styles komma seperated aan og options toevoegen */
+        if (item.use_style && item.use_style != "default") {            
+            if (i == layerItems.length-1) // laatste item zonder komma
+                allStyles += item.use_style;
+            else
+                allStyles += item.use_style + ",";
+        } else if (i != layerItems.length-1) {
+            allStyles += ",";
+        }
         
         var minscale;
         if (smallestMinscale!=0){
@@ -1812,6 +1815,8 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             options["maxResolution"]="auto";
         }
     }
+
+    ogcOptions["styles"] = allStyles;
     
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;

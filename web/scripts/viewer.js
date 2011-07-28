@@ -1,37 +1,77 @@
 dwr.engine.setErrorHandler(handler);
 
+/**
+ * Array with the current visible layers in correct order.
+ * The last is rendered on top.
+*/ 
+var enabledLayerItems = new Array();
+
+/**
+ * String that forms the request to the service. It contains the normal wms request
+ * parameters appened with the kaartenbalie url and if available also PROJECT
+ * or organization code parameters.
+*/
+var layerUrl = "" + kburl;
+
+var cookieArray = readCookie('checkedLayers');
+var cookieClusterArray = readCookie('checkedClusters');
+
+var activeAnalyseThemaId = '';
+var activeClusterId = '';
+
+/**
+ * Temporary list for init.
+*/
+var layersAan= new Array();
+var clustersAan = new Array();
+
+var featureInfoTimeOut = 30;
+var webMapController = null;
+
+/**
+ * Index used when adding layers. So its possible to leave indexes not used.
+*/
+var startLayerIndex = 0;
+
+/**
+ * Ballon reference.
+*/
+var balloon;
+
+var zoomBox,pan,prevExtent,identify;
+
+var mapInitialized = false;
+var searchExtent = null;
+var sldSearchServlet = null;
+
+var highlightThemaId = null;
+
+var multiPolygonBufferWkt = null;
+
+var alleLayers = new Array();
+
+/**
+ * Start off with initMapComponent()
+*/
+initMapComponent();
+
+/**
+ * Shows a message in a popup window.
+ * @param msg The message to display.
+*/
 function handler(msg) {
     var message = msg;
-
+    
     if (message != '')
     {
         messagePopup("", message, "information");
     }
 }
-// // main list that holds current visible layers
-// in correct order, last is top
-var enabledLayerItems= new Array();
 
-var layerUrl=""+kburl;
-var cookieArray = readCookie('checkedLayers');
-var cookieClusterArray = readCookie('checkedClusters');
-
-var activeAnalyseThemaId = '';
-var activeClusterId='';
-
-// temp lists for init
-var layersAan= new Array();
-var clustersAan = new Array();
-
-var featureInfoTimeOut=30;
-var webMapController= null;
-//from this index the layers will be added (so its possible to leave some indexes not used)
-var startLayerIndex=0;
-/*Balloon reference*/
-var balloon;
-
-var zoomBox,pan,prevExtent,identify;
-
+/**
+ * Initialize the viewer. This sets the web map controller to either
+ * Flamingo or OpenLayers. It also registers the events that can be fired.
+*/
 function initMapComponent(){
 
     mapviewer = viewerType;
@@ -69,18 +109,28 @@ function initMapComponent(){
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
 }
 
+/**
+ * Hides the I-tool icon. (Flamingo only)
+*/
 function hideIdentifyIcon(){
     if(webMapController instanceof FlamingoController) {
         webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
     }
 }
 
+/**
+ * Shows the I-tool icon. (Flamingo only)
+*/
 function showIdentifyIcon(){
     if(webMapController instanceof FlamingoController) {
         webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','show');
     }
 }
 
+/**
+ * Initialize the tools used in the viewer. It registers the event and handler
+ * for the tool.
+*/
 function initializeButtons() {
     /*ie bug fix*/
     if (ieVersion!=undefined && ieVersion <= 7){
@@ -191,19 +241,10 @@ function initializeButtons() {
     webMapController.addTool(zoombar);
 }
 
-initMapComponent();
-
-var mapInitialized=false;
-var searchExtent=null;
-var sldSearchServlet=null;
-//if searchConfigId is set do a search
-
-var highlightThemaId = null;
-
-var multiPolygonBufferWkt = null;
-
-var alleLayers = new Array();
-
+/**
+ * Uses a search configuration and search params in the url. Is done when searching via url
+ * params and is called when the viewer (framework) is loaded.
+*/
 function doInitSearch() {
     if (searchConfigId.length > 0 && search.length > 0){
         showLoading();
@@ -212,14 +253,28 @@ function doInitSearch() {
         JZoeker.zoek(new Array(searchConfigId),termen,0,handleInitSearch);
     }
 }
+
+/**
+ * Callback method used in doInitSearch() function. This function hides the loading
+ * screen and calls the handleInitSearchResult() method for further handling.
+ * @param list List with search results from back-end.
+*/
 function handleInitSearch(list){
     hideLoading();
     if (list.length > 0){
         handleInitSearchResult(list[0],searchAction, searchId,searchClusterId,searchSldVisibleValue);
     }
 }
-/*Handles the searchresult.
- **/
+
+/**
+ * Handles the search results from the back-end. It performs the given action.
+ * @param result List with search results.
+ * @param action The search action to perform (zoom, highlight or filter)
+ * @param themaId Adds this value as themaId parameter for the SLD options.
+ * @param clusterId Adds this value as clusterId parameter for the SLD options.
+ * @param visibleValue Displays this value for the result. If none is provided
+ * the result id is displayed instead.
+*/
 function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
     var doZoom= true;
     var doHighlight=false;
@@ -282,6 +337,12 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
     }
 }
 
+/**
+ * Changes the bounding box of the feature to a minimal size when this is smaller
+ * than the minimal vlue.
+ * @param feature The feature.
+ * @return Returns the feature with adjusted bbox.
+*/
 function getBboxMinSize2(feature){
     if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
         var addX=Number((minBboxZoeken-(feature.maxx-feature.minx))/2);
@@ -294,17 +355,29 @@ function getBboxMinSize2(feature){
     return feature;
 }
 
-/*because a simple reload won't change the url in flamingo. Remove the layer and add it again.
- *Maybe a getCap is done but with a little luck the browser cached the last request.*/
-function setSldOnDefaultMap(sldUrl,reload){
-    var kbLayer=webMapController.getMap("map1").getLayer("fmcLayer");
+/**
+ * Because a simple reload won't change the url in flamingo. Remove the layer
+ * and add it again. Maybe a getCap is done but with a little luck the browser
+ * cached the last request.
+ * @param sldUrl The SLD url for the layer.
+ * @param reAddLayer If true the layer will be removed and added again.
+*/
+function setSldOnDefaultMap(sldUrl, reAddLayer){
+    var kbLayer = webMapController.getMap("map1").getLayer("fmcLayer");
     kbLayer.setSld(escape(sldUrl));
-    if (reload){
+
+    if (reAddLayer){
         webMapController.getMap("map1").removeLayerById(kbLayer.getId(), false);
-        webMapController.getMap("map1").addLayer(kbLayer);//, true, true
+        webMapController.getMap("map1").addLayer(kbLayer);
     }
 }
 
+/**
+ * Shows a busy with loading page.
+ * cached the last request.
+ * @param handle Handle to the window to display page content in.
+ * @param type Type of display used (div, panel or window).
+*/
 function loadBusyJSP(handle, type) {
     var $iframebody = null;
     if(type == 'div') $iframebody = $j(handle).contents().find("body");
@@ -335,7 +408,16 @@ function loadBusyJSP(handle, type) {
     }
 }
 
-function handleGetAdminData(/*coords,*/ geom, highlightThemaId, selectionWithinObject) {
+/**
+ * Handles onIdentify by the user to retrieve object information. This function
+ * submits the data via form to the back-end.
+ * @param geom The (buffered) geometry of the click location.
+ * @param highlightThemaId Is used to also highlight the clicked object.
+ * @param selectionWithinObject Boolean indicates if it should retrieve objectdata
+ * for all objects within the current selection (polygon). When false it retrives only
+ * data directly under the (buffered) click location.
+*/
+function handleGetAdminData(geom, highlightThemaId, selectionWithinObject) {
     if (!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
@@ -461,14 +543,21 @@ function handleGetAdminData(/*coords,*/ geom, highlightThemaId, selectionWithinO
     document.forms[0].submit();
 }
 
+/**
+ * Opens an url in an iFrame.
+ * @param url url to open.
+*/
 function openUrlInIframe(url){
     var iframe=document.getElementById("dataframe");
     iframe.src=url;
 }
 
-// 0 = niet in cookie en niet visible,
-// >0 = in cookie, <0 = geen cookie maar wel visible
-// alse item.analyse=="active" dan altijd visible
+/**
+ * Returns current state of layer item. When item analyse is "active" then it
+ * always returns -1 so it will be visible.
+ * @param item The layer item.
+ * @return 0 = Not in cookie or visible, -1 = No cookie but visible, 1 = In cookie.
+*/
 function getLayerPosition(item) {
 
     if((cookieArray == null) || !useCookies) {
@@ -492,6 +581,12 @@ function getLayerPosition(item) {
     return 0;
 }
 
+/**
+ * Returns current state of cluster item. When item is active then it always
+ * returns -1 so it will be visible.
+ * @param item The cluster item.
+ * @return 0 = Not in cookie or visible, -1 = No cookie but visible, 1 = In cookie.
+*/
 function getClusterPosition(item) {
     if ((cookieClusterArray == null) || !useCookies) {
         if (item.visible || item.active)
@@ -507,6 +602,7 @@ function getClusterPosition(item) {
     }
     if (item.active)
         return -1;
+
     return 0;
 }
 
@@ -525,6 +621,7 @@ function setActiveCluster(item,overrule){
         }
     }
 }
+
 function setActiveThema(id, label, overrule) {
     if (!(id && id!=null && label && label!=null && overrule)) {
         return activeAnalyseThemaId;

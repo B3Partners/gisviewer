@@ -1675,6 +1675,20 @@ function getLayerById(id) {
     return null;
 }
 
+function layersOnlyHaveDefaultStyles(layerItems) {
+    if (layerItems == undefined || layerItems == "")
+        return true;
+
+    for (var i=0; i < layerItems.length; i++) {
+        var item = layerItems[i];
+
+        if (item.use_style && item.use_style != "default")
+            return false;
+    }
+
+    return true;
+}
+
 function addLayerToViewer(lname, layerUrl, layerItems) {
     var capLayerUrl=layerUrl;
 
@@ -1707,19 +1721,22 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
 
     var allStyles = "";
 
+    /* Kijken of layers alleen maar default styles bevatten? Zo ja
+     * dan hoeven er geen styles meegegeven te worden */
+    var onlyDefaultStyles = layersOnlyHaveDefaultStyles(layerItems);
+
     var maptips=new Array();
     // last in list will be on top in map
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
 
-        /* styles komma seperated aan og options toevoegen */
-        if (item.use_style && item.use_style != "default") {            
-            if (i == layerItems.length-1) // laatste item zonder komma
+        /* styles komma seperated aan ogc options toevoegen */
+        if (item.use_style && !onlyDefaultStyles) {
+            if (i == layerItems.length-1) {
                 allStyles += item.use_style;
-            else
+            } else {
                 allStyles += item.use_style + ",";
-        } else if (i != layerItems.length-1) {
-            allStyles += ",";
+            }
         }
         
         var minscale;

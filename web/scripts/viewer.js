@@ -26,7 +26,7 @@ var layersAan= new Array();
 var clustersAan = new Array();
 
 var featureInfoTimeOut = 30;
-var webMapController = null;
+var webMapController;
 
 /**
  * Index used when adding layers. So its possible to leave indexes not used.
@@ -38,16 +38,17 @@ var startLayerIndex = 0;
 */
 var balloon;
 
-var zoomBox,pan,prevExtent,identify;
+var zoomBox;
+var pan;
+var prevExtent;
+var identify;
 
 var mapInitialized = false;
-var searchExtent = null;
-var sldSearchServlet = null;
+var searchExtent;
+var sldSearchServlet;
 
-var highlightThemaId = null;
-
-var multiPolygonBufferWkt = null;
-
+var highlightThemaId;
+var multiPolygonBufferWkt;
 var alleLayers = new Array();
 
 /**

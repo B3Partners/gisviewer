@@ -606,6 +606,11 @@ function getClusterPosition(item) {
     return 0;
 }
 
+/**
+ * Set the active cluster to be able to display metadata for this cluster..
+ * @param item Cluster item to be activated
+ * @param overrule When true overrule the current active item.
+*/
 function setActiveCluster(item,overrule){
     if(((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
         if(item != undefined & item != null) {
@@ -622,6 +627,13 @@ function setActiveCluster(item,overrule){
     }
 }
 
+/**
+ * Set the active thema to be able to fetch object info.
+ * @param id The id of the thema.
+ * @param label Label to display above the viewer.
+ * @param overrule When true overrule the current active thema.
+ * @return The active analyse thema.
+*/
 function setActiveThema(id, label, overrule) {
     if (!(id && id!=null && label && label!=null && overrule)) {
         return activeAnalyseThemaId;
@@ -661,6 +673,11 @@ function setActiveThema(id, label, overrule) {
     return activeAnalyseThemaId;
 }
 
+/**
+ * Called when a user selects a radio element in the tree. Activates the selected
+ * thema. When the thema has a metadata link it will display the info in the info tab.
+ * @param obj The selected raio element.
+*/
 function radioClick(obj) {
     var oldActiveThemaId = activeAnalyseThemaId;
     if (obj && obj!=null && obj.theItem && obj.theItem!=null && obj.theItem.id && obj.theItem.title) {
@@ -675,6 +692,12 @@ function radioClick(obj) {
 }
 
 var prevRadioButton = null;
+
+/**
+ * Check if the item is the current active thema.
+ * @param item The item to check.
+ * @return boolean
+*/
 function isActiveItem(item) {
     if (!item) {
         return false;
@@ -703,11 +726,13 @@ function isActiveItem(item) {
 
     return true;
 }
+
 /**
- *Create a radio cluster
- *@param item the cluster item (json)
- *@param checked set to true if this radio must be checked?
- *@param groupName the groupname of this radio group (the parent cluster id in most cases)
+ * Create a radio cluster element
+ * @param item the cluster item (json)
+ * @param checked set to true if this radio must be checked?
+ * @param groupName the groupname of this radio group (the parent cluster id in most cases)
+ * @return The radio element.
  */
 function createRadioCluster(item,checked,groupName){
     var checkbox;
@@ -737,7 +762,12 @@ function createRadioCluster(item,checked,groupName){
 }
 
 
-/*Create a checkbox for cluster*/
+/**
+ * Create a checkbox cluster element
+ * @param item Item the cluster item (json)
+ * @param checked Checked set to true if this radio must be checked?
+ * @return The checkbox element.
+ */
 function createCheckboxCluster(item, checked){
 
     var checkbox;
@@ -765,6 +795,11 @@ function createCheckboxCluster(item, checked){
     return checkbox;
 }
 
+/**
+ * Create a radio element for active thema.
+ * @param item The thema item (json)
+ * @return The radio element.
+ */
 function createRadioSingleActiveThema(item){
     var radio;
     if (ieVersion <= 8 && ieVersion != -1) {
@@ -791,12 +826,14 @@ function createRadioSingleActiveThema(item){
     radio.theItem=item;
     return radio;
 }
+
 /**
- *Create a radio thema
- *@param item the thema item (json)
- *@param checked set to true if this radio must be checked?
- *@param groupName the groupname of this radio group (the parent cluster id in most cases)
- */
+ * Create a radio thema
+ * @param item the thema item (json)
+ * @param checked set to true if this radio must be checked?
+ * @param groupName the groupname of this radio group (the parent cluster id in most cases)
+ * @return The radio element.
+*/
 function createRadioThema(item,checked,groupName){
     var checkbox;
 
@@ -827,6 +864,12 @@ function createRadioThema(item,checked,groupName){
     return checkbox;
 }
 
+/**
+ * Create a checkbox thema
+ * @param item the thema item (json)
+ * @param checked set to true if this radio must be checked?
+ * @return The checkbox element.
+*/
 function createCheckboxThema(item, checked) {
     var checkbox;
 
@@ -857,9 +900,20 @@ function createCheckboxThema(item, checked) {
     return checkbox;
 }
 
+/**
+ * Creates a non visible thema div
+ * @param item The id for the div element
+ * @return createInvisibleDiv()
+*/
 function createInvisibleThemaDiv(item) {
     return createInvisibleDiv(item.id);
 }
+
+/**
+ * Creates a non visible div
+ * @param id The id for the div element.
+ * @return The div element.
+*/
 function createInvisibleDiv(id) {
     var div = document.createElement("div");
     div.name=id;
@@ -871,7 +925,13 @@ function createInvisibleDiv(id) {
     div.style.display="none";
     return div;
 }
-function createMetadatLink(item){
+
+/**
+ * Creates a link element to a new iFrame with the metadata from the item.
+ * @param item The item with the metadata.
+ * @return The link element.
+*/
+function createMetadataLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
     lnk.href = '#';
@@ -885,13 +945,14 @@ function createMetadatLink(item){
     return lnk;
 }
 
+/**
+ * Creates a leaf in the tree. Is called for each item when creating the tree.
+ * @param container The tree container
+ * @param item The item with the leaf info.
+ * @return useless boolean ?
+*/
 function createLabel(container, item) {
-//    if (true) {  // voor test
-//        var spanEl = document.createElement("span");
-//        spanEl.innerHTML = ' ' + item.title + '<br />';
-//        container.appendChild(spanEl);
-//        return false;
-//    } else
+
     if (item.cluster) {
         //if callable
         if (item.callable) {
@@ -948,7 +1009,7 @@ function createLabel(container, item) {
         }
         if (!item.hide_tree || item.callable){
             container.appendChild(document.createTextNode('  '));
-            container.appendChild(createMetadatLink(item));
+            container.appendChild(createMetadataLink(item));
         }
         container.appendChild(createTreeLegendDiv(item));
         if (item.hide_tree && !item.callable){
@@ -1000,7 +1061,7 @@ function createLabel(container, item) {
         }
 
         container.appendChild(document.createTextNode('  '));
-        container.appendChild(createMetadatLink(item));
+        container.appendChild(createMetadataLink(item));
 
         if (item.legendurl != undefined && showLegendInTree) {
             container.appendChild(createTreeLegendDiv(item));
@@ -1019,6 +1080,10 @@ function createLabel(container, item) {
     return true;
 }
 
+/**
+ * Disable (gray out) a layer in the tree. Function uses jQuery to edit element.
+ * @param itemid Item id to disable.
+*/
 function disableLayer(itemid) {
     var $item = $j("#layermaindiv_item_" + itemid+"_label");
     $item.addClass("layerdisabled");
@@ -1026,6 +1091,10 @@ function disableLayer(itemid) {
     $item.find(".treeLegendIcon").addClass("disabledLegendIcon");
 }
 
+/**
+ * Enable a layer in the tree. Function uses jQuery to edit element.
+ * @param itemid Item id to enable.
+*/
 function enableLayer(itemid) {
     var $item = $j("#layermaindiv_item_" + itemid+"_label");
     $item.removeClass("layerdisabled");
@@ -1033,7 +1102,10 @@ function enableLayer(itemid) {
     $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");
 }
 
-// var legendimg = null;
+/**
+ * Creates a new legend icon element for use in tree.
+ * @return The icon element.
+*/
 function createTreeLegendIcon() {
     var legendicon = document.createElement("img");
     legendicon.src = imageBaseUrl + "icons/application_view_list.png";
@@ -1048,6 +1120,9 @@ function createTreeLegendIcon() {
     return legendicon;
 }
 
+/**
+ * Loads the legend image when the user clicked on a legend icon.
+*/
 function loadTreeLegendImage(divid) {
     var divobj = document.getElementById(divid);
     var $divobj = $j(divobj);
@@ -1087,6 +1162,12 @@ function loadTreeLegendImage(divid) {
     }
     $j(divobj).toggle();
 }
+
+/**
+ * Creates the image element for the legend
+ * @param item Item used for the image name and title
+ * @return Image element.
+*/
 function createTreeLegendImage(item){
     var legendimg = document.createElement("img");
     legendimg.name = item.title;
@@ -1098,6 +1179,12 @@ function createTreeLegendImage(item){
     // legendimg.src = item.legendurl;
     return legendimg;
 }
+
+/**
+ * Creates the tree legend div.
+ * @param item Item used for the image name and title
+ * @return Div element.
+*/
 function createTreeLegendDiv(item) {
     var id=item.id + '#tree#' + item.wmslayers;
 
@@ -1112,12 +1199,18 @@ function createTreeLegendDiv(item) {
     return div;
 }
 
+/**
+ * Displays an error when the legend image can not be fetched.
+*/
 function treeImageError(){
     var divobj = $j(this).parent();
     divobj.find("img.legendLoading").hide();
     divobj.html('<span style="color: Black;">Legenda kan niet worden opgehaald</span>');
 }
 
+/**
+ * Hides the legend loading message when the legend image is loaded.
+*/
 function treeImageOnload(){
     // TODO: Hoogte check wegehaald, ging niet altijd goed in IE7 waardoor laadicoontje niet werd weggehaald
     // if (parseInt(this.height) > 5){

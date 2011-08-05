@@ -412,6 +412,7 @@
         <input type="hidden" name="searchId"/>
         <input type="hidden" name="searchClusterId"/>
         <input type="hidden" name="withinObject"/>
+        <input type="hidden" name="onlyFeaturesInGeom"/>
 
         <html:hidden property="themaid" />
         <html:hidden property="analysethemaid" />

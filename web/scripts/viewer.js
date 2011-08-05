@@ -458,8 +458,10 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject) {
 
     if (selectionWithinObject) {
         document.forms[0].withinObject.value = "1";
+        document.forms[0].onlyFeaturesInGeom.value="true";
     }else {
         document.forms[0].withinObject.value = "-1";
+        document.forms[0].onlyFeaturesInGeom.value="false";
     }
 
     if (highlightThemaId != null) {

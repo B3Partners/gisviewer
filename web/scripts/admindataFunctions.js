@@ -422,7 +422,11 @@ function handleGetGegevensBronMulti(gegevensbron) {
                     var childTr = $j('<tr></tr>');
                     var toggleIcon = $j('<img src="'+plusicon+'" alt="Openklappen" title="Openklappen" />')
                     .click(function(){
-                        var childLoaded = loadChild(childDivId, child.id, child.wkt, child.cql);
+                        var childWkt=child.wkt;
+                        if (!onlyFeaturesInGeom){
+                            childWkt=null;
+                        }
+                        var childLoaded = loadChild(childDivId, child.id, childWkt, child.cql);
                         if(!childLoaded) toggleBron($j(this));
                     });
                     var collapse = $j('<td></td>').css({
@@ -489,7 +493,7 @@ function loadChild(bronContentId, beanId, wkt, beanCql) {
 
     if($bronContentDiv.hasClass("bronChildEmpty"))
     {
-        JCollectAdmindata.fillGegevensBronBean(beanId, 0, wkt, beanCql, bronContentId, handleGetGegevensBron);
+        JCollectAdmindata.fillGegevensBronBean(beanId, 0, wkt, beanCql,false, bronContentId, handleGetGegevensBron);
         $bronContentDiv.removeClass("bronChildEmpty").addClass("bronContentClosed");
         $j("#childCaption"+bronContentId).hide();
         $j('#childLoading'+bronContentId).show();

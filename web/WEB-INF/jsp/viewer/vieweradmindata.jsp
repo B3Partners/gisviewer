@@ -65,6 +65,11 @@ reguliere admindata of GetFeatureInfo --%>
 <div id="getFeatureInfo"></div>
 
 <script type="text/javascript">
+    /*True als er alleen features mogen worden getoond die binnen de originele vraag geometry liggen (klik punt(met kleine buffer)
+     of getekend object(polygon))
+    false als childs altijd moeten worden getoond als het een child is. 
+     */
+    var onlyFeaturesInGeom=${onlyFeaturesInGeom};
     <c:choose>
         <c:when test="${not empty beans}">
             <%-- er komt reguliere admindata binnen. de wachtmelding wordt in de
@@ -74,7 +79,7 @@ reguliere admindata of GetFeatureInfo --%>
                     // optellen aantal gegevensbronnen
                     loop++;
                     // haal gegevens op van gegevensbron
-                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', '${bean.cql}', 'adminDataWrapper', handleGetGegevensBron);
+                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', '${bean.cql}', false, 'adminDataWrapper', handleGetGegevensBron);
             </c:forEach>
                 });
         </c:when>

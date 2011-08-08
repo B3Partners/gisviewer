@@ -76,6 +76,7 @@
         <put name="title" value="Viewer Redlining" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerredlining.jsp"/>
     </definition>
+
     <definition name="viewerhighlight" path="/WEB-INF/jsp/viewer/viewerhighlightkeuze.jsp"/>
 
     <!-- viewer popup -->
@@ -94,6 +95,11 @@
     </definition>
     <definition name="createmappdf" extends="templatePrint">
         <put name="content" value="/WEB-INF/jsp/viewer/createmappdf.jsp"/>
+    </definition>
+
+    <definition name="globespotter" extends="popup">
+        <put name="title" value="Globespotter" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/globespotter.jsp"/>
     </definition>
 
     <definition name="voorzieningzoeker" extends="tab">

@@ -543,6 +543,9 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.b3p-zoeker}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
+        <ant antfile="${project.commons-mail-b3p}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
         <ant antfile="${project.jump-b3p}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
@@ -570,6 +573,9 @@ exists or setup the property manually. For example like this:
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.b3p-zoeker}/build.xml" inheritall="false" target="jar">
+            <property name="deploy.on.save" value="false"/>
+        </ant>
+        <ant antfile="${project.commons-mail-b3p}/build.xml" inheritall="false" target="jar">
             <property name="deploy.on.save" value="false"/>
         </ant>
         <ant antfile="${project.jump-b3p}/build.xml" inheritall="false" target="jar">
@@ -740,6 +746,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.b3p-combineImageTool.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.GeotoolsShpRenderer.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.Fop.classpath}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.commons-mail-b3p.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
@@ -770,6 +777,7 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.b3p-combineImageTool.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.GeotoolsShpRenderer.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
         <copyfiles files="${libs.Fop.classpath}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copyfiles files="${reference.commons-mail-b3p.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
         <delete dir="${build.web.dir}/WEB-INF/lib"/>
@@ -1082,6 +1090,7 @@ exists or setup the property manually. For example like this:
         <ant antfile="${project.b3p-geotools-filterImpl2}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-gisviewer}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.b3p-zoeker}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.commons-mail-b3p}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.jump-b3p}/build.xml" inheritall="false" target="clean"/>
         <ant antfile="${project.securityfilter-b3p}/build.xml" inheritall="false" target="clean"/>
     </target>

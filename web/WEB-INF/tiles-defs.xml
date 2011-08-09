@@ -76,7 +76,10 @@
         <put name="title" value="Viewer Redlining" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerredlining.jsp"/>
     </definition>
-
+    <definition name="viewerbag" extends="tab">
+        <put name="title" value="BAG" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerbag.jsp"/>
+    </definition>
     <definition name="viewerhighlight" path="/WEB-INF/jsp/viewer/viewerhighlightkeuze.jsp"/>
 
     <!-- viewer popup -->

@@ -417,29 +417,37 @@ function loadBusyJSP(handle, type) {
  * @param selectionWithinObject Boolean indicates if it should retrieve objectdata
  * for all objects within the current selection (polygon). When false it retrives only
  * data directly under the (buffered) click location.
+ * @param themaIds the thema ids where this request must be done. If ommited the 
+ * selected thema's are used. It doesn't change the checkboxes.
+ * @param extraCriteria CQL criteria that is used as filter for getting the features.
 */
-function handleGetAdminData(geom, highlightThemaId, selectionWithinObject) {
+function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, themaIds, extraCriteria) {
     if (!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
+    if (themaIds==undefined){
+        if (!multipleActiveThemas){
+            themaIds = activeAnalyseThemaId;
+        } else {
+            themaIds = getLayerIdsAsString(true);
+        }
 
-    var checkedThemaIds;
-    if (!multipleActiveThemas){
-        checkedThemaIds = activeAnalyseThemaId;
-    } else {
-        checkedThemaIds = getLayerIdsAsString(true);
+        if (themaIds == null || themaIds == '') {
+            hideLoading();
+            return;
+        }
     }
-
-    if (checkedThemaIds == null || checkedThemaIds == '') {
-        hideLoading();
-        return;
+    //set the extra criteria.
+    document.forms[0].extraCriteria.value="";
+    if(extraCriteria){
+        document.forms[0].extraCriteria.value=extraCriteria;
     }
-
+    //set the correct action
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = '';
-
-    document.forms[0].themaid.value = checkedThemaIds;
+    
+    document.forms[0].themaid.value = themaIds;
     
     document.forms[0].lagen.value='';
 
@@ -3571,6 +3579,11 @@ $j(document).ready(function(){
     /* vullen inhoud redlining tab */
     if(document.getElementById('redliningframeViewer')) {
         document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
+    }
+    
+    /* vullen inhoud redlining tab */
+    if(document.getElementById('bagframeViewer')) {
+        document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
     }
 
     var pwCreated = false;

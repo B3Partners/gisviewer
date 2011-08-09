@@ -434,3 +434,8 @@ body.homebody {
     width: 17px;
     cursor: pointer;
 }
+/*Slider*/
+.slider{
+    margin-left: 10px;
+    margin-right: 10px;
+}

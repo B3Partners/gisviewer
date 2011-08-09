@@ -292,7 +292,8 @@
         "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
         "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
         "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" },
-        "cms": {id: "cms", contentid: "cmsvak", name: "Extra"}
+        "cms": {id: "cms", contentid: "cmsvak", name: "Extra"},
+        "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"}
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -413,6 +414,8 @@
         <input type="hidden" name="searchClusterId"/>
         <input type="hidden" name="withinObject"/>
         <input type="hidden" name="onlyFeaturesInGeom"/>
+        <input type="hidden" name="extraCriteria"/>
+        
 
         <html:hidden property="themaid" />
         <html:hidden property="analysethemaid" />
@@ -603,6 +606,7 @@
     <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="meldingenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="meldingenframeViewer" name="meldingenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="redliningvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="redliningframeViewer" name="redliningframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    <div id="bagvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="bagframeViewer" name="bagframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">

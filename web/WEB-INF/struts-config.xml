@@ -17,7 +17,6 @@
             <form-property name="tolerance" type="java.lang.String"/>
             <form-property name="lagen" type="java.lang.String"/>
             <form-property name="locatieveld" type="java.lang.String"/>
-            <form-property name="extraCriteria" type="java.lang.String"/>
             <form-property name="geselecteerd_object" type="java.lang.String"/>
             <form-property name="zoekopties" type="java.lang.String"/>
             <form-property name="zoekopties_object" type="java.lang.String"/>
@@ -179,6 +178,8 @@
             <forward name="failure" path="viewerredlining"/>
             <forward name="redlining" path="viewerredlining"/>
         </action>
+        
+        <action path="/viewerbag" forward="viewerbag"/>
 
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>

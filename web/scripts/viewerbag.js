@@ -56,14 +56,20 @@ function getBagObjects(){
     var extraCriteria="";
     var minOpp= $j("#oppervlakteSlider").slider("values",0);
     var maxOpp= $j("#oppervlakteSlider").slider("values",1);
-    if (minOpp > configMinOpp){
+    if (minOpp > configMinOpp || maxOpp < configMaxOpp){
         if(extraCriteria.length > 0) extraCriteria+=" && ";
-        extraCriteria+=oppAttributeName+" >= "+minOpp;
+        extraCriteria+="minopp <= "+maxOpp;     
+        extraCriteria+=" && ";
+        extraCriteria+="maxopp >= "+minOpp; 
+    }
+    /*if (minOpp > configMinOpp){
+        if(extraCriteria.length > 0) extraCriteria+=" && ";
+        extraCriteria+=oppAttributeName+" <= "+minOpp;
     }
     if (maxOpp < configMaxOpp){
         if(extraCriteria.length > 0) extraCriteria+=" && ";
         extraCriteria+=oppAttributeName+" <= "+maxOpp;
-    }
+    }*/
     
     var minBouwjaar= $j("#bouwjaarSlider").slider("values",0);
     var maxBouwjaar= $j("#bouwjaarSlider").slider("values",1);
@@ -74,6 +80,6 @@ function getBagObjects(){
     if (maxBouwjaar < configMaxOpp){
         if(extraCriteria.length > 0) extraCriteria+=" && ";
         extraCriteria+=bouwjaarAttributeName+" <= "+maxBouwjaar;
-    }
+    }    
     parent.handleGetAdminData(null, null, false, bagThemaId, extraCriteria);
 }

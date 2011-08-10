@@ -94,13 +94,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                             }
                         </script>
                     </c:if>
-                    <h3><c:out value="${form.map.welkomTekst}"/></h3>
-                    <p>
-                        <fmt:message key="melding.teken.help"/>
+                    <h3>Meldingformulier</h3>
+
+                    <c:if test="${!empty form.map.welkomTekst}">
+                        <p><c:out value="${form.map.welkomTekst}"/></p>
+                    </c:if>
+
+                    <c:if test="${empty form.map.welkomTekst}">
+                        <p><fmt:message key="melding.teken.help"/></p>
+                    </c:if>
+                    
+                    <p>                        
                         <input type="button" value="Klik hier om tekenen te starten" class="zoek_knop" onclick="tekenMelding('${form.map.objectSoort}');" />
-                    </p>
-                    <p>
-                        <fmt:message key="melding.verzenden.help"/>
                     </p>
 
                     <div class="meldinglabel"><fmt:message key="melding.naammelder"/></div>

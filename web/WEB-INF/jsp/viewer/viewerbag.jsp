@@ -30,9 +30,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var configMaxOpp=15200;
     var configMinOpp=1;
     //LETOP: Onderstaande waarden moeten worden veranderd.
-    var bagThemaId=4;
-    var pandenGegevensBronId=7;
-    var verblijfsObjectenGegevensBronId=8;
+    var bagThemaId=343;
+    var pandenGegevensBronId=266;
+    var verblijfsObjectenGegevensBronId=267;
     var oppAttributeName="OPPERVLAKTE";
     var bouwjaarAttributeName="BOUWJAAR";
     var gebruiksfunctieAttributeName="GEBRUIKSFUNCTIE";

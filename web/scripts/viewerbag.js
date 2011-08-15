@@ -17,7 +17,7 @@ $j(document).ready(function (){
                 if (ui.values[0]==configMinOpp && ui.values[1]==configMaxOpp){
                     text="Alles";
                 }else{
-                    text="van " + ui.values[ 0 ] + " m<sup>2</sup> tot " + ui.values[ 1 ] +" m<sup>2</sup>";
+                    text="van " + ui.values[ 0 ] + " m<sup>2</sup> tot en met " + ui.values[ 1 ] +" m<sup>2</sup>";
                 }
                 $j("#oppervlakteHoeveelheid" ).html(text);
             }
@@ -33,7 +33,7 @@ $j(document).ready(function (){
                 if (ui.values[0]==configMinBouwjaar && ui.values[1]==configMaxBouwjaar){
                     text="Alles";
                 }else{
-                    text="van " + ui.values[ 0 ] + " tot " + ui.values[ 1 ];
+                    text="van " + ui.values[ 0 ] + " tot en met " + ui.values[ 1 ];
                 }
                 $j("#bouwjaarHoeveelheid" ).html(text);
             }
@@ -87,16 +87,16 @@ function getBagObjects(){
         extraCriteria[verblijfsObjectenGegevensBronId]+=oppAttributeName+" >= "+minOpp; 
     }
     if (maxOpp < configMaxOpp){
-        if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria+=" && ";
+        if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria[verblijfsObjectenGegevensBronId]+=" && ";
         extraCriteria[verblijfsObjectenGegevensBronId]+=oppAttributeName+" <= "+maxOpp;     
     }    
     //gebruiksfuncties
     var gebruiksFunctiesCriteria="";
-    $j.each($j("input[name='gebruiksfunctie']"),function(index,elem){
+    $j.each($j("input:checked[name='gebruiksfunctie']"),function(index,elem){
         if(gebruiksFunctiesCriteria.length > 0) gebruiksFunctiesCriteria+=" OR ";
         gebruiksFunctiesCriteria+= gebruiksfunctieAttributeName+" = '"+$j(elem).val()+"'";
     });
-    if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria+=" && ";        
+    if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria[verblijfsObjectenGegevensBronId]+=" && ";        
     if (gebruiksFunctiesCriteria==""){
         extraCriteria[verblijfsObjectenGegevensBronId]+=gebruiksfunctieAttributeName+" = null";
     }else{

@@ -93,8 +93,8 @@ function getBagObjects(){
     //gebruiksfuncties
     var gebruiksFunctiesCriteria="";
     $j.each($j("input[name='gebruiksfunctie']"),function(index,elem){
-        if(gebruiksFunctiesCriteria.length > 0) gebruiksFunctiesCriteria+=" || ";
-        gebruiksFunctiesCriteria+= gebruiksfunctieAttributeName+" = "+$j(elem).val();
+        if(gebruiksFunctiesCriteria.length > 0) gebruiksFunctiesCriteria+=" OR ";
+        gebruiksFunctiesCriteria+= gebruiksfunctieAttributeName+" = '"+$j(elem).val()+"'";
     });
     if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria+=" && ";        
     if (gebruiksFunctiesCriteria==""){

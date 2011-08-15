@@ -63,7 +63,7 @@ reguliere admindata of GetFeatureInfo --%>
 </div>
 <%-- div id="childLoadingadminDataContainer" class="childLoading"><img src="images/icons/loading.gif" alt="Loading" title="Loading" /></div --%>
 <div id="getFeatureInfo"></div>
-
+<script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
 <script type="text/javascript">
     /*True als er alleen features mogen worden getoond die binnen de originele vraag geometry liggen (klik punt(met kleine buffer)
      of getekend object(polygon))
@@ -79,7 +79,7 @@ reguliere admindata of GetFeatureInfo --%>
                     // optellen aantal gegevensbronnen
                     loop++;
                     // haal gegevens op van gegevensbron
-                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', '${bean.cql}', false, 'adminDataWrapper', handleGetGegevensBron);
+                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', JSON.stringify(${bean.cql}), false, 'adminDataWrapper', handleGetGegevensBron);
             </c:forEach>
                 });
         </c:when>

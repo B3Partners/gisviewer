@@ -53,15 +53,13 @@ function getParent() {
 }
 
 function getBagObjects(){
-    var extraCriteria="";
-    var minOpp= $j("#oppervlakteSlider").slider("values",0);
-    var maxOpp= $j("#oppervlakteSlider").slider("values",1);
-    if (minOpp > configMinOpp || maxOpp < configMaxOpp){
-        if(extraCriteria.length > 0) extraCriteria+=" && ";
-        extraCriteria+="minopp <= "+maxOpp;     
-        extraCriteria+=" && ";
-        extraCriteria+="maxopp >= "+minOpp; 
-    }
+    var extraCriteria=new Object();
+    extraCriteria[pandenGegevensBronId]="";
+    extraCriteria[verblijfsObjectenGegevensBronId]="";
+    //bbox
+    var extent = parent.webMapController.getMap().getExtent();
+    extraCriteria[pandenGegevensBronId]+= "BBOX("+geomAttributeName+", "+extent.minx+","+extent.miny+","+extent.maxx+","+extent.maxy+")";
+    
     /*if (minOpp > configMinOpp){
         if(extraCriteria.length > 0) extraCriteria+=" && ";
         extraCriteria+=oppAttributeName+" <= "+minOpp;
@@ -70,16 +68,41 @@ function getBagObjects(){
         if(extraCriteria.length > 0) extraCriteria+=" && ";
         extraCriteria+=oppAttributeName+" <= "+maxOpp;
     }*/
-    
+    //bouwjaar
     var minBouwjaar= $j("#bouwjaarSlider").slider("values",0);
     var maxBouwjaar= $j("#bouwjaarSlider").slider("values",1);
     if (minBouwjaar > configMinOpp){
-        if(extraCriteria.length > 0) extraCriteria+=" && ";
-        extraCriteria+=bouwjaarAttributeName+" >= "+minBouwjaar;
+        if(extraCriteria[pandenGegevensBronId].length > 0) extraCriteria[pandenGegevensBronId]+=" && ";
+        extraCriteria[pandenGegevensBronId]+=bouwjaarAttributeName+" >= "+minBouwjaar;
     }
     if (maxBouwjaar < configMaxOpp){
-        if(extraCriteria.length > 0) extraCriteria+=" && ";
-        extraCriteria+=bouwjaarAttributeName+" <= "+maxBouwjaar;
+        if(extraCriteria[pandenGegevensBronId].length > 0) extraCriteria[pandenGegevensBronId]+=" && ";
+        extraCriteria[pandenGegevensBronId]+=bouwjaarAttributeName+" <= "+maxBouwjaar;
+    }
+    //opp
+    var minOpp= $j("#oppervlakteSlider").slider("values",0);
+    var maxOpp= $j("#oppervlakteSlider").slider("values",1);
+    if (minOpp > configMinOpp){            
+        if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria[verblijfsObjectenGegevensBronId]+=" && ";
+        extraCriteria[verblijfsObjectenGegevensBronId]+=oppAttributeName+" >= "+minOpp; 
+    }
+    if (maxOpp < configMaxOpp){
+        if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria+=" && ";
+        extraCriteria[verblijfsObjectenGegevensBronId]+=oppAttributeName+" <= "+maxOpp;     
     }    
-    parent.handleGetAdminData(null, null, false, bagThemaId, extraCriteria);
+    //gebruiksfuncties
+    var gebruiksFunctiesCriteria="";
+    $j.each($j("input[name='gebruiksfunctie']"),function(index,elem){
+        if(gebruiksFunctiesCriteria.length > 0) gebruiksFunctiesCriteria+=" || ";
+        gebruiksFunctiesCriteria+= gebruiksfunctieAttributeName+" = "+$j(elem).val();
+    });
+    if(extraCriteria[verblijfsObjectenGegevensBronId].length > 0) extraCriteria+=" && ";        
+    if (gebruiksFunctiesCriteria==""){
+        extraCriteria[verblijfsObjectenGegevensBronId]+=gebruiksfunctieAttributeName+" = null";
+    }else{
+        extraCriteria[verblijfsObjectenGegevensBronId]+="(";
+        extraCriteria[verblijfsObjectenGegevensBronId]+=gebruiksFunctiesCriteria;
+        extraCriteria[verblijfsObjectenGegevensBronId]+=")";
+    }
+    parent.handleGetAdminData(null, null, false, bagThemaId, JSON.stringify(extraCriteria));
 }

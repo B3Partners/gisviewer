@@ -25,10 +25,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <script type="text/javascript">
     //TODO: deze waarden moeten nog configureerbaar gemaakt worden in de config.
-    var configMaxBouwjaar=2011;
-    var configMinBouwjaar=1570;
-    var configMaxOpp=15200;
-    var configMinOpp=1;
+    var configMaxBouwjaar='${bagMaxBouwjaar}';
+    var configMinBouwjaar='${bagMinBouwjaar}';
+    var configMaxOpp='${bagMaxOpp}';
+    var configMinOpp='${bagMinOpp}';
     //LETOP: Onderstaande waarden moeten worden veranderd.
     /*var bagThemaId=343;
     var pandenGegevensBronId=266;

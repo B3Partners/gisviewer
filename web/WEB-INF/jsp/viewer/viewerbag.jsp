@@ -30,9 +30,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var configMaxOpp=15200;
     var configMinOpp=1;
     //LETOP: Onderstaande waarden moeten worden veranderd.
-    var bagThemaId=343;
+    /*var bagThemaId=343;
     var pandenGegevensBronId=266;
-    var verblijfsObjectenGegevensBronId=267;
+    var verblijfsObjectenGegevensBronId=267;*/
+    var bagThemaId='${bagThemaId}';
+    var pandenGegevensBronId='${pandenGegevensBronId}';
+    var verblijfsObjectenGegevensBronId='${verblijfsObjectenGegevensBronId}';
+    
     var oppAttributeName="OPPERVLAKTE";
     var bouwjaarAttributeName="BOUWJAAR";
     var gebruiksfunctieAttributeName="GEBRUIKSFUNCTIE";
@@ -41,6 +45,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerbag.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
 <div style="padding: 5px;">
+    <div class="messages">
+            <html:messages id="message" message="true" >
+                <div id="error_tab">
+                    <c:out value="${message}" escapeXml="false"/>
+                </div>
+            </html:messages>
+            <html:messages id="message" name="acknowledgeMessages">
+                <div id="acknowledge_tab">
+                    <c:out value="${message}"/>
+                </div>
+            </html:messages>
+        </div>
     Maak een selectie:
     <p>
         <strong>Bouwjaar</strong>

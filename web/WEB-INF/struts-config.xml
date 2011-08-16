@@ -179,7 +179,10 @@
             <forward name="redlining" path="viewerredlining"/>
         </action>
         
-        <action path="/viewerbag" forward="viewerbag"/>
+        <action path="/viewerbag" type="nl.b3p.gis.viewer.BagAction" scope="request" validate="false">
+            <forward name="success" path="viewerbag"/>
+            <forward name="failure" path="viewerbag"/>
+        </action>
 
         <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
             <forward name="view" path="/index.do"/>

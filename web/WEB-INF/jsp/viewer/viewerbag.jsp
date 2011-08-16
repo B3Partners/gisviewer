@@ -37,10 +37,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var pandenGegevensBronId='${pandenGegevensBronId}';
     var verblijfsObjectenGegevensBronId='${verblijfsObjectenGegevensBronId}';
     
-    var oppAttributeName="OPPERVLAKTE";
-    var bouwjaarAttributeName="BOUWJAAR";
-    var gebruiksfunctieAttributeName="GEBRUIKSFUNCTIE";
-    var geomAttributeName="the_geom";
+    var oppAttributeName="${bagOppAttr}";
+    var bouwjaarAttributeName="${bagBouwjaarAttr}";
+    var gebruiksfunctieAttributeName="${bagGebruiksfunctieAttr}";
+    var geomAttributeName="${bagGeomAttr}";
 </script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerbag.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>

@@ -419,7 +419,7 @@ function loadBusyJSP(handle, type) {
  * data directly under the (buffered) click location.
  * @param themaIds the thema ids where this request must be done. If ommited the 
  * selected thema's are used. It doesn't change the checkboxes.
- * @param extraCriteria CQL criteria that is used as filter for getting the features.
+ * @param extraCriteria JavaScript object with CQL criteria that is used as filter for getting the features.
 */
 function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, themaIds, extraCriteria) {
     if (!usePopup && !usePanel && !useBalloonPopup) {

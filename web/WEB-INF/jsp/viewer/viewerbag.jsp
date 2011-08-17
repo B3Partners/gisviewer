@@ -25,10 +25,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <script type="text/javascript">
     //TODO: deze waarden moeten nog configureerbaar gemaakt worden in de config.
-    var configMaxBouwjaar='${bagMaxBouwjaar}';
-    var configMinBouwjaar='${bagMinBouwjaar}';
-    var configMaxOpp='${bagMaxOpp}';
-    var configMinOpp='${bagMinOpp}';
+    var configMaxBouwjaar=${bagMaxBouwjaar};
+    var configMinBouwjaar=${bagMinBouwjaar};
+    var configMaxOpp=${bagMaxOpp};
+    var configMinOpp=${bagMinOpp};
     //LETOP: Onderstaande waarden moeten worden veranderd.
     /*var bagThemaId=343;
     var pandenGegevensBronId=266;
@@ -42,8 +42,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var gebruiksfunctieAttributeName="${bagGebruiksfunctieAttr}";
     var geomAttributeName="${bagGeomAttr}";
 </script>
-<script type="text/javascript" src="<html:rewrite page='/scripts/viewerbag.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/viewerbag.js'/>"></script>
 <div style="padding: 5px;">
     <div class="messages">
             <html:messages id="message" message="true" >
@@ -57,7 +57,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </div>
             </html:messages>
         </div>
-    Maak een selectie:
+    Hier onder kan gezocht worden op BAG objecten. Door de schuifjes te verslepen en de Gebruiksfuncties aan te geven worden
+    de resultaten beinvloed. Er worden alleen BAG objecten gevonden die op het moment van klikken op 'Zoek' zichtbaar zijn in de kaart
     <p>
         <strong>Bouwjaar</strong>
         <div id="bouwjaarHoeveelheid" class="slider">Alles</div>
@@ -71,6 +72,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </p>    
     <div id="oppervlakteSlider" class="slider"></div>
     <p>
+        <strong>Gebruiksfuncties</strong>
         <table>
             <tr>
                 <td class="bag_td"><input type="checkbox" name="gebruiksfunctie" value="winkelfunctie" checked="true"/>Winkel</td>

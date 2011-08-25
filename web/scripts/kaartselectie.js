@@ -2,6 +2,10 @@
 var kaartgroepenAan = new Array();
 var kaartlagenAan = new Array();
 
+var imagepath = '/gisviewer/images/icons/';
+var checkedimage = 'ok.png';
+var notcheckedimage = 'delete.png';
+
 function createLeaf(container, item) {
     container.appendChild(document.createTextNode(' '));
     container.appendChild(document.createTextNode(item.title));
@@ -24,6 +28,8 @@ function createLeaf(container, item) {
         } else {
             container.appendChild(createCheckboxDefaultOnThema(item, false));
         }
+    } else {
+        container.appendChild(createDummySpace());
     }
 
     return false;
@@ -67,11 +73,11 @@ function createServiceLeaf(container, item) {
     container.appendChild(createInputLayerSldPart(item));
 }
 
-function createCheckboxCluster(item, checked){
+/* function createCheckboxCluster(item, checked){
 
     var checkbox;
     if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input name="kaartgroepenAan" type="checkbox" id="' + item.id + '"';
+        var checkboxControleString = '<input style="display: none;" name="kaartgroepenAan" type="checkbox" id="' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -83,20 +89,43 @@ function createCheckboxCluster(item, checked){
         checkbox.id = item.id;
         checkbox.type = 'checkbox';
         checkbox.name = 'kaartgroepenAan'
+        checkbox.style.display = 'none';
         checkbox.value = item.id;
         if(checked) {
             checkbox.checked = true;
         }
     }
 
-    return checkbox;
+    var div = document.createElement('div');
+    
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    img.className ='treeview_image';
+    $j(img).click(function(){
+        var checkBox = $j("#" + item.id);
+        if($j(checkbox).is(":checked")) {
+            $j(checkBox).attr('checked', false);
+            $j(this).attr("src", imagepath + notcheckedimage);
+        } else {
+            $j(checkBox).attr('checked', true);
+            $j(this).attr("src", imagepath + checkedimage);
+        }
+    });
+    
+    div.appendChild(img);
+    div.appendChild(checkbox);
+
+    return div;
 }
 
 function createCheckboxDefaultOnCluster(item, checked){
 
     var checkbox;
     if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input name="kaartgroepenDefaultAan" type="checkbox" id="on_' + item.id + '"';
+        var checkboxControleString = '<input style="display: none;" name="kaartgroepenDefaultAan" type="checkbox" id="on_' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -108,21 +137,44 @@ function createCheckboxDefaultOnCluster(item, checked){
         checkbox.id = 'on_' + item.id;
         checkbox.type = 'checkbox';
         checkbox.name = 'kaartgroepenDefaultAan'
+        checkbox.style.display = 'none';
         checkbox.value = item.id;
         if(checked) {
             checkbox.checked = true;
         }
     }
+    
+    var div = document.createElement('div');
+    
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    img.className ='treeview_image';
+    $j(img).click(function(){
+        var checkBox = $j("#on_" + item.id);
+        if($j(checkbox).is(":checked")) {
+            $j(checkBox).attr('checked', false);
+            $j(this).attr("src", imagepath + notcheckedimage);
+        } else {
+            $j(checkBox).attr('checked', true);
+            $j(this).attr("src", imagepath + checkedimage);
+        }
+    });
+    
+    div.appendChild(img);
+    div.appendChild(checkbox);
 
-    return checkbox;
-}
+    return div;
+} */
 
 function createCheckboxThema(item, checked) {
     var checkbox;
 
     if (ieVersion <= 8 && ieVersion != -1) {
 
-        var checkboxControleString = '<input class="checkboxThema" name="kaartlagenAan" type="checkbox" id="' + item.id + '"';
+        var checkboxControleString = '<input style="display: none;" class="checkboxThema" name="kaartlagenAan" type="checkbox" id="' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -136,14 +188,37 @@ function createCheckboxThema(item, checked) {
         checkbox.className = "checkboxThema";
         checkbox.type = 'checkbox';
         checkbox.name = 'kaartlagenAan'
+        checkbox.style.display = 'none';
         checkbox.value = item.id;
         
-
         if (checked) {
             checkbox.checked = true;
         }
     }
-    return checkbox;
+    
+    var div = document.createElement('div');
+    div.className ='treeview_image';
+    
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    $j(img).click(function(){
+        var checkBox = $j("#" + item.id);
+        if($j(checkbox).is(":checked")) {
+            $j(checkBox).attr('checked', false);
+            $j(this).attr("src", imagepath + notcheckedimage);
+        } else {
+            $j(checkBox).attr('checked', true);
+            $j(this).attr("src", imagepath + checkedimage);
+        }
+    });
+    
+    div.appendChild(img);
+    div.appendChild(checkbox);
+
+    return div;
 }
 
 function createCheckboxDefaultOnThema(item, checked) {
@@ -151,7 +226,7 @@ function createCheckboxDefaultOnThema(item, checked) {
 
     if (ieVersion <= 8 && ieVersion != -1) {
 
-        var checkboxControleString = '<input class="checkboxThemaOn" name="kaartlagenDefaultAan" type="checkbox" id="on_' + item.id + '"';
+        var checkboxControleString = '<input style="display: none;" class="checkboxThemaOn" name="kaartlagenDefaultAan" type="checkbox" id="on_' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -165,20 +240,44 @@ function createCheckboxDefaultOnThema(item, checked) {
         checkbox.className = "checkboxThemaOn";
         checkbox.type = 'checkbox';
         checkbox.name = 'kaartlagenDefaultAan'
+        checkbox.style.display = 'none';
         checkbox.value = item.id;
 
         if (checked) {
             checkbox.checked = true;
         }
     }
-    return checkbox;
+    
+    var div = document.createElement('div');
+    div.className ='treeview_image_on';
+    
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    $j(img).click(function(){
+        var checkBox = $j("#on_" + item.id);
+        if($j(checkbox).is(":checked")) {
+            $j(checkBox).attr('checked', false);
+            $j(this).attr("src", imagepath + notcheckedimage);
+        } else {
+            $j(checkBox).attr('checked', true);
+            $j(this).attr("src", imagepath + checkedimage);
+        }
+    });
+    
+    div.appendChild(img);
+    div.appendChild(checkbox);
+
+    return div;
 }
 
 function createCheckboxLayer(item, checked) {
     var checkbox;
 
     if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input name="layersAan" type="checkbox" id="l_' + item.id + '"';
+        var checkboxControleString = '<input style="display: none;" name="layersAan" type="checkbox" id="l_' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -191,13 +290,37 @@ function createCheckboxLayer(item, checked) {
         checkbox.id = 'l_' +item.id;
         checkbox.type = 'checkbox';
         checkbox.name = 'layersAan'
+        checkbox.style.display = 'none';
         checkbox.value = item.id;
 
         if (checked) {
             checkbox.checked = true;
         }
     }
-    return checkbox;
+    
+    var div = document.createElement('div');
+    div.className ='treeview_image';
+    
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    $j(img).click(function(){
+        var checkBox = $j("#l_" + item.id);
+        if($j(checkbox).is(":checked")) {
+            $j(checkBox).attr('checked', false);
+            $j(this).attr("src", imagepath + notcheckedimage);
+        } else {
+            $j(checkBox).attr('checked', true);
+            $j(this).attr("src", imagepath + checkedimage);
+        }
+    });
+    
+    div.appendChild(img);
+    div.appendChild(checkbox);
+
+    return div;
 }
 
 function createCheckboxDefaultOnLayer(item, checked) {
@@ -205,7 +328,7 @@ function createCheckboxDefaultOnLayer(item, checked) {
 
     if (ieVersion <= 8 && ieVersion != -1) {
 
-        var checkboxControleString = '<input name="layersDefaultAan" type="checkbox" id="lOn_' + item.id + '"';
+        var checkboxControleString = '<input style="display: none" name="layersDefaultAan" type="checkbox" id="lOn_' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -218,13 +341,37 @@ function createCheckboxDefaultOnLayer(item, checked) {
         checkbox.id = 'lOn_' + item.id;
         checkbox.type = 'checkbox';
         checkbox.name = 'layersDefaultAan'
+        checkbox.style.display = 'none';
         checkbox.value = item.id;
 
         if (checked) {
             checkbox.checked = true;
         }
     }
-    return checkbox;
+    
+    var div = document.createElement('div');
+    div.className ='treeview_image_on';
+    
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    $j(img).click(function(){
+        var checkBox = $j("#lOn_" + item.id);
+        if($j(checkbox).is(":checked")) {
+            $j(checkBox).attr('checked', false);
+            $j(this).attr("src", imagepath + notcheckedimage);
+        } else {
+            $j(checkBox).attr('checked', true);
+            $j(this).attr("src", imagepath + checkedimage);
+        }
+    });
+    
+    div.appendChild(img);
+    div.appendChild(checkbox);
+
+    return div;
 }
 
 function createCheckboxService(item) {
@@ -357,4 +504,10 @@ function createInputHiddenLayerId(item) {
     }
 
     return input;
+}
+
+function createDummySpace() {
+    var div = document.createElement('div');
+    div.className = 'checkboxDummy';
+    return div;
 }

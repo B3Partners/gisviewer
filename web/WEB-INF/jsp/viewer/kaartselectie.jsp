@@ -26,8 +26,8 @@ welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
 </div>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
-    <div class="kaartselectie">
-        <div id="mainTreeDiv"></div>
+    <div>
+        <div class="kaartselectie" id="mainTreeDiv"></div>
     </div>
 
     <script type="text/javascript">
@@ -43,7 +43,8 @@ welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
             },
             "saveExpandedState": true,
             "streeaveScrollState": true,
-            "expandAll": true
+            "expandAll": true,
+            "childrenPadding": '15px'
         });
     </script>
 
@@ -56,7 +57,7 @@ welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
     </p>
 
     <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
-        <div id="layerTreeDiv_${status.count}"></div>
+        <div id="layerTreeDiv_${status.count}" class="kaartselectie"></div>
 
         <script type="text/javascript">            
         treeview_create({
@@ -71,7 +72,8 @@ welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
             },
             "saveExpandedState": true,
             "streeaveScrollState": true,
-            "expandAll": true
+            "expandAll": true,
+            "childrenPadding": '15px'
         });
         </script>
     </c:forEach>
@@ -103,3 +105,28 @@ welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
     </p>
     
 </html:form>
+    
+<script type="text/javascript">
+    function treeZebra() {
+        $j(".kaartselectie").each(function() {
+            var counter = 0;
+            $j(".treeview_row", this).each(function() {
+                // check if visible
+                if($j(this).parent().parent().parent().parent().is(":visible")) {
+                    $j(this).removeClass("treeview_odd_row");
+                    if(counter%2==0) {
+                        $j(this).addClass("treeview_odd_row");
+                    }
+                    counter++;
+                }
+            });
+        });
+    }
+    treeZebra();
+    
+    function debugLog(msg) {
+        if (console !== undefined && (console.debug !== undefined || console.log !== undefined)) { 
+            console.log(msg);
+        }
+    }
+</script>

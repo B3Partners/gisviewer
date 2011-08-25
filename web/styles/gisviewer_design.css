@@ -652,15 +652,36 @@ a.highlightlink:hover{
     /* background-color: #eee; */
 }
 
-.kaartselectie .checkboxThema {
-    margin-top: -12px;
-    margin-left: 200px;
+.treeview_image {
     float: left;
+    margin-left: 300px;
+    margin-top: -12px;
+}
+
+.treeview_image_on {
+    float: left;
+    margin-left: 150px;
+    margin-top: -12px;
+}
+
+.kaartselectie .checkboxDummy {
+    margin-top: -12px;
+    margin-left: 300px;
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+
+.kaartselectie .checkboxThema {
+    
 }
 
 .kaartselectie .checkboxThemaOn {
-    margin-top: -12px;
-    float: left;
+    
+}
+
+.kaartselectie .treeview_odd_row {
+    background-color: #DDE9F2;
 }
 
 .bag_td{

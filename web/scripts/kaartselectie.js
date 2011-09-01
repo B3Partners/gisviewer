@@ -5,6 +5,8 @@ var kaartlagenAan = new Array();
 var imagepath = '/gisviewer/images/icons/';
 var checkedimage = 'ok.png';
 var notcheckedimage = 'delete.png';
+var hassld = 'page_white_text.png';
+var hasnosld = 'page_white.png';
 
 function createLeaf(container, item) {
     container.appendChild(document.createTextNode(' '));
@@ -62,112 +64,9 @@ function createServiceLeaf(container, item) {
     else
         container.appendChild(createCheckboxDefaultOnLayer(item, false));
 
-    /* Alleen selectbox tonen als er meer dan alleen een default style is */
-    if (item.styles) {
-        if (item.styles[0] != "default") {
-            container.appendChild(createSelectBoxLayerStyles(item));
-        }
-    }
-
     container.appendChild(document.createTextNode(' '));
     container.appendChild(createInputLayerSldPart(item));
 }
-
-/* function createCheckboxCluster(item, checked){
-
-    var checkbox;
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input style="display: none;" name="kaartgroepenAan" type="checkbox" id="' + item.id + '"';
-        if (checked) {
-            checkboxControleString += ' checked="checked"';
-        }
-        checkboxControleString += ' value="' + item.id + '"';
-        checkboxControleString += '>';
-        checkbox = document.createElement(checkboxControleString);
-    }else{
-        checkbox = document.createElement('input');
-        checkbox.id = item.id;
-        checkbox.type = 'checkbox';
-        checkbox.name = 'kaartgroepenAan'
-        checkbox.style.display = 'none';
-        checkbox.value = item.id;
-        if(checked) {
-            checkbox.checked = true;
-        }
-    }
-
-    var div = document.createElement('div');
-    
-    var imagetype = notcheckedimage;
-    if(checked) imagetype = checkedimage;
-    
-    var img = document.createElement('img');
-    img.src = imagepath + imagetype;
-    img.className ='treeview_image';
-    $j(img).click(function(){
-        var checkBox = $j("#" + item.id);
-        if($j(checkbox).is(":checked")) {
-            $j(checkBox).attr('checked', false);
-            $j(this).attr("src", imagepath + notcheckedimage);
-        } else {
-            $j(checkBox).attr('checked', true);
-            $j(this).attr("src", imagepath + checkedimage);
-        }
-    });
-    
-    div.appendChild(img);
-    div.appendChild(checkbox);
-
-    return div;
-}
-
-function createCheckboxDefaultOnCluster(item, checked){
-
-    var checkbox;
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input style="display: none;" name="kaartgroepenDefaultAan" type="checkbox" id="on_' + item.id + '"';
-        if (checked) {
-            checkboxControleString += ' checked="checked"';
-        }
-        checkboxControleString += ' value="' + item.id + '"';
-        checkboxControleString += '>';
-        checkbox = document.createElement(checkboxControleString);
-    }else{
-        checkbox = document.createElement('input');
-        checkbox.id = 'on_' + item.id;
-        checkbox.type = 'checkbox';
-        checkbox.name = 'kaartgroepenDefaultAan'
-        checkbox.style.display = 'none';
-        checkbox.value = item.id;
-        if(checked) {
-            checkbox.checked = true;
-        }
-    }
-    
-    var div = document.createElement('div');
-    
-    var imagetype = notcheckedimage;
-    if(checked) imagetype = checkedimage;
-    
-    var img = document.createElement('img');
-    img.src = imagepath + imagetype;
-    img.className ='treeview_image';
-    $j(img).click(function(){
-        var checkBox = $j("#on_" + item.id);
-        if($j(checkbox).is(":checked")) {
-            $j(checkBox).attr('checked', false);
-            $j(this).attr("src", imagepath + notcheckedimage);
-        } else {
-            $j(checkBox).attr('checked', true);
-            $j(this).attr("src", imagepath + checkedimage);
-        }
-    });
-    
-    div.appendChild(img);
-    div.appendChild(checkbox);
-
-    return div;
-} */
 
 function createCheckboxThema(item, checked) {
     var checkbox;
@@ -201,19 +100,7 @@ function createCheckboxThema(item, checked) {
     
     var imagetype = notcheckedimage;
     if(checked) imagetype = checkedimage;
-    
-    var img = document.createElement('img');
-    img.src = imagepath + imagetype;
-    $j(img).click(function(){
-        var checkBox = $j("#" + item.id);
-        if($j(checkbox).is(":checked")) {
-            $j(checkBox).attr('checked', false);
-            $j(this).attr("src", imagepath + notcheckedimage);
-        } else {
-            $j(checkBox).attr('checked', true);
-            $j(this).attr("src", imagepath + checkedimage);
-        }
-    });
+    var img = createImageReplacement(item.id, imagetype, '', "on_" + item.id);
     
     div.appendChild(img);
     div.appendChild(checkbox);
@@ -253,19 +140,7 @@ function createCheckboxDefaultOnThema(item, checked) {
     
     var imagetype = notcheckedimage;
     if(checked) imagetype = checkedimage;
-    
-    var img = document.createElement('img');
-    img.src = imagepath + imagetype;
-    $j(img).click(function(){
-        var checkBox = $j("#on_" + item.id);
-        if($j(checkbox).is(":checked")) {
-            $j(checkBox).attr('checked', false);
-            $j(this).attr("src", imagepath + notcheckedimage);
-        } else {
-            $j(checkBox).attr('checked', true);
-            $j(this).attr("src", imagepath + checkedimage);
-        }
-    });
+    var img = createImageReplacement("on_" + item.id, imagetype, item.id, '');
     
     div.appendChild(img);
     div.appendChild(checkbox);
@@ -303,19 +178,7 @@ function createCheckboxLayer(item, checked) {
     
     var imagetype = notcheckedimage;
     if(checked) imagetype = checkedimage;
-    
-    var img = document.createElement('img');
-    img.src = imagepath + imagetype;
-    $j(img).click(function(){
-        var checkBox = $j("#l_" + item.id);
-        if($j(checkbox).is(":checked")) {
-            $j(checkBox).attr('checked', false);
-            $j(this).attr("src", imagepath + notcheckedimage);
-        } else {
-            $j(checkBox).attr('checked', true);
-            $j(this).attr("src", imagepath + checkedimage);
-        }
-    });
+    var img = createImageReplacement("l_" + item.id, imagetype, '', "lOn_" + item.id);
     
     div.appendChild(img);
     div.appendChild(checkbox);
@@ -354,19 +217,7 @@ function createCheckboxDefaultOnLayer(item, checked) {
     
     var imagetype = notcheckedimage;
     if(checked) imagetype = checkedimage;
-    
-    var img = document.createElement('img');
-    img.src = imagepath + imagetype;
-    $j(img).click(function(){
-        var checkBox = $j("#lOn_" + item.id);
-        if($j(checkbox).is(":checked")) {
-            $j(checkBox).attr('checked', false);
-            $j(this).attr("src", imagepath + notcheckedimage);
-        } else {
-            $j(checkBox).attr('checked', true);
-            $j(this).attr("src", imagepath + checkedimage);
-        }
-    });
+    var img = createImageReplacement("lOn_" + item.id, imagetype, "l_" + item.id, '');
     
     div.appendChild(img);
     div.appendChild(checkbox);
@@ -377,20 +228,12 @@ function createCheckboxDefaultOnLayer(item, checked) {
 function createCheckboxService(item) {
     var checkbox;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input name="servicesAan" type="checkbox" id="' + item.id + '"';
-
-        checkboxControleString += ' value="' + item.serviceid + '"';
-        checkboxControleString += '>';
-        checkbox = document.createElement(checkboxControleString);
-    } else {
-        checkbox = document.createElement('input');
-        checkbox.id = item.id;
-        checkbox.type = 'checkbox';
-        checkbox.name = 'servicesAan'
-        checkbox.value = item.serviceid;
-    }
-
+    checkbox = document.createElement('input');
+    checkbox.id = item.id;
+    checkbox.type = 'checkbox';
+    checkbox.name = 'servicesAan'
+    checkbox.value = item.serviceid;
+        
     return checkbox;
 }
 
@@ -402,84 +245,108 @@ function createSelectBoxLayerStyles(item) {
     if (item.use_style != undefined && item.use_style != "default") {
         useStyle = item.use_style;
     }
+    
+    selectItem = document.createElement('select');
 
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var controleStr = '<select name="useLayerStyles" id="selStyle_' + item.id + '"';
+    selectItem.id = 'selStyle_' + item.id;
+    selectItem.name = 'useLayerStyles';
 
-        controleStr += '<option value="' + layerId + '@default">-Kies style-</option>';
+    var defOption = document.createElement("option");
 
-        for (var i=0; i < item.styles.length; i++) {            
-            if (item.styles[i] != "default") {
+    defOption.text = '-Kies style-';
+    defOption.value = layerId + '@default';
 
-                if (useStyle ==  item.styles[i]) {
-                    controleStr += '<option SELECTED value=' + layerId + '@' + item.styles[i] + '>' + item.styles[i] + '</option>';
-                } else {
-                    controleStr += '<option value=' + layerId + '@' + item.styles[i] + '>' + item.styles[i] + '</option>';
-                }
+    selectItem.options.add(defOption);
+
+    for (var j=0; j < item.styles.length; j++) {
+        if (item.styles[j] != "default") {
+            var objOption = document.createElement("option");
+
+            objOption.text = item.styles[j];
+            objOption.value = layerId + '@' + item.styles[j];
+
+            if (useStyle == item.styles[j]) {
+                objOption.selected = true;
             }
+
+            selectItem.options.add(objOption);
         }
-
-        controleStr += '>';
-        selectItem = document.createElement(controleStr);
-
-    } else {
-        selectItem = document.createElement('select');
-
-        selectItem.id = 'selStyle_' + item.id;
-        selectItem.name = 'useLayerStyles';
-
-        var defOption = document.createElement("option");
-
-        defOption.text = '-Kies style-';
-        defOption.value = layerId + '@default';
-
-        selectItem.options.add(defOption);
-
-        for (var j=0; j < item.styles.length; j++) {
-            if (item.styles[j] != "default") {
-                var objOption = document.createElement("option");
-
-                objOption.text = item.styles[j];
-                objOption.value = layerId + '@' + item.styles[j];
-
-                if (useStyle == item.styles[j]) {
-                    objOption.selected = true;
-                }
-
-                selectItem.options.add(objOption);
-            }
-        } 
-    }
+    } 
 
     return selectItem;
 }
 
 function createInputLayerSldPart(item) {
     var input;
-
-    var layerId = item.id;
     var sld_part = "";
+    
+    var selectbox = null;
+    /* Alleen selectbox tonen als er meer dan alleen een default style is */
+    if (item.styles) {
+        if (item.styles[0] != "default") {
+            selectbox = createSelectBoxLayerStyles(item);
+        }
+    }
 
     if (item.sld_part != undefined && item.sld_part != '') {
         sld_part = item.sld_part;
     }
 
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var inputString = '<textarea rows=1 cols=15 name="useLayerSldParts" id="' + item.id + '"';
-
-        inputString += ' value="' + sld_part + '"';
-        inputString += '>';
-        input = document.createElement(inputString);
-    } else {
-        input = document.createElement('textarea');
-        input.id = item.id;
-        input.name = 'useLayerSldParts'
-        input.value = sld_part;
-        input.rows = 1;
-        input.cols = 15;
+    input = document.createElement('textarea');
+    input.id = item.id;
+    input.name = 'useLayerSldParts'
+    input.value = sld_part;
+    input.rows = 1;
+    input.cols = 15;
+    
+    var imagetype = hasnosld;
+    if(sld_part != "" || (item.use_style != undefined && item.use_style != "default")) imagetype = hassld;
+    
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    $j(img).click(function(e){
+        openSldContainer('sldcontainer_' + item.id);
+        e.stopPropagation();
+    });
+    
+    var imgclone = $j(img).clone();
+    imgclone.css({"float": "right"});
+    imgclone.click(function(e) {
+        closeSldContainers();
+        e.stopPropagation();
+    });
+    
+    var sldcontainer = document.createElement('div');
+    sldcontainer.className = 'kaartlaagselectieSldContainer';
+    sldcontainer.id = 'sldcontainer_' + item.id;
+    
+    sldcontainer.appendChild(imgclone[0]);
+    
+    if(selectbox != null) {
+        var lbl = document.createElement('label');
+        lbl.innerHTML = 'Selecteer een style';
+        
+        sldcontainer.appendChild(lbl);
+        sldcontainer.appendChild(selectbox);
     }
-
-    return input;
+    
+    var lbl2 = document.createElement('label');
+    if(selectbox == null) lbl2.innerHTML = 'Voer een SLD in';
+    else lbl2.innerHTML = 'Of voer een SLD in';  
+    
+    sldcontainer.appendChild(lbl2);
+    sldcontainer.appendChild(input);
+    
+    var divcontainer = document.createElement('div');
+    divcontainer.className = 'kaartlaagselectieContainer';
+    
+    divcontainer.appendChild(img);
+    divcontainer.appendChild(sldcontainer);
+    $j(divcontainer).click(function(e) {
+        e.stopPropagation();
+    });
+    
+    return divcontainer;
 }
 
 /* userLayerIds wordt gebruikt om de layerid's te kunnen koppelen
@@ -489,19 +356,11 @@ function createInputHiddenLayerId(item) {
 
     var layerId = item.id;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var inputString = '<input type=hidden name="userLayerIds" id="' + item.id + '"';
-
-        inputString += ' value="' + layerId + '"';
-        inputString += '>';
-        input = document.createElement(inputString);
-    } else {
-        input = document.createElement('input');
-        input.id = item.id;
-        input.name = 'userLayerIds';
-        input.type = 'hidden';
-        input.value = layerId;
-    }
+    input = document.createElement('input');
+    input.id = item.id;
+    input.name = 'userLayerIds';
+    input.type = 'hidden';
+    input.value = layerId;
 
     return input;
 }
@@ -510,4 +369,43 @@ function createDummySpace() {
     var div = document.createElement('div');
     div.className = 'checkboxDummy';
     return div;
+}
+
+function createImageReplacement(id, imagetype, dependant, child) {
+    var img = document.createElement('img');
+    img.src = imagepath + imagetype;
+    img.id = id + '_image';
+    $j(img).click(function(e){
+        var checkBox = $j("#" + id);
+        if(checkBox.is(":checked")) {
+            checkBox.attr('checked', false);
+            $j(this).attr("src", imagepath + notcheckedimage);
+            if(child != '') {
+                $j("#" + child).attr('checked', false);
+                $j("#" + child + "_image").attr("src", imagepath + notcheckedimage);
+            }
+        } else {
+            checkBox.attr('checked', true);
+            $j(this).attr("src", imagepath + checkedimage);
+            if(dependant != '' && !$j("#"+dependant).is(":checked")) {
+                $j("#" + dependant).attr('checked', true);
+                $j("#" + dependant + "_image").attr("src", imagepath + checkedimage);
+            }
+        }
+        e.stopPropagation();
+    });
+    return img;
+}
+
+function openSldContainer(containerid) {
+    $j('.kaartlaagselectieSldContainer').hide();
+    $j('#'+containerid).show();
+    if (ieVersion <= 8 && ieVersion != -1) {
+        $j('.kaartlaagselectieContainer').css("z-index", "4000");
+        $j('#'+containerid).parent().css("z-index", "5000");
+    }
+}
+
+function closeSldContainers() {
+    $j('.kaartlaagselectieSldContainer').hide();
 }

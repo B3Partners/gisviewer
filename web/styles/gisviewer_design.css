@@ -648,40 +648,251 @@ a.highlightlink:hover{
     border: 0px none;
 }
 
+.kaartselectieBody {
+    margin-top: 10px;
+}
+
+.kaartselectieBody .help {
+    position: absolute;
+    width: 340px;
+    border: 1px solid #196299;
+    padding: 5px;
+    margin-top: -2px;
+    left: 125px;
+    background-color: #DDE9F2;
+    display: none;
+    z-index: 1100;
+}
+
+.kaartselectieBody .submitbutton {
+    font-weight: bold;
+    color: #61676B;
+    background-color: #DDE9F2;
+    padding: 4px;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    padding-left: 20px;
+    background-image: url(../images/icons/save.png);
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+    cursor: pointer;
+}
+
+.kaartselectieBody .submitbutton.deletebutton {
+    background-image: url(../images/icons/remove.png);
+}
+
+.kaartselectieBody .submitbutton:hover {
+    border: 1px solid #196299;
+    color: #196299;
+}
+
+.kaartselectieBody .submitbutton.deletebutton:hover {
+    border: 1px solid #F84838;
+    color: #F84838;
+}
+
+.kaartselectieBody input, .kaartselectieBody textarea {
+    font-size: 9pt;
+    border: 1px solid #61676B;
+    padding: 5px;
+}
+
+.kaartselectieBody input[type=checkbox] {
+    border: 0px none;
+    margin: 0px;
+}
+
 .kaartselectie {
     /* background-color: #eee; */
+    width: 748px;
 }
 
 .treeview_image {
-    float: left;
-    margin-left: 300px;
-    margin-top: -12px;
+    position: absolute;
+    left: 300px;
+    margin-top: -14px;
+    z-index: 1050;
 }
 
 .treeview_image_on {
-    float: left;
-    margin-left: 150px;
-    margin-top: -12px;
+    position: absolute;
+    left: 450px;
+    margin-top: -14px;
+    z-index: 1050;
+}
+
+.kaartlaagselectieContainer {
+    position: absolute;
+    left: 600px;
+    margin-top: -14px;
+}
+
+.kaartlaagselectieContainer img {
+    position: absolute;
+    z-index: 1050;
+}
+
+.kaartlaagselectieSldContainer {
+    position: absolute;
+    width: 340px;
+    margin-left: -330px;
+    margin-top: -6px;
+    border: 1px solid #196299;
+    padding: 5px;
+    background-color: #DDE9F2;
+    display: none;
+    z-index: 10000;
+}
+
+.kaartlaagselectieSldContainer img {
+    position: static;
+}
+
+.kaartlaagselectieSldContainer textarea {
+    width: 328px;
+    height: 80px;
+}
+
+.kaartlaagselectieSldContainer select {
+    width: 100%;
+}
+
+.kaartlaagselectieSldContainer label {
+    display: block;
+    color: #196299;
+    font-size: 12px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 .kaartselectie .checkboxDummy {
-    margin-top: -12px;
-    margin-left: 300px;
-    float: left;
+    margin-top: -14px;
+    left: 300px;
+    position: absolute;
     width: 16px;
     height: 16px;
+    z-index: 1050;
 }
 
-.kaartselectie .checkboxThema {
-    
+.kaartselectie img {
+    cursor: pointer;
 }
 
-.kaartselectie .checkboxThemaOn {
-    
+.kaartselectie .treeview_row {
+    height: 20px;
 }
 
 .kaartselectie .treeview_odd_row {
     background-color: #DDE9F2;
+}
+
+.kaartselectieKoppen {
+    margin-top: 10px;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #196299;
+    padding-bottom: 1px;
+    width: 748px;
+}
+
+.kaartselectieKoppen h3 {
+    font-size: 15px;
+    margin: 0px;
+    color: #196299;
+}
+
+.kaartselectieKoppen h3 img {
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
+.kaartselectieKoppen h4 {
+    float: left;
+    font-size: 1.3em;
+    font-weight: normal;
+    color: #196299;
+    margin: 0px;
+    margin-top: -1.3em;
+    margin-left: 290px;
+}
+
+.kaartselectieKoppen h4.col2 {
+    margin-left: 420px;
+}
+
+.kaartselectieKoppen h4.col3 {
+    margin-left: 650px;
+}
+
+#kaartselectieAddServiceLink {
+    display: block;
+    font-weight: normal;
+    background-image: url(../images/icons/add.png);
+    background-repeat: no-repeat;
+    background-position: 2px 0px;
+    color: #196299;
+    font-size: 13px;
+    padding-left: 24px;
+    padding-top: 0px;
+    padding-bottom: 2px;
+    text-decoration: underline;
+    margin-top: 7px;
+    margin-left: 4px;
+    float: left;
+    margin-bottom: 10px;
+}
+
+#kaartselectieAddService {
+    background-color: #DDE9F2;
+    padding: 14px;
+    padding-top: 8px;
+    width: 720px;
+    font-size: 12px;
+    display: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#kaartselectieAddService h4 {
+    font-weight: normal;
+    font-size: 13px;
+    color: #196299;
+    padding-left: 28px;
+    padding-top: 1px;
+    background-image: url(../images/icons/add.png);
+    background-repeat: no-repeat;
+    background-position: 6px 0px;
+    margin: 0px;
+    margin-left: -14px;
+    
+}
+
+#kaartselectieAddService label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#kaartselectieAddService input {
+    width: 560px;
+}
+
+.kaartselectieBody .rightButton, #kaartselectieAddService .rightButton {
+    float: right;
+    margin-right: 10px;
+}
+
+#kaartselectieAddService .rightButton {
+    margin-right: 0px;
+    width: auto;
+}
+
+.kaartselectieBody #error, .kaartselectieBody #acknowledge {
+    width: 706px;
+    padding: 12px;
+    padding-left: 30px;
+    background-position: 10px 11px;
+    margin-left: 0px;
 }
 
 .bag_td{

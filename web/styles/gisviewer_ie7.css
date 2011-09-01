@@ -13,3 +13,39 @@
 body.pdfExportClass {
     position: relative;
 }
+
+#kaartselectieAddService input {
+    width: 520px;
+}
+
+.kaartselectieBody .submitbutton {
+    padding-left: 10px;
+    padding-right: 0px;
+}
+
+.kaartselectieBody .rightButton, #kaartselectieAddService .rightButton {
+    margin-top: -28px;
+}
+
+.treeview_image {
+    margin-top: 0px;
+}
+
+.treeview_image_on {
+    margin-top: 0px;
+}
+
+.kaartlaagselectieContainer {
+    margin-top: 0px;
+    z-index: 4000;
+}
+
+.kaartlaagselectieSldContainer textarea {
+    float: left;
+    margin-left: 5px;
+}
+
+/* remove ugly black border */
+.kaartselectieBody .submitbutton {
+    filter: chroma(color=#000000);
+}

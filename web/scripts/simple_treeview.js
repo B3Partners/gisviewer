@@ -57,6 +57,10 @@ function treeview_create(options) {
 	if(!options.childrenPadding) {
 		options.childrenPadding = "10px";
 	}
+        
+        if(!options.zebraEffect) {
+                options.zebraEffect = false;
+        }
 
 	if(!options.rootChildrenAsRoots) {
 		if(haveInnerHTML && options.itemHtmlLabelCreatorFunction) {
@@ -194,6 +198,8 @@ function treeview_toggleClick(e) {
 	var DOMItemId = itemNode.id;
 
 	treeview_toggleItemChildren(DOMItemId);
+
+        if(typeof treeZebra == 'function') treeZebra();
 
 	return false;
 }
@@ -375,6 +381,7 @@ function treeview_createContentNode(options, id, item) {
 
 	var td0 = document.createElement("td");
 	td0.style.verticalAlign = "middle";
+        if(options.zebraEffect) td0.style.width = '12px';
 	td0.appendChild(labelContainer.togglea);
 
 	var td1 = document.createElement("td");
@@ -383,6 +390,7 @@ function treeview_createContentNode(options, id, item) {
 	td1.appendChild(labelContainer);
 
 	var tr = document.createElement("tr");
+        if(options.zebraEffect) tr.className = 'treeview_row';
 	tr.appendChild(td0);
 	tr.appendChild(td1);
 	var tbody = document.createElement("tbody");
@@ -391,6 +399,7 @@ function treeview_createContentNode(options, id, item) {
 	table.border = 0;
 	table.cellSpacing = 0;
 	table.style.padding = 0;
+        if(options.zebraEffect) table.style.width = '100%';
 	table.appendChild(tbody);
 
 	return table;

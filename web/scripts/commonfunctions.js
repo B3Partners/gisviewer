@@ -123,9 +123,13 @@ function blockViewerUI() {
         $j('#content_viewer, #header').block({
             message: null,
             baseZ: 100,
+            css: {
+                cursor: 'auto'
+            },
             overlayCSS: {
                 backgroundColor: '#000',
-                opacity: 0.3
+                opacity: 0.3,
+                cursor: 'auto'
             }
         });
         uiBlocked = true;
@@ -264,22 +268,23 @@ function dialogPopUp(innerJqueryElement,title,width,height,dialogOptions){
 }
 
 var prevpopup;
-function iFramePopup(url, newpopup, title, width, height) {
+function iFramePopup(url, newpopup, title, width, height, blockviewer) {
     if(!newpopup) newpopup = false;
     if(!title) title = "";
     if(!width) width = 300;
     if(!height) height = 300;
+    if(!blockviewer) blockviewer = false;
 
     var showdiv = null;
     if(newpopup || prevpopup == null) {
         var $div = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
         var $iframe = $j('<iframe></iframe>').attr({
             src: url,
-            frameborder: 0
+            frameBorder: 0
         }).css({
             border: "0px none",
             width: "100%",
-            height: "100%"
+            height: "99%"
         });
         $div.append($iframe);
         if(!newpopup) {
@@ -293,27 +298,34 @@ function iFramePopup(url, newpopup, title, width, height) {
         showdiv = prevpopup;
     }
 
-    showdiv.dialog({
+    var dialogOptions = {
         resizable: true,
         draggable: true,
         show: 'slide',
         hide: 'slide',
         title: title,
         containment: 'document',
-        autoOpen: false,
-        dragStart: function(event, ui) {startDrag();},
-        dragStop: function(event, ui) {stopDrag();},
-        resizeStart: function(event, ui) {startResize();},
-        resizeStop: function(event, ui) {stopResize();}
-    });
+        autoOpen: false
+    };
+    if(!blockviewer) {
+        dialogOptions.dragStart = function(event, ui) {startDrag();};
+        dialogOptions.dragStop = function(event, ui) {stopDrag();};
+        dialogOptions.resizeStart = function(event, ui) {startResize();};
+        dialogOptions.resizeStop = function(event, ui) {stopResize();};
+    } else {
+        dialogOptions.close = function(event, ui) {unblockViewerUI();};
+    }
+    showdiv.dialog(dialogOptions);
     showdiv.dialog("option", "title", title);
     showdiv.dialog("option", "height", height);
     showdiv.dialog("option", "width", width);
     showdiv.dialog('open');
+    if(blockviewer) blockViewerUI();
 }
 
 function closeiFramepopup() {
     prevpopup.dialog('close');
+    unblockViewerUI();
 }
 
 var $messageDialog = null;

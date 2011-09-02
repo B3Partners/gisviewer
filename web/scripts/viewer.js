@@ -3618,14 +3618,14 @@ $j(document).ready(function() {
             document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
         }
     }
+    
+    if (zoekenTabOn || vergunningTabOn) {
+        createSearchConfigurations();
+    }
 
     var pwCreated = false;
     if(document.getElementById('popupWindow')) {
         pwCreated = true;
-    }
-
-    if (zoekenTabOn || vergunningTabOn) {
-        createSearchConfigurations();
     }
 
     try {

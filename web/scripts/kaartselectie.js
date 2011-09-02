@@ -5,8 +5,8 @@ var kaartlagenAan = new Array();
 var imagepath = '/gisviewer/images/icons/';
 var checkedimage = 'ok.png';
 var notcheckedimage = 'delete.png';
-var hassld = 'page_white_text.png';
-var hasnosld = 'page_white.png';
+var hassld = 'dropdown_red.png';
+var hasnosld = 'dropdown_gray.png';
 
 function createLeaf(container, item) {
     container.appendChild(document.createTextNode(' '));
@@ -304,6 +304,7 @@ function createInputLayerSldPart(item) {
     
     var img = document.createElement('img');
     img.src = imagepath + imagetype;
+    img.title = "Indien aanwezig kies een layer style of voer een stukje SLD in.";
     $j(img).click(function(e){
         openSldContainer('sldcontainer_' + item.id);
         e.stopPropagation();

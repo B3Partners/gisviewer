@@ -31,8 +31,8 @@
             Deze kaartlagen zijn van te voren klaargezet door de beheerder. Ook kunt u aangeven
             welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
         </div>
-        <h4>Laag aanzetten</h4>
-        <h4 class="col2">Laag aanzetten bij opstarten</h4>
+        <h4>Laag tonen</h4>
+        <h4 class="col2">Laag aan bij opstarten</h4>
     </div>
     <div style="clear: both;"></div>
     <div>
@@ -69,8 +69,8 @@
             voegen en daarna de kaartlagen die u beschikbaar wilt hebben aan te vinken.
             De nieuwe lagen worden in de kaartboom onder de ingevulde groepnaam getoond.
         </div>
-        <h4>Laag aanzetten</h4>
-        <h4 class="col2">Laag aanzetten bij opstarten</h4>
+        <h4>Laag tonen</h4>
+        <h4 class="col2">Laag aan bij opstarten</h4>
         <h4 class="col3">Style / SLD</h4>
     </div>
     <div style="clear: both;"></div>

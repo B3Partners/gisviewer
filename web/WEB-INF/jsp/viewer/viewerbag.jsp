@@ -24,26 +24,70 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 
 <script type="text/javascript">
-    //TODO: deze waarden moeten nog configureerbaar gemaakt worden in de config.
-    var configMaxBouwjaar=${bagMaxBouwjaar};
-    var configMinBouwjaar=${bagMinBouwjaar};
-    var configMaxOpp=${bagMaxOpp};
-    var configMinOpp=${bagMinOpp};
-    //LETOP: Onderstaande waarden moeten worden veranderd.
-    /*var bagThemaId=343;
-    var pandenGegevensBronId=266;
-    var verblijfsObjectenGegevensBronId=267;*/
-    var bagThemaId='${bagThemaId}';
-    var pandenGegevensBronId='${pandenGegevensBronId}';
-    var verblijfsObjectenGegevensBronId='${verblijfsObjectenGegevensBronId}';
-    
-    var oppAttributeName="${bagOppAttr}";
-    var bouwjaarAttributeName="${bagBouwjaarAttr}";
-    var gebruiksfunctieAttributeName="${bagGebruiksfunctieAttr}";
-    var geomAttributeName="${bagGeomAttr}";
+
+    function catchEmpty(defval){
+        return defval
+    }
+
+    var configMaxBouwjaar = catchEmpty(${configMaxBouwjaar});
+    if(typeof configMaxBouwjaar === 'undefined' || !configMaxBouwjaar) {
+        configMaxBouwjaar = 2100;
+    }
+
+    var configMinBouwjaar = catchEmpty(${configMinBouwjaar});
+    if(typeof configMinBouwjaar === 'undefined' || !configMinBouwjaar) {
+        configMinBouwjaar = 1;
+    }
+
+    var configMaxOpp = catchEmpty(${configMaxOpp});
+    if(typeof configMaxOpp === 'undefined' || !configMaxOpp) {
+        configMaxOpp = 1000000;
+    }
+
+    var configMinOpp = catchEmpty(${configMinOpp});
+    if(typeof configMinOpp === 'undefined' || !configMinOpp) {
+        configMinOpp = 1;
+    }
+
+    var bagThemaId = catchEmpty(${bagThemaId});
+    if(typeof bagThemaId === 'undefined' || !bagThemaId) {
+        bagThemaId = -1;
+    }
+
+    var pandenGegevensBronId = catchEmpty(${pandenGegevensBronId});
+    if(typeof pandenGegevensBronId === 'undefined' || !pandenGegevensBronId) {
+        pandenGegevensBronId = -1;
+    }
+
+    var verblijfsObjectenGegevensBronId = catchEmpty(${verblijfsObjectenGegevensBronId});
+    if(typeof verblijfsObjectenGegevensBronId === 'undefined' || !verblijfsObjectenGegevensBronId) {
+        verblijfsObjectenGegevensBronId = -1;
+    }
+
+    var oppAttributeName = catchEmpty(${oppAttributeName});
+    if(typeof oppAttributeName === 'undefined' || !oppAttributeName) {
+        oppAttributeName = "";
+    }
+
+    var bouwjaarAttributeName = catchEmpty(${bouwjaarAttributeName});
+    if(typeof bouwjaarAttributeName === 'undefined' || !bouwjaarAttributeName) {
+        bouwjaarAttributeName = "";
+    }
+
+    var gebruiksfunctieAttributeName = catchEmpty(${gebruiksfunctieAttributeName});
+    if(typeof gebruiksfunctieAttributeName === 'undefined' || !gebruiksfunctieAttributeName) {
+        gebruiksfunctieAttributeName = "";
+    }
+
+    var geomAttributeName = catchEmpty(${geomAttributeName});
+    if(typeof geomAttributeName === 'undefined' || !geomAttributeName) {
+        geomAttributeName = "";
+    }
 </script>
+    
 <script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerbag.js'/>"></script>
+    
 <div style="padding: 5px;">
     <div class="messages">
             <html:messages id="message" message="true" >

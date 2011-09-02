@@ -3565,31 +3565,69 @@ buildPopup = function() {
 
 var popupCreated = false;
 
-$j(document).ready(function(){
+$j(document).ready(function() {
 
-    /* vullen inhoud analyse tab */
-    if(document.getElementById('analyseframeViewer')) {
-        document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
-    }
-    /* vullen inhoud meldingen tab */
-    if(document.getElementById('meldingenframeViewer')) {
-        document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
+    /* Alleen tabs vullen als ze ook echt aanstaan */
+    var analyseTabOn = false;
+    var meldingenTabOn = false;
+    var vergunningTabOn = false;
+    var zoekenTabOn = false;
+    var redliningTabOn = false;
+    var bagTabOn = false;
+
+    for (var i=0; i < enabledtabs.length; i++) {
+        if (enabledtabs[i] == "analyse")
+            analyseTabOn = true;
+
+        if (enabledtabs[i] == "meldingen")
+            meldingenTabOn = true;
+
+        if (enabledtabs[i] == "vergunningen")
+            vergunningTabOn = true;
+
+        if (enabledtabs[i] == "redlining")
+            redliningTabOn = true;
+
+        if (enabledtabs[i] == "bag")
+            bagTabOn = true;
+
+        if (enabledtabs[i] == "zoeken")
+            zoekenTabOn = true;
     }
 
-    /* vullen inhoud redlining tab */
-    if(document.getElementById('redliningframeViewer')) {
-        document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
+    if (analyseTabOn) {
+        if (document.getElementById('analyseframeViewer')) {
+            document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
+        }
     }
     
-    /* vullen inhoud redlining tab */
-    if(document.getElementById('bagframeViewer')) {
-        document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
+    if (meldingenTabOn) {
+        if(document.getElementById('meldingenframeViewer')) {
+            document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
+        }
+    }
+
+    if (redliningTabOn) {
+        if(document.getElementById('redliningframeViewer')) {
+            document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
+        }
+    }
+
+    if (bagTabOn) {
+        if(document.getElementById('bagframeViewer')) {
+            document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
+        }
     }
 
     var pwCreated = false;
     if(document.getElementById('popupWindow')) {
         pwCreated = true;
     }
+
+    if (zoekenTabOn || vergunningTabOn) {
+        createSearchConfigurations();
+    }
+
     try {
         if(getParent().document.getElementById('popupWindow')) {
             pwCreated = true;
@@ -3620,13 +3658,13 @@ $j(document).ready(function(){
             }
         });
 
-
         $j('#popupWindow_Close').click(function(){
             if (dataframepopupHandle)
                 dataframepopupHandle.closed = true;
 
             $j("#popupWindow").hide();
         });
+
         /* $j("#popupWindow").mouseover(function(){
             startDrag();
         });
@@ -3635,11 +3673,9 @@ $j(document).ready(function(){
         }); */
         
     }
+
     popupCreated = true;
-
-    createSearchConfigurations();
 });
-
 
 /**
  * @param mapDiv The div element where the map is in.

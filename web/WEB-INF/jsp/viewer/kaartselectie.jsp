@@ -71,7 +71,7 @@
         </div>
         <h4>Laag tonen</h4>
         <h4 class="col2">Laag aan bij opstarten</h4>
-        <h4 class="col3">Style / SLD</h4>
+        <h4 class="col3">Style</h4>
     </div>
     <div style="clear: both;"></div>
 
@@ -108,11 +108,15 @@
     <div id="kaartselectieAddService">
         <h4>Nieuwe WMS Service toevoegen</h4>
         <label for="groupName">Groep</label>
-        <html:text property="groupName" size="20" /></td>
+        <html:text property="groupName" size="20" />
         <label for="serviceUrl">Url</label>
-        <html:text property="serviceUrl" size="40" /></td>
+        <html:text property="serviceUrl" size="40" />
+
+        <%--
         <label for="sldUrl">Sld url</label>
-        <html:text property="sldUrl" size="40" /></td>
+        <html:text property="sldUrl" size="40" />
+        --%>
+
         <html:submit property="saveWMSService" styleClass="rightButton submitbutton">Service toevoegen</html:submit>
     </div>
     

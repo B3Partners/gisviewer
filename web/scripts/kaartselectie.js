@@ -323,13 +323,21 @@ function createInputLayerSldPart(item) {
     
     sldcontainer.appendChild(imgclone[0]);
     
-    if(selectbox != null) {
+    if (selectbox != null) {
         var lbl = document.createElement('label');
         lbl.innerHTML = 'Selecteer een style';
         
         sldcontainer.appendChild(lbl);
         sldcontainer.appendChild(selectbox);
+    } else {
+        var labelNoStyles = document.createElement('label');
+        labelNoStyles.innerHTML = 'Geen styles aanwezig.';
+
+        sldcontainer.appendChild(labelNoStyles);
     }
+
+    /*
+     * TODO: Is even uitgecomment. Sld parts invoeren doen we nu nog niet.
     
     var lbl2 = document.createElement('label');
     if(selectbox == null) lbl2.innerHTML = 'Voer een SLD in';
@@ -337,7 +345,8 @@ function createInputLayerSldPart(item) {
     
     sldcontainer.appendChild(lbl2);
     sldcontainer.appendChild(input);
-    
+    */    
+   
     var divcontainer = document.createElement('div');
     divcontainer.className = 'kaartlaagselectieContainer';
     

@@ -12,26 +12,32 @@ function createLeaf(container, item) {
     container.appendChild(document.createTextNode(' '));
     container.appendChild(document.createTextNode(item.title));
 
-    // aan/uit vinkjes
+    /* aan/uit vinkjes kaartgroepen en kaartlagen */
     if (!item.cluster) {
         if (item.kaartSelected) {
             container.appendChild(createCheckboxThema(item, true));
         } else {
             container.appendChild(createCheckboxThema(item, false));
         }
+    } else if (item.callable) {
+        container.appendChild(createDummySpace());
     }
 
     container.appendChild(document.createTextNode(' '));
 
-    // default visible vinkjes
+    /* default aan/uit vinkjes kaartgroepen en kaartlagen */
     if (!item.cluster) {
         if (item.kaartDefaultOn) {
             container.appendChild(createCheckboxDefaultOnThema(item, true));
         } else {
             container.appendChild(createCheckboxDefaultOnThema(item, false));
         }
-    } else {
-        container.appendChild(createDummySpace());
+    } else if (item.callable) {
+        if (item.groupDefaultOn) {
+            container.appendChild(createCheckboxDefaultOnCluster(item, true));
+        } else {
+            container.appendChild(createCheckboxDefaultOnCluster(item, false));
+        }
     }
 
     return false;
@@ -418,4 +424,84 @@ function openSldContainer(containerid) {
 
 function closeSldContainers() {
     $j('.kaartlaagselectieSldContainer').hide();
+}
+
+function createCheckboxCluster(item, checked) {
+    var checkbox;
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+
+        var checkboxControleString = '<input style="display: none;" class="checkboxThema" name="kaartgroepenAan" type="checkbox" id="' + item.id + '"';
+        if (checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = item.id;
+        checkbox.className = "checkboxThema";
+        checkbox.type = 'checkbox';
+        checkbox.name = 'kaartgroepenAan'
+        checkbox.style.display = 'none';
+        checkbox.value = item.id;
+
+        if (checked) {
+            checkbox.checked = true;
+        }
+    }
+
+    var div = document.createElement('div');
+    div.className ='treeview_image';
+
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    var img = createImageReplacement(item.id, imagetype, '', "on_" + item.id);
+
+    div.appendChild(img);
+    div.appendChild(checkbox);
+
+    return div;
+}
+
+function createCheckboxDefaultOnCluster(item, checked) {
+    var checkbox;
+
+    if (ieVersion <= 8 && ieVersion != -1) {
+
+        var checkboxControleString = '<input style="display: none;" class="checkboxThemaOn" name="kaartgroepenDefaultAan" type="checkbox" id="on_' + item.id + '"';
+        if (checked) {
+            checkboxControleString += ' checked="checked"';
+        }
+        checkboxControleString += ' value="' + item.id + '"';
+        checkboxControleString += '>';
+        checkbox = document.createElement(checkboxControleString);
+
+    } else {
+        checkbox = document.createElement('input');
+        checkbox.id = 'on_' + item.id;
+        checkbox.className = "checkboxThemaOn";
+        checkbox.type = 'checkbox';
+        checkbox.name = 'kaartgroepenDefaultAan'
+        checkbox.style.display = 'none';
+        checkbox.value = item.id;
+
+        if (checked) {
+            checkbox.checked = true;
+        }
+    }
+
+    var div = document.createElement('div');
+    div.className ='treeview_image_on';
+
+    var imagetype = notcheckedimage;
+    if(checked) imagetype = checkedimage;
+    var img = createImageReplacement("on_" + item.id, imagetype, item.id, '');
+
+    div.appendChild(img);
+    div.appendChild(checkbox);
+
+    return div;
 }

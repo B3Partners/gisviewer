@@ -60,51 +60,54 @@
             "zebraEffect": true
         });
     </script>
-   
-    <div class="kaartselectieKoppen">
-        <h3>
-            Eigen kaartlagen
-            <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
-        </h3>
-        <div id="eigenKaartlagenHelp" class="help">
-            <strong>Zelf toegevoegde kaartlagen</strong><br />
-            U kunt ook zelf kaartlagen toevoegen aan de viewer door een wms service toe te
-            voegen en daarna de kaartlagen die u beschikbaar wilt hebben aan te vinken.
-            De nieuwe lagen worden in de kaartboom onder de ingevulde groepnaam getoond.
+
+    <c:if test="${!empty servicesTrees}">
+        <div class="kaartselectieKoppen">
+            <h3>
+                Eigen kaartlagen
+                <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
+            </h3>
+            <div id="eigenKaartlagenHelp" class="help">
+                <strong>Zelf toegevoegde kaartlagen</strong><br />
+                U kunt ook zelf kaartlagen toevoegen aan de viewer door een wms service toe te
+                voegen en daarna de kaartlagen die u beschikbaar wilt hebben aan te vinken.
+                De nieuwe lagen worden in de kaartboom onder de ingevulde groepnaam getoond.
+            </div>
+            <h4>Laag tonen</h4>
+            <h4 class="col2">Laag aan bij opstarten</h4>
+            <h4 class="col3">Style</h4>
         </div>
-        <h4>Laag tonen</h4>
-        <h4 class="col2">Laag aan bij opstarten</h4>
-        <h4 class="col3">Style</h4>
-    </div>
-    <div style="clear: both;"></div>
+        <div style="clear: both;"></div>
 
-    <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
-        <div id="layerTreeDiv${status.count}" class="kaartselectie"></div>
+        <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
+            <div id="layerTreeDiv${status.count}" class="kaartselectie"></div>
 
-        <script type="text/javascript">            
-        treeview_create({
-            "id": 'layerTreeDiv${status.count}',
-            "root": ${serviceTree},
-            "rootChildrenAsRoots": false,
-            "itemLabelCreatorFunction": createServiceLeaf,
-            "toggleImages": {
-                "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
-                "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
-                "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
-            },
-            "saveExpandedState": true,
-            "saveScrollState": true,
-            "expandAll": true,
-            "childrenPadding": '20px',
-            "zebraEffect": true
-        });
-        </script>
-    </c:forEach>
+            <script type="text/javascript">
+            treeview_create({
+                "id": 'layerTreeDiv${status.count}',
+                "root": ${serviceTree},
+                "rootChildrenAsRoots": false,
+                "itemLabelCreatorFunction": createServiceLeaf,
+                "toggleImages": {
+                    "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
+                    "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
+                    "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
+                },
+                "saveExpandedState": true,
+                "saveScrollState": true,
+                "expandAll": true,
+                "childrenPadding": '20px',
+                "zebraEffect": true
+            });
+            </script>
+        </c:forEach>
 
-    <p>
-        <html:submit property="deleteWMSServices" styleClass="submitbutton deletebutton">Services wissen</html:submit>
-        <html:submit property="save" styleClass="rightButton submitbutton">Alles opslaan</html:submit>
-    </p>
+        <p>
+            <html:submit property="deleteWMSServices" styleClass="submitbutton deletebutton">Services wissen</html:submit>
+        </p>
+    </c:if>
+
+    <html:submit property="save" styleClass="rightButton submitbutton">Alles opslaan</html:submit>
 
     <a href="#" id="kaartselectieAddServiceLink">Nieuwe WMS Service toevoegen</a>
     <div style="clear: both;"></div>

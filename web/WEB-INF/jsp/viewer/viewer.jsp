@@ -367,6 +367,11 @@
 	
     /* Variable wordt gebruikt om de huidige active tab in op te slaan */
     var currentActiveTab = null;
+
+    var appCode = catchEmpty("${appCode}");
+    if (typeof appCode === 'undefined' || !appCode) {
+        appCode = "0";
+    }
     
     function getZoekconfiguraties(){
         return zoekconfiguraties;

@@ -20,6 +20,9 @@
 </div>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
+
+    <html:hidden property="appCode" />
+
     <div class="kaartselectieKoppen">
         <h3>
             Vaste kaartlagen

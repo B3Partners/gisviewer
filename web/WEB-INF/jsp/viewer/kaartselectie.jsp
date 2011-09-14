@@ -107,6 +107,10 @@
         </p>
     </c:if>
 
+    <p>
+        Huidige instellingen zijn alleen lezen <html:checkbox property="appReadOnly" />
+    </p>
+
     <html:submit property="save" styleClass="rightButton submitbutton">Alles opslaan</html:submit>
 
     <a href="#" id="kaartselectieAddServiceLink">Nieuwe WMS Service toevoegen</a>

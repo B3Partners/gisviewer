@@ -84,6 +84,7 @@
             <form-property name="alt_action" type="java.lang.String"/>
 
             <form-property name="appCode" type="java.lang.String"/>
+            <form-property name="appReadOnly" type="java.lang.Boolean"/>
 
             <form-property name="kaartgroepenAan" type="java.lang.String[]"/>
             <form-property name="kaartlagenAan" type="java.lang.String[]"/>

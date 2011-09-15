@@ -108,7 +108,8 @@
     </c:if>
 
     <p>
-        Huidige instellingen zijn alleen lezen <html:checkbox property="appReadOnly" />
+        <html:hidden property="currentAppReadOnly" />
+        Instellingen opslaan als alleen-lezen <html:checkbox property="makeAppReadOnly" />
     </p>
 
     <html:submit property="save" styleClass="rightButton submitbutton">Alles opslaan</html:submit>

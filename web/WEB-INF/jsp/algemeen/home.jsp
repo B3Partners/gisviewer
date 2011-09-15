@@ -15,39 +15,42 @@
 
 <tiles:insert definition="actionMessages"/>
 <!-- Loop door tekstblokken heen -->
+
+<div id="carouselcontainerblock"></div>
+
 <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
-    <div class="content_block">
-        <div class="content_title"><c:out value="${tb.titel}"/></div>
+    <div class="content_block item">
+        <div class="content">
+            <div class="content_title"><c:out value="${tb.titel}"/></div>
 
-        <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
-        <c:if test="${tb.toonUrl}">
-            <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
-        </c:if>
-
-        <!-- Anders gewoon de tekst tonen van tekstblok -->
-        <c:if test="${!tb.toonUrl}">
-        <div class="inleiding_body">
-            ${tb.tekst}
-
-            <c:if test="${!empty tb.url}">
-            Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
+            <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
+            <c:if test="${tb.toonUrl}">
+                <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
             </c:if>
 
-            <c:if test="${tb.toonUrl}">
-                <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+            <!-- Anders gewoon de tekst tonen van tekstblok -->
+            <c:if test="${!tb.toonUrl}">
+            <div class="inleiding_body">
+                ${tb.tekst}
+
+                <c:if test="${!empty tb.url}">
+                Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
+                </c:if>
+
+                <c:if test="${tb.toonUrl}">
+                    <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+                </c:if>
+            </div>
             </c:if>
         </div>
-        </c:if>
     </div>
-    <c:if test="${status.count % 2 == 0}">
-        <div style="clear: both;"></div>
-    </c:if>
 </c:forEach>
 
 <!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard
 blokken -->
 <c:if test="${empty tekstBlokken}">
-    <div class="content_block">
+
+    <div class="content_block item">
         <div class="content_title"><fmt:message key="algemeen.home.titel"/></div>
 
         <div class="inleiding_body">
@@ -72,7 +75,7 @@ blokken -->
         </div>
     </div>
 
-    <div class="content_block">
+    <div class="content_block item">
         <div class="content_title">Luchtfoto Heuvelrug</div>
 
         <div class="inleiding_body">
@@ -80,10 +83,8 @@ blokken -->
             <p>Luchtfoto van de Utrechtse heuvelrug</p>
         </div>
     </div>
-            
-    <div style="clear: both;"></div>
 
-    <div class="content_block">
+    <div class="content_block item">
         <div class="content_title">Nieuwe Kaart Nederland</div>
 
         <div class="inleiding_body">
@@ -92,7 +93,7 @@ blokken -->
         </div>
     </div>
 
-    <div class="content_block">
+    <div class="content_block item">
         <div class="content_title">OpenStreetMap</div>
 
         <div class="inleiding_body">
@@ -101,9 +102,7 @@ blokken -->
         </div>
     </div>
             
-    <div style="clear: both;"></div>
-
-    <div class="content_block">
+    <div class="content_block item">
         <div class="content_title">Bestemmingsplannen</div>
 
         <div class="inleiding_body">
@@ -113,7 +112,7 @@ blokken -->
     </div>
 </c:if>
 
-<div class="content_block">
+<div class="content_block" id="loginblock">
     <c:choose>
         <c:when test="${not empty themalist || not empty clusterlist}">
             <div class="content_title"><fmt:message key="algemeen.home.themas.titel"/></div>
@@ -209,3 +208,5 @@ blokken -->
 </c:if>
 
 <div style="clear: both; padding-bottom: 25px;"></div>
+
+<script type="text/javascript" src="<html:rewrite page='/scripts/homecarousel.js' module=''/>"></script>

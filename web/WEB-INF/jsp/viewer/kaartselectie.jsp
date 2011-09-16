@@ -4,20 +4,33 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 <div class="kaartselectieBody">
 
-    <h1>Kaartselectie</h1>
-    
-<div class="messages">
-    <html:messages id="message" message="true" >
-        <div id="error">
-            <c:out value="${message}" escapeXml="false"/>
-        </div>
-    </html:messages>
-    <html:messages id="message" name="acknowledgeMessages">
-        <div id="acknowledge">
-            <c:out value="${message}"/>
-        </div>
-    </html:messages>
-</div>
+<h1>Kaartselectie</h1>
+
+<!-- Indien niet goed opgeslagen dan wel messages tonen -->
+<c:if test="${empty appCodeSaved}">
+    <div class="messages">
+        <html:messages id="message" message="true" >
+            <div id="error">
+                <c:out value="${message}" escapeXml="false"/>
+            </div>
+        </html:messages>
+        <html:messages id="message" name="acknowledgeMessages">
+            <div id="acknowledge">
+                <c:out value="${message}"/>
+            </div>
+        </html:messages>
+    </div>
+</c:if>
+
+
+<c:if test="${!empty appCodeSaved}">
+    <div id="appUrl">
+    <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}"/>
+
+    Uw persoonlijke instellingen zijn opgeslagen. U kunt de nieuwe viewer bekijken
+    via de volgende <html:link page="${appUrl}" target="_top">persoonlijke url</html:link>.
+    </div>
+</c:if>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">
 

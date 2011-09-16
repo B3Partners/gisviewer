@@ -898,3 +898,18 @@ a.highlightlink:hover{
 .bag_td{
     color: white;
 }
+
+#appUrl{
+    font-size: 1.4em;
+    background-color: #EEEEEE;
+    border: 1px solid black;
+    padding: 3px;
+}
+
+#appUrl a{
+    color: #0000ff;
+}
+
+#appUrl a:hover {
+    text-decoration: none;
+}

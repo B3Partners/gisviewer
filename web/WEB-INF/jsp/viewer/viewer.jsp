@@ -44,7 +44,9 @@
     
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
+
     var bbox='${extent}';
+
     var resolution=catchEmpty(${resolution});
 
     /* init search */
@@ -739,6 +741,16 @@
             switchTab(document.getElementById("${activeTab}"));
         }
     </c:if>
+    
+    <c:if test="${empty activeTab}">
+        var cfgAtiveTab = catchEmpty("${configMap["activeTab"]}");
+        if(typeof cfgAtiveTab === 'undefined' || !cfgAtiveTab) {
+            cfgAtiveTab = "themas";
+        }
+
+        switchTab(document.getElementById(cfgAtiveTab));
+    </c:if>
+
         var panelBelowCollapsed = false;
         var panelLeftCollapsed = true;
         var panelRightCollapsed = false;

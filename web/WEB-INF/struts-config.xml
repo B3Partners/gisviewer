@@ -83,7 +83,6 @@
             <form-property name="action" type="java.lang.String"/>
             <form-property name="alt_action" type="java.lang.String"/>
 
-            <form-property name="appCode" type="java.lang.String"/>
             <form-property name="currentAppReadOnly" type="java.lang.String"/>
             <form-property name="makeAppReadOnly" type="java.lang.Boolean"/>
 

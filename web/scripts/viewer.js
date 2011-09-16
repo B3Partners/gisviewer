@@ -2995,9 +2995,7 @@ function b_print(id, event) {
 }
 
 function b_layerSelection(id, event) {
-    var url = 'kaartselectie.do' + '?appCode=' + appCode;
-
-    iFramePopup(url, false, 'Kaartselectie', 800, 600, true);
+    iFramePopup('kaartselectie.do', false, 'Kaartselectie', 800, 600, true);
 }
 
 function b_overview(id,event) {

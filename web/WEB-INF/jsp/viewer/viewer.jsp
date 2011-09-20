@@ -366,6 +366,11 @@
     if(typeof defaultdataframehoogte === 'undefined' || !defaultdataframehoogte) {
         defaultdataframehoogte = 150;
     }
+
+    var bookmarkAppcode = catchEmpty("${bookmarkAppcode}");
+    if(typeof bookmarkAppcode === 'undefined' || !bookmarkAppcode) {
+        bookmarkAppcode = "";
+    }
 	
     /* Variable wordt gebruikt om de huidige active tab in op te slaan */
     var currentActiveTab = null;

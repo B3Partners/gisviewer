@@ -3331,41 +3331,56 @@ function openGoogleMaps(values) {
 function createPermaLink(){
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
+
     var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
 
-    /* personal code */
-    var personalCode = "code=" + kbcode + "&";
+    /* applicatie code */
+    var appCode = "";
+    if (bookmarkAppcode != undefined && bookmarkAppcode != "") {
+        appCode = "appCode=" + bookmarkAppcode;
+    }
 
-    /* kaartlaagIds ophalen */
+    /* kaartlagen ophalen */
     var id = "";
     var layerIds = getLayerIdsAsString();
-
-    if (layerIds != undefined && layerIds.length > 0) {
-        id = "id=" + layerIds;
+    if (layerIds != undefined && layerIds != "") {
+        id = "&id=" + layerIds;
     }
-    var clusterIds="";
-    if (clustersAan!=undefined && clustersAan.length> 0){
+
+    /* kaartgroepen ophalen */
+    var clusterIds = "";
+    if (clustersAan != undefined && clustersAan.length > 0){
+        clusterIds += "&clusterId=";
+
         for (var i=0; i < clustersAan.length; i++){
             if (clusterIds.length > 0){
                 clusterIds+=",";
             }
             clusterIds+=clustersAan[i].theItem.id.substring(1);
         }
-
     }
 
     /* extent ophalen */
+    var extent = "";
     var fullExtent = webMapController.getMap().getExtent();
-    
-    var minx = Math.round(Number(fullExtent.minx)+1);
-    var miny = Math.round(Number(fullExtent.miny)+1);
-    var maxx = Math.round(Number(fullExtent.maxx)-1);
-    var maxy = Math.round(Number(fullExtent.maxy)-1);
+    if (fullExtent != undefined && fullExtent != "") {
+        var minx = Math.round(Number(fullExtent.minx)+1);
+        var miny = Math.round(Number(fullExtent.miny)+1);
+        var maxx = Math.round(Number(fullExtent.maxx)-1);
+        var maxy = Math.round(Number(fullExtent.maxy)-1);
 
-    var extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
-    var scale=webMapController.getMap().getResolution();
-    scale="&resolution="+scale;
-    var url = urlBase + personalCode + id +"&clusterId="+clusterIds+ extent+scale;
+        extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
+    }
+
+    /* extent ophalen */
+    var reso = "";
+    var controllerRes = webMapController.getMap().getResolution();
+    if (controllerRes != undefined && controllerRes != "") {
+        reso = "&resolution=" + controllerRes;
+    }
+
+    var url = urlBase + appCode + id + clusterIds + extent + reso;
+
     return url;
 }
 

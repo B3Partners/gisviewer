@@ -3360,7 +3360,7 @@ function createPermaLink(){
         }
     }
 
-    /* extent ophalen */
+    /* kaart extent ophalen */
     var extent = "";
     var fullExtent = webMapController.getMap().getExtent();
     if (fullExtent != undefined && fullExtent != "") {
@@ -3372,7 +3372,7 @@ function createPermaLink(){
         extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
     }
 
-    /* extent ophalen */
+    /* kaart resolutie ophalen */
     var reso = "";
     var controllerRes = webMapController.getMap().getResolution();
     if (controllerRes != undefined && controllerRes != "") {

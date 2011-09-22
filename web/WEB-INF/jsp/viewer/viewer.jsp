@@ -123,6 +123,7 @@
     if (objectInfoType== "balloon"){
         usePopup=false;
         usePanel = false;
+        usePanelControls =  false;
         useDivPopup = false;
         useBalloonPopup=true;
     }

@@ -516,8 +516,10 @@
 
     <form id="volgordeForm">
         <div id="volgordevak" style="display: none;" class="tabvak">
-            <div>Bepaal de volgorde waarin de kaartlagen getoond worden</div>
             <div id="orderLayerBox" class="orderLayerBox tabvak_groot"></div>
+
+            <%--
+            <div>Bepaal de volgorde waarin de kaartlagen getoond worden</div>
             <div>
                 <script type="text/javascript">
                     if(!useSortableFunction) {
@@ -527,7 +529,7 @@
                     }
                 </script>
             </div>
-            <%--input type="button" value="Verwijderen" onclick="deleteAllLayers();" class="knop" /--%>
+            --%>
         </div>
     </form>
 

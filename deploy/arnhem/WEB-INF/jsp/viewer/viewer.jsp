@@ -410,7 +410,7 @@
                 }
             }
             if(noOfTabs > 5) noOfTabs = 5;
-            var tabwidth = Math.floor((288 - (noOfTabs-1)) / noOfTabs);
+            var tabwidth = Math.floor((300 - (noOfTabs-1)) / noOfTabs);
             var cloneTabContentId = null;
             for(i in enabledtabs) {
                 var tabid = enabledtabs[i];
@@ -666,7 +666,7 @@
         }
         if(dir == 'right') {
             if(panelRightCollapsed) {
-                var panelbreedte = 288;
+                var panelbreedte = 300;
                 document.getElementById('tab_container').style.display = 'block';
                 document.getElementById('tabjes').style.display = 'block';
                 document.getElementById('rightControl').className = 'right_open';
@@ -691,7 +691,7 @@
         }
         if(dir == 'left') {
             if(panelLeftCollapsed) {
-                var panelbreedte = 288;
+                var panelbreedte = 300;
                 document.getElementById('leftcontent').style.display = 'block';
                 document.getElementById('leftControl').className = 'left_open';
                 panelLeftCollapsed = false;

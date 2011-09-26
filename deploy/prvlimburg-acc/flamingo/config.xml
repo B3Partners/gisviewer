@@ -9,12 +9,7 @@
         <string id="loading"  en="Making... [layer] [percentage]%..." nl="Kaart aan het laden. [percentage]%"/>
     </fmc:MonitorMap>
 
-    <fmc:Container backgroundcolor="#EEEEEE" left="0" top="0" height="36" width="100%">
-        <fmc:Scalebar id="sbkm" skin="style1" right="right -40" bottom="bottom" width="180" units="m" magicnumber="1" listento="map1">
-			<style id=".label" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
-			<style id=".units" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
-		</fmc:Scalebar>
-		
+    <fmc:Container backgroundcolor="#EEEEEE" left="0" top="0" height="36" width="100%"> 
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
@@ -68,14 +63,19 @@
                 </fmc:JsButton>
             </fmc:Container>
         </fmc:ToolGroup>
-		
-        <fmc:Coordinates left="12" bottom="bottom" decimals="0" listento="map1">
-			<string id="xy" en="x: [x]  y: [y]"/>
-			<style id=".xy" font-family="arial" font-size="10px" color="#191919" display="block" font-weight="normal"/>
-		</fmc:Coordinates/>
     </fmc:Container>
 
-    <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">
+    <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">	
+		<fmc:Scalebar id="sbkm" skin="style1" right="right -50" bottom="bottom -10" width="180" units="m" magicnumber="1" listento="map1">
+            <style id=".label" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
+            <style id=".units" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
+        </fmc:Scalebar>
+
+        <fmc:Coordinates left="12" bottom="bottom -10" decimals="0" listento="map1">
+            <string id="xy" en="x: [x]  y: [y]"/>
+            <style id=".xy" font-family="arial" font-size="10px" color="#191919" display="block" font-weight="normal"/>
+        </fmc:Coordinates/>
+		
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>
 
         <!-- het 'canvas' waar op getekend kan worden-->

@@ -24,6 +24,16 @@
                 <html:hidden property="imageId" styleId="imageId"/>
             </td>
         </tr>
+
+        <tr>
+            <td colspan="2" class="printvoorbeeld_help">
+                U kunt dit printvoorbeeld ook direct gebruiken door met de rechtermuisknop op de
+                afbeelding te klikken. Kies voor 'kopiëren' om het plaatje op het
+                klembord te plaatsen of kies voor 'opslaan als...' om het plaatje op de
+                harde schijf te plaatsen.
+            </td>
+        </tr>
+        
         <tr class="aanvullende_info_alternateTr">
             <td><fmt:message key="createmappdf.title"/></td>
             <td><html:text property="title"/></td>

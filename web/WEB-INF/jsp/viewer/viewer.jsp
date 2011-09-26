@@ -398,6 +398,11 @@
         return vergunningConfigStraal;
     }
 
+    /* Boomsortering */
+    var treeOrder = catchEmpty("${configMap["treeOrder"]}");
+    if(typeof treeOrder === 'undefined' || !treeOrder) {
+        treeOrder = 'volgorde';
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

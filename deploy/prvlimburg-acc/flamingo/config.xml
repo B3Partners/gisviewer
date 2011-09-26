@@ -77,7 +77,7 @@
         <!-- het 'canvas' waar op getekend kan worden-->
         <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
 
-        <fmc:GIS id="gis" geometryeditable="yes" alwaysdrawpoints="no">
+        <fmc:GIS id="gis" geometryeditable="false" alwaysdrawpoints="no">
             <fmc:Layer id="layer1" name="layer1" visible="true" geometrytypes="Point,LineString,Polygon,MultiPolygon">
                 <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>
             </fmc:Layer>
@@ -91,11 +91,11 @@
         </fmc:Map>
     </fmc:Container>
 
-<fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="true" canclose="true" title="Overzicht" defocusalpha="75">
-    <fmc:Map id="map_overview" left="0" top="0" width="150" height="350" minscale="80" extent="168000,305000,214000,422000" fullextent="168000,305000,214000,422000">
-        <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
-        <fmc:LayerImage id="oimage" imageurl="assets/limburg/limburg.swf" extent="168000,305000,214000,422000" listento="map1"/>
-    </fmc:Map>
-</fmc:Window>
+<fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="true" canclose="true" title="Overzicht" defocusalpha="75">        
+        <fmc:Map left="10%" width="75%" height="90%" top="5%" id="map_overview" clear="true" extent="168000,310000,214000,421000" fullextent="168000,310000,214000,421000">
+            <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
+            <fmc:LayerImage imageurl="assets/limburg/limburg2010.swf" extent="168000,307000,214000,421000" listento="map1"/>
+        </fmc:Map>
+    </fmc:Window>
 
 </FLAMINGO>

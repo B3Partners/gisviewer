@@ -1377,9 +1377,13 @@ function clusterCheckboxClick(element,dontRefresh){
     // of
     // als een tree gehide is (gebruiker kan de layers niet aan/uit vinken)
     if (!useInheritCheckbox || cluster.hide_tree) {
-        if (element.checked) {       
-            for (var k=0; k < cluster.children.length;k++){
-                var child=cluster.children[k];
+        if (element.checked) {
+
+            /* Cluster is net aangevinkt. Children omgekeerd aanzetten zodat
+             * bovenste layer in boom ook bovenop wordt getekend. */
+            for (var k = cluster.children.length; k > 0; k--){
+                var child = cluster.children[k-1];
+
                 if (!child.cluster){
                     addItemAsLayer(child);
                     if (!cluster.hide_tree){
@@ -2236,7 +2240,7 @@ function createLegendDiv(item) {
     div.appendChild(spanEl);
     div.theItem=item;
 	
-	/* nieuw */
+    /* nieuw */
     div.onclick=function(){
         selectLayer(this);
     };

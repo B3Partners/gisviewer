@@ -10,7 +10,11 @@
     </fmc:MonitorMap>
 
     <fmc:Container backgroundcolor="#EEEEEE" left="0" top="0" height="36" width="100%">
-        <fmc:Scalebar left="530" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
+        <fmc:Scalebar id="sbkm" skin="style1" right="right -40" bottom="bottom" width="180" units="m" magicnumber="1" listento="map1">
+			<style id=".label" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
+			<style id=".units" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
+		</fmc:Scalebar>
+		
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
@@ -63,12 +67,12 @@
                     <string id="tooltip" en="Show map overview" nl="Toon overzichtskaart"/>
                 </fmc:JsButton>
             </fmc:Container>
-
         </fmc:ToolGroup>
-        <fmc:Coordinates id="coordinates" listento="map1" left="85%" top="10" decimals="0">
-            <style id=".xy" font-family="arial" font-size="11" />
-            <string id="xy" nl="X: [x]     Y: [y]" />
-        </fmc:Coordinates>
+		
+        <fmc:Coordinates left="12" bottom="bottom" decimals="0" listento="map1">
+			<string id="xy" en="x: [x]  y: [y]"/>
+			<style id=".xy" font-family="arial" font-size="10px" color="#191919" display="block" font-weight="normal"/>
+		</fmc:Coordinates/>
     </fmc:Container>
 
     <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">
@@ -77,7 +81,7 @@
         <!-- het 'canvas' waar op getekend kan worden-->
         <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
 
-        <fmc:GIS id="gis" geometryeditable="false" alwaysdrawpoints="no">
+        <fmc:GIS id="gis" geometryeditable="false" alwaysdrawpoints="false">
             <fmc:Layer id="layer1" name="layer1" visible="true" geometrytypes="Point,LineString,Polygon,MultiPolygon">
                 <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>
             </fmc:Layer>
@@ -91,7 +95,7 @@
         </fmc:Map>
     </fmc:Container>
 
-<fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="true" canclose="true" title="Overzicht" defocusalpha="75">        
+<fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
         <fmc:Map left="10%" width="75%" height="90%" top="5%" id="map_overview" clear="true" extent="168000,310000,214000,421000" fullextent="168000,310000,214000,421000">
             <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
             <fmc:LayerImage imageurl="assets/limburg/limburg2010.swf" extent="168000,307000,214000,421000" listento="map1"/>

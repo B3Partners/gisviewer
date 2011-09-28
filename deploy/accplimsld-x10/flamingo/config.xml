@@ -61,6 +61,9 @@
                 <fmc:JsButton id="b_showOverzicht" left="470" top="0" width="21" height="21" iconurl_up="images/map.png" iconurl_over="images/map.png" iconurl_sel="images/map.png" iconurl_dis="images/map.png" label="" toggle="true" visible="true" enabled="true" selected="false">
                     <string id="tooltip" en="Show map overview" nl="Toon overzichtskaart"/>
                 </fmc:JsButton>
+                <fmc:JsButton id="b_layerSelection" left="500" top="0" width="21" height="21" iconurl_up="images/book_open.png" iconurl_over="images/book_open.png" iconurl_sel="images/book_open.png" iconurl_dis="images/book_open.png" label="" toggle="false" visible="false" enabled="true" selected="false">
+                    <string id="tooltip" en="layer selection" nl="kaartselectie"/>
+                </fmc:JsButton>
             </fmc:Container>
         </fmc:ToolGroup>
     </fmc:Container>

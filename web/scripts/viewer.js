@@ -1088,7 +1088,7 @@ function createLabel(container, item) {
         return true;//hide
     }
 
-    return true;
+    return false;
 }
 
 /**

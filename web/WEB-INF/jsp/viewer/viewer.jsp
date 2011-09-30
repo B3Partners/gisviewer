@@ -290,7 +290,7 @@
         "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse" },
         "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
         "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
-        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Plan selectie" },
+        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie" },
         "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
         "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
         "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
@@ -542,25 +542,36 @@
         <div class="planselectcontainer">
             <!--<a class="toggleLinkActive" id="kopTekst" onclick="return toggle(this, 'kolomTekst');">Plan selectie module</a>-->
             <div id="kolomTekst">
-                Eigenaar:
+                <p>
+                <b>Eigenaar</b>
                 <select id="eigenaarselect" name="eigenaarselect" onchange="eigenaarchanged(this)" class="planselectbox" size="10" disabled="true">
-                    <option value="">Bezig met laden eigenaren</option>
+                    <option value="">Bezig met laden eigenaren...</option>
                 </select>
-                Plan type
-                <select id="plantypeselect" name="plantypeselect" size="10" class="planselectbox" onchange="plantypechanged(this)">
-                    <option value="">Kies een eigenaar</option>
-                </select>
-                Plan status
-                <select id="statusselect" name="statusselect" size="10" class="planselectbox" onchange="statuschanged(this)">
-                    <option value="">Kies een eigenaar</option>
-                </select>
-                Plan
-                <select id="planselect" name="planselect" size="10" class="planselectbox" onchange="planchanged(this)">
-                    <option value="">Kies een eigenaar</option>
-                </select>
-                <div id="selectedPlan">Geen plan geselecteerd</div>
-            </div>
+                </p>
 
+                <p>
+                <b>Type</b>
+                <select id="plantypeselect" name="plantypeselect" size="10" class="planselectbox" onchange="plantypechanged(this)">
+                    <option value="">Selecteer een plantype...</option>
+                </select>
+                </p>
+
+                <p>
+                <b>Status</b>
+                <select id="statusselect" name="statusselect" size="10" class="planselectbox" onchange="statuschanged(this)">
+                    <option value="">Selecteer een planstatus...</option>
+                </select>
+                </p>
+
+                <p>
+                <b>Plan</b>
+                <select id="planselect" name="planselect" size="10" class="planselectbox" onchange="planchanged(this)">
+                    <option value="">Selecteer een plan...</option>
+                </select>
+                </p>
+                
+                <div id="selectedPlan">Nog geen plan geselecteerd.</div>
+            </div>
         </div>
     </div>
 

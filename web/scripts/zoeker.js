@@ -2,7 +2,7 @@ var plannen = new Object();
 var bestemmingen = new Object();
 var selectedPlan=null;
 
-var plantypeAttribuutNaam="typeplan";
+var plantypeAttribuutNaam="typePlan";
 var planStatusAttribuutNaam="planstatus";
 var tekstAttribuutNaam="documenten";
 
@@ -80,10 +80,6 @@ function handleGetPlannen(list){
 function updateTypeSelect(){
     dwr.util.removeAllOptions(plantypeSelectName);
     var typen= getDistinctFromPlannen(plantypeAttribuutNaam);
-    dwr.util.addOptions(plantypeSelectName,[{
-        naam:"Selecteer een plantype...",
-        waarde:""
-    }],'waarde','naam');
     dwr.util.addOptions(plantypeSelectName,typen);
 }
 
@@ -96,10 +92,6 @@ function updateStatusSelect(){
     }
     //alleen de statusen van de gefilterde plannen
     var statussen= getDistinctFromPlannen(planStatusAttribuutNaam,filteredPlannen);
-    dwr.util.addOptions(statusSelectName,[{
-        naam:"Selecteer een planstatus...",
-        waarde:""
-    }],'waarde','naam');
     dwr.util.addOptions(statusSelectName,statussen);
 }
 function updatePlanSelect(){
@@ -113,7 +105,7 @@ function updatePlanSelect(){
     }
     dwr.util.addOptions(planSelectName,filteredPlannen,"id","label");
     if (filteredPlannen==undefined || filteredPlannen.length==0){
-        dwr.util.addOptions(planSelectName,[ "Geen plannen gevonden"]);
+        dwr.util.addOptions(planSelectName,["Er zijn geen plannen gevonden."]);
     }
 }
 /***
@@ -193,10 +185,10 @@ function filterPlannen(attribuutType,value,plannenArray){
 function setSelectedPlan(plan){
     selectedPlan=plan;
     if (plan==null){
-        document.getElementById("selectedPlan").innerHTML="Geen plan geselecteerd";
-    }else{
+        document.getElementById("selectedPlan").innerHTML = "Nog geen plan geselecteerd.";
+    }else {
         //commentaar tool zichtbaar maken:
-        document.getElementById("selectedPlan").innerHTML=plan.id;
+        document.getElementById("selectedPlan").innerHTML = "<p>Plan identificatie</p>" + plan.id;
     }
 }
 

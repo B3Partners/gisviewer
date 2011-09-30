@@ -504,10 +504,9 @@
 </div>
 
 <div id="tab_container">
-
     <div id="treevak" style="display: none;" class="tabvak">
         <div>
-            <form id="treeForm">
+            <form action=""  id="treeForm">
                 <div id="layermaindiv" style="display: none;"></div>
             </form></div>
         <div id="timings"></div>
@@ -517,9 +516,7 @@
         </c:forEach>
     </div>
 
-    
-
-    <form id="volgordeForm">
+    <form action="" id="volgordeForm">
         <div id="volgordevak" style="display: none;" class="tabvak">
             <div id="orderLayerBox" class="orderLayerBox tabvak_groot"></div>
 
@@ -540,7 +537,6 @@
 
     <div id="plannenzoeker" style="display: none; overflow: auto;" class="tabvak">
         <div class="planselectcontainer">
-            <!--<a class="toggleLinkActive" id="kopTekst" onclick="return toggle(this, 'kolomTekst');">Plan selectie module</a>-->
             <div id="kolomTekst">
                 <p>
                 U kunt met onderstaande filters een plan selecteren. De viewer zal

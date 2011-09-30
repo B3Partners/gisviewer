@@ -543,6 +543,11 @@
             <!--<a class="toggleLinkActive" id="kopTekst" onclick="return toggle(this, 'kolomTekst');">Plan selectie module</a>-->
             <div id="kolomTekst">
                 <p>
+                U kunt met onderstaande filters een plan selecteren. De viewer zal
+                hier dan naar toe zoomen.
+                </p>
+
+                <p>
                 <b>Eigenaar</b>
                 <select id="eigenaarselect" name="eigenaarselect" onchange="eigenaarchanged(this)" class="planselectbox" size="10" disabled="true">
                     <option value="">Bezig met laden eigenaren...</option>

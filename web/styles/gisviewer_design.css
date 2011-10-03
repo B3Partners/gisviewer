@@ -664,18 +664,16 @@ a.highlightlink:hover{
     z-index: 1100;
 }
 
-.kaartselectieBody .submitbutton {
-    font-weight: bold;
-    color: #61676B;
+.kaartselectieBody .alleenLezen {
+    position: absolute;
+    width: 340px;
+    border: 1px solid #196299;
+    padding: 5px;
+    margin-top: -125px;
+    left: 225px;
     background-color: #DDE9F2;
-    padding: 4px;
-    padding-top: 5px;
-    padding-bottom: 2px;
-    padding-left: 20px;
-    background-image: url(../images/icons/save.png);
-    background-repeat: no-repeat;
-    background-position: 4px 4px;
-    cursor: pointer;
+    display: none;
+    z-index: 1100;
 }
 
 .kaartselectieBody .submitbutton.deletebutton {

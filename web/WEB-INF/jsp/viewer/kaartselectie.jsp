@@ -121,6 +121,16 @@
     <p>
         <html:hidden property="currentAppReadOnly" />
         Instellingen opslaan als alleen-lezen <html:checkbox property="makeAppReadOnly" />
+        <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbuttonAlleenLezen" alt="help" />
+
+        <div id="alleenLezenHelp" class="alleenLezen">
+            <strong>Alleen-lezen</strong><BR/>
+            Als u de instellingen opslaat als alleen-lezen betekend dit dat deze niet meer
+            gewijzigd kunnen worden. Als u of anderen de viewer bekijken dan worden eventuele
+            aanpassingen opgeslagen onder een nieuwe url. U kunt bijvoorbeeld
+            de instellingen opslaan als alleen-lezen als u de viewer wilt tonen aan anderen
+            maar niet wilt dat zij wijzigingen kunnen aanbrengen in uw boom instellingen.
+        </div>
     </p>
 
     <html:submit property="save" styleClass="rightButton submitbutton">Alles opslaan</html:submit>
@@ -184,6 +194,18 @@
         }, function() {
             $j(this).hide();
         });
+
+        $j('.helpbuttonAlleenLezen').hover(function() {
+            $j(this).parent().parent().find('.alleenLezen').show();
+        }, function() {
+            $j(this).parent().parent().find('.alleenLezen').hide();
+        });
+        $j('.alleenLezen').hover(function() {
+            $j(this).show();
+        }, function() {
+            $j(this).hide();
+        });
+
         treeZebra();
     });
 </script>

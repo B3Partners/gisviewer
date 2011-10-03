@@ -707,6 +707,7 @@ a.highlightlink:hover{
 
 .kaartselectieBody .submitbutton.deletebutton {
     background-image: url(../images/icons/remove.png);
+    background-repeat: no-repeat;
 }
 
 .kaartselectieBody .submitbutton:hover {

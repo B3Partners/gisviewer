@@ -676,8 +676,23 @@ a.highlightlink:hover{
     z-index: 1100;
 }
 
+.kaartselectieBody .submitbutton {
+    font-weight: bold;
+    color: #61676B;
+    background-color: #DDE9F2;
+    padding: 4px;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    padding-left: 20px;
+    background-image: url(../images/icons/save.png);
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+    cursor: pointer;
+}
+
 .kaartselectieBody .submitbutton.deletebutton {
     background-image: url(../images/icons/remove.png);
+    background-repeat: no-repeat;
 }
 
 .kaartselectieBody .submitbutton:hover {

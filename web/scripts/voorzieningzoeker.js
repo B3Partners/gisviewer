@@ -309,7 +309,7 @@ function handleSearchResults(results){
 function moveAndIdentify(x, y){
     var straal=100;
     viewerDocument.moveToExtent(Number(x)-straal, Number(y)-straal, Number(x)+straal, Number(y)+straal,true);
-    viewerDocument.doIdentify(x,y,x,y);
+    //viewerDocument.doIdentify(x,y,x,y);
 }
 
 function performSearchOnEnterKey(ev){

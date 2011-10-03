@@ -370,7 +370,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             performSearch();
         }));
 
-        container.append($j('<input type="button" />').attr("value", " Opnieuw zoeken").addClass("knop").click(function() {
+        container.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
             searchConfigurationsSelectChanged(inputSearchDropdown);
         }));
     }

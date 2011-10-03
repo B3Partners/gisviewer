@@ -10,7 +10,6 @@
     </fmc:MonitorMap>
 
     <fmc:Container backgroundcolor="#EEEEEE" left="0" top="0" height="36" width="100%">
-        <fmc:Scalebar left="560" top="40%" width="100" listento="map1" units=" m"></fmc:Scalebar>
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
@@ -65,13 +64,16 @@
             </fmc:Container>
 
         </fmc:ToolGroup>
-        <fmc:Coordinates id="coordinates" listento="map1" left="85%" top="10" decimals="0">
-            <style id=".xy" font-family="arial" font-size="11" />
-            <string id="xy" nl="X: [x]     Y: [y]" />
-        </fmc:Coordinates>
     </fmc:Container>
 
     <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">
+        <fmc:Scalebar right="right -50" bottom="bottom -15" width="100" listento="map1" units=" m"></fmc:Scalebar>
+        
+        <fmc:Coordinates left="15" bottom="bottom -15" decimals="0" listento="map1">
+            <string id="xy" en="x: [x]  y: [y]"/>
+            <style id=".xy" font-family="arial" font-size="10px" color="#191919" display="block" font-weight="normal"/>
+        </fmc:Coordinates/>
+
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>
 
         <!-- het 'canvas' waar op getekend kan worden-->

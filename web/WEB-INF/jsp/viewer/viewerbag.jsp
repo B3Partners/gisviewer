@@ -64,22 +64,22 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         verblijfsObjectenGegevensBronId = -1;
     }
 
-    var oppAttributeName = catchEmpty(${bagOppAttr});
-    if(typeof oppAttributeName === 'undefined' || !oppAttributeName) {
-        oppAttributeName = "";
-    }
-
-    var bouwjaarAttributeName = catchEmpty(${bagBouwjaarAttr});
+    var bouwjaarAttributeName = catchEmpty("${bagBouwjaarAttr}");
     if(typeof bouwjaarAttributeName === 'undefined' || !bouwjaarAttributeName) {
         bouwjaarAttributeName = "";
     }
 
-    var gebruiksfunctieAttributeName = catchEmpty(${bagGebruiksfunctieAttr});
+    var oppAttributeName = catchEmpty("${bagOppAttr}");
+    if(typeof oppAttributeName === 'undefined' || !oppAttributeName) {
+        oppAttributeName = "";
+    }
+
+    var gebruiksfunctieAttributeName = catchEmpty("${bagGebruiksfunctieAttr}");
     if(typeof gebruiksfunctieAttributeName === 'undefined' || !gebruiksfunctieAttributeName) {
         gebruiksfunctieAttributeName = "";
     }
 
-    var geomAttributeName = catchEmpty(${bagGeomAttr});
+    var geomAttributeName = catchEmpty("${bagGeomAttr}");
     if(typeof geomAttributeName === 'undefined' || !geomAttributeName) {
         geomAttributeName = "";
     }

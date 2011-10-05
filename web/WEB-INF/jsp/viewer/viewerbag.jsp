@@ -29,22 +29,22 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         return defval
     }
 
-    var configMaxBouwjaar = catchEmpty(${configMaxBouwjaar});
-    if(typeof configMaxBouwjaar === 'undefined' || !configMaxBouwjaar) {
+    var configMaxBouwjaar = catchEmpty(${bagMaxBouwjaar});
+    if (typeof configMaxBouwjaar === 'undefined' || !configMaxBouwjaar) {
         configMaxBouwjaar = 2100;
     }
 
-    var configMinBouwjaar = catchEmpty(${configMinBouwjaar});
+    var configMinBouwjaar = catchEmpty(${bagMinBouwjaar});
     if(typeof configMinBouwjaar === 'undefined' || !configMinBouwjaar) {
         configMinBouwjaar = 1;
     }
 
-    var configMaxOpp = catchEmpty(${configMaxOpp});
+    var configMaxOpp = catchEmpty(${bagMaxOpp});
     if(typeof configMaxOpp === 'undefined' || !configMaxOpp) {
         configMaxOpp = 1000000;
     }
 
-    var configMinOpp = catchEmpty(${configMinOpp});
+    var configMinOpp = catchEmpty(${bagMinOpp});
     if(typeof configMinOpp === 'undefined' || !configMinOpp) {
         configMinOpp = 1;
     }
@@ -64,22 +64,22 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         verblijfsObjectenGegevensBronId = -1;
     }
 
-    var oppAttributeName = catchEmpty(${oppAttributeName});
+    var oppAttributeName = catchEmpty(${bagOppAttr});
     if(typeof oppAttributeName === 'undefined' || !oppAttributeName) {
         oppAttributeName = "";
     }
 
-    var bouwjaarAttributeName = catchEmpty(${bouwjaarAttributeName});
+    var bouwjaarAttributeName = catchEmpty(${bagBouwjaarAttr});
     if(typeof bouwjaarAttributeName === 'undefined' || !bouwjaarAttributeName) {
         bouwjaarAttributeName = "";
     }
 
-    var gebruiksfunctieAttributeName = catchEmpty(${gebruiksfunctieAttributeName});
+    var gebruiksfunctieAttributeName = catchEmpty(${bagGebruiksfunctieAttr});
     if(typeof gebruiksfunctieAttributeName === 'undefined' || !gebruiksfunctieAttributeName) {
         gebruiksfunctieAttributeName = "";
     }
 
-    var geomAttributeName = catchEmpty(${geomAttributeName});
+    var geomAttributeName = catchEmpty(${bagGeomAttr});
     if(typeof geomAttributeName === 'undefined' || !geomAttributeName) {
         geomAttributeName = "";
     }

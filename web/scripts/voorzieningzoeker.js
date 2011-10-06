@@ -30,6 +30,10 @@ $j(document).ready(function(){
             voorzieningConfigurationsSelectChanged($j(this));
         });
 
+        selectbox.change(function() {
+            searchConfigurationsSelectChanged($j(this));
+        });
+
         selectbox.append($j('<option></option>').html("Maak uw keuze ...").val(""));
 
         for (var i=0; i < zoekconfiguraties.length; i++){

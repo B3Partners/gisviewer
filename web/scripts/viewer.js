@@ -135,7 +135,8 @@ function showIdentifyIcon(){
 function initializeButtons() {
     /*ie bug fix*/
     if (ieVersion!=undefined && ieVersion <= 7){
-        var viewport= document.getElementById('OpenLayers.Map_4_OpenLayers_ViewPort');
+        var mapId = webMapController.getMap().getFrameworkMap().id;
+        var viewport= document.getElementById(mapId+ '_OpenLayers_ViewPort');
         if (viewport){
             viewport.style.position="absolute";
         }

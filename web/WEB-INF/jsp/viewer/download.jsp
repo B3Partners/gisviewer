@@ -24,16 +24,26 @@
     </c:if>
 
     <html:form styleId="downloadForm" action="/download">
-            <html:hidden property="uuids" />
+            <html:hidden property="uuids" value="4" /> <!-- Meldingen gegevensbron -->
 
-            <label for="email">E-mail: </label>
-            <html:text property="email" size="40" />
-
-            <label for="formaat">Formaat: </label>
-            <html:radio property="formaat" value="Shape" />
-            <html:radio property="formaat" value="GML" />
-
-            <html:submit property="save" styleClass="rightButton submitbutton">Verzenden</html:submit>
+            <table>
+                <tr>
+                    <td>E-mail</td>
+                    <td><html:text property="email" size="40" /></td>
+                </tr>
+                <tr>
+                    <td>Formaat</td>
+                    <td>
+                        <html:select property="formaat">
+                            <html:option value="SHP" />
+                            <html:option value="GML" />
+                        </html:select>
+                    </td>
+                </tr>
+            </table>
+                    
+            <p>
+                <html:submit property="save" styleClass="rightButton submitbutton">Verzenden</html:submit>
+            </p>
     </html:form>
-
 </div>

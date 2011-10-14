@@ -120,6 +120,11 @@
         <put name="content" value="/WEB-INF/jsp/viewer/kaartselectie.jsp" />
     </definition>
 
+    <definition name="download" extends="popup">
+        <put name="title" value="Download Shape of GML" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/download.jsp" />
+    </definition>
+
     <!-- tiles met herbruikbare onderdelen die in de content pagina's kunnen worden ge-insert  -->
     <definition name="loginblock" path="/WEB-INF/jsp/commons/userAndLogout.jsp"/>
     <definition name="googleAnalytics" path="/WEB-INF/jsp/commons/googleAnalytics.jsp"/>

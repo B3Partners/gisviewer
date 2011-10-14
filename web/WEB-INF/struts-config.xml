@@ -104,6 +104,16 @@
             <form-property name="serviceUrl" type="java.lang.String"/>
             <form-property name="sldUrl" type="java.lang.String"/>
         </form-bean>
+
+        <form-bean name="downloadForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+
+            <form-property name="uuids" type="java.lang.String[]"/>
+            <form-property name="email" type="java.lang.String"/>
+            <form-property name="formaat" type="java.lang.String"/>
+        </form-bean>
         
     </form-beans>
     
@@ -195,6 +205,11 @@
         <action path="/kaartselectie" type="nl.b3p.gis.viewer.KaartSelectieAction" name="kaartselectieForm" scope="request">
             <forward name="success" path="kaartselectie"/>
             <forward name="failure" path="kaartselectie"/>
+        </action>
+
+        <action path="/download" type="nl.b3p.gis.viewer.DownloadAction" name="downloadForm" scope="request">
+            <forward name="success" path="download"/>
+            <forward name="failure" path="download"/>
         </action>
     </action-mappings>
     

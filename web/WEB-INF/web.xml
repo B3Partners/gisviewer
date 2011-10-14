@@ -36,7 +36,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
+            <param-value>http://192.168.1.15:8084/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -116,6 +116,7 @@
             <param-value>MIIBPAIBAAJBAKjeVutOmj3gQAv5tRCEvCmDr8qCMCiavtJGFekZ6X9kO3i2Gsq+\n4zS+c2/hPgquiJMVJ+9O+nlFYnQy7btrtxsCAwEAAQJBAIXDgWRpYgKLhRA3X7bS\n/d2Ao5otIAq58VfNDoQT84LlUCYxmsJMrFox9ybqoQDQj68LuaaLiAjzQI5DS60z\nm3ECIQDW8ykzf4SDpC6mA1ofn9fnnnfdv9JA1xvkNhYy4FC/cwIhAMkeRlss89UW\nt4hNVpcLl4owhKZByVXbA5GYdbYJF++5AiEAkib5/8MXxi6PbV/gGpqjwiBU3lk8\nS8w3cb947pTpMpMCIQC/EWoZ+Mz15o0aiw72lOa1PH7pTJqwXFA5pDRAasc40QIg\nPbiSX7GYGWggb20XFCPHEf6MHwfH/EZYIXCYxz7K6DM=\n</param-value>
         </init-param>
     </servlet>
+
     <servlet>
         <servlet-name>CreateSLD</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
@@ -123,11 +124,11 @@
             <param-name>defaultSld</param-name>
             <param-value>/WEB-INF/defaultSld.xml</param-value>
         </init-param>
-     </servlet>
+    </servlet>
 
     <servlet>
         <servlet-name>PrintServlet</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>        
+        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>
         <init-param>
             <param-name>xsl_A4_Staand</param-name>
             <param-value>/WEB-INF/xsl/A4_Staand.xsl</param-value>
@@ -152,16 +153,6 @@
         <servlet-class>nl.b3p.gis.viewer.services.SearchAutocomplete</servlet-class>
     </servlet>
 
-    <servlet-mapping>
-        <servlet-name>PrintServlet</servlet-name>
-        <url-pattern>/services/PrintServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>action</servlet-name>
-        <url-pattern>*.do</url-pattern>
-    </servlet-mapping>
-
     <servlet>
         <servlet-name>dwr-invoker</servlet-name>
         <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
@@ -171,6 +162,50 @@
         </init-param>
     </servlet>
 
+    <servlet>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>maxThreadLog</param-name>
+            <param-value>100</param-value>
+        </init-param>
+        <init-param>
+            <param-name>refreshRate</param-name>
+            <param-value>10</param-value>
+        </init-param>
+        <init-param>
+            <param-name>dispatcherSleepTime</param-name>
+            <param-value>10000</param-value>
+        </init-param>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
+        <init-param>
+            <param-name>downloadPath</param-name>
+            <param-value>/WEB-INF/downloads</param-value>
+        </init-param>
+        <init-param>
+            <param-name>smtpHost</param-name>
+            <param-value>kmail.b3partners.nl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>emailFrom</param-name>
+            <param-value>downloads@b3partners.nl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>emailSubject</param-name>
+            <param-value>Uw Shape/GML download staat klaar.</param-value>
+        </init-param>
+        <load-on-startup>6</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>dwr-invoker</servlet-name>
         <url-pattern>/dwr/*</url-pattern>
@@ -178,7 +213,7 @@
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreateImageServlet</servlet-name>
         <url-pattern>/CreateImage</url-pattern>
@@ -199,6 +234,15 @@
         <servlet-name>SearchAutocomplete</servlet-name>
         <url-pattern>/viewer/SearchAutocomplete.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrintServlet</servlet-name>
+        <url-pattern>/services/PrintServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/services/DownloadServlet</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             480

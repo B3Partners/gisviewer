@@ -19,8 +19,6 @@
         return defval
     }
 
-    //iFramePopup('download.do', false, 'Download', 500, 500, true);
-
     var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
     var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
@@ -916,3 +914,11 @@
         });
     }
 </script>
+
+<div id="dialog-confirm" title="Kaartlaag opties">
+    <p>
+        <span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 20px 0;"></span>
+        U kunt voor deze kaartlaag de metadata bekijken of de datasets downloaden.
+        Wat wilt u doen ?
+    </p>
+</div>

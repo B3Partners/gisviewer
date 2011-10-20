@@ -496,7 +496,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             loadBusyJSP(dataframepopupHandle, 'window');
         }
 
-    } else if(useBalloonPopup){
+    }else if(useBalloonPopup){
         if(!balloon){
             var offsetX = 0;
             var offsetY = 0;
@@ -546,7 +546,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
 
         var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
         balloon.getContentElement().html(iframeElement);
-    } else {
+    }else {
         document.forms[0].target = 'dataframe';
         loadBusyJSP('dataframe', 'panel');
     }
@@ -946,11 +946,28 @@ function createInvisibleDiv(id) {
 function createMetadataLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
-    lnk.href = '#';
+    lnk.href = '#'; 
 
-    if (item.metadatalink && item.metadatalink.length > 1) {
+    if (item.metadatalink && item.metadatalink.length > 1 || item.gegevensbronid && item.gegevensbronid.length > 1) {
         lnk.onclick = function() {
-            iFramePopup(item.metadatalink, false, 'Informatie', 665, 500);
+
+            $j("#dialog-confirm").dialog({
+                buttons: {
+                    'Download': function(){
+                        iFramePopup('download.do?id=' + item.gegevensbronid, false, 'Download', 500, 500, true);
+                        $j(this).dialog( "close");
+                    },
+                    'Metadata': function(){
+                        iFramePopup(item.metadatalink, false, 'Informatie', 665, 500);
+                        $j(this).dialog( "close");
+                    },
+                    'Cancel': function(){
+                        $j(this).dialog( "close");
+                    }
+                }
+            });
+
+            $j("#dialog-confirm").dialog('open');
         };
     }
 

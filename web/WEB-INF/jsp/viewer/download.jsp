@@ -16,15 +16,15 @@
         </html:messages>
     </div>
 
-    <c:if test="${!empty downloadLink}">
-        <div id="downloadLink">
-            <c:set var="dLink" value="/download.do?link=${downloadLink}"/>
-            <html:link page="${dLink}" target="_top">Download</html:link> het bestand.
-        </div>
-    </c:if>
+    <p>
+        Vul een geldig e-mailadres in en kies een download formaat. Het ophalen
+        van de dataset kan enige tijd duren. Als de download klaar is gezet ontvangt u
+        hierover een e-mail met daarin een download link. Na het klikken op
+        'Start download' kunt u dit scherm afsluiten.
+    </p>
 
     <html:form styleId="downloadForm" action="/download">
-            <html:hidden property="uuids" value="4" /> <!-- Meldingen gegevensbron -->
+            <html:hidden property="uuids" />
 
             <table>
                 <tr>
@@ -43,7 +43,7 @@
             </table>
                     
             <p>
-                <html:submit property="save" styleClass="rightButton submitbutton">Verzenden</html:submit>
+                <html:submit property="save" styleClass="rightButton submitbutton">Start download</html:submit>
             </p>
     </html:form>
 </div>

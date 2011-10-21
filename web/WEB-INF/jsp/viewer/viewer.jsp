@@ -915,10 +915,9 @@
     }
 </script>
 
-<div id="dialog-confirm" title="Kaartlaag opties" style="display: none;">
+<div id="dialog-download-metadata" title="Kaartlaag opties" style="display: none;">
     <p>
         <span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 20px 0;"></span>
-        U kunt voor deze kaartlaag de metadata bekijken of de datasets downloaden.
-        Wat wilt u doen ?
+        U kunt voor deze kaartlaag de metadata bekijken of de dataset als zip downloaden.
     </p>
 </div>

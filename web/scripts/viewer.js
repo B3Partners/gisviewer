@@ -946,32 +946,67 @@ function createInvisibleDiv(id) {
 function createMetadataLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
-    lnk.href = '#'; 
+    lnk.href = '#';
 
-    if (item.metadatalink && item.metadatalink.length > 1 || item.gegevensbronid && item.gegevensbronid.length > 1) {
+    var downloadTitle = 'Download dataset van ' + item.title;
+    var infoTitle = 'Informatie over ' + item.title;
+
+    /* Gelijk Metadata pop-up tonen */
+    if (item.metadatalink && item.metadatalink.length > 1 && (item.gegevensbronid == undefined || item.gegevensbronid < 1)) {
+        lnk.onclick = function() {
+            iFramePopup(item.metadatalink, false, infoTitle, 665, 500);
+        }
+    }
+
+    /* Gelijk Download pop-up tonen */
+    if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
+        lnk.onclick = function() {
+            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, 665, 500, true);
+        }
+    }
+
+    /* Eerst dialog tonen met vraag wat gebruiker wil doen. */
+    if (item.metadatalink && item.metadatalink.length > 1 && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
 
-            $j("#dialog-confirm").dialog({
-                buttons: {
-                    'Download': function(){
-                        iFramePopup('download.do?id=' + item.gegevensbronid, false, 'Download', 500, 500, true);
-                        $j(this).dialog( "close");
-                    },
-                    'Metadata': function(){
-                        iFramePopup(item.metadatalink, false, 'Informatie', 665, 500);
-                        $j(this).dialog( "close");
-                    },
-                    'Cancel': function(){
-                        $j(this).dialog( "close");
+            $j("#dialog-download-metadata").dialog("option", "buttons", {
+                "Download": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, 500, 500, true);
+                        $j(this).dialog("close");
+                    }
+                },
+                "Metadata": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        iFramePopup(item.metadatalink, false, infoTitle, 665, 500);
+                        $j(this).dialog("close");
+                    }
+                },
+                "Cancel": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
                     }
                 }
             });
 
-            $j("#dialog-confirm").dialog('open');
-        };
+            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
+                $j(this).html($j(this).parent().attr('text'));
+            });
+
+            $j("#dialog-download-metadata").dialog('open');
+        }
     }
 
     return lnk;
+}
+
+function createDownloadMetadataDialog(){
+    $j("#dialog-download-metadata").dialog({
+        disabled: true,
+        autoOpen: false,
+        resizable: false,
+        modal: true
+    });
 }
 
 /**
@@ -3600,120 +3635,6 @@ buildPopup = function() {
     document.body.appendChild(popupWindowBackground);
 }
 
-var popupCreated = false;
-
-$j(document).ready(function() {
-
-    /* Alleen tabs vullen als ze ook echt aanstaan */
-    var analyseTabOn = false;
-    var meldingenTabOn = false;
-    var vergunningTabOn = false;
-    var zoekenTabOn = false;
-    var redliningTabOn = false;
-    var bagTabOn = false;
-
-    for (var i=0; i < enabledtabs.length; i++) {
-        if (enabledtabs[i] == "analyse")
-            analyseTabOn = true;
-
-        if (enabledtabs[i] == "meldingen")
-            meldingenTabOn = true;
-
-        if (enabledtabs[i] == "vergunningen")
-            vergunningTabOn = true;
-
-        if (enabledtabs[i] == "redlining")
-            redliningTabOn = true;
-
-        if (enabledtabs[i] == "bag")
-            bagTabOn = true;
-
-        if (enabledtabs[i] == "zoeken")
-            zoekenTabOn = true;
-    }
-
-    if (analyseTabOn) {
-        if (document.getElementById('analyseframeViewer')) {
-            document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
-        }
-    }
-    
-    if (meldingenTabOn) {
-        if(document.getElementById('meldingenframeViewer')) {
-            document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
-        }
-    }
-
-    if (redliningTabOn) {
-        if(document.getElementById('redliningframeViewer')) {
-            document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
-        }
-    }
-
-    if (bagTabOn) {
-        if(document.getElementById('bagframeViewer')) {
-            document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
-        }
-    }
-    
-    if (zoekenTabOn || vergunningTabOn) {
-        createSearchConfigurations();
-    }
-
-    var pwCreated = false;
-    if(document.getElementById('popupWindow')) {
-        pwCreated = true;
-    }
-
-    try {
-        if(getParent().document.getElementById('popupWindow')) {
-            pwCreated = true;
-        }
-    } catch(err) {}
-
-    if(!pwCreated) {
-        buildPopup();
-
-        $j('#popupWindow').draggable({
-            handle:    '#popupWindow_Handle',
-            iframeFix: true,
-            zIndex: 200,
-            containment: 'document',
-            start: function(event, ui) {
-                startDrag();
-            },
-            stop: function(event, ui) {
-                stopDrag();
-            }
-        }).resizable({
-            handles: 'se',
-            start: function(event, ui) {
-                startResize();
-            },
-            stop: function(event, ui) {
-                stopResize();
-            }
-        });
-
-        $j('#popupWindow_Close').click(function(){
-            if (dataframepopupHandle)
-                dataframepopupHandle.closed = true;
-
-            $j("#popupWindow").hide();
-        });
-
-        /* $j("#popupWindow").mouseover(function(){
-            startDrag();
-        });
-        $j("#popupWindow").mouseout(function(){
-            stopDrag();
-        }); */
-        
-    }
-
-    popupCreated = true;
-});
-
 /**
  * @param mapDiv The div element where the map is in.
  * @param webMapController the webMapController that controlles the map
@@ -4077,3 +3998,117 @@ function getValidLayerId(lname) {
 
     return lname;
 }
+
+var popupCreated = false;
+$j(document).ready(function() {
+
+    /* Alleen tabs vullen als ze ook echt aanstaan */
+    var analyseTabOn = false;
+    var meldingenTabOn = false;
+    var vergunningTabOn = false;
+    var zoekenTabOn = false;
+    var redliningTabOn = false;
+    var bagTabOn = false;
+
+    for (var i=0; i < enabledtabs.length; i++) {
+        if (enabledtabs[i] == "analyse")
+            analyseTabOn = true;
+
+        if (enabledtabs[i] == "meldingen")
+            meldingenTabOn = true;
+
+        if (enabledtabs[i] == "vergunningen")
+            vergunningTabOn = true;
+
+        if (enabledtabs[i] == "redlining")
+            redliningTabOn = true;
+
+        if (enabledtabs[i] == "bag")
+            bagTabOn = true;
+
+        if (enabledtabs[i] == "zoeken")
+            zoekenTabOn = true;
+    }
+
+    if (analyseTabOn) {
+        if (document.getElementById('analyseframeViewer')) {
+            document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
+        }
+    }
+
+    if (meldingenTabOn) {
+        if(document.getElementById('meldingenframeViewer')) {
+            document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
+        }
+    }
+
+    if (redliningTabOn) {
+        if(document.getElementById('redliningframeViewer')) {
+            document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
+        }
+    }
+
+    if (bagTabOn) {
+        if(document.getElementById('bagframeViewer')) {
+            document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
+        }
+    }
+
+    if (zoekenTabOn || vergunningTabOn) {
+        createSearchConfigurations();
+    }
+
+    var pwCreated = false;
+    if(document.getElementById('popupWindow')) {
+        pwCreated = true;
+    }
+
+    try {
+        if(getParent().document.getElementById('popupWindow')) {
+            pwCreated = true;
+        }
+    } catch(err) {}
+
+    if(!pwCreated) {
+        buildPopup();
+
+        $j('#popupWindow').draggable({
+            handle:    '#popupWindow_Handle',
+            iframeFix: true,
+            zIndex: 200,
+            containment: 'document',
+            start: function(event, ui) {
+                startDrag();
+            },
+            stop: function(event, ui) {
+                stopDrag();
+            }
+        }).resizable({
+            handles: 'se',
+            start: function(event, ui) {
+                startResize();
+            },
+            stop: function(event, ui) {
+                stopResize();
+            }
+        });
+
+        $j('#popupWindow_Close').click(function(){
+            if (dataframepopupHandle)
+                dataframepopupHandle.closed = true;
+
+            $j("#popupWindow").hide();
+        });
+
+        /* $j("#popupWindow").mouseover(function(){
+            startDrag();
+        });
+        $j("#popupWindow").mouseout(function(){
+            stopDrag();
+        }); */
+
+    }
+
+    popupCreated = true;
+    createDownloadMetadataDialog();
+});

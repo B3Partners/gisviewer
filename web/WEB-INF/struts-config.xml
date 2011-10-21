@@ -207,7 +207,7 @@
             <forward name="failure" path="kaartselectie"/>
         </action>
 
-        <action path="/download" type="nl.b3p.gis.viewer.DownloadAction" name="downloadForm" scope="request">
+        <action path="/download" type="nl.b3p.gis.viewer.DownloadAction" name="downloadForm" scope="request" validate="false">
             <forward name="success" path="download"/>
             <forward name="failure" path="download"/>
         </action>

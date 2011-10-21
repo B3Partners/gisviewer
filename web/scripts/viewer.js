@@ -943,6 +943,13 @@ function createInvisibleDiv(id) {
  * @param item The item with the metadata.
  * @return The link element.
 */
+var widthMetadataPopup = 800;
+var heightMetadataPopup = 600;
+var widthDownloadPopup = 425;
+var heightDownloadPopup = 250;
+var downloadPopupBlocksViewer = true;
+var metadataPopupBlocksViewer = true;
+
 function createMetadataLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
@@ -954,14 +961,14 @@ function createMetadataLink(item){
     /* Gelijk Metadata pop-up tonen */
     if (item.metadatalink && item.metadatalink.length > 1 && (item.gegevensbronid == undefined || item.gegevensbronid < 1)) {
         lnk.onclick = function() {
-            iFramePopup(item.metadatalink, false, infoTitle, 665, 500);
+            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
         }
     }
 
     /* Gelijk Download pop-up tonen */
     if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
-            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, 665, 500, true);
+            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
         }
     }
 
@@ -972,19 +979,20 @@ function createMetadataLink(item){
             $j("#dialog-download-metadata").dialog("option", "buttons", {
                 "Download": function() {
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, 500, 500, true);
+                        iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
                         $j(this).dialog("close");
                     }
                 },
                 "Metadata": function() {
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        iFramePopup(item.metadatalink, false, infoTitle, 665, 500);
+                        iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
                         $j(this).dialog("close");
                     }
                 },
-                "Cancel": function() {
+                "Annuleren": function() {
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
                         $j(this).dialog("close");
+                        unblockViewerUI();
                     }
                 }
             });
@@ -993,6 +1001,7 @@ function createMetadataLink(item){
                 $j(this).html($j(this).parent().attr('text'));
             });
 
+            blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         }
     }
@@ -1002,10 +1011,10 @@ function createMetadataLink(item){
 
 function createDownloadMetadataDialog(){
     $j("#dialog-download-metadata").dialog({
-        disabled: true,
-        autoOpen: false,
         resizable: false,
-        modal: true
+        disabled: true,
+        autoOpen: false,        
+        modal: false
     });
 }
 
@@ -3052,7 +3061,7 @@ function b_print(id, event) {
 }
 
 function b_layerSelection(id, event) {
-    iFramePopup('kaartselectie.do', false, 'Kaartselectie', 800, 600, true);
+    iFramePopup('kaartselectie.do', false, 'Kaartselectie', 800, 600, true, true);
 }
 
 function b_overview(id,event) {
@@ -3142,7 +3151,7 @@ function highLightThemaObject(geom) {
 
     if (highlightLayers.length > 1) {
         // popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 680, 225, true);
-        iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300);
+        iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300, true, false);
     }
 
     var scale = webMapController.getMap().getResolution();

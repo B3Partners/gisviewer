@@ -268,13 +268,13 @@ function dialogPopUp(innerJqueryElement,title,width,height,dialogOptions){
 }
 
 var prevpopup;
-function iFramePopup(url, newpopup, title, width, height, blockviewer) {
+function iFramePopup(url, newpopup, title, width, height, blockviewer, showScrollbars) {
     if(!newpopup) newpopup = false;
     if(!title) title = "";
     if(!width) width = 300;
     if(!height) height = 300;
     if(!blockviewer) blockviewer = false;
-
+    
     var showdiv = null;
     if(newpopup || prevpopup == null) {
         var $div = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
@@ -299,7 +299,7 @@ function iFramePopup(url, newpopup, title, width, height, blockviewer) {
     }
 
     var dialogOptions = {
-        resizable: true,
+        resizable: showScrollbars,
         draggable: true,
         show: 'slide',
         hide: 'slide',
@@ -318,8 +318,26 @@ function iFramePopup(url, newpopup, title, width, height, blockviewer) {
     showdiv.dialog(dialogOptions);
     showdiv.dialog("option", "title", title);
     showdiv.dialog("option", "height", height);
-    showdiv.dialog("option", "width", width);
+    showdiv.dialog("option", "width", width);    
+        
+    if (!showScrollbars) {
+        showdiv.find('iframe').attr("scrolling", "no");
+    } else {
+        showdiv.find('iframe').attr("scrolling", "yes");
+    }
+
     showdiv.dialog('open');
+
+    if (ieVersion != -1 && ieVersion <= 7) {
+        showdiv.find('iframe').load(function (){
+            $j(this).width((width-30) + 'px');
+            $j(this).height((height-30) + 'px');
+
+            $j(this).css('height', (height-50) + 'px');
+            $j(this).css('width', (width-40) + 'px');
+        });
+    }
+    
     if(blockviewer) blockViewerUI();
 }
 
@@ -341,7 +359,7 @@ function messagePopup(title, message, msgType) {
             buttons: [
                 {
                     text: "Sluiten",
-                    click: function() { $j(this).dialog("close"); }
+                    click: function() {$j(this).dialog("close");}
                 }
             ]
         });

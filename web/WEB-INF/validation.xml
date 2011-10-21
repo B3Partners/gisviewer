@@ -12,7 +12,6 @@
             <constant-value>^\d{5}\d*$</constant-value>
         </constant>
         end example-->
-
     </global>
     <formset>
         <form name="meldingForm">

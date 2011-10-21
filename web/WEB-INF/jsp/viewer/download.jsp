@@ -1,8 +1,20 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<div class="downloadBody">
-    <h1>Download Shape of GML</h1>
+<script type="text/javascript">
+    function validateEmail()
+    {
+        var emailAdres = document.forms["downloadForm"]["email"].value;
+        var atpos = emailAdres.indexOf("@");
+        var dotpos = emailAdres.lastIndexOf(".");
 
+        if (atpos < 1 || dotpos < atpos+2 || dotpos+2 >= emailAdres.length) {
+            alert("E-mailadres niet ingevuld of ongeldig.");
+            return false;
+        }
+    }
+</script>
+
+<div class="downloadBody">
     <div class="messages">
         <html:messages id="message" message="true" >
             <div id="error">
@@ -21,15 +33,15 @@
         van de dataset kan enige tijd duren. Als de download klaar is gezet ontvangt u
         hierover een e-mail met daarin een download link. Na het klikken op
         'Start download' kunt u dit scherm afsluiten.
-    </p>
+    </p>    
 
-    <html:form styleId="downloadForm" action="/download">
+    <html:form styleId="downloadForm" action="/download" onsubmit="return validateEmail();">
         <html:hidden property="uuids" />
 
         <table>
             <tr>
                 <td>E-mail</td>
-                <td><html:text property="email" size="40" /></td>
+                <td><html:text property="email" maxlength="60" size="40" /></td>
             </tr>
             <tr>
                 <td>Formaat</td>

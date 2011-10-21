@@ -648,6 +648,38 @@ a.highlightlink:hover{
     border: 0px none;
 }
 
+.downloadBody {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.downloadBody .submitbutton {
+    color: #61676B;
+    background-color: #DDE9F2;
+    font-weight: bold;
+
+    padding: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 22px;
+
+    background-image: url(../images/icons/download_icon.png);
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+
+    border: 1px solid #000;
+}
+
+.downloadBody input[type=text] {
+    border: 1px solid #000;
+    width: 300px;
+}
+
+.downloadBody select {
+    border: 1px solid #000;
+    width: 60px;
+}
+
 .kaartselectieBody {
     margin-top: 10px;
 }

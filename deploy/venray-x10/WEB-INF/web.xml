@@ -178,7 +178,7 @@
         </init-param>
         <init-param>
             <param-name>emailFrom</param-name>
-            <param-value>downloads@b3partners.nl</param-value>
+            <param-value>downloads@venray.nl</param-value>
         </init-param>
         <init-param>
             <param-name>emailSubject</param-name>

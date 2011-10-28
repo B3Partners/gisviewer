@@ -105,7 +105,7 @@
         <servlet-class>nl.b3p.gis.utils.CycloramaFetcherServlet</servlet-class>
         <init-param>
             <param-name>accountId</param-name>
-            <param-value>2194</param-value>
+            <param-value>5000</param-value>
         </init-param>
         <init-param>
             <param-name>cyclomediaUrl</param-name>
@@ -113,7 +113,7 @@
         </init-param>
         <init-param>
             <param-name>privateBase64Key</param-name>
-            <param-value>MIIBPAIBAAJBAKjeVutOmj3gQAv5tRCEvCmDr8qCMCiavtJGFekZ6X9kO3i2Gsq+\n4zS+c2/hPgquiJMVJ+9O+nlFYnQy7btrtxsCAwEAAQJBAIXDgWRpYgKLhRA3X7bS\n/d2Ao5otIAq58VfNDoQT84LlUCYxmsJMrFox9ybqoQDQj68LuaaLiAjzQI5DS60z\nm3ECIQDW8ykzf4SDpC6mA1ofn9fnnnfdv9JA1xvkNhYy4FC/cwIhAMkeRlss89UW\nt4hNVpcLl4owhKZByVXbA5GYdbYJF++5AiEAkib5/8MXxi6PbV/gGpqjwiBU3lk8\nS8w3cb947pTpMpMCIQC/EWoZ+Mz15o0aiw72lOa1PH7pTJqwXFA5pDRAasc40QIg\nPbiSX7GYGWggb20XFCPHEf6MHwfH/EZYIXCYxz7K6DM=\n</param-value>
+            <param-value>5000\n</param-value>
         </init-param>
     </servlet>
     <servlet>
@@ -146,11 +146,46 @@
         </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>
+	
+	<servlet>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>maxThreadLog</param-name>
+            <param-value>100</param-value>
+        </init-param>
+        <init-param>
+            <param-name>refreshRate</param-name>
+            <param-value>10</param-value>
+        </init-param>
+        <init-param>
+            <param-name>dispatcherSleepTime</param-name>
+            <param-value>10000</param-value>
+        </init-param>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
 
-    <servlet-mapping>
-        <servlet-name>PrintServlet</servlet-name>
-        <url-pattern>/services/PrintServlet</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
+        <init-param>
+            <param-name>downloadPath</param-name>
+            <param-value>/srv/downloads/venray</param-value>
+        </init-param>
+        <init-param>
+            <param-name>smtpHost</param-name>
+            <param-value>kmail.b3partners.nl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>emailFrom</param-name>
+            <param-value>downloads@b3partners.nl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>emailSubject</param-name>
+            <param-value>Uw Shape/GML download staat klaar.</param-value>
+        </init-param>
+        <load-on-startup>6</load-on-startup>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>
@@ -190,6 +225,15 @@
         <servlet-name>CreateSLD</servlet-name>
         <url-pattern>/services/CreateSLD</url-pattern>
     </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>PrintServlet</servlet-name>
+        <url-pattern>/services/PrintServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/services/DownloadServlet</url-pattern>
+    </servlet-mapping>
+	
     <session-config>
         <session-timeout>
             480

@@ -151,6 +151,56 @@
         <servlet-name>PrintServlet</servlet-name>
         <url-pattern>/services/PrintServlet</url-pattern>
     </servlet-mapping>
+	
+	<servlet>
+        <servlet-name>SearchAutocomplete</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.SearchAutocomplete</servlet-class>
+    </servlet>
+	
+	<servlet>
+        <servlet-name>DispatcherServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>maxThreadLog</param-name>
+            <param-value>100</param-value>
+        </init-param>
+        <init-param>
+            <param-name>refreshRate</param-name>
+            <param-value>10</param-value>
+        </init-param>
+        <init-param>
+            <param-name>dispatcherSleepTime</param-name>
+            <param-value>10000</param-value>
+        </init-param>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
+        <init-param>
+            <param-name>downloadPath</param-name>
+            <param-value>/srv/downloads/www.kaartenbalie.nl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>smtpHost</param-name>
+            <param-value>kmail.b3partners.nl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>contactEmail</param-name>
+            <param-value>downloads@b3partners.nl</param-value>
+        </init-param>
+        <load-on-startup>6</load-on-startup>
+    </servlet>
+	
+	<servlet-mapping>
+        <servlet-name>SearchAutocomplete</servlet-name>
+        <url-pattern>/viewer/SearchAutocomplete.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/services/DownloadServlet</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>

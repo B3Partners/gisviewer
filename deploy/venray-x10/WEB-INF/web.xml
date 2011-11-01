@@ -170,19 +170,15 @@
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
         <init-param>
             <param-name>downloadPath</param-name>
-            <param-value>/srv/downloads/venray</param-value>
+            <param-value>C:\downloads</param-value>
         </init-param>
         <init-param>
             <param-name>smtpHost</param-name>
             <param-value>kmail.b3partners.nl</param-value>
         </init-param>
         <init-param>
-            <param-name>emailFrom</param-name>
-            <param-value>downloads@venray.nl</param-value>
-        </init-param>
-        <init-param>
-            <param-name>emailSubject</param-name>
-            <param-value>Uw Shape/GML download staat klaar.</param-value>
+            <param-name>contactEmail</param-name>
+            <param-value>info@b3partners.nl</param-value>
         </init-param>
         <load-on-startup>6</load-on-startup>
     </servlet>

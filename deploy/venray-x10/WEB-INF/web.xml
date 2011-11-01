@@ -178,7 +178,7 @@
         </init-param>
         <init-param>
             <param-name>contactEmail</param-name>
-            <param-value>info@b3partners.nl</param-value>
+            <param-value>gemeente@venray.nl</param-value>
         </init-param>
         <load-on-startup>6</load-on-startup>
     </servlet>

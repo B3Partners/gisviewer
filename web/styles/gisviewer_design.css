@@ -893,7 +893,6 @@ a.highlightlink:hover{
     padding-top: 8px;
     width: 720px;
     font-size: 12px;
-    display: none;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -924,11 +923,19 @@ a.highlightlink:hover{
 
 .kaartselectieBody .rightButton, #kaartselectieAddService .rightButton {
     float: right;
-    margin-right: 10px;
+    margin-right: 15px;
+    padding-left: 21px;
+    padding-bottom: 5px;
+    padding-top: 5px;    
+    width: auto;
 }
 
 #kaartselectieAddService .rightButton {
-    margin-right: 0px;
+    float: right;
+    margin-right: 2px;
+    padding-left: 21px;
+    padding-bottom: 5px;
+    padding-top: 5px;
     width: auto;
 }
 

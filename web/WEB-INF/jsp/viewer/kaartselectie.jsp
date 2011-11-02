@@ -64,9 +64,9 @@
                 "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
                 "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
             },
-            "saveExpandedState": true,
-            "saveScrollState": true,
-            "expandAll": true,
+            "saveExpandedState": false,
+            "saveScrollState": false,
+            "expandAll": false,
             "childrenPadding": '20px',
             "zebraEffect": true
         });
@@ -104,9 +104,9 @@
                     "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
                     "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
                 },
-                "saveExpandedState": true,
-                "saveScrollState": true,
-                "expandAll": true,
+                "saveExpandedState": false,
+                "saveScrollState": false,
+                "expandAll": false,
                 "childrenPadding": '20px',
                 "zebraEffect": true
             });
@@ -133,12 +133,15 @@
         </div>
     </p>
 
-    <html:submit property="save" styleClass="rightButton submitbutton">Alles opslaan</html:submit>
+    <html:submit property="save" styleClass="rightButton submitbutton">Selectie opslaan</html:submit>
 
-    <a href="#" id="kaartselectieAddServiceLink">Nieuwe WMS Service toevoegen</a>
     <div style="clear: both;"></div>
+    
+    <div class="kaartselectieKoppen">
+        <h3>Nieuwe WMS Service toevoegen</h3>
+    </div>
+    
     <div id="kaartselectieAddService">
-        <h4>Nieuwe WMS Service toevoegen</h4>
         <label for="groupName">Groep</label>
         <html:text property="groupName" size="20" />
         <label for="serviceUrl">Url</label>
@@ -175,12 +178,7 @@
         });
     }
     
-    $j(function() {
-        $j("#kaartselectieAddServiceLink").click(function() {
-            $j("#kaartselectieAddService").show();
-            $j(this).hide();
-            return false;
-        });
+    $j(function() {        
         $j('.kaartselectieBody').click(function() {
             closeSldContainers();
         });

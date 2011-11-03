@@ -1904,6 +1904,12 @@ function refreshLayer(doRefreshOrder) {
                     var layers = new Array();
                     layers[0] = layerGroup[k];
 
+                    /* Sld url aan service url toevoegen */
+                    var sldUrl = layerGroup[k].service_sld;                    
+                    if (sldUrl != undefined || sldUrl != "") {
+                        lUrl += "&sld=" + sldUrl;
+                    }
+                    
                     addLayerToViewer(lName, lUrl, layers);
                     layerId = getValidLayerId(lName);
                 } else {
@@ -2003,6 +2009,14 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
     /* Kijken of layers alleen maar default styles bevatten? Zo ja
      * dan hoeven er geen styles meegegeven te worden */
     var onlyDefaultStyles = layersOnlyHaveDefaultStyles(layerItems);
+    
+    /* 
+     * TODO: Sld parts opbouwen via sld servlet. Servlet aan layerUrl plakken
+     * Als er een hele sld in de layerUrl is meegegeven dan geen style gebruiken 
+    */
+    if (layerUrl.indexOf("&sld=") != -1) {
+        onlyDefaultStyles = true;
+    }  
 
     var maptips=new Array();
     // last in list will be on top in map

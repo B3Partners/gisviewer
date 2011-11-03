@@ -146,11 +146,9 @@
         <html:text property="groupName" size="20" />
         <label for="serviceUrl">Url</label>
         <html:text property="serviceUrl" size="40" />
-
-        <%--
+        
         <label for="sldUrl">Sld url</label>
         <html:text property="sldUrl" size="40" />
-        --%>
 
         <html:submit property="saveWMSService" styleClass="rightButton submitbutton">Service toevoegen</html:submit>
     </div>

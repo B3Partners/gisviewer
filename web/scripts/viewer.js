@@ -1793,11 +1793,23 @@ function refreshLayer(doRefreshOrder) {
 
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
+            
+            /* Indien object nog niet gevonden dan is het item
+             * waarschijnlijk een user layer. Object opzoeken via jQuery */
+            if (object == undefined || object == null) {
+                object = $j("#input").find('l_' + item.id);                
+            }
+            
+            if (object == undefined || object == null) {
+                object = $j("#input").find('lOn_' + item.id);                
+            }
+            
             // Item alleen toevoegen aan de layers indien
             // parent cluster(s) allemaal aangevinkt staan of
             // geen cluster heeft
-            if (!itemHasAllParentsEnabled(object))
+            if (!itemHasAllParentsEnabled(object)) {
                 continue;
+            }  
         }
         if (item.wmslayers){
             if (item.background){
@@ -3975,7 +3987,7 @@ function checkboxUserLayerClick(checkbox) {
 
     /* laag toevoegen aan viewer */
     if (checked) {
-        addItemAsLayer(item);
+        addItemAsLayer(item);        
     } else {
         removeItemAsLayer(item);
     }

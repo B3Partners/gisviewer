@@ -1904,11 +1904,11 @@ function refreshLayer(doRefreshOrder) {
                     var layers = new Array();
                     layers[0] = layerGroup[k];
 
-                    /* Sld url aan service url toevoegen */
+                    /* Sld url aan service url toevoegen
                     var sldUrl = layerGroup[k].service_sld;                    
-                    if (sldUrl != undefined || sldUrl != "") {
+                    if (sldUrl != undefined && sldUrl != "" && sldUrl.length > 0) {
                         lUrl += "&sld=" + sldUrl;
-                    }
+                    } */
                     
                     addLayerToViewer(lName, lUrl, layers);
                     layerId = getValidLayerId(lName);
@@ -2016,15 +2016,29 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
     */
     if (layerUrl.indexOf("&sld=") != -1) {
         onlyDefaultStyles = true;
-    }  
+    }
 
+    var sldIds = "";
+    
     var maptips=new Array();
     // last in list will be on top in map
     for (var i=0; i<layerItems.length; i++){
         var item = layerItems[i];
-
-        /* styles komma seperated aan ogc options toevoegen */
-        if (item.use_style && !onlyDefaultStyles) {
+        
+        var usingSldPart = false;
+        if (item.sld_part != undefined || item.sld_part != "") {            
+            if (sldIds.length < 1) {
+                sldIds += item.id;
+            } else {
+                sldIds += "," + item.id;
+            }
+            
+            usingSldPart = true;
+        }
+        
+        /* styles komma seperated aan ogc options toevoegen. style niet gebruiken
+         * als er een sld_part is voor het item. */
+        if (item.use_style && !onlyDefaultStyles && !usingSldPart) {
             if (i == layerItems.length-1) {
                 allStyles += item.use_style;
             } else {
@@ -2135,6 +2149,17 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
     //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
     
     options["maptip_layers"]=maptipLayers;
+    
+    /* sld servlet gebruiken ? */
+    if (sldIds.length > 0) {
+        var protocol = window.location.protocol + "//";
+        var host = window.location.host;
+
+        var baseUrl = protocol + host  + baseNameViewer;
+        var sldUrl = "sld=" + baseUrl + "/services/createUserSld?layerids=" + sldIds;
+    
+        layerUrl += sldUrl;
+    }
     
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 

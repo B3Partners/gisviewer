@@ -151,6 +151,15 @@
         <servlet-name>PrintServlet</servlet-name>
         <url-pattern>/services/PrintServlet</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UserLayerSld</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.UserLayerSldServlet</servlet-class>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>UserLayerSld</servlet-name>
+        <url-pattern>/services/createUserSld</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>

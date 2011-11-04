@@ -341,17 +341,13 @@ function createInputLayerSldPart(item) {
 
         sldcontainer.appendChild(labelNoStyles);
     }
-
-    /*
-     * TODO: Is even uitgecomment. Sld parts invoeren doen we nu nog niet.
     
     var lbl2 = document.createElement('label');
     if(selectbox == null) lbl2.innerHTML = 'Voer een SLD in';
     else lbl2.innerHTML = 'Of voer een SLD in';  
     
     sldcontainer.appendChild(lbl2);
-    sldcontainer.appendChild(input);
-    */    
+    sldcontainer.appendChild(input);        
    
     var divcontainer = document.createElement('div');
     divcontainer.className = 'kaartlaagselectieContainer';

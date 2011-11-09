@@ -189,11 +189,11 @@
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
         <init-param>
             <param-name>downloadPath</param-name>
-            <param-value>/tmp/</param-value>
+            <param-value>/opt/data/kaartenbalie-acc/downloads/</param-value>
         </init-param>
         <init-param>
             <param-name>smtpHost</param-name>
-            <param-value>kmail.b3partners.nl</param-value>
+            <param-value>vspl0149.prvlimburg.nl</param-value>
         </init-param>
         <init-param>
             <param-name>contactEmail</param-name>

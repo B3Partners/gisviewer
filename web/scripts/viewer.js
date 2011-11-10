@@ -2026,7 +2026,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         var item = layerItems[i];
         
         var usingSldPart = false;
-        if (item.sld_part != undefined || item.sld_part != "") {            
+        if (item.sld_part != undefined && item.sld_part != "") {            
             if (sldIds.length < 1) {
                 sldIds += item.id;
             } else {

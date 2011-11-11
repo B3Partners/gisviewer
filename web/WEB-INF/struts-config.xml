@@ -154,7 +154,10 @@
         
         <action path="/viewerhighlight" forward="viewerhighlight"/>
 
-        <action path="/globespotter" forward="globespotter"/>
+        <action path="/globespotter" type="nl.b3p.gis.viewer.CyclomediaAction" scope="request">
+            <forward name="success" path="globespotter"/>
+            <forward name="failure" path="globespotter"/>
+        </action>
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>

@@ -496,7 +496,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             loadBusyJSP(dataframepopupHandle, 'window');
         }
 
-    }else if(useBalloonPopup){
+    } else if(useBalloonPopup){
         if(!balloon){
             var offsetX = 0;
             var offsetY = 0;
@@ -546,7 +546,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
 
         var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
         balloon.getContentElement().html(iframeElement);
-    }else {
+    } else {
         document.forms[0].target = 'dataframe';
         loadBusyJSP('dataframe', 'panel');
     }
@@ -1829,7 +1829,9 @@ function refreshLayer(doRefreshOrder) {
     var localGroupName = "";
     for (var j=0; j<orderedLayerItems.length; j++){
         item = orderedLayerItems[j];
-        if (layerGrouping == "lg_layer") {
+        //als layergrouping afzonderlijke layers is of als de layer een tiling layer is
+        //maak dan een afzonderlijke layer.
+        if (layerGrouping == "lg_layer" || item.tiled) {
             localGroupName = "fmc" + item.id;
         } else if (layerGrouping == "lg_cluster") {
             localGroupName = "fmc" + item.clusterid;
@@ -1857,7 +1859,13 @@ function refreshLayer(doRefreshOrder) {
     }
 
     // verwijderen ontbrekende layers
-    var shownLayers=webMapController.getMap().getAllWMSLayers();
+    var allLayers=webMapController.getMap().getLayers();
+    var shownLayers= new Array();
+    for (var a=0; a < allLayers.length; a++){
+        if (allLayers[a].getType()==Layer.RASTER_TYPE){
+            shownLayers.push(allLayers[a]);
+        }
+    }
     var removedLayers = new Array();
     for (var k=0; k < shownLayers.length; k++){
         var lid = shownLayers[k].getId();
@@ -1975,39 +1983,56 @@ function layersOnlyHaveDefaultStyles(layerItems) {
 }
 
 function addLayerToViewer(lname, layerUrl, layerItems) {
-    var capLayerUrl=layerUrl;
+    //tiling layer
+    if (layerItems.length==1 && layerItems[0].tiled){
+        var options=new Object();
+        var tileItem=layerItems[0];
+        options["VERSION"]=tileItem.tileVersion;
+        options["LAYERS"]=tileItem.tileLayers;        
+        options["STYLES"]=tileItem.tileStyles;
+        options["FORMAT"]=tileItem.tileFormat;
+        options["SRS"]=tileItem.tileSrs;
+        options["BBOX"]=tileItem.tileBoundingBox;
+        options["RESOLUTIONS"]=tileItem.resolutions;
+        options["TILEHEIGHT"]=tileItem.tileHeight;
+        options["TILEWIDTH"]=tileItem.tileWidth;
+        var tileLayer=webMapController.createWMScLayer(lname, layerUrl,options);
+        webMapController.getMap().addLayer(tileLayer);//false, true, false
+    }else{
+        //wms layer    
+        var capLayerUrl=layerUrl;
 
-    var validId = getValidLayerId(lname);
+        var validId = getValidLayerId(lname);
 
-    var options={
-        id: validId,
-        timeout: 30,
-        retryonerror: 10,
-        getcapabilitiesurl: capLayerUrl,
-        ratio: 1,
-        showerrors: true,
-        initService: false
-    };
+        var options={
+            id: validId,
+            timeout: 30,
+            retryonerror: 10,
+            getcapabilitiesurl: capLayerUrl,
+            ratio: 1,
+            showerrors: true,
+            initService: false
+        };
 
-    var ogcOptions={
-        format: "image/png",
-        transparent: true,
-        exceptions: "application/vnd.ogc.se_inimage",
-        srs: "EPSG:28992",
-        version: "1.1.1",
-        noCache: true // TODO: Voor achtergrond kaartlagen wel cache gebruiken
-    };
-    
-    var theLayers="";
-    var queryLayers="";
-    var maptipLayers="";
-    var smallestMinscale = -1;
-    var largestMaxscale = -1;
+        var ogcOptions={
+            format: "image/png",
+            transparent: true,
+            exceptions: "application/vnd.ogc.se_inimage",
+            srs: "EPSG:28992",
+            version: "1.1.1",
+            noCache: true // TODO: Voor achtergrond kaartlagen wel cache gebruiken
+        };
 
-    var allStyles = "";
+        var theLayers="";
+        var queryLayers="";
+        var maptipLayers="";
+        var smallestMinscale = -1;
+        var largestMaxscale = -1;
 
-    /* Kijken of layers alleen maar default styles bevatten? Zo ja
-     * dan hoeven er geen styles meegegeven te worden */
+        var allStyles = "";
+
+        /* Kijken of layers alleen maar default styles bevatten? Zo ja
+         * dan hoeven er geen styles meegegeven te worden */
     var onlyDefaultStyles = layersOnlyHaveDefaultStyles(layerItems);
     
     /* 
@@ -2041,109 +2066,109 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         if (item.use_style && !onlyDefaultStyles && !usingSldPart) {
             if (i == layerItems.length-1) {
                 allStyles += item.use_style;
-            } else {
-                allStyles += item.use_style + ",";
-            }
-        }
-        
-        var minscale;
-        if (smallestMinscale!=0){
-            if (item.scalehintmin != null) {
-                minscale = Number(item.scalehintmin.replace(",", "."));
-                if (!isNaN(minscale)){
-                    if (smallestMinscale == -1 || minscale < smallestMinscale) {
-                        smallestMinscale = minscale;
-                    }
+                } else {
+                    allStyles += item.use_style + ",";
                 }
-            }else{
-                //geen minscale dan moet er geen minscale worden ingesteld.
-                smallestMinscale=0;
-            }            
-        }
- 
-        var maxscale;
-        if (largestMaxscale!=0){
-            if (item.scalehintmax != null) {
-                maxscale = Number(item.scalehintmax.replace(",", "."));
-                if (!isNaN(maxscale)) {
-                    if (largestMaxscale == -1 || maxscale > largestMaxscale) {
-                        largestMaxscale = maxscale;
+            }
+
+            var minscale;
+            if (smallestMinscale!=0){
+                if (item.scalehintmin != null) {
+                    minscale = Number(item.scalehintmin.replace(",", "."));
+                    if (!isNaN(minscale)){
+                        if (smallestMinscale == -1 || minscale < smallestMinscale) {
+                            smallestMinscale = minscale;
+                        }
                     }
+                }else{
+                    //geen minscale dan moet er geen minscale worden ingesteld.
+                    smallestMinscale=0;
+                }            
+            }
+
+            var maxscale;
+            if (largestMaxscale!=0){
+                if (item.scalehintmax != null) {
+                    maxscale = Number(item.scalehintmax.replace(",", "."));
+                    if (!isNaN(maxscale)) {
+                        if (largestMaxscale == -1 || maxscale > largestMaxscale) {
+                            largestMaxscale = maxscale;
+                        }
+                    }
+                }else{
+                    //geen maxscale dan moet er geen maxscale worden ingesteld.
+                    largestMaxscale=0;
                 }
-            }else{
-                //geen maxscale dan moet er geen maxscale worden ingesteld.
-                largestMaxscale=0;
+            }
+
+            if (item.wmslayers){
+                if (theLayers.length>0) {
+                    theLayers+=",";
+                }
+                theLayers+=item.wmslayers;
+
+                /* 
+                 * Achtergrond optie toevoegen voor gebruik bij Print. Anders
+                 * komt de laatst aangevinkte laag bovenop ook als dit een 
+                 * achtergrond laag is.
+                */
+                if (item.background) {
+                    options["background"] = true;
+                } else {
+                    options["background"] = false;
+                }
+
+            }
+            if (item.wmsquerylayers){
+                if (queryLayers.length > 0) {
+                    queryLayers+=",";
+                }
+                queryLayers+=item.wmsquerylayers
+            }
+            if (layerItems[i].maptipfield){
+                if (maptipLayers.length!=0)
+                    maptipLayers+=",";
+                maptipLayers+=layerItems[i].wmslayers;
+                var aka=layerItems[i].wmslayers;
+                //Als de gebruiker ingelogd is dan zal het waarschijnlijk een kaartenbalie service zijn
+                //Daarom moet er een andere aka worden gemaakt voor de map tip.
+                if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
+                    aka=aka.substring(aka.indexOf("_")+1);
+                }
+                var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
+                maptips.push(maptip);
+            //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
             }
         }
 
-        if (item.wmslayers){
-            if (theLayers.length>0) {
-                theLayers+=",";
+        if (smallestMinscale != null && smallestMinscale > 0) {
+            options["minscale"]=smallestMinscale;
+        }
+
+        if (largestMaxscale != null && largestMaxscale > 0) {
+            options["maxscale"]=largestMaxscale;
+        }
+
+        if (webMapController instanceof FlamingoController){
+            if(options["maxResolution"]){
+                options["maxscale"]=options["maxResolution"];
             }
-            theLayers+=item.wmslayers;
-
-            /* 
-             * Achtergrond optie toevoegen voor gebruik bij Print. Anders
-             * komt de laatst aangevinkte laag bovenop ook als dit een 
-             * achtergrond laag is.
-            */
-            if (item.background) {
-                options["background"] = true;
-            } else {
-                options["background"] = false;
+            if(options["minResolution"]){
+                options["minscale"]=options["minResolution"];
             }
-
-        }
-        if (item.wmsquerylayers){
-            if (queryLayers.length > 0) {
-                queryLayers+=",";
+            delete options["maxResolution"];
+            delete options["minResolution"];
+        }else if (webMapController instanceof OpenLayersController){
+            if (options["maxResolution"]!=undefined && options["minResolution"]==undefined){
+                options["minResolution"]="auto";
             }
-            queryLayers+=item.wmsquerylayers
-        }
-        if (layerItems[i].maptipfield){
-            if (maptipLayers.length!=0)
-                maptipLayers+=",";
-            maptipLayers+=layerItems[i].wmslayers;
-            var aka=layerItems[i].wmslayers;
-            //Als de gebruiker ingelogd is dan zal het waarschijnlijk een kaartenbalie service zijn
-            //Daarom moet er een andere aka worden gemaakt voor de map tip.
-            if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
-                aka=aka.substring(aka.indexOf("_")+1);
+            if (options["minResolution"]!=undefined && options["maxResolution"]==undefined){
+                options["maxResolution"]="auto";
             }
-            var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
-            maptips.push(maptip);
-        //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
         }
-    }
 
-    if (smallestMinscale != null && smallestMinscale > 0) {
-        options["minscale"]=smallestMinscale;
-    }
+        ogcOptions["styles"] = allStyles;
 
-    if (largestMaxscale != null && largestMaxscale > 0) {
-        options["maxscale"]=largestMaxscale;
-    }
-    
-    if (webMapController instanceof FlamingoController){
-        if(options["maxResolution"]){
-            options["maxscale"]=options["maxResolution"];
-        }
-        if(options["minResolution"]){
-            options["minscale"]=options["minResolution"];
-        }
-        delete options["maxResolution"];
-        delete options["minResolution"];
-    }else if (webMapController instanceof OpenLayersController){
-        if (options["maxResolution"]!=undefined && options["minResolution"]==undefined){
-            options["minResolution"]="auto";
-        }
-        if (options["minResolution"]!=undefined && options["maxResolution"]==undefined){
-            options["maxResolution"]="auto";
-        }
-    }
-
-    ogcOptions["styles"] = allStyles;
-    
     ogcOptions["layers"]=theLayers;
     ogcOptions["query_layers"]=queryLayers;
     //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
@@ -2163,8 +2188,9 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
     
     var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 
-    newLayer.setMapTips(maptips);
-    webMapController.getMap().addLayer(newLayer);//false, true, false
+        newLayer.setMapTips(maptips);
+        webMapController.getMap().addLayer(newLayer);//false, true, false
+    }
 }
 
 function loadObjectInfo(geom) {

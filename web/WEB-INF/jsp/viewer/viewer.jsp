@@ -918,6 +918,17 @@
 <div id="dialog-download-metadata" title="Kaartlaag opties" style="display: none;">
     <p>
         <span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 20px 0;"></span>
-        U kunt voor deze kaartlaag de metadata bekijken of de dataset als zip downloaden.
+        U heeft voor deze kaartlaag de volgende keuzes.
     </p>
+</div>
+
+<div id="dialog-wmsservice-url" title="Kopieer WMS Service url" style="display: none;">
+    <p>
+        <span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 20px 0;"></span>
+        Hieronder de url naar de achterliggende WMS service. U kunt deze in uw eigen
+        GIS omgeving gebruiken om de lagen te bekijken.
+    </p>
+    <p>
+        <input type="text" class="input_wmsserviceurl" id="input_wmsserviceurl" name="input_wmsserviceurl" value="" />
+    </p>    
 </div>

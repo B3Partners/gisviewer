@@ -956,23 +956,89 @@ function createMetadataLink(item){
     lnk.href = '#';
 
     var downloadTitle = 'Download dataset van ' + item.title;
-    var infoTitle = 'Informatie over ' + item.title;
+    var infoTitle = 'Informatie over ' + item.title; 
 
-    /* Gelijk Metadata pop-up tonen */
+    /* Metadata tonen, WMS Service url en Annuleren */
     if (item.metadatalink && item.metadatalink.length > 1 && (item.gegevensbronid == undefined || item.gegevensbronid < 1)) {
         lnk.onclick = function() {
-            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+            $j("#dialog-download-metadata").dialog("option", "buttons", {                
+                "Metadata": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                        $j(this).dialog("close");
+                    }
+                },
+                "Url": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                        $j(this).dialog("close");                        
+                        
+                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                        $j("#input_wmsserviceurl").val(url);
+                        
+                        unblockViewerUI();
+                        $j("#dialog-wmsservice-url").dialog('open');
+                    }
+                },
+                "Annuleren": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
+                        unblockViewerUI();
+                    }
+                }
+            });
+
+            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
+                $j(this).html($j(this).parent().attr('text'));
+            });
+
+            blockViewerUI();
+            $j("#dialog-download-metadata").dialog('open');
         }
+        
+        return lnk;
     }
 
-    /* Gelijk Download pop-up tonen */
+    /* Download tonen, WMS Service url en Annuleren */
     if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
-            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+            $j("#dialog-download-metadata").dialog("option", "buttons", {
+                "Download": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+                        $j(this).dialog("close");
+                    }
+                },
+                "Url": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                        $j(this).dialog("close");                        
+                        
+                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                        $j("#input_wmsserviceurl").val(url);
+                        
+                        unblockViewerUI();
+                        $j("#dialog-wmsservice-url").dialog('open');
+                    }
+                },
+                "Annuleren": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
+                        unblockViewerUI();
+                    }
+                }
+            });
+
+            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
+                $j(this).html($j(this).parent().attr('text'));
+            });
+
+            blockViewerUI();
+            $j("#dialog-download-metadata").dialog('open');
         }
+        
+        return lnk;
     }
 
-    /* Eerst dialog tonen met vraag wat gebruiker wil doen. */
+    /* Download tonen, Metadata, WMS Service url en Annuleren */
     if (item.metadatalink && item.metadatalink.length > 1 && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
 
@@ -987,6 +1053,17 @@ function createMetadataLink(item){
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
                         iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
                         $j(this).dialog("close");
+                    }
+                },
+                "Url": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                        $j(this).dialog("close");                        
+                        
+                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                        $j("#input_wmsserviceurl").val(url);
+                        
+                        unblockViewerUI();
+                        $j("#dialog-wmsservice-url").dialog('open');
                     }
                 },
                 "Annuleren": function() {
@@ -1007,6 +1084,17 @@ function createMetadataLink(item){
     }
 
     return lnk;
+}
+
+function createWMSServiceUrlDialog() {
+    $j("#dialog-wmsservice-url").dialog({
+        resizable: false,
+        disabled: true,
+        autoOpen: false,        
+        modal: false,
+        width: 750,
+        height: 150
+    });
 }
 
 function createDownloadMetadataDialog(){
@@ -4070,8 +4158,34 @@ function createServiceLayerLink(item){
     lnk.href = '#';
 
     if (item.service_url != undefined) {
-        lnk.title = "WMS Service url " + item.service_url;
-        lnk.alt = "WMS Service url " + item.service_url;
+        lnk.onclick = function() {
+            $j("#dialog-download-metadata").dialog("option", "buttons", {
+                "Url": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                        $j(this).dialog("close");  
+        
+                        var url = item.service_url + "service=WMS&request=GetCapabilities&version=1.0.0";
+                        $j("#input_wmsserviceurl").val(url);
+                        
+                        unblockViewerUI();
+                        $j("#dialog-wmsservice-url").dialog('open');
+                    }
+                },
+                "Annuleren": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
+                        unblockViewerUI();
+                    }
+                }
+            });
+
+            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
+                $j(this).html($j(this).parent().attr('text'));
+            });
+
+            blockViewerUI();
+            $j("#dialog-download-metadata").dialog('open');
+        }
     }
 
     return lnk;
@@ -4197,4 +4311,5 @@ $j(document).ready(function() {
 
     popupCreated = true;
     createDownloadMetadataDialog();
+    createWMSServiceUrlDialog();
 });

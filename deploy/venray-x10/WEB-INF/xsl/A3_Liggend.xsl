@@ -77,7 +77,7 @@
     <xsl:template name="info-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
             <fo:block>
-                <fo:external-graphic src="url('b3p_noordpijl.png')" width="84px" height="77px"/>
+                <fo:external-graphic src="url('venray_noordpijl.png')" width="41px" height="80px"/>
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">

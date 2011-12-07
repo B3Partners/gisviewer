@@ -94,7 +94,7 @@ body.homebody {
     background-position: 10px 11px;
 }
 
-#acknowledge_tab {
+.acknowledge_tab {
     border: 1px solid #357EBF;
     width: 215px;
     padding: 12px;

@@ -654,3 +654,18 @@ a.highlightlink:hover{
 .imagenoborder {
     border: 0px none;
 }
+
+.meldingencontainer .messages .acknowledge_tab
+{
+    border: 1px solid #828282;
+    width: 215px;
+    padding: 12px;
+    padding-left: 30px;
+    margin: 10px;
+    margin-left: 0px;
+    color: #000000;
+    background-color: #E5E5E5;
+    background-image: url(/gisviewer/images/icons/information.png);
+    background-repeat: no-repeat;
+    background-position: 10px 11px;
+}

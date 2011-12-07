@@ -75,7 +75,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </div>
             </html:messages>
             <html:messages id="message" name="acknowledgeMessages">
-                <div id="acknowledge_tab">
+                <div class="acknowledge_tab">
                     <c:out value="${message}"/>
                 </div>
             </html:messages>

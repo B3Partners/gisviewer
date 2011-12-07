@@ -13,7 +13,7 @@
                 </div>
             </html:messages>
             <html:messages id="message" name="acknowledgeMessages">
-                <div id="acknowledge_tab">
+                <div class="acknowledge_tab">
                     <c:out value="${message}"/>
                 </div>
             </html:messages>

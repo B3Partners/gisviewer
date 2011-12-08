@@ -30,7 +30,7 @@
 
             <!-- Anders gewoon de tekst tonen van tekstblok -->
             <c:if test="${!tb.toonUrl}">
-            <div class="inleiding_body" style="height: ${tekstblokHeight}px;">
+            <div class="inleiding_body">
                 ${tb.tekst}
 
                 <c:if test="${!empty tb.url}">
@@ -209,6 +209,4 @@ blokken -->
 
 <div style="clear: both; padding-bottom: 25px;"></div>
 
-<c:if test="${useCaroussel}">
-    <script type="text/javascript" src="<html:rewrite page='/scripts/homecarousel.js' module=''/>"></script>
-</c:if>
+<script type="text/javascript" src="<html:rewrite page='/scripts/homecarousel.js' module=''/>"></script>

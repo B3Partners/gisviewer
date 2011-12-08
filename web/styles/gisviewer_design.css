@@ -519,7 +519,7 @@ body.pdfExportClass {
     padding-bottom: 2px;
     color: #1962A0;
     font-weight: bold;
-    /* height: 120px; */
+    height: 220px;
     
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
@@ -964,4 +964,25 @@ a.highlightlink:hover{
 
 #appUrl a:hover {
     text-decoration: none;
+}
+
+.meldingencontainer .messages .acknowledge_tab
+{
+    border: 1px solid #828282;
+    width: 215px;
+    padding: 12px;
+    padding-left: 30px;
+    margin: 10px;
+    margin-left: 0px;
+    color: #000000;
+    background-color: #E5E5E5;
+    background-image: url(/gisviewer/images/icons/information.png);
+    background-repeat: no-repeat;
+    background-position: 10px 11px;
+}
+
+.input_wmsserviceurl {
+    border: 1px solid #61676B;
+    width: 725px;
+    height: 22px;
 }

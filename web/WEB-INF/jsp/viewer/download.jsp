@@ -1,6 +1,18 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <script type="text/javascript">
+    function getParent() {
+        if (window.opener){
+            return window.opener;
+        }else if (window.parent){
+            return window.parent;
+        }else{
+            messagePopup("", "No parent found", "error");
+            
+            return null;
+        }
+    }
+    
     function validateEmail()
     {
         var emailAdres = document.forms["downloadForm"]["email"].value;
@@ -11,6 +23,16 @@
             alert("E-mailadres niet ingevuld of ongeldig.");
             return false;
         }
+        
+        var ouder = getParent();
+        if (ouder) {
+            var wkt = ouder.getWktForDownload();
+            if (wkt) {
+                document.forms[0].wkt.value = wkt;
+            }
+        }
+        
+        return true;
     }
 </script>
 
@@ -29,14 +51,16 @@
     </div>
 
     <p>
-        Vul een geldig e-mailadres in en kies een download formaat. Het ophalen
-        van de dataset kan enige tijd duren. Als de download klaar is gezet ontvangt u
-        hierover een e-mail met daarin een download link. Na het klikken op
-        'Start download' kunt u dit scherm afsluiten.
+        U kunt de gehele dataset downloaden of alleen een selectie als u een polygoon op
+        de kaart hebt getekend. Vul een geldig e-mailadres in en kies een download
+        formaat. Het ophalen van de dataset kan enige tijd duren. Als de download
+        klaar is gezet ontvangt u hierover een e-mail met daarin een download link.
+        Na het klikken op 'Start download' kunt u dit scherm afsluiten.
     </p>    
 
     <html:form styleId="downloadForm" action="/download" onsubmit="return validateEmail();">
         <html:hidden property="uuids" />
+        <html:hidden property="wkt" />
 
         <table>
             <tr>

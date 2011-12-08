@@ -111,6 +111,7 @@
             <form-property name="alt_action" type="java.lang.String"/>
 
             <form-property name="uuids" type="java.lang.String"/>
+            <form-property name="wkt" type="java.lang.String"/>
             <form-property name="email" type="java.lang.String"/>
             <form-property name="formaat" type="java.lang.String"/>
         </form-bean>

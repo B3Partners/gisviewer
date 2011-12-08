@@ -3160,6 +3160,16 @@ function getWktActiveFeature() {
     return object.getWkt();
 }
 
+function getWktForDownload() {
+    var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
+
+    if (object == null) {
+        return "";
+    }
+
+    return object.getWkt();
+}
+
 function getWkt() {
     var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
 

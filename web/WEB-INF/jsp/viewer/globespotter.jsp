@@ -20,8 +20,7 @@
                    width="600" height="400"
                    type="application/x-shockwave-flash"
                    allowScriptAccess="always"
-                   FlashVars="&imageid=${imageId}&APIKey=
-                   &MapSRSName=EPSG:28992&TID=${tid}">
+                   FlashVars="&APIKey=${apiKey}&imageid=${imageId}&MapSRSName=EPSG:28992&TID=${tid}">
             </embed>
         </object>
 </body>

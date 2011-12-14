@@ -991,7 +991,7 @@ function createMetadataLink(item){
                 $j(this).html($j(this).parent().attr('text'));
             });
 
-            blockViewerUI();
+            //blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         }
         
@@ -1031,7 +1031,7 @@ function createMetadataLink(item){
                 $j(this).html($j(this).parent().attr('text'));
             });
 
-            blockViewerUI();
+            //blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         }
         
@@ -1078,9 +1078,45 @@ function createMetadataLink(item){
                 $j(this).html($j(this).parent().attr('text'));
             });
 
-            blockViewerUI();
+            //blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         }
+        
+        return lnk;
+    }
+    
+    /* Alleen url en Annuleren */
+    if ( (item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) ) {
+        lnk.onclick = function() {
+            $j("#dialog-download-metadata").dialog("option", "buttons", {                
+                "Url": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                        $j(this).dialog("close");                        
+                        
+                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                        $j("#input_wmsserviceurl").val(url);
+                        
+                        unblockViewerUI();
+                        $j("#dialog-wmsservice-url").dialog('open');
+                    }
+                },
+                "Annuleren": function() {
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
+                        unblockViewerUI();
+                    }
+                }
+            });
+
+            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
+                $j(this).html($j(this).parent().attr('text'));
+            });
+
+            //blockViewerUI();
+            $j("#dialog-download-metadata").dialog('open');
+        }
+        
+        return lnk;
     }
 
     return lnk;

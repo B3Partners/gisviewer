@@ -684,13 +684,6 @@ function createTableTd(waarde) {
     if(waarde.type == 'TYPE_URL') {
         if (!waarde.value) {
             td.html("-");
-        /* test voor globespotter sdk */
-        } else if (waarde.value.indexOf("globespotter") != -1) {
-            var icon3 = $j('<img src="'+infoicon+'" alt="Aanvullende informatie" title="Aanvullende informatie" />')
-            .click(function() {
-                popUp('globespotter.do', 'Gloebspotter', 500, 400);
-            });
-            td.html(icon3);
         } else {
             var icon = $j('<img src="'+infoicon+'" alt="Aanvullende informatie" title="Aanvullende informatie" />')
             .click(function() {
@@ -760,7 +753,7 @@ function createTableTd(waarde) {
                     .attr({
                         "title": listWaarde
                     });
-                }else{
+                } else {
                     // TODO: icon kiezen afh van extentie listWaarde
                     clickable = $j('<img src="'+urlicon+'" alt="Externe informatie" border="0"/>')
                     .attr({

@@ -842,11 +842,12 @@ function setAttributeStringValue(element, themaid, keyName, keyValue, attributeN
 
 function setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
     var oldValue = element.innerHTML;
-
+    var newValue;
+    
     if(oldValue == '' || oldValue == 'Nieuw' || oldValue == 'nieuw') {
-        var newValue = 'afgemeld';
+        newValue = 'afgemeld';
     } else {
-        var newValue = 'nieuw';
+        newValue = 'nieuw';
     }
 
     JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);

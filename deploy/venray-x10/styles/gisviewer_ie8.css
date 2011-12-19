@@ -1,0 +1,5 @@
+.inleiding_body {
+    position: relative;
+    -pie-background: linear-gradient(#009900, #006600);
+    behavior: url(/gisviewer/PIE.htc);
+}

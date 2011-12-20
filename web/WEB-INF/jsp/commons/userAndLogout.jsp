@@ -47,11 +47,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
         <!-- Tekst ingelogd als alleen tonen als de gebruiker niet anoniem is -->
         <c:if test="${userName != 'anoniem'}">
-            <fmt:message key="commons.userandlogout.ingelogdals"/> <c:out value="${pageContext.request.remoteUser}"/>
-        </c:if>
-
-        <c:if test="${not empty appName}">
-            (${appName}) |
+            <fmt:message key="commons.userandlogout.ingelogdals"/> 
+            <c:if test="${not empty appName}">
+            ${appName}
+            </c:if>
+            
+            (<c:out value="${pageContext.request.remoteUser}"/>)
         </c:if>
             
         <a href="#"  onclick="javascript:logout();"><fmt:message key="commons.userandlogout.uitloggen"/></a>

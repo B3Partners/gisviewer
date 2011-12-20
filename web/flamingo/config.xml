@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent,b_showOverzicht.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
@@ -87,9 +87,26 @@
 
         <fmc:Maptip listento="map1"/>
         <fmc:Map maptipdelay="150" id="map1" left="0" top="0%" height="100%" width="100%"
-        bottom="bottom" visible="true" extenthistory="10" extent="168000,305000,214000,422000"
-        movesteps="20" movetime="100">
-            <fmc:LayerIdentifyIcon  id="identifyicon"/>          
+            bottom="bottom" visible="true" extenthistory="10" extent="0,292000,304000,628000"
+            movesteps="20" movetime="100" zoomscalefactor="2" minscale="0.125">
+            
+            <!--
+            <fmc:TilingLayer 
+                id="ondergrond" 
+                serviceurl="http://tilecache.kaartenbalie.nl/tilecache.cgi?" 
+                resolutions="512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125" 
+                serviceenvelope="0,292000,304000,628000" 
+                type="wmsc">
+
+                <TilingParam name="Layers">osm</TilingParam>
+                <TilingParam name="SERVICE">WMS</TilingParam>
+                <TilingParam name="VERSION">1.1.1</TilingParam>
+                <TilingParam name="REQUEST">GetMap</TilingParam>
+                <TilingParam name="STYLES"> </TilingParam>
+                <TilingParam name="SRS">EPSG:28992</TilingParam>
+            </fmc:TilingLayer>  -->
+
+            <fmc:LayerIdentifyIcon  id="identifyicon" />        
         </fmc:Map>        
     </fmc:Container>
 </FLAMINGO>

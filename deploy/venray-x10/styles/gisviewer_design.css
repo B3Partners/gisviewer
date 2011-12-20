@@ -997,3 +997,10 @@ a.highlightlink:hover{
     width: 725px;
     height: 22px;
 }
+
+#searchInputFieldsContainer select {
+    width: 275px;
+    overflow: auto;
+    padding: 2px;
+    border: 1px solid #808080;
+}

@@ -948,3 +948,31 @@ a.highlightlink:hover{
 #appUrl a:hover {
     text-decoration: none;
 }
+
+.meldingencontainer .messages .acknowledge_tab
+{
+    border: 1px solid #828282;
+    width: 215px;
+    padding: 12px;
+    padding-left: 30px;
+    margin: 10px;
+    margin-left: 0px;
+    color: #000000;
+    background-color: #E5E5E5;
+    background-image: url(/gisviewer/images/icons/information.png);
+    background-repeat: no-repeat;
+    background-position: 10px 11px;
+}
+
+.input_wmsserviceurl {
+    border: 1px solid #61676B;
+    width: 725px;
+    height: 22px;
+}
+
+#searchInputFieldsContainer select {
+    width: 275px;
+    overflow: auto;
+    padding: 2px;
+    border: 1px solid #808080;
+}

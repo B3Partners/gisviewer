@@ -656,6 +656,16 @@ function handleZoekVeldinputList(list){
         kiesObj.push({id:" ", label: "Maak uw keuze ..."});        
         dwr.util.addOptions(controlElementName,kiesObj,'id','label');
 
+        /* List label waarde afkappen op aantal tekens. Gedaan zodat dropdown
+         * met lange waardes niet rechts buiten het scherm vallen */
+        for (var j=0; j < list.length; j++) {
+            var waarde = list[j].label;
+            
+            if (waarde.length > 50) {
+                list[j].label = waarde.substring(0, 50) + '...';
+            }
+        }        
+        
         dwr.util.addOptions(controlElementName,list,"id","label");
         //als er maar 1 zoekveld is gelijk zoeken bij selecteren dropdown.
         if (zc.zoekVelden.length==1){

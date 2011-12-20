@@ -3656,7 +3656,7 @@ function createPermaLink(){
         reso = "&resolution=" + controllerRes;
     }
 
-    var url = urlBase + appCode + id + clusterIds + extent + reso;
+    var url = urlBase + appCode + id + clusterIds + extent;; // + reso;
 
     return url;
 }

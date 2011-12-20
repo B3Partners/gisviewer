@@ -33,11 +33,15 @@ function createLeaf(container, item) {
             container.appendChild(createCheckboxDefaultOnThema(item, false));
         }
     } else if (item.callable) {
+        /*
+         * Vanwege issue 20 in afspraak met PLIM vinkje voor 
+         * kaartgroep voor eindgebruiker uitgezet.
         if (item.groupDefaultOn) {
             container.appendChild(createCheckboxDefaultOnCluster(item, true));
         } else {
             container.appendChild(createCheckboxDefaultOnCluster(item, false));
         }
+        */
     }
 
     return false;

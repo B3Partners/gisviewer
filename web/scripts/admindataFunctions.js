@@ -761,7 +761,7 @@ function createTableTd(waarde) {
                     })
                 }
                 clickable.click(function() {
-                    popUp(listWaarde, 'externe_link', 600, 500);
+                    popUp(listWaarde, 'externe_link', 730, 350);
                 });
                 linkspan.html(clickable);
                 td.append(linkspan);

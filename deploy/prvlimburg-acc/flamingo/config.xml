@@ -84,8 +84,8 @@
         <!-- het 'canvas' waar op getekend kan worden-->
         <fmc:EditMap id="editMap" editable="true" left="0" top="0%" height="100%" width="100%" bottom="bottom" listento="gis,map1"/>
 
-        <fmc:GIS id="gis" geometryeditable="false" alwaysdrawpoints="false" showmeasures="true">
-            <fmc:Layer id="layer1" name="layer1" visible="true" geometrytypes="Point,LineString,Polygon,MultiPolygon">
+        <fmc:GIS id="gis" geometryeditable="false" alwaysdrawpoints="false">
+            <fmc:Layer id="layer1" name="layer1" visible="true" geometrytypes="Point,LineString,Polygon,MultiPolygon" showmeasures="true">
                 <fmc:Style fillcolor="0x000000" fillopacity="30" strokecolor="0xcc0000" strokeopacity="100" strokeWidth="1"/>
             </fmc:Layer>
         </fmc:GIS>

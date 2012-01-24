@@ -661,8 +661,8 @@ function handleZoekVeldinputList(list){
         for (var j=0; j < list.length; j++) {
             var waarde = list[j].label;
             
-            if (waarde.length > 50) {
-                list[j].label = waarde.substring(0, 50) + '...';
+            if (waarde.length > 45) {
+                list[j].label = waarde.substring(0, 45) + '...';
             }
         }        
         

@@ -988,5 +988,5 @@ a.highlightlink:hover{
     padding: 5px;
     background-color: #DDE9F2;
     display: none;
-    z-index: 10000;
+    z-index: 5000;
 }

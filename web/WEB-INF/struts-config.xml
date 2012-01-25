@@ -85,6 +85,7 @@
 
             <form-property name="currentAppReadOnly" type="java.lang.String"/>
             <form-property name="makeAppReadOnly" type="java.lang.Boolean"/>
+            <form-property name="useUserWmsDropdown" type="java.lang.String"/>
 
             <form-property name="kaartgroepenAan" type="java.lang.String[]"/>
             <form-property name="kaartlagenAan" type="java.lang.String[]"/>
@@ -103,6 +104,8 @@
             <form-property name="groupName" type="java.lang.String"/>
             <form-property name="serviceUrl" type="java.lang.String"/>
             <form-property name="sldUrl" type="java.lang.String"/>
+            
+            <form-property name="selectedUserWMSId" type="java.lang.String"/>
         </form-bean>
 
         <form-bean name="downloadForm" type="org.apache.struts.validator.DynaValidatorForm">

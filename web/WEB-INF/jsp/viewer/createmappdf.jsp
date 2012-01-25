@@ -12,7 +12,7 @@
 </script>
 
 <div class="createMapPDFBody">
-    <h1><fmt:message key="createmappdf"/></h1>
+    <h1>Printvoorbeeld</h1>
 
     <html:form action="/printmap" focus="title">
     <table>
@@ -27,8 +27,8 @@
 
         <tr>
             <td colspan="2" class="printvoorbeeld_help">
-                U kunt dit printvoorbeeld ook direct gebruiken door met de rechtermuisknop op de
-                afbeelding te klikken. Kies voor 'kopiëren' om het plaatje op het
+                U kunt dit printvoorbeeld ook direct gebruiken door met de rechtermuisknop
+                op de afbeelding te klikken. Kies voor 'kopiëren' om het plaatje op het
                 klembord te plaatsen of kies voor 'opslaan als...' om het plaatje op de
                 harde schijf te plaatsen.
             </td>
@@ -43,11 +43,12 @@
                 <td><html:textarea property="remark" cols="60" rows="4"/></td>
             </tr>
             <tr>
-                <td colspan="2">
-                    De startwaarde van de kwaliteitsbalk is afhankelijk van uw beeldscherm. Als u<br/>
-                    deze kwaliteit aanpast kan het kaartbeeld veranderen t.o.v. het orgineel.
+                <td colspan="2" class="printvoorbeeld_help">
+                    De startwaarde van de kwaliteitsbalk is afhankelijk van uw beeldscherm.
+                    Als u deze kwaliteit aanpast kan het kaartbeeld veranderen t.o.v. het
+                    orgineel.
                 </td>
-            </tr>
+            </tr>            
             <tr class="aanvullende_info_alternateTr">
                 <td><fmt:message key="createmappdf.imageSize"/></td>
                 <td>

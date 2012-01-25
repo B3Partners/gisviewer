@@ -209,4 +209,6 @@ blokken -->
 
 <div style="clear: both; padding-bottom: 25px;"></div>
 
+<!--
 <script type="text/javascript" src="<html:rewrite page='/scripts/homecarousel.js' module=''/>"></script>
+-->

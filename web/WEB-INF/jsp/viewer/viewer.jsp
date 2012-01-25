@@ -403,6 +403,11 @@
     if(typeof treeOrder === 'undefined' || !treeOrder) {
         treeOrder = 'volgorde';
     }
+    
+    var useUserWmsDropdown = catchEmpty(${configMap["useUserWmsDropdown"]});
+    if(typeof useUserWmsDropdown === 'undefined') {
+        useUserWmsDropdown = true;
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

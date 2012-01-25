@@ -3271,7 +3271,7 @@ function b_print(id, event) {
     exportMap();
 }
 
-function b_layerSelection(id, event) {
+function b_layerSelection(id, event) {    
     iFramePopup('kaartselectie.do', false, 'Kaartselectie', 800, 600, true, true);
 }
 

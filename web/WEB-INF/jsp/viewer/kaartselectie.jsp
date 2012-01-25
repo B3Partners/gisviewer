@@ -6,6 +6,18 @@
 
 <h1>Kaartselectie</h1>
 
+<script type="text/javascript">
+    function checkForm() {
+        var id = document.forms["kaartselectieForm"]["selectedUserWMSId"].value;
+        
+        if (id && id != "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+    
 <!-- Indien niet goed opgeslagen dan wel messages tonen -->
 <c:if test="${empty appCodeSaved}">
     <div class="messages">
@@ -120,6 +132,8 @@
 
     <p>
         <html:hidden property="currentAppReadOnly" />
+        <html:hidden property="useUserWmsDropdown" />
+        
         Instellingen opslaan als alleen-lezen <html:checkbox property="makeAppReadOnly" />
         <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbuttonAlleenLezen" alt="help" />
 
@@ -141,7 +155,23 @@
         <h3>Nieuwe WMS Service toevoegen</h3>
     </div>
     
-    <div id="kaartselectieAddService">
+    <c:if test="${useUserWmsDropdown == '1'}">
+        <p>
+            U kunt ook nog extra kaartlagen toevoegen door een WMS te selecteren
+            uit deze lijst.
+        </p>
+        <html:select property="selectedUserWMSId">
+            <html:option value="">-Kies een service-</html:option>
+            <c:forEach items="${userWmsList}" var="item">
+                <html:option value="${item.id}">${item.name}</html:option>
+            </c:forEach>
+        </html:select>
+            
+        <html:submit property="saveWMSService" styleClass="leftButton submitbutton" onclick="return checkForm();">Service toevoegen</html:submit>      
+    </c:if>
+        
+    <c:if test="${useUserWmsDropdown == '0'}">
+        <div id="kaartselectieAddService">
         <label for="groupName">Groep</label>
         <html:text property="groupName" size="20" />
         <label for="serviceUrl">Url</label>
@@ -152,6 +182,7 @@
 
         <html:submit property="saveWMSService" styleClass="rightButton submitbutton">Service toevoegen</html:submit>
     </div>
+    </c:if>
     
 </html:form>
     </div>

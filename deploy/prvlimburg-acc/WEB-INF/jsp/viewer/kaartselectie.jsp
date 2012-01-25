@@ -160,11 +160,10 @@
                 <tr>
                     <td>E-mail</td>
                     <td>
-                        <!-- TODO: Deze email suffix ergens uit een config halen
+                        <!-- TODO: Deze email suffix ergens uit een config halen -->
                         <c:if test="${empty gebruikerEmail}">
                             <html:text property="gebruikerEmail" size="30" value="@prvlimburg.nl" />
                         </c:if>
-                        -->
                         
                         <c:if test="${not empty gebruikerEmail}">
                             <html:text property="gebruikerEmail" size="30" />

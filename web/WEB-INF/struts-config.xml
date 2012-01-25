@@ -106,6 +106,10 @@
             <form-property name="sldUrl" type="java.lang.String"/>
             
             <form-property name="selectedUserWMSId" type="java.lang.String"/>
+            
+            <form-property name="kaartNaam" type="java.lang.String"/>
+            <form-property name="gebruikerEmail" type="java.lang.String"/>
+            <form-property name="newkaartoption" type="java.lang.String"/>
         </form-bean>
 
         <form-bean name="downloadForm" type="org.apache.struts.validator.DynaValidatorForm">

@@ -684,11 +684,11 @@ a.highlightlink:hover{
     width: 340px;
     border: 1px solid #196299;
     padding: 5px;
-    margin-top: -125px;
-    left: 225px;
+    margin-top: -50px;
+    left: 425px;
     background-color: #DDE9F2;
     display: none;
-    z-index: 1100;
+    z-index: 6000;
 }
 
 .kaartselectieBody .submitbutton {
@@ -975,4 +975,18 @@ a.highlightlink:hover{
     overflow: auto;
     padding: 2px;
     border: 1px solid #808080;
+}
+
+.kaartlaagselectieSubmitPopup {
+    position: absolute;
+    width: 340px;
+    left: 50%;
+    top: 50%;
+    margin-left: -170px;
+    margin-top: -100px;
+    border: 1px solid #196299;
+    padding: 5px;
+    background-color: #DDE9F2;
+    display: none;
+    z-index: 10000;
 }

@@ -2293,24 +2293,24 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
 
         ogcOptions["styles"] = allStyles;
 
-    ogcOptions["layers"]=theLayers;
-    ogcOptions["query_layers"]=queryLayers;
-    //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
-    
-    options["maptip_layers"]=maptipLayers;
-    
-    /* sld servlet gebruiken ? */
-    if (sldIds.length > 0) {
-        var protocol = window.location.protocol + "//";
-        var host = window.location.host;
+        ogcOptions["layers"]=theLayers;
+        ogcOptions["query_layers"]=queryLayers;
+        //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
 
-        var baseUrl = protocol + host  + baseNameViewer;
-        var sldUrl = "sld=" + baseUrl + "/services/createUserSld?layerids=" + sldIds;
-    
-        layerUrl += sldUrl;
-    }
-    
-    var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+        options["maptip_layers"]=maptipLayers;
+
+        /* sld servlet gebruiken ? */
+        if (sldIds.length > 0) {
+            var protocol = window.location.protocol + "//";
+            var host = window.location.host;
+
+            var baseUrl = protocol + host  + baseNameViewer;
+            var sldUrl = "sld=" + baseUrl + "/services/createUserSld?layerids=" + sldIds;
+
+            layerUrl += sldUrl;
+        }
+
+        var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 
         newLayer.setMapTips(maptips);
         webMapController.getMap().addLayer(newLayer);//false, true, false

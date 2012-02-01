@@ -2120,9 +2120,11 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         options["RESOLUTIONS"]=tileItem.resolutions;
         options["TILEHEIGHT"]=tileItem.tileHeight;
         options["TILEWIDTH"]=tileItem.tileWidth;
-        var tileLayer=webMapController.createWMScLayer(lname, layerUrl,options);
-        webMapController.getMap().addLayer(tileLayer);//false, true, false
-    }else{
+        
+        var tileLayer=webMapController.createWMScLayer(lname, layerUrl,options);        
+        webMapController.getMap().addLayer(tileLayer);
+        
+    } else {
         //wms layer    
         var capLayerUrl=layerUrl;
 

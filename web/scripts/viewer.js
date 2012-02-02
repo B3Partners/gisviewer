@@ -94,6 +94,7 @@ function initMapComponent(){
             maxExtent: maxBounds,
             allOverlays: true,
             units :'m',
+            //center: new OpenLayers.LonLat( (maxBounds.left + maxBounds.right) / 2, (maxBounds.top + maxBounds.bottom) / 2 ),
             resolutions: [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125],
             controls : [new OpenLayers.Control.Navigation({
                     zoomBoxEnabled: false

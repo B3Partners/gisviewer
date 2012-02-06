@@ -1003,8 +1003,14 @@ function createMetadataLink(item){
     if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
             $j("#dialog-download-metadata").dialog("option", "buttons", {
-                "Download": function() {
+                "Download": function() {                    
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        /* Kijken of er een polygoon is getekend voor subselectie in download */
+						var wkt = getWktForDownload();            
+						if (wkt == "") {
+							alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
+						}
+
                         iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
                         $j(this).dialog("close");
                     }
@@ -1044,8 +1050,14 @@ function createMetadataLink(item){
         lnk.onclick = function() {
 
             $j("#dialog-download-metadata").dialog("option", "buttons", {
-                "Download": function() {
+                "Download": function() {            
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        /* Kijken of er een polygoon is getekend voor subselectie in download */
+						var wkt = getWktForDownload();            
+						if (wkt == "") {
+							alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
+						}
+                        
                         iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
                         $j(this).dialog("close");
                     }

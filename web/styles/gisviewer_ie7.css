@@ -23,8 +23,21 @@ body.pdfExportClass {
     padding-right: 0px;
 }
 
-.kaartselectieBody .rightButton, #kaartselectieAddService .rightButton {
-    margin-top: -28px;
+/* IE7 posities voor mee scrollende opslaan knop */
+#kaartselectieOpslaanKnop {
+    float: right;
+    margin-right: 7px;
+    top: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+#kaartselectieBomen {
+    padding-top: 65px;
+}
+
+#kaartselectieAddService .rightButton {
+    margin-top: -25px;
 }
 
 .treeview_image {

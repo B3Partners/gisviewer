@@ -34,7 +34,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/gisviewer_basisimport.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
-        <script type="text/javascript" src="scripts/commonfunctions.js"></script>
+        
+        <script type="text/javascript" src="scripts/commonfunctions.js"></script>     
         <!--[if lte IE 7]>
             <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
         <![endif]-->

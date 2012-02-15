@@ -31,12 +31,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
 
         <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
-        <link href="styles/gisviewer_viewerimport.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_viewerimport.css" rel="stylesheet" type="text/css">        
+        
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
-        <script type="text/javascript" src="scripts/commonfunctions.js"></script>
         <script type="text/javascript" src="scripts/jquery.blockUI.js"></script>
         
+        <script type="text/javascript" src="scripts/commonfunctions.js"></script>
 
         <!--[if lte IE 6]>
             <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
@@ -46,6 +47,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <script type="text/javascript" src="scripts/cssfixes_ie.js"></script>
             <script type="text/javascript" src="scripts/jquery.bgiframe.min.js"></script>
         <![endif]-->
+        
         <script type="text/javascript">
             attachOnload(checkLocation);
         </script>
@@ -76,6 +78,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <tiles:insert attribute="infobalk" />
             <tiles:insert attribute="content" />
         </div>
-        <tiles:insert definition="googleAnalytics"/>
+        <tiles:insert definition="googleAnalytics"/>        
     </body>
 </html:html>

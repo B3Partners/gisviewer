@@ -2,9 +2,8 @@
 
 <script type="text/javascript" src="<html:rewrite page='/scripts/kaartselectie.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
-<div class="kaartselectieBody">
 
-<h1>Kaartselectie</h1>
+<div class="kaartselectieBody">
 
 <script type="text/javascript">
     function checkForm() {
@@ -34,7 +33,6 @@
     </div>
 </c:if>
 
-
 <c:if test="${!empty appCodeSaved}">
     <div id="appUrl">
     <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}"/>
@@ -44,24 +42,31 @@
     </div>
 </c:if>
 
-<html:form styleId="kaartselectieForm" action="/kaartselectie">
-
-    <div class="kaartselectieKoppen">
-        <h3>
-            Vaste kaartlagen
-            <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
-        </h3>
-        <div id="vasteKaartlagenHelp" class="help">
-            <strong>Vaste kaartlagen</strong><br />
-            Maak een selectie van de kaartlagen die u beschikbaar wilt hebben binnen de viewer.
-            Deze kaartlagen zijn van te voren klaargezet door de beheerder. Ook kunt u aangeven
-            welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
+<html:form styleId="kaartselectieForm" action="/kaartselectie">    
+    <div id="scrollHeaders" style="background-color: #fff; z-index: 9999;">
+        <div id="kaartselectieOpslaanKnop">
+            <input type="button" class="rightButton submitbutton" id="saveSelection" value="Selectie opslaan" />
         </div>
-        <h4>Laag tonen</h4>
-        <h4 class="col2">Laag aan bij opstarten</h4>
+
+        <div class="kaartselectieKoppen">
+            <h3>
+                Vaste kaartlagen
+                <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
+            </h3>
+            <div id="vasteKaartlagenHelp" class="help">
+                <strong>Vaste kaartlagen</strong><br />
+                Maak een selectie van de kaartlagen die u beschikbaar wilt hebben binnen de viewer.
+                Deze kaartlagen zijn van te voren klaargezet door de beheerder. Ook kunt u aangeven
+                welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
+            </div>
+            <h4>Laag tonen</h4>
+            <h4 class="col2">Laag aan bij opstarten</h4>
+        </div>
     </div>
+                
     <div style="clear: both;"></div>
-    <div>
+    
+    <div id="kaartselectieBomen">
         <div class="kaartselectie" id="mainTreeDiv"></div>
     </div>
 
@@ -141,16 +146,15 @@
             Als iemand uw kaart toch aanpast dan ontvangen zij hiervoor een eigen url.
         </div>
     </p>
-    
-    <div id="submitPopup" class="kaartlaagselectieSubmitPopup">
         
+    <div id="submitPopup" class="kaartlaagselectieSubmitPopup">        
         <c:if test="${currentAppReadOnly == '0'}">
         <p>
             <input type="radio" name="newkaartoption" value="new" onclick="$j('#name_email').show();" /> opslaan als nieuwe kaart<br />
             <input type="radio" name="newkaartoption" value="existing" onclick="$j('#name_email').hide();" checked /> bestaande kaart ${kaartNaam} wijzigen
         </p>
         </c:if>
-        
+
         <div id="name_email" style="display: none;">
             <table>
                 <tr>
@@ -165,7 +169,7 @@
                             <html:text property="gebruikerEmail" size="30" value="@prvlimburg.nl" />
                         </c:if>
                         -->
-                        
+
                         <c:if test="${not empty gebruikerEmail}">
                             <html:text property="gebruikerEmail" size="30" />
                         </c:if>                        
@@ -173,25 +177,23 @@
                 </tr>                    
             </table>
         </div>
-                
+
         <c:if test="${currentAppReadOnly == '1'}">
             <script type="text/javascript">
                 $j('#name_email').show();
             </script>            
         </c:if>
-            
+
         <p>
             Ik wil dat deze kaart niet meer kan worden gewijzigd: <html:checkbox property="makeAppReadOnly" />
             &nbsp;<img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbuttonAlleenLezen" alt="help" />
         </p>
-        
+
         <p>
             <input type="button" class="submitbutton deletebutton" id="closeSelection" value="Sluiten" />
             <html:submit property="save" styleClass="leftButton submitbutton">Kaart opslaan</html:submit>
         </p>
     </div>
-        
-    <input type="button" class="rightButton submitbutton" id="saveSelection" value="Selectie opslaan" />
            
     <div style="clear: both;"></div>
         
@@ -291,5 +293,26 @@
         });
 
         treeZebra();
+        
+        /* Kaartselectie headers laten mee scrollen */
+        var offSet = 10;
+        
+        var el = $j("#scrollHeaders");
+        el.css('position', 'absolute');
+        var elheight = el.outerHeight();
+        var elpos_original = el.offset().top;
+        $j(window).scroll(function() {
+            var elpos = el.offset().top;
+            var windowpos = $j(window).scrollTop();
+            var finaldestination = windowpos;
+
+            if(windowpos<elpos_original) {
+                finaldestination = elpos_original;
+                el.stop().css({'top': offSet});
+            } else {
+                el.stop().animate({'top':finaldestination-elpos_original+offSet},500);
+            }
+        });
+        
     });
 </script>

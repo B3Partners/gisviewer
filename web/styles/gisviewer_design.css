@@ -755,14 +755,14 @@ a.highlightlink:hover{
 
 .treeview_image {
     position: absolute;
-    left: 300px;
+    left: 385px;
     margin-top: -14px;
     z-index: 1050;
 }
 
 .treeview_image_on {
     position: absolute;
-    left: 450px;
+    left: 500px;
     margin-top: -14px;
     z-index: 1050;
 }
@@ -815,7 +815,7 @@ a.highlightlink:hover{
     position: absolute;
     width: 340px;
     left: 50%;
-    top: 50%;
+    top: 70%;
     margin-left: -170px;
     margin-top: -100px;
     border: 1px solid #196299;
@@ -872,15 +872,15 @@ a.highlightlink:hover{
     color: #196299;
     margin: 0px;
     margin-top: -1.3em;
-    margin-left: 280px;
+    margin-left: 350px;
 }
 
 .kaartselectieKoppen h4.col2 {
-    margin-left: 390px;
+    margin-left: 440px;
 }
 
 .kaartselectieKoppen h4.col3 {
-    margin-left: 570px;
+    margin-left: 620px;
 }
 
 #kaartselectieAddServiceLink {
@@ -935,12 +935,16 @@ a.highlightlink:hover{
     width: 560px;
 }
 
+#kaartselectieOpslaanKnop {
+    top: -10px;
+}
+
 .kaartselectieBody .rightButton, #kaartselectieAddService .rightButton {
     float: right;
-    margin-right: 15px;
+    margin-right: 2px;
     padding-left: 21px;
     padding-bottom: 5px;
-    padding-top: 5px;    
+    padding-top: 5px;
     width: auto;
 }
 
@@ -951,6 +955,10 @@ a.highlightlink:hover{
     padding-bottom: 5px;
     padding-top: 5px;
     width: auto;
+}
+
+#kaartselectieBomen {
+    padding-top: 40px;
 }
 
 .kaartselectieBody #error, .kaartselectieBody #acknowledge {

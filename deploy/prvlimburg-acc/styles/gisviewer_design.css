@@ -738,14 +738,14 @@ a.highlightlink:hover{
 
 .treeview_image {
     position: absolute;
-    left: 300px;
+    left: 385px;
     margin-top: -14px;
     z-index: 1050;
 }
 
 .treeview_image_on {
     position: absolute;
-    left: 450px;
+    left: 500px;
     margin-top: -14px;
     z-index: 1050;
 }
@@ -841,15 +841,15 @@ a.highlightlink:hover{
     color: #196299;
     margin: 0px;
     margin-top: -1.3em;
-    margin-left: 280px;
+    margin-left: 350px;
 }
 
 .kaartselectieKoppen h4.col2 {
-    margin-left: 390px;
+    margin-left: 440px;
 }
 
 .kaartselectieKoppen h4.col3 {
-    margin-left: 570px;
+    margin-left: 620px;
 }
 
 #kaartselectieAddServiceLink {

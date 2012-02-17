@@ -753,20 +753,6 @@ a.highlightlink:hover{
     width: 748px;
 }
 
-.treeview_image {
-    position: absolute;
-    left: 385px;
-    margin-top: -14px;
-    z-index: 1050;
-}
-
-.treeview_image_on {
-    position: absolute;
-    left: 500px;
-    margin-top: -14px;
-    z-index: 1050;
-}
-
 .kaartlaagselectieContainer {
     position: absolute;
     left: 600px;
@@ -865,24 +851,6 @@ a.highlightlink:hover{
     margin-bottom: 2px;
 }
 
-.kaartselectieKoppen h4 {
-    float: left;
-    font-size: 1.3em;
-    font-weight: normal;
-    color: #196299;
-    margin: 0px;
-    margin-top: -1.3em;
-    margin-left: 350px;
-}
-
-.kaartselectieKoppen h4.col2 {
-    margin-left: 440px;
-}
-
-.kaartselectieKoppen h4.col3 {
-    margin-left: 620px;
-}
-
 #kaartselectieAddServiceLink {
     display: block;
     font-weight: normal;
@@ -938,6 +906,40 @@ a.highlightlink:hover{
 #kaartselectieOpslaanKnop {
     top: -10px;
 }
+
+/* Edit below to position image checkboxes and Laag tonen */
+.treeview_image {
+    position: absolute;
+    left: 483px;
+    margin-top: -14px;
+    z-index: 1050;
+}
+
+.treeview_image_on {
+    position: absolute;
+    left: 590px;
+    margin-top: -14px;
+    z-index: 1050;
+}
+
+.kaartselectieKoppen h4 {
+    float: left;
+    font-size: 1.3em;
+    font-weight: normal;
+    color: #196299;
+    margin: 0px;
+    margin-top: -1.3em;
+    margin-left: 450px;
+}
+
+.kaartselectieKoppen h4.col2 {
+    margin-left: 540px;
+}
+
+.kaartselectieKoppen h4.col3 {
+    margin-left: 720px;
+}
+/* end edit margins */
 
 .kaartselectieBody .rightButton, #kaartselectieAddService .rightButton {
     float: right;

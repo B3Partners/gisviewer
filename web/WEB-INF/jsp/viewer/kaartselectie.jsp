@@ -45,7 +45,7 @@
 <html:form styleId="kaartselectieForm" action="/kaartselectie">    
     <div id="scrollHeaders" style="background-color: #fff; z-index: 9999;">
         <div id="kaartselectieOpslaanKnop">
-            <input type="button" class="rightButton submitbutton" id="saveSelection" value="Selectie opslaan" />
+            <input type="button" class="rightButton submitbutton" id="saveSelection" value="Opslaan" />
         </div>
 
         <div class="kaartselectieKoppen">
@@ -60,7 +60,7 @@
                 welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
             </div>
             <h4>Laag tonen</h4>
-            <h4 class="col2">Laag aan bij opstarten</h4>
+            <h4 class="col2">Aan bij opstarten</h4>
         </div>
     </div>
                 

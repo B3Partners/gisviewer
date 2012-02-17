@@ -10,6 +10,12 @@ var hasnosld = 'dropdown_gray.png';
 
 function createLeaf(container, item) {
     container.appendChild(document.createTextNode(' '));
+    
+    /* Afkappen anders komt de kaartlaagnaam door de vinkjes heen */
+    if (item.title.length > 60) {
+        item.title = item.title.substring(0, 60) + ' ...';
+    }
+            
     container.appendChild(document.createTextNode(item.title));
 
     /* aan/uit vinkjes kaartgroepen en kaartlagen */

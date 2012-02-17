@@ -28,6 +28,7 @@ body.pdfExportClass {
     float: right;
     margin-right: 7px;
     top: 25px;
+    right: 2px;
     position: relative;
     overflow: hidden;
 }

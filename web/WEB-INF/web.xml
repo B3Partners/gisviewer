@@ -38,7 +38,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://192.168.1.15:8084/kaartenbalie/services/</param-value>
+            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -142,7 +142,7 @@
         </init-param>
         <load-on-startup>5</load-on-startup>
     </servlet>
-
+    
     <servlet>
         <servlet-name>DownloadServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
@@ -189,11 +189,13 @@
     <servlet-mapping>
         <servlet-name>PrintServlet</servlet-name>
         <url-pattern>/services/PrintServlet</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>DownloadServlet</servlet-name>
         <url-pattern>/services/DownloadServlet</url-pattern>
     </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>UserLayerSld</servlet-name>
         <url-pattern>/services/createUserSld</url-pattern>

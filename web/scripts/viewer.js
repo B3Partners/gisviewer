@@ -11,6 +11,7 @@ var enabledLayerItems = new Array();
  * parameters appened with the kaartenbalie url and if available also PROJECT
  * or organization code parameters.
 */
+
 var layerUrl = "" + kburl;
 
 var cookieArray = readCookie('checkedLayers');
@@ -1820,7 +1821,7 @@ function refreshLayerWithDelay() {
     refresh_timeout_handle = setTimeout("doRefreshLayer();", refreshDelay);
 }     
 
-function doRefreshLayer() {
+function doRefreshLayer() {    
     //register after loading
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
     refreshLayer();
@@ -1900,7 +1901,7 @@ function setScaleForTree(item,scale){
     }
 }
 
-function refreshLayer(doRefreshOrder) {
+function refreshLayer(doRefreshOrder) {    
     var local_refresh_handle = refresh_timeout_handle;
 
     if (doRefreshOrder == undefined) {
@@ -2057,8 +2058,8 @@ function refreshLayer(doRefreshOrder) {
                     
                     addLayerToViewer(lName, lUrl, layers);
                     layerId = getValidLayerId(lName);
-                } else {
-                    addLayerToViewer(layerId, layerUrl, layerGroup);
+                } else {                    
+                    addLayerToViewer(layerId, layerUrl, layerGroup);                  
                 }
             }
         }
@@ -2119,7 +2120,7 @@ function layersOnlyHaveDefaultStyles(layerItems) {
     return true;
 }
 
-function addLayerToViewer(lname, layerUrl, layerItems) {
+function addLayerToViewer(lname, layerUrl, layerItems) {    
     //tiling layer
     if (layerItems.length==1 && layerItems[0].tiled){
         var options=new Object();

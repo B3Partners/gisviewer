@@ -922,6 +922,10 @@ a.highlightlink:hover{
     width: auto;
 }
 
+#kaartselectieBomen {
+    padding-top: 40px;
+}
+
 .kaartselectieBody #error, .kaartselectieBody #acknowledge {
     width: 706px;
     padding: 12px;

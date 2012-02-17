@@ -156,6 +156,10 @@
             <param-name>contactEmail</param-name>
             <param-value>geoloket@prvlimburg.nl</param-value>
         </init-param>
+		<init-param>
+            <param-name>emailSuffix</param-name>
+            <param-value>@prvlimburg.nl</param-value>
+        </init-param>
         <load-on-startup>6</load-on-startup>
     </servlet>
 	

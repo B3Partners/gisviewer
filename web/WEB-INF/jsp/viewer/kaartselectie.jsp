@@ -290,8 +290,13 @@
         var offSet = 10;
         
         var el = $j("#scrollHeaders");
+        var submitPopup = $j('#submitPopup');
         el.css('position', 'absolute');
         var elheight = el.outerHeight();
+        
+        var submitOffset = submitPopup.outerHeight();
+        var submitOriginal = submitPopup.offset().top;
+        
         var elpos_original = el.offset().top;
         $j(window).scroll(function() {
             var elpos = el.offset().top;
@@ -301,8 +306,10 @@
             if(windowpos<elpos_original) {
                 finaldestination = elpos_original;
                 el.stop().css({'top': offSet});
+                submitPopup.css({'top': submitOffset + 10});
             } else {
-                el.stop().animate({'top':finaldestination-elpos_original+offSet},500);
+                el.stop().animate({'top': finaldestination-elpos_original+offSet},500);
+                submitPopup.css({'top': finaldestination-submitOriginal+submitOffset});
             }
         });
         

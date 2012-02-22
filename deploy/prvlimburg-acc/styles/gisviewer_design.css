@@ -875,14 +875,14 @@ a.highlightlink:hover{
 /* Edit below to position image checkboxes and Laag tonen */
 .treeview_image {
     position: absolute;
-    left: 483px;
+    left: 463px;
     margin-top: -14px;
     z-index: 1050;
 }
 
 .treeview_image_on {
     position: absolute;
-    left: 590px;
+    left: 570px;
     margin-top: -14px;
     z-index: 1050;
 }
@@ -894,15 +894,15 @@ a.highlightlink:hover{
     color: #196299;
     margin: 0px;
     margin-top: -1.3em;
-    margin-left: 450px;
+    margin-left: 430px;
 }
 
 .kaartselectieKoppen h4.col2 {
-    margin-left: 540px;
+    margin-left: 520px;
 }
 
 .kaartselectieKoppen h4.col3 {
-    margin-left: 720px;
+    margin-left: 700px;
 }
 /* end edit margins */
 

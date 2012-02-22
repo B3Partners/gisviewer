@@ -38,11 +38,15 @@ function createLeaf(container, item) {
         } else {
             container.appendChild(createCheckboxDefaultOnThema(item, false));
         }
-    } else if (item.callable) {        
+    } else if (item.callable) {
+        var children = [];
+        if(item.cluster) {
+            children = item.children;
+        }
         if (item.groupDefaultOn) {
-            container.appendChild(createCheckboxDefaultOnCluster(item, true));
+            container.appendChild(createCheckboxDefaultOnCluster(item, true, children));
         } else {
-            container.appendChild(createCheckboxDefaultOnCluster(item, false));
+            container.appendChild(createCheckboxDefaultOnCluster(item, false, children));
         }
     }
 
@@ -389,7 +393,7 @@ function createDummySpace() {
     return div;
 }
 
-function createImageReplacement(id, imagetype, dependant, child) {
+function createImageReplacement(id, imagetype, dependant, child, children) {
     var img = document.createElement('img');
     img.src = imagepath + imagetype;
     img.id = id + '_image';
@@ -402,12 +406,24 @@ function createImageReplacement(id, imagetype, dependant, child) {
                 $j("#" + child).attr('checked', false);
                 $j("#" + child + "_image").attr("src", imagepath + notcheckedimage);
             }
+            if(children !== undefined && children.length > 0) {
+                for(var i = 0; i < children.length; i++) {
+                    $j("#" + children[i].id).attr('checked', false);
+                    $j("#" + children[i].id + "_image").attr("src", imagepath + notcheckedimage);
+                }
+            }
         } else {
             checkBox.attr('checked', true);
             $j(this).attr("src", imagepath + checkedimage);
             if(dependant != '' && !$j("#"+dependant).is(":checked")) {
                 $j("#" + dependant).attr('checked', true);
                 $j("#" + dependant + "_image").attr("src", imagepath + checkedimage);
+            }
+            if(children !== undefined && children.length > 0) {
+                for(var i = 0; i < children.length; i++) {
+                    $j("#" + children[i].id).attr('checked', true);
+                    $j("#" + children[i].id + "_image").attr("src", imagepath + checkedimage);
+                }
             }
         }
         e.stopPropagation();
@@ -468,7 +484,7 @@ function createCheckboxCluster(item, checked) {
     return div;
 }
 
-function createCheckboxDefaultOnCluster(item, checked) {
+function createCheckboxDefaultOnCluster(item, checked, children) {
     var checkbox;
 
     if (ieVersion <= 8 && ieVersion != -1) {
@@ -500,7 +516,7 @@ function createCheckboxDefaultOnCluster(item, checked) {
 
     var imagetype = notcheckedimage;
     if(checked) imagetype = checkedimage;
-    var img = createImageReplacement("on_" + item.id, imagetype, item.id, '');
+    var img = createImageReplacement("on_" + item.id, imagetype, item.id, '', children);
 
     div.appendChild(img);
     div.appendChild(checkbox);

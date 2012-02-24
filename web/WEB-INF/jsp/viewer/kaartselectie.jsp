@@ -15,6 +15,26 @@
             return false;
         }
     }
+    
+    function emptyViewerNaam() {
+        document.forms["kaartselectieForm"]["kaartNaam"].value = "";
+        return true;
+    }
+    
+    function checkOpslaanForm() {
+        var viewerNaam = document.forms["kaartselectieForm"]["kaartNaam"].value;
+        var gebruikerEmail = document.forms["kaartselectieForm"]["gebruikerEmail"].value;
+        
+        if (viewerNaam == undefined || viewerNaam == "") {
+            alert('Viewernaam is verplicht.');
+            return false;
+        } else if (gebruikerEmail == undefined || gebruikerEmail == "") {
+            alert('E-mail is verplicht.');
+            return false;
+        } else {
+            return true;
+        }        
+    }
 </script>
     
 <!-- Indien niet goed opgeslagen dan wel messages tonen -->
@@ -159,7 +179,7 @@
             <table>
                 <tr>
                     <td>Viewernaam</td>
-                    <td><html:text property="kaartNaam" size="30" /></td>
+                    <td><html:text property="kaartNaam" size="30" onclick="return emptyViewerNaam()" /></td>
                 </tr>
                 <tr>
                     <td>E-mail</td>
@@ -183,7 +203,7 @@
 
         <p>
             <input type="button" class="submitbutton deletebutton" id="closeSelection" value="Sluiten" />
-            <html:submit property="save" styleClass="leftButton submitbutton">Viewer opslaan</html:submit>
+            <html:submit property="save" styleClass="leftButton submitbutton" onclick="return checkOpslaanForm();">Viewer opslaan</html:submit>
         </p>
     </div>
            
@@ -313,5 +333,11 @@
             }
         });
         
+        /* Viewernaam indien leeg voor invullen */
+        var viewerNaamCheck = document.forms["kaartselectieForm"]["kaartNaam"].value;
+        
+        if (viewerNaamCheck !== undefined && viewerNaamCheck == "") {
+            document.forms["kaartselectieForm"]["kaartNaam"].value = "<vul hier uw viewernaam in>";
+        }        
     });
 </script>

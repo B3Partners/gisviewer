@@ -1,6 +1,6 @@
 Geachte heer, mevrouw,
 
-U heeft via de gisviewer een kaart opgeslagen met de naam {0}. U kunt deze kaart via
+U heeft via Atlas Limburg een gisviewer opgeslagen met de naam {0}. U kunt deze viewer via
 de volgende link bekijken:
 
 {1}

@@ -158,7 +158,7 @@
         <div id="name_email" style="display: none;">
             <table>
                 <tr>
-                    <td>Kaartnaam</td>
+                    <td>Viewernaam</td>
                     <td><html:text property="kaartNaam" size="30" /></td>
                 </tr>
                 <tr>
@@ -177,13 +177,13 @@
         </c:if>
 
         <p>
-            Ik wil dat deze kaart niet meer kan worden gewijzigd: <html:checkbox property="makeAppReadOnly" />
+            Ik wil dat deze viewer niet meer kan worden gewijzigd: <html:checkbox property="makeAppReadOnly" />
             &nbsp;<img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbuttonAlleenLezen" alt="help" />
         </p>
 
         <p>
             <input type="button" class="submitbutton deletebutton" id="closeSelection" value="Sluiten" />
-            <html:submit property="save" styleClass="leftButton submitbutton">Kaart opslaan</html:submit>
+            <html:submit property="save" styleClass="leftButton submitbutton">Viewer opslaan</html:submit>
         </p>
     </div>
            

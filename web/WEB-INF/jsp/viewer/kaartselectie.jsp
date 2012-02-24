@@ -141,9 +141,9 @@
 
         <div id="alleenLezenHelp" class="alleenLezen">
             <strong>Niet meer wijzigen</strong><BR/>
-            Als u aangeeft deze kaart niet meer te kunnen wijzigen kunnen andere uw
-            kaart wel bekijken maar geen wijzigingen opslaan in de boom instellingen. 
-            Als iemand uw kaart toch aanpast dan ontvangen zij hiervoor een eigen url.
+            Als u aangeeft deze viewer niet meer te kunnen wijzigen kunnen andere uw
+            viewer wel bekijken maar geen wijzigingen opslaan in de boom instellingen. 
+            Als iemand uw viewer toch aanpast dan ontvangen zij hiervoor een eigen url.
         </div>
     </p>
         

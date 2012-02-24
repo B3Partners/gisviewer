@@ -31,6 +31,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <a href="#" onclick="getBookMark();" class="menulink">
         <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
     </a>
+	
+	<a href="#" onclick="getLatLonForGoogleMaps();" class="menulink">
+        <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
+    </a>
     
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
     <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />

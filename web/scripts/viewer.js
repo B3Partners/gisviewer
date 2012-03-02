@@ -3181,6 +3181,16 @@ function exportMap(){
     wktInput.type = 'hidden';
     wktInput.value = wktString;
     submitForm.appendChild(wktInput);
+    
+    /* Tiling spullen meegeven voor CombineImageSettings */
+    var tilingString = getTilingLayer();
+    
+    var tilingInput = document.createElement('input');
+    tilingInput.id = 'tilings';
+    tilingInput.name = 'tilings';
+    tilingInput.type = 'hidden';
+    tilingInput.value = tilingString;
+    submitForm.appendChild(tilingInput);
 
     submitForm.target="exportMapWindowNaam";
     submitForm.action= "printmap.do";
@@ -3190,6 +3200,25 @@ function exportMap(){
         exportMapWindow=window.open("", "exportMapWindowNaam");
         exportMapWindow.focus();
     }
+}
+
+function getTilingLayer() {
+    var tilingString = "";
+    var firstURL = true;
+
+    var layers = webMapController.getMap("map1").getAllTilingLayers();
+
+    /* tiling layers toevoegen */
+    for (var j=0; j < layers.length; j++) {    
+        var bbox = layers[j]["options"]["BBOX"];
+        var resolutions = layers[j]["options"]["RESOLUTIONS"];
+        var tileSize = layers[j]["options"]["TILEWIDTH"];
+        var serviceUrl = layers[j]["options"]["url"];
+        
+        tilingString += bbox + ";"+ resolutions + ";" + tileSize + ";" + serviceUrl;
+    }
+
+    return tilingString;
 }
 
 function checkboxClickById(id){

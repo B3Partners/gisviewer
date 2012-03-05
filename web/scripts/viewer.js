@@ -3191,6 +3191,26 @@ function exportMap(){
     tilingInput.type = 'hidden';
     tilingInput.value = tilingString;
     submitForm.appendChild(tilingInput);
+    
+    /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
+     * wms url in de print zit waar dit uit gehaald kan worden */
+    
+    var mapWidth = webMapController.getMap("map1").getScreenWidth();
+    var mapHeight = webMapController.getMap("map1").getScreenHeight();
+    
+    var minX = webMapController.getMap("map1").getExtent().minx;
+    var minY = webMapController.getMap("map1").getExtent().miny;
+    var maxX = webMapController.getMap("map1").getExtent().maxx;
+    var maxY = webMapController.getMap("map1").getExtent().maxy;
+    
+    var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
+    
+    var mapSizeInput = document.createElement('input');
+    mapSizeInput.id = 'mapsizes';
+    mapSizeInput.name = 'mapsizes';
+    mapSizeInput.type = 'hidden';
+    mapSizeInput.value = mapWidth + ";" + mapHeight + ";" + mapBbox;
+    submitForm.appendChild(mapSizeInput);
 
     submitForm.target="exportMapWindowNaam";
     submitForm.action= "printmap.do";
@@ -3212,10 +3232,11 @@ function getTilingLayer() {
     for (var j=0; j < layers.length; j++) {    
         var bbox = layers[j]["options"]["BBOX"];
         var resolutions = layers[j]["options"]["RESOLUTIONS"];
-        var tileSize = layers[j]["options"]["TILEWIDTH"];
+        var tileWidth = layers[j]["options"]["TILEWIDTH"];
+        var tileHeight = layers[j]["options"]["TILEHEIGHT"];
         var serviceUrl = layers[j]["options"]["url"];
         
-        tilingString += bbox + ";"+ resolutions + ";" + tileSize + ";" + serviceUrl;
+        tilingString += bbox + ";"+ resolutions + ";" + tileWidth + ";" + tileHeight + ";" +serviceUrl;
     }
 
     return tilingString;

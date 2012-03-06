@@ -3233,13 +3233,65 @@ function getTilingLayer() {
         var bbox = layers[j]["options"]["BBOX"];
         var resolutions = layers[j]["options"]["RESOLUTIONS"];
         var tileWidth = layers[j]["options"]["TILEWIDTH"];
-        var tileHeight = layers[j]["options"]["TILEHEIGHT"];
-        var serviceUrl = layers[j]["options"]["url"];
+        var tileHeight = layers[j]["options"]["TILEHEIGHT"]; 
         
-        tilingString += bbox + ";"+ resolutions + ";" + tileWidth + ";" + tileHeight + ";" +serviceUrl;
+        /* parameters aan service url plakken om in back-end nieuwe url 
+         * te kunnen opbouwen. alleen als ze er nog niet instaan. */
+        var url = buildTilingServiceUrl(layers[j]);
+        
+        tilingString += bbox + ";"+ resolutions + ";" + tileWidth + ";" + tileHeight + ";" + url;
     }
 
     return tilingString;
+}
+
+function checkParam(url, name) {
+    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    
+    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    var regex = new RegExp(regexS);
+    
+    var results = regex.exec(url);
+    if (results == null) {
+        return false;  
+    }        
+    
+    return true;  
+}
+
+function buildTilingServiceUrl(tilingLayer) {    
+    var serviceUrl = tilingLayer["options"]["url"];
+    var service = tilingLayer["options"]["SERVICE"];
+    var version = tilingLayer["options"]["VERSION"];
+    var layer = tilingLayer["options"]["LAYERS"];
+    var styles = tilingLayer["options"]["STYLES"];
+    var format = tilingLayer["options"]["FORMAT"];
+    var srs = tilingLayer["options"]["SRS"];
+    var request = tilingLayer["options"]["REQUEST"];
+    
+    if (!checkParam(serviceUrl, "service") && !checkParam(serviceUrl, "SERVICE")) {
+        serviceUrl += "&SERVICE=" + tilingLayer["options"]["SERVICE"];
+    }    
+    if (!checkParam(serviceUrl, "version") && !checkParam(serviceUrl, "VERSION")) {
+        serviceUrl += "&VERSION=" + tilingLayer["options"]["VERSION"];
+    }
+    if (!checkParam(serviceUrl, "layer") && !checkParam(serviceUrl, "LAYER")) {
+        serviceUrl += "&LAYERS=" + tilingLayer["options"]["LAYERS"];
+    }
+    if (!checkParam(serviceUrl, "styles") && !checkParam(serviceUrl, "STYLES")) {
+        serviceUrl += "&STYLES=" + tilingLayer["options"]["STYLES"];
+    }
+    if (!checkParam(serviceUrl, "format") && !checkParam(serviceUrl, "FORMAT")) {
+        serviceUrl += "&FORMAT=" + tilingLayer["options"]["FORMAT"];
+    }
+    if (!checkParam(serviceUrl, "srs") && !checkParam(serviceUrl, "SRS")) {
+        serviceUrl += "&SRS=" + tilingLayer["options"]["SRS"];
+    }
+    if (!checkParam(serviceUrl, "request") && !checkParam(serviceUrl, "REQUEST")) {
+        serviceUrl += "&REQUEST=" + tilingLayer["options"]["REQUEST"];
+    }
+        
+    return serviceUrl;        
 }
 
 function checkboxClickById(id){

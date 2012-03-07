@@ -1853,7 +1853,7 @@ function isItemInScale(item,scale){
                 itemVisible=true;
             }
         }
-    }else{
+    }else {
         if (item.scalehintmin != null) {
             var minscale = Number(item.scalehintmin.replace(",", "."));
             if (scale<minscale){
@@ -1867,6 +1867,35 @@ function isItemInScale(item,scale){
             }
         }       
     }
+    
+    /* Schaal check voor Tiling lagen */
+    if (item.resolutions) {      
+        var res = item.resolutions.trim();
+        
+        var list;
+        list = res.split(" ");
+        
+        if (list && list.length < 1) {
+            list = res.split(",");
+        }
+        
+        if (list && list.length > 0) {
+            var size = list.length;
+            var max = list[0];
+            var min = list[size-1];
+
+            // doe W(res(kw) * 2) scalehint
+            var scaleMax = Math.sqrt((max*max) * 2);   
+            var scaleMin = Math.sqrt((min*min) * 2);
+
+            if (scale < scaleMax && scale > scaleMin) {
+                itemVisible = true;
+            } else {
+                itemVisible = false;
+            }
+        }
+    }
+    
     return itemVisible;
 }
 /**

@@ -8,6 +8,8 @@ var notcheckedimage = 'delete.png';
 var hassld = 'dropdown_red.png';
 var hasnosld = 'dropdown_gray.png';
 
+var toggleChildrenImage = 'arrow-down.png';
+
 function createLeaf(container, item) {
     container.appendChild(document.createTextNode(' '));
     
@@ -44,9 +46,11 @@ function createLeaf(container, item) {
             children = item.children;
         }
         if (item.groupDefaultOn) {
-            container.appendChild(createCheckboxDefaultOnCluster(item, true, children));
+            container.appendChild(createToggleChildren(item, children));
+            container.appendChild(createCheckboxDefaultOnCluster(item, true));
         } else {
-            container.appendChild(createCheckboxDefaultOnCluster(item, false, children));
+            container.appendChild(createToggleChildren(item, children));
+            container.appendChild(createCheckboxDefaultOnCluster(item, false));
         }
     }
 
@@ -397,11 +401,18 @@ function createImageReplacement(id, imagetype, dependant, child, children) {
     var img = document.createElement('img');
     img.src = imagepath + imagetype;
     img.id = id + '_image';
+    
     $j(img).click(function(e){
         var checkBox = $j("#" + id);
         if(checkBox.is(":checked")) {
             checkBox.attr('checked', false);
-            $j(this).attr("src", imagepath + notcheckedimage);
+            
+            /* Toggle pijlte voor children hoeft niet van icon te veranderen 
+             * als je erop klikt */
+            if (imagetype != toggleChildrenImage) {
+                $j(this).attr("src", imagepath + notcheckedimage);
+            }  
+            
             if(child != '') {
                 $j("#" + child).attr('checked', false);
                 $j("#" + child + "_image").attr("src", imagepath + notcheckedimage);
@@ -414,7 +425,13 @@ function createImageReplacement(id, imagetype, dependant, child, children) {
             }
         } else {
             checkBox.attr('checked', true);
-            $j(this).attr("src", imagepath + checkedimage);
+            
+            /* Toggle pijlte voor children hoeft niet van icon te veranderen 
+             * als je erop klikt */
+            if (imagetype != toggleChildrenImage) {
+                $j(this).attr("src", imagepath + checkedimage);
+            }  
+            
             if(dependant != '' && !$j("#"+dependant).is(":checked")) {
                 $j("#" + dependant).attr('checked', true);
                 $j("#" + dependant + "_image").attr("src", imagepath + checkedimage);
@@ -520,6 +537,19 @@ function createCheckboxDefaultOnCluster(item, checked, children) {
 
     div.appendChild(img);
     div.appendChild(checkbox);
+
+    return div;
+}
+
+function createToggleChildren(item, children) {
+    var div = document.createElement('div');
+    div.className ='treeview_image_toggle_children';
+    div.title = 'Toggle onderliggende kaartlagen aan/uit in boom';
+
+    var imagetype = toggleChildrenImage;
+    var img = createImageReplacement("on_" + item.id, imagetype, item.id, '', children);
+
+    div.appendChild(img);
 
     return div;
 }

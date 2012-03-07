@@ -915,6 +915,12 @@ a.highlightlink:hover{
     width: auto;
 }
 
+#kaartselectieOpslaanKnop {
+    float: right;
+    position: relative;
+    overflow: hidden;
+}
+
 #kaartselectieAddService .rightButton {
     float: right;
     margin-right: 2px;

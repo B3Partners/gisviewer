@@ -943,11 +943,17 @@ a.highlightlink:hover{
 
 .kaartselectieBody .rightButton, #kaartselectieAddService .rightButton {
     float: right;
-    margin-right: 2px;
+    margin-right: 15px;
     padding-left: 21px;
     padding-bottom: 5px;
-    padding-top: 5px;
+    padding-top: 5px;    
     width: auto;
+}
+
+#kaartselectieOpslaanKnop {
+    float: right;
+    position: relative;
+    overflow: hidden;
 }
 
 #kaartselectieAddService .rightButton {

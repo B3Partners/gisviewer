@@ -26,9 +26,8 @@ body.pdfExportClass {
 /* IE7 posities voor mee scrollende opslaan knop */
 #kaartselectieOpslaanKnop {
     float: right;
-    margin-right: 7px;
     top: 25px;
-    right: 17px;
+    right: 20px;
     position: relative;
     overflow: hidden;
 }

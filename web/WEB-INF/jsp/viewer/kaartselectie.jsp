@@ -65,7 +65,7 @@
 <html:form styleId="kaartselectieForm" action="/kaartselectie">    
     <div id="scrollHeaders" style="background-color: #fff; z-index: 9999;">
         <div id="kaartselectieOpslaanKnop">
-            <input type="button" class="rightButton submitbutton" id="saveSelection" value="Opslaan" />
+            <input type="button" class="submitbutton" id="saveSelection" value="Opslaan" />
         </div>
 
         <div class="kaartselectieKoppen">

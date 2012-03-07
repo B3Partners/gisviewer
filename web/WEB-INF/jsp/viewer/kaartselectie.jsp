@@ -3,6 +3,31 @@
 <script type="text/javascript" src="<html:rewrite page='/scripts/kaartselectie.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 
+<!-- Indien niet goed opgeslagen dan wel messages tonen -->
+<c:if test="${empty appCodeSaved}">
+    <div class="messages">
+        <html:messages id="message" message="true" >
+            <div id="error">
+                <c:out value="${message}" escapeXml="false"/>
+            </div>
+        </html:messages>
+        <html:messages id="message" name="acknowledgeMessages">
+            <div id="acknowledge">
+                <c:out value="${message}"/>
+            </div>
+        </html:messages>
+    </div>
+</c:if>
+
+<c:if test="${!empty appCodeSaved}">
+    <div id="appUrl">
+    <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}"/>
+
+    Uw persoonlijke instellingen zijn opgeslagen. U kunt de nieuwe viewer bekijken
+    via de volgende <html:link page="${appUrl}" target="_top">persoonlijke url</html:link>.
+    </div>
+</c:if>
+
 <div class="kaartselectieBody">
 
 <script type="text/javascript">
@@ -36,31 +61,6 @@
         }        
     }
 </script>
-    
-<!-- Indien niet goed opgeslagen dan wel messages tonen -->
-<c:if test="${empty appCodeSaved}">
-    <div class="messages">
-        <html:messages id="message" message="true" >
-            <div id="error">
-                <c:out value="${message}" escapeXml="false"/>
-            </div>
-        </html:messages>
-        <html:messages id="message" name="acknowledgeMessages">
-            <div id="acknowledge">
-                <c:out value="${message}"/>
-            </div>
-        </html:messages>
-    </div>
-</c:if>
-
-<c:if test="${!empty appCodeSaved}">
-    <div id="appUrl">
-    <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}"/>
-
-    Uw persoonlijke instellingen zijn opgeslagen. U kunt de nieuwe viewer bekijken
-    via de volgende <html:link page="${appUrl}" target="_top">persoonlijke url</html:link>.
-    </div>
-</c:if>
 
 <html:form styleId="kaartselectieForm" action="/kaartselectie">    
     <div id="scrollHeaders" style="background-color: #fff; z-index: 9999;">
@@ -165,6 +165,14 @@
             viewer wel bekijken maar geen wijzigingen opslaan in de boom instellingen. 
             Als iemand uw viewer toch aanpast dan ontvangen zij hiervoor een eigen url.
         </div>
+    
+        <div id="viewerNaamHelp" class="viewerNaamHelperClass">
+            <strong>Viewernaam en E-mail</strong><BR/>
+            Vul een zinvolle viewernaam en uw e-mail adres in. Via e-mail en bovenin
+            dit scherm krijgt u een persoonlijke link waarmee de nieuwe kaartlagen
+            kunnen worden bekeken. Deze persoonlijke gisviewer kunt u zelf blijven
+            gebruiken en uitwisselen met andere gebruikers.
+        </div>
     </p>
         
     <div id="submitPopup" class="kaartlaagselectieSubmitPopup">        
@@ -179,7 +187,10 @@
             <table>
                 <tr>
                     <td>Viewernaam</td>
-                    <td><html:text property="kaartNaam" size="30" onclick="return emptyViewerNaam()" /></td>
+                    <td>
+                        <html:text styleId="kaartNaam" property="kaartNaam" size="30" onclick="return emptyViewerNaam()" />&nbsp;
+                        <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpButtonViewerNaam" alt="help" />
+                    </td>
                 </tr>
                 <tr>
                     <td>E-mail</td>
@@ -281,11 +292,22 @@
         });
 
         $j('.helpbuttonAlleenLezen').hover(function() {
-            $j(this).parent().parent().parent().parent().find('.alleenLezen').show();
+            $j("#alleenLezenHelp").show();
         }, function() {
-            $j(this).parent().parent().parent().parent().find('.alleenLezen').hide();
+            $j("#alleenLezenHelp").hide();
         });
         $j('.alleenLezen').hover(function() {
+            $j(this).show();
+        }, function() {
+            $j(this).hide();
+        });
+        
+        $j('.helpButtonViewerNaam').hover(function() {
+            $j("#viewerNaamHelp").show();            
+        }, function() {
+            $j("#viewerNaamHelp").hide();            
+        });
+        $j('.viewerNaamHelperClass').hover(function() {
             $j(this).show();
         }, function() {
             $j(this).hide();
@@ -314,6 +336,9 @@
         el.css('position', 'absolute');
         var elheight = el.outerHeight();
         
+        var alleenLezenHelp = $j('#alleenLezenHelp');
+        var viewerNaamHelp = $j('#viewerNaamHelp');
+        
         var submitOffset = submitPopup.outerHeight();
         var submitOriginal = submitPopup.offset().top;
         
@@ -327,17 +352,21 @@
                 finaldestination = elpos_original;
                 el.stop().css({'top': offSet});
                 submitPopup.css({'top': submitOffset + 10});
+                alleenLezenHelp.css({'top': submitOffset + 10});
+                viewerNaamHelp.css({'top': submitOffset + 10});
             } else {
                 el.stop().animate({'top': finaldestination-elpos_original+offSet},500);
                 submitPopup.css({'top': finaldestination-submitOriginal+submitOffset});
+                alleenLezenHelp.css({'top': finaldestination-submitOriginal+submitOffset});
+                viewerNaamHelp.css({'top': finaldestination-submitOriginal+submitOffset});
             }
         });
         
         /* Viewernaam indien leeg voor invullen */
-        var viewerNaamCheck = document.forms["kaartselectieForm"]["kaartNaam"].value;
+        var viewerNaamCheck = $j("#kaartNaam").val();
         
-        if (viewerNaamCheck !== undefined && viewerNaamCheck == "") {
-            document.forms["kaartselectieForm"]["kaartNaam"].value = "<vul hier uw viewernaam in>";
-        }        
+        if (viewerNaamCheck !== undefined && viewerNaamCheck != "") {
+            $j("#kaartNaam").val("<vul hier uw viewernaam in>");
+        }
     });
 </script>

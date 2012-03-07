@@ -696,7 +696,7 @@ a.highlightlink:hover{
     z-index: 1100;
 }
 
-.kaartselectieBody .alleenLezen {
+.kaartselectieBody .alleenLezen, .viewerNaamHelperClass {
     position: absolute;
     width: 340px;
     border: 1px solid #196299;
@@ -952,6 +952,7 @@ a.highlightlink:hover{
 
 #kaartselectieOpslaanKnop {
     float: right;
+    top: 1px;
     position: relative;
     overflow: hidden;
 }

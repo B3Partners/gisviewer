@@ -1899,15 +1899,16 @@ function checkScaleForLayers() {
  * @return boolean wel of niet zichtbaar in scale.
  **/
 function isItemInScale(item,scale){
-    var itemVisible=true;
-    if (item.children){
-        itemVisible=false;
+    var itemVisible = true;
+    
+    if (item.children) {
+        itemVisible = false;
         for (var i=0; i < item.children.length; i++){
             if(isItemInScale(item.children[i],scale)){
                 itemVisible=true;
             }
         }
-    }else {
+    } else {
         if (item.scalehintmin != null) {
             var minscale = Number(item.scalehintmin.replace(",", "."));
             if (scale<minscale){
@@ -1942,7 +1943,9 @@ function isItemInScale(item,scale){
             var scaleMax = Math.sqrt((max*max) * 2);   
             var scaleMin = Math.sqrt((min*min) * 2);
 
-            if (scale < scaleMax && scale > scaleMin) {
+            var adjustedScale = scale + 0.00000000001;
+            
+            if (adjustedScale <= scaleMax && adjustedScale >= scaleMin) {
                 itemVisible = true;
             } else {
                 itemVisible = false;
@@ -1956,17 +1959,20 @@ function isItemInScale(item,scale){
  *Sets een tree item enabled or disabled (visually)
  */
 function setScaleForTree(item,scale){
-    var disabledRadio=false;
+    var disabledRadio = false;
+    
     //if disabled radioinput dan zijn de layers al gedisabled.
-    var inputElement=document.getElementById(item.id);
-    disabledRadio=inputElement && inputElement.type=='radio' && !inputElement.checked;
+    var inputElement = document.getElementById(item.id);
+    
+    disabledRadio = inputElement && inputElement.type=='radio' && !inputElement.checked;
+    
     if (!disabledRadio){
         if (item.children){
             for (var i=0; i < item.children.length; i++){
                 setScaleForTree(item.children[i],scale);
             }
         }
-        var itemVisible=isItemInScale(item,scale);
+        var itemVisible = isItemInScale(item,scale);
 
         /* Als item een cluster is en aangevinkt kan worden of het item is
          * geen cluster, dus een kaartlaag dan mag dit wel of
@@ -1978,8 +1984,10 @@ function setScaleForTree(item,scale){
                 disableLayer(item.id);
             }
         }
+        
         return itemVisible;
-    }else{
+        
+    } else {
         return false;
     }
 }
@@ -2217,6 +2225,27 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         options["RESOLUTIONS"]=tileItem.resolutions;
         options["TILEHEIGHT"]=tileItem.tileHeight;
         options["TILEWIDTH"]=tileItem.tileWidth;
+        
+        /* Min/max scale zetten voor tiling layers */
+        if (tileItem.resolutions) {      
+            var res = tileItem.resolutions.trim();
+
+            var list;
+            list = res.split(" ");
+
+            if (list && list.length < 1) {
+                list = res.split(",");
+            }
+
+            if (list && list.length > 0) {
+                var size = list.length;
+                var max = list[0];
+                var min = list[size-1];
+
+                options["minscale"] = min;
+                options["maxscale"] = max;
+            }
+        }
         
         var tileLayer=webMapController.createWMScLayer(lname, layerUrl,options);        
         webMapController.getMap().addLayer(tileLayer);
@@ -3038,7 +3067,9 @@ function ie6_hack_onInit(){
         }
     }
 }
-function moveToExtent(minx,miny,maxx,maxy){
+function moveToExtent(minx,miny,maxx,maxy) {    
+    console.log(minx);
+    
     webMapController.getMap().zoomToExtent({
         minx:minx,
         miny:miny,
@@ -3046,7 +3077,7 @@ function moveToExtent(minx,miny,maxx,maxy){
         maxy:maxy
     }, 0);
 }
-function setFullExtent(minx,miny,maxx,maxy){
+function setFullExtent(minx,miny,maxx,maxy) {
     webMapController.getMap().setMaxExtent({
         minx:minx,
         miny:miny,

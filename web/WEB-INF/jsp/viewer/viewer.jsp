@@ -408,6 +408,11 @@
     if(typeof useUserWmsDropdown === 'undefined') {
         useUserWmsDropdown = true;
     }
+    
+    var datasetDownload = catchEmpty(${configMap["datasetDownload"]});
+    if (typeof datasetDownload === 'undefined') {
+        datasetDownload = false;
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

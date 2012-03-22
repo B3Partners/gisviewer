@@ -1003,37 +1003,61 @@ function createMetadataLink(item){
     /* Download tonen, WMS Service url en Annuleren */
     if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
-            $j("#dialog-download-metadata").dialog("option", "buttons", {
-                "Download": function() {                    
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        /* Kijken of er een polygoon is getekend voor subselectie in download */
-						var wkt = getWktForDownload();            
-						if (wkt == "") {
-							alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
-						}
+            
+            /* Wel download button tonen */
+            if (datasetDownload) {
+                $j("#dialog-download-metadata").dialog("option", "buttons", {
+                    "Download": function() {                    
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            /* Kijken of er een polygoon is getekend voor subselectie in download */
+                            var wkt = getWktForDownload();            
+                            if (wkt == "") {
+                                alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
+                            }
 
-                        iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
-                        $j(this).dialog("close");
+                            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+                            $j(this).dialog("close");
+                        }
+                    },
+                    "Url": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                            $j(this).dialog("close");                        
+
+                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            $j("#input_wmsserviceurl").val(url);
+
+                            unblockViewerUI();
+                            $j("#dialog-wmsservice-url").dialog('open');
+                        }
+                    },
+                    "Annuleren": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+                            unblockViewerUI();
+                        }
                     }
-                },
-                "Url": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                        $j(this).dialog("close");                        
-                        
-                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                        $j("#input_wmsserviceurl").val(url);
-                        
-                        unblockViewerUI();
-                        $j("#dialog-wmsservice-url").dialog('open');
+                });
+            } else {
+                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
+                    "Url": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                            $j(this).dialog("close");                        
+
+                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            $j("#input_wmsserviceurl").val(url);
+
+                            unblockViewerUI();
+                            $j("#dialog-wmsservice-url").dialog('open');
+                        }
+                    },
+                    "Annuleren": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+                            unblockViewerUI();
+                        }
                     }
-                },
-                "Annuleren": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        $j(this).dialog("close");
-                        unblockViewerUI();
-                    }
-                }
-            });
+                });
+            }
 
             $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
                 $j(this).html($j(this).parent().attr('text'));
@@ -1049,44 +1073,74 @@ function createMetadataLink(item){
     /* Download tonen, Metadata, WMS Service url en Annuleren */
     if (item.metadatalink && item.metadatalink.length > 1 && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
+            
+            /* Wel download button tonen */
+            if (datasetDownload) {
+                $j("#dialog-download-metadata").dialog("option", "buttons", {
+                    "Download": function() {            
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            /* Kijken of er een polygoon is getekend voor subselectie in download */
+                            var wkt = getWktForDownload();            
+                            if (wkt == "") {
+                                alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
+                            }
 
-            $j("#dialog-download-metadata").dialog("option", "buttons", {
-                "Download": function() {            
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        /* Kijken of er een polygoon is getekend voor subselectie in download */
-						var wkt = getWktForDownload();            
-						if (wkt == "") {
-							alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
-						}
-                        
-                        iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
-                        $j(this).dialog("close");
+                            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+                            $j(this).dialog("close");
+                        }
+                    },
+                    "Metadata": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                            $j(this).dialog("close");
+                        }
+                    },
+                    "Url": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                            $j(this).dialog("close");                        
+
+                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            $j("#input_wmsserviceurl").val(url);
+
+                            unblockViewerUI();
+                            $j("#dialog-wmsservice-url").dialog('open');
+                        }
+                    },
+                    "Annuleren": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+                            unblockViewerUI();
+                        }
                     }
-                },
-                "Metadata": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
-                        $j(this).dialog("close");
+                });
+            } else {
+                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
+                    "Metadata": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                            $j(this).dialog("close");
+                        }
+                    },
+                    "Url": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
+                            $j(this).dialog("close");                        
+
+                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            $j("#input_wmsserviceurl").val(url);
+
+                            unblockViewerUI();
+                            $j("#dialog-wmsservice-url").dialog('open');
+                        }
+                    },
+                    "Annuleren": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+                            unblockViewerUI();
+                        }
                     }
-                },
-                "Url": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                        $j(this).dialog("close");                        
-                        
-                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                        $j("#input_wmsserviceurl").val(url);
-                        
-                        unblockViewerUI();
-                        $j("#dialog-wmsservice-url").dialog('open');
-                    }
-                },
-                "Annuleren": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        $j(this).dialog("close");
-                        unblockViewerUI();
-                    }
-                }
-            });
+                });
+            }
+            
 
             $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
                 $j(this).html($j(this).parent().attr('text'));

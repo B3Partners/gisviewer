@@ -30,6 +30,7 @@
 
 <div class="kaartselectieBody">
 
+
 <script type="text/javascript">
     function checkForm() {
         var id = document.forms["kaartselectieForm"]["selectedUserWMSId"].value;
@@ -330,6 +331,9 @@
         
         /* Kaartselectie headers laten mee scrollen */
         var offSet = 10;
+        if(document.getElementById('appUrl')) {
+            offSet = 10 + $j('#appUrl').outerHeight();
+        }
         
         var el = $j("#scrollHeaders");
         var submitPopup = $j('#submitPopup');

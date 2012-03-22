@@ -32,6 +32,13 @@ body.pdfExportClass {
     overflow: hidden;
 }
 
+.treeview_image_toggle_children {
+    position: absolute;
+    left: 463px;
+    margin-top: 1px;
+    z-index: 1050;
+}
+
 #kaartselectieBomen {
     padding-top: 65px;
 }

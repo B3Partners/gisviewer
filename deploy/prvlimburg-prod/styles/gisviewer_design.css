@@ -684,8 +684,8 @@ a.highlightlink:hover{
     width: 340px;
     border: 1px solid #196299;
     padding: 5px;
-    margin-top: -50px;
-    left: 425px;
+    margin-top: -35px;
+    left: 380px;
     background-color: #DDE9F2;
     display: none;
     z-index: 6000;
@@ -883,7 +883,6 @@ a.highlightlink:hover{
 .treeview_image_toggle_children {
     position: absolute;
     left: 463px;
-    margin-top: -14px;
     z-index: 1050;
 }
 

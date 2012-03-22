@@ -443,8 +443,15 @@ function createImageReplacement(id, imagetype, dependant, child, children) {
                 }
             }
         }
+        
+        /* Leaf openklappen als children getoggeld worden via pijltje */
+        if (imagetype == toggleChildrenImage) {
+            treeview_expandItemChildren('mainTreeDiv', dependant);
+        }
+        
         e.stopPropagation();
     });
+    
     return img;
 }
 

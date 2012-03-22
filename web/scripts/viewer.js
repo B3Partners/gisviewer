@@ -2802,7 +2802,7 @@ function refreshMapVolgorde() {
     syncLayerCookieAndForm();
 }
 
-function refreshLegendBox() {
+function refreshLegendBox() {    
 	resetLegendImageQueue();
     webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
     var visibleLayerItems = new Array();
@@ -3067,9 +3067,7 @@ function ie6_hack_onInit(){
         }
     }
 }
-function moveToExtent(minx,miny,maxx,maxy) {    
-    console.log(minx);
-    
+function moveToExtent(minx,miny,maxx,maxy) {     
     webMapController.getMap().zoomToExtent({
         minx:minx,
         miny:miny,

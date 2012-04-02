@@ -3341,11 +3341,11 @@ function getTilingLayer() {
     var layers = webMapController.getMap("map1").getAllTilingLayers();
 
     /* tiling layers toevoegen */
-    for (var j=0; j < layers.length; j++) {    
-        var bbox = layers[j]["options"]["BBOX"];
-        var resolutions = layers[j]["options"]["RESOLUTIONS"];
-        var tileWidth = layers[j]["options"]["TILEWIDTH"];
-        var tileHeight = layers[j]["options"]["TILEHEIGHT"]; 
+    for (var j=0; j < layers.length; j++) {
+        var bbox = layers[j].getOption("BBOX");
+        var resolutions = layers[j].getOption("RESOLUTIONS");
+        var tileWidth = layers[j].getOption("TILEWIDTH");
+        var tileHeight = layers[j].getOption("TILEHEIGHT");
         
         /* parameters aan service url plakken om in back-end nieuwe url 
          * te kunnen opbouwen. alleen als ze er nog niet instaan. */
@@ -3372,35 +3372,28 @@ function checkParam(url, name) {
 }
 
 function buildTilingServiceUrl(tilingLayer) {    
-    var serviceUrl = tilingLayer["options"]["url"];
-    var service = tilingLayer["options"]["SERVICE"];
-    var version = tilingLayer["options"]["VERSION"];
-    var layer = tilingLayer["options"]["LAYERS"];
-    var styles = tilingLayer["options"]["STYLES"];
-    var format = tilingLayer["options"]["FORMAT"];
-    var srs = tilingLayer["options"]["SRS"];
-    var request = tilingLayer["options"]["REQUEST"];
+    var serviceUrl = tilingLayer.getOption("url");
     
     if (!checkParam(serviceUrl, "service") && !checkParam(serviceUrl, "SERVICE")) {
-        serviceUrl += "&SERVICE=" + tilingLayer["options"]["SERVICE"];
+        serviceUrl += "&SERVICE=" + tilingLayer.getOption("SERVICE");
     }    
     if (!checkParam(serviceUrl, "version") && !checkParam(serviceUrl, "VERSION")) {
-        serviceUrl += "&VERSION=" + tilingLayer["options"]["VERSION"];
+        serviceUrl += "&VERSION=" + tilingLayer.getOption("VERSION");
     }
     if (!checkParam(serviceUrl, "layer") && !checkParam(serviceUrl, "LAYER")) {
-        serviceUrl += "&LAYERS=" + tilingLayer["options"]["LAYERS"];
+        serviceUrl += "&LAYERS=" + tilingLayer.getOption("LAYERS");
     }
     if (!checkParam(serviceUrl, "styles") && !checkParam(serviceUrl, "STYLES")) {
-        serviceUrl += "&STYLES=" + tilingLayer["options"]["STYLES"];
+        serviceUrl += "&STYLES=" + tilingLayer.getOption("STYLES");
     }
     if (!checkParam(serviceUrl, "format") && !checkParam(serviceUrl, "FORMAT")) {
-        serviceUrl += "&FORMAT=" + tilingLayer["options"]["FORMAT"];
+        serviceUrl += "&FORMAT=" + tilingLayer.getOption("FORMAT");
     }
     if (!checkParam(serviceUrl, "srs") && !checkParam(serviceUrl, "SRS")) {
-        serviceUrl += "&SRS=" + tilingLayer["options"]["SRS"];
+        serviceUrl += "&SRS=" + tilingLayer.getOption("SRS");
     }
     if (!checkParam(serviceUrl, "request") && !checkParam(serviceUrl, "REQUEST")) {
-        serviceUrl += "&REQUEST=" + tilingLayer["options"]["REQUEST"];
+        serviceUrl += "&REQUEST=" + tilingLayer.getOption("REQUEST");
     }
         
     return serviceUrl;        

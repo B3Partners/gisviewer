@@ -147,29 +147,41 @@ function initializeButtons() {
     webMapController.createPanel("toolGroup");    
 
     webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
-
+    
+    /* Zoom tool */
     zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {
-        title: 'Inzomen met selectie'
+        title: 'inzoomen via selectie'
     });
     webMapController.addTool(zoomBox);
-
+    
+    /* Pan tool */
     pan = webMapController.createTool("b_pan",Tool.PAN, {
-        title: 'Pannen'
+        title: 'kaartbeeld slepem'
     });
     webMapController.addTool(pan);
     //set default tool pan so the cursor is ok.
-    if (mapviewer=="openlayers")
+    if (mapviewer=="openlayers") {
         webMapController.activateTool("b_pan");
-
+    }
+    
+    /* Previous extent tool */
     prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
-        title: 'Vorige extent'
+        title: 'stap terug'
     });
     webMapController.addTool(prevExtent);
 
+    /* Afstand meten tool */
+    var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {
+        title: 'afstand meten'
+    });
+    //webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
+    webMapController.addTool(bu_measure);
+    
+    /* I-tool */
     var options = new Object();
     options["handlerGetFeatureHandler"] = onIdentifyData;
     options["handlerBeforeGetFeatureHandler"] = onIdentify;
-    options["title"] = "Ophalen gegevens";
+    options["title"] = "informatie opvragen";
     identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
     webMapController.addTool(identify);
     webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
@@ -178,65 +190,67 @@ function initializeButtons() {
     webMapController.getMap().addLayer(editLayer);
     webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length+startLayerIndex);
        
+    /* Redlining tools */
     var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {
         layer: editLayer
     });
     webMapController.addTool(edittingtb);
-
+    
+    /* Buffer tool */
     var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, {
         layer: editLayer,
-        title: 'Buffer het tekenobject'
+        title: 'buffer het tekenobject'
     });
     webMapController.addTool(bu_buffer);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_buffer,b_buffer);
-
-    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, {
-        layer: editLayer,
-        title: 'Selecteer object'
-    });
-    webMapController.addTool(bu_getfeatures);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
-
+    
+    /* Selecteer kaartobject tool */
     var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, {
         layer: editLayer,
-        title: 'Selecteer een object in de kaart'
+        title: 'selecteer een object in de kaart'
     });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
     webMapController.addTool(bu_highlight);
-
+    
+    /* Selecteer binnen kaartobject tool */
+    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'selecteer binnen geselecteerd kaartobject'
+    });
+    webMapController.addTool(bu_getfeatures);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
+    
+    /* Verwijder polygon tool */
     var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, {
         layer: editLayer,
-        title: 'Verwijder object'
+        title: 'verwijder het tekenobject'
     });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
     webMapController.addTool(bu_removePolygons);
 
+    /* Print tool */
     var bu_print = webMapController.createTool("b_printMap",Tool.BUTTON, {
         layer: editLayer,
-        title: 'Printvoorbeeld'
+        title: 'printvoorbeeld'
     });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_print,b_print);
     webMapController.addTool(bu_print);
 
+    /* Kaartselectie tool */
     var bu_layerSelection = webMapController.createTool("b_layerSelection",Tool.BUTTON, {
         layer: editLayer,
-        title: 'Kaartselectie'
+        title: 'kaartselectie'
     });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_layerSelection,b_layerSelection);
     webMapController.addTool(bu_layerSelection);
 
+    /* Overzichtskaart tool */
     var bu_overview = webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
         layer: editLayer,
-        title: 'Overzichtskaart'
+        title: 'overzichtskaart'
     });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_overview,b_overview);
     webMapController.addTool(bu_overview);
-
-    var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {
-        title: 'Meten'
-    });
-    //webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
-    webMapController.addTool(bu_measure);
 
     var scalebar = webMapController.createTool("scalebar",Tool.SCALEBAR);
     webMapController.addTool(scalebar);

@@ -82,21 +82,52 @@ function initMapComponent(){
         mapviewer="flamingo";
     if (mapviewer== "flamingo"){
         webMapController=new FlamingoController('mapcontent');
-        var map=webMapController.createMap("map1");
-        webMapController.addMap(map);
-    }else if (mapviewer=="openlayers"){
-        webMapController= new OpenLayersController();
-        var maxBounds=new OpenLayers.Bounds(120000,304000,280000,620000);
-        if (fullbbox){
-            maxBounds=Utils.createBounds(new Extent(fullbbox));
+        var map=webMapController.createMap("map1");        
+        webMapController.addMap(map); 
+    } else if (mapviewer == "openlayers") {
+        webMapController = new OpenLayersController();
+        
+        var maxBounds;        
+        if (!bbox && fullbbox){
+            maxBounds = Utils.createBounds(new Extent(fullbbox));
+        } else if (bbox && fullbbox) {
+            maxBounds = Utils.createBounds(new Extent(fullbbox));
+        } else if (bbox && !fullbbox) {
+            maxBounds = Utils.createBounds(new Extent(bbox));
+        } else {
+            maxBounds = new OpenLayers.Bounds(12000,304000,280000,620000);
         }
+        
+        /* Resoluties klaarzetten */
+        var olRes;
+        if (tilingResolutions) {
+            var res = tilingResolutions.trim();
+
+            var list;            
+            if (res.indexOf(",") != -1) {
+                list = res.split(",");
+            } else {
+                list = res.split(" ");
+            }
+
+            if (list && list.length > 0) {                
+                olRes = new Array();
+                for (var i in list) {
+                    list[i] = parseFloat(list[i]);        
+                    olRes[i] = list[i];
+                }
+            }
+        } else {
+            olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
+        }
+    
         var opt={
             projection:new OpenLayers.Projection("EPSG:28992"),
             maxExtent: maxBounds,
             allOverlays: true,
             units :'m',
             //center: new OpenLayers.LonLat( (maxBounds.left + maxBounds.right) / 2, (maxBounds.top + maxBounds.bottom) / 2 ),
-            resolutions: [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125],
+            resolutions: olRes,
             controls : [new OpenLayers.Control.Navigation({
                     zoomBoxEnabled: false
                 }),new OpenLayers.Control.ArgParser()]
@@ -106,7 +137,7 @@ function initMapComponent(){
         $j("#mapcontent").css("border","1px solid black");
         webMapController.addMap(olmap);
     }
-   
+    
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
@@ -3070,6 +3101,11 @@ function onFrameworkLoaded(){
     mapInitialized=true;
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     doInitSearch();
+    
+    /* Tiling resolutions zetten. */
+    if (tilingResolutions != undefined && tilingResolutions != "") {
+        webMapController.getMap().setTilingResolutions(tilingResolutions);
+    }
 }
 
 function ie6_hack_onInit(){

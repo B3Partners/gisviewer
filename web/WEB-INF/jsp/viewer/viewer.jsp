@@ -413,6 +413,11 @@
     if (typeof datasetDownload === 'undefined') {
         datasetDownload = false;
     }
+    
+    var tilingResolutions = catchEmpty("${configMap["tilingResolutions"]}");
+    if (typeof tilingResolutions === 'undefined' || !tilingResolutions) {
+        tilingResolutions = "";
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

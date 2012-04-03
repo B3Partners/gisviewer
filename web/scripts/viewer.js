@@ -3101,8 +3101,8 @@ function onFrameworkLoaded(){
     mapInitialized=true;
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     doInitSearch();
-    
-    /* Tiling resolutions zetten. */
+        
+    /* Tiling resolutions zetten. */    
     if (tilingResolutions != undefined && tilingResolutions != "") {
         webMapController.getMap().setTilingResolutions(tilingResolutions);
     }

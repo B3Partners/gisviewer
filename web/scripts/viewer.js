@@ -98,6 +98,8 @@ function initMapComponent(){
             maxBounds = new OpenLayers.Bounds(12000,304000,280000,620000);
         }
         
+        /* TODO: Aanpassen maxBounds aan huidig beeldscherm verhoudingen */
+        
         /* Resoluties klaarzetten */
         var olRes;
         if (tilingResolutions) {
@@ -121,10 +123,56 @@ function initMapComponent(){
             olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
         }
         
+        /* resoluties die buiten maxBounds vallen niet op map zetten */
+        if (tilingResolutions) {            
+            /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
+             * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
+             * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
+            */
+            var width = $j("#mapcontent").width();
+            var height = $j("#mapcontent").height();
+            
+            var minx = maxBounds.left;
+            var maxx = maxBounds.right;
+            
+            var miny = maxBounds.bottom;
+            var maxy = maxBounds.top;
+            
+            var mapBreedte = maxx - minx;
+            var mapHoogte = maxy - miny;
+            
+            var resolutionX = mapBreedte / width;  
+            var resolutionY = mapHoogte / height; 
+            
+            var dpm = 72 / 0.0254;
+            var scale = (resolutionX * dpm) / 1000;
+            
+            console.log("Full extent: " + maxBounds);
+            console.log("Breedte: " + width);
+            console.log("Hoogte: " + height);
+            console.log("Info: " + defaultdataframehoogte);
+            console.log("ResolutionX: " + resolutionX);
+            console.log("ResolutionY: " + resolutionY);
+            console.log("Scale: " + scale);
+            
+            var newList = new Array();
+            var counter = 0;            
+            for (var idx in olRes) {
+                if (olRes[idx] <= scale) {
+                    newList[counter] = olRes[idx];
+                    counter++;
+                }
+            }
+            
+            //olRes = newList;
+            
+            console.log("New resoluties: " + olRes);
+        }
+        
         var opt = {
             projection: new OpenLayers.Projection("EPSG:28992"),
             maxExtent: maxBounds,
-            //maxResolution: 200.0,
+            //maxResolution: 215.04,
             //restrictedExtent: maxBounds,
             resolutions: olRes,
             allOverlays: true,
@@ -2061,8 +2109,8 @@ function refreshLayer(doRefreshOrder) {
         layerUrl+="SERVICE=WMS";
     }
 
-    var topLayerItems= new Array();
-    var backgroundLayerItems= new Array();
+    var topLayerItems = new Array();
+    var backgroundLayerItems = new Array();
     var item;
 
     for (var i=0; i<enabledLayerItems.length; i++){
@@ -3106,10 +3154,8 @@ function onFrameworkLoaded(){
     doInitSearch();
         
     /* Tiling resolutions zetten. */    
-    if (tilingResolutions != undefined && tilingResolutions != "") {        
-        if (mapviewer == "flamingo") {
-            webMapController.getMap().setTilingResolutions(tilingResolutions);
-        }
+    if (tilingResolutions != undefined && tilingResolutions != "") { 
+        webMapController.getMap().setTilingResolutions(tilingResolutions);        
         
         /* Move naar extent */
         if (bbox) {

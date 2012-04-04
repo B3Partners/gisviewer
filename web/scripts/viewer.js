@@ -1930,7 +1930,7 @@ function doRefreshLayer() {
 
 /*Check scale for all layers*/
 function checkScaleForLayers() {
-    var currentscale = webMapController.getMap().getResolution();
+    var currentscale = webMapController.getMap().getScaleHint();
     
     setScaleForTree(themaTree,currentscale);
 }
@@ -1988,7 +1988,7 @@ function isItemInScale(item,scale){
             var scaleMax = Math.sqrt((max*max) * 2);   
             var scaleMin = Math.sqrt((min*min) * 2);
 
-            var adjustedScale = scale + 0.00000000001;
+            var adjustedScale = scale + 0.00000000000001;
             
             if (adjustedScale <= scaleMax && adjustedScale >= scaleMin) {
                 itemVisible = true;

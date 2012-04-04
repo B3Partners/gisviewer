@@ -79,8 +79,8 @@ function initMapComponent(){
     mapviewer = viewerType;
 
     if (window.location.href.indexOf("flamingo")>0)
-        mapviewer="flamingo";
-    if (mapviewer== "flamingo"){
+        mapviewer = "flamingo";
+    if (mapviewer == "flamingo"){
         webMapController=new FlamingoController('mapcontent');
         var map=webMapController.createMap("map1");        
         webMapController.addMap(map); 
@@ -120,21 +120,24 @@ function initMapComponent(){
         } else {
             olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
         }
-    
-        var opt={
-            projection:new OpenLayers.Projection("EPSG:28992"),
+        
+        var opt = {
+            projection: new OpenLayers.Projection("EPSG:28992"),
             maxExtent: maxBounds,
-            allOverlays: true,
-            units :'m',
-            //center: new OpenLayers.LonLat( (maxBounds.left + maxBounds.right) / 2, (maxBounds.top + maxBounds.bottom) / 2 ),
+            //maxResolution: 200.0,
+            //restrictedExtent: maxBounds,
             resolutions: olRes,
+            allOverlays: true,
+            units : 'm',            
             controls : [new OpenLayers.Control.Navigation({
                     zoomBoxEnabled: false
                 }),new OpenLayers.Control.ArgParser()]
         };
+        
         $j("#mapcontent").html(" ");
-        var olmap=webMapController.createMap('mapcontent',opt);
+        var olmap = webMapController.createMap('mapcontent',opt);
         $j("#mapcontent").css("border","1px solid black");
+        
         webMapController.addMap(olmap);
     }
     
@@ -3103,8 +3106,17 @@ function onFrameworkLoaded(){
     doInitSearch();
         
     /* Tiling resolutions zetten. */    
-    if (tilingResolutions != undefined && tilingResolutions != "") {
-        webMapController.getMap().setTilingResolutions(tilingResolutions);
+    if (tilingResolutions != undefined && tilingResolutions != "") {        
+        if (mapviewer == "flamingo") {
+            webMapController.getMap().setTilingResolutions(tilingResolutions);
+        }
+        
+        /* Move naar extent */
+        if (bbox) {
+            moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+        } else if (!bbox && fullbbox) {
+            moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+        }
     }
 }
 

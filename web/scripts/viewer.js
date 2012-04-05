@@ -75,7 +75,6 @@ function handler(msg) {
  * Flamingo or OpenLayers. It also registers the events that can be fired.
 */
 function initMapComponent(){
-
     mapviewer = viewerType;
 
     if (window.location.href.indexOf("flamingo")>0)
@@ -98,9 +97,30 @@ function initMapComponent(){
             maxBounds = new OpenLayers.Bounds(12000,304000,280000,620000);
         }
         
-        /* TODO: Aanpassen maxBounds aan huidig beeldscherm verhoudingen */
+        /* Aanpassen maxBounds aan huidige beeldscherm verhoudingen */
+        var oldMapWidth = maxBounds.right - maxBounds.left;
+        var oldMapHeight = maxBounds.top - maxBounds.bottom;
         
-        /* Resoluties klaarzetten */
+        var screenWidth = $j("#mapcontent").width();
+        var screenHeight = $j("#mapcontent").height() + defaultdataframehoogte + 75;        
+        
+        var ratio = screenWidth / screenHeight;
+        
+        // calc new map height
+        if (ratio < (oldMapWidth / oldMapHeight)) { 
+            var newHeight = oldMapWidth / ratio;
+            maxBounds.bottom = maxBounds.bottom - ((newHeight-oldMapHeight) / 2);
+            maxBounds.top = maxBounds.bottom + newHeight;
+        // calc new map width
+        } else { 
+            var newWidth = oldMapHeight * ratio;
+            maxBounds.left = maxBounds.left - ((newWidth - oldMapWidth) / 2);
+            maxBounds.right = maxBounds.left + newWidth;
+        }
+
+        var newMapWidth = maxBounds.right - maxBounds.left;
+            
+        /* Alle tiling resoluties in een lijst zetten */
         var olRes;
         if (tilingResolutions) {
             var res = tilingResolutions.trim();
@@ -123,37 +143,16 @@ function initMapComponent(){
             olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
         }
         
-        /* resoluties die buiten maxBounds vallen niet op map zetten */
+        /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
         if (tilingResolutions) {            
             /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
              * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
              * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
             */
-            var width = $j("#mapcontent").width();
-            var height = $j("#mapcontent").height();
-            
-            var minx = maxBounds.left;
-            var maxx = maxBounds.right;
-            
-            var miny = maxBounds.bottom;
-            var maxy = maxBounds.top;
-            
-            var mapBreedte = maxx - minx;
-            var mapHoogte = maxy - miny;
-            
-            var resolutionX = mapBreedte / width;  
-            var resolutionY = mapHoogte / height; 
+            var resolution = newMapWidth / screenWidth;
             
             var dpm = 72 / 0.0254;
-            var scale = (resolutionX * dpm) / 1000;
-            
-            console.log("Full extent: " + maxBounds);
-            console.log("Breedte: " + width);
-            console.log("Hoogte: " + height);
-            console.log("Info: " + defaultdataframehoogte);
-            console.log("ResolutionX: " + resolutionX);
-            console.log("ResolutionY: " + resolutionY);
-            console.log("Scale: " + scale);
+            var scale = (resolution * dpm) / 1000;
             
             var newList = new Array();
             var counter = 0;            
@@ -164,16 +163,12 @@ function initMapComponent(){
                 }
             }
             
-            //olRes = newList;
-            
-            console.log("New resoluties: " + olRes);
+            olRes = newList;
         }
         
         var opt = {
             projection: new OpenLayers.Projection("EPSG:28992"),
             maxExtent: maxBounds,
-            //maxResolution: 215.04,
-            //restrictedExtent: maxBounds,
             resolutions: olRes,
             allOverlays: true,
             units : 'm',            
@@ -2270,12 +2265,19 @@ function refreshLayer(doRefreshOrder) {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-    //TODO: WebMapController
-    //webMapController.getMap().refreshLayerOrder();
+        //TODO: WebMapController
+        //webMapController.getMap().refreshLayerOrder();
     }
-    //    flamingoController.getMap().update();
+    
+    // flamingoController.getMap().update();
 
     var lagen = webMapController.getMap().getAllVectorLayers();
+    var tilingLayers = webMapController.getMap().getAllTilingLayers();
+    
+    if (tilingLayers) {
+        lagen.concat(tilingLayers);
+    }
+    
     var totalLayers = webMapController.getMap().getLayers().length;
     for(var p = 0 ; p < lagen.length;p++){
         var laag = lagen[p];

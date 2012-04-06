@@ -117,7 +117,10 @@ function initMapComponent(){
             maxBounds.left = maxBounds.left - ((newWidth - oldMapWidth) / 2);
             maxBounds.right = maxBounds.left + newWidth;
         }
-
+        
+        //fullbbox = maxBounds.left + "," + maxBounds.bottom + "," + maxBounds.right + "," + maxBounds.top;
+        //bbox = maxBounds.left + "," + maxBounds.bottom + "," + maxBounds.right + "," + maxBounds.top;
+        
         var newMapWidth = maxBounds.right - maxBounds.left;
             
         /* Alle tiling resoluties in een lijst zetten */
@@ -2320,7 +2323,13 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         options["FORMAT"]=tileItem.tileFormat;
         options["SRS"]=tileItem.tileSrs;
         options["BBOX"]=tileItem.tileBoundingBox;
+        
+        if (mapviewer == "openlayers" && tilingResolutions) {
+            options["serverResolutions"] = tilingResolutions;
+        }
+        
         options["RESOLUTIONS"]=tileItem.resolutions;
+        
         options["TILEHEIGHT"]=tileItem.tileHeight;
         options["TILEWIDTH"]=tileItem.tileWidth;
         

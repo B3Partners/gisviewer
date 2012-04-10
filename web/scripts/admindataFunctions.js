@@ -676,8 +676,46 @@ function createTableTd(waarde) {
     if(waarde.type == 'TYPE_DATA') {
         if (!waarde.value) {
             td.html("-");
-        } else {
-            td.html(waarde.value);
+        } else {            
+            /* In data .html vervangen door klikbare links. Gebruiken voor vervangen 
+             * komma gescheiden html links in verwijzingNaarTekst */
+            var links;
+            var html = "";
+            var type;
+            var imgHtml;
+            if (waarde.value.indexOf(".htm") != -1 || waarde.value.indexOf(".htm") != -1 ||
+                waarde.value.indexOf(".pdf") != -1) {                
+                links = waarde.value.trim().split(",");
+                
+                if (links) {
+                    html = "";
+                    for (var i in links) {
+                        if (links[i].indexOf("t_") != -1) {
+                            type = "toelichting";
+                        } else if (links[i].indexOf("tb_") != -1) {
+                            type = "bijlagen bij toelichting";
+                        } else if (links[i].indexOf("r_") != -1) {
+                            type = "regels";
+                        } else if (links[i].indexOf("rb_") != -1) {
+                            type = "bijlagen";
+                        } else{
+                            type = links[i];
+                        }
+                        
+                        if (links[i].indexOf(".pdf") != -1) {
+                            imgHtml = "<img src=" + pdficon + " alt=\""+type+"\" title=\"" +type+ "\" border=0>";
+                        } else {
+                            imgHtml = "<img src=" + urlicon + " alt=\""+type+"\" title=\"" +type+ "\" border=0>";
+                        }                        
+                        
+                        html += " <a href=" + links[i] + " target=_blank>" + imgHtml + "</a>";
+                    }   
+                    
+                    td.html(html);
+                }
+            } else {
+                td.html(waarde.value);
+            }
         }
     }
 

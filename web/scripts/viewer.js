@@ -2746,10 +2746,9 @@ function createLegendDiv(item) {
         div.style.display="none";
     } // end
 
-    if (item.legendurl != undefined){        
+    if (item.legendurl != undefined) {        
         myImage.src = item.legendurl;
-        //from now the image is loading
-        loadingLegendImages[id]=myImage;
+        loadingLegendImages[id]=myImage;        
     } else {
         myImage.onerror();
     }
@@ -2851,7 +2850,7 @@ function loadNextInLegendImageQueue(){
     }
 }
 function resetLegendImageQueue(){
-    loadingLegendImages= new Object();
+    //loadingLegendImages= new Object();
     legendImageQueue = new Array();
     legendImageLoadingSpace=2;
 }
@@ -2910,7 +2909,8 @@ function refreshMapVolgorde() {
 }
 
 function refreshLegendBox() {    
-	resetLegendImageQueue();
+    resetLegendImageQueue();
+    
     webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
@@ -2954,7 +2954,9 @@ function refreshLegendBox() {
     if (visibleLayerItems.length>0) {
         enabledLayerItems = enabledLayerItems.concat(visibleLayerItems);
     }
+    
     resetLegendImageQueue();
+    
     for (var j=0; j<enabledLayerItems.length; j++){
         item = enabledLayerItems[j];
         addLayerToLegendBox(item, false);

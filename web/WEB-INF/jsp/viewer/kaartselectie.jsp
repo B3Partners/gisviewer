@@ -369,8 +369,10 @@
         /* Viewernaam indien leeg voor invullen */
         var viewerNaamCheck = $j("#kaartNaam").val();
         
-        if (viewerNaamCheck !== undefined && viewerNaamCheck != "") {
-            $j("#kaartNaam").val("<vul hier uw viewernaam in>");
-        }
+        <c:if test="${currentAppReadOnly == '1'}">
+            if (viewerNaamCheck !== undefined && viewerNaamCheck != "") {
+                $j("#kaartNaam").val("<vul hier uw viewernaam in>");
+            }
+        </c:if>
     });
 </script>

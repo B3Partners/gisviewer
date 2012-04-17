@@ -2018,12 +2018,18 @@ function isItemInScale(item,scale){
     }
     
     /* Schaal check voor Tiling lagen */
-    if (item.resolutions) {      
-        var res = item.resolutions.trim();
-        
+    if (item.resolutions || item.PRINTRESOLUTIONS) {
         var list;
-        list = res.split(" ");
+        var res;
         
+        if (item.PRINTRESOLUTIONS) {
+            res = item.PRINTRESOLUTIONS.trim();
+        } else {
+            res = item.resolutions.trim();
+        }        
+        
+        list = res.split(" ");
+
         if (list && list.length < 1) {
             list = res.split(",");
         }
@@ -3463,8 +3469,16 @@ function getTilingLayer() {
 
     /* tiling layers toevoegen */
     for (var j=0; j < layers.length; j++) {
+        var currentscale = webMapController.getMap().getScaleHint();
+        var item = layers[j].getFrameworkLayer();
+        var inScale = isItemInScale(item, currentscale);
+        
+        if (!inScale) {
+            continue;
+        }
+        
         var bbox = layers[j].getOption("BBOX");
-        var resolutions = layers[j].getOption("RESOLUTIONS");
+        var resolutions = layers[j].getOption("PRINTRESOLUTIONS");
         var tileWidth = layers[j].getOption("TILEWIDTH");
         var tileHeight = layers[j].getOption("TILEHEIGHT");
         

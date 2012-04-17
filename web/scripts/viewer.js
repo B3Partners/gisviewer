@@ -173,8 +173,9 @@ function initMapComponent(){
             projection: new OpenLayers.Projection("EPSG:28992"),
             maxExtent: maxBounds,
             resolutions: olRes,
+            //numZoomLevels: olRes.length-1,
             allOverlays: true,
-            units : 'm',            
+            units : 'meters',            
             controls : [new OpenLayers.Control.Navigation({
                     zoomBoxEnabled: false
                 }),new OpenLayers.Control.ArgParser()]
@@ -1992,7 +1993,7 @@ function checkScaleForLayers() {
  * @param scale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
  * @return boolean wel of niet zichtbaar in scale.
  **/
-function isItemInScale(item,scale){
+function isItemInScale(item,scale) {    
     var itemVisible = true;
     
     if (item.children) {
@@ -2603,7 +2604,7 @@ function getLayerIdsAsString(onlyWithinScale) {
                 continue;
         }
         if (onlyWithinScale){
-            var currentscale = webMapController.getMap().getResolution();
+            var currentscale = webMapController.getMap().getScaleHint();
             if (!isItemInScale(enabledLayerItems[i],currentscale)){
                 continue;
             }

@@ -3582,7 +3582,7 @@ function b_getfeatures(id,event) {
     }
 }
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
-function b_buffer(id, event) {
+function b_buffer(id, event) {    
     var wkt;
 
     /* Indien door highlight de global var is gevuld deze
@@ -3884,9 +3884,11 @@ function onGetCapabilities (id,params){
 }
 
 //do only ones.
-var initialized=false;
+var initialized = false;
 function onConfigComplete(id,params){
-    if (!initialized) {        
+    if (!initialized) {
+        initialized = true;
+    
         initializeButtons();
         checkDisplayButtons();
 
@@ -3894,8 +3896,6 @@ function onConfigComplete(id,params){
         // nu niet meer met flamingoevent
         onFrameworkLoaded();
     }
-
-    initialized=true;
 }
 
 function getBookMark() {    

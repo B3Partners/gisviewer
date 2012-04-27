@@ -51,12 +51,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </html:link>
 
     <c:set var="stijlklasse" value="menulink" />
-    <c:if test="${requestJSP eq 'viewer.do'}">
-        <c:set var="stijlklasse" value="activemenulink" />
-    </c:if>
-    <html:link page="/viewer.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
-
-    <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>

@@ -374,7 +374,7 @@ function handleInitSearch(list){
  * @param visibleValue Displays this value for the result. If none is provided
  * the result id is displayed instead.
 */
-function handleInitSearchResult(result,action,themaId,clusterId,visibleValue){
+function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {    
     var doZoom= true;
     var doHighlight=false;
     var doFilter=false;
@@ -3116,7 +3116,7 @@ function layerBoxSort(a, b) {
 
 var frameWorkInitialized = false;
 
-function onFrameworkLoaded(){
+function onFrameworkLoaded(){    
     if (document.getElementById("treeForm") && (ieVersion <= 8 && ieVersion != -1)){
         document.getElementById("treeForm").reset();
     }
@@ -3195,15 +3195,17 @@ function ie6_hack_onInit(){
         }
     }
 }
-function moveToExtent(minx,miny,maxx,maxy) {     
+
+function moveToExtent(minx,miny,maxx,maxy) {    
     webMapController.getMap().zoomToExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
         maxy:maxy
-    }, 0);
+    }, 0);   
 }
-function setFullExtent(minx,miny,maxx,maxy) {
+
+function setFullExtent(minx,miny,maxx,maxy) {    
     webMapController.getMap().setMaxExtent({
         minx:minx,
         miny:miny,
@@ -3227,7 +3229,7 @@ function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
     nextIdentifyExtent.maxy=maxy;
 }
 
-function moveAndIdentify(minx,miny,maxx,maxy){
+function moveAndIdentify(minx,miny,maxx,maxy) {    
     moveToExtent(minx,miny,maxx,maxy);
     var centerX=Number(Number(Number(minx)+Number(maxx))/2);
     var centerY=Number(Number(Number(miny)+Number(maxy))/2);
@@ -3879,13 +3881,13 @@ function checkDisplayButtons() {
     }
 }
 
-function onGetCapabilities (id,params){
+function onGetCapabilities(id,params){    
     hideLoading();
 }
 
 //do only ones.
 var initialized = false;
-function onConfigComplete(id,params){
+function onConfigComplete(id,params){    
     if (!initialized) {
         initialized = true;
     

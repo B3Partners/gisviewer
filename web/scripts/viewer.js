@@ -2231,13 +2231,18 @@ function refreshLayer(doRefreshOrder) {
     for (i=0; i<layerGroups.length; i++){
         layerGroup = layerGroups[i];
         var layerId = layerGroup[0];
+        
+        //console.log('Looping groep: ' + layerId);
+        
         if (webMapController.getMap().getLayer(layerId)==null){
             layerGroup.splice(0,1); // verwijder eerste element
             
             for (k=0; k < layerGroup.length; k++) {
+                //console.log('Looping laag: ' + layerId);
+                
                 /* eigen wms layer */
                 if (layerGroup[k].serviceid != undefined) {
-                    var lName = layerGroup[k].name;
+                    var lName = layerGroup[k].name;                    
                     var lUrl = layerGroup[k].service_url;
                     var layers = new Array();
                     layers[0] = layerGroup[k];
@@ -2263,6 +2268,8 @@ function refreshLayer(doRefreshOrder) {
                 doRefreshOrder=true;
             }
         }
+        
+        //console.log('End looping layer: ' + layerId);
     }
 
     hideLoading();
@@ -2319,7 +2326,7 @@ function layersOnlyHaveDefaultStyles(layerItems) {
     return true;
 }
 
-function addLayerToViewer(lname, layerUrl, layerItems) {    
+function addLayerToViewer(lname, layerUrl, layerItems) {       
     //tiling layer
     if (layerItems.length==1 && layerItems[0].tiled){
         var options=new Object();
@@ -2555,6 +2562,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 
         newLayer.setMapTips(maptips);
+        
         webMapController.getMap().addLayer(newLayer);//false, true, false
     }
 }

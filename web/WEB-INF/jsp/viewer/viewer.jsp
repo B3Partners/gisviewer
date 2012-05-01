@@ -534,9 +534,10 @@
     <form action="" id="volgordeForm">
         <div id="volgordevak" style="display: none;" class="tabvak">
             <div id="orderLayerBox" class="orderLayerBox tabvak_groot"></div>
-
+            
             <%--
-            <div>Bepaal de volgorde waarin de kaartlagen getoond worden</div>
+            <p>Bepaal de volgorde waarin de kaartlagen getoond worden</p>
+            
             <div>
                 <script type="text/javascript">
                     if(!useSortableFunction) {
@@ -547,6 +548,7 @@
                 </script>
             </div>
             --%>
+            
         </div>
     </form>
 

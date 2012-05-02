@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-app 
+    xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+        
     <!-- Localization context voor o.a. de <fmt:message> JSTL tag -->
     <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
@@ -41,6 +46,7 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    
     <servlet>
         <servlet-name>xmlsecuritydatabase</servlet-name>
         <servlet-class>nl.b3p.commons.security.XmlSecurityDatabase</servlet-class>
@@ -50,6 +56,7 @@
         </init-param>
         <load-on-startup>3</load-on-startup>
     </servlet>
+    
     <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
@@ -67,33 +74,24 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    
     <servlet>
         <servlet-name>Data2CSV</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.Data2CSV</servlet-class>
     </servlet>
+    
     <servlet>
-        <servlet-name>CreateMapPDF</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.services.CreateMapPDF</servlet-class>
+        <servlet-name>CreateImageServlet</servlet-name>
+        <servlet-class>nl.b3p.combineimages.CreateImageServlet</servlet-class>
         <init-param>
-            <param-name>addFooter</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>logoPath</param-name>
-            <param-value>/images/barneveld/bg_top_bv.gif</param-value>
-        </init-param>
-        <init-param>
-            <param-name>extraImagePath</param-name>
-            <param-value>/images/barneveld/noordpijl.png</param-value>
-        </init-param>
-        <init-param>
-            <param-name>disclaimer</param-name>
-            <param-value>- Aan deze afdruk kunnen geen rechten worden ontleend -</param-value>
+            <param-name>maxResponseTime</param-name>
+            <param-value>30000</param-value>
         </init-param>
     </servlet>
-	 <servlet>
+
+    <servlet>
         <servlet-name>PrintServlet</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>        
+        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>
         <init-param>
             <param-name>xsl_A4_Staand</param-name>
             <param-value>/WEB-INF/xsl/A4_Staand.xsl</param-value>
@@ -112,18 +110,22 @@
         </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>
-
-    <servlet-mapping>
-        <servlet-name>PrintServlet</servlet-name>
-        <url-pattern>/services/PrintServlet</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
+    
+    <servlet>
         <servlet-name>SearchAutocomplete</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.SearchAutocomplete</servlet-class>
     </servlet>
-	
-	<servlet>
+
+    <servlet>
+        <servlet-name>dwr-invoker</servlet-name>
+        <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </servlet>
+    
+    <servlet>
         <servlet-name>DispatcherServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.DispatcherServlet</servlet-class>
         <init-param>
@@ -140,13 +142,13 @@
         </init-param>
         <load-on-startup>5</load-on-startup>
     </servlet>
-
+    
     <servlet>
         <servlet-name>DownloadServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
         <init-param>
             <param-name>downloadPath</param-name>
-            <param-value>C:/srv/downloads/</param-value>
+            <param-value>C:\srv\downloads</param-value>
         </init-param>
         <init-param>
             <param-name>smtpHost</param-name>
@@ -154,60 +156,55 @@
         </init-param>
         <init-param>
             <param-name>contactEmail</param-name>
-            <param-value>support@b3partners.nl</param-value>
+            <param-value>info@b3partners.nl</param-value>
         </init-param>
-		<init-param>
+        <init-param>
             <param-name>emailSuffix</param-name>
-            <param-value>@nieuwegein.nl</param-value>
+            <param-value></param-value>
         </init-param>
         <load-on-startup>6</load-on-startup>
     </servlet>
-	
-	<servlet-mapping>
-        <servlet-name>SearchAutocomplete</servlet-name>
-        <url-pattern>/viewer/SearchAutocomplete.do</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DownloadServlet</servlet-name>
-        <url-pattern>/services/DownloadServlet</url-pattern>
-    </servlet-mapping>
     
     <servlet>
         <servlet-name>UserLayerSld</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.UserLayerSldServlet</servlet-class>
     </servlet>    
-    <servlet-mapping>
-        <servlet-name>UserLayerSld</servlet-name>
-        <url-pattern>/services/createUserSld</url-pattern>
-    </servlet-mapping>
-	
+
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>dwr-invoker</servlet-name>
-        <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
-        </init-param>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>dwr-invoker</servlet-name>
         <url-pattern>/dwr/*</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CreateMapPDF</servlet-name>
-        <url-pattern>/services/CreateMapPDF</url-pattern>
+        <servlet-name>CreateImageServlet</servlet-name>
+        <url-pattern>/CreateImage</url-pattern>
+    </servlet-mapping>    
+    <servlet-mapping>
+        <servlet-name>SearchAutocomplete</servlet-name>
+        <url-pattern>/viewer/SearchAutocomplete.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrintServlet</servlet-name>
+        <url-pattern>/services/PrintServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/services/DownloadServlet</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>UserLayerSld</servlet-name>
+        <url-pattern>/services/createUserSld</url-pattern>
+    </servlet-mapping>
+    
     <session-config>
         <session-timeout>
             480

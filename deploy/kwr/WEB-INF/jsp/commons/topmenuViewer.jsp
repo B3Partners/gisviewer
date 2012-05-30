@@ -54,6 +54,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
     <html:link page="/indexlist.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
+    
+    <tiles:insert name="loginblock"/>
 </div>
 
 

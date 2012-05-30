@@ -140,7 +140,7 @@ blokken -->
                 </c:if>
                 <c:if test="${not found}">
                     <li><fmt:message key="algemeen.home.themas.geengevonden"/></li>
-                    <li><fmt:message key="algemeen.home.themas.linknaarviewer"/><html:link page="/viewer.do"><fmt:message key="algemeen.home.themas.viewer"/></html:link>.</li>
+                    <li><fmt:message key="algemeen.home.themas.linknaarviewer"/> <html:link page="/viewer.do"><fmt:message key="algemeen.home.themas.viewer"/></html:link>.</li>
                 </c:if>
             </ol>
 

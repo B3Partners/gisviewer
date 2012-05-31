@@ -31,6 +31,10 @@
         <put name="title" value="Help" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
     </definition>
+    <definition name="kwrprojecten" extends="algemeen">
+        <put name="title" value="Projecten" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/kwrprojecten.jsp"/>
+    </definition>
     <definition name="home" extends="algemeen">
         <put name="title" value="Home" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>

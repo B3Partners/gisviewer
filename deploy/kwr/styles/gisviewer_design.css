@@ -223,12 +223,13 @@ a:hover{
 
 /* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
 #content_style, #content_style h1, #content_style h2, #content_style div, #content_style td, #content_style th, #content_style a, #content_style li {
-    color: #666666;
+    color: #333333;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
 #content_style hr {
-    color: #666666;
-    background-color: #666666;
+    color: #333333;
+    background-color: #333333;
     border: 0px none;
     height: 1px;
     width: 100%;
@@ -245,15 +246,8 @@ a:hover{
 }
 
 #content_style div.inleiding {
-    background-color: #eee4d0;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
-    font-weight: bold;
     width: 440px;
-    margin-left: -15px;
-    color: #666666;
+    color: #333333;
 }
 
 .loadingMessage{
@@ -270,43 +264,38 @@ a:hover{
 
 #content_style h1 {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: normal;
     text-decoration: none;
     font-style: normal;
     margin-left: 0px;
     margin-bottom: 15px;
-    color: #666666;
+    color: Black;
+    font-family: Georgia, serif;
 }
 
 #content_style h2 {
     font-size: 14px;
-    font-weight: bold;
+    font-weight: normal;
     text-decoration: none;
     font-style: normal;
-    margin-bottom: 0px;
-    margin-top: 15px;
-    color: #666666;
-}
-
-#content_style div.inleiding h2 {
-    margin-top: 0px;
-    
+    margin-bottom: 3px;
+    margin-top: 20px;
+    color: #216F83;
 }
 
 #content_style img {
-    border: 1px solid #666666;
+    border: 1px solid #333333;
     padding: 4px;
 }
 
 #content_style a {
-    text-decoration: underline;
-    font-weight: bold;
-    color: #666666;
+    text-decoration: none;
+    font-weight: normal;
+    color: #227083;
 }
 
 #content_style a:hover {
-    color: #eee4d0;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 #content_style .presentation_table {
@@ -576,43 +565,57 @@ body.pdfExportClass {
 
 .content_block a {
     padding-top: 5px;
+    color: #227083;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.content_block a.menulink {
+    color: White;
+}
+
+.content_block a.menulink:hover {
     color: #666666;
+    text-decoration: none;
+}
+
+.content_block a:hover {
     text-decoration: underline;
 }
 
 .content_title {
     font-size: 1.5em;
-    font-weight: bold;
-    color: White;
+    color: Black;
     margin-top: 15px;
     padding-bottom: 10px;
+    font-family: Georgia, serif;
 }
 
 .inleiding_body {
-    background-color: #eee4d0;
-    padding-left: 10px;
-    padding-right: 10px;
+    background-color: White;
     padding-top: 2px;
-    padding-bottom: 2px;
-    color: #666666;
-    font-weight: bold;
+    color: #333333;
     min-height: 180px;
-    
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px 8px 8px 8px;
-    -webkit-box-shadow: #666 0px 2px 3px;
-    -moz-box-shadow: #666 0px 2px 3px;
-    box-shadow: #666 0px 2px 3px;
-    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#eee4d0), to(#ddd4c1));
-    background: -moz-linear-gradient(#eee4d0, #ddd4c1);
-    background: -ms-linear-gradient(top, #eee4d0, #ddd4c1);
-    background: -o-linear-gradient(top, #eee4d0, #ddd4c1);
-    background: linear-gradient(#eee4d0, #ddd4c1);
+    padding-bottom: 10px;
+    border-bottom: 1px solid #EAF4F5;
+    margin-bottom: 10px;
+}
+
+.inleiding_body input {
+    width: 290px;
+    background-color: #FEFBF4;
+    border: 1px solid #EFE4D0;
+    height: 20px;
+    padding: 5px;
+    -o-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .content_block_tab .inleiding_body {
-    color: #666666;
+    color: #333333;
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px 0px 0px 0px;

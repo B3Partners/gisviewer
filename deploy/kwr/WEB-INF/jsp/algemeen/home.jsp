@@ -72,7 +72,7 @@
             <form id="loginForm" action="j_security_check" method="POST">
             <table>
                 <tr>
-                    <td><fmt:message key="algemeen.login.gebruikersnaam"/></td>
+                    <td style="width: 145px;"><fmt:message key="algemeen.login.gebruikersnaam"/></td>
                     <td><input class="inputfield" type="text" name="j_username" size="36"></td>
                 </tr>
                 <tr>
@@ -80,20 +80,25 @@
                     <td><input class="inputfield" type="password" name="j_password" size="36"></td>
                 </tr>
                 <tr>
-                    <td>of code</td>
+                    <td>Code</td>
                     <td><input class="inputfield" type="text" name="j_code" size="36"></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
-                    <td><input class="inlogbutton" type="Submit" value="<fmt:message key="algemeen.login.login"/>"></td>
+                    <td><input class="inlogbutton" type="Submit" id="loginsubmit" value="<fmt:message key="algemeen.login.login"/>"></td>
                 </tr>
             </table>
             </form>
 			</p>
             <script type="text/javascript">
-                <!--
                 document.forms.loginForm.j_username.focus();
-                // -->
+                (function($) {
+                    var $link = $('<a href="#" class="menulink" style="float: left;">Inloggen</a>').click(function(event) {
+                        $('#loginForm').submit();
+                        event.preventDefault();
+                    });
+                    $('#loginsubmit').hide().parent().append($link);
+                })(jQuery);
             </script>
             
         </div>

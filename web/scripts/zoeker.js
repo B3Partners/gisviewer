@@ -303,7 +303,7 @@ function performSearch() {
 
     showTabvakLoading('Bezig met zoeken');
     $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
-
+    webMapController.getMap().removeMarker("searchResultMarker");
     JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,searchCallBack);
 }
 
@@ -313,6 +313,10 @@ function handleZoekResultaat(searchResultId){
     //zoom naar het gevonden object.(als er een bbox is)
     if (searchResult.minx != 0 && searchResult.miny != 0 && searchResult.maxx != 0 && searchResult.maxy) {
         moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
+        var x =(searchResult.maxx + searchResult.minx)/2;
+        var y = (searchResult.maxy + searchResult.miny)/2;
+        webMapController.getMap().removeMarker("searchResultMarker");
+        webMapController.getMap().setMarker("searchResultMarker", x,y);
     }
     
     //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan een ouder heeft.

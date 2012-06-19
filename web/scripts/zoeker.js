@@ -491,6 +491,7 @@ function searchConfigurationsSelectChanged(element){
 function clearConfigurationsSelect(container) {
     currentSearchSelectId = "";
     container.html("");
+    zoekconfiguratieThemas = null;
 }
 
 function fillSearchDiv(container, zoekVelden, zoekStrings) {

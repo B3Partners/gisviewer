@@ -478,6 +478,8 @@ function searchConfigurationsSelectChanged(element){
 //    } else
     if(!element ||element.val()==""){
         clearConfigurationsSelect(container);
+        var resultsContainer=$j("#searchResults");
+        clearConfigurationsSelect(resultsContainer);
         return;
     }
     currentSearchSelectId=element.val();

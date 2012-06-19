@@ -491,6 +491,7 @@ function searchConfigurationsSelectChanged(element){
 function clearConfigurationsSelect(container) {
     currentSearchSelectId = "";
     container.html("");
+    webMapController.getMap().removeMarker("searchResultMarker");
     zoekconfiguratieThemas = null;
 }
 

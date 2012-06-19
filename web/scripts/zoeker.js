@@ -309,7 +309,8 @@ function performSearch() {
 
 function handleZoekResultaat(searchResultId){
     var searchResult = foundValues[searchResultId];
-
+    // Zet alle lagen aan die geconfigureerd staan bij deze zoekingang.
+    switchLayersOn();
     //zoom naar het gevonden object.(als er een bbox is)
     if (searchResult.minx != 0 && searchResult.miny != 0 && searchResult.maxx != 0 && searchResult.maxy) {
         moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
@@ -438,7 +439,23 @@ function searchCallBack(values){
     }
 
 }
+var zoekconfiguratieThemas = null;
+function zoekconfiguratieThemasCallBack(themaIds){
+    zoekconfiguratieThemas = new Array();
+    for ( var i = 0 ; i < themaIds.length ;i++ ){
+        var themaId = themaIds[i];
+        zoekconfiguratieThemas.push(themaId);
+    }
+}
 
+function switchLayersOn(){
+    if(zoekconfiguratieThemas){
+        for ( var i = 0 ; i < zoekconfiguratieThemas.length ;i++ ){
+            var themaId = zoekconfiguratieThemas[i];
+            checkboxOnByid(themaId);
+        }
+    }
+}
 
 function getBboxMinSize2(feature){
     if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
@@ -466,6 +483,7 @@ function searchConfigurationsSelectChanged(element){
     currentSearchSelectId=element.val();
 
     var zc = zoekconfiguraties[currentSearchSelectId];
+    JZoekconfiguratieThemaUtil.getThemas(zc.id,zoekconfiguratieThemasCallBack);
     var zoekVelden=zc.zoekVelden;
     fillSearchDiv(container, zoekVelden, null);
 }

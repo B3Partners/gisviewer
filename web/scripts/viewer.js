@@ -3553,6 +3553,14 @@ function checkboxClickById(id){
     }
 }
 
+function checkboxOnByid(id){
+    var el=document.getElementById(id);
+    if (el) {
+        el.checked=true;
+        checkboxClick(el,false);
+    }
+}
+
 function getWktActiveFeature() {
     var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
 

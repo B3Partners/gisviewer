@@ -47,14 +47,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <![endif]-->
         <!--[if IE]>
         <script type="text/javascript">
-            var iframes = ['objectframeViewer','analyseframeViewer','beschrijvingVakViewer','voorzieningframeZoeker','vergunningframeZoeker','meldingenframeViewer','redliningframeViewer','bagframeViewer'];
             fixTransparentBackgroundIframe = function() {
-                for(i in iframes) {
-                    var iframe = document.getElementById(iframes[i]);
-                    if(iframe) {
-                        iframe.allowTransparency = 'allowtransparency';
-                    }
-                }
+                $j("#tab_container iframe").each(function() {
+                    this.allowTransparency = 'allowtransparency';
+                });
             }
             attachOnload(fixTransparentBackgroundIframe);
         </script>

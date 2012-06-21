@@ -4632,6 +4632,7 @@ $j(document).ready(function() {
     var zoekenTabOn = false;
     var redliningTabOn = false;
     var bagTabOn = false;
+    var wktTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
         if (enabledtabs[i] == "analyse")
@@ -4651,6 +4652,9 @@ $j(document).ready(function() {
 
         if (enabledtabs[i] == "zoeken")
             zoekenTabOn = true;
+        
+        if (enabledtabs[i] == "wkt")
+            wktTabOn = true;
     }
 
     if (analyseTabOn) {
@@ -4674,6 +4678,12 @@ $j(document).ready(function() {
     if (bagTabOn) {
         if(document.getElementById('bagframeViewer')) {
             document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
+        }
+    }
+    
+    if (wktTabOn) {
+        if(document.getElementById('wktframeViewer')) {
+            document.getElementById('wktframeViewer').src='/gisviewer/viewerwkt.do';
         }
     }
 

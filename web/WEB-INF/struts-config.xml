@@ -222,6 +222,12 @@
             <forward name="success" path="download"/>
             <forward name="failure" path="download"/>
         </action>
+        
+        <action path="/viewerwkt" type="nl.b3p.gis.viewer.WktAction" scope="request" validate="false">
+            <forward name="success" path="viewerwkt"/>
+            <forward name="failure" path="viewerwkt"/>
+        </action>
+        
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

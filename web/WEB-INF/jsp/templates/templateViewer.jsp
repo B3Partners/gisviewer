@@ -55,7 +55,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript">
             fixTransparentBackgroundIframe = function() {
                 $j("#tab_container iframe").each(function() {
-                    //alert(this.name);
                     this.allowTransparency = 'allowtransparency';
                 });
             }

@@ -37,6 +37,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </html:messages>
     </div>
     <div>
-        <!-- content goes here -->
+        Teken een object met de redliningtool. Met onderstaande knop wordt de actieve geometrie in het onderstaande veld gezet. <br/>
+        <input type="button" value="Haal geometrie op" onclick="getActiveWkt()"/> <br/>
+        WKT:
+        <textarea id="activeWkt" style="width: 90%; height:400px;"></textarea>
     </div>
+    <script type="text/javascript">
+        function getActiveWkt(){
+            var wmc = parent.webMapController;
+            var vectorLayer = wmc.getMap().getAllVectorLayers()[0];
+            var feature = vectorLayer.getActiveFeature();
+            var activeWktArea = $j("#activeWkt");
+            activeWktArea.val(feature.wkt);
+        }
+    </script>
 </div>

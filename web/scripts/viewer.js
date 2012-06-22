@@ -52,6 +52,7 @@ var highlightThemaId;
 var multiPolygonBufferWkt;
 var alleLayers = new Array();
 
+var gpsComponent = null;
 /**
  * Start off with initMapComponent()
 */
@@ -324,6 +325,17 @@ function initializeButtons() {
     });
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_layerSelection,b_layerSelection);
     webMapController.addTool(bu_layerSelection);
+    
+    
+    /* GPS tool */
+    var bu_gps= webMapController.createTool("b_gps",Tool.BUTTON, {
+        layer: editLayer,
+        title: 'gps'
+    });
+    gpsComponent = new GPSComponent(gpsBuffer);
+    webMapController.registerEvent(Event.ON_EVENT_UP,bu_gps,gpsComponent.stopPolling);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_gps,gpsComponent.startPolling);
+    webMapController.addTool(bu_gps);
 
     /* Overzichtskaart tool */
     var bu_overview = webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
@@ -3894,6 +3906,12 @@ function checkDisplayButtons() {
         webMapController.getTool("b_layerSelection").setVisible(true);
     } else {
         webMapController.getTool("b_layerSelection").setVisible(false);
+    }
+    
+    if (showGPSTool) {
+        webMapController.getTool("b_gps").setVisible(true);
+    } else {
+        webMapController.getTool("b_gps").setVisible(false);
     }
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent,b_showOverzicht.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true" tooltipdelay="100">
+<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent,b_showOverzicht.onEvent,b_gps.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true" tooltipdelay="100">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     
     <yguide id="my" y="50%"/>
@@ -64,8 +64,14 @@
                     <string id="tooltip" en="print example" nl="printvoorbeeld"/>
                 </fmc:JsButton>
 
-                <fmc:JsButton id="b_layerSelection" left="470" top="0" width="21" height="21" iconurl_up="images/book_open.png" iconurl_over="images/book_open.png" iconurl_sel="images/book_open.png" iconurl_dis="images/book_open.png" label="" toggle="false" visible="false" enabled="true" selected="false">
+                <fmc:JsButton id="b_showOverzicht" left="470" top="0" width="21" height="21" iconurl_up="images/map.png" iconurl_over="images/map.png" iconurl_sel="images/map.png" iconurl_dis="images/map.png" label="" toggle="true" visible="true" enabled="true" selected="false">
+                    <string id="tooltip" en="Show map overview" nl="Toon overzichtskaart"/>
+                </fmc:JsButton>
+                <fmc:JsButton id="b_layerSelection" left="510" top="0" width="21" height="21" iconurl_up="images/book_open.png" iconurl_over="images/book_open.png" iconurl_sel="images/book_open.png" iconurl_dis="images/book_open.png" label="" toggle="false" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="layer selection" nl="kaartselectie"/>
+                </fmc:JsButton>
+                <fmc:JsButton id="b_gps" left="540" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/gps_up.png" iconurl_over="flamingo/assets/jsbtn/gps_up.png" iconurl_sel="flamingo/assets/jsbtn/gps_down.png" iconurl_dis="flamingo/assets/jsbtn/gps_up.png" label="" toggle="true" visible="false" enabled="true" selected="false">
+                    <string id="tooltip" en="Switch GPS location on/off" nl="Zet GPS locatie aan/uit"/>
                 </fmc:JsButton>
             </fmc:Container>
         </fmc:ToolGroup>
@@ -94,6 +100,6 @@
         
         <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" maptipdelay="200" bottom="bottom" visible="true" extent="12000,304000,280000,620000" fullextent="12000,304000,280000,620000" extenthistory="10" >          
             <fmc:LayerIdentifyIcon id="identifyicon" />        
-        </fmc:Map>        
+        </fmc:Map>          
     </fmc:Container>
 </FLAMINGO>

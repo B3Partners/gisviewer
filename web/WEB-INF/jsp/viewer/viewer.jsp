@@ -6,6 +6,7 @@
 <script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js'></script>
 
+<script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
@@ -338,6 +339,16 @@
     var showLayerSelectionTool = catchEmpty(${configMap["showLayerSelectionTool"]});
     if (typeof showLayerSelectionTool === 'undefined') {
         showLayerSelectionTool = false;
+    }
+    
+    var showGPSTool = catchEmpty(${configMap["showGPSTool"]});
+    if (typeof showGPSTool === 'undefined') {
+        showGPSTool = false;
+    }
+    
+    var gpsBuffer = catchEmpty(${configMap["gpsBuffer"]});
+    if (typeof gpsBuffer === 'undefined') {
+        gpsBuffer = false;
     }
 
     var layerGrouping = catchEmpty("${configMap["layerGrouping"]}");
@@ -925,7 +936,7 @@
 </script>
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>
-
+<script type="text/javascript" src="<html:rewrite page="/scripts/GPSComponent.js"/>"></script>
 <script type="text/javascript">
     /* Weghalen als viewer.jsp klaar is */
     if (!waitUntillFullyLoaded) {

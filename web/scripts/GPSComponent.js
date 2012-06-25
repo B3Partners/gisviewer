@@ -34,7 +34,6 @@ function GPSComponent(buffer){
     }
     
     this.once = function(){
-        console.log("Get position");
         navigator.geolocation.getCurrentPosition(gpsComponent.receiveLocation, gpsComponent.errorHandler);
     }
     

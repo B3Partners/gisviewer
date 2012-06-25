@@ -18,6 +18,7 @@
 
 function GPSComponent(buffer){
     this.timeoutId = null;
+    this.interval = 20000;
     if(buffer){
         this.buffer = buffer;
     }
@@ -28,15 +29,17 @@ function GPSComponent(buffer){
     
     this.startPolling = function (){
         // Request repeated updates.
-        gpsComponent.timeoutId = navigator.geolocation.watchPosition(gpsComponent.receiveLocation, gpsComponent.errorHandler);
+        gpsComponent.timeoutId = setInterval(gpsComponent.once,gpsComponent.interval);
+        gpsComponent.once();
     }
     
     this.once = function(){
-        gpsComponent.timeoutId = navigator.geolocation.getCurrentPosition(gpsComponent.receiveLocation, gpsComponent.errorHandler);
+        console.log("Get position");
+        navigator.geolocation.getCurrentPosition(gpsComponent.receiveLocation, gpsComponent.errorHandler);
     }
     
     this.stopPolling = function(){
-        navigator.geolocation.clearWatch(gpsComponent.timeoutId);
+        clearInterval(gpsComponent.timeoutId);
     }
     
     this.receiveLocation = function (location){

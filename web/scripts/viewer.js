@@ -4651,6 +4651,7 @@ $j(document).ready(function() {
     var redliningTabOn = false;
     var bagTabOn = false;
     var wktTabOn = false;
+    var transparantieTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
         if (enabledtabs[i] == "analyse")
@@ -4673,6 +4674,9 @@ $j(document).ready(function() {
         
         if (enabledtabs[i] == "wkt")
             wktTabOn = true;
+        
+        if (enabledtabs[i] == "transparantie")
+            transparantieTabOn = true;
     }
 
     if (analyseTabOn) {
@@ -4702,6 +4706,12 @@ $j(document).ready(function() {
     if (wktTabOn) {
         if(document.getElementById('wktframeViewer')) {
             document.getElementById('wktframeViewer').src='/gisviewer/viewerwkt.do';
+        }
+    }
+    
+    if (transparantieTabOn) {
+        if(document.getElementById('transparantieframeViewer')) {
+            document.getElementById('transparantieframeViewer').src='/gisviewer/viewertransparantie.do';
         }
     }
 

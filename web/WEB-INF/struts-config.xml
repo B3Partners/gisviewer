@@ -228,6 +228,11 @@
             <forward name="failure" path="viewerwkt"/>
         </action>
         
+        <action path="/viewertransparantie" type="nl.b3p.gis.viewer.TransparantieAction" scope="request" validate="false">
+            <forward name="success" path="viewertransparantie"/>
+            <forward name="failure" path="viewertransparantie"/>
+        </action>
+        
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

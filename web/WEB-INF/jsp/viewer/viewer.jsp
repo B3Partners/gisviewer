@@ -299,7 +299,8 @@
         "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" },
         "cms": {id: "cms", contentid: "cmsvak", name: "Extra"},
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"},
-        "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"}
+        "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
+        "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"}
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -665,6 +666,7 @@
     <div id="redliningvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="redliningframeViewer" name="redliningframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="bagvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="bagframeViewer" name="bagframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="wktvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="wktframeViewer" name="wktframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">

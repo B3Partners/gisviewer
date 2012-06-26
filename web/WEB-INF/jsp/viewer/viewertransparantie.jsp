@@ -36,10 +36,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         </html:messages>
     </div>
-    <div>
-        <h2>Stel de transparantie in</h2>
-        <div id="slider" style="width: 250px; float: left;"></div>
+        
+    <div id="transSlider" style="width: 260px; padding-left: 5px;">
+        <p>
+            Versleep de slider om de transparantie van alle voorgrond lagen in te
+            stellen.
+        </p>
+        
+        <div style="float: left; font-size: 22px; padding-right: 3px; margin-top: -8px;">-</div>
+        <div id="slider" style="width: 215px; float: left"></div>
+        <div style="float: left; font-size: 22px; padding-left: 10px; margin-top: -6px;">+</div>
     </div>
+    
     <script type="text/javascript">
         $j(function() {
             $j("#slider").slider({
@@ -61,7 +69,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     l.setOpacity (opacity);
                 }
             }
-            console.log(value);
+            //console.log(value);
         }
     </script>
 </div>

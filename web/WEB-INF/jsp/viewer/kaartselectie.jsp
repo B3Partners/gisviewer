@@ -179,8 +179,8 @@
     <div id="submitPopup" class="kaartlaagselectieSubmitPopup">        
         <c:if test="${currentAppReadOnly == '0'}">
         <p>
-            <input type="radio" name="newkaartoption" value="new" onclick="$j('#name_email').show();" /> opslaan als nieuwe kaart<br />
-            <input type="radio" name="newkaartoption" value="existing" onclick="$j('#name_email').hide();" checked /> bestaande kaart ${kaartNaam} wijzigen
+            <input type="radio" name="newkaartoption" value="new" onclick="$j('#name_email').show();" /> opslaan als nieuwe viewer<br />
+            <input type="radio" name="newkaartoption" value="existing" onclick="$j('#name_email').hide();" checked /> bestaande viewer '${kaartNaam}' wijzigen
         </p>
         </c:if>
 

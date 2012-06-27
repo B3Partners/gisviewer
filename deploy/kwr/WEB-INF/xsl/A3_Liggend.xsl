@@ -100,7 +100,7 @@
                 <xsl:value-of select="datum"/>
             </fo:block>
 
-            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt" font-style="italic">
+            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt">
                 <xsl:value-of select="opmerking"/>
             </fo:block>
 
@@ -142,7 +142,7 @@
 
     <xsl:template name="logo-block">
         <fo:block>
-            <fo:external-graphic src="url('kwr_logo.gif')" width="378px" height="50px"/>
+            <fo:external-graphic src="url('kwr_logo_241x46.png')" width="241px" height="46px"/>
         </fo:block>
     </xsl:template>    
 </xsl:stylesheet>

@@ -16,19 +16,6 @@
 <tiles:insert definition="actionMessages"/>
 
 <div class="content_block">
-	<div class="content_title"><c:out value="Demo"/></div>
-	<div class="inleiding_body">
-		<p>Welkom bij de Demo versie van de KWR GIS Viewer. Deze demo versie is gerealiseerd in het kader van de Pilot KWR GIS Viewer.
-		Voornaamste doel van deze pilot is het laagdrempelig ontsluiten van KWR GIS projecten en geodata voor niet GIS-specialisten.</p>
-
-		<p>De getoonde kaarten zijn alleen ten bate van deze demo beschikbaar en worden gedurende de pilot niet bijgewerkt.</p>
-
-		<p>Gedurende de pilot vind de dienstverlening via een testserver plaats. Deze kan tijdelijk onderbroken worden en de performance
-		is niet altijd optimaal. Als er even geen contact is verzoeken we u het later nog een te proberen.</p>
-	</div>
-</div>
-
-<div class="content_block">
     <c:choose>
         <c:when test="${not empty themalist || not empty clusterlist}">
             <div class="content_title"><fmt:message key="algemeen.home.themas.titel"/></div>

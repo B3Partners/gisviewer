@@ -884,6 +884,7 @@ a.highlightlink:hover{
     position: absolute;
     left: 463px;
     z-index: 1050;
+	margin-top: -15px;
 }
 
 .treeview_image_on {

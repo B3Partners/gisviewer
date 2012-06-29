@@ -49,6 +49,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
         <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
     </html:link>
+	
+	<c:set var="stijlklasse" value="menulink" />
+    <c:if test="${requestJSP eq 'viewer.do'}">
+        <c:set var="stijlklasse" value="activemenulink" />
+    </c:if>
+    <html:link page="/viewer.do?appCode=${appCode}" styleClass="${stijlklasse}" module="">&#155; Ververs viewer</html:link>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">

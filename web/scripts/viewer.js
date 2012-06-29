@@ -3493,7 +3493,8 @@ function getTilingLayer() {
     /* tiling layers toevoegen */
     for (var j=0; j < layers.length; j++) {
         var currentscale = webMapController.getMap().getScaleHint();
-        var item = layers[j].getFrameworkLayer();
+        var item = getItemByLayer(themaTree,layers[j].layers);
+        //var item = layers[j].getFrameworkLayer();
         var inScale = isItemInScale(item, currentscale);
         
         if (!inScale) {
@@ -4638,6 +4639,28 @@ function getValidLayerId(lname) {
     lname = lname.replace(".", "_");
 
     return lname;
+}
+/**
+ * get the item that has the configuration of this wmslayer string
+ * @param item the item to begin the search
+ * @param layers the layers string of a layer object
+ * @return the item
+ */
+function getItemByLayer(item,layers){
+    if (item.children){
+        for (var i=0; i < item.children.length; i++){
+            var child = item.children[i];
+            if (child.wmslayers && child.wmslayers==layers){
+                return child;
+            }else if (child.children){
+                var foundItem=getItemByLayer(child,layers);
+                if (foundItem!=null){
+                    return foundItem;
+                }
+            }
+        }
+    }
+    return null;        
 }
 
 var popupCreated = false;

@@ -3493,7 +3493,7 @@ function getTilingLayer() {
     /* tiling layers toevoegen */
     for (var j=0; j < layers.length; j++) {
         var currentscale = webMapController.getMap().getScaleHint();
-        var item = getItemByLayer(themaTree,layers[j].layers);
+        var item = getItemByLayer(themaTree,layers[j].options.LAYERS);
         //var item = layers[j].getFrameworkLayer();
         var inScale = isItemInScale(item, currentscale);
         
@@ -3502,7 +3502,7 @@ function getTilingLayer() {
         }
         
         var bbox = layers[j].getOption("BBOX");
-        var resolutions = layers[j].getOption("PRINTRESOLUTIONS");
+        var resolutions = layers[j].getOption("RESOLUTIONS");
         var tileWidth = layers[j].getOption("TILEWIDTH");
         var tileHeight = layers[j].getOption("TILEHEIGHT");
         

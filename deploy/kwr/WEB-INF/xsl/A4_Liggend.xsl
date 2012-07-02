@@ -36,57 +36,40 @@
                     <fo:block-container width="7.6cm" height="2.3cm" top="0cm" left="0cm" background-color="#FFFFFF" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
-
                     <fo:block-container width="6.6cm" height="15.4cm" top="1.6cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="info-block"/>
                     </fo:block-container>
-
                     <fo:block-container width="21.7cm" height="16.2cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block"/>
-                    </fo:block-container>
-                    
+                    </fo:block-container>                    
                     <fo:block-container width="6.6cm" height="4.0cm" top="15.6cm" left="1.5cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="noordpijl-block"/>
                     </fo:block-container>
-
                     <fo:block-container width="20.8cm" height="2.3cm" top="18.3cm" left="6.7cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
-                    </fo:block-container>
-                    
+                    </fo:block-container>                    
                 </fo:flow>
             </fo:page-sequence>
         </fo:root>
     </xsl:template>
+    
+    <xsl:template name="logo-block">
+        <fo:block>
+            <fo:external-graphic src="url('kwr_logo_241x46.png')" width="241px" height="46px"/>
+        </fo:block>
+    </xsl:template>
 
     <xsl:template name="info-block">
-        <fo:block margin-left="0.2cm" font-size="12pt" font-style="bold" font-family="Helvetica">
+        <fo:block margin-left="0.2cm" word-spacing="0.075cm" font-size="11pt" font-family="Tahoma, Verdana" font-weight="bold">
             <xsl:value-of select="titel"/>
         </fo:block>
         
-        <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="10pt" font-style="bold" font-family="Helvetica">
+        <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="8pt" font-family="Tahoma, Verdana" font-weight="bold">
             <xsl:value-of select="datum"/>
         </fo:block>
 
-        <fo:block margin-left="0.2cm" margin-right="0.4cm" margin-top="0.5cm" font-size="8pt" font-family="Helvetica">
+        <fo:block margin-left="0.2cm" margin-right="0.4cm" margin-top="0.5cm" line-height="1.5" font-size="8pt" font-family="Tahoma, Verdana">
             <xsl:value-of select="opmerking"/>
-        </fo:block>
-    </xsl:template>
-    
-    <xsl:template name="noordpijl-block">
-        <fo:block margin-left="1.0cm">
-            <fo:external-graphic src="url('kwr_noordpijl.png')" width="38px" height="38px"/>
-        </fo:block>
-
-        <!-- create scalebar -->
-        <fo:block margin-left="0.2cm" margin-top="0.1cm">
-            <xsl:call-template name="calc-scale">
-                <xsl:with-param name="m-width">
-                    <xsl:call-template name="calc-bbox-width-m-corrected">
-                        <xsl:with-param name="bbox" select="bbox"/>
-                    </xsl:call-template>
-                </xsl:with-param>
-                <xsl:with-param name="px-width" select="$map-width-px"/>
-            </xsl:call-template>
         </fo:block>
     </xsl:template>
     
@@ -117,15 +100,27 @@
         </fo:block-container>
     </xsl:template>
     
+    <xsl:template name="noordpijl-block">
+        <fo:block margin-left="1.0cm">
+            <fo:external-graphic src="url('kwr_noordpijl.png')" width="38px" height="38px"/>
+        </fo:block>
+
+        <!-- create scalebar -->
+        <fo:block margin-left="0.2cm" margin-top="0.1cm">
+            <xsl:call-template name="calc-scale">
+                <xsl:with-param name="m-width">
+                    <xsl:call-template name="calc-bbox-width-m-corrected">
+                        <xsl:with-param name="bbox" select="bbox"/>
+                    </xsl:call-template>
+                </xsl:with-param>
+                <xsl:with-param name="px-width" select="$map-width-px"/>
+            </xsl:call-template>
+        </fo:block>
+    </xsl:template>
+    
     <xsl:template name="disclaimer-block">
         <fo:block margin-left="0cm" margin-top="0.1cm" font-size="8pt" font-style="italic">
             Aan deze kaart kunnen geen rechten worden ontleend.
         </fo:block>
     </xsl:template>
-
-    <xsl:template name="logo-block">
-        <fo:block>
-            <fo:external-graphic src="url('kwr_logo_241x46.png')" width="241px" height="46px"/>
-        </fo:block>
-    </xsl:template>    
 </xsl:stylesheet>

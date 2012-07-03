@@ -1,8 +1,13 @@
-<fop version="0.95">
+<fop version="0.95">    
     <renderers>
         <renderer mime="application/pdf">
             <fonts>
-                <auto-detect/>
+                <font metrics-url="tahoma.xml" kerning="yes" embed-url="tahoma.ttf">
+                    <font-triplet name="Tahoma" style="normal" weight="normal"/>
+                </font>
+                <font metrics-url="fedrasansi.xml" kerning="yes" embed-url="fedrasansi.ttf">
+                    <font-triplet name="FedraSansI" style="normal" weight="normal"/>
+                </font>
             </fonts>
         </renderer>
     </renderers>

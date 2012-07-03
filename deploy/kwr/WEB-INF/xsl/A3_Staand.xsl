@@ -101,15 +101,15 @@
     </xsl:template>
 
     <xsl:template name="info-block">
-        <fo:block margin-left="0.2cm" word-spacing="0.075cm" font-size="11pt" font-family="Tahoma, Verdana" font-weight="bold">
+        <fo:block margin-left="0.2cm" word-spacing="0.075cm" font-size="11pt" font-family="Tahoma" font-weight="bold">
             <xsl:value-of select="titel"/>
         </fo:block>
         
-        <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="8pt" font-family="Tahoma, Verdana" font-weight="bold">
+        <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="8pt" font-family="Tahoma" font-weight="bold">
             <xsl:value-of select="datum"/>
         </fo:block>
 
-        <fo:block margin-left="0.2cm" margin-right="0.4cm" margin-top="0.5cm" line-height="1.5" font-size="8pt" font-family="Tahoma, Verdana">
+        <fo:block margin-left="0.2cm" margin-right="0.4cm" margin-top="0.5cm" line-height="1.5" font-size="8pt" font-family="Tahoma">
             <xsl:value-of select="opmerking"/>
         </fo:block>
     </xsl:template>
@@ -160,7 +160,7 @@
     </xsl:template>
     
     <xsl:template name="disclaimer-block">
-        <fo:block margin-left="0cm" margin-top="0.1cm" font-size="8pt" font-style="italic">
+        <fo:block margin-left="0cm" margin-top="0.1cm" font-size="8pt" font-family="FedraSansI, Tahoma" font-style="italic">
             Aan deze kaart kunnen geen rechten worden ontleend.
         </fo:block>
     </xsl:template>

@@ -59,19 +59,35 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <tiles:insert definition="actionMessages"/>
                     <h1>Help</h1>
 
-                    <h2><fmt:message key="algemeen.help.part2.title"/></h2>
-                    <fmt:message key="algemeen.help.part2.content"/>
+                    <h2>Hoofdelementen van de GIS Viewer</h2>
+					De GIS viewer bestaat uit een kaart met bovenin navigatie knoppen, een aantal tools en rechts een paneel met
+					tabbladen Kaarten, Legenda en Zoeken.
 
-                    <a name="thema"></a><h2><fmt:message key="algemeen.help.part3.title"/></h2>
-                    <fmt:message key="algemeen.help.part3.content"/>
+                    <a name="thema"></a><h2>Tabblad Kaarten</h2>
+					<strong>Kaarten zichtbaar maken</strong><br>
+					Het tabblad Kaarten bestaat uit een uitklapbare boomstructuur met alle selecteerbare
+					kaartlagen. Indien een kaartlaag geen vinkvak heeft dan is de onderliggende dataset niet aangemaakt. 
+					De gebruiker kan de kaartlagen en groepen aan en uitzetten; de kaart wordt dan ververst.
+					
+					<p>Sommige kaartlagen zijn pas zichtbaar vanaf een bepaald zoomniveau om overmatige serverbelasting te voorkomen. 
+					Dit is ook afhankelijk van de achterliggende dataset/service.</p>
+					
+					<p>
+					<strong>Kaartlaaginformatie</strong><br>
+					De kaartlaagnaam in de boom kan een link bevatten naar een metadata pagina.
+					</p>
 
-                    <a name="legenda"></a><h2><fmt:message key="algemeen.help.part4.title"/></h2>
-                    <fmt:message key="algemeen.help.part4.content"/>
-
+                    <a name="legenda"></a><h2>Tabblad Legenda</h2>
+                    Het tabblad legenda bestaat uit een paneel waarop u alle actieve kaartlagen kunt vinden. Bij deze 
+					kaartlagen is een afbeelding geplaatst waarop u kunt zien hoe u de betreffende kaartlaag op de kaart
+					kunt onderscheiden.
                 </td>
+				
                 <td valign="top">
-                    <a name="zoeker"></a><h2><fmt:message key="algemeen.help.part5.title"/></h2>
-                    <fmt:message key="algemeen.help.part5.content"/>
+                    <a name="zoeker"></a><h2>Tabblad Zoeken</h2>
+					Via het zoeken tabblad kunt u zoeken op adressen binnen de BAG. Als u een straatnaam en/of huisnummer
+					invult krijgt u onder het zoekveld een lijst met resultaten. Als u klikt op een van deze resultaten zoomt de
+					viewer naar de bijbehorende locatie. Als er maar 1 resultaat gevonden is zoomt de viewer direct.
                 </td>
             </tr>
         </table>

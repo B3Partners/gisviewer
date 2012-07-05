@@ -55,7 +55,7 @@
     </tr>
     <tr>
         <td>&nbsp;</td>
-        <td><input class="inlogbutton" type="Submit" id="loginsubmit" value="<fmt:message key="algemeen.login.login"/>"></td>
+        <td><input class="inlogbutton" type="submit" id="loginsubmit" value="<fmt:message key="algemeen.login.login"/>"></td>
     </tr>
 </table>
 </form>
@@ -68,6 +68,11 @@
         var $link = $('<a href="#" class="menulink" style="float: left;">Inloggen</a>').click(function(event) {
             $('#loginForm').submit();
             event.preventDefault();
+        });
+        $('.inputfield').keyup(function(e) {
+            if(e.keyCode == 13) { // Enter key
+                $('#loginForm').submit();
+            }
         });
         $('#loginsubmit').hide().parent().append($link);
     })(jQuery);

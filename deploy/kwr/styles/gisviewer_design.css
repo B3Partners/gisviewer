@@ -61,7 +61,7 @@ a.menulink:hover, a.activemenulink, a.activemenulink:visited, a.activemenulink:a
     text-decoration: none;
 }
 
-a.imagemenulink, a.imagemenulink:hover {
+#topmenu a.imagemenulink, #topmenu a.imagemenulink:hover, #topmenu a.imagemenulink:visited, #topmenu a.imagemenulink:active {
     background-image: none;
     padding-top: 0px;
     height: 25px;

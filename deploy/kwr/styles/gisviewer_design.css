@@ -224,7 +224,8 @@ a:hover{
 /* Design voor de content pagina's. Om dit design toe te passen moet er een div tag met ID content_style rond de content worden geplaatst. */
 #content_style, #content_style h1, #content_style h2, #content_style div, #content_style td, #content_style th, #content_style a, #content_style li {
     color: #333333;
-    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-family: Arial, "Trebuchet MS", Helvetica, sans-serif;
+	font-size: 12px;
 }
 
 #content_style hr {
@@ -587,7 +588,7 @@ body.pdfExportClass {
     font-size: 1.5em;
     color: Black;
     margin-top: 15px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     font-family: Georgia, serif;
 }
 
@@ -599,6 +600,19 @@ body.pdfExportClass {
     padding-bottom: 10px;
     border-bottom: 1px solid #EAF4F5;
     margin-bottom: 10px;
+	font-size: 12px;
+	padding-top: 5px;
+}
+
+.inleiding_body img {
+	width: 211px;
+	height: 158px;
+	border-width: 1px;
+	border-style: solid;
+	margin: 5px;
+	margin-left: 0px; !important;
+	margin-right: 15px; !important;
+	float:left;
 }
 
 .inleiding_body input {

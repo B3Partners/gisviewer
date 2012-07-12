@@ -29,46 +29,54 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <html:html>
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
-        
+
         <title><tiles:insert name='title'/> - KWR GIS Viewer</title>
-        <link href="styles/gisviewer_basisimport.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
+        <link href="styles/gisviewer_viewerimport.css" rel="stylesheet" type="text/css">        
+        
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
-        <link href="styles/jcarousel/skin.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.jcarousel.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.mousewheel.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.qtip-1.0.0-rc3.min.js' module=''/>"></script>
+        <script type="text/javascript" src="scripts/jquery.blockUI.js"></script>
+        
+        <script type="text/javascript" src="scripts/commonfunctions.js"></script>
+
         <!--[if lte IE 6]>
             <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
         <![endif]-->
         <!--[if lte IE 7]>
             <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
+            <script type="text/javascript" src="scripts/cssfixes_ie.js"></script>
+            <script type="text/javascript" src="scripts/jquery.bgiframe.min.js"></script>
         <![endif]-->
-        <!--[if lte IE 8]>
-            <link href="styles/gisviewer_ie8.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
+        
         <script type="text/javascript">
             attachOnload(checkLocation);
         </script>
+        <!--[if  lte IE 8]>
+        <script type="text/javascript">
+            fixTransparentBackgroundIframe = function() {
+                $j("#tab_container iframe").each(function() {
+                    this.allowTransparency = 'allowtransparency';
+                });
+            }
+            attachOnload(fixTransparentBackgroundIframe);
+        </script>
+        <![endif]-->
     </head>
-    <body class="homebody">
-        <div id="wrapper">
-            <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
-            <div id="content_normal">
-                <div id="content">
-                    <tiles:insert attribute="content" />
+    <body class="viewerbodyelement">
+        <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
+        <div id="loadingscreen">
+            <div id="loadingfilter">
+                <div id="loadingmessage">
+                    Bezig met laden van GIS viewer<br /><br />
                 </div>
             </div>
+            <img src="images/loadingmap.jpg" alt="Bezig met laden" id="loadingimage" />
         </div>
-        <div id="footer">
-            <div id="footer_content">
-                <div id="footer_tekst_links" class="footer_tekst">This program is distributed under the terms of the <a href="http://www.gnu.org/licenses/gpl.html" target="_new">GNU General Public License</a></div>
-                <div id="footer_tekst_rechts" class="footer_tekst">B3P GIS Suite 3.5</div>
-            </div>
+        
+        <div id="content_viewer">
+            <tiles:insert attribute="infobalk" />
+            <tiles:insert attribute="content" />
         </div>
-
-        <tiles:insert definition="googleAnalytics"/>
+        <tiles:insert definition="googleAnalytics"/>        
     </body>
 </html:html>

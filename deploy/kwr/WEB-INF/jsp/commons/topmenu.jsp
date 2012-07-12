@@ -6,8 +6,8 @@
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
     <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
 	
-	<a href="mailto:GIS@kwrwater.nl" class="menulink imagemenulink" style="margin-left: 5px; margin-top: 4px;">
-        <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
+	<a href="mailto:GIS@kwrwater.nl" class="menulink imagemenulink">
+        <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
     </a>
 	
     <c:set var="appCode" value="${param['appCode']}"/>

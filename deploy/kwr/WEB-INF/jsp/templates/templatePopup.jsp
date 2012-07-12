@@ -32,43 +32,24 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         
         <title><tiles:insert name='title'/> - KWR GIS Viewer</title>
         <link href="styles/gisviewer_basisimport.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
-        <link href="styles/jcarousel/skin.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.jcarousel.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.mousewheel.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.qtip-1.0.0-rc3.min.js' module=''/>"></script>
-        <!--[if lte IE 6]>
-            <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
+        
+        <script type="text/javascript" src="scripts/commonfunctions.js"></script>     
         <!--[if lte IE 7]>
             <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
         <![endif]-->
-        <!--[if lte IE 8]>
-            <link href="styles/gisviewer_ie8.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
+        
         <script type="text/javascript">
-            attachOnload(checkLocation);
+            var usePopup = false;
+            if(opener) {
+                usePopup = opener.usePopup;
+            }
         </script>
-    </head>
-    <body class="homebody">
-        <div id="wrapper">
-            <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
-            <div id="content_normal">
-                <div id="content">
-                    <tiles:insert attribute="content" />
-                </div>
-            </div>
-        </div>
-        <div id="footer">
-            <div id="footer_content">
-                <div id="footer_tekst_links" class="footer_tekst">This program is distributed under the terms of the <a href="http://www.gnu.org/licenses/gpl.html" target="_new">GNU General Public License</a></div>
-                <div id="footer_tekst_rechts" class="footer_tekst">B3P GIS Suite 3.5</div>
-            </div>
-        </div>
 
+    </head>
+    <body class="admindatabody" id="adminDataBodyId">
+        <tiles:insert attribute="content" />
         <tiles:insert definition="googleAnalytics"/>
     </body>
 </html:html>

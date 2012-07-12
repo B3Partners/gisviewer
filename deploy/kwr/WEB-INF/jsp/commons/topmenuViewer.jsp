@@ -26,8 +26,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <img src="<html:rewrite page="/images/kwr_logo.gif"/>" alt="KWR logo" />
 <div id="topmenu">
 
-    <a href="mailto:GIS@kwrwater.nl" class="menulink imagemenulink" style="margin-left: 5px; margin-top: 4px;">
-        <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
+    <a href="mailto:GIS@kwrwater.nl" class="menulink imagemenulink">
+        <img src="<html:rewrite page="/images/emailicon.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
     </a>
     
     <a href="#" onclick="getBookMark();" class="menulink imagemenulink">

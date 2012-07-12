@@ -3103,24 +3103,31 @@ function onIdentify(movie,extend) {
 var teller=0;
 //update the getFeatureInfo in the feature window.
 function updateGetFeatureInfo(data){
-    teller++
+    
+    /* TODO: Deze methode geeft geen GetFeatureInfo weer in Firefox.
+     * Werkt wel in IE en Chrome
+    */
+    
+    teller++;
+	
     //if times out return;
-    if (teller==featureInfoTimeOut){
-        teller=0;
+    if (teller > featureInfoTimeOut){
+        teller = 0;
         return;
     }
+	
     //if the admindata window is loaded then update the page (add the featureinfo thats given by the getFeatureInfo request.
     if (usePopup && dataframepopupHandle.contentWindow.writeFeatureInfoData){
         dataframepopupHandle.contentWindow.writeFeatureInfoData(data);
         data=null;
-    }else if (window.frames.dataframe.writeFeatureInfoData){
+    } else if (window.frames.dataframe.writeFeatureInfoData){
         window.frames.dataframe.writeFeatureInfoData(data);
         data=null;
-    }else{
+    } else {
         //if the admindata window is not loaded yet then retry after 1sec
-        setTimeout(function(){
-            updateGetFeatureInfo(data)
-        },1000);
+        setTimeout(function() {
+			updateGetFeatureInfo(data)
+        }, 1000);
     }
 }
 

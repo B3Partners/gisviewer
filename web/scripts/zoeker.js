@@ -651,8 +651,14 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
         }));
 
         container.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
+            webMapController.getMap().removeMarker("searchResultMarker");
+            
             searchConfigurationsSelectChanged(inputSearchDropdown);
-        }));        
+        }));  
+        
+        container.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
+            webMapController.getMap().removeMarker("searchResultMarker");
+        }));  
     }
 
     $j("#searchResults").empty();

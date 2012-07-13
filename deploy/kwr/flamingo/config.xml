@@ -92,7 +92,7 @@
 
         <fmc:Maptip listento="map1"/>
         
-        <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" maptipdelay="200" bottom="bottom" visible="true" extent="12000,304000,280000,620000" fullextent="12000,304000,280000,620000" extenthistory="10" >          
+        <fmc:Map id="map1" left="0" top="0%" height="100%" width="100%" maptipdelay="200" bottom="bottom" visible="true" extenthistory="10" >          
             <fmc:LayerIdentifyIcon id="identifyicon" />        
         </fmc:Map>        
     </fmc:Container>

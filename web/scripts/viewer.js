@@ -335,6 +335,10 @@ function initializeButtons() {
     gpsComponent = new GPSComponent(gpsBuffer);
     webMapController.registerEvent(Event.ON_EVENT_UP,bu_gps,gpsComponent.stopPolling);
     webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_gps,gpsComponent.startPolling);
+    
+    /* off event voor weghalen marker */
+    webMapController.registerEvent(Event.ON_EVENT_UP,bu_gps, b_gps_up);
+    
     webMapController.addTool(bu_gps);
 
     /* Overzichtskaart tool */
@@ -3679,6 +3683,10 @@ function b_overview(id,event) {
     if(webMapController instanceof FlamingoController) {
         webMapController.getMap().getFrameworkMap().callMethod('overviewwindow','show');
     }
+}
+
+function b_gps_up (id,event) {    
+    webMapController.getMap().removeMarker("searchResultMarker");
 }
 
 function drawFeature(ggbId, attrName, attrVal) {

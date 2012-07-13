@@ -51,6 +51,11 @@ function GPSComponent(buffer){
         var maxy = point.y + gpsComponent.buffer;
         var extent = new Extent(minx,miny,maxx,maxy);
         webMapController.getMap().zoomToExtent(extent);
+        
+        var x = (minx + maxx) / 2;
+        var y = (miny + maxy) / 2;
+        
+        webMapController.getMap().setMarker("searchResultMarker", x,y);
     }
     
     this.errorHandler = function (error){

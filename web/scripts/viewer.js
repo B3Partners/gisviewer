@@ -2350,6 +2350,9 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         options["SRS"]=tileItem.tileSrs;
         options["BBOX"]=tileItem.tileBoundingBox;
         
+        /* voor transparantie slider */
+        options["background"]= tileItem.background;
+        
         if (mapviewer == "openlayers" && tilingResolutions) {
             options["serverResolutions"] = tilingResolutions;
         }

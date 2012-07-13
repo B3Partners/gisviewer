@@ -3164,37 +3164,8 @@ function onFrameworkLoaded(){
             checkboxClick(layersAan[m],true);
         }
 
-        //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
-        if (searchExtent!=null){
-            webMapController.getMap("map1").moveToExtent(searchExtent);
-        }else{
-            doRefreshLayer();
-            //if searchExtent is already found (search is faster then Flamingo Init) then use the search extent.
-            if (searchExtent!=null){
-                webMapController.getMap("map1").moveToExtent(searchExtent);
-            }else{
-                if (bbox!=null && bbox.length>0 && bbox.split(",").length==4){
-                    moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-                }else{
-                    if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
-                        moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-                    }else{
-                        moveToExtent(12000,304000,280000,620000);
-                    }
-                }
-            }
-            
-            if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {            
-                setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-            } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
-                setFullExtent(12000,304000,280000,620000);
-            } else {
-                setFullExtent(12000,304000,280000,620000);
-            }
-        }
-        if (resolution){
-            webMapController.getMap().zoomToResolution(resolution);
-        }        
+        setStartExtent();
+        doRefreshLayer();
     }
 
     frameWorkInitialized = true;
@@ -3202,17 +3173,41 @@ function onFrameworkLoaded(){
     mapInitialized=true;
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     doInitSearch();
+}
+
+function setStartExtent() {
+    
+    /* Eerst kijken of er een zoekextent is */
+    if (searchExtent != null){
+        webMapController.getMap("map1").moveToExtent(searchExtent);
         
-    /* Tiling resolutions zetten. */    
-    if (tilingResolutions != undefined && tilingResolutions != "") { 
-        webMapController.getMap().setTilingResolutions(tilingResolutions);        
+    /* Extent uit Applicatie */
+    } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {
+        setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+        moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+    
+    /* Extent uit Flamingo */
+    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {
+        setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+        moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+    
+    } else if (resolution) {
+        webMapController.getMap().zoomToResolution(resolution);
+    
+    /* Als er tiling resoluties zijn ingesteldin Applicatie */
+    } else if (tilingResolutions != undefined && tilingResolutions != "") { 
+        webMapController.getMap().setTilingResolutions(tilingResolutions);  
         
-        /* Move naar extent */
         if (bbox) {
             moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
         } else if (!bbox && fullbbox) {
             moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
         }
+    
+    /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
+    } else {
+        setFullExtent(12000,304000,280000,620000);
+        moveToExtent(12000,304000,280000,620000);
     }
 }
 
@@ -3226,16 +3221,16 @@ function ie6_hack_onInit(){
     }
 }
 
-function moveToExtent(minx,miny,maxx,maxy) {    
+function moveToExtent(minx,miny,maxx,maxy) { 
     webMapController.getMap().zoomToExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
         maxy:maxy
-    }, 0);   
+    }, 0);
 }
 
-function setFullExtent(minx,miny,maxx,maxy) {    
+function setFullExtent(minx,miny,maxx,maxy) {  
     webMapController.getMap().setMaxExtent({
         minx:minx,
         miny:miny,

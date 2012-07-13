@@ -2248,14 +2248,10 @@ function refreshLayer(doRefreshOrder) {
         layerGroup = layerGroups[i];
         var layerId = layerGroup[0];
         
-        //console.log('Looping groep: ' + layerId);
-        
         if (webMapController.getMap().getLayer(layerId)==null){
             layerGroup.splice(0,1); // verwijder eerste element
             
-            for (k=0; k < layerGroup.length; k++) {
-                //console.log('Looping laag: ' + layerId);
-                
+            for (k=0; k < layerGroup.length; k++) {                
                 /* eigen wms layer */
                 if (layerGroup[k].serviceid != undefined) {
                     var lName = layerGroup[k].name;                    
@@ -2284,8 +2280,6 @@ function refreshLayer(doRefreshOrder) {
                 doRefreshOrder=true;
             }
         }
-        
-        //console.log('End looping layer: ' + layerId);
     }
 
     hideLoading();
@@ -3189,10 +3183,12 @@ function onFrameworkLoaded(){
                     }
                 }
             }
-            if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
-                setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-            }
-            else {
+            
+            if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {            
+                setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+            } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4){
+                setFullExtent(12000,304000,280000,620000);
+            } else {
                 setFullExtent(12000,304000,280000,620000);
             }
         }

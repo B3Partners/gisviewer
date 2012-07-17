@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent,b_showOverzicht.onEvent,b_gps.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" xmlns:cmc="cmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent,b_showOverzicht.onEvent,b_gps.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
@@ -19,9 +19,9 @@
             <fmc:ToolIdentify id="identify" left="120" skin="f2" />
 
             <fmc:ToolIdentify id="breinaald" left="120" skin="f2" visible="false">
-                    <cursor id='cursor' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
-                    <cursor id='click' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
-                    <cursor id='busy' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
+                <cursor id='cursor' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
+                <cursor id='click' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
+                <cursor id='busy' url='assets/jsbtn/polygon_select_cursor.png' xoffset="-8" yoffset="0"/>
             </fmc:ToolIdentify>
 
             <fmc:ButtonFull id="toolFullExtent" left="150" listento="map1" skin="f2" />
@@ -65,7 +65,7 @@
                     <string id="tooltip" en="layer selection" nl="kaartselectie"/>
                 </fmc:JsButton>
 				
-				<fmc:JsButton id="b_gps" left="530" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/gps_up.png" iconurl_over="flamingo/assets/jsbtn/gps_up.png" iconurl_sel="flamingo/assets/jsbtn/gps_on.png" iconurl_dis="flamingo/assets/jsbtn/gps_up.png" label="" toggle="true" visible="false" enabled="true" selected="false">
+                <fmc:JsButton id="b_gps" left="530" top="0" width="21" height="21" iconurl_up="flamingo/assets/jsbtn/gps_up.png" iconurl_over="flamingo/assets/jsbtn/gps_up.png" iconurl_sel="flamingo/assets/jsbtn/gps_on.png" iconurl_dis="flamingo/assets/jsbtn/gps_up.png" label="" toggle="true" visible="false" enabled="true" selected="false">
                     <string id="tooltip" en="Switch GPS location on/off" nl="Zet GPS locatie aan/uit"/>
                 </fmc:JsButton>
 				
@@ -74,7 +74,7 @@
     </fmc:Container>
 
     <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">	
-		<fmc:Scalebar id="sbkm" skin="style1" right="right -50" bottom="bottom -10" width="180" units="m" magicnumber="1" listento="map1">
+        <fmc:Scalebar id="sbkm" skin="style1" right="right -50" bottom="bottom -10" width="180" units="m" magicnumber="1" listento="map1">
             <style id=".label" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
             <style id=".units" font-family="arial" font-size="10px" color="#555555" display="block" font-weight="normal"/>
         </fmc:Scalebar>
@@ -97,16 +97,16 @@
 
         <fmc:Maptip listento="map1"/>
         <fmc:Map maptipdelay="150" id="map1" left="0" top="0%" height="100%" width="100%"
-        bottom="bottom" visible="true" extenthistory="10" movesteps="20" movetime="100" >
+                 bottom="bottom" visible="true" extenthistory="10" movesteps="20" movetime="100" >
             <fmc:LayerIdentifyIcon  id="identifyicon"/>          
         </fmc:Map>
     </fmc:Container>
 
-<fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
+    <cmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
         <fmc:Map left="10%" width="75%" height="90%" top="5%" id="map_overview" clear="true" extent="168000,310000,214000,421000" fullextent="168000,310000,214000,421000">
             <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
             <fmc:LayerImage imageurl="assets/limburg/limburg2011.swf" extent="168000,307000,214000,421000" listento="map1"/>
         </fmc:Map>
-    </fmc:Window>
+    </cmc:Window>
 
 </FLAMINGO>

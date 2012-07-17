@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<FLAMINGO xmlns:fmc="fmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
+<FLAMINGO xmlns:fmc="fmc" xmlns:cmc="cmc" allowExternalInterface="map1.onReallyChangedExtent,.onRequest,toolGroup.onSetTool,map1.onIdentify,map1.onIdentifyData,map1.onInit,map1.onUpdateComplete,b_getfeatures.onEvent,b_buffer.onEvent,b_removePolygons.onEvent,b_highlight.onEvent,b_bookMark.onEvent,b_printMap.onEvent,b_layerSelection.onEvent" id="flamingo" lang="nl" languages="nl,en" tooltipdelay="100" preloadtitle="B3p Gisviewer" useexternalinterface="true">
     <style id=".tooltip" font-family="arial, sans-serif" font-size="12" color="#000000" display="block"/>
     <yguide id="my" y="50%"/>
     <xguide id="mx" x="50%"/>
@@ -98,11 +98,10 @@
         </fmc:Map>
     </fmc:Container>
 
-<fmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
+    <cmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
         <fmc:Map left="10%" width="75%" height="90%" top="5%" id="map_overview" clear="true" extent="168000,310000,214000,421000" fullextent="168000,310000,214000,421000">
             <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
             <fmc:LayerImage imageurl="assets/limburg/limburg2010.swf" extent="168000,307000,214000,421000" listento="map1"/>
         </fmc:Map>
-    </fmc:Window>
-
+    </cmc:Window>
 </FLAMINGO>

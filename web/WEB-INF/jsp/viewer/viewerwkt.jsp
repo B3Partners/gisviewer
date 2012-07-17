@@ -22,7 +22,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
-    
+
 <div style="padding: 5px;">
     <div class="messages">
         <html:messages id="message" message="true" >
@@ -37,18 +37,28 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </html:messages>
     </div>
     <div>
-        Teken een object met de redliningtool. Met onderstaande knop wordt de actieve geometrie in het onderstaande veld gezet. <br/>
-        <input type="button" value="Haal geometrie op" onclick="getActiveWkt()"/> <br/>
-        WKT:
-        <textarea id="activeWkt" style="width: 90%; height:400px;"></textarea>
+            U kunt voor zelf getekende of geselecteerde kaartobjecten, indien er een 
+            polygoon op het scherm staat, de WKT ophalen. Nadat u op de knop heeft
+            geklikt kunt u met CTRL+C de tekst naar het klembord kopieeren.
+        
+        <p><input type="button" value="WKT ophalen" onclick="getActiveWkt()"/></p>        
+        
+        <p>
+            <textarea id="activeWkt" style="width: 90%; height:400px;"></textarea>
+        </p>
     </div>
+
     <script type="text/javascript">
         function getActiveWkt(){
             var wmc = parent.webMapController;
             var vectorLayer = wmc.getMap().getAllVectorLayers()[0];
             var feature = vectorLayer.getActiveFeature();
-            var activeWktArea = $j("#activeWkt");
-            activeWktArea.val(feature.wkt);
+            
+            if (feature != undefined) {
+                $j("#activeWkt").val(feature.wkt);                
+                $j('#activeWkt').focus();
+                $j('#activeWkt').select();               
+            }
         }
     </script>
 </div>

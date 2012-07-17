@@ -1,13 +1,15 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
+<script type="text/javascript" src='dwr/engine.js'></script>
+
 <script type='text/javascript' src='dwr/interface/EditUtil.js'></script>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js'></script>
 
 <script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
-<script type="text/javascript" src='dwr/engine.js'></script>
+
 <script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>

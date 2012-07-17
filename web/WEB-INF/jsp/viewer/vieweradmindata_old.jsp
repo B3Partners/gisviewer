@@ -1,7 +1,9 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
-<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+
 <script type="text/javascript" src='dwr/engine.js'></script>
+<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+
 <script type="text/javascript" src="<html:rewrite page='/scripts/table.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/flamingo/FlamingoController.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>

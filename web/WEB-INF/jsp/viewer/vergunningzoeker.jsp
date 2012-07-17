@@ -7,8 +7,8 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
 <script type="text/javascript" src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
 <script type='text/javascript' src='dwr/util.js'></script>
 
 <div style="padding: 5px;">

@@ -325,7 +325,7 @@ function handleZoekResultaat(searchResultId){
     var parentZc = zoekConfiguratie.parentZoekConfiguratie;
     if (parentZc == null){
         return false;
-     }
+    }
 
     if (parentZc.zoekVelden==undefined || parentZc.zoekVelden.length==0){
 
@@ -410,7 +410,7 @@ function searchCallBack(values){
     var searchResults=$j("#searchResults");
 
     if (values==null || values.length == 0) {
-	searchResults.html("<br /><strong>Er zijn geen resultaten gevonden!</strong>");
+        searchResults.html("<br /><strong>Er zijn geen resultaten gevonden!</strong>");
         return;
     }
 
@@ -435,7 +435,7 @@ function searchCallBack(values){
     
     if (values.length==1) {
         handleZoekResultaat(0);
-	return;
+        return;
     }
 
 }
@@ -473,9 +473,9 @@ var currentSearchSelectId = "";
 function searchConfigurationsSelectChanged(element){
     var container=$j("#searchInputFieldsContainer");
 
-//    if (currentSearchSelectId == element.val()){
-//        return;
-//    } else
+    //    if (currentSearchSelectId == element.val()){
+    //        return;
+    //    } else
     if(!element ||element.val()==""){
         clearConfigurationsSelect(container);
         var resultsContainer=$j("#searchResults");
@@ -499,12 +499,12 @@ function clearConfigurationsSelect(container) {
 
 function fillSearchDiv(container, zoekVelden, zoekStrings) {
     if (!zoekVelden){
-            container.html("Geen zoekvelden");
-            return container;
+        container.html("Geen zoekvelden");
+        return container;
     }
     if (zoekStrings && zoekStrings.length!=zoekVelden.length){
-            container.html("lengte van zoekvelden en te zoeken strings komt niet overeen");
-            return container;
+        container.html("lengte van zoekvelden en te zoeken strings komt niet overeen");
+        return container;
     }
 
     container.empty();
@@ -638,7 +638,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
                 container.append(inputfield).append('<br /><br />');
             }
             
-         }
+        }
 
         if (zoekString != "*") {
             inputfield.val(zoekString);
@@ -685,7 +685,10 @@ function handleZoekVeldinputList(list){
         dwr.util.removeAllOptions(controlElementName);
         /*maak een leeg object en voeg die toe*/
         var kiesObj=new Array();
-        kiesObj.push({id:" ", label: "Maak uw keuze ..."});        
+        kiesObj.push({
+            id:" ", 
+            label: "Maak uw keuze ..."
+        });        
         dwr.util.addOptions(controlElementName,kiesObj,'id','label');
 
         /* List label waarde afkappen op aantal tekens. Gedaan zodat dropdown

@@ -40,6 +40,9 @@
         </div>
         </c:if>
     </div>
+    <c:if test="${(status.count)%2 eq 0}">
+        <div style="clear: both;"></div>
+    </c:if>
 </c:forEach>
 
 <c:if test="${pageContext.request.remoteUser != null}">

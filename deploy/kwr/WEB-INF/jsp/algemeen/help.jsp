@@ -47,6 +47,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div>
         </c:if>
     </div>
+    <c:if test="${(status.count)%2 eq 0}">
+        <div style="clear: both;"></div>
+    </c:if>
 </c:forEach>
 
 <!-- Gewone help pagina tonen als er geen tekstblokken zijn -->

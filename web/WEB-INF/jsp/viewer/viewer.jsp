@@ -8,8 +8,6 @@
 <script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js'></script>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
-
 <script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>
@@ -729,6 +727,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
 <!--script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js"/>"></script-->
+<script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>

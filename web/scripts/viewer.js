@@ -127,7 +127,7 @@ function initMapComponent(){
         /* Alle tiling resoluties in een lijst zetten */
         var olRes;
         if (tilingResolutions) {
-            var res = tilingResolutions.trim();
+            var res = tilingResolutions; //.trim();
 
             var list;            
             if (res.indexOf(",") != -1) {
@@ -3429,6 +3429,8 @@ function getWktStringForPrint() {
 
 var exportMapWindow;
 function exportMap(){    
+    //console.log('exportMap');
+    
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);
     submitForm.method = "POST";

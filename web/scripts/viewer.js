@@ -3502,8 +3502,14 @@ function getTilingLayer() {
     /* tiling layers toevoegen */
     for (var j=0; j < layers.length; j++) {
         var currentscale = webMapController.getMap().getScaleHint();
-        var item = getItemByLayer(themaTree,layers[j].options.LAYERS);
-        //var item = layers[j].getFrameworkLayer();
+        
+        var item;
+        if (layers[j].options) {
+            item = getItemByLayer(themaTree,layers[j].options.LAYERS);
+        } else {
+            item = layers[j].getFrameworkLayer();
+        }
+    
         var inScale = isItemInScale(item, currentscale);
         
         if (!inScale) {

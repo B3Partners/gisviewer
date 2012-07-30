@@ -329,16 +329,24 @@ function initializeButtons() {
     
     
     /* GPS tool */
-    var bu_gps= webMapController.createTool("b_gps",Tool.BUTTON, {
-        layer: editLayer,
-        title: 'gps'
-    });
+    if (gpsBuffer < 1) {
+        gpsBuffer = 500;
+    }
+    
     gpsComponent = new GPSComponent(gpsBuffer);
-    webMapController.registerEvent(Event.ON_EVENT_UP,bu_gps,gpsComponent.stopPolling);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_gps,gpsComponent.startPolling);
+    
+    var bu_gps = webMapController.createTool("b_gps",Tool.GPS, {
+        layer: editLayer,
+        title: 'zet GPS locatie aan/uit'
+    });    
+    
+    webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, gpsComponent.stopPolling);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
     
     /* off event voor weghalen marker */
-    webMapController.registerEvent(Event.ON_EVENT_UP,bu_gps, b_gps_up);
+    if (webMapController instanceof FlamingoController) {
+        webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
+    }    
     
     webMapController.addTool(bu_gps);
 
@@ -3681,12 +3689,12 @@ function b_layerSelection(id, event) {
 }
 
 function b_overview(id,event) {
-    if(webMapController instanceof FlamingoController) {
+    if (webMapController instanceof FlamingoController) {
         webMapController.getMap().getFrameworkMap().callMethod('overviewwindow','show');
     }
 }
 
-function b_gps_up (id,event) {    
+function b_gps_stop(id, event) {
     webMapController.getMap().removeMarker("searchResultMarker");
 }
 

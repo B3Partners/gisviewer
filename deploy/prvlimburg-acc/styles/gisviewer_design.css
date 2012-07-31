@@ -1010,3 +1010,8 @@ a.highlightlink:hover{
     display: none;
     z-index: 5000;
 }
+
+/* OpenLayers */
+.olImageLoadError {
+    background-color: transparent !important;
+}

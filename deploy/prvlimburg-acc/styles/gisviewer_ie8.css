@@ -3,8 +3,3 @@
     -pie-background: linear-gradient(#D6E9F1, #E2F7FF);
     behavior: url(/gisviewer/PIE.htc);
 }
-
-/*OpenLayers */
-.olImageLoadError {
-    background-color: transparent !important;
-}

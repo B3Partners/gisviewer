@@ -700,3 +700,8 @@ a.highlightlink:hover{
 .bronChild bronChildEmpty {
     border: 1px solid #DFE3E4;
 }
+
+/* OpenLayers */
+.olImageLoadError {
+    background-color: transparent !important;
+}

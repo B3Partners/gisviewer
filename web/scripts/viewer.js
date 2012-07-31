@@ -349,7 +349,7 @@ function initializeButtons() {
     }    
     
     webMapController.addTool(bu_gps);
-
+    
     /* Overzichtskaart tool */
     var bu_overview = webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
         layer: editLayer,
@@ -2050,9 +2050,9 @@ function isItemInScale(item,scale) {
         var res;
         
         if (item.PRINTRESOLUTIONS) {
-            res = item.PRINTRESOLUTIONS.trim();
+            res = item.PRINTRESOLUTIONS; //.trim();
         } else {
-            res = item.resolutions.trim();
+            res = item.resolutions; //.trim();
         }        
         
         list = res.split(" ");
@@ -2372,7 +2372,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         
         /* Min/max scale zetten voor tiling layers */
         if (tileItem.resolutions) {      
-            var res = tileItem.resolutions.trim();
+            var res = tileItem.resolutions;; //.trim();
 
             var list;
             list = res.split(" ");
@@ -3437,8 +3437,6 @@ function getWktStringForPrint() {
 
 var exportMapWindow;
 function exportMap(){    
-    //console.log('exportMap');
-    
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);
     submitForm.method = "POST";
@@ -3496,7 +3494,7 @@ function exportMap(){
     submitForm.submit();
 
     if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
-        exportMapWindow=window.open("", "exportMapWindowNaam");
+        exportMapWindow = window.open("", "exportMapWindowNaam");
         exportMapWindow.focus();
     }
 }

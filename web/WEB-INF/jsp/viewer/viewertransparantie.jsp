@@ -69,7 +69,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     l.setOpacity (opacity);
                 }
             }
-            //console.log(value);
         }
     </script>
 </div>

@@ -81,94 +81,16 @@ function initMapComponent(){
     if (window.location.href.indexOf("flamingo")>0)
         mapviewer = "flamingo";
     if (mapviewer == "flamingo"){
-        webMapController=new FlamingoController('mapcontent');
-        var map=webMapController.createMap("map1");        
-        webMapController.addMap(map); 
+        webMapController = new FlamingoController('mapcontent');
+        
+        var map = webMapController.createMap("map1");        
+        webMapController.addMap(map);
+        
     } else if (mapviewer == "openlayers") {
         webMapController = new OpenLayersController();
         
-        var maxBounds;        
-        if (!bbox && fullbbox){
-            maxBounds = Utils.createBounds(new Extent(fullbbox));
-        } else if (bbox && fullbbox) {
-            maxBounds = Utils.createBounds(new Extent(fullbbox));
-        } else if (bbox && !fullbbox) {
-            maxBounds = Utils.createBounds(new Extent(bbox));
-        } else {
-            maxBounds = new OpenLayers.Bounds(12000,304000,280000,620000);
-        }
-        
-        /* Aanpassen maxBounds aan huidige beeldscherm verhoudingen */
-        var oldMapWidth = maxBounds.right - maxBounds.left;
-        var oldMapHeight = maxBounds.top - maxBounds.bottom;
-        
-        var screenWidth = $j("#mapcontent").width();
-        var screenHeight = $j("#mapcontent").height() + defaultdataframehoogte + 75;        
-        
-        var ratio = screenWidth / screenHeight;
-        
-        // calc new map height
-        if (ratio < (oldMapWidth / oldMapHeight)) { 
-            var newHeight = oldMapWidth / ratio;
-            maxBounds.bottom = maxBounds.bottom - ((newHeight-oldMapHeight) / 2);
-            maxBounds.top = maxBounds.bottom + newHeight;
-        // calc new map width
-        } else { 
-            var newWidth = oldMapHeight * ratio;
-            maxBounds.left = maxBounds.left - ((newWidth - oldMapWidth) / 2);
-            maxBounds.right = maxBounds.left + newWidth;
-        }
-        
-        //fullbbox = maxBounds.left + "," + maxBounds.bottom + "," + maxBounds.right + "," + maxBounds.top;
-        //bbox = maxBounds.left + "," + maxBounds.bottom + "," + maxBounds.right + "," + maxBounds.top;
-        
-        var newMapWidth = maxBounds.right - maxBounds.left;
-            
-        /* Alle tiling resoluties in een lijst zetten */
-        var olRes;
-        if (tilingResolutions) {
-            var res = tilingResolutions; //.trim();
-
-            var list;            
-            if (res.indexOf(",") != -1) {
-                list = res.split(",");
-            } else {
-                list = res.split(" ");
-            }
-
-            if (list && list.length > 0) {                
-                olRes = new Array();
-                for (var i in list) {
-                    list[i] = parseFloat(list[i]);        
-                    olRes[i] = list[i];
-                }
-            }
-        } else {
-            olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
-        }
-        
-        /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
-        if (tilingResolutions) {            
-            /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
-             * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
-             * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
-            */
-            var resolution = newMapWidth / screenWidth;
-            
-            var dpm = 72 / 0.0254;
-            var scale = (resolution * dpm) / 1000;
-            
-            var newList = new Array();
-            var counter = 0;            
-            for (var idx in olRes) {
-                if (olRes[idx] <= scale) {
-                    newList[counter] = olRes[idx];
-                    counter++;
-                }
-            }
-            
-            olRes = newList;
-        }
+        var maxBounds = getMaxBounds();
+        var olRes = getTilingResolutions(maxBounds, true);        
         
         Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs"; 
         var opt = {
@@ -193,6 +115,110 @@ function initMapComponent(){
     webMapController.initEvents();
     webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
+}
+
+function getMaxBounds() {
+    var maxBounds;        
+    if (!bbox && fullbbox){
+        maxBounds = Utils.createBounds(new Extent(fullbbox));
+    } else if (bbox && fullbbox) {
+        maxBounds = Utils.createBounds(new Extent(fullbbox));
+    } else if (bbox && !fullbbox) {
+        maxBounds = Utils.createBounds(new Extent(bbox));
+    } else {
+        maxBounds = new OpenLayers.Bounds(12000,304000,280000,620000);
+    }
+
+    /* Aanpassen maxBounds aan huidige beeldscherm verhoudingen */
+    var oldMapWidth = maxBounds.right - maxBounds.left;
+    var oldMapHeight = maxBounds.top - maxBounds.bottom;
+
+    var screenWidth = $j("#mapcontent").width();
+    var screenHeight = $j("#mapcontent").height() + defaultdataframehoogte + 75;        
+
+    var ratio = screenWidth / screenHeight;
+
+    // calc new map height
+    if (ratio < (oldMapWidth / oldMapHeight)) { 
+        var newHeight = oldMapWidth / ratio;
+        maxBounds.bottom = maxBounds.bottom - ((newHeight-oldMapHeight) / 2);
+        maxBounds.top = maxBounds.bottom + newHeight;
+    // calc new map width
+    } else { 
+        var newWidth = oldMapHeight * ratio;
+        maxBounds.left = maxBounds.left - ((newWidth - oldMapWidth) / 2);
+        maxBounds.right = maxBounds.left + newWidth;
+    }
+    
+    return maxBounds;
+}
+
+function getTilingResolutions(maxBounds, returnArray) {    
+    var newMapWidth = maxBounds.right - maxBounds.left;
+
+    /* Alle tiling resoluties in een lijst zetten */
+    var olRes;
+    if (tilingResolutions) {
+        var res = tilingResolutions; //.trim();
+
+        var list;            
+        if (res.indexOf(",") != -1) {
+            list = res.split(",");
+        } else {
+            list = res.split(" ");
+        }
+
+        if (list && list.length > 0) {                
+            olRes = new Array();
+            for (var i in list) {
+                list[i] = parseFloat(list[i]);        
+                olRes[i] = list[i];
+            }
+        }
+    } else {
+        tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125";
+        olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
+    }
+
+    /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
+    if (tilingResolutions) {            
+        /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
+         * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
+         * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
+        */       
+        var screenWidth = $j("#mapcontent").width();
+        //var screenHeight = $j("#mapcontent").height() + defaultdataframehoogte + 75;
+    
+        var resolution = newMapWidth / screenWidth;
+
+        var dpm = 72 / 0.0254;
+        var scale = (resolution * dpm) / 1000;
+
+        var newList = new Array();
+        var counter = 0;            
+        for (var idx in olRes) {
+            if (olRes[idx] <= scale) {
+                newList[counter] = olRes[idx];
+                counter++;
+            }
+        }
+
+        olRes = newList;
+    }
+    
+    if (returnArray) { // openlayers gebruikt een array
+        return olRes;
+    } else { // flamingo een string
+        
+        var str = "";
+        for (var k in olRes) {
+            str += parseFloat(olRes[k]) + " ";
+        }
+        
+        return str.trim();
+    }
+
+    return olRes;
 }
 
 /**
@@ -243,7 +269,7 @@ function initializeButtons() {
     });
     webMapController.addTool(pan);
     //set default tool pan so the cursor is ok.
-    if (mapviewer=="openlayers") {
+    if (webMapController instanceof OpenLayersController) {
         webMapController.activateTool("b_pan");
     }
     
@@ -2359,9 +2385,9 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         options["BBOX"]=tileItem.tileBoundingBox;
         
         /* voor transparantie slider */
-        options["background"]= tileItem.background;
+        options["background"]= tileItem.background;        
         
-        if (mapviewer == "openlayers" && tilingResolutions) {
+        if (webMapController instanceof OpenLayersController && tilingResolutions) {
             options["serverResolutions"] = tilingResolutions;
         }
         
@@ -3091,7 +3117,7 @@ function onIdentify(movie,extend) {
          * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
          * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
          * de gisviewer aan.*/
-        if (mapviewer== "flamingo") {
+        if (webMapController instanceof FlamingoController) {
             webMapController.activateTool("breinaald");
         } else {
             webMapController.activateTool("identify");
@@ -3182,6 +3208,16 @@ function onFrameworkLoaded(){
     
     mapInitialized=true;
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
+    
+    /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt */
+    if (webMapController instanceof FlamingoController) {
+        console.log('flamingo');
+        var maxBounds = getMaxBounds();
+        var olRes = getTilingResolutions(maxBounds, false);
+        
+        webMapController.getMap("map1").setTilingResolutions(olRes);
+    } 
+    
     doInitSearch();
 }
 
@@ -3735,7 +3771,7 @@ function b_highlight( id,params) {
      * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
      * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
      * de gisviewer aan.*/
-    if (mapviewer== "flamingo") {
+    if (webMapController instanceof FlamingoController) {
         webMapController.activateTool("breinaald");
     } else {
         webMapController.activateTool("identify");

@@ -90,7 +90,7 @@ function initMapComponent(){
         webMapController = new OpenLayersController();
         
         var maxBounds = getMaxBounds();
-        var olRes = getTilingResolutions(maxBounds, true);        
+        var olRes = getTilingResolutions(maxBounds, true);       
         
         Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs"; 
         var opt = {
@@ -219,6 +219,13 @@ function getTilingResolutions(maxBounds, returnArray) {
     }
 
     return olRes;
+}
+
+/* trim for IE8 */
+if (typeof String.prototype.trim !== 'function') {
+    String.prototype.trim = function() {
+        return this.replace(/^\s+|\s+$/g, '');
+    }
 }
 
 /**
@@ -2076,9 +2083,9 @@ function isItemInScale(item,scale) {
         var res;
         
         if (item.PRINTRESOLUTIONS) {
-            res = item.PRINTRESOLUTIONS; //.trim();
+            res = item.PRINTRESOLUTIONS;
         } else {
-            res = item.resolutions; //.trim();
+            res = item.resolutions;
         }        
         
         list = res.split(" ");
@@ -2091,6 +2098,10 @@ function isItemInScale(item,scale) {
             var size = list.length;
             var max = list[0];
             var min = list[size-1];
+            
+            if (min == "") {
+                min = list[size-2];
+            }
 
             // doe W(res(kw) * 2) scalehint
             var scaleMax = Math.sqrt((max*max) * 2);   
@@ -3210,8 +3221,7 @@ function onFrameworkLoaded(){
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     
     /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt */
-    if (webMapController instanceof FlamingoController) {
-        console.log('flamingo');
+    if (webMapController instanceof FlamingoController) {        
         var maxBounds = getMaxBounds();
         var olRes = getTilingResolutions(maxBounds, false);
         
@@ -3238,20 +3248,13 @@ function setStartExtent() {
         moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
     
     } else if (resolution) {
-        webMapController.getMap().zoomToResolution(resolution);
-    
-    /* Als er tiling resoluties zijn ingesteldin Applicatie */
-    } else if (tilingResolutions != undefined && tilingResolutions != "") { 
-        webMapController.getMap().setTilingResolutions(tilingResolutions);  
-        
-        if (bbox) {
-            moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-        } else if (!bbox && fullbbox) {
-            moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-        }
+        webMapController.getMap().zoomToResolution(resolution);    
     
     /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
     } else {
+        bbox = "12000,304000,280000,620000";
+        fullbbox = "12000,304000,280000,620000";
+        
         setFullExtent(12000,304000,280000,620000);
         moveToExtent(12000,304000,280000,620000);
     }

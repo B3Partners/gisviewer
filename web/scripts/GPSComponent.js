@@ -18,7 +18,8 @@
 
 function GPSComponent(buffer){    
     this.timeoutId = null;
-    this.interval = 20000;
+    this.interval = 15000;
+    
     if(buffer){
         this.buffer = buffer;
     }

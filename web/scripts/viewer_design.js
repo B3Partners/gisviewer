@@ -17,7 +17,7 @@ var checkResizableContent = function() {
 
 resizeTabContents = function() {
     var tmpCurrentActiveTab = currentActiveTab;
-    var totalTabHeight = document.getElementById('tab_container').offsetHeight - 15; // Minus margin
+    var totalTabHeight = document.getElementById('tab_container').offsetHeight - 30; // Minus margin
     for(var i = 0; i < resizableTabs.length; i++) {
         switchTab(document.getElementById(resizableTabs[i]));
         i = i+1;

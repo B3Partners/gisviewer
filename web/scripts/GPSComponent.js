@@ -18,7 +18,7 @@
 
 function GPSComponent(buffer){    
     this.timeoutId = null;
-    this.interval = 15000;
+    this.interval = 20000;
     
     if(buffer){
         this.buffer = buffer;
@@ -46,17 +46,16 @@ function GPSComponent(buffer){
         var lat = location.coords.latitude;
         var lon = location.coords.longitude;
         var point = gpsComponent.transformLatLon(Number(lon),Number(lat));
+        
         var minx = point.x - gpsComponent.buffer;
         var miny = point.y - gpsComponent.buffer;
         var maxx = point.x + gpsComponent.buffer;
         var maxy = point.y + gpsComponent.buffer;
+        
         var extent = new Extent(minx,miny,maxx,maxy);
         webMapController.getMap().zoomToExtent(extent);
         
-        var x = (minx + maxx) / 2;
-        var y = (miny + maxy) / 2;
-        
-        webMapController.getMap().setMarker("searchResultMarker", x,y);
+        webMapController.getMap().setMarker("searchResultMarker", point.x, point.y);
     }
     
     this.errorHandler = function (error){

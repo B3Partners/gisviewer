@@ -377,9 +377,7 @@ function initializeButtons() {
     webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
     
     /* off event voor weghalen marker */
-    if (webMapController instanceof FlamingoController) {
-        webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
-    }    
+    webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
     
     webMapController.addTool(bu_gps);
     

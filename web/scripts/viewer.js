@@ -53,6 +53,11 @@ var multiPolygonBufferWkt;
 var alleLayers = new Array();
 
 var gpsComponent = null;
+
+/* TODO: OL height work-around for first time getMaxBounds */
+var firstTimeOLHeightAdjusted = false;
+var wierdOLDiffHeight = 224;
+
 /**
  * Start off with initMapComponent()
 */
@@ -117,6 +122,16 @@ function initMapComponent(){
     webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
 }
 
+function getNLExtent() {
+    return "12000,304000,280000,620000";
+}
+
+function getNLMaxBounds() {
+    return Utils.createBounds(new Extent(getNLExtent()));
+}
+
+
+
 function getMaxBounds() {
     var maxBounds;        
     if (!bbox && fullbbox){
@@ -126,7 +141,8 @@ function getMaxBounds() {
     } else if (bbox && !fullbbox) {
         maxBounds = Utils.createBounds(new Extent(bbox));
     } else {
-        maxBounds = new OpenLayers.Bounds(12000,304000,280000,620000);
+        var bounds = getNLMaxBounds();        
+        maxBounds = new OpenLayers.Bounds(bounds.left, bounds.bottom, bounds.right, bounds.top);
     }
 
     /* Aanpassen maxBounds aan huidige beeldscherm verhoudingen */
@@ -134,12 +150,22 @@ function getMaxBounds() {
     var oldMapHeight = maxBounds.top - maxBounds.bottom;
 
     var screenWidth = $j("#mapcontent").width();
-    var screenHeight = $j("#mapcontent").height() + defaultdataframehoogte + 75;        
+    var heightMapContent = $j("#mapcontent").height();
+    
+    var screenHeight = heightMapContent + defaultdataframehoogte + 75;
+    
+    if (!firstTimeOLHeightAdjusted) {
+        var wierdOLDiffHeight = 224;
+        
+        screenHeight += wierdOLDiffHeight;
+        firstTimeOLHeightAdjusted = true;
+    }
 
     var ratio = screenWidth / screenHeight;
+    var mapRatio = oldMapWidth / oldMapHeight;
 
     // calc new map height
-    if (ratio < (oldMapWidth / oldMapHeight)) { 
+    if (ratio < mapRatio) { 
         var newHeight = oldMapWidth / ratio;
         maxBounds.bottom = maxBounds.bottom - ((newHeight-oldMapHeight) / 2);
         maxBounds.top = maxBounds.bottom + newHeight;
@@ -153,6 +179,8 @@ function getMaxBounds() {
     return maxBounds;
 }
 
+/* Methode herberekend ingevulde tiling resoluties o.b.v. max eetent. 
+ * Geeft een array of string terug. */
 function getTilingResolutions(maxBounds, returnArray) {    
     var newMapWidth = maxBounds.right - maxBounds.left;
 
@@ -2394,13 +2422,16 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         options["BBOX"]=tileItem.tileBoundingBox;
         
         /* voor transparantie slider */
-        options["background"]= tileItem.background;        
+        options["background"]= tileItem.background;  
         
+        var maxBounds = getMaxBounds();
+        var olRes = getTilingResolutions(maxBounds, false); 
+            
         if (webMapController instanceof OpenLayersController && tilingResolutions) {
-            options["serverResolutions"] = tilingResolutions;
+            options["serverResolutions"] = olRes; // tilingResolutions
         }
         
-        options["RESOLUTIONS"]=tileItem.resolutions;
+        options["RESOLUTIONS"]= olRes; //tileItem.resolutions;
         
         options["TILEHEIGHT"]=tileItem.tileHeight;
         options["TILEWIDTH"]=tileItem.tileWidth;
@@ -3195,7 +3226,6 @@ function onFrameworkLoaded(){
     }
 
     if (!frameWorkInitialized) {
-
         // layer added in reverse order
         // layer with lowest order number should be on top
         // so added last
@@ -3218,13 +3248,14 @@ function onFrameworkLoaded(){
     mapInitialized=true;
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     
-    /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt */
+    /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt.
+     * Let op: Bij OpenLayers gebeurt dit al bij maken Map */
     if (webMapController instanceof FlamingoController) {        
         var maxBounds = getMaxBounds();
         var olRes = getTilingResolutions(maxBounds, false);
         
         webMapController.getMap("map1").setTilingResolutions(olRes);
-    } 
+    }
     
     doInitSearch();
 }
@@ -3250,11 +3281,13 @@ function setStartExtent() {
     
     /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
     } else {
-        bbox = "12000,304000,280000,620000";
-        fullbbox = "12000,304000,280000,620000";
+        bbox = getNLExtent();
+        fullbbox = getNLExtent();
         
-        setFullExtent(12000,304000,280000,620000);
-        moveToExtent(12000,304000,280000,620000);
+        var bounds = getNLMaxBounds();        
+        
+        setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
+        moveToExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
     }
 }
 

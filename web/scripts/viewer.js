@@ -130,8 +130,6 @@ function getNLMaxBounds() {
     return Utils.createBounds(new Extent(getNLExtent()));
 }
 
-
-
 function getMaxBounds() {
     var maxBounds;        
     if (!bbox && fullbbox){
@@ -154,12 +152,7 @@ function getMaxBounds() {
     
     var screenHeight = heightMapContent + defaultdataframehoogte + 75;
     
-    if (!firstTimeOLHeightAdjusted) {
-        var wierdOLDiffHeight = 224;
-        
-        screenHeight += wierdOLDiffHeight;
-        firstTimeOLHeightAdjusted = true;
-    }
+    resizeOpenLayersDiv(screenWidth + 'px', screenHeight + 'px');
 
     var ratio = screenWidth / screenHeight;
     var mapRatio = oldMapWidth / oldMapHeight;
@@ -2431,7 +2424,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             options["serverResolutions"] = olRes; // tilingResolutions
         }
         
-        options["RESOLUTIONS"]= olRes; //tileItem.resolutions;
+        options["RESOLUTIONS"] = olRes; //tileItem.resolutions;
         
         options["TILEHEIGHT"]=tileItem.tileHeight;
         options["TILEWIDTH"]=tileItem.tileWidth;
@@ -3258,6 +3251,13 @@ function onFrameworkLoaded(){
     }
     
     doInitSearch();
+}
+
+function resizeOpenLayersDiv(w, h) {
+    if (webMapController instanceof OpenLayersController) {        
+        $j("#mapcontent").css('width', w);
+        $j("#mapcontent").css('height', h);
+    }
 }
 
 function setStartExtent() {

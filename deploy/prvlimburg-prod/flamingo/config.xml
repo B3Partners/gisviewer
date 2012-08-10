@@ -105,7 +105,7 @@
     <cmc:Window id="overviewwindow" skin="f2" left="right -200" top="50" width="175" height="400" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
         <fmc:Map left="10%" width="75%" height="90%" top="5%" id="map_overview" clear="true" extent="168000,310000,214000,421000" fullextent="168000,310000,214000,421000">
             <fmc:LayerOverview listento="map1" color="#76B6D1" followfactor="10000" />
-            <fmc:LayerImage imageurl="assets/limburg/limburg2010.swf" extent="168000,307000,214000,421000" listento="map1"/>
+            <fmc:LayerImage imageurl="assets/limburg/limburg2011.swf" extent="168000,307000,214000,421000" listento="map1"/>
         </fmc:Map>
     </cmc:Window>
 

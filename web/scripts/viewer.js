@@ -3248,6 +3248,9 @@ function onFrameworkLoaded(){
         var olRes = getTilingResolutions(maxBounds, false);
         
         webMapController.getMap("map1").setTilingResolutions(olRes);
+        
+        /* Standaard pan tool activeren */
+        webMapController.activateTool("toolPan");
     }
     
     doInitSearch();

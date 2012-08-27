@@ -18,7 +18,7 @@
     var baseNameViewer = "${contextPath}";
     
     function catchEmpty(defval){
-        return defval
+        return defval;
     }
 
     var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
@@ -760,7 +760,7 @@
 
 </script>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script>
+<!-- <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script> -->
 <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
 <!--script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js"/>"></script-->
 <script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>

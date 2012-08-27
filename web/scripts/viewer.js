@@ -3272,13 +3272,19 @@ function setStartExtent() {
     /* Extent uit Applicatie */
     } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {
         setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-        moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+        
+        setTimeout(function () {
+            moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+        }, 1);        
     
     /* Extent uit Flamingo */
     } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {
         setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-        moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-    
+        
+        setTimeout(function () {
+            moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+        }, 1);      
+        
     } else if (resolution) {
         webMapController.getMap().zoomToResolution(resolution);    
     
@@ -3290,7 +3296,10 @@ function setStartExtent() {
         var bounds = getNLMaxBounds();        
         
         setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
-        moveToExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
+        
+        setTimeout(function () {
+            moveToExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
+        }, 1);
     }
 }
 

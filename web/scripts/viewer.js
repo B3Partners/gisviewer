@@ -512,6 +512,22 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
             sldSearchServlet=sldUrl;
         }
     }
+    
+    /* Place marker */
+    result = getBboxMinSize2(result);
+    var x = (result.maxx - result.minx) / 2 + result.minx;
+    var y = (result.maxy - result.miny) / 2 + result.miny;
+        
+    placeSearchResultMarker(x,y);    
+    switchTab(document.getElementById("zoeken"));
+}
+
+function placeSearchResultMarker(x,y) {
+    webMapController.getMap().setMarker("searchResultMarker", x, y);
+}
+
+function removeSearchResultMarker() {
+    webMapController.getMap().removeMarker("searchResultMarker");
 }
 
 /**
@@ -3775,7 +3791,7 @@ function b_overview(id,event) {
 }
 
 function b_gps_stop(id, event) {
-    webMapController.getMap().removeMarker("searchResultMarker");
+    removeSearchResultMarker();
 }
 
 function drawFeature(ggbId, attrName, attrVal) {

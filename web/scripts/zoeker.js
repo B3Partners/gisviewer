@@ -656,10 +656,12 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             searchConfigurationsSelectChanged(inputSearchDropdown);
         }));  
         
-        container.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
-            webMapController.getMap().removeMarker("searchResultMarker");
-        }));  
-    }
+        if (!search) {
+            container.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
+                webMapController.getMap().removeMarker("searchResultMarker");
+            }));
+        }
+    } 
 
     $j("#searchResults").empty();
 

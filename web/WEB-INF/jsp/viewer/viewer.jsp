@@ -644,11 +644,18 @@
     </div>
 
     <div id="infovak" style="display: none; overflow: auto;" class="tabvak">
+        <c:if test="${!empty search}">
+        <p>
+            <input type="button" class="knop" value="Verwijder marker" onclick="removeSearchResultMarker();"/>
+        </p>
+        </c:if>
+        
         <p>
             Kies de Info-tool en klik vervolgens op een punt<br/>
             op de kaart voor administratieve informatie<br/>
             van het object.
         </p>
+        
         <div>
             <div id="searchConfigurationsContainer"></div>
             <div id="searchInputFieldsContainer"></div>

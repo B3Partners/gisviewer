@@ -432,6 +432,11 @@
     if (typeof tilingResolutions === 'undefined' || !tilingResolutions) {
         tilingResolutions = "";
     }
+    
+    var showServiceUrl = catchEmpty(${configMap["showServiceUrl"]});
+    if (typeof showServiceUrl === 'undefined') {
+        showServiceUrl = false;
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">

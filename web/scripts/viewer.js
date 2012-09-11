@@ -1193,8 +1193,8 @@ function createMetadataLink(item){
     if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
             
-            /* Wel download button tonen */
-            if (datasetDownload) {
+            /* Wel download en url button tonen */
+            if (datasetDownload && showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Download": function() {                    
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
@@ -1218,7 +1218,7 @@ function createMetadataLink(item){
                             unblockViewerUI();
                             $j("#dialog-wmsservice-url").dialog('open');
                         }
-                    },
+                    },                
                     "Annuleren": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
                             $j(this).dialog("close");
@@ -1226,7 +1226,7 @@ function createMetadataLink(item){
                         }
                     }
                 });
-            } else {
+            } else if (!datasetDownload && showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {                    
                     "Url": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
@@ -1246,13 +1246,21 @@ function createMetadataLink(item){
                         }
                     }
                 });
+            } else {
+                $j("#dialog-download-metadata").dialog("option", "buttons", { 
+                    "Annuleren": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+                            unblockViewerUI();
+                        }
+                    }
+                });
             }
 
             $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
                 $j(this).html($j(this).parent().attr('text'));
             });
-
-            //blockViewerUI();
+            
             $j("#dialog-download-metadata").dialog('open');
         }
         
@@ -1264,7 +1272,7 @@ function createMetadataLink(item){
         lnk.onclick = function() {
             
             /* Wel download button tonen */
-            if (datasetDownload) {
+            if (datasetDownload && showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Download": function() {            
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
@@ -1302,7 +1310,7 @@ function createMetadataLink(item){
                         }
                     }
                 });
-            } else {
+            } else if (!datasetDownload && showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {                    
                     "Metadata": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
@@ -1328,8 +1336,22 @@ function createMetadataLink(item){
                         }
                     }
                 });
-            }
-            
+            } else {
+                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
+                    "Metadata": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                            $j(this).dialog("close");
+                        }
+                    },
+                    "Annuleren": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+                            unblockViewerUI();
+                        }
+                    }
+                });
+            }            
 
             $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
                 $j(this).html($j(this).parent().attr('text'));
@@ -1343,7 +1365,7 @@ function createMetadataLink(item){
     }
     
     /* Alleen url en Annuleren */
-    if ( (item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) ) {
+    if ( (item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) && (showServiceUrl) ) {
         lnk.onclick = function() {
             $j("#dialog-download-metadata").dialog("option", "buttons", {                
                 "Url": function() {

@@ -604,6 +604,10 @@ body.pdfExportClass {
 	padding-top: 0px;
 }
 
+.helppagina_cms_blok {
+    height: 220px;
+}
+
 .inleiding_body p, .inleiding_body span, .inleiding_body div {
     font-size: 12px;
     color: #333333;

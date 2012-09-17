@@ -34,7 +34,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
         <!-- Anders gewoon de tekst tonen van tekstblok -->
         <c:if test="${!tb.toonUrl}">
-        <div class="inleiding_body">
+        <div class="inleiding_body helppagina_cms_blok">
             ${tb.tekst}
 
             <c:if test="${!empty tb.url}">

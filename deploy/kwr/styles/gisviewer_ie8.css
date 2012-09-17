@@ -3,3 +3,7 @@
     -pie-background: linear-gradient(#FFF, #FFF);
     behavior: url(/gisviewer/PIE.htc);
 }
+
+.helppagina_cms_blok {
+    height: 220px;
+}

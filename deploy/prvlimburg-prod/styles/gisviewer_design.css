@@ -550,6 +550,10 @@ body.pdfExportClass {
     background: linear-gradient(#D6E9F1, #E2F7FF);
 }
 
+.helppagina_cms_blok {
+    height: 220px;
+}
+
 .content_block_tab .inleiding_body {
     color: #ffffff;
     -webkit-border-radius: 0px;

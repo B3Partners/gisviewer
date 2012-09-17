@@ -577,6 +577,10 @@ table.tablesorter thead tr .headerSortDown {
     min-height: 180px;
 }
 
+.helppagina_cms_blok {
+    height: 220px;
+}
+
 .example_image {
     float: left;
     padding-top: 8px;

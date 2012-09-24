@@ -134,10 +134,12 @@ function getMaxBounds() {
     var maxBounds;        
     if (!bbox && fullbbox){
         maxBounds = Utils.createBounds(new Extent(fullbbox));
+    } else if (bbox && appExtent) {
+        maxBounds = Utils.createBounds(new Extent(appExtent));
     } else if (bbox && fullbbox) {
         maxBounds = Utils.createBounds(new Extent(fullbbox));
     } else if (bbox && !fullbbox) {
-        maxBounds = Utils.createBounds(new Extent(bbox));
+        maxBounds = Utils.createBounds(new Extent(bbox));    
     } else {
         var bounds = getNLMaxBounds();        
         maxBounds = new OpenLayers.Bounds(bounds.left, bounds.bottom, bounds.right, bounds.top);
@@ -3301,20 +3303,23 @@ function resizeOpenLayersDiv(w, h) {
     }
 }
 
-function setStartExtent() {
-    
+function setStartExtent() {    
     /* Eerst kijken of er een zoekextent is */
-    if (searchExtent != null){
+    if (searchExtent != null) {
         webMapController.getMap("map1").moveToExtent(searchExtent);
         
-    /* Extent uit Applicatie */
-    } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {
-        setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+    /* Extent uit url */
+    } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {        
+        if (appExtent != null && appExtent.length > 0 && appExtent.split(",").length ==4 ) {
+            setFullExtent(appExtent.split(",")[0],appExtent.split(",")[1],appExtent.split(",")[2],appExtent.split(",")[3]);
+        } else {
+            setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+        }
         
         setTimeout(function () {
             moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
-        }, 1);        
-    
+        }, 1);
+        
     /* Extent uit Flamingo */
     } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {
         setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);

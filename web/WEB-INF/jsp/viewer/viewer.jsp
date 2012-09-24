@@ -48,6 +48,12 @@
     var fullbbox='${fullExtent}';
 
     var bbox='${extent}';
+    
+    /* Applicatie extent */
+    var appExtent = catchEmpty("${configMap["extent"]}");
+    if (typeof appExtent === 'undefined' || !appExtent) {
+        appExtent = "12000,304000,280000,620000";
+    }
 
     var resolution=catchEmpty(${resolution});
 

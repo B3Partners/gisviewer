@@ -476,7 +476,7 @@
         <input type="hidden" name="withinObject"/>
         <input type="hidden" name="onlyFeaturesInGeom"/>
         <input type="hidden" name="extraCriteria"/>
-
+        <input type="hidden" name="bookmarkAppcode"/>
 
         <html:hidden property="themaid" />
         <html:hidden property="analysethemaid" />

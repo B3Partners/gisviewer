@@ -519,7 +519,7 @@ function loadChild(bronContentId, beanId, wkt, beanCql) {
 
     if($bronContentDiv.hasClass("bronChildEmpty"))
     {
-        JCollectAdmindata.fillGegevensBronBean(beanId, 0, wkt, beanCql,false, bronContentId, handleGetGegevensBron);
+        JCollectAdmindata.fillGegevensBronBean(beanId, 0, wkt, beanCql,false, bronContentId, bookmarkAppcode, handleGetGegevensBron);
         $bronContentDiv.removeClass("bronChildEmpty").addClass("bronContentClosed");
         $j("#childCaption"+bronContentId).hide();
         $j('#childLoading'+bronContentId).show();

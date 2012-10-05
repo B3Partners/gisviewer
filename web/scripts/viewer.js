@@ -678,6 +678,10 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
         document.forms[0].withinObject.value = "-1";
         document.forms[0].onlyFeaturesInGeom.value="false";
     }
+    
+    if (bookmarkAppcode != null) {
+        document.forms[0].bookmarkAppcode.value=bookmarkAppcode;
+    }
 
     if (highlightThemaId != null) {
         document.forms[0].themaid.value = highlightThemaId;
@@ -756,7 +760,6 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
         document.forms[0].target = 'dataframe';
         loadBusyJSP('dataframe', 'panel');
     }
-
     
     document.forms[0].submit();
 }

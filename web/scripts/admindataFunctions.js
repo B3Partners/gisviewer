@@ -90,7 +90,7 @@ function handleGetGegevensBron(gegevensbron) {
     // aftellen verwerkte gegevensbron
     loop--;
     if(!gegevensbron) {
-        if (loop==0) {
+        if (loop <= 0) {
             // geen enkele gegevensbron was gevuld!
             window.setTimeout("writeNoResults();", timeout);
         }

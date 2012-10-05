@@ -55,7 +55,9 @@ function EditComponent(){
         var div = document.createElement('div');
         var fid = (result.fid);
         if(fid){
-            fid = fid.replace(/\./g,'_');
+            if(typeof fid === "string"){
+                fid = fid.replace(/\./g,'_');
+            }
             this.mode = "edit";
         }else{
             fid = "-1";

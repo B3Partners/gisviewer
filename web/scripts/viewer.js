@@ -466,19 +466,7 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
         else if (searchAction.toLowerCase().indexOf("filter")>=0)
             doFilter=true;
     }
-    if (doZoom){
-        result=getBboxMinSize2(result);
-        var ext= new Object();
-        ext.minx=result.minx;
-        ext.miny=result.miny;
-        ext.maxx=result.maxx;
-        ext.maxy=result.maxy;
-        if(mapInitialized) {
-            moveToExtent(ext.minx, ext.miny, ext.maxx, ext.maxy);
-        }else{
-            searchExtent=ext;
-        }
-    }
+    
     if (doHighlight || doFilter){
         var sldOptions="";
         var visval=null;
@@ -522,6 +510,26 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
         
     placeSearchResultMarker(x,y);    
     switchTab(document.getElementById("zoeken"));
+    
+    /* Lagen aanzetten na zoeken */
+    JZoekconfiguratieThemaUtil.getThemas(searchConfigId, function(data) {
+        zoekconfiguratieThemasCallBack(data);
+        switchLayersOn();
+        
+        if (doZoom){
+            result=getBboxMinSize2(result);
+            var ext= new Object();
+            ext.minx=result.minx;
+            ext.miny=result.miny;
+            ext.maxx=result.maxx;
+            ext.maxy=result.maxy;
+            if (mapInitialized) {
+                moveToExtent(ext.minx, ext.miny, ext.maxx, ext.maxy);
+            } else{
+                searchExtent=ext;
+            }
+        }        
+    });
 }
 
 function placeSearchResultMarker(x,y) {
@@ -3303,27 +3311,50 @@ function resizeOpenLayersDiv(w, h) {
     }
 }
 
-function setStartExtent() {    
-    /* Eerst kijken of er een zoekextent is */
-    if (searchExtent != null) {
-        webMapController.getMap("map1").moveToExtent(searchExtent);
-        
+function initFullExtent() {
     /* Extent uit url */
-    } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {        
+     if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {        
         if (appExtent != null && appExtent.length > 0 && appExtent.split(",").length ==4 ) {
             setFullExtent(appExtent.split(",")[0],appExtent.split(",")[1],appExtent.split(",")[2],appExtent.split(",")[3]);
         } else {
             setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
         }
         
+    /* Extent uit Flamingo */
+    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {
+        setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);        
+    
+    /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
+    } else {
+        bbox = getNLExtent();
+        fullbbox = getNLExtent();
+        
+        var bounds = getNLMaxBounds();        
+        
+        setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
+    }
+}
+
+function setStartExtent() {   
+    initFullExtent();
+    
+    /* Bij zoeken via url de handleInitSearch callback laten zoomen */
+    if (searchConfigId != null && searchConfigId > 0) {
+        return;
+    }
+    
+    /* Eerst kijken of er een zoekextent is */
+    if (searchExtent != null) {
+        webMapController.getMap("map1").moveToExtent(searchExtent);
+        
+    /* Extent uit url */
+    } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {          
         setTimeout(function () {
             moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
         }, 1);
         
     /* Extent uit Flamingo */
-    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {
-        setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-        
+    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {        
         setTimeout(function () {
             moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
         }, 1);      
@@ -3336,9 +3367,7 @@ function setStartExtent() {
         bbox = getNLExtent();
         fullbbox = getNLExtent();
         
-        var bounds = getNLMaxBounds();        
-        
-        setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
+        var bounds = getNLMaxBounds();
         
         setTimeout(function () {
             moveToExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);

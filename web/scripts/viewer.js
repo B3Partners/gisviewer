@@ -3552,7 +3552,14 @@ function getWMSLayersUrls() {
 
     /* dan voorgrond url's toevoegen */
     for (var k=0; k < fgLayers.length; k++){
-        if(fgLayers[k].getURL() != null){
+        /* Niet in print als voorgrond niet binnen schaal valt. Anders ontstaan er
+         * vreemde printvoorbeelden als je daarvoor al een keer een print hebt gemaakt
+         * waarbij de voorgrond nog wel binnen schaal viel. Fix voor ticket #618 Limburg */
+        var item = getItemFromWmsLayer(fgLayers[k]);        
+        var currentscale = webMapController.getMap().getScaleHint();
+        var inScale = isItemInScale(item, currentscale);
+        
+        if(fgLayers[k].getURL() != null && inScale){
             if(!firstURL){
                 urlString+=";";
             }else{
@@ -3567,6 +3574,17 @@ function getWMSLayersUrls() {
     }
 
     return urlString;
+}
+
+function getItemFromWmsLayer(layer) {
+    var item;
+    if (layer.options) {
+        item = getItemByLayer(themaTree, layer.options.layers);
+    } else {
+        item = layer.getFrameworkLayer();
+    }
+    
+    return item;
 }
 
 function getWktStringForPrint() {

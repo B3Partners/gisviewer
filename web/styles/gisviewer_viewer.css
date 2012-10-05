@@ -320,3 +320,37 @@ html, body {
 #mapcontent .olControlPanel, #mapcontent .olControlPanZoomBar {
     cursor: default;
 }
+/*Maatregel*/
+.maatregelContainer{
+    margin-top: 5px;
+}
+.maatregel_vraag{
+    margin-top: 5px;
+}
+.maatregel_vraagHoeveelheid{
+    margin-top: 5px;
+}
+.maatregel_vraagSelect{
+    margin-top: 5px;
+}
+.maatregelListContainer{
+    border-bottom: 1px solid;
+}
+.maatregel_item{
+    margin-bottom: 5px;
+}
+.maatregel_text{
+    float: left;
+    width: 75%;    
+}
+.maatregel_delete{    
+    float: right;
+    width: 25%;
+    color: red;
+    
+}
+
+/*
+.maatregel_vraagSelect input{
+    float: left;
+}*/

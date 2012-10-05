@@ -15,6 +15,8 @@
     var flagicon = '<html:rewrite href="./images/icons/flag_blue.png" />';
     var wandicon = '<html:rewrite href="./images/icons/wand.png" />';
     var loadingicon = '<html:rewrite href="./images/icons/loading.gif" />';
+    
+    var pencil = '<html:rewrite href="./images/icons/pencil.png" />';
 
     var pdficon = '<html:rewrite href="./images/icons/pdf.png" />';
     var docicon = '<html:rewrite href="./images/icons/document.png" />';

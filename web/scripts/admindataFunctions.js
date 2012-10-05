@@ -379,6 +379,18 @@ function handleGetGegevensBronMulti(gegevensbron) {
     var bronTableBody = $j('<tbody></tbody>');
 
     // Create table heading
+    if (gegevensbron.editable && getParent().showEditTool) {
+        var bewerk = {
+            commando: null,
+            eenheid:null,
+            id: -1,
+            kolomBreedte: 0,
+            kolomNaam: "bewerk",
+            label: "Bewerk feature",
+            type: "TYPE_DATA"
+        }
+        gegevensbron.labels.push(bewerk);
+    }
     var trHead = createTableHead(gegevensbron.labels, false);
     bronTableHead.append(trHead);
 
@@ -414,6 +426,15 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 var td = createTableTd(waarde);
                 tr.append(td);
             });
+            
+            if (gegevensbron.editable && getParent().showEditTool) {
+                var icon = $j('<img src="'+pencil+'" alt="Edit object" title="Edit object" />')
+                .click(function() {
+                    var ec = getParent().editComponent;
+                    ec.edit(record,gegevensbron.id);
+                });
+                tr.append(icon);
+            }
             bronTableBody.append(tr);
             // Check if there are childs
             if(record.childs != null && record.childs.length > 0) {
@@ -740,8 +761,13 @@ function createTableTd(waarde) {
             td.html("-");
         } else if(waarde.value.search('###') != -1) {
             var funcarray = waarde.value.split('###');
-            var fLink = $j('<a href="#" id="jsFunction_'+(idcounterJsFunctions++)+'">'+funcarray[0]+'</a>')
-            .click(function() {
+            var fLink=null;
+            if (funcarray[0]=="null"){
+                fLink =$j('<img src="'+flagicon+'" alt="Voer functie uit" title="Voer functie uit" />');
+            }else{
+                fLink = $j('<a href="#" id="jsFunction_'+(idcounterJsFunctions++)+'">'+funcarray[0]+'</a>')
+            }
+            fLink.click(function() {
                 eval(funcarray[1]);
             });
             td.html(fLink);
@@ -978,6 +1004,10 @@ function doDummy(element, themaid, keyName, keyValue, attributeName, attributeVa
  *Calculate the Area of the object.
  */
 function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){   
+    if (attributeName==null || attributeValue == null){
+        attributeName = keyName;
+        attributeValue = keyValue;
+    }
     JMapData.getArea(element.id,themaid,attributeName,attributeValue,eenheid,handleGetArea);
 }
 /**
@@ -1017,8 +1047,20 @@ function getParent(){
     }
 }
 
-function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
+function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
+    //console.log("Thema id: "+themaid+" "+naampk+":"+waardepk);
+    if (waardeingevuldekolom=="null"){
+        waardeingevuldekolom=null;
+    }
+    getParent().showMaatregel(waardeingevuldekolom,gegevensbronId,waardepk);
+    
+}
 
+function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
+    if (naamingevuldekolom==null || waardeingevuldekolom == null){
+        naamingevuldekolom = naampk;
+        waardeingevuldekolom = waardepk;
+    }
     var sldstring=window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";
     //"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
     

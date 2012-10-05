@@ -88,6 +88,10 @@
         <put name="title" value="WKT" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewertransparantie.jsp"/>
     </definition>
+    <definition name="viewerteken" extends="tab">
+        <put name="title" value="Tekenen" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerteken.jsp"/>
+    </definition>
     
     <definition name="viewerhighlight" path="/WEB-INF/jsp/viewer/viewerhighlightkeuze.jsp"/>
 

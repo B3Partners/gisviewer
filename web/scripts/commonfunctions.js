@@ -256,15 +256,15 @@ function dialogPopUp(innerJqueryElement,title,width,height,dialogOptions){
 
     if (lightBoxPopUp!=null){
         lightBoxPopUp.dialog('close');
-        lightBoxPopUp.remove();
     }
-    var lightBoxPopUp = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
+    lightBoxPopUp = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
     lightBoxPopUp.append(innerJqueryElement);
     lightBoxPopUp.dialog(options);
     lightBoxPopUp.dialog("option", "title", title);
     lightBoxPopUp.dialog("option", "height", height);
     lightBoxPopUp.dialog("option", "width", width);
     lightBoxPopUp.dialog('open');    
+    return lightBoxPopUp;
 }
 
 var prevpopup;
@@ -339,6 +339,10 @@ function iFramePopup(url, newpopup, title, width, height, blockviewer, showScrol
     }
     
     if(blockviewer) blockViewerUI();
+}
+
+function closeDialogPopup(){
+    dialogPopup.dialog('close');
 }
 
 function closeiFramepopup() {

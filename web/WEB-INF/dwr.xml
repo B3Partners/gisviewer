@@ -18,7 +18,14 @@
         <create creator="new" javascript="JZoekconfiguratieThemaUtil">
             <param name="class" value="nl.b3p.gis.utils.ZoekconfiguratieThemaUtil"/>
         </create>
-
+        <create creator="new" javascript="JEditFeature">
+            <param name="class" value="nl.b3p.gis.viewer.services.EditFeature"/>
+        </create>
+        
+        <create creator="new" javascript="JMaatregelService">
+            <param name="class" value="nl.b3p.gis.viewer.services.MaatregelService"/>
+        </create>
+        
         <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaat"/>
         <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaatAttribuut"/>
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>

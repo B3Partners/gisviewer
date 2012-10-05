@@ -7,6 +7,8 @@
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js'></script>
+<script type='text/javascript' src='dwr/interface/JEditFeature.js'></script>
+<script type='text/javascript' src='dwr/interface/JMaatregelService.js'></script>
 
 <script type='text/javascript' src='dwr/util.js'></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
@@ -306,7 +308,8 @@
         "cms": {id: "cms", contentid: "cmsvak", name: "Extra"},
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"},
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
-        "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"}
+        "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"},
+        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"}
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -351,6 +354,11 @@
     var showGPSTool = catchEmpty(${configMap["showGPSTool"]});
     if (typeof showGPSTool === 'undefined') {
         showGPSTool = false;
+    }
+    
+    var showEditTool = catchEmpty(${configMap["showEditTool"]});
+    if (typeof showEditTool === 'undefined') {
+        showEditTool = false;
     }
     
     var gpsBuffer = catchEmpty(${configMap["gpsBuffer"]});
@@ -721,6 +729,7 @@
     <div id="bagvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="bagframeViewer" name="bagframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="wktvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="wktframeViewer" name="wktframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    <div id="tekenenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="tekenenframeViewer" name="tekenenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">
@@ -994,6 +1003,8 @@
 
 <script type="text/javascript" src="scripts/zoeker.js"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/GPSComponent.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/EditComponent.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/MaatregelComponent.js"/>"></script>
 <script type="text/javascript">
     /* Weghalen als viewer.jsp klaar is */
     if (!waitUntillFullyLoaded) {

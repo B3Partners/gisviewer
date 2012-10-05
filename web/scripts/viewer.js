@@ -53,6 +53,7 @@ var multiPolygonBufferWkt;
 var alleLayers = new Array();
 
 var gpsComponent = null;
+var editComponent = null;
 
 /* TODO: OL height work-around for first time getMaxBounds */
 var firstTimeOLHeightAdjusted = false;
@@ -418,6 +419,10 @@ function initializeButtons() {
 
     var zoombar= webMapController.createTool("zoombar",Tool.ZOOM_BAR);
     webMapController.addTool(zoombar);
+    
+    if(showEditTool){
+        editComponent = new EditComponent();
+    }
 }
 
 /**
@@ -4872,6 +4877,7 @@ $j(document).ready(function() {
     var bagTabOn = false;
     var wktTabOn = false;
     var transparantieTabOn = false;
+    var tekenTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
         if (enabledtabs[i] == "analyse")
@@ -4897,6 +4903,9 @@ $j(document).ready(function() {
         
         if (enabledtabs[i] == "transparantie")
             transparantieTabOn = true;
+        
+        if (enabledtabs[i] == "tekenen")
+            tekenTabOn = true;
     }
 
     if (analyseTabOn) {
@@ -4932,6 +4941,12 @@ $j(document).ready(function() {
     if (transparantieTabOn) {
         if(document.getElementById('transparantieframeViewer')) {
             document.getElementById('transparantieframeViewer').src='/gisviewer/viewertransparantie.do';
+        }
+    }
+    
+    if (tekenTabOn) {
+        if(document.getElementById('tekenenframeViewer')) {
+            document.getElementById('tekenenframeViewer').src='/gisviewer/viewerteken.do';
         }
     }
 

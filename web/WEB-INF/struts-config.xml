@@ -233,6 +233,11 @@
             <forward name="failure" path="viewertransparantie"/>
         </action>
         
+        <action path="/viewerteken" type="nl.b3p.gis.viewer.TekenAction" scope="request" validate="false">
+            <forward name="success" path="viewerteken"/>
+            <forward name="failure" path="viewerteken"/>
+        </action>
+        
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

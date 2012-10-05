@@ -318,8 +318,10 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     var bronTableBody = $j('<tbody></tbody>');
 
     // Create table heading
-    var trHead = createTableHead(gegevensbron.labels, true);
-    bronTableHead.append(trHead);
+    if (gegevensbron.records) {
+        var trHead = createTableHead(gegevensbron.labels, true);
+        bronTableHead.append(trHead);
+    }
 
     // Create table content
     if(!gegevensbron.records) {
@@ -390,9 +392,12 @@ function handleGetGegevensBronMulti(gegevensbron) {
             type: "TYPE_DATA"
         }
         gegevensbron.labels.push(bewerk);
+    }    
+    
+    if (gegevensbron.records) {
+        var trHead = createTableHead(gegevensbron.labels, false);
+        bronTableHead.append(trHead);
     }
-    var trHead = createTableHead(gegevensbron.labels, false);
-    bronTableHead.append(trHead);
 
     // Create table content
     if(!gegevensbron.records) {
@@ -622,7 +627,10 @@ function createBronCaption(gegevensbron, simple, index) {
     });
     
     bronCaption.append(" ");
-    bronCaption.append(icon);
+    
+    if(gegevensbron.records) {
+        bronCaption.append(icon);
+    }
 
     //Info export knop
     var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j";
@@ -649,7 +657,10 @@ function createBronCaption(gegevensbron, simple, index) {
         $j("#"+infoFrmId).submit();
     });
     bronCaption.append(" ");
-    bronCaption.append(icona);
+    
+    if(gegevensbron.records) {
+        bronCaption.append(icona);
+    }
 
     return bronCaption;
 }
@@ -845,8 +856,13 @@ function createEmptyRow(size) {
     var td = $j('<td></td>').attr({
         "colSpan": size
     })
-    .html("leeg");
+    .html("Er zijn geen gegevens gevonden.")
+    .css("font-size", "1.2em")
+    .css("font-weight", "bold")
+    .css("color", "#808080");
+    
     tr.append(td);
+    
     return tr;
 }
 

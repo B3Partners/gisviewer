@@ -420,9 +420,7 @@ function initializeButtons() {
     var zoombar= webMapController.createTool("zoombar",Tool.ZOOM_BAR);
     webMapController.addTool(zoombar);
     
-    if(showEditTool){
-        editComponent = new EditComponent();
-    }
+    editComponent = new EditComponent();
 }
 
 /**

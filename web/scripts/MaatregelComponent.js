@@ -172,6 +172,16 @@ function MaatregelComponent(){
                     hEl.value=eigenschap.hoeveelheid;
                 }
             }
+            //fill the customInputs.
+            if (eigenschap.customInputs){
+                for (var c=0; c < eigenschap.customInputs.length; c++){
+                    var customInput=eigenschap.customInputs[c];
+                    var inputEl=document.getElementById(this.customInputPrefix+eigenschap.deficode+customInput.index);
+                    if (inputEl){
+                        inputEl.value=customInput.value;
+                    }
+                }
+            }
         }
         if (result.hoeveelheid){
             var mhEl=document.getElementById("maatregel_hoeveelheid");

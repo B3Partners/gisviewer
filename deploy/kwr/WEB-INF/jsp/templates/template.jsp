@@ -65,7 +65,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <div id="footer">
             <div id="footer_content">
                 <div id="footer_tekst_links" class="footer_tekst">This program is distributed under the terms of the <a href="http://www.gnu.org/licenses/gpl.html" target="_new">GNU General Public License</a></div>
-                <div id="footer_tekst_rechts" class="footer_tekst">B3P GIS Suite 3.6</div>
+                <div id="footer_tekst_rechts" class="footer_tekst">B3P GIS Suite 4.0</div>
             </div>
         </div>
 

@@ -25,7 +25,7 @@ function addNew(){
     parent.JEditFeature.getFeatureType(gegevensbron,function(data){
         var results = JSON.parse(data);
         if(results.success){
-            parent.editComponent.receiveFeatureAttributes(results.featuretype);
+            parent.editComponent.receiveFeatureAttributes(results.featuretype,false, true);
         }else{
             alert("Ophalen van gegevens mislukt." + results.message);
         }

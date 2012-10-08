@@ -47,9 +47,13 @@ function EditComponent(){
         
     },
 
-    this.receiveFeatureAttributes = function (result,showDeleteButton){
+    this.receiveFeatureAttributes = function (result,showDeleteButton, keepFeatures){
         this.removeCurrentEditWindow();
-        this.vectorLayer.removeAllFeatures();
+        
+        if(keepFeatures == undefined || keepFeatures == null){keepFeatures = false;}
+        if(!keepFeatures){
+            this.vectorLayer.removeAllFeatures();
+        }
         var table = null;
             // Create div
         var div = document.createElement('div');

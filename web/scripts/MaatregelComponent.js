@@ -20,6 +20,7 @@ function MaatregelComponent(){
     this.listContainer = null;
     this.maatregelSelectText=null;
     this.maatregelSelect=null;
+    this.showAllMaatregel=null;
     this.popup=null;
     this.questionObject=null;
     this.currentCrow=null;
@@ -208,7 +209,11 @@ function MaatregelComponent(){
         this.maatregelContainer.append(this.maatregelSelectText);
         this.maatregelSelect = $j("<SELECT id='maatregelSelect'></SELECT>");
         this.maatregelContainer.append(this.maatregelSelect);            
-        
+        this.showAllMaatregel = $j("<input id='showAllMaatregel' type='checkbox'>Toon alle maatregelen</input>");
+        this.showAllMaatregel.change(function(){
+            me.refreshMaatregelSelect();
+        });
+        this.maatregelContainer.append(this.showAllMaatregel);
         JMaatregelService.getMaatregelen(this.objectType,function (maatregelen){
             me.handleGetMaatregelen(maatregelen)            
             //add change function
@@ -220,7 +225,11 @@ function MaatregelComponent(){
     
     this.refreshMaatregelSelect = function (){
         var me = this;
-        JMaatregelService.getMaatregelen(this.objectType,function (maatregelen){
+        var objType=this.objectType;
+        if($j("#showAllMaatregel:checked").length>0){
+            objType=null;
+        }
+        JMaatregelService.getMaatregelen(objType,function (maatregelen){
             me.handleGetMaatregelen(maatregelen)            
             //add change function
             me.maatregelSelect.change(function(){
@@ -238,12 +247,16 @@ function MaatregelComponent(){
     /**
      * Handle function when maatregels are returned.
      */
-    this.handleGetMaatregelen = function (data){        
+    this.handleGetMaatregelen = function (data){
+        var value=this.maatregelSelect.val();
         dwr.util.removeAllOptions("maatregelSelect");
         dwr.util.addOptions("maatregelSelect",[ "Kies maatregel..."]);
         var response = JSON.parse(data);
         if (response.success){
             dwr.util.addOptions("maatregelSelect",response.results,"id","omschrijving");
+        }
+        if (value){
+            this.maatregelSelect.val(value);
         }
     },
     /**

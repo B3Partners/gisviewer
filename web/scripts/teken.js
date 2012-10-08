@@ -57,7 +57,7 @@ function retrievePoint(layerName,object){
         isEditting = false;
         var feature = object.wkt;
         var scale = webMapController.getMap().getScale();
-        var distance = scale * 2;
+        var distance = scale * 4;
         var me = this;
         laag.removeAllFeatures();
         parent.JEditFeature.getFeatureByWkt(gegevensbron,feature,distance,

@@ -68,7 +68,8 @@ function MaatregelComponent(){
         
         if (this.maatregelSelect==null){
             this.createMaatregelSelect();
-        }
+        }        
+        this.refreshMaatregelSelect();
         this.refresh();
         
         this.popup.dialog('open');
@@ -199,6 +200,17 @@ function MaatregelComponent(){
         this.maatregelSelect = $j("<SELECT id='maatregelSelect'></SELECT>");
         this.maatregelContainer.append(this.maatregelSelect);            
         
+        JMaatregelService.getMaatregelen(this.objectType,function (maatregelen){
+            me.handleGetMaatregelen(maatregelen)            
+            //add change function
+            me.maatregelSelect.change(function(){
+                me.maatregelSelectChanged();
+            });
+        });
+    },
+    
+    this.refreshMaatregelSelect = function (){
+        var me = this;
         JMaatregelService.getMaatregelen(this.objectType,function (maatregelen){
             me.handleGetMaatregelen(maatregelen)            
             //add change function

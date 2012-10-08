@@ -190,6 +190,15 @@ function MaatregelComponent(){
                 mhEl.value=result.hoeveelheid;
             }
         }
+        if (result.customInputs){
+            for (var i = 0; i < result.customInputs.length; i++){
+                var customInput =result.customInputs[i];
+                var inputEl = document.getElementById(this.customInputPrefix + customInput.index);
+                if (inputEl){
+                    inputEl.value=customInput.value;
+                }
+            }
+        }
     },
     
     this.createMaatregelSelect = function(){
@@ -405,6 +414,20 @@ function MaatregelComponent(){
         //get vraag answers
         var vraagIds= this.currentCrow.getVraagIds();
         obj.eigenschappen = [];
+        //get customInputs in Maatregel Tekst
+        var count=0;
+        var customInputEl = document.getElementById(this.customInputPrefix+count);
+        while (customInputEl){
+            if (obj.customInputs == undefined){
+                obj.customInputs = [];
+            }
+            obj.customInputs.push({
+                index: count,
+                value: customInputEl.value
+            });
+            count++;
+            customInputEl = document.getElementById(this.customInputPrefix+count);
+        }
         for (var i=0; i < vraagIds.length; i++){
             var checkedRadio=$j("input[name='"+this.radioPrefix+vraagIds[i]+"']:checked");
             if (checkedRadio){
@@ -414,8 +437,9 @@ function MaatregelComponent(){
                 if (hoeveelheidInput && hoeveelheidInput.value.length){
                     eigenschap.hoeveelheid=hoeveelheidInput.value;
                 }
-                var count=0;
-                var customInputEl = document.getElementById(this.customInputPrefix+eigenschap.deficode+count);                 
+                //get customInputs in questions
+                count=0;
+                customInputEl = document.getElementById(this.customInputPrefix+eigenschap.deficode+count);                 
                 while (customInputEl){
                     if (eigenschap.customInputs==undefined){
                         eigenschap.customInputs=[];

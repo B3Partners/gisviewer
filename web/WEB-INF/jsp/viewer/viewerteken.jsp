@@ -36,7 +36,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         </html:messages>
     </div>
-    <h2>${tekenTitel}</h2>
     ${tekenTekstBoven} <br/>
     <img src="${tekenPlaatje}"/> <br/>
     ${tekenTekstOnder} <br/>    

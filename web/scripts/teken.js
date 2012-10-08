@@ -107,15 +107,21 @@ function openLink(index){
     parent.editComponent.receiveFeatureAttributes(this.currentResults[index],true);
 }
 
-$j(document).ready(function(){
-    changeTabTitle();
-    editComponent = parent.editComponent;
-        var lagen = webMapController.getMap().getAllVectorLayers();
-    if(lagen.length >0){
+function init(){
+    var lagen = webMapController.getMap().getAllVectorLayers();
+    if(lagen.length > 0 ){
         var laag = lagen[0]
         var me = this;
         webMapController.registerEvent(parent.Event.ON_FEATURE_ADDED,laag,function(layerName,object){
             retrievePoint(layerName,object);
         },me);
+    }else{
+        setTimeout(init,300);
     }
+}
+
+$j(document).ready(function(){
+    changeTabTitle();
+     editComponent = parent.editComponent;
+     init();
 });

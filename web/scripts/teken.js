@@ -42,11 +42,6 @@ function selectFeature(){
             laag.stopDrawDrawFeature();
         }else{
             isEditting = true;
-            webMapController.registerEvent(parent.Event.ON_FEATURE_ADDED,laag,function(layerName,object){
-                webMapController.unRegisterEvent(parent.Event.ON_FEATURE_ADDED,laag,arguments.callee);
-                isEditting = false;
-                me.retrievePoint(layerName,object);
-            });
             laag.drawFeature("Point");
         }
     }else{
@@ -55,18 +50,21 @@ function selectFeature(){
 }
 
 function retrievePoint(layerName,object){
-    var lagen = webMapController.getMap().getAllVectorLayers();
-    var laag = lagen[0]
-    laag.stopDrawDrawFeature();
-    var feature = object.wkt;
-    var scale = webMapController.getMap().getScale();
-    var distance = scale * 2;
-    var me = this;
-    laag.removeAllFeatures();
-    parent.JEditFeature.getFeatureByWkt(gegevensbron,feature.wktgeom,distance,
-        function (data){
-            me.receiveFeatureAttributes(data,true );
-        });
+    if(isEditting){
+        var lagen = webMapController.getMap().getAllVectorLayers();
+        var laag = lagen[0]
+        laag.stopDrawDrawFeature();
+        isEditting = false;
+        var feature = object.wkt;
+        var scale = webMapController.getMap().getScale();
+        var distance = scale * 2;
+        var me = this;
+        laag.removeAllFeatures();
+        parent.JEditFeature.getFeatureByWkt(gegevensbron,feature,distance,
+            function (data){
+                me.receiveFeatureAttributes(data,true );
+            });
+    }
 }
 
 function receiveFeatureAttributes(data){
@@ -112,4 +110,12 @@ function openLink(index){
 $j(document).ready(function(){
     changeTabTitle();
     editComponent = parent.editComponent;
+        var lagen = webMapController.getMap().getAllVectorLayers();
+    if(lagen.length >0){
+        var laag = lagen[0]
+        var me = this;
+        webMapController.registerEvent(parent.Event.ON_FEATURE_ADDED,laag,function(layerName,object){
+            retrievePoint(layerName,object);
+        },me);
+    }
 });

@@ -36,6 +36,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
+        <link href="styles/jcarousel/skin.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.jcarousel.min.js' module=''/>"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.mousewheel.min.js' module=''/>"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.qtip-1.0.0-rc3.min.js' module=''/>"></script>
         <!--[if lte IE 6]>
             <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
         <![endif]-->
@@ -62,8 +66,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         </div>
         <div id="footer">
-            <div id="footer_content">
-            </div>
+            <div id="footer_content"></div>
         </div>
 
         <tiles:insert definition="googleAnalytics"/>

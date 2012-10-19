@@ -1,52 +1,144 @@
 body {
-    font-size: 8pt;
-    background-color: #CCCCCC;
+    font-size: 11px;
+    background-color: #FFFFFF;
     color: #000000;
     font-family: arial, sans-serif;
+    background: url(../images/bg_fade.gif) repeat-x scroll 0 -60px transparent;
 }
 
 #header {
-    background-image: url(../images/bovenbalk.gif);
+    background-image: url(../images/bg_city.gif);
     background-repeat: repeat-x;
+    background-position: bottom center;
+    height: 174px;
+    padding-top: 66px;
+    background-color: transparent;
+}
+
+.viewerbodyelement #header {
+    height: 50px;
+    padding-top: 0px;
 }
 
 #header_content {
-    background-image: url(../images/Gisviewer.gif);
+    background-image: url(../images/bg_header.gif);
     background-repeat: no-repeat;
+    background-position: bottom left;
+}
+
+.viewerbodyelement #header_content {
+    margin-left: 0px;
+    width: 100%;
+    background-image: url(../images/logo_small.png);
+}
+
+#venraylogo {
+    background-image: url(../images/logo.gif);
+    width: 339px;
+    height: 78px;
+}
+
+#venrayhead {
+    height: 89px;
+    margin-top: 96px;
+}
+
+#venrayhead h1 {
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 26px;
+    margin: 0;
+    padding: 30px;
+}
+
+#topmenu_header {  
+    background-color: #000000;
+    border-radius: 30px 30px 0 0;
+    height: 50px;
+    width: 180px;
+    margin-bottom: 16px;
+}
+
+#topmenu_header h2 {
+    color: #FFFFFF;
+    font-size: 19px;
+    font-weight: bold;
+    margin: 0;
+    padding: 16px;
 }
 
 #topmenu {
-    margin-top: 16px;
+    width: 180px;
+    height: 250px;
+    margin-top: 0px;
+    
+    background-color: #AC1E35;
+    border-radius: 30px 30px 30px 30px;
+    -webkit-border-radius: 30px 30px 30px 30px;
+}
+
+.viewerbodyelement #topmenu {
+    background-color: transparent;
+    width: auto;
+    background-color: White;
+    height: auto;
+    padding: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 0px 0px 15px 0px;
+    -webkit-border-radius: 0px 0px 15px 0px;
 }
 
 a.menulink, a.menulink:visited, a.menulink:active, a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
+    color: #E5BBB3;
     display: block;
-    padding-top: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    height: 21px;
-    border: 0px none;
-    color:  #990000;;
-    float: right;
-    
-    background-color: #FFFFFF;
-    
+    line-height: 32px;
+    padding: 0 16px;
+    font-size: 14px;
+    text-decoration: none;
 }
 
-a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
-    border: 0px none;
-    color:  #990000;;
+a.activemenulink, a.activemenulink:visited, a.activemenulink:active, a.menulink:hover {
+    background-color: #7B0A1F;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.viewerbodyelement a.menulink, .viewerbodyelement a.menulink:visited, .viewerbodyelement a.menulink:active, .viewerbodyelement a.activemenulink, .viewerbodyelement a.activemenulink:visited, .viewerbodyelement a.activemenulink:active, .viewerbodyelement a.menulink:hover {
+    float: right;
+    display: inline;
+    padding: 0px;
+    font-size: 11px;
+    margin-right: 15px;
+    line-height: inherit;
+    color: #7B0A1F;
+    background-color: transparent;
 }
 
 #wrapper {
-    background-image: url(../images/maindiv_bg.gif);
-    background-position: center center;
-    background-repeat: repeat-y;
     color: White;
 }
 
+#content_normal {
+    padding-bottom: 60px;
+}
+
+#footer {
+    height: 27px;
+    margin-top: -27px;
+}
+
 #content {
-    background-color: #E5E5E5;
+    background-color: #FFFFFF;
+    border-left: 1px solid #BBBDBF;
+    border-right: 1px solid #BBBDBF;
+    border-bottom: 1px solid #BBBDBF;
+    width: 959px;
+    margin-top: 89px;
+    
+    -webkit-border-radius: 0px 0px 30px 30px;
+            border-radius: 0px 0px 30px 30px;
 }
 
 .infobalk {
@@ -63,7 +155,7 @@ a.activemenulink, a.activemenulink:visited, a.activemenulink:active {
 }
 
 .infobalk .infobalk_actions {
-    font-size: 8pt;
+    font-size: 11px;
     font-weight: bold;
     color: #000000;
 }
@@ -79,12 +171,12 @@ ul#nav a {
 }
 
 ul#nav a:hover, ul#nav li.activelink a,ul#nav li.activelink a:hover {
-    background: #009900;
+    background: #488431;
     color: #ffffff;
 }
 
 #tab_container, #leftcontent {
-    background-color: #009900;
+    background-color: #488431;
     background-repeat: repeat-x;
     color: White;
     background-position: 100% 100%;
@@ -113,13 +205,13 @@ ul#nav a:hover, ul#nav li.activelink a,ul#nav li.activelink a:hover {
 
 /* Common styles */
 th {
-    font-size: 8pt;
+    font-size: 11px;
     font-weight: bold;
     text-align: left;
 }
 
 div, td, th, span, input, textarea, select, option, button {
-    font-size: 8pt;
+    font-size: 11px;
     color: #000000;
     font-family: arial, sans-serif;
 }
@@ -127,7 +219,7 @@ div, td, th, span, input, textarea, select, option, button {
 h1{
     font-weight: bold;
     font-size: 11pt;
-    color: #009900;
+    color: #488431;
 }
 
 a, a:visited, a:active {
@@ -164,8 +256,8 @@ a:hover{
 }
 
 #content_style div.inleiding {
-    background-color: #009900;
-    padding-top: 5px;
+    background-color: #488431;
+    padding-top: 15px;
     padding-bottom: 5px;
     padding-left: 15px;
     padding-right: 15px;
@@ -176,8 +268,8 @@ a:hover{
 }
 
 .loadingMessage{
-    background-color: #009900;
-    padding-top: 5px;
+    background-color: #488431;
+    padding-top: 15px;
     padding-bottom: 5px;
     padding-left: 15px;
     padding-right: 15px;
@@ -198,7 +290,7 @@ a:hover{
     font-style: normal;
     margin-left: 0px;
     margin-bottom: 15px;
-    color: #009900;
+    color: #AC1E35;
 }
 
 #content_style h2 {
@@ -208,7 +300,7 @@ a:hover{
     font-style: normal;
     margin-bottom: 0px;
     margin-top: 15px;
-    color: #009900;
+    color: #AC1E35;
 }
 
 #content_style div.inleiding h2 {
@@ -223,11 +315,11 @@ a:hover{
 
 #content_style a {
     text-decoration: underline;
-    color: #000000;
+    color: #AC1E35;
 }
 
 #content_style a:hover {
-    color: #990000;
+    color: #AC1E35;
 }
 
 #content_style .presentation_table {
@@ -305,7 +397,7 @@ a:hover{
 
 .aanvullende_info_th {
     text-align: left;
-    font-size: 8pt;
+    font-size: 11px;
     height: 20px;
     margin: 0px;
     padding: 0px;
@@ -313,7 +405,7 @@ a:hover{
 }
 
 .aanvullende_info_td {
-    font-size: 8pt;
+    font-size: 11px;
     text-align: center;
     height: 20px;
     margin: 0px;
@@ -396,7 +488,7 @@ a:hover{
 
 #popupWindow {
     border: 3px solid #CCCCCC;
-    background-color: #009900;
+    background-color: #488431;
 }
 
 #popupWindow_Handle {
@@ -521,32 +613,28 @@ body.pdfExportClass {
 .content_title {
     font-size: 1.5em;
     font-weight: bold;
-    color: #009900;
+    color: #AC1E35;
     margin-top: 15px;
     padding-bottom: 10px;
 }
 
 .inleiding_body {
-    background-color: #009900;
+    background-color: #488431;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 2px;
     padding-bottom: 2px;
     color: #FFFFFF;
-    font-weight: bold;
+    font-weight: normal;
     min-height: 180px;
     
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px 8px 8px 8px;
-    -webkit-box-shadow: #666 0px 2px 3px;
-    -moz-box-shadow: #666 0px 2px 3px;
-    box-shadow: #666 0px 2px 3px;
-    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#009900), to(#006600));
-    background: -moz-linear-gradient(#009900, #006600);
-    background: -ms-linear-gradient(top, #009900, #006600);
-    background: -o-linear-gradient(top, #009900, #006600);
-    background: linear-gradient(#009900, #006600);
+    -webkit-border-radius: 8px 8px 8px 8px;
+            border-radius: 8px 8px 8px 8px;
+            
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background-image: none;
 }
 
 .helppagina_cms_blok {
@@ -566,7 +654,7 @@ body.pdfExportClass {
 
 .content_body a {
     padding-top: 5px;
-    color: #000000;
+    color: #AC1E35;
     text-decoration: underline;
 }
 
@@ -606,12 +694,8 @@ body.pdfExportClass {
 }
 
 .uitloggen a {
-    color: #000000;
+    color: #AC1E35;
     text-decoration: underline;
-}
-
-.uitloggen a:hover {
-    color: #990000;
 }
 
 a.highlightlink, a.highlightlink:visited, a.highlightlink:active {

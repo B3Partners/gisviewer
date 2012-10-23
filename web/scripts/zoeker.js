@@ -530,7 +530,10 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             continue;
         }
 
-        container.append('<strong>'+zoekVelden[i].label+':</strong><br />');
+        if (zoekVeld.type != 110) {
+            container.append('<strong>'+zoekVelden[i].label+':</strong><br />');
+        }
+        
         var inputfield;
 
         if (zoekVeld.inputType == 1 && zoekVeld.inputZoekConfiguratie) {
@@ -623,6 +626,20 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
                     performSearchOnEnterKey(ev);
                 });
                 container.append(inputfield).append('<br/><br/>');
+                
+            /* Invoer is geom voor afstand berekening */
+            } else if (zoekVeld.type == 110) {                
+                inputfield = $j('<input type="hidden" />');
+                inputfield.attr({
+                    id: zoekVeld.attribuutnaam,
+                    name: zoekVeld.attribuutnaam,
+                    size: 40,
+                    maxlength: zoekVeld.inputSize
+                }).keyup(function(ev) {
+                    performSearchOnEnterKey(ev);
+                });
+
+                container.append(inputfield).append('<br /><br />');
 
             } else {
                 inputfield = $j('<input type="text" />');

@@ -167,9 +167,16 @@
             <forward name="failure" path="globespotter"/>
         </action>
         
+        <action path="/a11yViewer" type="nl.b3p.gis.viewer.A11YViewerAction">
+            <forward name="list" path="/WEB-INF/jsp/viewer/a11y/a11y.jsp"/>
+            <forward name="search" path="/WEB-INF/jsp/viewer/a11y/a11ySearch.jsp"/>
+            <forward name="results" path="/WEB-INF/jsp/viewer/a11y/a11yResults.jsp"/>
+        </action>
+        
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
             <forward name="success" path="viewer"/>
             <forward name="simpleviewer" path="simpleviewer"/>
+            <forward name="a11yViewer" path="/a11yViewer.do" />
             <forward name="login" path="login"/>
             <forward name="list" path="index"/>
         </action>

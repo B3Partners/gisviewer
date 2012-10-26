@@ -32,22 +32,42 @@
 
             <c:forEach var="veld" items="${zoekVelden}">
                 <c:if test="${veld.inputtype == 2}">
-                    <p><c:out value="${veld.label}" /> <input type="text" name="${veld.label}" /></p>
-                    </c:if>  
+                    <c:set var="added" value="0" />
+
+                    <c:forEach var="entry" items="${params}">
+                        <c:if test="${entry.key == veld.label}">
+                            <c:set var="added" value="1" />
+                            <c:if test="${veld.type == 110 || veld.type == 3}">                                
+                                <input type="hidden" name="${veld.label}" value="${entry.value}"/>
+                            </c:if>
+                            <c:if test="${veld.type == 0}">
+                                <p><c:out value="${veld.label}" /> <input type="text" name="${veld.label}" value="${entry.value}"/></p>
+                                </c:if>
+                            </c:if>
+                        </c:forEach>
+
+                    <c:if test="${added == 0}">
+                        <c:if test="${veld.type == 110 || veld.type == 3}">
+                            <p><input type="hidden" name="${veld.label}" />
+                            </c:if>
+                            <c:if test="${veld.type == 0}">
+                            <p><c:out value="${veld.label}" /> <input type="text" name="${veld.label}" /></p>
+                            </c:if>
+                        </c:if>
+                    </c:if>
 
                 <c:if test="${veld.inputtype == 1}">
-                    <c:set var="dropDownresults" value="dropdown_${veld.label}" />
-                    
-                    <c:out value="${veld.label}" />
-                    
-                    <select name="${veld.label}">
-                        <%-- TODO: dropdown_naam vervangen voor variable in dropDownresults --%>
-                        <c:forEach var="results" items="${dropdown_naam}">                        
-                            <c:forEach var="attr" items="${results.attributen}">
-                                <option value="${attr.waarde}">${attr.waarde}</option>
-                            </c:forEach>
-                        </c:forEach>
-                    </select>                            
+                    <c:forEach var="entry" items="${dropdownResults}">
+                        <c:if test="${entry.key == veld.label}">
+                            <c:out value="${veld.label}" /> <select name="${veld.label}">
+                                <c:forEach var="results" items="${entry.value}">                        
+                                    <c:forEach var="attr" items="${results.attributen}">
+                                        <option value="${attr.waarde}">${attr.waarde}</option>
+                                    </c:forEach>
+                                </c:forEach>
+                            </select>  
+                        </c:if>
+                    </c:forEach>
                 </c:if>   
             </c:forEach>
 

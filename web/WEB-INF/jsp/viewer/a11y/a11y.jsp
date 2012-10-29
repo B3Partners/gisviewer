@@ -18,9 +18,7 @@
     <body>
         <h1>Accessibility Viewer</h1>
 
-        <p>Appcode = ${appCode}</p>
-
-        <p>Zoekers</p>
+        <p>Beschikbare zoekers</p>
         <c:forEach var="zc" items="${zoekConfigs}">
             <p>
                 <html:link page="/a11yViewer.do?search=t&appCode=${appCode}&searchConfigId=${zc.id}" styleClass="searchLink" module="">

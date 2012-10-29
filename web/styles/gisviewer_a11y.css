@@ -1,4 +1,10 @@
-.searchLink {
+body {
     font-size: 1.1em;
-    color: blue;
+    background-color: #fff;
+    color: #000;
+}
+
+.searchLink {
+    font-size: 1.2em;
+    color: #0000ff;
 }

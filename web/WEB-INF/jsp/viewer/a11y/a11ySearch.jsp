@@ -13,22 +13,17 @@
         <link href="styles/gisviewer_a11y.css" rel="stylesheet" type="text/css">
 
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-        <title>Accessibility Viewer | Zoeken</title>
+        <title>Accessibility Viewer | ${searchName}</title>
     </head>
     <body>
-        <h1>Accessibility Viewer | Zoeken</h1>
-
-        <p>Welkom bij de Zoeker</p>
-
-        <p>Appcode = ${appCode}</p>
-        <p>Zoeker id = ${searchConfigId}</p>
-
-        <p>Zoekvelden</p>
+        <h1>Accessibility Viewer | ${searchName}</h1>
 
         <form action="a11yViewer.do" method="GET">
             <input type="hidden" name="results" value="t" />            
             <input type="hidden" name="appCode" value="${appCode}" />
             <input type="hidden" name="searchConfigId" value="${searchConfigId}" />
+            <input type="hidden" name="startIndex" value="0" />        
+            <input type="hidden" name="limit" value="25" />        
 
             <c:forEach var="veld" items="${zoekVelden}">
                 <c:if test="${veld.inputtype == 2}">

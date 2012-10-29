@@ -18,6 +18,18 @@
     <body>
         <h1>Accessibility Viewer | Resultaten voor ${searchName}</h1>
 
+        <p>
+            <c:forEach var="entry" items="${searchparams}" varStatus="status">
+                <c:if test="${status.count <= 1}">
+                    U heeft gezocht op
+                </c:if>
+                
+                <c:if test="${entry.value != ''}">
+                    ${entry.key} "${entry.value}"                                 
+                </c:if>
+            </c:forEach>
+        </p>
+
         <c:set var="total" value="${startIndex + limit}" />
 
         <c:if test="${total > count}">

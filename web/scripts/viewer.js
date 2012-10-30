@@ -4853,9 +4853,18 @@ function getItemByLayer(item,layers){
     if (item.children){
         for (var i=0; i < item.children.length; i++){
             var child = item.children[i];
+            
             if (child.wmslayers && child.wmslayers==layers){
                 return child;
-            }else if (child.children){
+            } else if (child.wmslayers && child.wmslayers != layers) {
+                var mLayers = layers.split(",");
+                
+                for (var j in mLayers) {                    
+                    if (child.wmslayers == mLayers[j]) {
+                        return child;
+                    }                    
+                }                
+            } else if (child.children){
                 var foundItem=getItemByLayer(child,layers);
                 if (foundItem!=null){
                     return foundItem;
@@ -4863,6 +4872,7 @@ function getItemByLayer(item,layers){
             }
         }
     }
+    
     return null;        
 }
 

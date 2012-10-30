@@ -336,6 +336,12 @@ function initializeButtons() {
     });
     webMapController.addTool(edittingtb);
     
+    /* Draw Polygon with measured surface area  */
+    var bu_polyMeasure = webMapController.createTool("b_polyMeasure",Tool.MEASURED_POLYGON, {
+        title: 'polygon tekenen met oppervlakte'
+    });
+    webMapController.addTool(bu_polyMeasure);
+    
     /* Buffer tool */
     var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, {
         layer: editLayer,
@@ -4064,7 +4070,7 @@ function checkDisplayButtons() {
         }else{
             webMapController.getTool("redLiningContainer_point").setVisible(true);
             webMapController.getTool("redLiningContainer_line").setVisible(true);
-            webMapController.getTool("redLiningContainer_polygon").setVisible(true);
+            //webMapController.getTool("redLiningContainer_polygon").setVisible(true);
         }
     } else {
         if (webMapController.getTool("redLiningContainer")){
@@ -4072,7 +4078,7 @@ function checkDisplayButtons() {
         }else{
             webMapController.getTool("redLiningContainer_point").setVisible(false);
             webMapController.getTool("redLiningContainer_line").setVisible(false);
-            webMapController.getTool("redLiningContainer_polygon").setVisible(false);
+            //webMapController.getTool("redLiningContainer_polygon").setVisible(false);
         }
     }
 

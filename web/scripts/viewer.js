@@ -338,7 +338,8 @@ function initializeButtons() {
     
     /* Draw Polygon with measured surface area  */
     var bu_polyMeasure = webMapController.createTool("b_polyMeasure",Tool.MEASURED_POLYGON, {
-        title: 'polygon tekenen met oppervlakte'
+        title: 'oppervlakte meten',
+        displayClass: 'olControlb_polyMeasure'
     });
     webMapController.addTool(bu_polyMeasure);
     
@@ -3908,6 +3909,13 @@ function drawObject(feature) {
  */
 function b_removePolygons(id,params){
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    
+    if (webMapController instanceof OpenLayersController) {
+        var measureValueDiv=document.getElementById("olControlMeasurePolygonValue");
+        if (measureValueDiv){                
+            measureValueDiv.style.display="none";
+        }
+    }
 }
 
 /* er is net op de highlight knop gedrukt */
@@ -4070,7 +4078,7 @@ function checkDisplayButtons() {
         }else{
             webMapController.getTool("redLiningContainer_point").setVisible(true);
             webMapController.getTool("redLiningContainer_line").setVisible(true);
-            //webMapController.getTool("redLiningContainer_polygon").setVisible(true);
+            webMapController.getTool("redLiningContainer_polygon").setVisible(true);
         }
     } else {
         if (webMapController.getTool("redLiningContainer")){
@@ -4078,7 +4086,7 @@ function checkDisplayButtons() {
         }else{
             webMapController.getTool("redLiningContainer_point").setVisible(false);
             webMapController.getTool("redLiningContainer_line").setVisible(false);
-            //webMapController.getTool("redLiningContainer_polygon").setVisible(false);
+            webMapController.getTool("redLiningContainer_polygon").setVisible(false);
         }
     }
 

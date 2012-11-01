@@ -22,7 +22,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
-    
+
 <div style="padding: 5px;">
     <div class="messages">
         <html:messages id="message" message="true" >
@@ -36,15 +36,21 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         </html:messages>
     </div>
-    ${tekenTekstBoven} <br/>
-    <img src="${tekenPlaatje}"/> <br/>
-    ${tekenTekstOnder} <br/>    
-    <input type="button" value="Nieuw" onclick="addNew()" /><br/>
-    <input type="button" value="Selecteer" onclick="selectFeature()" /><br/>
-    <br/>
+
+    <p>${tekenTekstBoven}</p>
+
+    <img src="${tekenPlaatje}"/>
+
+    <p>${tekenTekstOnder}</p>
+
+    <p>
+        <input type="button" value="Nieuw" onclick="addNew()" />
+        <input type="button" value="Selecteer" onclick="selectFeature()" />
+    </p>
+
     <div id="multipleResults" style="width: 100%;"/>
-    
- 
+
+
 </div>
 <script>
     var title = "${tekenTitel}";

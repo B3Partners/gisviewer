@@ -3666,6 +3666,72 @@ function getWktStringForPrint() {
     return wktString;
 }
 
+function getLegendUrls() {
+    var background;
+
+    var bgLayers = new Array();
+    var fgLayers = new Array();
+
+    var urlString="";
+    var firstURL = true;
+
+    var layers = webMapController.getMap("map1").getAllWMSLayers();
+
+    /* eerst layers verdelen in achtergrond en voorgrond */
+    for (var i=0; i < layers.length; i++){
+        if(layers[i].getURL() != null){
+            background = layers[i].getOption("background");
+
+            if (background) {
+                bgLayers.push(layers[i]);
+            } else {
+                fgLayers.push(layers[i]);
+            }
+        }
+    }
+
+    /* eerst achtergrond url's toevoegen */
+    for (var j=0; j < bgLayers.length; j++){
+        if(bgLayers[j].getURL() != null){
+            if(!firstURL){
+                urlString+=";";
+            }else{
+                firstURL = false;
+            }
+
+            urlString+=bgLayers[j].getURL();
+            if(bgLayers[j].getAlpha && bgLayers[j].getAlpha() != null){
+                urlString+="#"+bgLayers[j].getAlpha();
+            }
+        }
+    }
+
+    /* dan voorgrond url's toevoegen */
+    for (var k=0; k < fgLayers.length; k++){
+        /* Niet in print als voorgrond niet binnen schaal valt. Anders ontstaan er
+         * vreemde printvoorbeelden als je daarvoor al een keer een print hebt gemaakt
+         * waarbij de voorgrond nog wel binnen schaal viel. Fix voor ticket #618 Limburg */
+        var item = getItemFromWmsLayer(fgLayers[k]);        
+        var currentscale = webMapController.getMap().getScaleHint();
+        var inScale = isItemInScale(item, currentscale);
+        
+        if(fgLayers[k].getURL() != null && inScale){
+            if(!firstURL){
+                urlString+=";";
+            }else{
+                firstURL = false;
+            }
+
+            urlString+=fgLayers[k].getURL();
+            if(fgLayers[k].getAlpha && fgLayers[k].getAlpha() != null){
+                urlString+="#"+fgLayers[k].getAlpha();
+            }
+        }
+    }
+
+    return urlString;
+}
+
 var exportMapWindow;
 function exportMap(){    
     var submitForm = document.createElement("FORM");
@@ -3681,6 +3747,16 @@ function exportMap(){
     urlInput.value = urlString;
     submitForm.appendChild(urlInput);
 
+    /* Legend urls */
+    var legendUrlsString = getLegendUrls();
+
+    var legendUrlInput = document.createElement('input');
+    legendUrlInput.id = 'legendUrls';
+    legendUrlInput.name = 'legendUrls';
+    legendUrlInput.type = 'hidden';
+    legendUrlInput.value = legendUrlsString;
+    submitForm.appendChild(legendUrlInput);
+    
     var wktString = getWktStringForPrint();
 
     var wktInput = document.createElement('input');

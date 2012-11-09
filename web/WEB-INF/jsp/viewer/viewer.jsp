@@ -567,7 +567,7 @@
     <form action="" id="volgordeForm">  
         <div id="volgordevak" style="display: none;" class="tabvak">
             <div id="orderLayerBox" class="orderLayerBox tabvak_groot"></div>
-            
+
             <!-- slider -->
             <div id="transSlider" style="height: 50px; width: 260px; padding-left: 5px;">
                 <p>
@@ -579,7 +579,7 @@
                 <div style="float: left; font-size: 22px; padding-left: 10px; margin-top: -6px;">+</div>
                 <div style="clear: both;"></div>
             </div>
-            
+
             <script type="text/javascript">
                 $j(function() {
                     $j("#slider").slider({
@@ -603,7 +603,7 @@
                     }
                 }
             </script>
-            
+
             <%--
             <p>Bepaal de volgorde waarin de kaartlagen getoond worden</p>
             
@@ -664,17 +664,17 @@
 
     <div id="infovak" style="display: none; overflow: auto;" class="tabvak">
         <c:if test="${!empty search}">
-        <p>
-            <input type="button" class="knop" value="Verwijder marker" onclick="removeSearchResultMarker();"/>
-        </p>
+            <p>
+                <input type="button" class="knop" value="Verwijder marker" onclick="removeSearchResultMarker();"/>
+            </p>
         </c:if>
-        
+
         <p>
             Kies de Info-tool en klik vervolgens op een punt<br/>
             op de kaart voor administratieve informatie<br/>
             van het object.
         </p>
-        
+
         <div>
             <div id="searchConfigurationsContainer"></div>
             <div id="searchInputFieldsContainer"></div>
@@ -1030,4 +1030,30 @@
     <p>
         <input type="text" class="input_wmsserviceurl" id="input_wmsserviceurl" name="input_wmsserviceurl" value="" />
     </p>    
+</div>
+
+<div id="embedded_icons" style="display: none;">
+    <div class="embedded_icon">
+        <html:link page="/help.do?id=${kaartid}" target="_blank" module="">
+            <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
+        </html:link>
+    </div>
+
+    <div class="embedded_icon">
+        <a href="#" onclick="getLatLonForGoogleMaps();">
+            <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
+        </a>
+    </div>
+
+    <div class="embedded_icon">
+        <a href="#" onclick="getBookMark();">
+            <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
+        </a>
+    </div>
+
+    <div class="embedded_icon">
+        <a href="mailto:support@b3partners.nl">
+            <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
+        </a>
+    </div>
 </div>

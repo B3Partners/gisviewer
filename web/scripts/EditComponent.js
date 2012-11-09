@@ -24,6 +24,7 @@ function EditComponent(){
     this.currentFID = null;
     this.vectorLayer = null;
     this.mode = null;
+    
     this.init = function(){
         var lagen = webMapController.getMap().getAllVectorLayers();
         if(lagen.length >0 ){
@@ -50,12 +51,14 @@ function EditComponent(){
     this.receiveFeatureAttributes = function (result,showDeleteButton, keepFeatures){
         this.removeCurrentEditWindow();
         
-        if(keepFeatures == undefined || keepFeatures == null){keepFeatures = false;}
+        if(keepFeatures == undefined || keepFeatures == null){
+            keepFeatures = false;
+        }
         if(!keepFeatures){
             this.vectorLayer.removeAllFeatures();
         }
         var table = null;
-            // Create div
+        // Create div
         var div = document.createElement('div');
         var fid = (result.fid);
         if(fid){
@@ -216,6 +219,8 @@ function EditComponent(){
             });
             this.vectorLayer.drawFeature(type);
         }
+        
+        
     },
     
     this.geomFinished = function(layerName, object){

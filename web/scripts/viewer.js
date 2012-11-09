@@ -106,9 +106,12 @@ function initMapComponent(){
             //numZoomLevels: olRes.length-1,
             allOverlays: true,
             units : 'meters',            
-            controls : [new OpenLayers.Control.Navigation({
-                    zoomBoxEnabled: false
-                }),new OpenLayers.Control.ArgParser()]
+            controls : [
+            new OpenLayers.Control.Navigation({
+                zoomBoxEnabled: false
+            }),
+            new OpenLayers.Control.ArgParser()                
+            ]
         };
         
         $j("#mapcontent").html(" ");
@@ -428,6 +431,39 @@ function initializeButtons() {
     webMapController.addTool(zoombar);
     
     editComponent = new EditComponent();
+    
+    if (viewerTemplate == "embedded") {
+        displayEmbeddedMenuIcons();
+    }
+}
+
+function displayEmbeddedMenuIcons() {  
+    $j("#embedded_icons").css('position', 'absolute');
+    $j("#embedded_icons").css('width', '145px');
+    $j("#embedded_icons").css('height', '36px');
+    
+    $j("#embedded_icons .embedded_icon").css('float', 'left');
+    $j("#embedded_icons .embedded_icon").css('padding-top', '7px');
+    $j("#embedded_icons .embedded_icon").css('padding-left', '15px');
+    
+    if (webMapController instanceof OpenLayersController) {        
+        $j("#embedded_icons").css('left', '650px');
+        $j("#embedded_icons").css('top', '6px');
+        $j("#embedded_icons").css('border', 'solid 1px #808080');
+        $j("#embedded_icons").css('background-color', '#eeeeee');
+    } else {
+        $j("#embedded_icons").css('left', '630px');
+        $j("#embedded_icons").css('top', '2px');
+    }
+    
+    $j("#embedded_icons").show();
+}
+
+function getBaseUrl() {
+    var protocol = window.location.protocol + "//";
+    var host = window.location.host;
+
+    return protocol + host  + baseNameViewer;
 }
 
 /**
@@ -739,17 +775,21 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             if (minx==undefined){
                 minx=x;
                 maxx=x;
-            }if(miny==undefined){
+            }
+            if(miny==undefined){
                 miny=y;
                 maxy=y;
             }
             if (x > maxx){
                 maxx=x;
-            }if (x < minx){
+            }
+            if (x < minx){
                 minx=x;
-            }if (y > maxy){
+            }
+            if (y > maxy){
                 maxy=y;
-            }if (y < miny){
+            }
+            if (y < miny){
                 miny=y;
             }
         }
@@ -1714,7 +1754,7 @@ function treeImageOnload(){
     // TODO: Hoogte check wegehaald, ging niet altijd goed in IE7 waardoor laadicoontje niet werd weggehaald
     // if (parseInt(this.height) > 5){
     $j(this).parent().find("img.legendLoading").hide();
-    // }
+// }
 }
 
 function activateCheckbox(id) {
@@ -2051,7 +2091,7 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
 
     if (!isStringEmpty(organizationcode) && !isStringEmpty(projectnaam)) {
         layerUrl = originalLayerUrl + groepParam + "=" + organizationcode + "&"
-            + projectParam + "=" + projectnaam;
+        + projectParam + "=" + projectnaam;
     }
 
     /* tekenobject van kaart afhalen */
@@ -2168,10 +2208,12 @@ function isItemInScale(item,scale) {
             res = item.resolutions;
         }        
         
-        list = res.split(" ");
+        if (!res instanceof Array) {
+            list = res.split(" ");
 
-        if (list && list.length < 1) {
-            list = res.split(",");
+            if (list && list.length < 1) {
+                list = res.split(",");
+            }
         }
         
         if (list && list.length > 0) {
@@ -2419,8 +2461,8 @@ function refreshLayer(doRefreshOrder) {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-        //TODO: WebMapController
-        //webMapController.getMap().refreshLayerOrder();
+    //TODO: WebMapController
+    //webMapController.getMap().refreshLayerOrder();
     }
     
     // flamingoController.getMap().update();
@@ -2492,7 +2534,8 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         
         /* Min/max scale zetten voor tiling layers */
         if (tileItem.resolutions) {      
-            var res = tileItem.resolutions;; //.trim();
+            var res = tileItem.resolutions;
+            ; //.trim();
 
             var list;
             list = res.split(" ");
@@ -2549,39 +2592,39 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
 
         /* Kijken of layers alleen maar default styles bevatten? Zo ja
          * dan hoeven er geen styles meegegeven te worden */
-    var onlyDefaultStyles = layersOnlyHaveDefaultStyles(layerItems);
+        var onlyDefaultStyles = layersOnlyHaveDefaultStyles(layerItems);
     
-    /* 
+        /* 
      * TODO: Sld parts opbouwen via sld servlet. Servlet aan layerUrl plakken
      * Als er een hele sld in de layerUrl is meegegeven dan geen style gebruiken 
     */
-    if (layerUrl.indexOf("&sld=") != -1) {
-        onlyDefaultStyles = true;
-    }
-
-    var sldIds = "";
-    
-    var maptips=new Array();
-    // last in list will be on top in map
-    for (var i=0; i<layerItems.length; i++){
-        var item = layerItems[i];
-        
-        var usingSldPart = false;
-        if (item.sld_part != undefined && item.sld_part != "") {            
-            if (sldIds.length < 1) {
-                sldIds += item.id;
-            } else {
-                sldIds += "," + item.id;
-            }
-            
-            usingSldPart = true;
+        if (layerUrl.indexOf("&sld=") != -1) {
+            onlyDefaultStyles = true;
         }
+
+        var sldIds = "";
+    
+        var maptips=new Array();
+        // last in list will be on top in map
+        for (var i=0; i<layerItems.length; i++){
+            var item = layerItems[i];
         
-        /* styles komma seperated aan ogc options toevoegen. style niet gebruiken
+            var usingSldPart = false;
+            if (item.sld_part != undefined && item.sld_part != "") {            
+                if (sldIds.length < 1) {
+                    sldIds += item.id;
+                } else {
+                    sldIds += "," + item.id;
+                }
+            
+                usingSldPart = true;
+            }
+        
+            /* styles komma seperated aan ogc options toevoegen. style niet gebruiken
          * als er een sld_part is voor het item. */
-        if (item.use_style && !onlyDefaultStyles && !usingSldPart) {
-            if (i == layerItems.length-1) {
-                allStyles += item.use_style;
+            if (item.use_style && !onlyDefaultStyles && !usingSldPart) {
+                if (i == layerItems.length-1) {
+                    allStyles += item.use_style;
                 } else {
                     allStyles += item.use_style + ",";
                 }
@@ -2969,14 +3012,17 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
                 } else {
                     $j(beforeChild).before($j(layerDiv));
                 }
-                //$j(orderLayerBox).insertBefore($j(layerDiv),beforeChild);
+            //$j(orderLayerBox).insertBefore($j(layerDiv),beforeChild);
             }
         }
         $j(layerDiv).css("display","block");
         return;
     }
     
-    legendImageQueue.push({theItem: theItem, atBottomOfType: atBottomOfType});
+    legendImageQueue.push({
+        theItem: theItem, 
+        atBottomOfType: atBottomOfType
+    });
     loadNextInLegendImageQueue();
 }
 //queue of the legend objects that needs to be loaded
@@ -3089,7 +3135,7 @@ function refreshLegendBox() {
             visibleLayerItems.push(item);
         }
     }
-	enabledLayerItems = new Array();
+    enabledLayerItems = new Array();
     var totalLength = orderLayerBox.childNodes.length;
     //Kijk of ze al bestaan en in die volgorde staan.
     for(var i = (totalLength - 1); i > -1; i--) {
@@ -3257,7 +3303,7 @@ function updateGetFeatureInfo(data){
     } else {
         //if the admindata window is not loaded yet then retry after 1sec
         setTimeout(function() {
-			updateGetFeatureInfo(data)
+            updateGetFeatureInfo(data)
         }, 1000);
     }
 }
@@ -3326,7 +3372,7 @@ function resizeOpenLayersDiv(w, h) {
 
 function initFullExtent() {
     /* Extent uit url */
-     if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {        
+    if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {        
         if (appExtent != null && appExtent.length > 0 && appExtent.split(",").length ==4 ) {
             setFullExtent(appExtent.split(",")[0],appExtent.split(",")[1],appExtent.split(",")[2],appExtent.split(",")[3]);
         } else {
@@ -4269,7 +4315,8 @@ function createPermaLink(){
         reso = "&resolution=" + controllerRes;
     }
 
-    var url = urlBase + appCode + id + clusterIds + extent;; // + reso;
+    var url = urlBase + appCode + id + clusterIds + extent;
+    ; // + reso;
 
     return url;
 }
@@ -4533,26 +4580,26 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
             .css('top', this.balloonArrowHeight-1+'px')
             .css('width', this.balloonWidth-this.balloonCornerSize+'px')
             .css('height',maxCornerSize+'px')
-        );
+            );
         this.balloon.append($j("<div class='balloonCornerTopRight'><img style='position: absolute; left: -1004px;' src='images/infoBalloon/round.png'/></div>")
             .css('width',this.balloonCornerSize+'px')
             .css('height',maxCornerSize+'px')
             .css('top', this.balloonArrowHeight-1+'px')
             .css('right','0px')
-        );
+            );
         this.balloon.append($j("<div class='balloonCornerBottomLeft'><img style='position: absolute; top: -748px;' src='images/infoBalloon/round.png'/></div>")
             .css('height',this.balloonCornerSize+'px')
             .css('left', '0px')
             .css('bottom',this.balloonArrowHeight-1+'px')
             .css('width', this.balloonWidth-this.balloonCornerSize)
-        );
+            );
         this.balloon.append($j("<div class='balloonCornerBottomRight'><img style='position: absolute; top: -748px; left: -1004px;' src='images/infoBalloon/round.png'/></div>")
             .css('width',this.balloonCornerSize+'px')
             .css('height',this.balloonCornerSize+'px')
             .css('right','0px')
             .css('bottom',this.balloonArrowHeight-1+'px')
 
-        );
+            );
         //arrows
         this.balloon.append($j("<div class='balloonArrow balloonArrowTopLeft' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
         this.balloon.append($j("<div class='balloonArrow balloonArrowTopRight' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
@@ -4562,7 +4609,7 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         this.balloon.append($j("<div class='balloonContent'></div>")
             .css('top',this.balloonArrowHeight+20+'px')
             .css('bottom',this.balloonArrowHeight+4+'px')
-        );
+            );
         //closing button
         var thisObj=this;
         this.balloon.append($j("<div class='balloonCloseButton'></div>")
@@ -4573,7 +4620,7 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
                 return false;
             })
 
-        );
+            );
         this.xCoord=x;
         this.yCoord=y;
 
@@ -4676,7 +4723,7 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         if (this.topOfPoint){
             top= top-this.balloonHeight;
         }
-       //set position of balloon
+        //set position of balloon
         this.balloon.css('left', ""+left+"px");
         this.balloon.css('top', ""+top+"px");
     }
@@ -5021,7 +5068,7 @@ $j(document).ready(function() {
             $j("#popupWindow").hide();
         });
 
-        /* $j("#popupWindow").mouseover(function(){
+    /* $j("#popupWindow").mouseover(function(){
             startDrag();
         });
         $j("#popupWindow").mouseout(function(){

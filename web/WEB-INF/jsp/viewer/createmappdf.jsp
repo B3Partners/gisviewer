@@ -15,28 +15,28 @@
     <h1>Printvoorbeeld</h1>
 
     <html:form action="/printmap" focus="title">
-    <table>
-        <tr>
-            <td colspan="2" class="createmappdftd">
-                <div id="imageContainer">
-                    <html:img page="/printmap.do?image=t&keepAlive=true&imageId=${imageId}" styleId="mapImage" alt="Preview" border="1"/>
-                </div>
-                <html:hidden property="imageId" styleId="imageId"/>
-            </td>
-        </tr>
+        <table>
+            <tr>
+                <td colspan="2" class="createmappdftd">
+                    <div id="imageContainer">
+                        <html:img page="/printmap.do?image=t&keepAlive=true&imageId=${imageId}" styleId="mapImage" alt="Preview" border="1"/>
+                    </div>
+                    <html:hidden property="imageId" styleId="imageId"/>
+                </td>
+            </tr>
 
-        <tr>
-            <td colspan="2" class="printvoorbeeld_help">
-                U kunt dit printvoorbeeld ook direct gebruiken door met de rechtermuisknop
-                op de afbeelding te klikken. Kies voor 'kopiëren' om het plaatje op het
-                klembord te plaatsen of kies voor 'opslaan als...' om het plaatje op de
-                harde schijf te plaatsen.
-            </td>
-        </tr>
-        
-        <tr class="aanvullende_info_alternateTr">
-            <td><fmt:message key="createmappdf.title"/></td>
-            <td><html:text property="title"/></td>
+            <tr>
+                <td colspan="2" class="printvoorbeeld_help">
+                    U kunt dit printvoorbeeld ook direct gebruiken door met de rechtermuisknop
+                    op de afbeelding te klikken. Kies voor 'kopiëren' om het plaatje op het
+                    klembord te plaatsen of kies voor 'opslaan als...' om het plaatje op de
+                    harde schijf te plaatsen.
+                </td>
+            </tr>
+
+            <tr class="aanvullende_info_alternateTr">
+                <td><fmt:message key="createmappdf.title"/></td>
+                <td><html:text property="title"/></td>
             </tr>
             <tr>
                 <td valign="top"><fmt:message key="createmappdf.remark"/></td>
@@ -68,7 +68,7 @@
                                 <input type="button" onclick="resetImageSize();" value="Orginele kwaliteit"/>
                             </div>
                         </div>    
-                                            
+
                     </div>
 
                     <html:hidden property="imageSize" styleId="imageSize"/>
@@ -80,10 +80,10 @@
                 <td>
                     <html:radio property="landscape" value="false">Staand</html:radio>
                     <html:radio property="landscape" value="true">Liggend</html:radio>
-                </td>
-            </tr>
-            <tr>
-                <td><fmt:message key="createmappdf.pageformat"/></td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="createmappdf.pageformat"/></td>
                 <td>
                     <html:select property="pageSize">
                         <html:option value="A4">A4</html:option>
@@ -101,11 +101,21 @@
                     </html:select>
                 </td>
             </tr>
+
+            <tr>
+                <td>Legenda</td>
+                <td>
+                    <c:forEach var="entry" items="${legendItems}">
+                        <html:checkbox property="legendItems" value="${entry.key}" />${entry.key}<BR>
+                    </c:forEach>
+                </td>
+            </tr>
+
             <tr>
                 <td></td>
                 <td><html:submit property="print"><fmt:message key="button.ok"/></html:submit></td>
-            </tr>
-        </table>
+                </tr>
+            </table>
     </html:form>
     <br />
 </div>

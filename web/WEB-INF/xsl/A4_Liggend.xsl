@@ -107,10 +107,13 @@
                 <xsl:value-of select="opmerking"/>
             </fo:block>
             
+            <!-- Extra block voor legenda plaatjes -->
             <fo:block margin-left="0.2cm" margin-top="0.3cm">       
-                <fo:block color="#000000" font-size="10pt">
-                    Legenda:                 
-                </fo:block>
+                <xsl:if test="(count(legendUrls) > 0)">
+                    <fo:block color="#000000" font-size="10pt">
+                        Legenda:                 
+                    </fo:block>
+                </xsl:if>
                   
                 <xsl:for-each select="legendUrls">
                     <xsl:variable name="legendUrl" select="." />
@@ -120,6 +123,7 @@
                     </fo:block>
                 </xsl:for-each>
             </fo:block>
+            
         </fo:block>
     </xsl:template>
 

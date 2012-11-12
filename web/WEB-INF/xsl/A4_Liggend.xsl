@@ -108,7 +108,7 @@
             </fo:block>
             
             <!-- Extra block voor legenda plaatjes -->
-            <fo:block margin-left="0.2cm" margin-top="0.3cm">       
+            <fo:block margin-left="0.2cm" margin-top="0.1cm">       
                 <xsl:if test="(count(legendUrls) > 0)">
                     <fo:block color="#000000" font-size="10pt">
                         Legenda:                 
@@ -118,7 +118,7 @@
                 <xsl:for-each select="legendUrls">
                     <xsl:variable name="legendUrl" select="." />
                     
-                    <fo:block margin-left="0.1cm" margin-top="0.1cm">
+                    <fo:block margin-left="0.0cm" margin-top="0.05cm">
                         <fo:external-graphic src="{$legendUrl}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform"/>
                     </fo:block>
                 </xsl:for-each>

@@ -285,7 +285,7 @@ function performSearch() {
 
             } else if (zoekVelden[i].type== 90) { // Schaal zoekveld
                 var invoer = $j("#"+zoekVelden[i].id + '_schaal').val();
-
+                
                 if (invoer == undefined || invoer == "" || invoer <= 0) {
                     messagePopup("Zoeken", "Ongeldige schaal opgegeven.", "error");
 
@@ -294,6 +294,9 @@ function performSearch() {
 
                 /* zoom naar ingevoerde schaal */
                 var schaal = invoer * 0.000498;
+                var dpm = 72 / 0.0254;
+                var res = invoer / dpm;
+                
                 webMapController.getMap().zoomToScale(schaal);
             } else {
                 waarde[i]=veld;

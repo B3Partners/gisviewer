@@ -110,6 +110,11 @@
                     </c:forEach>
                 </td>
             </tr>
+            
+            <tr>
+                <td>Schaal</td>
+                <td>1:<html:text property="scale"/></td>
+            </tr>
 
             <tr>
                 <td></td>

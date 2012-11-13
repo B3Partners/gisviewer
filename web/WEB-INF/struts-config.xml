@@ -31,6 +31,7 @@
             <form-property name="outputType" type="java.lang.String" initial="PDF"/>
             <form-property name="remark" type="java.lang.String"/>
             <form-property name="legendItems" type="java.lang.String[]"/>
+            <form-property name="scale" type="java.lang.Integer"/>
         </form-bean>
         <form-bean name="meldingForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>

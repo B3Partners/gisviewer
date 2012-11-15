@@ -117,10 +117,7 @@
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">
-                schaal 
-                <xsl:if test="(scale > 0)">
-                    1:<xsl:value-of select="scale"/>
-                </xsl:if>
+                schaalbalk
             </fo:block>
 
             <!-- create scalebar -->

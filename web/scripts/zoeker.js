@@ -292,12 +292,13 @@ function performSearch() {
                     return;
                 }
 
-                /* zoom naar ingevoerde schaal */
-                var schaal = invoer * 0.000498;
-                var dpm = 72 / 0.0254;
-                var res = invoer / dpm;
+                /* reken ingevoerde schaal om naar resolutie */
+                var screenWidthPx = $j("#mapcontent").width();
+    
+                var newMapWidth = invoer * (screenWidthPx * 0.00028);
+                var res = newMapWidth / screenWidthPx;
                 
-                webMapController.getMap().zoomToScale(schaal);
+                webMapController.getMap().zoomToScale(res);                
             } else {
                 waarde[i]=veld;
             }

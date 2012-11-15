@@ -112,8 +112,16 @@
             </tr>
             
             <tr>
+                <td colspan="2" class="printvoorbeeld_help">
+                    De berekende waarde van de schaal is afhankelijk van uw beeldscherm.
+                    Als u deze schaal aanpast kan het kaartbeeld veranderen t.o.v. het
+                    orgineel.
+                </td>
+            </tr>   
+            
+            <tr>
                 <td>Schaal</td>
-                <td>1:<html:text property="scale"/></td>
+                <td><b>1 : <html:text property="scale"/> cm</b></td>
             </tr>
 
             <tr>

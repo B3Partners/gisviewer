@@ -65,6 +65,13 @@
                     </c:forEach>
                 </c:if>   
             </c:forEach>
+            
+            <h2>Uitleg zoekvelden</h2>
+            <p>
+                <c:forEach var="veld" items="${zoekVelden}">
+                    <c:out value="${veld.label}" />: <c:out value="${veld.omschrijving}" /><br>
+                </c:forEach>
+            </p>
 
             <p><input type="submit" value="Zoeken" /></p>
         </form>

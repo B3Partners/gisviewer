@@ -23,7 +23,7 @@
                 <c:if test="${status.count <= 1}">
                     U heeft gezocht op
                 </c:if>
-                
+
                 <c:if test="${entry.value != ''}">
                     ${entry.key} "${entry.value}"                                 
                 </c:if>
@@ -126,7 +126,17 @@
                     </tr>
                 </form>
             </c:forEach>
-
-            <table>
-                </body>
-                </html>
+        <table>
+            
+        <h2>Uitleg resultaatvelden</h2>
+        <p>
+            <c:forEach var="result" items="${results}" begin="0" end="0">  
+                <c:forEach var="attr" items="${result.attributen}">
+                    <c:if test="${attr.type == 2 || attr.type == 120}" >
+                        <c:out value="${attr.label}" />: <c:out value="${attr.omschrijving}" /><br>
+                    </c:if>
+                </c:forEach>
+            </c:forEach>
+        </p>
+</body>
+</html>

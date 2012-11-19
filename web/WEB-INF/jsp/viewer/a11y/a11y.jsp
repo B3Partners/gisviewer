@@ -21,6 +21,9 @@
         <p>Beschikbare zoekers</p>
         <c:forEach var="zc" items="${zoekConfigs}">
             <p>
+                <c:out value="${zc.omschrijving}" />
+            </p>
+            <p>
                 <html:link page="/a11yViewer.do?search=t&appCode=${appCode}&searchConfigId=${zc.id}" styleClass="searchLink" module="">
                     <c:out value="${zc.naam}" />
                 </html:link>

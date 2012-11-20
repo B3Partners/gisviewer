@@ -7,13 +7,13 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
-<!DOCTYPE html>
-<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="NL">
     <head>
         <link href="styles/gisviewer_a11y.css" rel="stylesheet" type="text/css">
 
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-        <title>Accessibility Viewer | Resultaten</title>
+        <title>Accessibility Viewer | Resultaten voor ${searchName}</title>
     </head>
     <body>
         <h1>Accessibility Viewer | Resultaten voor ${searchName}</h1>
@@ -57,77 +57,76 @@
                 <c:set var="countNext" value="${startIndex + limit}" />
 
                 <c:forEach var="entry" items="${params}">
-                    <c:set var="resultParams" value="${stat.first ? '' : resultParams}&${entry.key}=${entry.value}" />
+                    <c:set var="resultParams" value="${stat.first ? '' : resultParams}&amp;${entry.key}=${entry.value}" />
                 </c:forEach> 
 
                 <c:if test="${countPrev >= 0}">
-                    <html:link page="/a11yViewer.do?results=t&appCode=${appCode}&searchConfigId=${searchConfigId}${resultParams}&startIndex=${countPrev}&limit=${limit}" styleClass="searchLink" module="">
-                        Vorige
-                    </html:link>
+                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink" module="">Vorige</html:link>
                 </c:if>
 
                 <c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status">
                     <c:set var="startIndex" value="${(i-1) * limit}" />
 
-                    <html:link page="/a11yViewer.do?results=t&appCode=${appCode}&searchConfigId=${searchConfigId}${resultParams}&startIndex=${startIndex}&limit=${limit}" styleClass="searchLink" module="">
-                        ${i}
-                    </html:link>
+                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink" module="">${i}</html:link>
                 </c:forEach>
 
                 <c:if test="${countNext < count}">
-                    <html:link page="/a11yViewer.do?results=t&appCode=${appCode}&searchConfigId=${searchConfigId}${resultParams}&startIndex=${countNext}&limit=${limit}" styleClass="searchLink" module="">
-                        Volgende
-                    </html:link>
+                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink" module="">Volgende</html:link>
                 </c:if>
             </c:if>
         </p>
 
-        <table>
-            <tr>
-                <c:forEach var="result" items="${results}" begin="0" end="0">  
-                    <c:forEach var="attr" items="${result.attributen}">
-                        <c:if test="${attr.type == 2 || attr.type == 120}" >
-                            <th align="left">${attr.label}</th>
-                        </c:if>
-                    </c:forEach>
-                </c:forEach>
-
-                <c:if test="${nextStep == true && count > 0}">
-                    <th align="left">Actie</th>
+        <c:forEach var="result" items="${results}" begin="0" end="0">  
+            <c:forEach var="attr" items="${result.attributen}">
+                <c:if test="${attr.type == 2 || attr.type == 120}" >
+                    <div class="div-table-header">
+                        ${attr.label}
+                    </div>
                 </c:if>
-            </tr>
+            </c:forEach>
+        </c:forEach>
 
-            <c:forEach var="result" items="${results}">  
-                <form action="a11yViewer.do" method="POST">
-                    <input type="hidden" name="search" value="t" />
-                    <input type="hidden" name="appCode" value="${appCode}" />
+        <c:if test="${nextStep == true && count > 0}">
+            <div class="div-table-header">Actie</div>
+        </c:if>
+
+        <div style="clear: both;"></div>
+
+        <c:forEach var="result" items="${results}">  
+            <form action="a11yViewer.do" method="POST">
+                <p>
+                    <input type="hidden" name="search" value="t">
+                    <input type="hidden" name="appCode" value="${appCode}">
 
                     <c:if test="${nextStep == true}">
-                        <input type="hidden" name="searchConfigId" value="${nextSearchConfigId}" />
+                        <input type="hidden" name="searchConfigId" value="${nextSearchConfigId}">
                     </c:if>
 
                     <c:if test="${nextStep == false}">
-                        <input type="hidden" name="searchConfigId" value="${searchConfigId}" />
-                    </c:if>                    
+                        <input type="hidden" name="searchConfigId" value="${searchConfigId}">
+                    </c:if>     
+                </p>
 
-                    <tr>
-                        <c:forEach var="attr" items="${result.attributen}">
-                            <c:if test="${attr.type == 2 || attr.type == 120}" >
-                                <%-- <c:out value="${attr.label}" /> = <c:out value="${attr.waarde}" /> --%>
-                                <td>${attr.waarde}</td>
-                            </c:if>
+                <c:forEach var="attr" items="${result.attributen}">
+                    <c:if test="${attr.type == 2 || attr.type == 120}">
+                        <div class="div-table-row">${attr.waarde}</div>
+                    </c:if>
 
-                        <input type="hidden" name="${attr.label}" value="${attr.waarde}" />
-                    </c:forEach>
+                    <p>
+                        <input type="hidden" name="${attr.label}" value="${attr.waarde}">
+                    </p>
+                </c:forEach>
 
-                    <c:if test="${nextStep == true}">
-                        <td><input type="submit" value="Verder zoeken" /></td>
-                        </c:if>   
-                    </tr>
-                </form>
-            </c:forEach>
-        <table>
-            
+                <c:if test="${nextStep == true}">
+                    <div class="div-table-row">
+                        <input type="submit" value="Verder zoeken">
+                    </div>
+                </c:if>  
+            </form>
+
+            <div style="clear: both;"></div>
+        </c:forEach>
+
         <h2>Uitleg resultaatvelden</h2>
         <p>
             <c:forEach var="result" items="${results}" begin="0" end="0">  
@@ -138,5 +137,9 @@
                 </c:forEach>
             </c:forEach>
         </p>
-</body>
+
+        <div id="footer">
+            <address>Zonnebaan 12C</address>
+        </div>
+    </body>
 </html>

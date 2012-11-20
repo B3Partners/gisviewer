@@ -61,17 +61,17 @@
                 </c:forEach> 
 
                 <c:if test="${countPrev >= 0}">
-                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink" module="">Vorige</html:link>
+                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink">Vorige</html:link>
                 </c:if>
 
                 <c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status">
                     <c:set var="startIndex" value="${(i-1) * limit}" />
 
-                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink" module="">${i}</html:link>
+                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink">${i}</html:link>
                 </c:forEach>
 
                 <c:if test="${countNext < count}">
-                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink" module="">Volgende</html:link>
+                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink">Volgende</html:link>
                 </c:if>
             </c:if>
         </p>

@@ -76,6 +76,10 @@
         <put name="title" value="Viewer Redlining" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerredlining.jsp"/>
     </definition>
+    <definition name="viewereditboom" extends="tab">
+        <put name="title" value="Viewer Edit" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewereditboom.jsp"/>
+    </definition>
     <definition name="viewerbag" extends="tab">
         <put name="title" value="BAG" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerbag.jsp"/>

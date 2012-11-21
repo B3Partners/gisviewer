@@ -125,6 +125,83 @@
             <form-property name="formaat" type="java.lang.String"/>
         </form-bean>
         
+        <!-- digitree boom edit tab -->
+        <form-bean name="editboomForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+
+            <!-- hidden -->
+            <form-property name="id" type="java.lang.Integer"/>
+            <form-property name="wkt" type="java.lang.String"/>
+            <form-property name="gegevensbron" type="java.lang.Integer"/>
+            <form-property name="status" type="java.lang.String"/>
+            <form-property name="projectid" type="java.lang.String"/>
+
+            <!-- formulier -->
+            <form-property name="boomid" type="java.lang.String"/>
+            <form-property name="mutatiedatum" type="java.lang.String"/>
+            <form-property name="mutatietijd" type="java.lang.String"/>
+            <form-property name="inspecteur" type="java.lang.String"/>
+            <form-property name="aktie" type="java.lang.String"/>
+            <form-property name="project" type="java.lang.String"/>
+            <form-property name="boomsoort" type="java.lang.String"/>
+            <form-property name="plantjaar" type="java.lang.Integer"/>
+            <form-property name="boomhoogte" type="java.lang.String"/>
+            <form-property name="boomhoogtevrij" type="java.lang.String"/>
+            <form-property name="eindbeeldvrij" type="java.lang.String"/>
+            <form-property name="eindbeeld" type="java.lang.String"/>
+            <form-property name="scheefstand" type="java.lang.String"/>
+            <form-property name="scheuren" type="java.lang.String"/>
+            <form-property name="holten" type="java.lang.String"/>
+            <form-property name="stamvoetschade" type="java.lang.String"/>
+            <form-property name="stamschade" type="java.lang.String"/>
+            <form-property name="kroonschade" type="java.lang.String"/>
+            <form-property name="inrot" type="java.lang.String"/>
+            <form-property name="houtboorder" type="java.lang.String"/>
+            <form-property name="zwam" type="java.lang.String"/>
+            <form-property name="zwam_stamvoet" type="java.lang.String"/>
+            <form-property name="zwam_stam" type="java.lang.String"/>
+            <form-property name="zwam_kroon" type="java.lang.String"/>
+            <form-property name="dood_hout" type="java.lang.String"/>
+            <form-property name="plakoksel" type="java.lang.String"/>
+            <form-property name="stamschot" type="java.lang.String"/>
+            <form-property name="wortelopslag" type="java.lang.String"/>
+            <form-property name="takken" type="java.lang.String"/>
+            <form-property name="opdruk" type="java.lang.String"/>
+            <form-property name="vta1" type="java.lang.String"/>
+            <form-property name="vta2" type="java.lang.String"/>
+            <form-property name="vta3" type="java.lang.String"/>
+            <form-property name="vta4" type="java.lang.String"/>
+            <form-property name="vta5" type="java.lang.String"/>
+            <form-property name="vta6" type="java.lang.String"/>
+            <form-property name="aantastingenvrij" type="java.lang.String"/>
+            <form-property name="aantastingen" type="java.lang.String"/>
+            <form-property name="status_zp" type="java.lang.String"/>
+            <form-property name="classificatie" type="java.lang.String"/>
+            <form-property name="maatregelen_kortvrij" type="java.lang.String"/>
+            <form-property name="maatregelen_kort" type="java.lang.String"/>
+            <form-property name="nader_onderzoek" type="java.lang.String"/>
+            <form-property name="maatregelen_langvrij" type="java.lang.String"/>
+            <form-property name="maatregelen_lang" type="java.lang.String"/>
+            <form-property name="risicoklasse" type="java.lang.String"/>
+            <form-property name="uitvoerdatum" type="java.lang.String"/>
+            <form-property name="bereikbaarheid" type="java.lang.String"/>
+            <form-property name="wegtypevrij" type="java.lang.String"/>
+            <form-property name="wegtype" type="java.lang.String"/>
+            <form-property name="opmerking" type="java.lang.String"/>
+            <form-property name="extra1" type="java.lang.String"/>
+            <form-property name="extra2" type="java.lang.String"/>
+            <form-property name="extra3" type="java.lang.String"/>
+            <form-property name="extra4" type="java.lang.String"/>
+            <form-property name="extra5" type="java.lang.String"/>
+            <form-property name="extra6" type="java.lang.String"/>
+            <form-property name="extra7" type="java.lang.String"/>
+            <form-property name="extra8" type="java.lang.String"/>
+            <form-property name="extra9" type="java.lang.String"/>
+            <form-property name="extra10" type="java.lang.String"/>
+        </form-bean>
+        
     </form-beans>
     
     <global-exceptions>
@@ -182,7 +259,7 @@
             <forward name="login" path="login"/>
             <forward name="list" path="index"/>
         </action>
-        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction" name="viewerForm" scope="request" validate="false">
+        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataDigitreeAction" name="viewerForm" scope="request" validate="false">
             <forward name="failure" path="viewerdata"/>
             <forward name="admindata" path="vieweradmindata"/>
             <forward name="metadata" path="viewermetadata"/>
@@ -193,6 +270,11 @@
         <action path="/printmap" type="nl.b3p.gis.viewer.PrintAction" name="printForm" scope="request" validate="false">
             <forward name="success" path="createmappdf"/>
             <forward name="failure" path="createmappdf"/>
+        </action>
+        
+        <action path="/imagemap" type="nl.b3p.gis.viewer.ImageAction">
+            <forward name="success" path="vieweraanvullendeinfo"/>
+            <forward name="failure" path="vieweraanvullendeinfo"/>
         </action>
 
         <action path="/admindatabusy" forward="vieweradmindatabusy"/>
@@ -210,6 +292,12 @@
             <forward name="success" path="viewerredlining"/>
             <forward name="failure" path="viewerredlining"/>
             <forward name="redlining" path="viewerredlining"/>
+        </action>
+        
+        <action path="/viewereditboom" type="nl.b3p.gis.viewer.EditBoomAction" name="editboomForm" scope="request" validate="false">
+            <forward name="success" path="viewereditboom"/>
+            <forward name="failure" path="viewereditboom"/>
+            <forward name="redlining" path="viewereditboom"/>
         </action>
         
         <action path="/viewerbag" type="nl.b3p.gis.viewer.BagAction" scope="request" validate="false">

@@ -4,6 +4,7 @@
 <script type="text/javascript" src='dwr/engine.js'></script>
 
 <script type='text/javascript' src='dwr/interface/EditUtil.js'></script>
+<script type='text/javascript' src='dwr/interface/EditBoomUtil.js'></script>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
 <script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js'></script>
@@ -309,7 +310,8 @@
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"},
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
         "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"},
-        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"}
+        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"},
+        "edit": { id: "edit", contentid: "editboomvakViewer", name: "Edit boom" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -730,6 +732,7 @@
     <div id="wktvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="wktframeViewer" name="wktframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="tekenenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="tekenenframeViewer" name="tekenenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    <div id="editboomvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="editboomframeViewer" name="editboomframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">

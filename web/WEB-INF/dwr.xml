@@ -8,6 +8,9 @@
         <create creator="new" javascript="EditUtil">
             <param name="class" value="nl.b3p.gis.utils.EditUtil"/>
         </create>
+        <create creator="new" javascript="EditBoomUtil">
+            <param name="class" value="nl.b3p.gis.utils.EditBoomUtil"/>
+        </create>
         <create creator="new" javascript="JZoeker">
             <param name="class" value="nl.b3p.zoeker.services.Zoeker"/>
             <include method="zoek"/>

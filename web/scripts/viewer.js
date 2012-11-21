@@ -2058,7 +2058,8 @@ function addItemAsLayer(theItem){
     
     //If there is a orgainization code key then add this to the service url.
     if (theItem.wmslayers){
-        var organizationCodeKey = theItem.organizationcodekey;
+        //var organizationCodeKey = theItem.organizationcodekey;
+        var organizationCodeKey = "PROJECTID";
         if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
             if(layerUrl.indexOf(organizationCodeKey)<=0){
                 if(layerUrl.indexOf('?')> 0)
@@ -2105,6 +2106,283 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
     deActivateCheckbox(themaId);
     activateCheckbox(themaId);
 }
+
+/* Digitree */
+function reloadEditBoom(removeFeatures){
+    /* tekenobject van kaart afhalen */
+    if (removeFeatures) {
+        removeAllFeatures();
+    }
+
+    for (var i=0; i<enabledLayerItems.length; i++){
+        var item = enabledLayerItems[i];
+        var themaid = item.id;
+
+        deActivateCheckbox(themaid);
+        activateCheckbox(themaid);
+    }
+}
+
+/* Methodes edit tab */
+function selectBoomObject(geom) {
+    /* Params
+     * geom: Klikpunt op de kaart. Een POINT wkt string.
+     * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
+    */
+    var scale = webMapController.getMap().getScale();
+    var tol = tolerance;
+
+    EditBoomUtil.getIdAndWktForBoomObject(geom, boomGegevensbronId, scale, tol, returnBoomObject);
+}
+
+function returnBoomObject(jsonString) {
+    if (jsonString == "-1") {
+        messagePopup("Boom bewerken", "Geen object gevonden.", "error");
+
+        return;
+    }
+
+    var boomObj = eval('(' + jsonString + ')');
+    var wkt = boomObj.wkt;
+
+    if (wkt.length > 0 && wkt != "-1")
+    {
+        var polyObject = new Feature(61502,wkt);
+        drawObject(polyObject);
+    }
+
+    var id = boomObj.id;
+    var project = boomObj.project;
+    var projectid = boomObj.projectid;
+    var boomid = boomObj.boomid;
+    var status = boomObj.status;
+    var mutatiedatum = boomObj.mutatiedatum;
+    var mutatietijd = boomObj.mutatietijd;
+    //var inspecteur = boomObj.inspecteur;
+    //var aktie = boomObj.aktie;
+    var boomsoort = boomObj.boomsoort;
+    var plantjaar = boomObj.plantjaar;
+    var boomhoogte = boomObj.boomhoogte;
+    var eindbeeld = boomObj.eindbeeld;
+    var scheefstand = boomObj.scheefstand;
+    var scheuren = boomObj.scheuren;
+    var holten = boomObj.holten;
+    var stamvoetschade = boomObj.stamvoetschade;
+    var stamschade = boomObj.stamschade;
+    var kroonschade = boomObj.kroonschade;
+    var inrot = boomObj.inrot;
+    var houtboorder = boomObj.houtboorder;
+    var zwam = boomObj.zwam;
+    var zwam_stamvoet = boomObj.zwam_stamvoet;
+    var zwam_stam = boomObj.zwam_stam;
+    var zwam_kroon = boomObj.zwam_kroon;
+    var dood_hout = boomObj.dood_hout;
+    var plakoksel = boomObj.plakoksel;
+    var stamschot = boomObj.stamschot;
+    var wortelopslag = boomObj.wortelopslag;
+    var takken = boomObj.takken;
+    var opdruk = boomObj.opdruk;
+    var vta1 = boomObj.vta1;
+    var vta2 = boomObj.vta2;
+    var vta3 = boomObj.vta3;
+    var vta4 = boomObj.vta4;
+    var vta5 = boomObj.vta5;
+    var vta6 = boomObj.vta6;
+    var aantastingen = boomObj.aantastingen;
+    var maatregelen_kort = boomObj.maatregelen_kort;
+    var maatregelen_lang = boomObj.maatregelen_lang;
+    var wegtype = boomObj.wegtype;
+    var bereikbaarheid = boomObj.bereikbaarheid;
+    var nader_onderzoek = boomObj.nader_onderzoek;
+    var status_zp = boomObj.status_zp;
+    var classificatie = boomObj.classificatie;
+    var risicoklasse = boomObj.risicoklasse;
+    var uitvoerdatum = boomObj.uitvoerdatum;
+    var opmerkingen = boomObj.opmerkingen;
+    var extra1 = boomObj.extra1;
+    var extra2 = boomObj.extra2;
+    var extra3 = boomObj.extra3;
+    var extra4 = boomObj.extra4;
+    var extra5 = boomObj.extra5;
+    var extra6 = boomObj.extra6;
+    var extra7 = boomObj.extra7;
+    var extra8 = boomObj.extra8;
+    var extra9 = boomObj.extra9;
+    var extra10 = boomObj.extra10;
+
+    /* formulier op edit tabblad aanpassen */
+    var iframe = document.getElementById('editboomframeViewer');
+    var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
+
+    innerDoc.getElementById("id").value = id;
+    innerDoc.getElementById("project").value = project;
+    innerDoc.getElementById("projectid").value = projectid;
+    innerDoc.getElementById("boomid").value = boomid;
+    innerDoc.getElementById("status").value = status;
+    innerDoc.getElementById("mutatiedatum").value = mutatiedatum;
+    innerDoc.getElementById("mutatietijd").value = mutatietijd;
+    
+    //innerDoc.getElementById("inspecteur").value = inspecteur;
+    //innerDoc.getElementById("aktie").value = aktie;
+    
+    innerDoc.getElementById("boomsoort").value = boomsoort;
+    innerDoc.getElementById("plantjaar").value = plantjaar;
+    innerDoc.getElementById("boomhoogtevrij").value = boomhoogte;
+    innerDoc.getElementById("boomhoogte").value = boomhoogte;
+    innerDoc.getElementById("eindbeeldvrij").value = eindbeeld;
+    innerDoc.getElementById("eindbeeld").value = eindbeeld;
+    innerDoc.getElementById("scheefstand").checked = scheefstand;
+    innerDoc.getElementById("scheuren").checked = scheuren;
+    innerDoc.getElementById("holten").checked = holten;
+    innerDoc.getElementById("stamvoetschade").checked = stamvoetschade;
+    innerDoc.getElementById("stamschade").checked = stamschade;
+    innerDoc.getElementById("kroonschade").checked = kroonschade;
+    innerDoc.getElementById("inrot").checked = inrot;
+    innerDoc.getElementById("houtboorder").checked = houtboorder;
+    innerDoc.getElementById("zwam").checked = zwam;
+    innerDoc.getElementById("zwam_stamvoet").checked = zwam_stamvoet;
+    innerDoc.getElementById("zwam_stam").checked = zwam_stam;
+    innerDoc.getElementById("zwam_kroon").checked = zwam_kroon;
+    innerDoc.getElementById("dood_hout").checked = dood_hout;
+    innerDoc.getElementById("plakoksel").checked = plakoksel;
+    innerDoc.getElementById("stamschot").checked = stamschot;
+    innerDoc.getElementById("wortelopslag").checked = wortelopslag;
+    innerDoc.getElementById("takken").checked = takken;
+    innerDoc.getElementById("opdruk").checked = opdruk;
+    innerDoc.getElementById("vta1").checked = vta1;
+    innerDoc.getElementById("vta2").checked = vta2;
+    innerDoc.getElementById("vta3").checked = vta3;
+    innerDoc.getElementById("vta4").checked = vta4;
+    innerDoc.getElementById("vta5").checked = vta5;
+    innerDoc.getElementById("vta6").checked = vta6;    
+    innerDoc.getElementById("aantastingen").value = aantastingen;
+    
+    fillStatusZiektenDropdown();
+    
+    innerDoc.getElementById("maatregelen_kort").value = maatregelen_kort;
+    innerDoc.getElementById("maatregelen_lang").value = maatregelen_lang;
+    innerDoc.getElementById("wegtype").value = wegtype;
+    innerDoc.getElementById("aantastingenvrij").value = aantastingen;
+    innerDoc.getElementById("maatregelen_kortvrij").value = maatregelen_kort;
+    innerDoc.getElementById("maatregelen_langvrij").value = maatregelen_lang;
+    innerDoc.getElementById("wegtypevrij").value = wegtype;
+    innerDoc.getElementById("bereikbaarheid").checked = bereikbaarheid;
+    innerDoc.getElementById("nader_onderzoek").checked = nader_onderzoek;
+    innerDoc.getElementById("status_zp").value = status_zp;
+    
+    fillClassificatieDropdown();
+    
+    innerDoc.getElementById("classificatie").value = classificatie;
+    innerDoc.getElementById("risicoklasse").value = risicoklasse;
+    innerDoc.getElementById("uitvoerdatum").value = uitvoerdatum;
+    
+    //innerDoc.getElementById("opmerking").value = opmerkingen;
+    
+    innerDoc.getElementById("extra1").value = extra1;
+    innerDoc.getElementById("extra2").value = extra2;
+    innerDoc.getElementById("extra3").value = extra3;
+    innerDoc.getElementById("extra4").value = extra4;
+    innerDoc.getElementById("extra5").value = extra5;
+    innerDoc.getElementById("extra6").value = extra6;
+    innerDoc.getElementById("extra7").value = extra7;
+    innerDoc.getElementById("extra8").value = extra8;
+    innerDoc.getElementById("extra9").value = extra9;
+    innerDoc.getElementById("extra10").value = extra10;
+
+    if (opmerkingen != null && opmerkingen != "undefined") {
+        innerDoc.getElementById("opmerking").value = opmerkingen;
+    } else {
+        innerDoc.getElementById("opmerking").value = "";
+    }
+
+    //innerDoc.getElementById("status").disabled= true;
+    
+    editingBoom = false;
+}
+
+function fillStatusZiektenDropdown(){
+    var iframe = document.getElementById('editboomframeViewer');
+    var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
+    
+    var aantasting = innerDoc.getElementById("aantastingen").value;
+    var select = innerDoc.getElementById("status_zp"); 
+    
+    emptyStatusDropdown();
+        
+    if(aantasting == 'eikenprocessierups' || aantasting == 'bloedingsziekte' || aantasting == 'massaria' || aantasting == 'iepziekte'){
+        select.add(new Option("melding", "melding"), null);
+        select.add(new Option("monitoring", "monitoring"), null);
+        select.add(new Option("registratie", "registratie"), null);
+        select.add(new Option("bestreden", "bestreden"), null);
+    }
+    
+    innerDoc.getElementById("aantastingenvrij").value = "";
+}
+
+function fillClassificatieDropdown() {
+    var iframe = document.getElementById('editboomframeViewer');
+    var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
+    
+    var status_zp = innerDoc.getElementById("status_zp").value;
+    var select = innerDoc.getElementById("classificatie"); 
+    
+    emptyClassificatieDropdown();
+    
+    if(status_zp == 'melding'){
+        select.add(new Option("gemeente", "gemeente"), null);
+        select.add(new Option("particulier", "particulier"), null);
+        select.add(new Option("provincie", "provincie"), null);
+    }else if(status_zp == 'monitoring'){
+        select.add(new Option("spuitlocatie", "spuitlocatie"), null);
+        select.add(new Option("feromoonval", "feromoonval"), null);
+        select.add(new Option("controlelocatie", "feromoonval"), null);
+    }else if(status_zp == 'registratie'){
+        select.add(new Option("prioriteit: urgent", "prioriteit: urgent"), null);
+        select.add(new Option("prioriteit: standaard", "prioriteit: standaard"), null);
+        select.add(new Option("prioriteit: laag", "prioriteit: laag"), null);
+        select.add(new Option("prioriteit: geen", "prioriteit: geen"), null);
+    }else if(status_zp == 'bestreden'){
+        select.add(new Option("hoge plaagdruk", "hoge plaagdruk"), null);
+        select.add(new Option("matige plaagdruk", "matige plaagdruk"), null);
+        select.add(new Option("lage plaagdruk", "lage plaagdruk"), null);
+        select.add(new Option("geen plaagdruk", "geen plaagdruk"), null);
+    }
+}
+
+function emptyStatusDropdown() {  
+    var iframe = document.getElementById('editboomframeViewer');
+    var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
+     
+    var selectStatus = innerDoc.getElementById("status_zp"); 
+    
+    selectStatus.remove(9);
+    selectStatus.remove(8);
+    selectStatus.remove(7);
+    selectStatus.remove(6);
+    selectStatus.remove(5);
+    selectStatus.remove(4);
+    selectStatus.remove(3);
+    selectStatus.remove(2);
+    selectStatus.remove(1);  
+}
+
+function emptyClassificatieDropdown() {  
+    var iframe = document.getElementById('editboomframeViewer');
+    var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
+    
+    var selectClassificatie = innerDoc.getElementById("classificatie"); 
+    
+    selectClassificatie.remove(9);
+    selectClassificatie.remove(8);
+    selectClassificatie.remove(7);
+    selectClassificatie.remove(6);
+    selectClassificatie.remove(5);
+    selectClassificatie.remove(4);
+    selectClassificatie.remove(3);
+    selectClassificatie.remove(2);
+    selectClassificatie.remove(1);    
+}
+/* End methodes edit tab */
 
 /* als order niet aangepast mag worden dan moet hier een sort komen */
 function addLayerToEnabledLayerItems(theItem){
@@ -3248,6 +3526,10 @@ function onIdentify(movie,extend) {
     if (editingRedlining) {
         hideIdentifyIcon();
         selectRedlineObject(geom);
+        return;
+    }else if(editingBoom){
+        hideIdentifyIcon();
+        selectBoomObject(geom);
         return;
     }
 
@@ -4795,12 +5077,28 @@ function hideTabvakLoading() {
 
 var editingRedlining = false;
 var redLineGegevensbronId = -1;
+var editingBoom = false;
 
 function enableEditRedlining(id) {
     editingRedlining = true;
     redLineGegevensbronId = id;
 
     webMapController.activateTool("breinaald");
+}
+
+function enableEditBoom(id) {
+    editingBoom = true;
+    boomGegevensbronId = id;
+
+    webMapController.activateTool("breinaald");
+}
+
+function disableEditBoom(){
+    editingBoom = false;
+}
+
+function enableNewBoom(id) {
+    boomGegevensbronId = id;
 }
 
 function createServiceLeaf(container, item) {
@@ -4988,6 +5286,7 @@ $j(document).ready(function() {
     var wktTabOn = false;
     var transparantieTabOn = false;
     var tekenTabOn = false;
+    var editTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
         if (enabledtabs[i] == "analyse")
@@ -5016,6 +5315,9 @@ $j(document).ready(function() {
         
         if (enabledtabs[i] == "tekenen")
             tekenTabOn = true;
+        
+        if (enabledtabs[i] == "edit")
+            editTabOn = true;
     }
 
     if (analyseTabOn) {
@@ -5057,6 +5359,12 @@ $j(document).ready(function() {
     if (tekenTabOn) {
         if(document.getElementById('tekenenframeViewer')) {
             document.getElementById('tekenenframeViewer').src='/gisviewer/viewerteken.do';
+        }
+    }
+    
+    if (editTabOn) {
+        if(document.getElementById('editboomframeViewer')) {
+            document.getElementById('editboomframeViewer').src='/gisviewer/viewereditboom.do';
         }
     }
 

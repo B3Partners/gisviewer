@@ -77,7 +77,7 @@
     
     <servlet>
         <servlet-name>Data2CSV</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.services.Data2CSV</servlet-class>
+        <servlet-class>nl.b3p.gis.viewer.services.Data2CSVDigitree</servlet-class>
     </servlet>
     
     <servlet>
@@ -172,7 +172,38 @@
     <servlet>
         <servlet-name>UserLayerSld</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.UserLayerSldServlet</servlet-class>
-    </servlet>    
+    </servlet>  
+    
+    <servlet>
+      <servlet-name>ConfigServlet</servlet-name>
+      <servlet-class>nl.b3p.gis.viewer.services.ConfigServlet</servlet-class>
+      <init-param>
+          <param-name>jdbcUrlGisdata</param-name>
+          <param-value>jdbc:postgresql://b3p-demoserver:5432/acc_gis</param-value>
+      </init-param>
+      <init-param>
+          <param-name>jdbcUrlKaartenbalie</param-name>
+          <param-value>jdbc:postgresql://b3p-demoserver:5432/acc_kaartenbalie</param-value>
+      </init-param>
+      <init-param>
+          <param-name>databaseUserName</param-name>
+          <param-value>digitree</param-value>
+      </init-param>
+      <init-param>
+          <param-name>databasePassword</param-name>
+          <param-value>04zIYpUKFLUgAU0op</param-value>
+      </init-param>
+      <init-param>
+          <param-name>databaseLabelTable</param-name>
+          <param-value>digitree_labels</param-value>
+      </init-param>
+      <load-on-startup>5</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ConfigServlet</servlet-name>
+        <url-pattern>/services/ConfigServlet</url-pattern>
+    </servlet-mapping>  
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>

@@ -55,24 +55,10 @@
             <c:if test="${pageNr > 1}">
                 <c:set var="countPrev" value="${startIndex - limit}" />
                 <c:set var="countNext" value="${startIndex + limit}" />
-
                 <c:forEach var="entry" items="${params}">
                     <c:set var="resultParams" value="${stat.first ? '' : resultParams}&amp;${entry.key}=${entry.value}" />
-                </c:forEach> 
-
-                <c:if test="${countPrev >= 0}">
-                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink">Vorige</html:link>
-                </c:if>
-
-                <c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status">
-                    <c:set var="startIndex" value="${(i-1) * limit}" />
-
-                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink">${i}</html:link>
                 </c:forEach>
-
-                <c:if test="${countNext < count}">
-                    <html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink">Volgende</html:link>
-                </c:if>
+                <c:if test="${countPrev >= 0}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink">Vorige</html:link> | </c:if><c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status"><c:set var="startIndex" value="${(i-1) * limit}" /><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink">${i}</html:link> | </c:forEach><c:if test="${countNext < count}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink">Volgende</html:link></c:if>
             </c:if>
         </p>
 

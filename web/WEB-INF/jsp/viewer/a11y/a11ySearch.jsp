@@ -35,11 +35,11 @@
                         <c:if test="${entry.key == veld.label}">
                             <c:set var="added" value="1" />
                             <c:if test="${veld.type == 110 || veld.type == 3}">                                
-                                <input type="hidden" name="${veld.label}" value="${entry.value}">
+                                <p><input type="hidden" name="${veld.label}" value="${entry.value}"></p>
                             </c:if>
                             <c:if test="${veld.type == 0}">
                                 <p>
-                                    <label for="${veld.label}"><c:out value="${veld.label}" /></label><input type="text" name="${veld.label}" value="${entry.value}"/>
+                                    <label for="${veld.label}"><c:out value="${veld.label}" /></label><input type="text" name="${veld.label}" value="${entry.value}">
                                 </p>
                             </c:if>
                         </c:if>
@@ -47,13 +47,11 @@
 
                     <c:if test="${added == 0}">
                         <c:if test="${veld.type == 110 || veld.type == 3}">
-                            <p>
-                                <input type="hidden" name="${veld.label}">
-                            </p>
+                            <p><input type="hidden" name="${veld.label}"></p>
                         </c:if>
                         <c:if test="${veld.type == 0}">
                             <p>
-                                <label for="${veld.label}"><c:out value="${veld.label}" /></label><input tabindex="${status.count}" id="${veld.label}" type="text" name="${veld.label}" />
+                                <label for="${veld.label}"><c:out value="${veld.label}" /></label><input tabindex="${status.count}" id="${veld.label}" type="text" name="${veld.label}">
                             </p>
                         </c:if>
                     </c:if>

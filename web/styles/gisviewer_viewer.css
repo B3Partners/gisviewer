@@ -7,7 +7,7 @@ html, body {
     position: absolute;
     z-index: 9999999;
     left: 0px;
-    top: 78px; /* header height + infobalkheight */
+    top: 68px; /* header height + infobalkheight */
     bottom: 0px;
 }
 
@@ -63,8 +63,8 @@ html, body {
 }
 
 #content_viewer .infobalk .infobalk_actions {
-    text-align: left;
-    width: 400px;
+    text-align: right;
+    width: 500px;
     float: left;
     margin-left: 20px;
     color: #000;
@@ -290,27 +290,27 @@ html, body {
 
 /* CURSOR DEFINITIONS OPENLAYERS */
 #mapcontent .olControlidentifyActive, #mapcontent .olDragDown.olControlidentifyActive {
-    cursor: url(./cursors/identify.cur), url(cursors/identify.cur), pointer;
+    cursor: url(./styles/cursors/identify.cur), url(cursors/identify.cur), pointer;
 }
 
 #mapcontent .olControlDragPanActive {
-    cursor: url(./cursors/pan.cur), url(cursors/pan.cur), default;
+    cursor: url(./styles/cursors/pan.cur), url(cursors/pan.cur), default;
 }
 
 #mapcontent .olDragDown {
-    cursor: url(./cursors/pan_drag.cur), url(cursors/pan_drag.cur), move;
+    cursor: url(./styles/cursors/pan_drag.cur), url(cursors/pan_drag.cur), move;
 }
 
 #mapcontent .olControlZoomBoxActive {
-    cursor: url(./cursors/zoom.cur), url(cursors/zoom.cur), default;
+    cursor: url(./styles/cursors/zoom.cur), url(cursors/zoom.cur), default;
 }
 
 #mapcontent .olControlMeasureActive {
-    cursor: url(./cursors/measure.cur), url(cursors/measure.cur), default;
+    cursor: url(./styles/cursors/measure.cur), url(cursors/measure.cur), default;
 }
 
 #mapcontent .olControlb_highlightActive {
-    cursor: url(./cursors/highlight.cur), url(cursors/highlight.cur), default;
+    cursor: url(./styles/cursors/highlight.cur), url(cursors/highlight.cur), default;
 }
 
 #content_viewer #mapcontent .olControlDrawFeaturePolygonActive, #content_viewer #mapcontent .olControlDrawFeaturePathActive, #content_viewer #mapcontent .olControlDrawFeaturePointActive {

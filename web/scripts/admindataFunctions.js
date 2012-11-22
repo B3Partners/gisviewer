@@ -616,6 +616,7 @@ function createBronCaption(gegevensbron, simple, index) {
     });
     frm.append('<input type="hidden" name="themaId" value="' + gegevensbron.id + '" />');
     frm.append('<input type="hidden" name="objectIds" value="' + gegevensbron.csvPks + '" />');
+    frm.append('<input type="hidden" name="seperator" value=";" />');
     bronCaption.append(frm);
 
     var icon = $j('<img src="'+csvexporticon+'"/>').attr({
@@ -632,6 +633,36 @@ function createBronCaption(gegevensbron, simple, index) {
         bronCaption.append(icon);
     }
 
+    var urlString="";
+    var firstURL = true;
+    var layers=null;
+    if (window.opener){
+        if (window.opener.webMapController){
+            layers=window.opener.lastGetMapRequest.getMap("map1").getAllWMSLayers();
+        }else if(window.opener.opener && window.opener.opener.webMapController){
+            layers=window.opener.opener.lastGetMapRequest.getMap("map1").getAllWMSLayers();
+        }else if(window.opener.parent && window.opener.parent.webMapController){
+            layers=window.opener.parent.lastGetMapRequest.getMap("map1").getAllWMSLayers();
+        }
+
+    }else{
+        layers=window.parent.webMapController.getMap("map1").getAllWMSLayers();
+    }
+
+    for (var i=0; i < layers.length; i++){
+        if(layers[i].getURL() != null){
+            if(!firstURL){
+                urlString+=";";
+            }else{
+                firstURL = false;
+            }
+            urlString+=layers[i].getURL();
+            if(layers[i].getAlpha && layers[i].getAlpha() != null){
+                urlString+="#"+layers[i].getAlpha();
+            }
+        }
+    }
+
     //Info export knop
     var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j";
     
@@ -646,6 +677,7 @@ function createBronCaption(gegevensbron, simple, index) {
     frm.append('<input type="hidden" name="themaId" value="' + gegevensbron.id + '" />');
     frm.append('<input type="hidden" name="primaryKeys" value="' + gegevensbron.csvPks + '" />');
     frm.append('<input type="hidden" name="addKaart" value="j" />');
+    frm.append('<input type="hidden" name="url" value="' + urlString + '" />');
     bronCaption.append(frm);
 
     var icona = $j('<img src="'+infoexporticon+'" alt="Info Export" alt="Info Export"/>').attr({
@@ -663,6 +695,10 @@ function createBronCaption(gegevensbron, simple, index) {
     }
 
     return bronCaption;
+}
+
+function extraInfoForm(){
+    alert("extra info form");
 }
 
 function createTableHead(labels, simple) {
@@ -697,7 +733,6 @@ function createTableTh(label) {
 }
 
 var idcounterJsFunctions = 1;
-
 function createTableTd(waarde) {
     var kolomBreedte = (waarde.kolomBreedte == 0) ? 150 : waarde.kolomBreedte;
     var td = $j('<td></td>')
@@ -832,15 +867,15 @@ function createTableTd(waarde) {
                     .attr({
                         "title": listWaarde
                     });
-                } else {
+                }else{
                     // TODO: icon kiezen afh van extentie listWaarde
-                    clickable = $j('<img src="'+urlicon+'" alt="Externe informatie" border="0"/>')
+                    clickable = $j('<img src="'+urlicon+'" alt="Externe informatie"/>')
                     .attr({
                         "title": listWaarde
                     })
                 }
                 clickable.click(function() {
-                    popUp(listWaarde, 'externe_link', 730, 350);
+                    popUp(listWaarde, 'externe_link', 600, 500);
                 });
                 linkspan.html(clickable);
                 td.append(linkspan);
@@ -862,24 +897,29 @@ function createEmptyRow(size) {
     .css("color", "#808080");
     
     tr.append(td);
-    
     return tr;
 }
 
 /*
- * Hier staan alle javascriptfuncties. Deze kunnen worden aangeroepen door bij
- * de themadata aan te geven dat het veld van het type javascript is. Het commando
- * wat je dan invult is de naam van de functie.
- * De functie wordt altijd met de volgende parameters aangeroepen:
- * 
- * element: het html element dat is aangeklikt
- * themaid: id van het thema
- * keyName: primairy key name
- * keyValue: waarde van de primairy key
- * attributeName: gekozen (in themadata) attribuut naam
- * attributeValue: waarde van het attribuut
- * eenheid: eventueel eenheid voor omrekenen
-*/
+ *Hier staan alle javascriptfuncties. Deze kunnen worden aangeroepen door bij
+ *de themadata aan te geven dat het veld van het type javascript is. Het commando 
+ *wat je dan invult is de naam van de functie.
+ *De functie wordt altijd met de volgende parameters aangeroepen:
+ *element: het html element dat is aangeklikt
+ *themaid: id van het thema
+ *keyName: primairy key name
+ *keyValue: waarde van de primairy key
+ *attributeName: gekozen (in themadata) attribuut naam
+ *attributeValue: waarde van het attribuut
+ *eenheid: eventueel eenheid voor omrekenen
+ *
+ */
+
+/* Wijzig de waarde van een kolom in de database
+ *
+ * TODO: Zorgen dat er klant specifieke methodes hier komen die
+ * met een mooi label in de datatype dropdown worden aangeboden
+ * tijdens het configureren van de objectdata. */
 function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
     var oldValue = element.innerHTML;
     var newValue;

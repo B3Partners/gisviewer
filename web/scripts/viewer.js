@@ -439,7 +439,7 @@ function initializeButtons() {
 
 function displayEmbeddedMenuIcons() {  
     $j("#embedded_icons").css('position', 'absolute');
-    $j("#embedded_icons").css('width', '145px');
+    $j("#embedded_icons").css('width', '170px');
     $j("#embedded_icons").css('height', '36px');
     
     $j("#embedded_icons .embedded_icon").css('float', 'left');
@@ -447,7 +447,7 @@ function displayEmbeddedMenuIcons() {
     $j("#embedded_icons .embedded_icon").css('padding-left', '15px');
     
     if (webMapController instanceof OpenLayersController) {        
-        $j("#embedded_icons").css('left', '650px');
+        $j("#embedded_icons").css('left', '670px');
         $j("#embedded_icons").css('top', '6px');
         $j("#embedded_icons").css('border', 'solid 1px #808080');
         $j("#embedded_icons").css('background-color', '#eeeeee');

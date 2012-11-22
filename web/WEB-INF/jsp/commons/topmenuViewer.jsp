@@ -24,6 +24,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 
 <div id="topmenu">
+    <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
+    <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
+    <c:set var="kaartid" value="${param['id']}"/>
+    <c:set var="appCode" value="${param['appCode']}"/>
+
+    <c:set var="stijlklasse" value="menulink" />
+    <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" target="_new" styleClass="${stijlklasse}" module="">
+        <img src="<html:rewrite page="/images/search_list.png"/>" alt="Zoeken met lijsten" title="Zoeken met lijsten" border="0" />
+    </html:link>
+
     <a href="mailto:support@b3partners.nl" class="menulink">
         <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
     </a>
@@ -35,22 +45,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <a href="#" onclick="getLatLonForGoogleMaps();" class="menulink">
         <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
     </a>
-    
-    <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
-    <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
-    <c:set var="kaartid" value="${param['id']}"/>
-    <c:set var="appCode" value="${param['appCode']}"/>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'help.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-        
+
     <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
         <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
     </html:link>
-
-    
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">

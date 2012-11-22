@@ -44,6 +44,8 @@
             <p>Er is 1 resultaat gevonden.</p>
         </c:if>
 
+        <c:set var="resultNr" value="${startIndex}" />
+        
         <c:if test="${count > 1}" >
             <p>Er zijn ${count} resultaten gevonden. Resultaten ${startIndex+1} tot ${total} worden getoond.</p>
         </c:if>
@@ -62,7 +64,9 @@
             </c:if>
         </p>
 
-        <c:forEach var="result" items="${results}" begin="0" end="0">  
+        <c:forEach var="result" items="${results}" begin="0" end="0">
+            <div class="div-table-header-small">Nr.</div>
+            
             <c:forEach var="attr" items="${result.attributen}">
                 <c:if test="${attr.type == 2 || attr.type == 120}" >
                     <div class="div-table-header">
@@ -78,7 +82,7 @@
 
         <div style="clear: both;"></div>
 
-        <c:forEach var="result" items="${results}">  
+        <c:forEach var="result" items="${results}" varStatus="status">  
             <form action="a11yViewer.do" method="POST">
                 <p>
                     <input type="hidden" name="search" value="t">
@@ -92,7 +96,9 @@
                         <input type="hidden" name="searchConfigId" value="${searchConfigId}">
                     </c:if>     
                 </p>
-
+                
+                <div class="div-table-row-small">${status.count + resultNr}</div>
+                
                 <c:forEach var="attr" items="${result.attributen}">
                     <c:if test="${attr.type == 2 || attr.type == 120}">
                         <div class="div-table-row">${attr.waarde}</div>

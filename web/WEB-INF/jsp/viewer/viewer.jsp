@@ -1,3 +1,7 @@
+<noscript>
+    <meta http-equiv="refresh" content="0; url=viewer.do?appCode=${bookmarkAppcode}&amp;accessibility=1" />
+</noscript>
+
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 

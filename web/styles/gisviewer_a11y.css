@@ -16,9 +16,23 @@ body {
     background-color: #ccc;  
 }
 
+.div-table-header-small {
+    float: left;
+    display: table-column;         
+    width: 50px;         
+    background-color: #ccc;  
+}
+
 .div-table-row {
     float: left;
     display: table-row;         
     width: 200px;         
+    background-color: #eee;  
+}
+
+.div-table-row-small {
+    float: left;
+    display: table-row;         
+    width: 50px;         
     background-color: #eee;  
 }

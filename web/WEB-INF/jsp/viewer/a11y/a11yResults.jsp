@@ -113,16 +113,18 @@
             <div style="clear: both;"></div>
         </c:forEach>
 
-        <h2>Uitleg resultaatvelden</h2>
-        <p>
-            <c:forEach var="result" items="${results}" begin="0" end="0">  
-                <c:forEach var="attr" items="${result.attributen}">
-                    <c:if test="${attr.type == 2 || attr.type == 120}" >
-                        <c:out value="${attr.label}" />: <c:out value="${attr.omschrijving}" /><br>
-                    </c:if>
+        <c:if test="${fn:length(results) > 0}">
+            <h2>Uitleg resultaatvelden</h2>
+            <p>
+                <c:forEach var="result" items="${results}" begin="0" end="0">  
+                    <c:forEach var="attr" items="${result.attributen}">
+                        <c:if test="${(attr.type == 2 || attr.type == 120) && !empty attr.omschrijving}" >
+                            <c:out value="${attr.label}" />: <c:out value="${attr.omschrijving}" /><br>
+                        </c:if>
+                    </c:forEach>
                 </c:forEach>
-            </c:forEach>
-        </p>
+            </p>
+        </c:if>
 
         <div id="footer">
             <address>Zonnebaan 12C</address>

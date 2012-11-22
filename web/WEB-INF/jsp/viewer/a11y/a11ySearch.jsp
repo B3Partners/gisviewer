@@ -36,8 +36,8 @@
                             <c:set var="added" value="1" />
                             <c:if test="${veld.type == 110 || veld.type == 3}">                                
                                 <p><input type="hidden" name="${veld.label}" value="${entry.value}"></p>
-                            </c:if>
-                            <c:if test="${veld.type == 0}">
+                                </c:if>
+                                <c:if test="${veld.type == 0}">
                                 <p>
                                     <label for="${veld.label}"><c:out value="${veld.label}" /></label><input type="text" name="${veld.label}" value="${entry.value}">
                                 </p>
@@ -48,8 +48,8 @@
                     <c:if test="${added == 0}">
                         <c:if test="${veld.type == 110 || veld.type == 3}">
                             <p><input type="hidden" name="${veld.label}"></p>
-                        </c:if>
-                        <c:if test="${veld.type == 0}">
+                            </c:if>
+                            <c:if test="${veld.type == 0}">
                             <p>
                                 <label for="${veld.label}"><c:out value="${veld.label}" /></label><input tabindex="${status.count}" id="${veld.label}" type="text" name="${veld.label}">
                             </p>
@@ -79,12 +79,16 @@
 
             <p><input type="submit" value="Zoeken" /></p>
 
-            <h2>Uitleg zoekvelden</h2>
-            <p>
-                <c:forEach var="veld" items="${zoekVelden}">
-                    <c:out value="${veld.label}" />: <c:out value="${veld.omschrijving}" /><br>
-                </c:forEach>
-            </p>
+            <c:if test="${fn:length(zoekVelden) > 0}">
+                <h2>Uitleg zoekvelden</h2>
+                <p>
+                    <c:forEach var="veld" items="${zoekVelden}">
+                        <c:if test="${!empty veld.omschrijving}" >
+                            <c:out value="${veld.label}" />: <c:out value="${veld.omschrijving}" /><br>
+                        </c:if>                        
+                    </c:forEach>
+                </p>
+            </c:if>
 
 
         </form>

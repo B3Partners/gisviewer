@@ -696,6 +696,33 @@ function createTableTh(label) {
     return th;
 }
 
+/* only numbers and math operators are valid */
+function containsInvalidEvalChars(evalStr){  
+    var pattern = /[^0-9-+/*%()]/; 
+    
+    return pattern.test(evalStr);
+}
+
+function evalObjectDataCommando(commando) {   
+    var value;  
+    
+    /* remove = and spaces */
+    var evalString = commando.substring(1, commando.length).replace(/ /g, '');    
+      
+    if (!containsInvalidEvalChars(evalString)) {        
+        var waarde = eval(evalString);
+        if (/[.,]/.test(waarde)) { // Fix to 3 decimals
+            value = waarde.toFixed(3);
+        } else {
+            value = waarde;
+        }        
+    } else {
+        value = "Fout in " + evalString;
+    } 
+    
+    return value;
+}
+
 var idcounterJsFunctions = 1;
 
 function createTableTd(waarde) {
@@ -793,8 +820,19 @@ function createTableTd(waarde) {
 
     if (waarde.type == 'TYPE_QUERY') {
     	if(waarde.valueList.length > 1){
-	    var labels = waarde.value.split(',');
-	}
+			var labels = waarde.value.split(',');
+		}
+		
+		/* Een Objectdata veld met een berekening, bijvoorbeeld =[A]*[B] */
+        if(waarde.valueList.length == 1) {
+            if (waarde.valueList[0].charAt(0) == '=') {                
+                var value = evalObjectDataCommando(waarde.valueList[0]);
+                td.append(value);
+                
+                return td;
+            }
+        } 
+		
         var i = 0;
         $j.each(waarde.valueList, function(index3, listWaarde) {
 

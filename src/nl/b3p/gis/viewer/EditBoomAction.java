@@ -86,7 +86,7 @@ public class EditBoomAction extends ViewerCrudAction {
         "opkronen 4-4 m", "opkronen 4-6 m", "opkronen 4-8 m", "opkronen 6-6 m", "opkronen 6-8 m", "opkronen 8-8 m",
         "knotboom", "leiboom", "gekandelaberde boom", "haagboom", "vormboom", "overig"};
     private static final String[] AANTASTINGEN = {
-        "eikenprocessierups", "bloedingsziekte", "massaria", "iepziekte", "Bastwoekerziekte",
+        "massaria", "essterfte", "iepziekte", "eikenprocessierups", "bloedingsziekte", "Bastwoekerziekte",
         "Berkendoder", "Berkenweerschijnzwam", "Dikrandtonderzwam", "Echte honingzwam", "Echte tonderzwam",
         "Eikenweerschijnzwam", "Gesteelde lakzwam", "Gewone oesterzwam", "Goudvliesbundelzwam",
         "Harslakzwam", "Kastanjemineermot", "Kogelhoutskoolzwam", "Korsthoutskoolzwam", "Platte tonderzwam",

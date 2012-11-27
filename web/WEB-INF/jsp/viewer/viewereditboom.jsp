@@ -200,27 +200,27 @@
                 <td class="editinputcell"><html:checkbox styleClass="editcheckbox" property="opdruk"  styleId="opdruk"/></td>
             </tr>
             <tr class="checkboxtoggle">
-                <td>VTA1:</td>
+                <td><c:out value="${labels.vta1}"/>:</td>
                 <td class="editinputcell"><html:checkbox styleClass="editcheckbox" property="vta1" styleId="vta1"/></td>
             </tr>
             <tr class="checkboxtoggle">
-                <td>VTA2:</td>
+                <td><c:out value="${labels.vta2}"/>:</td>
                 <td class="editinputcell"><html:checkbox styleClass="editcheckbox" property="vta2" styleId="vta2"/></td>
             </tr>
             <tr class="checkboxtoggle">
-                <td>VTA3:</td>
+                <td><c:out value="${labels.vta3}"/>:</td>
                 <td class="editinputcell"><html:checkbox styleClass="editcheckbox" property="vta3" styleId="vta3"/></td>
             </tr>
             <tr class="checkboxtoggle">
-                <td>VTA4:</td>
+                <td><c:out value="${labels.vta4}"/>:</td>
                 <td class="editinputcell"><html:checkbox styleClass="editcheckbox" property="vta4" styleId="vta4"/></td>
             </tr>
             <tr class="checkboxtoggle">
-                <td>VTA5:</td>
+                <td><c:out value="${labels.vta5}"/>:</td>
                 <td class="editinputcell"><html:checkbox styleClass="editcheckbox" property="vta5" styleId="vta5"/></td>
             </tr>
             <tr class="checkboxtoggle">
-                <td>VTA6:</td>
+                <td><c:out value="${labels.vta6}"/>:</td>
                 <td class="editinputcell"><html:checkbox styleClass="editcheckbox" property="vta6" styleId="vta6"/></td>
             </tr>            
             <tr class="checkboxtoggle">

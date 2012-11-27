@@ -43,7 +43,8 @@ public class LabelsUtil {
         StringBuilder query = new StringBuilder();
 
         query.append("SELECT extra1, extra2, extra3, extra4, extra5, extra6," +
-                " extra7, extra8, extra9, extra10 FROM ");
+                " extra7, extra8, extra9, extra10, vta1, vta2, vta3, vta4," +
+                " vta5, vta6 FROM ");
 
         query.append(TABLE);
 
@@ -73,7 +74,12 @@ public class LabelsUtil {
                     labels.put("extra8", rs.getString("extra8"));
                     labels.put("extra9", rs.getString("extra9"));
                     labels.put("extra10", rs.getString("extra10"));
-
+                    labels.put("vta1", rs.getString("vta1"));
+                    labels.put("vta2", rs.getString("vta2"));
+                    labels.put("vta3", rs.getString("vta3"));
+                    labels.put("vta4", rs.getString("vta4"));
+                    labels.put("vta5", rs.getString("vta5"));
+                    labels.put("vta6", rs.getString("vta6"));
                 }
             } finally {
                 statement.close();
@@ -130,6 +136,30 @@ public class LabelsUtil {
 
         if (labels.get("extra10") == null || labels.get("extra10").equals("")) {
             labels.put("extra10", "extra10");
+        }
+        
+        if (labels.get("vta1") == null || labels.get("vta1").equals("")) {
+            labels.put("vta1", "VTA1");
+        }
+        
+        if (labels.get("vta2") == null || labels.get("vta2").equals("")) {
+            labels.put("vta2", "VTA2");
+        }
+        
+        if (labels.get("vta3") == null || labels.get("vta3").equals("")) {
+            labels.put("vta3", "VTA3");
+        }
+        
+        if (labels.get("vta4") == null || labels.get("vta4").equals("")) {
+            labels.put("vta4", "VTA4");
+        }
+        
+        if (labels.get("vta5") == null || labels.get("vta5").equals("")) {
+            labels.put("vta5", "VTA5");
+        }
+        
+        if (labels.get("vta6") == null || labels.get("vta6").equals("")) {
+            labels.put("vta6", "VTA6");
         }
 
         request.setAttribute("labels", labels);

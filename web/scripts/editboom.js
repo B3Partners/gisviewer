@@ -298,7 +298,8 @@ function changeAantating(){
     emptyStatusDropdown();
     
     if (aantasting == 'eikenprocessierups' || aantasting == 'bloedingsziekte' 
-        || aantasting == 'massaria' || aantasting == 'iepziekte') {
+        || aantasting == 'massaria' || aantasting == 'iepziekte'
+        || aantasting == 'essterfte' ) {
         
         select.appendChild(getOption("", "kies status.."));
         select.appendChild(getOption("melding", "melding"));

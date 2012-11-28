@@ -2158,8 +2158,7 @@ function returnBoomObject(jsonString) {
     var status = boomObj.status;
     var mutatiedatum = boomObj.mutatiedatum;
     var mutatietijd = boomObj.mutatietijd;
-    //var inspecteur = boomObj.inspecteur;
-    //var aktie = boomObj.aktie;
+    var aktie = boomObj.aktie;
     var boomsoort = boomObj.boomsoort;
     var plantjaar = boomObj.plantjaar;
     var boomhoogte = boomObj.boomhoogte;
@@ -2211,7 +2210,18 @@ function returnBoomObject(jsonString) {
     var extra10 = boomObj.extra10;
 
     /* formulier op edit tabblad aanpassen */
-    var iframe = document.getElementById('editboomframeViewer');
+    var iframe;
+    var tab = "";
+    for (var i=0; i < enabledtabs.length; i++) {
+        if (enabledtabs[i] == "edit"){
+            iframe = document.getElementById('editboomframeViewer');
+            tab = "edit";
+        }
+        if (enabledtabs[i] == "ziekte"){
+            iframe = document.getElementById('editziekteframeViewer');
+            tab = "ziekte"
+        }
+    }
     var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
 
     innerDoc.getElementById("id").value = id;
@@ -2222,8 +2232,9 @@ function returnBoomObject(jsonString) {
     innerDoc.getElementById("mutatiedatum").value = mutatiedatum;
     innerDoc.getElementById("mutatietijd").value = mutatietijd;
     
-    //innerDoc.getElementById("inspecteur").value = inspecteur;
-    //innerDoc.getElementById("aktie").value = aktie;
+    if (tab == "ziekte"){
+        innerDoc.getElementById("aktie").value = aktie;
+    }
     
     innerDoc.getElementById("boomsoort").value = boomsoort;
     innerDoc.getElementById("plantjaar").value = plantjaar;
@@ -2257,7 +2268,7 @@ function returnBoomObject(jsonString) {
     innerDoc.getElementById("vta6").checked = vta6;    
     innerDoc.getElementById("aantastingen").value = aantastingen;
     
-    fillStatusZiektenDropdown();
+    fillStatusZiektenDropdown(iframe);
     
     innerDoc.getElementById("maatregelen_kort").value = maatregelen_kort;
     innerDoc.getElementById("maatregelen_lang").value = maatregelen_lang;
@@ -2270,13 +2281,11 @@ function returnBoomObject(jsonString) {
     innerDoc.getElementById("nader_onderzoek").checked = nader_onderzoek;
     innerDoc.getElementById("status_zp").value = status_zp;
     
-    fillClassificatieDropdown();
+    fillClassificatieDropdown(iframe);
     
     innerDoc.getElementById("classificatie").value = classificatie;
     innerDoc.getElementById("risicoklasse").value = risicoklasse;
     innerDoc.getElementById("uitvoerdatum").value = uitvoerdatum;
-    
-    //innerDoc.getElementById("opmerking").value = opmerkingen;
     
     innerDoc.getElementById("extra1").value = extra1;
     innerDoc.getElementById("extra2").value = extra2;
@@ -2294,22 +2303,19 @@ function returnBoomObject(jsonString) {
     } else {
         innerDoc.getElementById("opmerking").value = "";
     }
-
-    //innerDoc.getElementById("status").disabled= true;
     
     editingBoom = false;
 }
 
-function fillStatusZiektenDropdown(){
-    var iframe = document.getElementById('editboomframeViewer');
+function fillStatusZiektenDropdown(iframe){
     var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
     
     var aantasting = innerDoc.getElementById("aantastingen").value;
     var select = innerDoc.getElementById("status_zp"); 
     
-    emptyStatusDropdown();
+    emptyStatusDropdown(iframe);
         
-    if(aantasting == 'eikenprocessierups' || aantasting == 'bloedingsziekte' || aantasting == 'massaria' || aantasting == 'iepziekte'){
+    if(aantasting == 'eikenprocessierups' || aantasting == 'bloedingsziekte' || aantasting == 'massaria' || aantasting == 'iepziekte' || aantasting == 'essterfte'){
         select.add(new Option("melding", "melding"), null);
         select.add(new Option("monitoring", "monitoring"), null);
         select.add(new Option("registratie", "registratie"), null);
@@ -2319,14 +2325,13 @@ function fillStatusZiektenDropdown(){
     innerDoc.getElementById("aantastingenvrij").value = "";
 }
 
-function fillClassificatieDropdown() {
-    var iframe = document.getElementById('editboomframeViewer');
+function fillClassificatieDropdown(iframe) {
     var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
     
     var status_zp = innerDoc.getElementById("status_zp").value;
     var select = innerDoc.getElementById("classificatie"); 
     
-    emptyClassificatieDropdown();
+    emptyClassificatieDropdown(iframe);
     
     if(status_zp == 'melding'){
         select.add(new Option("gemeente", "gemeente"), null);
@@ -2349,8 +2354,7 @@ function fillClassificatieDropdown() {
     }
 }
 
-function emptyStatusDropdown() {  
-    var iframe = document.getElementById('editboomframeViewer');
+function emptyStatusDropdown(iframe) {  
     var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
      
     var selectStatus = innerDoc.getElementById("status_zp"); 
@@ -2366,8 +2370,7 @@ function emptyStatusDropdown() {
     selectStatus.remove(1);  
 }
 
-function emptyClassificatieDropdown() {  
-    var iframe = document.getElementById('editboomframeViewer');
+function emptyClassificatieDropdown(iframe) {  
     var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
     
     var selectClassificatie = innerDoc.getElementById("classificatie"); 
@@ -5287,6 +5290,7 @@ $j(document).ready(function() {
     var transparantieTabOn = false;
     var tekenTabOn = false;
     var editTabOn = false;
+    var ziekteTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
         if (enabledtabs[i] == "analyse")
@@ -5318,6 +5322,9 @@ $j(document).ready(function() {
         
         if (enabledtabs[i] == "edit")
             editTabOn = true;
+        
+        if (enabledtabs[i] == "ziekte")
+            ziekteTabOn = true;
     }
 
     if (analyseTabOn) {
@@ -5365,6 +5372,12 @@ $j(document).ready(function() {
     if (editTabOn) {
         if(document.getElementById('editboomframeViewer')) {
             document.getElementById('editboomframeViewer').src='/gisviewer/viewereditboom.do';
+        }
+    }
+    
+    if (ziekteTabOn) {
+        if(document.getElementById('editziekteframeViewer')) {
+            document.getElementById('editziekteframeViewer').src='/gisviewer/viewereditziekte.do';
         }
     }
 

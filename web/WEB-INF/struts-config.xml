@@ -300,6 +300,12 @@
             <forward name="redlining" path="viewereditboom"/>
         </action>
         
+        <action path="/viewereditziekte" type="nl.b3p.gis.viewer.EditBoomAction" name="editboomForm" scope="request" validate="false">
+            <forward name="success" path="viewereditziekte"/>
+            <forward name="failure" path="viewereditziekte"/>
+            <forward name="redlining" path="viewereditziekte"/>
+        </action>
+        
         <action path="/viewerbag" type="nl.b3p.gis.viewer.BagAction" scope="request" validate="false">
             <forward name="success" path="viewerbag"/>
             <forward name="failure" path="viewerbag"/>

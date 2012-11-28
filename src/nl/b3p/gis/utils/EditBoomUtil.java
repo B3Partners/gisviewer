@@ -113,12 +113,11 @@ public class EditBoomUtil extends EditUtil{
         String projectid = getFeatureString(f, "projectid");
         String boomid = getFeatureString(f, "boomid");
         String status = getFeatureString(f, "status");
-        //String mutatiedatum = getFeatureString(f, "mutatiedatum");
-        //String mutatietijd = getFeatureString(f, "mutatietijd");
+
         String mutatiedatum = sdf.format(vandaag);
         String mutatietijd = sdf2.format(vandaag);
-        //String inspecteur = getFeatureString(f, "inspecteur");
-        //String aktie = getFeatureString(f, "aktie");
+
+        String aktie = getFeatureString(f, "aktie");
         String boomsoort = getFeatureString(f, "boomsrt");
         Integer plantjaar = (Integer)f.getProperty("plantjaar").getValue();
         String boomhoogte = getFeatureString(f, "boomhoogte");
@@ -178,8 +177,7 @@ public class EditBoomUtil extends EditUtil{
                 .put("status", status)
                 .put("mutatiedatum", mutatiedatum)
                 .put("mutatietijd", mutatietijd)
-                //.put("inspecteur", inspecteur)
-                //.put("aktie", aktie)
+                .put("aktie", aktie)
                 .put("boomsoort", boomsoort)
                 .put("plantjaar", plantjaar)
                 .put("boomhoogte", boomhoogte)

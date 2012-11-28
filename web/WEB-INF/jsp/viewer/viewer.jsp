@@ -311,7 +311,8 @@
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
         "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"},
         "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"},
-        "edit": { id: "edit", contentid: "editboomvakViewer", name: "Edit boom" }
+        "edit": { id: "edit", contentid: "editboomvakViewer", name: "Edit boom" },
+        "ziekte": { id: "ziekte", contentid: "editziektevakViewer", name: "Edit Digidis" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -733,6 +734,7 @@
     <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="tekenenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="tekenenframeViewer" name="tekenenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="editboomvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="editboomframeViewer" name="editboomframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    <div id="editziektevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="editziekteframeViewer" name="editziekteframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">

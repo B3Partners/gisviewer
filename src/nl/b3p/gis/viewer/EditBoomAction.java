@@ -92,6 +92,8 @@ public class EditBoomAction extends ViewerCrudAction {
         "Harslakzwam", "Kastanjemineermot", "Kogelhoutskoolzwam", "Korsthoutskoolzwam", "Platte tonderzwam",
         "Prachtkever", "Reuzenzwam", "Roodporiezwam", "Sombere honingzwam", "Verwelkingziekte (Verticilium)",
         "Waslakzwam", "Watermerkziekte", "Wilgenhoutrups", "Zadelzwam", "Zwavelzwam"};
+    private static final String[] AANTASTINGEN_DIGIDIS = {
+        "massaria", "essterfte", "iepziekte", "eikenprocessierups", "bloedingsziekte"};
     private static final String[] MAATREGELEN_KORT = {
         "BGS beeld", "BGS achterstallig", "BGS verwaarloosd", "OHS beeld", "OHS achterstallig", "Rooien"};
     private static final String[] MAATREGELEN_LANG = {
@@ -269,6 +271,7 @@ public class EditBoomAction extends ViewerCrudAction {
         request.setAttribute("BOOMHOOGTE", BOOMHOOGTE);
         request.setAttribute("EINDBEELD", EINDBEELD);
         request.setAttribute("AANTASTINGEN", AANTASTINGEN);
+        request.setAttribute("AANTASTINGEN_DIGIDIS", AANTASTINGEN_DIGIDIS);
         request.setAttribute("MAATREGELEN_KORT", MAATREGELEN_KORT);
         request.setAttribute("MAATREGELEN_LANG", MAATREGELEN_LANG);
         request.setAttribute("RISICOKLASSE", RISICOKLASSE);

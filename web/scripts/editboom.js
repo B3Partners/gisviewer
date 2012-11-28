@@ -232,6 +232,11 @@ function submitForm() {
         ouder.messagePopup("", "De boom kan niet worden opgeslagen. De volgende velden zijn verplicht: "+missing, "information");
         return false;
     }
+    
+    if(plantjaar == ""){
+        plantjaar = 0;
+    }
+    
     if((""+ parseInt(plantjaar)) != plantjaar){
         ouder.messagePopup("", "De boom kan niet worden opgeslagen. Het veld plantjaar moet een nummer zijn.", "information");
         return false;

@@ -18,6 +18,7 @@
 
 <div id="carouselcontainerblock"></div>
 
+<%--
 <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
     <div class="content_block item">
         <div class="content">
@@ -49,8 +50,9 @@
 <!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard
 blokken -->
 <c:if test="${empty tekstBlokken}">
+--%>
 
-    <h1>Welkom bij SolutionsParc</h1>
+    <h1><img src="<html:rewrite page="/images/solutionparc-design/pageicons/home.png"/>" alt="" /> Welkom bij SolutionsParc</h1>
 
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis id sapien sapien. Quisque tincidunt elementum bibendum. Aliquam erat volutpat. Etiam facilisis commodo nulla id feugiat. Sed enim dui, lobortis non elementum eget, dictum facilisis diam. Aliquam velit urna, sollicitudin nec tempor vel, congue id velit. Curabitur id ligula nisi. Duis eget lacus et arcu blandit vestibulum facilisis nec quam. Proin tempor accumsan erat in posuere. In id velit urna. Donec ligula elit, pharetra sed consequat ac, feugiat ut mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam bibendum elit eu sem vehicula rhoncus. Duis pretium sem et dolor tempus molestie. Duis vulputate ligula mauris. 
@@ -58,20 +60,18 @@ blokken -->
 
     <div class="solutionparc_homeblocks">
 
-        <a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/maatschappelijk.png"/>" /></a>
-        <a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/actuelezaken.png"/>" /></a>
-        <a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/wijkgericht.png"/>" /></a>
+        <div class="blockwrapper"><div class="home_tegel" id="maatschappelijkevoorzieningen"><html:link page="/maatschappelijkevoorzieningen.do"></html:link></div></div>
+        <div class="blockwrapper"><div class="home_tegel" id="actuelezaken"><html:link page="/actuelezaken.do"></html:link></div></div>
+        <div class="blockwrapper"><div class="home_tegel" id="wijkgerichtwerken"><html:link page="/wijkgerichtwerken.do"></html:link></div></div>
+        <div class="blockwrapper"><div class="home_tegel" id="beheeropenbareruimte"><html:link page="/beheeropenbareruimte.do"></html:link></div></div>
+        <div class="blockwrapper"><div class="home_tegel" id="natuurmilieucultuurhistorie"><html:link page="/natuurmilieucultuurhistorie.do"></html:link></div></div>
+        <div class="blockwrapper"><div class="home_tegel" id="gemeenteopdekaart"><html:link page="/gemeenteopdekaart.do"></html:link></div></div>
+
+        <div class="blockwrapper"><a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/login.png"/>" /></a></div>
+        <div class="blockwrapper"><a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/kiesuwpositie.png"/>" /></a></div>
 
     </div>
-    
-    <div class="solutionparc_homeblocks" style="margin-top: 15px;">
-
-        <a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/natuur.png"/>" /></a>
-        <a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/openbareruimte.png"/>" /></a>
-        <a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/gemeente.png"/>" /></a>
-
-    </div>
-
+<%--
 </c:if>
 
 <div class="content_block" id="loginblock">
@@ -170,7 +170,7 @@ blokken -->
 </c:if>
 
 <div style="clear: both; padding-bottom: 25px;"></div>
-
+--%>
 <!--
 <script type="text/javascript" src="<html:rewrite page='/scripts/homecarousel.js' module=''/>"></script>
 -->

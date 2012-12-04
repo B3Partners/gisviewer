@@ -2,14 +2,21 @@ package nl.b3p.gis.utils;
 
 import com.vividsolutions.jts.geom.Geometry;
 import java.security.Principal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import nl.b3p.gis.geotools.DataStoreUtil;
 import nl.b3p.gis.geotools.FilterBuilder;
 import nl.b3p.gis.viewer.db.Gegevensbron;
+import nl.b3p.gis.viewer.services.ConfigServlet;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
@@ -21,6 +28,7 @@ import org.directwebremoting.WebContextFactory;
 import org.geotools.data.DataStore;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opengis.feature.Feature;
@@ -39,6 +47,74 @@ public class EditBoomUtil extends EditUtil{
      * Constructor
      **/
     public EditBoomUtil() throws Exception {
+    }
+    
+    // maakt een JSONArray met voor elk resultaat een label (omschrijving) en value (boomsoort)
+    public String getAutoSuggestBoomSoorten(String search) throws JSONException{
+        String url = ConfigServlet.getJdbcUrlGisdata();
+        String user = ConfigServlet.getDatabaseUserName();
+        String password = ConfigServlet.getDatabasePassword();
+        String output = "";
+        
+        if(search == null || search.equals("") || search.isEmpty()){
+            return output;
+        }
+        
+        String query = "select boomsoort, omschrijving from digitree_boomsoorten where UPPER(omschrijving) like UPPER('%"+search+"%') order by omschrijving asc";
+
+        Connection conn = null;
+
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+
+            PreparedStatement statement = conn.prepareStatement(query.toString());
+            statement.setMaxRows(10);
+            JSONObject json = new JSONObject();
+            try {
+                JSONArray soorten = new JSONArray();
+                ResultSet rs = statement.executeQuery();
+                while (rs.next()) {
+                    String boomsoort = rs.getString(1);
+                    String omschrijving = rs.getString(2);
+                    
+                    JSONObject soort = new JSONObject()
+                            .put("label", omschrijving)
+                            .put("value", boomsoort);
+                    soorten.put(soort);
+                }
+                json.put("success", Boolean.TRUE);
+                json.put("soorten", soorten);
+                
+                String jString = json.toString();
+                return jString;
+                
+            } finally {
+                statement.close();
+            }
+
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
+        return output;
+    }
+    
+    private String[] ListToArray(List<String> values){
+        int size = values.size();
+        String[] stringvalues = new String[size];
+        
+        int i = 0;
+        for(Iterator it = values.iterator(); it.hasNext();){
+            String value = (String)it.next();
+            stringvalues[i] = value;
+            i++;
+        }
+        return stringvalues;
     }
 
     public String getIdAndWktForBoomObject(String wkt, Integer boomGegevensbronId,

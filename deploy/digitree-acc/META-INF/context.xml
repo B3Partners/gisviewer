@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/gisviewer">
+
+<Resource 
+    auth="Container" 
+    driverClassName="org.postgresql.Driver" 
+    logAbandoned="true" 
+    maxActive="100" 
+    maxIdle="30" 
+    maxWait="10000" 
+    minEvictableIdleTimeMillis="10000" 
+    name="jdbc/gisviewer" 
+    username="digitree"
+    password="04zIYpUKFLUgAU0op"
+    url="jdbc:postgresql://kantoor.b3p.nl/acc_gisviewer" 
+    removeAbandoned="true" 
+    removeAbandonedTimeout="60" 
+    timeBetweenEvictionRunsMillis="60000" 
+    type="javax.sql.DataSource" 
+    validationQuery="select 1"
+/>
+</Context>

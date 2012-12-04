@@ -145,6 +145,7 @@
                              <!-- Wordt een plaatje getoond van het object -->
                             <c:if test="${envelops[0].minX!=null and not empty envelops[0].minX}">
                                 <div class="aanvullendeInfoKaartContainer">
+                                    <html:img page="/imagemap.do?image=t&keepAlive=true&imageId=${imageId}&minx=${envelops[regelCounter.count-1].minX}&miny=${envelops[regelCounter.count-1].minY}&maxx=${envelops[regelCounter.count-1].maxX}&maxy=${envelops[regelCounter.count-1].maxY}" styleId="mapImage" alt="Preview" styleClass="width: 474px; height: 1px;" />
                                     <script>
                                         var minx,maxx,miny,maxy,ax,ay;
                                         minx=<c:out value="${envelops[regelCounter.count-1].minX}"/>;

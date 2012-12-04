@@ -9,6 +9,13 @@
 
 <c:set var="form" value="${editboomForm}"/>
 
+<script type="text/javascript" src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/interface/EditBoomUtil.js'></script>
+<script type='text/javascript' src='dwr/util.js'></script>
+
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+
 <div style="float: left; margin: 5px; width: 265px;">
     <img src="<html:rewrite page="/images/digidis_logo.gif"/>" title="Digidis"/>
     <div class="messages">
@@ -116,17 +123,21 @@
             <tr>
                 <td colspan="2">
                     Boomsoort*:<br />
+                    <div class="ui-widget">
+                     <html:text property="boomsoort" styleId="boomsoort" />
+                    </div>
+                    <%--<html:text property="boomsoort" styleId="boomsoort" onkeyup="getBoomsoort();" />
                     <html:select property="boomsoort" styleId="boomsoort">
                         <html:option value="">Selecteer..</html:option>
                         <c:forEach var="soort" items="${boomsoort}">
                             <html:option value="${soort.naam}"><c:out value="${soort.omschrijving}"/></html:option>
                         </c:forEach>
-                    </html:select>
+                    </html:select>--%>
                 </td>
             </tr>
             <tr>
                 <td>Plantjaar*:</td>
-                <td class="editinputcell"><html:text property="plantjaar" styleId="plantjaar" /></td>
+                <td class="editinputcell"><html:text property="plantjaar" styleId="plantjaar" value="0" /></td>
             </tr>
             <tr>
                 <td>Boomhoogte:</td>
@@ -310,5 +321,48 @@
         document.forms[0].aktie.value = status;
         changeStatusZP();
     }
+    
+    $(function() {        
+        function log( message ) {            
+            $( "<div>" ).text( message ).prependTo( "#log" );            
+            $( "#log" ).scrollTop( 0 );        
+        }         
+        $( "#boomsoort" ).autocomplete({            
+            source: function( request, response ) {    
+                var zoekterm = document.forms[0].boomsoort.value;
+                $.ajax({                    
+                    url: EditBoomUtil.getAutoSuggestBoomSoorten(zoekterm),                    
+                    dataType: "jsonp",                    
+                    /*data: {                        
+                        -featureClass: "P",                       
+                        style: "full",                        
+                        maxRows: 12,                        
+                        name_startsWith: request.term                    
+                    },*/                    
+                    success: function( data ) {       
+                        alert("data; "+data.soorten);
+                        response( $.map( data.soorten, function( item ) {                            
+                            return {                                
+                                label: item.label,
+                                value: item.value                           
+                            }                        
+                        }));                    
+                    }                
+                });            
+            },            
+            minLength: 4,            
+            select: function( event, ui ) {                
+            log( ui.item ?                    
+                "Selected: " + ui.item.label :                    
+                "Nothing selected, input was " + this.value);            
+            },            
+            open: function() {                
+                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );            
+            },            
+            close: function() {                
+                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );            
+            }        
+        });    
+    });
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/editboom.js"/>"></script>

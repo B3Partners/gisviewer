@@ -233,9 +233,9 @@ function submitForm() {
         return false;
     }
     
-    if(plantjaar == ""){
+    /*if(plantjaar == ""){
         plantjaar = 0;
-    }
+    }*/
     
     if((""+ parseInt(plantjaar)) != plantjaar){
         ouder.messagePopup("", "De boom kan niet worden opgeslagen. Het veld plantjaar moet een nummer zijn.", "information");

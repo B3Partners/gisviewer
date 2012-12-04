@@ -38,7 +38,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
+            <param-value>http://digitreetest.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -179,11 +179,11 @@
       <servlet-class>nl.b3p.gis.viewer.services.ConfigServlet</servlet-class>
       <init-param>
           <param-name>jdbcUrlGisdata</param-name>
-          <param-value>jdbc:postgresql://b3p-demoserver:5432/acc_gis</param-value>
+          <param-value>jdbc:postgresql://kantoor.b3p.nl:5432/acc_gis</param-value>
       </init-param>
       <init-param>
           <param-name>jdbcUrlKaartenbalie</param-name>
-          <param-value>jdbc:postgresql://b3p-demoserver:5432/acc_kaartenbalie</param-value>
+          <param-value>jdbc:postgresql://kantoor.b3p.nl:5432/acc_kaartenbalie</param-value>
       </init-param>
       <init-param>
           <param-name>databaseUserName</param-name>

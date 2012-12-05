@@ -29,7 +29,13 @@
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
     var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
     var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
+    var digitree = <c:out value="${f:isUserInRole(pageContext.request, 'muteren')}"/>;
+    var digidis = <c:out value="${f:isUserInRole(pageContext.request, 'digidismuteren')}"/>;
     var anoniem= !beheerder && !organisatiebeheerder && !themabeheerder && !gebruiker && !demogebruiker;
+    
+    if(digitree && digidis){
+        digidis = false;
+    }
     
     var sldServletUrl=window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>";
 
@@ -523,18 +529,27 @@
             var cloneTabContentId = null;
             for(i in enabledtabs) {
                 var tabid = enabledtabs[i];
-                var tabobj = eval("tabbladen."+tabid);
-                if(showLeftPanel != null && tabid == showLeftPanel) {
-                    cloneTabContentId = tabobj.contentid;
-                } else {
+                var showTab = true;
+                if(tabid == "ziekte" && !digidis){
+                    showTab = false; 
+                }
+                if(tabid == "edit" && !digitree){
+                    showTab = false;
+                }
+                if(showTab){
+                    var tabobj = eval("tabbladen."+tabid);
+                    if(showLeftPanel != null && tabid == showLeftPanel) {
+                        cloneTabContentId = tabobj.contentid;
+                    } else {
 
-                    if (useMouseOverTabs)
-                        document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
-                    else
-                        document.write('<li id="' + tabid + '" onclick="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
+                        if (useMouseOverTabs)
+                            document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
+                        else
+                            document.write('<li id="' + tabid + '" onclick="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
 
-                    createdTabs[i] = enabledtabs[i];
-                    if(i == 4) break;
+                        createdTabs[i] = enabledtabs[i];
+                        if(i == 4) break;
+                    }
                 }
             }
 

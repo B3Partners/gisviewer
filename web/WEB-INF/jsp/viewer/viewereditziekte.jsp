@@ -330,25 +330,15 @@
         $( "#boomsoort" ).autocomplete({            
             source: function( request, response ) {    
                 var zoekterm = document.forms[0].boomsoort.value;
-                $.ajax({                    
-                    url: EditBoomUtil.getAutoSuggestBoomSoorten(zoekterm),                    
-                    dataType: "jsonp",                    
-                    /*data: {                        
-                        -featureClass: "P",                       
-                        style: "full",                        
-                        maxRows: 12,                        
-                        name_startsWith: request.term                    
-                    },*/                    
-                    success: function( data ) {       
-                        alert("data; "+data.soorten);
-                        response( $.map( data.soorten, function( item ) {                            
-                            return {                                
-                                label: item.label,
-                                value: item.value                           
-                            }                        
-                        }));                    
-                    }                
-                });            
+                EditBoomUtil.getAutoSuggestBoomSoorten(zoekterm, function(jsonstring) {
+                   var soorten = eval('(' + jsonstring + ')');
+                    response( $.map( soorten, function( item ) {                            
+                        return {                                
+                            label: item.label,
+                            value: item.value                           
+                        }
+                    }));
+                });           
             },            
             minLength: 4,            
             select: function( event, ui ) {                

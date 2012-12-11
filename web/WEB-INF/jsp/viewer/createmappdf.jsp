@@ -44,37 +44,19 @@
             </tr>
             <tr>
                 <td colspan="2" class="printvoorbeeld_help">
-                    De startwaarde van de kwaliteitsbalk is afhankelijk van uw beeldscherm.
                     Als u deze kwaliteit aanpast kan het kaartbeeld veranderen t.o.v. het
                     orgineel.
                 </td>
             </tr>            
             <tr class="aanvullende_info_alternateTr">
-                <td><fmt:message key="createmappdf.imageSize"/></td>
+                <td>Kwaliteit</td>
                 <td>
-
-                    <!-- Slider div -->
-                    <div id="kwaliteitsbalk" style="width: 600px">
-                        <div id="kwaliteitsbalk_labels" style="margin-left: 0px; padding-top: 0px;">
-                            <span style="padding-top: 2px; margin-right: 90px; margin-left: 5px; padding-bottom: 10px;">Laag</span>
-                            <span style="padding-top: 2px; padding-bottom: 10px;">Medium</span>
-                            <span style="padding-top: 2px; margin-left: 90px; padding-bottom: 10px;">Hoog</span>
-                        </div>
-
-                        <div id="kwaliteitsbalk_slider" style="margin-left: 15px; padding-top: 10px;">
-                            <div id="slider" style="width: 250px; float: left;"></div>
-
-                            <div id="orgineelKnop" style="float: left; margin-left: 10px;">
-                                <input type="button" onclick="resetImageSize();" value="Orginele kwaliteit"/>
-                            </div>
-                        </div>    
-
-                    </div>
-
-                    <html:hidden property="imageSize" styleId="imageSize"/>
-                    <input type="hidden" name="startImageSize" id="startImageSize" value="2048"/> 
+                    <html:radio property="ppi" value="72">72 dpi (beeldscherm)</html:radio>
+                    <html:radio property="ppi" value="150">150 dpi </html:radio>
+                    <html:radio property="ppi" value="300">300 dpi (print)</html:radio>
                 </td>
-            </tr>         
+            </tr>
+                
             <tr class="aanvullende_info_alternateTr">
                 <td><fmt:message key="createmappdf.landscape"/></td>
                 <td>
@@ -88,6 +70,9 @@
                     <html:select property="pageSize">
                         <html:option value="A4">A4</html:option>
                         <html:option value="A3">A3</html:option>
+                        <html:option value="A2">A2</html:option>
+                        <html:option value="A1">A1</html:option>
+                        <html:option value="A0">A0</html:option>
                     </html:select>
                 </td>
             </tr>
@@ -132,15 +117,5 @@
     </html:form>
     <br />
 </div>
-<script type="text/javascript">
-    $j(function() {
-        $j("#slider").slider({
-            min: 0,
-            max: 2048,
-            value: 2048,
-            animate: true,
-            change: function(event, ui) { $j("#imageSize").val(ui.value); }
-        });
-    });
-</script>
+
 <script type="text/javascript" src="scripts/createmappdf.js"></script>

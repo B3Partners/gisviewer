@@ -111,6 +111,13 @@ public class GetViewerDataDigitreeAction extends GetViewerDataAction {
         String val8 = (String)labels.get("extra8");
         String val9 = (String)labels.get("extra9");
         String val10 = (String)labels.get("extra10");
+        
+        String val11 = (String)labels.get("vta1");
+        String val12 = (String)labels.get("vta2");
+        String val13 = (String)labels.get("vta3");
+        String val14 = (String)labels.get("vta4");
+        String val15 = (String)labels.get("vta5");
+        String val16 = (String)labels.get("vta6");
 
         Iterator iter = data.iterator();
         List labeledList = new ArrayList();
@@ -166,6 +173,36 @@ public class GetViewerDataDigitreeAction extends GetViewerDataAction {
             if (td.getLabel().equals("extra10")) {
                 if ( (val10 != null) && (!val10.equals("")) )
                     td.setLabel(val10);
+            }
+            
+            if (td.getLabel().equals("Aanvulling VTA 1") || td.getLabel().equals("vta1")) {
+                if ( (val11 != null) && (!val11.equals("")) )
+                    td.setLabel(val11);
+            }
+            
+            if (td.getLabel().equals("Aanvulling VTA 2") || td.getLabel().equals("vta2")) {
+                if ( (val12 != null) && (!val12.equals("")) )
+                    td.setLabel(val12);
+            }
+            
+            if (td.getLabel().equals("Aanvulling VTA 3") || td.getLabel().equals("vta3")) {
+                if ( (val13 != null) && (!val13.equals("")) )
+                    td.setLabel(val13);
+            }
+            
+            if (td.getLabel().equals("Aanvulling VTA 4") || td.getLabel().equals("vta4")) {
+                if ( (val14 != null) && (!val14.equals("")) )
+                    td.setLabel(val14);
+            }
+            
+            if (td.getLabel().equals("Aanvulling VTA 5") || td.getLabel().equals("vta5")) {
+                if ( (val15 != null) && (!val15.equals("")) )
+                    td.setLabel(val15);
+            }
+            
+            if (td.getLabel().equals("Aanvulling VTA 6") || td.getLabel().equals("vta6")) {
+                if ( (val16 != null) && (!val16.equals("")) )
+                    td.setLabel(val16);
             }
 
             labeledList.add(td);

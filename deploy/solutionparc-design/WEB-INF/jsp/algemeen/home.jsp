@@ -67,8 +67,8 @@ blokken -->
         <div class="blockwrapper"><div class="home_tegel" id="natuurmilieucultuurhistorie"><html:link page="/natuurmilieucultuurhistorie.do"></html:link></div></div>
         <div class="blockwrapper"><div class="home_tegel" id="gemeenteopdekaart"><html:link page="/gemeenteopdekaart.do"></html:link></div></div>
 
-        <div class="blockwrapper"><a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/login.png"/>" /></a></div>
-        <div class="blockwrapper"><a href="#"><img alt="" src="<html:rewrite page="/images/solutionparc-design/kiesuwpositie.png"/>" /></a></div>
+        <div class="blockwrapper"><div class="home_tegel" id="logintegel"><html:link page="/login.do"></html:link></div></div>
+        <div class="blockwrapper"><div class="home_tegel" id="lokatietegel"><a href="#"></a></div></div>
 
     </div>
 <%--

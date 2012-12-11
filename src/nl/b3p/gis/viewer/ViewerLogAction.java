@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
+import nl.b3p.gis.viewer.services.ConfigServlet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForward;
@@ -22,10 +23,10 @@ import org.apache.struts.validator.DynaValidatorForm;
 public class ViewerLogAction extends BaseGisAction {
     private static final Log log = LogFactory.getLog(ViewerLogAction.class);
 
-    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/digitree_gis";
-    private static final String DB_USER = "digitree";
-    private static final String DB_PASSW = "04zIYpUKFLUgAU0op";
-    private static final String TABLE = "digitree_labels";
+    private static String JDBC_URL = "";
+    private static String DB_USER = "";
+    private static String DB_PASSW = "";
+    private static String TABLE = "";
 
     protected static final String LOGINFO = "loginfo";
     public static final List column_names = Arrays.asList(new String[] {
@@ -52,6 +53,11 @@ public class ViewerLogAction extends BaseGisAction {
 
     public ActionForward loginfo(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
+
+        JDBC_URL = ConfigServlet.getJdbcUrlGisdata();
+        DB_USER = ConfigServlet.getDatabaseUserName();
+        DB_PASSW = ConfigServlet.getDatabasePassword();
+        TABLE = ConfigServlet.getDatabaseLabelTable();
 
         request.setAttribute("column_names", column_names);
 

@@ -60,6 +60,7 @@ public class EditBoomUtil extends EditUtil{
             return output;
         }
         
+        search.replaceAll("'", "\'");
         String query = "select boomsoort, omschrijving from digitree_boomsoorten where UPPER(omschrijving) like UPPER('%"+search+"%') order by omschrijving asc";
 
         Connection conn = null;
@@ -68,7 +69,6 @@ public class EditBoomUtil extends EditUtil{
             conn = DriverManager.getConnection(url, user, password);
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
-            //statement.setMaxRows(10);
             JSONObject json = new JSONObject();
             try {
                 JSONArray soorten = new JSONArray();

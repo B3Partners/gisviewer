@@ -9,6 +9,13 @@
 
 <c:set var="form" value="${editboomForm}"/>
 
+<script type="text/javascript" src='dwr/engine.js'></script>
+<script type='text/javascript' src='dwr/interface/EditBoomUtil.js'></script>
+<script type='text/javascript' src='dwr/util.js'></script>
+
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+
 <div style="float: left; margin: 5px; width: 265px;">
     <div class="messages">
         <html:messages id="message" message="true" >
@@ -78,12 +85,9 @@
             <tr>
                 <td colspan="2">
                     Boomsoort*:<br />
-                    <html:select property="boomsoort" styleId="boomsoort">
-                        <html:option value="">Selecteer..</html:option>
-                        <c:forEach var="soort" items="${boomsoort}">
-                            <html:option value="${soort.naam}"><c:out value="${soort.omschrijving}"/></html:option>
-                        </c:forEach>
-                    </html:select>
+                    <div class="ui-widget">
+                     <html:text property="boomsoort" styleId="boomsoort" size="40"/>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -446,5 +450,38 @@
     function clearWegtype(){
         document.forms[0].wegtypevrij.value = "";
     }
+    
+    $(function() {        
+        function log( message ) {            
+            $( "<div>" ).text( message ).prependTo( "#log" );            
+            $( "#log" ).scrollTop( 0 );        
+        }         
+        $( "#boomsoort" ).autocomplete({            
+            source: function( request, response ) {    
+                var zoekterm = document.forms[0].boomsoort.value;
+                EditBoomUtil.getAutoSuggestBoomSoorten(zoekterm, function(jsonstring) {
+                   var soorten = eval('(' + jsonstring + ')');
+                    response( $.map( soorten, function( item ) {   
+                        return {                                
+                            label: item.label/*,
+                            value: item.value  */                         
+                        }
+                    }));
+                });           
+            },            
+            minLength: 4,            
+            select: function( event, ui ) {                
+            log( ui.item ?                    
+                "Selected: " + ui.item.label :                    
+                "Nothing selected, input was " + this.value);            
+            },            
+            open: function() {                
+                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );            
+            },            
+            close: function() {                
+                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );            
+            }        
+        });    
+    });
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/editboom.js"/>"></script>

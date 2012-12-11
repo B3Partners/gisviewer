@@ -334,7 +334,7 @@ function changeStatusZP(){
     	select.appendChild(getOption("", "kies classificatie.."));
         select.appendChild(getOption("spuitlocatie", "spuitlocatie"));
         select.appendChild(getOption("feromoonval", "feromoonval"));
-        select.appendChild(getOption("controlelocatie", "feromoonval"));
+        select.appendChild(getOption("controlelocatie", "controlelocatie"));
     }else if(status_zp == 'registratie'){
     	select.appendChild(getOption("", "kies classificatie.."));
         select.appendChild(getOption("prioriteit: urgent", "prioriteit: urgent"));

@@ -68,7 +68,7 @@ public class EditBoomUtil extends EditUtil{
             conn = DriverManager.getConnection(url, user, password);
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
-            statement.setMaxRows(10);
+            //statement.setMaxRows(10);
             JSONObject json = new JSONObject();
             try {
                 JSONArray soorten = new JSONArray();
@@ -82,11 +82,8 @@ public class EditBoomUtil extends EditUtil{
                             .put("value", boomsoort);
                     soorten.put(soort);
                 }
-                json.put("success", Boolean.TRUE);
-                json.put("soorten", soorten);
                 
-                String jString = json.toString();
-                return jString;
+                output = soorten.toString();
                 
             } finally {
                 statement.close();
@@ -194,7 +191,7 @@ public class EditBoomUtil extends EditUtil{
         String mutatietijd = sdf2.format(vandaag);
 
         String aktie = getFeatureString(f, "aktie");
-        String boomsoort = getFeatureString(f, "boomsrt");
+        String boomsoort = getBoomSoortlabel(getFeatureString(f, "boomsrt"));
         Integer plantjaar = (Integer)f.getProperty("plantjaar").getValue();
         String boomhoogte = getFeatureString(f, "boomhoogte");
         String eindbeeld = getFeatureString(f, "eindbeeld");
@@ -335,6 +332,41 @@ public class EditBoomUtil extends EditUtil{
         }
 
         return value;
+    }
+    
+    private String getBoomSoortlabel(String boomsoort){
+        String url = ConfigServlet.getJdbcUrlGisdata();
+        String user = ConfigServlet.getDatabaseUserName();
+        String password = ConfigServlet.getDatabasePassword();
+        String output = "";
+        
+        String query = "select omschrijving from digitree_boomsoorten where boomsoort = '"+boomsoort+"'";
+
+        Connection conn = null;
+
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+
+            PreparedStatement statement = conn.prepareStatement(query.toString());
+            try {
+                ResultSet rs = statement.executeQuery();
+                while (rs.next()) {
+                    output = rs.getString(1);
+                }
+            } finally {
+                statement.close();
+            }
+
+        } catch (SQLException ex) {
+            log.error("", ex);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                log.error("", ex);
+            }
+        }
+        return output;
     }
 
     @Override

@@ -265,9 +265,9 @@ public class EditBoomAction extends ViewerCrudAction {
         Integer gbId = (Integer) instellingen.get("editGegevensbron");
         dynaForm.set("gegevensbron", gbId);
 
-        List boomsoort = getBoomSoorten();
+        //List boomsoort = getBoomSoorten();
 
-        request.setAttribute("boomsoort", boomsoort);
+        //request.setAttribute("boomsoort", boomsoort);
         request.setAttribute("BOOMHOOGTE", BOOMHOOGTE);
         request.setAttribute("EINDBEELD", EINDBEELD);
         request.setAttribute("AANTASTINGEN", AANTASTINGEN);
@@ -292,11 +292,12 @@ public class EditBoomAction extends ViewerCrudAction {
         String project = FormUtils.nullIfEmpty(dynaForm.getString("project"));
         Integer plantjaar = FormUtils.getInteger(dynaForm, "plantjaar");
 
-        //String mutatiedatum = FormUtils.nullIfEmpty(dynaForm.getString("mutatiedatum"));
-        //String mutatietijd = FormUtils.nullIfEmpty(dynaForm.getString("mutatietijd"));
         String inspecteur = FormUtils.nullIfEmpty(dynaForm.getString("inspecteur"));
         String aktie = FormUtils.nullIfEmpty(dynaForm.getString("aktie"));
-        String boomsoort = FormUtils.nullIfEmpty(dynaForm.getString("boomsoort"));
+
+        String boomlabel = FormUtils.nullIfEmpty(dynaForm.getString("boomsoort"));
+        String boomsoort = getBoomSoort(boomlabel);
+        
         String boomhoogte = FormUtils.nullIfEmpty(dynaForm.getString("boomhoogte"));
         String boomhoogtevrij = FormUtils.nullIfEmpty(dynaForm.getString("boomhoogtevrij"));
         String eindbeeldvrij = FormUtils.nullIfEmpty(dynaForm.getString("eindbeeldvrij"));
@@ -568,23 +569,26 @@ public class EditBoomAction extends ViewerCrudAction {
         }
     }
 
-    private List getBoomSoorten() {
-        List soorten = new ArrayList();
-        String query = "select boomsoort, omschrijving from digitree_boomsoorten order by omschrijving asc";
+    private String getBoomSoort(String boomlabel){
+        String url = ConfigServlet.getJdbcUrlGisdata();
+        String user = ConfigServlet.getDatabaseUserName();
+        String password = ConfigServlet.getDatabasePassword();
+        
+        boomlabel.replaceAll("'", "\'");
+        String output = "";
+        
+        String query = "select boomsoort from digitree_boomsoorten where omschrijving = '"+boomlabel+"'";
 
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSW);
+            conn = DriverManager.getConnection(url, user, password);
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             try {
                 ResultSet rs = statement.executeQuery();
                 while (rs.next()) {
-                    Map soort = new HashMap();
-                    soort.put("naam", rs.getString(1));
-                    soort.put("omschrijving", rs.getString(2));
-                    soorten.add(soort);
+                    output = rs.getString(1);
                 }
             } finally {
                 statement.close();
@@ -599,7 +603,7 @@ public class EditBoomAction extends ViewerCrudAction {
                 logger.error("", ex);
             }
         }
-        return soorten;
+        return output;
     }
 
     private List getBomen(String boomid) {
@@ -825,18 +829,20 @@ public class EditBoomAction extends ViewerCrudAction {
         String echteRol = null;
 
         Boolean foundRole = false;
-        for (int i = 0; i < configRollen.length; i++) {
-            if (foundRole) {
-                break;
-            }
-            String rolnaam = configRollen[i];
-            Iterator iter = roles.iterator();
-            while (iter.hasNext()) {
-                String inlogRol = iter.next().toString();
-                if (rolnaam.equals(inlogRol)) {
-                    echteRol = rolnaam;
-                    foundRole = true;
+        if(configRollen != null && configRollen.length > 0){
+            for (int i = 0; i < configRollen.length; i++) {
+                if (foundRole) {
                     break;
+                }
+                String rolnaam = configRollen[i];
+                Iterator iter = roles.iterator();
+                while (iter.hasNext()) {
+                    String inlogRol = iter.next().toString();
+                    if (rolnaam.equals(inlogRol)) {
+                        echteRol = rolnaam;
+                        foundRole = true;
+                        break;
+                    }
                 }
             }
         }

@@ -124,15 +124,8 @@
                 <td colspan="2">
                     Boomsoort*:<br />
                     <div class="ui-widget">
-                     <html:text property="boomsoort" styleId="boomsoort" />
+                        <html:text property="boomsoort" styleId="boomsoort" size="40" />
                     </div>
-                    <%--<html:text property="boomsoort" styleId="boomsoort" onkeyup="getBoomsoort();" />
-                    <html:select property="boomsoort" styleId="boomsoort">
-                        <html:option value="">Selecteer..</html:option>
-                        <c:forEach var="soort" items="${boomsoort}">
-                            <html:option value="${soort.naam}"><c:out value="${soort.omschrijving}"/></html:option>
-                        </c:forEach>
-                    </html:select>--%>
                 </td>
             </tr>
             <tr>
@@ -332,10 +325,10 @@
                 var zoekterm = document.forms[0].boomsoort.value;
                 EditBoomUtil.getAutoSuggestBoomSoorten(zoekterm, function(jsonstring) {
                    var soorten = eval('(' + jsonstring + ')');
-                    response( $.map( soorten, function( item ) {                            
+                    response( $.map( soorten, function( item ) {   
                         return {                                
-                            label: item.label,
-                            value: item.value                           
+                            label: item.label/*,
+                            value: item.value  */                         
                         }
                     }));
                 });           

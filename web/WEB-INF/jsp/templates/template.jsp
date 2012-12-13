@@ -49,9 +49,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <!--[if lte IE 8]>
             <link href="styles/gisviewer_ie8.css" rel="stylesheet" type="text/css" />
         <![endif]-->
-        <!--[if IE 9]>
-            <style type="text/css"> .inleiding_body { background-image: url(images/homeblocksbg.gif); background-position: bottom; } </style>
-        <![endif]-->
+        
         <script type="text/javascript">
             attachOnload(checkLocation);
         </script>

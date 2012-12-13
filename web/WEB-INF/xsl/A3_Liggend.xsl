@@ -33,15 +33,15 @@
             
             <fo:page-sequence master-reference="a3-liggend">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="39.5cm" height="1.5cm" top="0cm" left="0cm" background-color="#166299" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="39.5cm" height="1.5cm" top="0cm" left="0cm" background-color="#008540" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="39.5cm" background-color="#166299" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="39.5cm" background-color="#008540" xsl:use-attribute-sets="column-block">
                         <fo:block />
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="0.75cm" top="1.6cm" left="0cm" background-color="#FFD203" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="0.75cm" top="1.6cm" left="0cm" background-color="#E5F0E8" xsl:use-attribute-sets="column-block">
                         <fo:block margin-left="0.2cm" margin-top="0.2cm" xsl:use-attribute-sets="default-font">
                             Info
                         </fo:block>
@@ -77,11 +77,11 @@
     <xsl:template name="info-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
             <fo:block>
-                <fo:external-graphic src="url('b3p_noordpijl.png')" width="84px" height="77px"/>
+                <fo:external-graphic src="url('noordpijl.png')" width="84px" height="77px"/>
             </fo:block>
 
             <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">
-                schaalbalk
+                schaal
             </fo:block>
 
             <!-- create scalebar -->
@@ -100,29 +100,8 @@
                 <xsl:value-of select="datum"/>
             </fo:block>
 
-            <fo:block margin-left="0.2cm" margin-top="0.1cm" font-size="10pt">
-                U bekijkt een demo ontwerp.
-            </fo:block>
-
             <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt" font-style="italic">
                 <xsl:value-of select="opmerking"/>
-            </fo:block>
-            
-            <!-- Extra block voor legenda plaatjes -->
-            <fo:block margin-left="0.2cm" margin-top="0.1cm">       
-                <xsl:if test="(count(legendUrls) > 0)">
-                    <fo:block color="#000000" font-size="10pt">
-                        Legenda:                 
-                    </fo:block>
-                </xsl:if>
-                  
-                <xsl:for-each select="legendUrls">
-                    <xsl:variable name="legendUrl" select="." />
-                    
-                    <fo:block margin-left="0.0cm" margin-top="0.05cm">
-                        <fo:external-graphic src="{$legendUrl}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform"/>
-                    </fo:block>
-                </xsl:for-each>
             </fo:block>
 
         </fo:block>
@@ -163,7 +142,7 @@
 
     <xsl:template name="logo-block">
         <fo:block>
-            <fo:external-graphic src="url('b3p_logo.png')" width="231px" height="56px"/>
+            <fo:external-graphic src="url('digitree_logo.png')" width="231px" height="60px"/>
         </fo:block>
     </xsl:template>    
 </xsl:stylesheet>

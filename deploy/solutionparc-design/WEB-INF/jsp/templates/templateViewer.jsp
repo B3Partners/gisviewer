@@ -74,7 +74,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div>
         
         <div id="content_viewer">
-            <tiles:insert attribute="infobalk" />
             <tiles:insert attribute="content" />
         </div>
         <tiles:insert definition="googleAnalytics"/>        

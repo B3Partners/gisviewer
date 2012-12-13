@@ -538,14 +538,16 @@ body.pdfExportClass {
 
 .inleiding_body {
     background-color: White;
+    /*
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 2px;
     padding-bottom: 2px;
+    */
     color: Black;
     font-weight: bold;
     height: 220px;
-    
+    /*
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px 8px 8px 8px;
@@ -557,6 +559,11 @@ body.pdfExportClass {
     background: -ms-linear-gradient(top, #FFF0C5, #FFE1A3);
     background: -o-linear-gradient(top, #FFF0C5, #FFE1A3);
     background: linear-gradient(#FFF0C5, #FFE1A3);
+    */
+}
+
+.inleiding_body p {
+    margin: 0px;
 }
 
 .helppagina_cms_blok {

@@ -43,7 +43,7 @@
                         </fo:block>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="55.5m" top="2.4cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="55.5cm" top="2.4cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="info-block"/>
                     </fo:block-container>
 

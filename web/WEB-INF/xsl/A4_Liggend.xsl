@@ -4,8 +4,8 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
-    <xsl:variable name="map-width-px" select="'612'"/>
-    <xsl:variable name="map-height-px" select="'457'"/>
+    <xsl:variable name="map-width-px" select="'630'"/>
+    <xsl:variable name="map-height-px" select="'453'"/>
 
     <!-- formatter -->
     <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
@@ -32,12 +32,8 @@
             
             <fo:page-sequence master-reference="a4-liggend">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="26.9cm" height="1.5cm" top="0cm" left="0cm" background-color="#008540" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="29.0cm" height="1.5cm" top="0cm" left="0cm" background-color="#008540" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="title-block"/>
-                    </fo:block-container>
-
-                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="26.9cm" background-color="#008540" xsl:use-attribute-sets="column-block">
-                        <fo:block />
                     </fo:block-container>
 
                     <fo:block-container width="6.6cm" height="0.75cm" top="1.6cm" left="0cm" background-color="#E5F0E8" xsl:use-attribute-sets="column-block">
@@ -50,7 +46,7 @@
                         <xsl:call-template name="info-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="21.7cm" height="16.2cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
+                    <fo:block-container width="22.3cm" height="16.2cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block"/>
                     </fo:block-container>
 
@@ -126,7 +122,7 @@
                 <xsl:value-of select="$bbox-corrected"/>
             </xsl:variable>
 
-            <fo:block-container margin-top="0.5cm" height="17cm" xsl:use-attribute-sets="column-block">
+            <fo:block-container height="16.2cm" xsl:use-attribute-sets="column-block">
                 <fo:block margin-left="0.05cm" margin-right="0.05cm">
                     <fo:external-graphic src="{$map}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$map-width-px}" height="{$map-height-px}"/>
                 </fo:block>

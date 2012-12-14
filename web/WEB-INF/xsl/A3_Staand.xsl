@@ -5,8 +5,8 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
-    <xsl:variable name="map-width-px" select="'612'"/>
-    <xsl:variable name="map-height-px" select="'1053'"/>
+    <xsl:variable name="map-width-px" select="'625'"/>
+    <xsl:variable name="map-height-px" select="'1047'"/>
 
     <!-- formatter -->
     <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
@@ -69,12 +69,8 @@
             
             <fo:page-sequence master-reference="a3-staand">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="26.9cm" height="1.5cm" top="0cm" left="0cm" background-color="#008540" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="29.0cm" height="1.5cm" top="0cm" left="0cm" background-color="#008540" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="title-block"/>
-                    </fo:block-container>
-
-                    <fo:block-container width="1.5cm" height="1.5cm" top="0cm" left="26.9cm" background-color="#008540" xsl:use-attribute-sets="column-block">
-                        <fo:block />
                     </fo:block-container>
 
                     <fo:block-container width="6.6cm" height="0.75cm" top="1.6cm" left="0cm" background-color="#E5F0E8" xsl:use-attribute-sets="column-block">
@@ -87,7 +83,7 @@
                         <xsl:call-template name="info-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="21.7cm" height="37.2cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
+                    <fo:block-container width="22.3cm" height="37.2cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block"/>
                     </fo:block-container>
 

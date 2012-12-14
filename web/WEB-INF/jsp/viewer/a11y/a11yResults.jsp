@@ -45,7 +45,7 @@
         </c:if>
 
         <c:set var="resultNr" value="${startIndex}" />
-        
+
         <c:if test="${count > 1}" >
             <p>Er zijn ${count} resultaten gevonden. Resultaten ${startIndex+1} tot ${total} worden getoond.</p>
         </c:if>
@@ -66,7 +66,7 @@
 
         <c:forEach var="result" items="${results}" begin="0" end="0">
             <div class="div-table-header-small">Nr.</div>
-            
+
             <c:forEach var="attr" items="${result.attributen}">
                 <c:if test="${attr.type == 2 || attr.type == 120}" >
                     <div class="div-table-header">
@@ -85,7 +85,13 @@
         <c:forEach var="result" items="${results}" varStatus="status">  
             <form action="a11yViewer.do" method="POST">
                 <p>
-                    <input type="hidden" name="search" value="t">
+                    <c:if test="${startLocation == true}">
+                        <input type="hidden" name="startLocation" value="t">
+                    </c:if>
+                    <c:if test="${startLocation == false}">
+                        <input type="hidden" name="search" value="t">
+                    </c:if>                        
+
                     <input type="hidden" name="appCode" value="${appCode}">
 
                     <c:if test="${nextStep == true}">
@@ -96,12 +102,18 @@
                         <input type="hidden" name="searchConfigId" value="${searchConfigId}">
                     </c:if>     
                 </p>
-                
+
                 <div class="div-table-row-small">${status.count + resultNr}</div>
-                
+
                 <c:forEach var="attr" items="${result.attributen}">
                     <c:if test="${attr.type == 2 || attr.type == 120}">
                         <div class="div-table-row">${attr.waarde}</div>
+                    </c:if>
+
+                    <c:if test="${attr.type == 33}">
+                        <p>
+                            <input type="hidden" name="start_geom" value="${attr.waarde}">
+                        </p>
                     </c:if>
 
                     <p>
@@ -109,11 +121,17 @@
                     </p>
                 </c:forEach>
 
-                <c:if test="${nextStep == true}">
+                <c:if test="${nextStep == true and startLocation == false}">
                     <div class="div-table-row">
                         <input type="submit" value="Verder zoeken">
                     </div>
                 </c:if>  
+
+                <c:if test="${nextStep == false and startLocation == true}">
+                    <div class="div-table-row">
+                        <input type="submit" value="Als startlocatie instellen">
+                    </div>
+                </c:if>
             </form>
 
             <div style="clear: both;"></div>

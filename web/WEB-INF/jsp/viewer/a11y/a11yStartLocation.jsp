@@ -21,12 +21,16 @@
         <p>Uw startlocatie is ingesteld.</p>
 
         <p>
+            <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" styleClass="searchLink" module="">
+                Startpagina
+            </html:link> |                     
             <html:link page="/index.do" styleClass="searchLink" module="">
-                Ga terug naar de home pagina
+                Ga naar de kaartviewer home pagina
             </html:link>
         </p>
 
         <div id="footer">
+            <hr>            
             <address>Zonnebaan 12C</address>
         </div>
     </body>

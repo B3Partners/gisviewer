@@ -31,6 +31,12 @@
         </c:forEach>
 
         <div id="footer">
+            <hr>
+            <p>
+                <html:link page="/viewer.do?appCode=${appCode}" styleClass="searchLink" module="">
+                    Ga naar de kaartviewer
+                </html:link>
+            </p>
             <address>Zonnebaan 12C</address>
         </div>
     </body>

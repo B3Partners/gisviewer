@@ -137,7 +137,17 @@
             <div style="clear: both;"></div>
         </c:forEach>
 
-        <c:if test="${fn:length(results) > 0}">
+        <!-- Alleen uitleg tonen als er een omschrijving in een van de velden is -->
+        <c:set var="resultaatUitleg" value="false" />
+        <c:forEach var="veld" items="${results}">
+            <c:forEach var="attr" items="${result.attributen}">
+                <c:if test="${(attr.type == 2 || attr.type == 120) && !empty attr.omschrijving}" >
+                    <c:set var="resultaatUitleg" value="true" />
+                </c:if>
+            </c:forEach>
+        </c:forEach>
+
+        <c:if test="${fn:length(results) > 0 and resultaatUitleg == true}">
             <h2>Uitleg resultaatvelden</h2>
             <p>
                 <c:forEach var="result" items="${results}" begin="0" end="0">  
@@ -151,6 +161,15 @@
         </c:if>
 
         <div id="footer">
+            <hr>
+            <p>
+                <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" styleClass="searchLink" module="">
+                    Startpagina
+                </html:link> |
+                <html:link page="/viewer.do?appCode=${appCode}" styleClass="searchLink" module="">
+                    Ga naar de kaartviewer
+                </html:link>
+            </p>
             <address>Zonnebaan 12C</address>
         </div>
     </body>

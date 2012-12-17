@@ -79,7 +79,15 @@
 
             <p><input type="submit" value="Zoeken" /></p>
 
-            <c:if test="${fn:length(zoekVelden) > 0}">
+            <!-- Alleen uitleg tonen als er een omschrijving in een van de velden is -->
+            <c:set var="zoekUitleg" value="false" />
+            <c:forEach var="veld" items="${zoekVelden}">
+                <c:if test="${!empty veld.omschrijving}" >
+                    <c:set var="zoekUitleg" value="true" />
+                </c:if>
+            </c:forEach>
+
+            <c:if test="${fn:length(zoekVelden) > 0 and zoekUitleg == true}">
                 <h2>Uitleg zoekvelden</h2>
                 <p>
                     <c:forEach var="veld" items="${zoekVelden}">
@@ -94,6 +102,15 @@
         </form>
 
         <div id="footer">
+            <hr>
+            <p>
+                <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" styleClass="searchLink" module="">
+                    Startpagina
+                </html:link> |
+                <html:link page="/viewer.do?appCode=${appCode}" styleClass="searchLink" module="">
+                    Ga naar de kaartviewer
+                </html:link>
+            </p>
             <address>Zonnebaan 12C</address>
         </div>
     </body>

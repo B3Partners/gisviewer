@@ -149,7 +149,7 @@ blokken -->
 
         <c:when test="${pageContext.request.remoteUser == null}">
 
-        <div class="content_title">Inloggen</div>
+        <%--<div class="content_title">Inloggen</div>
 
         <div class="content_body">
             
@@ -183,7 +183,7 @@ blokken -->
                 // -->
             </script>
             
-        </div>
+        </div>--%>
 
         </c:when>
         <c:otherwise>

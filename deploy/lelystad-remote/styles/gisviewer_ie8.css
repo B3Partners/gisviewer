@@ -1,0 +1,14 @@
+.inleiding_body {
+    position: relative;
+    -pie-background: linear-gradient(#F4F4F4, #FFFFFF);
+    behavior: url(/gisviewer/PIE.htc);
+}
+
+.helppagina_cms_blok {
+    height: 220px;
+}
+
+/*OpenLayers */
+.olImageLoadError {
+    background-color: transparent !important;
+}

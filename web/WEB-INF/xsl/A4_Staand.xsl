@@ -6,7 +6,7 @@
     <xsl:param name="versionParam" select="'1.0'"/>
 
     <xsl:variable name="map-width-px" select="'403'"/>
-    <xsl:variable name="map-height-px" select="'678'"/>
+    <xsl:variable name="map-height-px" select="'788'"/>
 
     <!-- formatter -->
     <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
@@ -33,53 +33,74 @@
             
             <fo:page-sequence master-reference="a4-staand">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="20.45cm" height="1.5cm" top="0cm" left="0cm" background-color="#008540" xsl:use-attribute-sets="column-block">
-                        <xsl:call-template name="title-block"/>
-                    </fo:block-container>
 
-                    <fo:block-container width="6.0cm" height="0.75cm" top="1.6cm" left="0cm" background-color="#E5F0E8" xsl:use-attribute-sets="column-block">
-                        <fo:block margin-left="0.2cm" margin-top="0.2cm" xsl:use-attribute-sets="default-font">
-                            Info
-                        </fo:block>
-                    </fo:block-container>
-
-                    <fo:block-container width="5.8cm" height="24.0cm" top="2.35cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="5.8cm" height="24.0cm" top="2.35cm" left="14.5cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="info-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="14.3cm" height="24.0cm" top="1.6cm" left="6.1cm" xsl:use-attribute-sets="column-block-border">
+                    <fo:block-container width="14.3cm" height="28cm" top="0cm" left="0cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="12.0cm" height="2.3cm" top="26.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="5.8cm" height="2.3cm" top="26.5cm" left="14.5cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="7.6cm" height="2.3cm" top="26.5cm" left="12.0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="7.3cm" height="2.3cm" top="0cm" left="14.5cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                 </fo:flow>
             </fo:page-sequence>
         </fo:root>
     </xsl:template>    
-    
-    <!-- blocks -->
-    <xsl:template name="title-block">        
-        <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="title-font">
-            <xsl:value-of select="titel"/>
-        </fo:block>
-    </xsl:template>
 
     <xsl:template name="info-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
-            <fo:block>
-                <fo:external-graphic src="url('noordpijl.png')" width="84px" height="77px"/>
+            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="10pt" font-weight="bold">
+                Project:
+            </fo:block>
+            
+            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="14pt">
+                 DEMO<!--<xsl:value-of select="projectid"/>-->
+            </fo:block>
+            
+            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="10pt" font-weight="bold">
+                Titel:
+            </fo:block>
+            
+            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="11pt">
+                <xsl:value-of select="titel"/>
             </fo:block>
 
-            <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">
-                schaal
+            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="10pt" font-weight="bold">
+                Omschrijving:
             </fo:block>
-
+            
+            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="10pt">
+                <xsl:value-of select="opmerking"/>
+            </fo:block>
+            
+            <!-- Extra block voor legenda plaatjes -->
+            <fo:block margin-left="0.2cm" margin-top="0.1cm">       
+                <xsl:if test="(count(legendUrls) > 0)">
+                    <fo:block color="#000000" font-size="10pt" font-weight="bold">
+                        Legenda:                 
+                    </fo:block>
+                </xsl:if>
+                  
+                <xsl:for-each select="legendUrls">
+                    <xsl:variable name="legendUrl" select="." />
+                    
+                    <fo:block margin-left="0.0cm" margin-top="0.05cm">
+                        <fo:external-graphic src="{$legendUrl}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform"/>
+                    </fo:block>
+                </xsl:for-each>
+            </fo:block>
+            
+            <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="10pt" font-weight="bold">
+                schaal:
+            </fo:block>
+            
             <!-- create scalebar -->
             <fo:block margin-left="0.2cm" margin-top="0.2cm">
                 <xsl:call-template name="calc-scale">
@@ -91,13 +112,9 @@
                     <xsl:with-param name="px-width" select="$map-width-px"/>
                 </xsl:call-template>
             </fo:block>
-
-            <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="10pt">
-                <xsl:value-of select="datum"/>
-            </fo:block>
-
-            <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt" font-style="italic">
-                <xsl:value-of select="opmerking"/>
+            
+            <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="10pt" font-weight="bold">
+                Datum: <xsl:value-of select="datum"/>
             </fo:block>
 
         </fo:block>
@@ -123,7 +140,7 @@
                 <xsl:value-of select="$bbox-corrected"/>
             </xsl:variable>
 
-            <fo:block-container margin-top="0.5cm" height="17cm" xsl:use-attribute-sets="column-block">
+            <fo:block-container margin-top="0.5cm" height="27.9cm" xsl:use-attribute-sets="column-block">
                 <fo:block margin-left="0.05cm" margin-right="0.05cm">
                     <fo:external-graphic src="{$map}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$map-width-px}" height="{$map-height-px}"/>
                 </fo:block>
@@ -131,14 +148,14 @@
     </xsl:template>
     
     <xsl:template name="disclaimer-block">
-        <fo:block margin-left="0.2cm" margin-top="0.5cm" color="#000000" xsl:use-attribute-sets="default-font">
-            Aan deze kaart kunnen geen rechten worden ontleend.
+        <fo:block margin-left="0.2cm" margin-top="0.5cm" color="#000000" xsl:use-attribute-sets="default-font" font-size="8pt" font-style="italic">
+            Deze kaart is automatisch gegeneerd. Er kunnen aan deze kaart kunnen geen rechten worden ontleend.
         </fo:block>
     </xsl:template>
 
     <xsl:template name="logo-block">
         <fo:block>
-            <fo:external-graphic src="url('digitree_logo.png')" width="231px" height="60px"/>
+            <fo:external-graphic src="url('digitree_logo.png')" width="225px" height="58px"/>
         </fo:block>
     </xsl:template>    
 </xsl:stylesheet>

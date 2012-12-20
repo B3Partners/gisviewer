@@ -62,7 +62,7 @@
             </fo:block>
             
             <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="14pt">
-                 DEMO<!--<xsl:value-of select="projectid"/>-->
+                 <xsl:value-of select="projectid"/>
             </fo:block>
             
             <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="10pt" font-weight="bold">
@@ -156,7 +156,7 @@
 
     <xsl:template name="logo-block">
         <fo:block>
-            <fo:external-graphic src="url('digitree_logo.png')" width="225px" height="58px"/>
+            <fo:external-graphic src="url('digitree_logo.png')" width="225px" height="61px"/>
         </fo:block>
     </xsl:template>    
 </xsl:stylesheet>

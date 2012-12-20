@@ -91,7 +91,7 @@
 
     <servlet>
         <servlet-name>PrintServlet</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>
+        <servlet-class>nl.b3p.gis.digitree.print.PrintServlet</servlet-class>
         <init-param>
             <param-name>xsl_A4_Staand</param-name>
             <param-value>/WEB-INF/xsl/A4_Staand.xsl</param-value>

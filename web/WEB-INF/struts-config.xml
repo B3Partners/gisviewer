@@ -267,7 +267,7 @@
             <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
         </action>
 
-        <action path="/printmap" type="nl.b3p.gis.viewer.PrintAction" name="printForm" scope="request" validate="false">
+        <action path="/printmap" type="nl.b3p.gis.digitree.print.PrintAction" name="printForm" scope="request" validate="false">
             <forward name="success" path="createmappdf"/>
             <forward name="failure" path="createmappdf"/>
         </action>

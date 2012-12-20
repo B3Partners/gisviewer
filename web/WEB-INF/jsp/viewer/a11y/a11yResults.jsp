@@ -112,17 +112,22 @@
 
                     <c:if test="${attr.type == 33}">
                         <p>
-                            <input type="hidden" name="start_geom" value="${attr.waarde}">
+                            <input type="hidden" name="startGeom" value="${attr.waarde}">
                         </p>
                     </c:if>
 
-                    <p>
-                        <input type="hidden" name="${attr.label}" value="${attr.waarde}">
-                    </p>
+                    <c:if test="${attr.type != 33}">
+                        <p>
+                            <input type="hidden" name="${attr.label}" value="${attr.waarde}">
+                        </p>
+                    </c:if>
                 </c:forEach>
 
                 <c:if test="${nextStep == true and startLocation == false}">
                     <div class="div-table-row">
+                        <p>
+                            <input type="hidden" name="nextStep" value="t">
+                        </p>
                         <input type="submit" value="Verder zoeken">
                     </div>
                 </c:if>  

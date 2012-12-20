@@ -18,6 +18,18 @@
     <body>
         <h1>Accessibility Viewer | ${searchName}</h1>
 
+        <p>
+            <c:forEach var="entry" items="${a11yResultMap}" varStatus="status">
+                <c:if test="${status.count <= 1}">
+                    Uw vorige zoekresultaat was
+                </c:if>
+
+                <c:if test="${entry.value != ''}">
+                    ${entry.key} "${entry.value}"                                 
+                </c:if>
+            </c:forEach>
+        </p>
+        
         <form action="a11yViewer.do" method="GET">
             <p>
                 <input type="hidden" name="results" value="t">         

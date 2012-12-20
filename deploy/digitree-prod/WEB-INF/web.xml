@@ -38,7 +38,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://digitreetest.kaartenbalie.nl/kaartenbalie/services/</param-value>
+            <param-value>http://digitree.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -81,6 +81,69 @@
     </servlet>
     
     <servlet>
+            <servlet-name>CreateMapPDF</servlet-name>
+            <servlet-class>nl.b3p.gis.viewer.services.CreateMapPDF</servlet-class>
+            <init-param>
+                <param-name>addFooter</param-name>
+                <param-value>false</param-value>
+            </init-param>
+            <init-param>
+                <param-name>logoPath</param-name>
+                <param-value>/images/barneveld/bg_top_bv.gif</param-value>
+            </init-param>
+            <init-param>
+                <param-name>extraImagePath</param-name>
+                <param-value>/images/barneveld/noordpijl.png</param-value>
+            </init-param>
+            <init-param>
+                <param-name>disclaimer</param-name>
+                <param-value>- Aan deze afdruk kunnen geen rechten worden ontleend -</param-value>
+            </init-param>
+        </servlet>
+        <servlet>
+            <description>fetches document in background to hide actual location of document</description>
+            <servlet-name>DocFetcher</servlet-name>
+            <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
+            <init-param>
+                <param-name>locationPrefix</param-name>
+                <param-value>http://b3p-demoserver/gisviewer</param-value>
+            </init-param>
+            <init-param>
+                <param-name>directoryKeepDepth</param-name>
+                <param-value>1</param-value>
+            </init-param>
+            <init-param>
+                <param-name>fetchMethod</param-name>
+                <param-value>HTTP</param-value>
+            </init-param>
+        </servlet>
+        <servlet>
+            <description>adds credentials and redirects to cyclomedia</description>
+            <servlet-name>CycloramaFetcher</servlet-name>
+            <servlet-class>nl.b3p.gis.utils.CycloramaFetcherServlet</servlet-class>
+            <init-param>
+                <param-name>accountId</param-name>
+                <param-value>2194</param-value>
+            </init-param>
+            <init-param>
+                <param-name>cyclomediaUrl</param-name>
+                <param-value>http://live.cyclomedia.nl/cycloscopeliteview/cycloviewui.asp?</param-value>
+            </init-param>
+            <init-param>
+                <param-name>privateBase64Key</param-name>
+                <param-value>MIIBPAIBAAJBAKjeVutOmj3gQAv5tRCEvCmDr8qCMCiavtJGFekZ6X9kO3i2Gsq+\n4zS+c2/hPgquiJMVJ+9O+nlFYnQy7btrtxsCAwEAAQJBAIXDgWRpYgKLhRA3X7bS\n/d2Ao5otIAq58VfNDoQT84LlUCYxmsJMrFox9ybqoQDQj68LuaaLiAjzQI5DS60z\nm3ECIQDW8ykzf4SDpC6mA1ofn9fnnnfdv9JA1xvkNhYy4FC/cwIhAMkeRlss89UW\nt4hNVpcLl4owhKZByVXbA5GYdbYJF++5AiEAkib5/8MXxi6PbV/gGpqjwiBU3lk8\nS8w3cb947pTpMpMCIQC/EWoZ+Mz15o0aiw72lOa1PH7pTJqwXFA5pDRAasc40QIg\nPbiSX7GYGWggb20XFCPHEf6MHwfH/EZYIXCYxz7K6DM=\n</param-value>
+            </init-param>
+        </servlet>
+        <servlet>
+            <servlet-name>CreateSLD</servlet-name>
+            <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
+            <init-param>
+                <param-name>defaultSld</param-name>
+                <param-value>/WEB-INF/defaultSld.xml</param-value>
+            </init-param>
+     </servlet>
+    
+    <servlet>
         <servlet-name>CreateImageServlet</servlet-name>
         <servlet-class>nl.b3p.combineimages.CreateImageServlet</servlet-class>
         <init-param>
@@ -107,8 +170,8 @@
         <init-param>
             <param-name>xsl_A3_Staand</param-name>
             <param-value>/WEB-INF/xsl/A3_Staand.xsl</param-value>
-        </init-param>		
-		<init-param>
+        </init-param>        
+        <init-param>
             <param-name>xsl_A2_Liggend</param-name>
             <param-value>/WEB-INF/xsl/A2_Liggend.xsl</param-value>
         </init-param>
@@ -131,7 +194,7 @@
         <init-param>
             <param-name>xsl_A0_Staand</param-name>
             <param-value>/WEB-INF/xsl/A0_Staand.xsl</param-value>
-        </init-param>
+        </init-param>        
         <load-on-startup>4</load-on-startup>
     </servlet>
     
@@ -203,24 +266,28 @@
       <servlet-class>nl.b3p.gis.viewer.services.ConfigServlet</servlet-class>
       <init-param>
           <param-name>jdbcUrlGisdata</param-name>
-          <param-value>jdbc:postgresql://kantoor.b3p.nl:5432/acc_gis</param-value>
+          <param-value>jdbc:postgresql://b3p-demoserver:5432/acc_gis</param-value>
       </init-param>
       <init-param>
-          <param-name>jdbcUrlKaartenbalie</param-name>
-          <param-value>jdbc:postgresql://kantoor.b3p.nl:5432/acc_kaartenbalie</param-value>
+	  <param-name>jdbcUrlGisdata</param-name>
+	  <param-value>jdbc:postgresql://localhost:5432/digitree_gis</param-value>
       </init-param>
       <init-param>
-          <param-name>databaseUserName</param-name>
-          <param-value>digitree</param-value>
+	  <param-name>jdbcUrlKaartenbalie</param-name>
+	  <param-value>jdbc:postgresql://localhost:5432/digitree_kaartenbalie</param-value>
       </init-param>
       <init-param>
-          <param-name>databasePassword</param-name>
-          <param-value>04zIYpUKFLUgAU0op</param-value>
+	  <param-name>databaseUserName</param-name>
+	  <param-value>digitree</param-value>
       </init-param>
       <init-param>
-          <param-name>databaseLabelTable</param-name>
-          <param-value>digitree_labels</param-value>
+	  <param-name>databasePassword</param-name>
+	  <param-value>04zIYpUKFLUgAU0op</param-value>
       </init-param>
+      <init-param>
+	  <param-name>databaseLabelTable</param-name>
+	  <param-value>digitree_labels</param-value>
+        </init-param>
       <load-on-startup>5</load-on-startup>
     </servlet>
     
@@ -253,6 +320,23 @@
         <servlet-name>PrintServlet</servlet-name>
         <url-pattern>/services/PrintServlet</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>CreateMapPDF</servlet-name>
+	    <url-pattern>/services/CreateMapPDF</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>DocFetcher</servlet-name>
+	    <url-pattern>/docfetcher</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>CycloramaFetcher</servlet-name>
+	    <url-pattern>/cycloramafetcher</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>CreateSLD</servlet-name>
+	    <url-pattern>/CreateSLD</url-pattern>
+	</servlet-mapping>
     
     <servlet-mapping>
         <servlet-name>DownloadServlet</servlet-name>

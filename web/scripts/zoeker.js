@@ -677,12 +677,12 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             searchConfigurationsSelectChanged(inputSearchDropdown);
         }));  
         
-        if (!search) {
+        if (!search && startLocationX == "" && startLocationY == "") {
             container.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
                 webMapController.getMap().removeMarker("searchResultMarker");
             }));
         }
-    } 
+    }
 
     $j("#searchResults").empty();
 

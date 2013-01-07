@@ -1,5 +1,5 @@
 <noscript>
-    <meta http-equiv="refresh" content="0; url=viewer.do?appCode=${bookmarkAppcode}&amp;accessibility=1" />
+<meta http-equiv="refresh" content="0; url=viewer.do?appCode=${bookmarkAppcode}&amp;accessibility=1" />
 </noscript>
 
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
@@ -455,6 +455,15 @@
     if (typeof showServiceUrl === 'undefined') {
         showServiceUrl = false;
     }
+    
+    var startLocationX = catchEmpty(${startLocationX});
+    if (typeof startLocationX === 'undefined' || !startLocationX) {
+        startLocationX = "";
+    }  
+    var startLocationY = catchEmpty(${startLocationY});
+    if (typeof startLocationY === 'undefined' || !startLocationY) {
+        startLocationY = "";
+    }
 </script>
 <!--[if lte IE 6]>
     <script type="text/javascript">
@@ -674,9 +683,29 @@
         </c:if>
 
         <p>
-            Kies de Info-tool en klik vervolgens op een punt<br/>
-            op de kaart voor administratieve informatie<br/>
-            van het object.
+            Kies uit de lijst de objecten waar u op wilt zoeken en vul
+            daarna de zoekvulden in.
+        </p>
+
+        <p>
+            <c:forEach var="entry" items="${a11yResultMap}" varStatus="status">
+                <c:if test="${status.count <= 1}">
+                <p>
+                    U heeft een startlocatie ingesteld. Deze locatie staat op 
+                    de kaart gemarkeerd. Bij zoekers die hier gebruik van maken
+                    wordt de afstand naar de startlocatie getoond.
+                </p>
+                <p>
+                    <input type="button" class="knop" value="Verwijder marker" onclick="removeSearchResultMarker();"/>
+                </p>
+            </c:if>
+
+            <%--
+            <c:if test="${entry.value != ''}">
+                ${entry.key} "${entry.value}"                                 
+            </c:if>
+            --%>
+        </c:forEach>
         </p>
 
         <div>

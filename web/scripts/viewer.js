@@ -3361,6 +3361,14 @@ function onFrameworkLoaded(){
     }
     
     doInitSearch();
+    
+    placeStartLocationMarker();
+}
+
+function placeStartLocationMarker() {    
+    if (startLocationX != "" && startLocationY != "") {
+        placeSearchResultMarker(startLocationX, startLocationY);
+    }    
 }
 
 function resizeOpenLayersDiv(w, h) {

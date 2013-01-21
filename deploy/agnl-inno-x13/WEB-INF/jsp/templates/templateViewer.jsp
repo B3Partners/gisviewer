@@ -73,9 +73,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <img src="images/loadingmap.jpg" alt="Bezig met laden" id="loadingimage" />
         </div>
         
-        <div id="content_viewer" style="top: 172px;">
+        <div id="content_viewer" style="top: 172px; bottom: 30px;">
             <tiles:insert attribute="content" />
         </div>
+		<div id="viewer_footer">
+			<div id="viewer_footer_logo"></div>
+		</div>
         <tiles:insert definition="googleAnalytics"/>        
     </body>
 </html:html>

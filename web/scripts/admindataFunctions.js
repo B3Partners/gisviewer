@@ -774,7 +774,7 @@ function createTableTd(waarde) {
                 }
             } else {
                 if (waarde.eenheid) {
-					td.html(waarde.eenheid + ' ' + waarde.value);
+					td.html(waarde.value + ' ' + waarde.eenheid);
 				} else {
 					td.html(waarde.value);
 				}

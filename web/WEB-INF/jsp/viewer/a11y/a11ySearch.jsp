@@ -61,7 +61,7 @@
                         <c:if test="${veld.type == 110 || veld.type == 3}">
                             <p><input type="hidden" name="${veld.label}"></p>
                             </c:if>
-                            <c:if test="${veld.type == 0}">
+                            <c:if test="${veld.type == 0 || veld.type == 6}">
                             <p>
                                 <label for="${veld.label}"><c:out value="${veld.label}" /></label><input tabindex="${status.count}" id="${veld.label}" type="text" name="${veld.label}">
                             </p>

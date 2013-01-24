@@ -432,14 +432,20 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 tr.append(td);
             });
             
+            var editTd = $j('<td></td>').css({
+                "width": "50px"
+            });
+            
             if (gegevensbron.editable && getParent().showEditTool) {
                 var icon = $j('<img src="'+pencil+'" alt="Edit object" title="Edit object" />')
                 .click(function() {
                     var ec = getParent().editComponent;
                     ec.edit(record,gegevensbron.id);
                 });
-                tr.append(icon);
+                editTd.append(icon);
             }
+            tr.append(editTd);
+            
             bronTableBody.append(tr);
             // Check if there are childs
             if(record.childs != null && record.childs.length > 0) {

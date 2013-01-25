@@ -644,6 +644,37 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
                 });
 
                 container.append(inputfield).append('<br /><br />');
+                
+            /* indien straal search veld met dropdown type dan met komma gescheiden 
+             * waardes vullen */
+            } else if (zoekVeld.type == 100 && zoekVeld.inputType == 1 && zoekVeld.dropDownValues) {                
+                inputfield = $j('<select></select>').attr({
+                    id: zoekVeld.attribuutnaam, //'searchField_ ' + zoekVeld.id,
+                    name: zoekVeld.attribuutnaam,
+                    size: 1
+                });
+                
+                var straalValues = zoekVeld.dropDownValues;
+                var straalArray = straalValues.split(",");
+                
+                for (var n = 0; n < straalArray.length; n++) {
+                    inputfield.append($j('<option></option>').html(straalArray[n]));
+                }
+                
+                container.append(inputfield).append('<br /><br />');
+                
+             } else if (zoekVeld.type == 100 && zoekVeld.inputType == 2) {                
+                inputfield = $j('<input type="text" />');
+                inputfield.attr({
+                    id: zoekVeld.attribuutnaam, //'searchField_' + zoekVeld.id,
+                    name: zoekVeld.attribuutnaam,
+                    size: 40,
+                    maxlength: zoekVeld.inputSize
+                }).keyup(function(ev) {
+                    performSearchOnEnterKey(ev);
+                });
+
+                container.append(inputfield).append('<br /><br />');
 
             } else {
                 inputfield = $j('<input type="text" />');

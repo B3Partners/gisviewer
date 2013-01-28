@@ -647,7 +647,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
                 
             /* indien straal search veld met dropdown type dan met komma gescheiden 
              * waardes vullen */
-            } else if (zoekVeld.type == 100 && zoekVeld.inputType == 1 && zoekVeld.dropDownValues) {                
+            } else if (zoekVeld.inputZoekConfiguratie == null && zoekVeld.inputType == 1 && zoekVeld.dropDownValues) {                
                 inputfield = $j('<select></select>').attr({
                     id: zoekVeld.attribuutnaam, //'searchField_ ' + zoekVeld.id,
                     name: zoekVeld.attribuutnaam,

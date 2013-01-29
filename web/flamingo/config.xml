@@ -30,7 +30,7 @@
             <fmc:ButtonNext id="toolNextExtent" left="210" listento="map1" skin="f2" />
                 
             <!--<fmc:ZoomerV listento="map1" left="30" top="75" height="200" skin="f2"/>-->
-            <fmc:ZoomerV left="25" top="50" height="200" listento="map1">
+            <fmc:ZoomerV left="10" top="55" height="200" listento="map1">
                 <string id="tooltip_zoomin" en="zoomin" nl="inzoomen"/>
                 <string id="tooltip_zoomout" en="zoomout" nl="uitzoomen"/>
                 <string id="tooltip_slider" en="..." nl="..."/>
@@ -78,7 +78,7 @@
     </fmc:Container>
 
     <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">
-        <fmc:Scalebar right="right -50" bottom="bottom -15" width="100" listento="map1" units=" m"></fmc:Scalebar>
+        <fmc:Scalebar right="right -75" bottom="bottom -15" width="100" listento="map1" units=" m"></fmc:Scalebar>
         
         <fmc:Coordinates left="15" bottom="bottom -15" decimals="0" listento="map1">
             <string id="xy" en="x: [x]  y: [y]"/>

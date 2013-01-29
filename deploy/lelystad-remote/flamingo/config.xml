@@ -105,10 +105,10 @@
         </fmc:Map>          
     </fmc:Container>
     
-    <cmc:Window id="overviewwindow" skin="f2" left="right -325" top="50" width="300" height="298" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
-        <fmc:Map left="10%" width="75%" height="90%" top="5%" id="map_overview" clear="true" extent="142848,487904,173728,512736" fullextent="142848,487904,173728,512736">
+    <cmc:Window id="overviewwindow" skin="f2" left="right -330" top="20" width="317" height="282" canresize="false" visible="false" canclose="true" title="Overzicht" defocusalpha="75">        
+        <fmc:Map left="5" top="5" width="300" height="238" id="map_overview" clear="true" extent="130993,469137,193135,519247" fullextent="130993,469137,193135,519247">
             <fmc:LayerOverview listento="map1" color="#FFD800" followfactor="5000" />
-            <fmc:LayerImage imageurl="assets/overzichtskaart_lelystad_small.png" extent="142848,487904,173728,512736" listento="map1"/>
+            <fmc:LayerImage imageurl="assets/overzichtskaart_lelystad_001.png" extent="130993,469137,193135,519247" listento="map1"/>
         </fmc:Map>
     </cmc:Window>
 </FLAMINGO>

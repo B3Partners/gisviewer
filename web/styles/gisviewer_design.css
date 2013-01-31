@@ -1040,3 +1040,8 @@ a.highlightlink:hover{
 .olImageLoadError {
     background-color: transparent !important;
 }
+
+/* a11y styling */
+.contentstyle a {
+    color: #196299;
+}

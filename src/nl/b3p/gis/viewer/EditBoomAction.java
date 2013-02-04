@@ -326,32 +326,33 @@ public class EditBoomAction extends ViewerCrudAction {
         String extra9 = FormUtils.nullIfEmpty(dynaForm.getString("extra9"));
         String extra10 = FormUtils.nullIfEmpty(dynaForm.getString("extra10"));
 
-        String scheefstand = FormUtils.nullIfEmpty(dynaForm.getString("scheefstand"));
-        String scheuren = FormUtils.nullIfEmpty(dynaForm.getString("scheuren"));
-        String holten = FormUtils.nullIfEmpty(dynaForm.getString("holten"));
-        String stamvoetschade = FormUtils.nullIfEmpty(dynaForm.getString("stamvoetschade"));
-        String stamschade = FormUtils.nullIfEmpty(dynaForm.getString("stamschade"));
-        String kroonschade = FormUtils.nullIfEmpty(dynaForm.getString("kroonschade"));
-        String inrot = FormUtils.nullIfEmpty(dynaForm.getString("inrot"));
-        String houtboorder = FormUtils.nullIfEmpty(dynaForm.getString("houtboorder"));
-        String zwam = FormUtils.nullIfEmpty(dynaForm.getString("zwam"));
-        String zwam_stamvoet = FormUtils.nullIfEmpty(dynaForm.getString("zwam_stamvoet"));
-        String zwam_stam = FormUtils.nullIfEmpty(dynaForm.getString("zwam_stam"));
-        String zwam_kroon = FormUtils.nullIfEmpty(dynaForm.getString("zwam_kroon"));
-        String dood_hout = FormUtils.nullIfEmpty(dynaForm.getString("dood_hout"));
-        String plakoksel = FormUtils.nullIfEmpty(dynaForm.getString("plakoksel"));
-        String stamschot = FormUtils.nullIfEmpty(dynaForm.getString("stamschot"));
-        String wortelopslag = FormUtils.nullIfEmpty(dynaForm.getString("wortelopslag"));
-        String takken = FormUtils.nullIfEmpty(dynaForm.getString("takken"));
-        String opdruk = FormUtils.nullIfEmpty(dynaForm.getString("opdruk"));
-        String vta1 = FormUtils.nullIfEmpty(dynaForm.getString("vta1"));
-        String vta2 = FormUtils.nullIfEmpty(dynaForm.getString("vta2"));
-        String vta3 = FormUtils.nullIfEmpty(dynaForm.getString("vta3"));
-        String vta4 = FormUtils.nullIfEmpty(dynaForm.getString("vta4"));
-        String vta5 = FormUtils.nullIfEmpty(dynaForm.getString("vta5"));
-        String vta6 = FormUtils.nullIfEmpty(dynaForm.getString("vta6"));
-        String nader_onderzoek = FormUtils.nullIfEmpty(dynaForm.getString("nader_onderzoek"));
-        String bereikbaarheid = FormUtils.nullIfEmpty(dynaForm.getString("bereikbaarheid"));
+        boolean scheefstand = FormUtils.getBoolean(dynaForm, "scheefstand");
+        boolean scheuren = FormUtils.getBoolean(dynaForm, "scheuren");
+        boolean holten = FormUtils.getBoolean(dynaForm, "holten");
+        boolean stamvoetschade = FormUtils.getBoolean(dynaForm, "stamvoetschade");
+        boolean stamschade = FormUtils.getBoolean(dynaForm, "stamschade");
+        boolean kroonschade = FormUtils.getBoolean(dynaForm, "kroonschade");
+        boolean inrot = FormUtils.getBoolean(dynaForm, "inrot");
+        boolean houtboorder = FormUtils.getBoolean(dynaForm, "houtboorder");
+        boolean zwam = FormUtils.getBoolean(dynaForm, "zwam");
+        boolean zwam_stamvoet = FormUtils.getBoolean(dynaForm, "zwam_stamvoet");
+        boolean zwam_stam = FormUtils.getBoolean(dynaForm, "zwam_stam");
+        boolean zwam_kroon = FormUtils.getBoolean(dynaForm, "zwam_kroon");
+        boolean dood_hout = FormUtils.getBoolean(dynaForm, "dood_hout");
+        boolean plakoksel = FormUtils.getBoolean(dynaForm, "plakoksel");
+        boolean stamschot = FormUtils.getBoolean(dynaForm, "stamschot");
+        boolean wortelopslag = FormUtils.getBoolean(dynaForm, "wortelopslag");
+        boolean takken = FormUtils.getBoolean(dynaForm, "takken");
+        boolean opdruk = FormUtils.getBoolean(dynaForm, "opdruk");
+        boolean vta1 = FormUtils.getBoolean(dynaForm, "vta1");
+        boolean vta2 = FormUtils.getBoolean(dynaForm, "vta2");
+        boolean vta3 = FormUtils.getBoolean(dynaForm, "vta3");
+        boolean vta4 = FormUtils.getBoolean(dynaForm, "vta4");
+        boolean vta5 = FormUtils.getBoolean(dynaForm, "vta5");
+        boolean vta6 = FormUtils.getBoolean(dynaForm, "vta6");
+        
+        boolean nader_onderzoek = FormUtils.getBoolean(dynaForm, "nader_onderzoek");
+        boolean bereikbaarheid = FormUtils.getBoolean(dynaForm, "bereikbaarheid");
 
         if (id.equals(0)) {
             id = null;
@@ -451,83 +452,137 @@ public class EditBoomAction extends ViewerCrudAction {
         boom.setExtra9(extra9);
         boom.setExtra10(extra10);
 
-        if (scheefstand != null && scheefstand.equals("on")) {
+        if (scheefstand){
             boom.setScheefstand("1");
+        }else{
+            boom.setScheefstand("0");
         }
-        if (scheuren != null && scheuren.equals("on")) {
+        if (scheuren){
             boom.setScheuren("1");
+        }else{
+            boom.setScheuren("0");
         }
-        if (holten != null && holten.equals("on")) {
+        if (holten){
             boom.setHolten("1");
+        }else{
+            boom.setHolten("0");
         }
-        if (stamvoetschade != null && stamvoetschade.equals("on")) {
+        if (stamvoetschade) {
             boom.setStamvoetschade("1");
+        }else{
+            boom.setStamvoetschade("0");
         }
-        if (stamschade != null && stamschade.equals("on")) {
+        if (stamschade) {
             boom.setStamschade("1");
+        }else{
+            boom.setStamschade("0");
         }
-        if (kroonschade != null && kroonschade.equals("on")) {
+        if (kroonschade) {
             boom.setKroonschade("1");
+        }else{
+            boom.setKroonschade("0");
         }
-        if (inrot != null && inrot.equals("on")) {
+        if (inrot) {
             boom.setInrot("1");
+        }else{
+            boom.setInrot("0");
         }
-        if (houtboorder != null && houtboorder.equals("on")) {
+        if (houtboorder) {
             boom.setHoutboorder("1");
+        }else{
+            boom.setHoutboorder("0");
         }
-        if (zwam != null && zwam.equals("on")) {
+        if (zwam) {
             boom.setZwam("1");
+        }else{
+            boom.setZwam("0");
         }
-        if (zwam_stamvoet != null && zwam_stamvoet.equals("on")) {
+        if (zwam_stamvoet) {
             boom.setZwam_stamvoet("1");
+        }else{
+            boom.setZwam_stamvoet("0");
         }
-        if (zwam_stam != null && zwam_stam.equals("on")) {
+        if (zwam_stam) {
             boom.setZwam_stam("1");
+        }else{
+            boom.setZwam_stam("0");
         }
-        if (zwam_kroon != null && zwam_kroon.equals("on")) {
+        if (zwam_kroon) {
             boom.setZwam_kroon("1");
+        }else{
+            boom.setZwam_kroon("0");
         }
-        if (dood_hout != null && dood_hout.equals("on")) {
+        if (dood_hout) {
             boom.setDood_hout("1");
+        }else{
+            boom.setDood_hout("0");
         }
-        if (plakoksel != null && plakoksel.equals("on")) {
+        if (plakoksel) {
             boom.setPlakoksel("1");
+        }else{
+            boom.setPlakoksel("0");
         }
-        if (stamschot != null && stamschot.equals("on")) {
+        if (stamschot) {
             boom.setStamschot("1");
+        }else{
+            boom.setStamschot("0");
         }
-        if (wortelopslag != null && wortelopslag.equals("on")) {
+        if (wortelopslag) {
             boom.setWortelopslag("1");
+        }else{
+            boom.setWortelopslag("0");
         }
-        if (takken != null && takken.equals("on")) {
+        if (takken) {
             boom.setTakken("1");
+        }else{
+            boom.setTakken("0");
         }
-        if (opdruk != null && opdruk.equals("on")) {
+        if (opdruk) {
             boom.setOpdruk("1");
+        }else{
+            boom.setOpdruk("0");
         }
-        if (vta1 != null && vta1.equals("on")) {
+        if (vta1) {
             boom.setVta1("1");
+        }else{
+            boom.setVta1("0");
         }
-        if (vta2 != null && vta2.equals("on")) {
+        if (vta2) {
             boom.setVta2("1");
+        }else{
+            boom.setVta2("0");
         }
-        if (vta3 != null && vta3.equals("on")) {
+        if (vta3) {
             boom.setVta3("1");
+        }else{
+            boom.setVta3("0");
         }
-        if (vta4 != null && vta4.equals("on")) {
+        if (vta4) {
             boom.setVta4("1");
+        }else{
+            boom.setVta4("0");
         }
-        if (vta5 != null && vta5.equals("on")) {
+        if (vta5) {
             boom.setVta5("1");
+        }else{
+            boom.setVta5("0");
         }
-        if (vta6 != null && vta6.equals("on")) {
+        if (vta6) {
             boom.setVta6("1");
+        }else{
+            boom.setVta6("0");
         }
-        if (nader_onderzoek != null && nader_onderzoek.equals("on")) {
+        
+        if (nader_onderzoek) {
             boom.setNader_onderzoek("1");
+        }else{
+            boom.setNader_onderzoek("0");
         }
-        if (bereikbaarheid != null && bereikbaarheid.equals("on")) {
+        
+        if (bereikbaarheid) {
             boom.setBereikbaarheid("1");
+        }else{
+            boom.setBereikbaarheid("0");
         }
 
         return true;
@@ -574,10 +629,21 @@ public class EditBoomAction extends ViewerCrudAction {
         String user = ConfigServlet.getDatabaseUserName();
         String password = ConfigServlet.getDatabasePassword();
         
-        boomlabel.replaceAll("'", "\'");
+        String[] labels = boomlabel.split("'");
+        
         String output = "";
         
-        String query = "select boomsoort from digitree_boomsoorten where omschrijving = '"+boomlabel+"'";
+        String query = "select boomsoort from digitree_boomsoorten where ";
+        
+        for(int i = 0; i < labels.length; i++){
+            if(labels[i] != ""){
+                if(i == 0){
+                    query += "omschrijving like '%"+labels[i]+"%' ";
+                }else{
+                    query += "and omschrijving like '%"+labels[i]+"%' ";
+                }
+            }
+        }
 
         Connection conn = null;
 
@@ -893,30 +959,30 @@ public class EditBoomAction extends ViewerCrudAction {
         dynaForm.set("extra8", "");
         dynaForm.set("extra9", "");
         dynaForm.set("extra10", "");
-        dynaForm.set("scheefstand", "");
-        dynaForm.set("scheuren", "");
-        dynaForm.set("holten", "");
-        dynaForm.set("stamvoetschade", "");
-        dynaForm.set("stamschade", "");
-        dynaForm.set("kroonschade", "");
-        dynaForm.set("inrot", "");
-        dynaForm.set("houtboorder", "");
-        dynaForm.set("zwam", "");
-        dynaForm.set("zwam_stamvoet", "");
-        dynaForm.set("zwam_stam", "");
-        dynaForm.set("zwam_kroon", "");
-        dynaForm.set("dood_hout", "");
-        dynaForm.set("plakoksel", "");
-        dynaForm.set("stamschot", "");
-        dynaForm.set("wortelopslag", "");
-        dynaForm.set("takken", "");
-        dynaForm.set("opdruk", "");
-        dynaForm.set("vta1", "");
-        dynaForm.set("vta2", "");
-        dynaForm.set("vta3", "");
-        dynaForm.set("vta4", "");
-        dynaForm.set("vta5", "");
-        dynaForm.set("vta6", "");
+        dynaForm.set("scheefstand", false);
+        dynaForm.set("scheuren", false);
+        dynaForm.set("holten", false);
+        dynaForm.set("stamvoetschade", false);
+        dynaForm.set("stamschade", false);
+        dynaForm.set("kroonschade", false);
+        dynaForm.set("inrot", false);
+        dynaForm.set("houtboorder", false);
+        dynaForm.set("zwam", false);
+        dynaForm.set("zwam_stamvoet", false);
+        dynaForm.set("zwam_stam", false);
+        dynaForm.set("zwam_kroon", false);
+        dynaForm.set("dood_hout", false);
+        dynaForm.set("plakoksel", false);
+        dynaForm.set("stamschot", false);
+        dynaForm.set("wortelopslag", false);
+        dynaForm.set("takken", false);
+        dynaForm.set("opdruk", false);
+        dynaForm.set("vta1", false);
+        dynaForm.set("vta2", false);
+        dynaForm.set("vta3", false);
+        dynaForm.set("vta4", false);
+        dynaForm.set("vta5", false);
+        dynaForm.set("vta6", false);
         dynaForm.set("nader_onderzoek", "");
         dynaForm.set("bereikbaarheid", "");
     }

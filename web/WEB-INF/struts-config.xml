@@ -151,42 +151,44 @@
             <form-property name="boomhoogtevrij" type="java.lang.String"/>
             <form-property name="eindbeeldvrij" type="java.lang.String"/>
             <form-property name="eindbeeld" type="java.lang.String"/>
-            <form-property name="scheefstand" type="java.lang.String"/>
-            <form-property name="scheuren" type="java.lang.String"/>
-            <form-property name="holten" type="java.lang.String"/>
-            <form-property name="stamvoetschade" type="java.lang.String"/>
-            <form-property name="stamschade" type="java.lang.String"/>
-            <form-property name="kroonschade" type="java.lang.String"/>
-            <form-property name="inrot" type="java.lang.String"/>
-            <form-property name="houtboorder" type="java.lang.String"/>
-            <form-property name="zwam" type="java.lang.String"/>
-            <form-property name="zwam_stamvoet" type="java.lang.String"/>
-            <form-property name="zwam_stam" type="java.lang.String"/>
-            <form-property name="zwam_kroon" type="java.lang.String"/>
-            <form-property name="dood_hout" type="java.lang.String"/>
-            <form-property name="plakoksel" type="java.lang.String"/>
-            <form-property name="stamschot" type="java.lang.String"/>
-            <form-property name="wortelopslag" type="java.lang.String"/>
-            <form-property name="takken" type="java.lang.String"/>
-            <form-property name="opdruk" type="java.lang.String"/>
-            <form-property name="vta1" type="java.lang.String"/>
-            <form-property name="vta2" type="java.lang.String"/>
-            <form-property name="vta3" type="java.lang.String"/>
-            <form-property name="vta4" type="java.lang.String"/>
-            <form-property name="vta5" type="java.lang.String"/>
-            <form-property name="vta6" type="java.lang.String"/>
+            
+            <form-property name="scheefstand" type="java.lang.Boolean"/>
+            <form-property name="scheuren" type="java.lang.Boolean"/>
+            <form-property name="holten" type="java.lang.Boolean"/>
+            <form-property name="stamvoetschade" type="java.lang.Boolean"/>
+            <form-property name="stamschade" type="java.lang.Boolean"/>
+            <form-property name="kroonschade" type="java.lang.Boolean"/>
+            <form-property name="inrot" type="java.lang.Boolean"/>
+            <form-property name="houtboorder" type="java.lang.Boolean"/>
+            <form-property name="zwam" type="java.lang.Boolean"/>
+            <form-property name="zwam_stamvoet" type="java.lang.Boolean"/>
+            <form-property name="zwam_stam" type="java.lang.Boolean"/>
+            <form-property name="zwam_kroon" type="java.lang.Boolean"/>
+            <form-property name="dood_hout" type="java.lang.Boolean"/>
+            <form-property name="plakoksel" type="java.lang.Boolean"/>
+            <form-property name="stamschot" type="java.lang.Boolean"/>
+            <form-property name="wortelopslag" type="java.lang.Boolean"/>
+            <form-property name="takken" type="java.lang.Boolean"/>
+            <form-property name="opdruk" type="java.lang.Boolean"/>
+            <form-property name="vta1" type="java.lang.Boolean"/>
+            <form-property name="vta2" type="java.lang.Boolean"/>
+            <form-property name="vta3" type="java.lang.Boolean"/>
+            <form-property name="vta4" type="java.lang.Boolean"/>
+            <form-property name="vta5" type="java.lang.Boolean"/>
+            <form-property name="vta6" type="java.lang.Boolean"/>
+            
             <form-property name="aantastingenvrij" type="java.lang.String"/>
             <form-property name="aantastingen" type="java.lang.String"/>
             <form-property name="status_zp" type="java.lang.String"/>
             <form-property name="classificatie" type="java.lang.String"/>
             <form-property name="maatregelen_kortvrij" type="java.lang.String"/>
             <form-property name="maatregelen_kort" type="java.lang.String"/>
-            <form-property name="nader_onderzoek" type="java.lang.String"/>
+            <form-property name="nader_onderzoek" type="java.lang.Boolean"/>
             <form-property name="maatregelen_langvrij" type="java.lang.String"/>
             <form-property name="maatregelen_lang" type="java.lang.String"/>
             <form-property name="risicoklasse" type="java.lang.String"/>
             <form-property name="uitvoerdatum" type="java.lang.String"/>
-            <form-property name="bereikbaarheid" type="java.lang.String"/>
+            <form-property name="bereikbaarheid" type="java.lang.Boolean"/>
             <form-property name="wegtypevrij" type="java.lang.String"/>
             <form-property name="wegtype" type="java.lang.String"/>
             <form-property name="opmerking" type="java.lang.String"/>

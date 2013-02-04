@@ -2131,6 +2131,7 @@ function selectBoomObject(geom) {
     */
     var scale = webMapController.getMap().getScale();
     var tol = tolerance;
+    //alert("bron = "+boomGegevensbronId);
 
     EditBoomUtil.getIdAndWktForBoomObject(geom, boomGegevensbronId, scale, tol, returnBoomObject);
 }
@@ -5371,7 +5372,7 @@ $j(document).ready(function() {
     
     if (editTabOn) {
         if(document.getElementById('editboomframeViewer')) {
-            document.getElementById('editboomframeViewer').src='/digitree/viewereditboom.do';
+            document.getElementById('editboomframeViewer').src='/gisviewer/viewereditboom.do';
         }
     }
     

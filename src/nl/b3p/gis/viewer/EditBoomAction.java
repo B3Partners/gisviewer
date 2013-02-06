@@ -751,8 +751,6 @@ public class EditBoomAction extends ViewerCrudAction {
         query.append(table);
         query.append(" WHERE projectid = \'");
         query.append(boom.getProjectid());
-        query.append("\' AND project = \'");
-        query.append(boom.getProject());
         query.append("\' AND boomid = \'");
         query.append(boom.getBoomid());
         query.append("\'");

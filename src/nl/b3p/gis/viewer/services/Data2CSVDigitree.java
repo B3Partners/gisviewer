@@ -164,17 +164,7 @@ public class Data2CSVDigitree extends Data2CSV {
                 Property property = f.getProperty(propertyNames[p]);
                 if (property!=null && property.getValue()!=null && property.getValue().toString()!=null){
                     String value = property.getValue().toString().trim();
-                    Double d = null;
-                    try {
-                        d = new Double(value.trim());
-                    } catch (NumberFormatException nfe) {
-                        d = null;
-                    }
-                    if (d == null) {
-                        row[p] = value;
-                    } else {
-                        row[p] = value.replaceAll("\\.", ",");
-                    }
+                    row[p] = value;
                 }else{
                     row[p] = "";
                 }

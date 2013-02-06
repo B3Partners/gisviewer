@@ -10,7 +10,11 @@
 <!-- Loop door tekstblokken heen -->
 <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
     <div class="content_block">
-        <div class="content_title"><c:out value="${tb.titel}"/></div>
+        <div class="content_title"><c:out value="${tb.titel}"/>
+            <c:if test="${tb.inlogIcon}">
+                <html:image align="top" page="/images/icons/inlog_needed.png" title="Inlog is vereist voor deze applicatie"/>
+            </c:if>
+        </div>
 
         <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
         <c:if test="${tb.toonUrl}">

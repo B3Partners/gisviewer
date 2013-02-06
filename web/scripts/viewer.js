@@ -5372,7 +5372,7 @@ $j(document).ready(function() {
     
     if (editTabOn) {
         if(document.getElementById('editboomframeViewer')) {
-            document.getElementById('editboomframeViewer').src='/gisviewer/viewereditboom.do';
+            document.getElementById('editboomframeViewer').src='/digitree/viewereditboom.do';
         }
     }
     

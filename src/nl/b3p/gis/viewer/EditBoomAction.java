@@ -158,7 +158,7 @@ public class EditBoomAction extends ViewerCrudAction {
          * In vorige versie gaf boom.getId een NPE. Kan uniek niet een boolean worden?
          * Als uniek false wordt hieronder toch het form id gebruikt om te updaten of
          * te inserten. */
-        if(uniek.equals("") || (!uniek.equals("") && boom.getId() != null)){
+        if(uniek.equals("") || (!uniek.equals("") && boom.getId() != null && boom.getId() != -1)){
 
             ggb.getBron().getUrl();
 

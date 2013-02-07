@@ -329,8 +329,6 @@ public class EditBoomUtil extends EditUtil{
 
         if(newValue != null && newValue.equals("1")){
             value = "true";
-        }else{
-            value = "false";
         }
 
         return value;

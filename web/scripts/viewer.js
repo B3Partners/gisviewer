@@ -157,8 +157,6 @@ function getMaxBounds() {
     var heightMapContent = $j("#mapcontent").height();
     
     var screenHeight = heightMapContent + defaultdataframehoogte + 75;
-    
-    resizeOpenLayersDiv(screenWidth + 'px', screenHeight + 'px');
 
     var ratio = screenWidth / screenHeight;
     var mapRatio = oldMapWidth / oldMapHeight;
@@ -3369,13 +3367,6 @@ function placeStartLocationMarker() {
     if (startLocationX != "" && startLocationY != "") {
         placeSearchResultMarker(startLocationX, startLocationY);
     }    
-}
-
-function resizeOpenLayersDiv(w, h) {
-    if (webMapController instanceof OpenLayersController) {        
-        $j("#mapcontent").css('width', w);
-        $j("#mapcontent").css('height', h);
-    }
 }
 
 function initFullExtent() {

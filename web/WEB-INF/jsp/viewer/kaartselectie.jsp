@@ -21,122 +21,82 @@
 
 <c:if test="${!empty appCodeSaved}">
     <div id="appUrl">
-    <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}"/>
+        <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}"/>
 
-    Uw persoonlijke instellingen zijn opgeslagen. U kunt de nieuwe viewer bekijken
-    via de volgende <html:link page="${appUrl}" target="_top">persoonlijke url</html:link>.
-    </div>
+        Uw persoonlijke instellingen zijn opgeslagen. U kunt de nieuwe viewer bekijken
+        via de volgende <html:link page="${appUrl}" target="_top">persoonlijke url</html:link>.
+        </div>
 </c:if>
 
 <div class="kaartselectieBody">
 
 
-<script type="text/javascript">
-    function checkForm() {
-        var id = document.forms["kaartselectieForm"]["selectedUserWMSId"].value;
-        
-        if (id && id != "") {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    function emptyViewerNaam() {
-        document.forms["kaartselectieForm"]["kaartNaam"].value = "";
-        return true;
-    }
-    
-    function checkOpslaanForm() {
-        var viewerNaam = document.forms["kaartselectieForm"]["kaartNaam"].value;
-        var gebruikerEmail = document.forms["kaartselectieForm"]["gebruikerEmail"].value;
-        
-        if (viewerNaam == undefined || viewerNaam == "") {
-            alert('Viewernaam is verplicht.');
-            return false;
-        } else if (gebruikerEmail == undefined || gebruikerEmail == "") {
-            alert('E-mail is verplicht.');
-            return false;
-        } else {
-            return true;
-        }        
-    }
-</script>
-
-<html:form styleId="kaartselectieForm" action="/kaartselectie">    
-    <div id="scrollHeaders" style="background-color: #fff; z-index: 9999;">
-        <div id="kaartselectieOpslaanKnop">
-            <input type="button" class="submitbutton" id="saveSelection" value="Opslaan" />
-        </div>
-
-        <div class="kaartselectieKoppen">
-            <h3>
-                Vaste kaartlagen
-                <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
-            </h3>
-            <div id="vasteKaartlagenHelp" class="help">
-                <strong>Vaste kaartlagen</strong><br />
-                Maak een selectie van de kaartlagen die u beschikbaar wilt hebben binnen de viewer.
-                Deze kaartlagen zijn van te voren klaargezet door de beheerder. Ook kunt u aangeven
-                welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
-            </div>
-            <h4>Laag tonen</h4>
-            <h4 class="col2">Aan bij opstarten</h4>
-        </div>
-    </div>
-                
-    <div style="clear: both;"></div>
-    
-    <div id="kaartselectieBomen">
-        <div class="kaartselectie" id="mainTreeDiv"></div>
-    </div>
-
     <script type="text/javascript">
-        treeview_create({
-            "id": "mainTreeDiv",
-            "root": ${tree},
-            "rootChildrenAsRoots": true,
-            "itemLabelCreatorFunction": createLeaf,
-            "toggleImages": {
-                "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
-                "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
-                "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
-            },
-            "saveExpandedState": false,
-            "saveScrollState": false,
-            "expandAll": false,
-            "childrenPadding": '20px',
-            "zebraEffect": true
-        });
+        function checkForm() {
+            var id = document.forms["kaartselectieForm"]["selectedUserWMSId"].value;
+        
+            if (id && id != "") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    
+        function emptyViewerNaam() {
+            document.forms["kaartselectieForm"]["kaartNaam"].value = "";
+            return true;
+        }
+    
+        function checkOpslaanForm() {
+            var viewerNaam = document.forms["kaartselectieForm"]["kaartNaam"].value;
+            var gebruikerEmail = document.forms["kaartselectieForm"]["gebruikerEmail"].value;
+        
+            if (viewerNaam == undefined || viewerNaam == "") {
+                alert('Viewernaam is verplicht.');
+                return false;
+            } else if (gebruikerEmail == undefined || gebruikerEmail == "") {
+                alert('E-mail is verplicht.');
+                return false;
+            } else {
+                return true;
+            }        
+        }
     </script>
 
-    <c:if test="${!empty servicesTrees}">
-        <div class="kaartselectieKoppen">
-            <h3>
-                Eigen kaartlagen
-                <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
-            </h3>
-            <div id="eigenKaartlagenHelp" class="help">
-                <strong>Zelf toegevoegde kaartlagen</strong><br />
-                U kunt ook zelf kaartlagen toevoegen aan de viewer door een wms service toe te
-                voegen en daarna de kaartlagen die u beschikbaar wilt hebben aan te vinken.
-                De nieuwe lagen worden in de kaartboom onder de ingevulde groepnaam getoond.
+    <html:form styleId="kaartselectieForm" action="/kaartselectie">    
+        <div id="scrollHeaders" style="background-color: #fff; z-index: 9999;">
+            <div id="kaartselectieOpslaanKnop">
+                <input type="button" class="submitbutton" id="saveSelection" value="Opslaan" />
             </div>
-            <h4>Laag tonen</h4>
-            <h4 class="col2">Laag aan bij opstarten</h4>
-            <h4 class="col3">Style</h4>
+
+            <div class="kaartselectieKoppen">
+                <h3>
+                    Vaste kaartlagen
+                    <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
+                </h3>
+                <div id="vasteKaartlagenHelp" class="help">
+                    <strong>Vaste kaartlagen</strong><br />
+                    Maak een selectie van de kaartlagen die u beschikbaar wilt hebben binnen de viewer.
+                    Deze kaartlagen zijn van te voren klaargezet door de beheerder. Ook kunt u aangeven
+                    welke kaartlagen al aan moeten staan bij het opstarten van de viewer.
+                </div>
+                <h4>Laag tonen</h4>
+                <h4 class="col2">Aan bij opstarten</h4>
+            </div>
         </div>
+
         <div style="clear: both;"></div>
 
-        <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
-            <div id="layerTreeDiv${status.count}" class="kaartselectie"></div>
+        <div id="kaartselectieBomen">
+            <div class="kaartselectie" id="mainTreeDiv"></div>
+        </div>
 
-            <script type="text/javascript">
+        <script type="text/javascript">
             treeview_create({
-                "id": 'layerTreeDiv${status.count}',
-                "root": ${serviceTree},
-                "rootChildrenAsRoots": false,
-                "itemLabelCreatorFunction": createServiceLeaf,
+                "id": "mainTreeDiv",
+                "root": ${tree},
+                "rootChildrenAsRoots": true,
+                "itemLabelCreatorFunction": createLeaf,
                 "toggleImages": {
                     "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
                     "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
@@ -148,17 +108,57 @@
                 "childrenPadding": '20px',
                 "zebraEffect": true
             });
-            </script>
-        </c:forEach>
+        </script>
+
+        <c:if test="${!empty servicesTrees}">
+            <div class="kaartselectieKoppen">
+                <h3>
+                    Eigen kaartlagen
+                    <img src="<html:rewrite page="/images/icons/help.png"/>" class="helpbutton" />
+                </h3>
+                <div id="eigenKaartlagenHelp" class="help">
+                    <strong>Zelf toegevoegde kaartlagen</strong><br />
+                    U kunt ook zelf kaartlagen toevoegen aan de viewer door een wms service toe te
+                    voegen en daarna de kaartlagen die u beschikbaar wilt hebben aan te vinken.
+                    De nieuwe lagen worden in de kaartboom onder de ingevulde groepnaam getoond.
+                </div>
+                <h4>Laag tonen</h4>
+                <h4 class="col2">Laag aan bij opstarten</h4>
+                <h4 class="col3">Style</h4>
+            </div>
+            <div style="clear: both;"></div>
+
+            <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
+                <div id="layerTreeDiv${status.count}" class="kaartselectie"></div>
+
+                <script type="text/javascript">
+                    treeview_create({
+                        "id": 'layerTreeDiv${status.count}',
+                        "root": ${serviceTree},
+                        "rootChildrenAsRoots": false,
+                        "itemLabelCreatorFunction": createServiceLeaf,
+                        "toggleImages": {
+                            "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
+                            "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
+                            "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
+                        },
+                        "saveExpandedState": false,
+                        "saveScrollState": false,
+                        "expandAll": false,
+                        "childrenPadding": '20px',
+                        "zebraEffect": true
+                    });
+                </script>
+            </c:forEach>
+
+            <p>
+                <html:submit property="deleteWMSServices" styleClass="submitbutton deletebutton">Services wissen</html:submit>
+                </p>
+        </c:if>
 
         <p>
-            <html:submit property="deleteWMSServices" styleClass="submitbutton deletebutton">Services wissen</html:submit>
-        </p>
-    </c:if>
-
-    <p>
-        <html:hidden property="currentAppReadOnly" />
-        <html:hidden property="useUserWmsDropdown" />
+            <html:hidden property="currentAppReadOnly" />
+            <html:hidden property="useUserWmsDropdown" />
 
         <div id="alleenLezenHelp" class="alleenLezen">
             <strong>Niet meer wijzigen</strong><BR/>
@@ -166,7 +166,7 @@
             viewer wel bekijken maar geen wijzigingen opslaan in de boom instellingen. 
             Als iemand uw viewer toch aanpast dan ontvangen zij hiervoor een eigen url.
         </div>
-    
+
         <div id="viewerNaamHelp" class="viewerNaamHelperClass">
             <strong>Viewernaam en E-mail</strong><BR/>
             Vul een zinvolle viewernaam en uw e-mail adres in. Via e-mail en bovenin
@@ -175,13 +175,13 @@
             gebruiken en uitwisselen met andere gebruikers.
         </div>
     </p>
-        
+
     <div id="submitPopup" class="kaartlaagselectieSubmitPopup">        
         <c:if test="${currentAppReadOnly == '0'}">
-        <p>
-            <input type="radio" name="newkaartoption" value="new" onclick="$j('#name_email').show();" /> opslaan als nieuwe viewer<br />
-            <input type="radio" name="newkaartoption" value="existing" onclick="$j('#name_email').hide();" checked /> bestaande viewer '${kaartNaam}' wijzigen
-        </p>
+            <p>
+                <input type="radio" name="newkaartoption" value="new" onclick="$j('#name_email').show();" /> opslaan als nieuwe viewer<br />
+                <input type="radio" name="newkaartoption" value="existing" onclick="$j('#name_email').hide();" checked /> bestaande viewer '${kaartNaam}' wijzigen
+            </p>
         </c:if>
 
         <div id="name_email" style="display: none;">
@@ -218,45 +218,47 @@
             <html:submit property="save" styleClass="leftButton submitbutton" onclick="return checkOpslaanForm();">Viewer opslaan</html:submit>
         </p>
     </div>
-           
-    <div style="clear: both;"></div>
-        
-    <div class="kaartselectieKoppen">
-        <h3>Nieuwe WMS Service toevoegen</h3>
-    </div>
-    
-    <c:if test="${useUserWmsDropdown == '1'}">
-        <p>
-            U kunt ook nog extra kaartlagen toevoegen door een WMS te selecteren
-            uit deze lijst.
-        </p>
-        <html:select property="selectedUserWMSId">
-            <html:option value="">-Kies een service-</html:option>
-            <c:forEach items="${userWmsList}" var="item">
-                <html:option value="${item.id}">${item.name}</html:option>
-            </c:forEach>
-        </html:select>
-            
-        <html:submit property="saveWMSService" styleClass="leftButton submitbutton" onclick="return checkForm();">Service toevoegen</html:submit>      
-    </c:if>
-        
-    <c:if test="${useUserWmsDropdown == '0'}">
-        <div id="kaartselectieAddService">
-        <label for="groupName">Groep</label>
-        <html:text property="groupName" size="20" />
-        <label for="serviceUrl">Url</label>
-        <html:text property="serviceUrl" size="40" />
-        
-        <label for="sldUrl">Sld url</label>
-        <html:text property="sldUrl" size="40" />
 
-        <html:submit property="saveWMSService" styleClass="rightButton submitbutton">Service toevoegen</html:submit>
-    </div>
+    <div style="clear: both;"></div>
+
+    <c:if test="${appVersion > 1}">
+        <div class="kaartselectieKoppen">
+            <h3>Nieuwe WMS Service toevoegen</h3>
+        </div>
+
+        <c:if test="${useUserWmsDropdown == '1'}">
+            <p>
+                U kunt ook nog extra kaartlagen toevoegen door een WMS te selecteren
+                uit deze lijst.
+            </p>
+            <html:select property="selectedUserWMSId">
+                <html:option value="">-Kies een service-</html:option>
+                <c:forEach items="${userWmsList}" var="item">
+                    <html:option value="${item.id}">${item.name}</html:option>
+                </c:forEach>
+            </html:select>
+
+            <html:submit property="saveWMSService" styleClass="leftButton submitbutton" onclick="return checkForm();">Service toevoegen</html:submit>      
+        </c:if>
+
+        <c:if test="${useUserWmsDropdown == '0'}">
+            <div id="kaartselectieAddService">
+                <label for="groupName">Groep</label>
+                <html:text property="groupName" size="20" />
+                <label for="serviceUrl">Url</label>
+                <html:text property="serviceUrl" size="40" />
+
+                <label for="sldUrl">Sld url</label>
+                <html:text property="sldUrl" size="40" />
+
+                <html:submit property="saveWMSService" styleClass="rightButton submitbutton">Service toevoegen</html:submit>
+                </div>
+        </c:if>
     </c:if>
-    
+
 </html:form>
-    </div>
-    
+</div>
+
 <script type="text/javascript">
     function treeZebra() {
         var treecounter = 0;
@@ -369,10 +371,10 @@
         /* Viewernaam indien leeg voor invullen */
         var viewerNaamCheck = $j("#kaartNaam").val();
         
-        <c:if test="${currentAppReadOnly == '1'}">
+    <c:if test="${currentAppReadOnly == '1'}">
             if (viewerNaamCheck !== undefined && viewerNaamCheck != "") {
                 $j("#kaartNaam").val("<vul hier uw viewernaam in>");
             }
-        </c:if>
-    });
+    </c:if>
+        });
 </script>

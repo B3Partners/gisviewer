@@ -1117,7 +1117,7 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
         naamingevuldekolom = naampk;
         waardeingevuldekolom = waardepk;
     }
-    var sldstring=window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";
+    var sldstring=window.location.protocol + "//" +  window.location.host + "/digitree/CreateSLD";
     //"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
     
     var ouder = getParent();

@@ -89,7 +89,7 @@ checkLocation = function() {
 checkLocationPopup = function() {
    if(!usePopup) {
         if (top.location == self.location) {
-            top.location = '/gisviewer/index.do';
+            top.location = '/digitree/index.do';
         }
     }
 }

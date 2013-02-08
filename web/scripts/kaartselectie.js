@@ -2,7 +2,7 @@
 var kaartgroepenAan = new Array();
 var kaartlagenAan = new Array();
 
-var imagepath = '/gisviewer/images/icons/';
+var imagepath = '/digitree/images/icons/';
 var checkedimage = 'ok.png';
 var notcheckedimage = 'delete.png';
 var hassld = 'dropdown_red.png';

@@ -7,7 +7,7 @@
                 <div class="loadingMessage" style="width:100%;">
                     <table>
                         <tr>
-                            <td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>
+                            <td style="width:20px;"><img style="border: 0px;" src="/digitree/images/waiting.gif" alt="Bezig met laden..." /></td>
                             <td>
                                 <h2>Bezig met laden ...</h2>
                                 <p>Bezig met zoeken naar administratieve gegevens.</p>

@@ -313,7 +313,8 @@
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"},
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
         "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"},
-        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"}
+        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"},
+        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -763,6 +764,8 @@
     <div id="wktvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="wktframeViewer" name="wktframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="tekenenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="tekenenframeViewer" name="tekenenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    
+    <div id="uploadtemppointsvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="uploadtemppointsframeViewer" name="uploadtemppointsframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">

@@ -59,6 +59,8 @@ var editComponent = null;
 var firstTimeOLHeightAdjusted = false;
 var wierdOLDiffHeight = 224;
 
+var uploadCsvLayerOn = false;
+
 /**
  * Start off with initMapComponent()
 */
@@ -2481,6 +2483,9 @@ function refreshLayer(doRefreshOrder) {
         var laag = lagen[p];
         webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
     }
+    
+    /* Tijdelijke punten ook tonen */
+    checkTempUploadedPointsWms(uploadCsvLayerOn);
 }
 
 function getLayerById(id) {
@@ -3627,7 +3632,14 @@ function getWMSLayersUrls() {
         var currentscale = webMapController.getMap().getScaleHint();
         var inScale = isItemInScale(item, currentscale);
         
-        if(fgLayers[k].getURL() != null && inScale){
+        /* Also add tem points url in print */
+        var testUrl = fgLayers[k].getURL();  
+        var isTempPointsLayer = false;
+        if (testUrl.indexOf("tempPointsLayer") !== -1) {
+            isTempPointsLayer = true;
+        }  
+        
+        if(fgLayers[k].getURL() != null && inScale || isTempPointsLayer){
             if(!firstURL){
                 urlString+=";";
             }else{
@@ -3640,7 +3652,7 @@ function getWMSLayersUrls() {
             }
         }
     }
-
+    
     return urlString;
 }
 
@@ -4984,6 +4996,58 @@ function getItemByLayer(item,layers){
     return null;        
 }
 
+function getBaseUrl() {
+    var protocol = window.location.protocol + "//";
+    var host = window.location.host;
+
+    var urlBase = protocol + host  + baseNameViewer;
+    
+    return urlBase;    
+}
+
+function checkTempUploadedPointsWms(checked) { 
+    uploadCsvLayerOn = checked;
+    var layer = webMapController.getMap().getLayer("uploadedPoints");
+    
+    if (checked && layer == null) {
+        addTempUploadedPointsWms();  
+    } else if (checked && layer) {
+        layer.setVisible(true);
+    } else if (!checked && layer) {
+        /* Removing layer otherwise it is visible in print */
+        webMapController.getMap().removeLayer(layer);
+    }
+}
+
+function addTempUploadedPointsWms() {     
+    var lname = "uploadedPoints";
+    var layerUrl = getBaseUrl() + "/UploadedPointsWmsServlet";
+                
+    var options={
+        id: lname,
+        timeout: 30,
+        retryonerror: 10,
+        ratio: 1,
+        showerrors: true,
+        initService: false,
+        minscale: 0,
+        maxscale: 500000        
+    };
+    
+    var ogcOptions={
+        format: "image/png",
+        layers: "tempPointsLayer",
+        transparent: true,
+        exceptions: "application/vnd.ogc.se_inimage",
+        srs: "EPSG:28992",
+        version: "1.1.1",
+        noCache: true
+    };
+    
+    var newLayer = webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+    webMapController.getMap().addLayer(newLayer);
+}
+
 var popupCreated = false;
 $j(document).ready(function() {
     /* Alleen tabs vullen als ze ook echt aanstaan */
@@ -4996,6 +5060,7 @@ $j(document).ready(function() {
     var wktTabOn = false;
     var transparantieTabOn = false;
     var tekenTabOn = false;
+    var uploadPointsTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
         if (enabledtabs[i] == "analyse")
@@ -5024,6 +5089,9 @@ $j(document).ready(function() {
         
         if (enabledtabs[i] == "tekenen")
             tekenTabOn = true;
+        
+        if (enabledtabs[i] == "uploadpoints")
+            uploadPointsTabOn = true;
     }
 
     if (analyseTabOn) {
@@ -5070,6 +5138,12 @@ $j(document).ready(function() {
 
     if (zoekenTabOn || vergunningTabOn) {
         createSearchConfigurations();
+    }
+    
+    if (uploadPointsTabOn) {
+        if(document.getElementById('uploadtemppointsframeViewer')) {
+            document.getElementById('uploadtemppointsframeViewer').src='/gisviewer/uploadtemppoints.do';
+        }
     }
 
     var pwCreated = false;

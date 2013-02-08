@@ -2170,7 +2170,11 @@ function checkScaleForLayers() {
  * @param scale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
  * @return boolean wel of niet zichtbaar in scale.
  **/
-function isItemInScale(item,scale) {    
+function isItemInScale(item, scale) {
+    if (scale == 'NaN' || scale < 0 || !item) {
+        return false;
+    }
+    
     var itemVisible = true;
     
     if (item.children) {
@@ -2235,7 +2239,7 @@ function isItemInScale(item,scale) {
                 itemVisible = false;
             }
         }
-    }
+    }    
     
     return itemVisible;
 }
@@ -3124,7 +3128,9 @@ function refreshLegendBox() {
             //Item alleen toevoegen aan de layers indien
             //parent cluster(s) allemaal aangevinkt staan of
             //geen cluster heeft
-            if (!itemHasAllParentsEnabled(object) || (!isItemInScale(item,webMapController.getMap().getResolution()))) {
+            var res = webMapController.getMap().getResolution();
+            
+            if (!itemHasAllParentsEnabled(object) || (!isItemInScale(item, res))) {
                 found = true;
                 invisibleLayerItems.push(item);
             }
@@ -3161,6 +3167,7 @@ function refreshLegendBox() {
     
     for (var j=0; j<enabledLayerItems.length; j++){
         item = enabledLayerItems[j];
+        
         addLayerToLegendBox(item, false);
     }
     if (invisibleLayerItems.length>0) {
@@ -3495,6 +3502,9 @@ function onAllLayersFinishedLoading(mapId){
     if (waitUntillFullyLoaded) {
         $j("#loadingscreen").hide();
     }
+    
+    /* Do again so that layers outside of scale dont show up in legend tab at startup */
+    refreshLegendBox();
 }
 
 if(useSortableFunction) {
@@ -4976,7 +4986,6 @@ function getItemByLayer(item,layers){
 
 var popupCreated = false;
 $j(document).ready(function() {
-
     /* Alleen tabs vullen als ze ook echt aanstaan */
     var analyseTabOn = false;
     var meldingenTabOn = false;

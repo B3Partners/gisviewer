@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts-config PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+    <form-beans>
+        <form-bean name="viewerForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            <form-property name="themaid" type="java.lang.String"/>
+            <form-property name="analysethemaid" type="java.lang.String"/>
+            <form-property name="coords" type="java.lang.String"/>
+            <form-property name="geom" type="java.lang.String"/>
+            <form-property name="scale" type="java.lang.String"/>
+            <form-property name="tolerance" type="java.lang.String"/>
+            <form-property name="lagen" type="java.lang.String"/>
+            <form-property name="locatieveld" type="java.lang.String"/>
+            <form-property name="geselecteerd_object" type="java.lang.String"/>
+            <form-property name="zoekopties" type="java.lang.String"/>
+            <form-property name="zoekopties_object" type="java.lang.String"/>
+            <form-property name="zoekopties_waarde" type="java.lang.String"/>
+        </form-bean>
+        <form-bean name="printForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="title" type="java.lang.String"/>
+            <form-property name="imageId" type="java.lang.String"/>
+            <form-property name="imageSize" type="java.lang.String" initial="2048"/>
+            <form-property name="landscape" type="java.lang.String" initial="true"/>
+            <form-property name="pageSize" type="java.lang.String" initial="A4"/>
+            <form-property name="outputType" type="java.lang.String" initial="PDF"/>
+            <form-property name="remark" type="java.lang.String"/>
+            <form-property name="legendItems" type="java.lang.String[]"/>
+            <form-property name="scale" type="java.lang.Integer"/>
+        </form-bean>
+        <form-bean name="meldingForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            <form-property name="meldingID" type="java.lang.String"/>
+            <form-property name="welkomTekst" type="java.lang.String"/>
+            <form-property name="prefixKenmerk" type="java.lang.String"/>
+            <form-property name="meldingTekst" type="java.lang.String"/>
+            <form-property name="emailMelder" type="java.lang.String"/>
+            <form-property name="adresMelder" type="java.lang.String"/>
+            <form-property name="naamMelder" type="java.lang.String"/>
+            <form-property name="meldingType" type="java.lang.String"/>
+            <form-property name="meldingStatus" type="java.lang.String"/>
+            <form-property name="meldingCommentaar" type="java.lang.String"/>
+            <form-property name="zendEmailMelder" type="java.lang.Boolean"/>
+            <form-property name="layoutStylesheetMelder" type="java.lang.String"/>
+            <form-property name="naamBehandelaar" type="java.lang.String"/>
+            <form-property name="emailBehandelaar" type="java.lang.String"/>
+            <form-property name="zendEmailBehandelaar" type="java.lang.Boolean"/>
+            <form-property name="layoutStylesheetBehandelaar" type="java.lang.String"/>
+            <form-property name="objectSoort" type="java.lang.String"/>
+            <form-property name="icoonTekentool" type="java.lang.String"/>
+            <form-property name="opmerking" type="java.lang.String"/>
+            <form-property name="gegevensbron" type="java.lang.Integer"/>
+            <form-property name="wkt" type="java.lang.String"/>
+            <form-property name="kenmerk" type="java.lang.String"/>
+        </form-bean>
+
+        <form-bean name="redliningForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+
+            <!-- hidden -->
+            <form-property name="redliningID" type="java.lang.String"/>
+            <form-property name="wkt" type="java.lang.String"/>
+            <form-property name="gegevensbron" type="java.lang.Integer"/>
+            <form-property name="kaartlaagId" type="java.lang.Integer"/>
+
+            <!-- formulier -->
+            <form-property name="groepnaam" type="java.lang.String"/>
+            <form-property name="projectnaam" type="java.lang.String"/>
+            <form-property name="ontwerp" type="java.lang.String"/>
+            <form-property name="new_projectnaam" type="java.lang.String"/>
+            <form-property name="opmerking" type="java.lang.String"/>
+        </form-bean>
+
+        <!-- kaartselectie formulier -->
+        <form-bean name="kaartselectieForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+
+            <form-property name="currentAppReadOnly" type="java.lang.String"/>
+            <form-property name="makeAppReadOnly" type="java.lang.Boolean"/>
+            <form-property name="useUserWmsDropdown" type="java.lang.String"/>
+
+            <form-property name="kaartgroepenAan" type="java.lang.String[]"/>
+            <form-property name="kaartlagenAan" type="java.lang.String[]"/>
+            <form-property name="kaartgroepenDefaultAan" type="java.lang.String[]"/>
+            <form-property name="kaartlagenDefaultAan" type="java.lang.String[]"/>
+            <form-property name="layersAan" type="java.lang.String[]"/>
+            <form-property name="layersDefaultAan" type="java.lang.String[]"/>
+            <form-property name="servicesAan" type="java.lang.String[]"/>            
+            <form-property name="useLayerStyles" type="java.lang.String[]"/>
+
+            <!-- userLayerIds wordt gebruikt om de layerid's te kunnen
+            koppelen aan de textarea's -->
+            <form-property name="userLayerIds" type="java.lang.String[]"/>
+            <form-property name="useLayerSldParts" type="java.lang.String[]"/>
+
+            <form-property name="groupName" type="java.lang.String"/>
+            <form-property name="serviceUrl" type="java.lang.String"/>
+            <form-property name="sldUrl" type="java.lang.String"/>
+            
+            <form-property name="selectedUserWMSId" type="java.lang.String"/>
+            
+            <form-property name="kaartNaam" type="java.lang.String"/>
+            <form-property name="gebruikerEmail" type="java.lang.String"/>
+            <form-property name="newkaartoption" type="java.lang.String"/>
+        </form-bean>
+
+        <form-bean name="downloadForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+
+            <form-property name="uuids" type="java.lang.String"/>
+            <form-property name="wkt" type="java.lang.String"/>
+            <form-property name="email" type="java.lang.String"/>
+            <form-property name="formaat" type="java.lang.String"/>
+        </form-bean>
+        
+        <form-bean name="uploadTempPointsForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            
+            <form-property name="uploadFile" type="org.apache.struts.upload.FormFile"/>
+             <form-property name="csvSeparatorChar" type="java.lang.String"/>
+        </form-bean>
+        
+    </form-beans>
+    
+    <global-exceptions>
+    </global-exceptions>
+    
+    <global-forwards>
+        <forward name="failure" path="/index.do"/>
+    </global-forwards>
+    
+    <action-mappings>
+        <action path="/index" type="nl.b3p.gis.viewer.services.IndexAction">
+            <forward name="success" path="home"/>
+            <forward name="failure" path="messages"/>
+            <forward name="login" path="login"/>
+            <forward name="loginError" path="login"/>
+            <forward name="logout" path="/index.do" redirect="true"/>
+            <forward name="help" path="help"/>
+        </action>
+
+        <action path="/reset" type="nl.b3p.gis.viewer.services.ResetAction">
+            <forward name="success" path="reset"/>
+            <forward name="login" path="login"/>
+        </action>
+
+        <action path="/solparc" type="nl.b3p.gis.viewer.services.SolParcPaginaAction">
+            <forward name="maatschappelijkevoorzieningen" path="maatschappelijkevoorzieningen"/>
+            <forward name="actuelezaken" path="actuelezaken"/>
+            <forward name="wijkgerichtwerken" path="wijkgerichtwerken"/>
+            <forward name="beheeropenbareruimte" path="beheeropenbareruimte"/>
+            <forward name="natuurmilieucultuurhistorie" path="natuurmilieucultuurhistorie"/>
+            <forward name="gemeenteopdekaart" path="gemeenteopdekaart"/>
+            <forward name="failure" path="/index.do" redirect="true"/>
+        </action>
+
+        <action path="/maatschappelijkevoorzieningen" forward="/solparc.do?maatschappelijkevoorzieningen=t"/>
+        <action path="/actuelezaken" forward="/solparc.do?actuelezaken=t"/>
+        <action path="/wijkgerichtwerken" forward="/solparc.do?wijkgerichtwerken=t"/>
+        <action path="/beheeropenbareruimte" forward="/solparc.do?beheeropenbareruimte=t"/>
+        <action path="/natuurmilieucultuurhistorie" forward="/solparc.do?natuurmilieucultuurhistorie=t"/>
+        <action path="/gemeenteopdekaart" forward="/solparc.do?gemeenteopdekaart=t"/>
+
+        <action path="/indexlist" forward="/index.do?list=t"/>
+        <action path="/login" forward="/index.do?login=t"/>
+        <action path="/loginError" forward="/index.do?loginError=t"/>
+        <action path="/logout" forward="/index.do?logout=t"/>
+        <action path="/resetCache" forward="/index.do?resetCache=t"/>
+        <action path="/home" forward="home"/>
+        <action path="/zoekVoorziening" forward="voorzieningzoeker"/>
+        <action path="/zoekVergunning" forward="vergunningzoeker"/>
+
+        <action path="/help" forward="/index.do?help=t"/>
+        
+        <action path="/viewerlist" forward="/index.do?list=t"/>
+        
+        <action path="/viewerhighlight" forward="viewerhighlight"/>
+
+        <action path="/globespotter" type="nl.b3p.gis.viewer.CyclomediaAction" scope="request">
+            <forward name="success" path="globespotter"/>
+            <forward name="failure" path="globespotter"/>
+        </action>
+        
+        <action path="/a11yViewer" type="nl.b3p.gis.viewer.A11YViewerAction">
+            <forward name="list" path="/WEB-INF/jsp/viewer/a11y/a11y.jsp"/>
+            <forward name="search" path="/WEB-INF/jsp/viewer/a11y/a11ySearch.jsp"/>
+            <forward name="results" path="/WEB-INF/jsp/viewer/a11y/a11yResults.jsp"/>
+            <forward name="startLocation" path="/WEB-INF/jsp/viewer/a11y/a11yStartLocation.jsp"/>
+        </action>
+        
+        <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
+            <forward name="success" path="viewer"/>
+            <forward name="simpleviewer" path="simpleviewer"/>
+            <forward name="a11yViewer" path="/a11yViewer.do" />
+            <forward name="login" path="login"/>
+            <forward name="list" path="index"/>
+        </action>
+        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction" name="viewerForm" scope="request" validate="false">
+            <forward name="failure" path="viewerdata"/>
+            <forward name="admindata" path="vieweradmindata"/>
+            <forward name="metadata" path="viewermetadata"/>
+            <forward name="objectdata" path="viewerobjectdata"/>
+            <forward name="aanvullendeinfo" path="vieweraanvullendeinfo"/>
+        </action>
+
+        <action path="/printmap" type="nl.b3p.gis.viewer.PrintAction" name="printForm" scope="request" validate="false">
+            <forward name="success" path="createmappdf"/>
+            <forward name="failure" path="createmappdf"/>
+        </action>
+
+        <action path="/admindatabusy" forward="vieweradmindatabusy"/>
+
+        <action path="/viewerwelkom" forward="viewerwelkom"/>
+        <action path="/vieweranalysedata" forward="vieweranalysedata"/>
+
+        <action path="/viewermeldingen" type="nl.b3p.gis.viewer.MeldingAction" name="meldingForm" scope="request" validate="false">
+            <forward name="success" path="viewermeldingen"/>
+            <forward name="failure" path="viewermeldingen"/>
+            <forward name="melding" path="viewermeldingen"/>
+        </action>
+
+        <action path="/viewerredlining" type="nl.b3p.gis.viewer.RedliningAction" name="redliningForm" scope="request" validate="false">
+            <forward name="success" path="viewerredlining"/>
+            <forward name="failure" path="viewerredlining"/>
+            <forward name="redlining" path="viewerredlining"/>
+        </action>
+        
+        <action path="/viewerbag" type="nl.b3p.gis.viewer.BagAction" scope="request" validate="false">
+            <forward name="success" path="viewerbag"/>
+            <forward name="failure" path="viewerbag"/>
+        </action>
+
+        <action path="/listManager" type="nl.b3p.commons.mail.MessageAction" name="messagesForm" scope="request" validate="false">
+            <forward name="view" path="/index.do"/>
+            <forward name="continue" path="/index.do"/>
+        </action>
+
+        <action path="/kaartselectie" type="nl.b3p.gis.viewer.KaartSelectieAction" name="kaartselectieForm" scope="request">
+            <forward name="success" path="kaartselectie"/>
+            <forward name="failure" path="kaartselectie"/>
+        </action>
+
+        <action path="/download" type="nl.b3p.gis.viewer.DownloadAction" name="downloadForm" scope="request" validate="false">
+            <forward name="success" path="download"/>
+            <forward name="failure" path="download"/>
+        </action>
+        
+        <action path="/viewerwkt" type="nl.b3p.gis.viewer.WktAction" scope="request" validate="false">
+            <forward name="success" path="viewerwkt"/>
+            <forward name="failure" path="viewerwkt"/>
+        </action>
+        
+        <action path="/viewertransparantie" type="nl.b3p.gis.viewer.TransparantieAction" scope="request" validate="false">
+            <forward name="success" path="viewertransparantie"/>
+            <forward name="failure" path="viewertransparantie"/>
+        </action>
+        
+        <action path="/viewerteken" type="nl.b3p.gis.viewer.TekenAction" scope="request" validate="false">
+            <forward name="success" path="viewerteken"/>
+            <forward name="failure" path="viewerteken"/>
+        </action>
+        
+         <action path="/uploadtemppoints" type="nl.b3p.gis.viewer.UploadTempPointsAction" name="uploadTempPointsForm" scope="request" validate="false">
+            <forward name="success" path="uploadtemppoints"/>
+            <forward name="failure" path="uploadtemppoints"/>
+        </action>
+        
+    </action-mappings>
+    
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>
+    
+    <message-resources  parameter="ViewerResources" null="true" />
+    
+    <!-- ========================= Tiles plugin ===============================-->
+    <plug-in className="org.apache.struts.tiles.TilesPlugin" >
+        <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+        <set-property property="moduleAware" value="true" />
+    </plug-in>
+    
+    <!-- ========================= Validator plugin ================================= -->
+    <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+        <set-property
+            property="pathnames"
+            value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
+    </plug-in>
+    
+</struts-config>

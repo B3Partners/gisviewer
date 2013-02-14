@@ -30,3 +30,11 @@
 </div>
 
 <div style="clear: both;"></div>
+
+<hr>
+<div>
+    <div style="float: right;">
+        <address>Zonnebaan 12C</address>
+    </div>
+</div>
+<script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>

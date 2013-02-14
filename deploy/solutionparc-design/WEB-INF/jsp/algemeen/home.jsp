@@ -22,7 +22,11 @@
 <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
     <div class="content_block item">
         <div class="content">
-            <div class="content_title"><c:out value="${tb.titel}"/></div>
+            <div class="content_title"><c:out value="${tb.titel}"/>
+                <c:if test="${tb.inlogIcon}">
+                    <html:image align="top" page="/images/icons/inlog_needed.png" title="Inlog is vereist voor deze applicatie"/>
+                </c:if>
+            </div>
 
             <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
             <c:if test="${tb.toonUrl}">
@@ -53,23 +57,69 @@ blokken -->
 --%>
 
     <h1><img src="<html:rewrite page="/images/solutionparc-design/pageicons/home.png"/>" alt="" /> Welkom bij SolutionsParc</h1>
-
+    
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis id sapien sapien. Quisque tincidunt elementum bibendum. Aliquam erat volutpat. Etiam facilisis commodo nulla id feugiat. Sed enim dui, lobortis non elementum eget, dictum facilisis diam. Aliquam velit urna, sollicitudin nec tempor vel, congue id velit. Curabitur id ligula nisi. Duis eget lacus et arcu blandit vestibulum facilisis nec quam. Proin tempor accumsan erat in posuere. In id velit urna. Donec ligula elit, pharetra sed consequat ac, feugiat ut mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam bibendum elit eu sem vehicula rhoncus. Duis pretium sem et dolor tempus molestie. Duis vulputate ligula mauris. 
     </p>
-
+    
     <div class="solutionparc_homeblocks">
-
-        <div class="blockwrapper"><div class="home_tegel" id="maatschappelijkevoorzieningen"><html:link page="/maatschappelijkevoorzieningen.do"></html:link></div></div>
-        <div class="blockwrapper"><div class="home_tegel" id="actuelezaken"><html:link page="/actuelezaken.do"></html:link></div></div>
-        <div class="blockwrapper"><div class="home_tegel" id="wijkgerichtwerken"><html:link page="/wijkgerichtwerken.do"></html:link></div></div>
-        <div class="blockwrapper"><div class="home_tegel" id="beheeropenbareruimte"><html:link page="/beheeropenbareruimte.do"></html:link></div></div>
-        <div class="blockwrapper"><div class="home_tegel" id="natuurmilieucultuurhistorie"><html:link page="/natuurmilieucultuurhistorie.do"></html:link></div></div>
-        <div class="blockwrapper"><div class="home_tegel" id="gemeenteopdekaart"><html:link page="/gemeenteopdekaart.do"></html:link></div></div>
-
-        <div class="blockwrapper"><div class="home_tegel" id="logintegel"><html:link page="/login.do"></html:link></div></div>
-        <div class="blockwrapper"><div class="home_tegel" id="lokatietegel"><a href="#"></a></div></div>
-
+        
+        <div class="blockwrapper">
+            <div class="home_tegel" id="maatschappelijkevoorzieningen">
+                <html:link page="/maatschappelijkevoorzieningen.do" title="Maatschappelijke voorzieningen">
+                    Thema Maatschappelijke voorzieningen
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="actuelezaken">
+                <html:link page="/actuelezaken.do" title="Actuele zaken">
+                    Thema Actuele zaken
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="wijkgerichtwerken">
+                <html:link page="/wijkgerichtwerken.do" title="Wijkgericht werken">
+                    Thema Wijkgericht werken
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="beheeropenbareruimte">
+                <html:link page="/beheeropenbareruimte.do" title="Beheer openbare ruimte">
+                    Thema Beheer openbare ruimte
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="natuurmilieucultuurhistorie">
+                <html:link page="/natuurmilieucultuurhistorie.do" title="Natuur, Milieu, Cultuur en Historie">
+                    Thema Natuur, Milieu, Cultuur en Historie
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="gemeenteopdekaart">
+                <html:link page="/gemeenteopdekaart.do" title="Gemeente op de kaart">
+                    Thema Gemeente op de kaart
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="logintegel">
+                <html:link page="/login.do" title="Inloggen">
+                    Inloggen
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="lokatietegel">
+                <a href="#" title="Bepaal uw positie">
+                    Bepaal uw positie
+                </a>
+            </div>
+        </div>
     </div>
 <%--
 </c:if>
@@ -174,3 +224,10 @@ blokken -->
 <!--
 <script type="text/javascript" src="<html:rewrite page='/scripts/homecarousel.js' module=''/>"></script>
 -->
+<hr>
+<div>
+    <div style="float: right;">
+        <address>Zonnebaan 12C</address>
+    </div>
+</div>
+<script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>

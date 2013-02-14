@@ -1,3 +1,4 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <%--
 B3P Gisviewer is an extension to Flamingo MapComponents making
 it a complete webbased GIS viewer and configuration tool that
@@ -25,8 +26,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@page isELIgnored="false"%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html:html>
+<html lang="nl">
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
         
@@ -60,6 +60,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <style type="text/css"> .inleiding_body { background-image: url(images/homeblocksbg.gif); background-position: bottom; } </style>
         <![endif]-->
         <script type="text/javascript">
+            var basepath = '<html:rewrite page='/' module=''/>';
             attachOnload(checkLocation);
         </script>
     </head>
@@ -81,4 +82,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
         <tiles:insert definition="googleAnalytics"/>
     </body>
-</html:html>
+</html>

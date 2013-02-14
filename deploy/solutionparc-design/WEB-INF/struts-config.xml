@@ -125,6 +125,15 @@
             <form-property name="formaat" type="java.lang.String"/>
         </form-bean>
         
+        <form-bean name="uploadTempPointsForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <!-- struts -->
+            <form-property name="action" type="java.lang.String"/>
+            <form-property name="alt_action" type="java.lang.String"/>
+            
+            <form-property name="uploadFile" type="org.apache.struts.upload.FormFile"/>
+             <form-property name="csvSeparatorChar" type="java.lang.String"/>
+        </form-bean>
+        
     </form-beans>
     
     <global-exceptions>
@@ -190,6 +199,7 @@
             <forward name="list" path="/WEB-INF/jsp/viewer/a11y/a11y.jsp"/>
             <forward name="search" path="/WEB-INF/jsp/viewer/a11y/a11ySearch.jsp"/>
             <forward name="results" path="/WEB-INF/jsp/viewer/a11y/a11yResults.jsp"/>
+            <forward name="startLocation" path="/WEB-INF/jsp/viewer/a11y/a11yStartLocation.jsp"/>
         </action>
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">
@@ -262,6 +272,11 @@
         <action path="/viewerteken" type="nl.b3p.gis.viewer.TekenAction" scope="request" validate="false">
             <forward name="success" path="viewerteken"/>
             <forward name="failure" path="viewerteken"/>
+        </action>
+        
+         <action path="/uploadtemppoints" type="nl.b3p.gis.viewer.UploadTempPointsAction" name="uploadTempPointsForm" scope="request" validate="false">
+            <forward name="success" path="uploadtemppoints"/>
+            <forward name="failure" path="uploadtemppoints"/>
         </action>
         
     </action-mappings>

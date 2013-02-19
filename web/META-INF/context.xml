@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/gisviewer">
 
-<Resource 
+<Resource
+    name="jdbc/gisviewer"
     auth="Container" 
-    driverClassName="org.postgresql.Driver" 
-    logAbandoned="true" 
-    maxActive="100" 
-    maxIdle="30" 
-    maxWait="10000" 
-    minEvictableIdleTimeMillis="10000" 
-    name="jdbc/gisviewer" 
-    username="postgres" 
-    password="***REMOVED***"
-    url="jdbc:postgresql://localhost:5432/gisviewer" 
-    removeAbandoned="true" 
-    removeAbandonedTimeout="60" 
-    timeBetweenEvictionRunsMillis="60000" 
     type="javax.sql.DataSource" 
-    validationQuery="select 1"
+    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    testWhileIdle="true"
+    testOnBorrow="true"
+    testOnReturn="false"
+    validationQuery="SELECT 1"
+    validationInterval="30000"
+    timeBetweenEvictionRunsMillis="30000"
+    maxActive="50" 
+    minIdle="10" 
+    maxWait="10000"
+    initialSize="10"
+    removeAbandonedTimeout="60"
+    removeAbandoned="true"
+    logAbandoned="true"
+    minEvictableIdleTimeMillis="30000" 
+    jmxEnabled="true"
+    username="postgres" 
+    password="***REMOVED***" 
+    driverClassName="org.postgresql.Driver"
+    url="jdbc:postgresql://localhost:5432/gisviewer"
 />
+
 </Context>

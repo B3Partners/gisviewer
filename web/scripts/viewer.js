@@ -3119,31 +3119,43 @@ function refreshMapVolgorde() {
     syncLayerCookieAndForm();
 }
 
-function refreshLegendBox() {    
+function refreshLegendBox() { 
     resetLegendImageQueue();
     
+    var res = webMapController.getMap().getResolution();
+    
     webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
+    
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
+    
     for (var k=0; k<enabledLayerItems.length; k++){
         var item = enabledLayerItems[k];
         var found = false;
+        
+        // ouder moet aan staan en binnen schaal
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
             //Item alleen toevoegen aan de layers indien
             //parent cluster(s) allemaal aangevinkt staan of
-            //geen cluster heeft
-            var res = webMapController.getMap().getResolution();
-            
+            //geen cluster heeft            
             if (!itemHasAllParentsEnabled(object) || (!isItemInScale(item, res))) {
                 found = true;
                 invisibleLayerItems.push(item);
             }
+        // alleen binnen schaal tonen in legenda
+        } else {
+            if (!isItemInScale(item, res)) {
+                found = true;
+                invisibleLayerItems.push(item);
+            }
         }
+        
         if (!found) {
             visibleLayerItems.push(item);
         }
     }
+    
     enabledLayerItems = new Array();
     var totalLength = orderLayerBox.childNodes.length;
     //Kijk of ze al bestaan en in die volgorde staan.
@@ -3164,18 +3176,20 @@ function refreshLegendBox() {
             $j(orderLayerBox.childNodes[i]).css("display","none");
         }
     }
+    
     if (visibleLayerItems.length>0) {
         enabledLayerItems = enabledLayerItems.concat(visibleLayerItems);
     }
     
     resetLegendImageQueue();
     
-    for (var j=0; j<enabledLayerItems.length; j++){
+    for (var j=0; j < enabledLayerItems.length; j++){
         item = enabledLayerItems[j];
         
         addLayerToLegendBox(item, false);
     }
-    if (invisibleLayerItems.length>0) {
+    
+    if (invisibleLayerItems.length > 0) {
         enabledLayerItems = enabledLayerItems.concat(invisibleLayerItems);
     }
 }

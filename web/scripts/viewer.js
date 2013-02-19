@@ -2159,9 +2159,9 @@ function doRefreshLayer() {
 
 /*Check scale for all layers*/
 function checkScaleForLayers() {
-    var currentscale = webMapController.getMap().getScaleHint();
+    var currentscale = webMapController.getMap().getResolution();
     
-    setScaleForTree(themaTree,currentscale);
+    setScaleForTree(themaTree, currentscale);
 }
 
 
@@ -2244,6 +2244,21 @@ function isItemInScale(item, scale) {
     }    
     
     return itemVisible;
+}
+
+/*
+ * Calculates and returns the ??? from 1:??? for the current extent and 
+ * current mapwidth in pixels. Average ppi value assumed. The 0.00028
+ * could be made into a config setting in gisviewerconfig.
+*/
+function calcScaleForCurrentExtent() {
+    var extent = webMapController.getMap().getExtent();
+    var newMapWidth = extent.maxx - extent.minx;    
+    
+    var screenWidth = $j("#mapcontent").width();
+    var scale = newMapWidth / (screenWidth * 0.00028);
+    
+    return Math.round(Number(scale));
 }
 /**
  *Sets een tree item enabled or disabled (visually)
@@ -2805,7 +2820,7 @@ function getLayerIdsAsString(onlyWithinScale) {
                 continue;
         }
         if (onlyWithinScale){
-            var currentscale = webMapController.getMap().getScaleHint();
+            var currentscale = webMapController.getMap().getResolution();
             if (!isItemInScale(enabledLayerItems[i],currentscale)){
                 continue;
             }
@@ -3524,6 +3539,20 @@ function onAllLayersFinishedLoading(mapId){
     
     /* Do again so that layers outside of scale dont show up in legend tab at startup */
     refreshLegendBox();
+    
+    /* Config optie maken ? */
+    if (showDebugContent) {
+        setDebugContent();
+    }    
+}
+
+/* Kan gebruikt worden om wat debug info onderin de kaartboom weer te geven zoals
+ * specifieke timings of huidig omgerekende schaal */
+function setDebugContent() {
+    var scale = calcScaleForCurrentExtent(); 
+    var html = "<p><b>Schaal 1 : "+scale+"</b></p>";
+    
+    $j("#debug-content").html(html);
 }
 
 if(useSortableFunction) {
@@ -3643,7 +3672,7 @@ function getWMSLayersUrls() {
          * vreemde printvoorbeelden als je daarvoor al een keer een print hebt gemaakt
          * waarbij de voorgrond nog wel binnen schaal viel. Fix voor ticket #618 Limburg */
         var item = getItemFromWmsLayer(fgLayers[k]);        
-        var currentscale = webMapController.getMap().getScaleHint();
+        var currentscale = webMapController.getMap().getResolution();
         var inScale = isItemInScale(item, currentscale);
         
         /* Also add tem points url in print */
@@ -3811,7 +3840,7 @@ function getTilingLayer() {
 
     /* tiling layers toevoegen */
     for (var j=0; j < layers.length; j++) {
-        var currentscale = webMapController.getMap().getScaleHint();
+        var currentscale = webMapController.getMap().getResolution();
         
         var item;
         if (layers[j].options) {

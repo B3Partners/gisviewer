@@ -19,6 +19,8 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>
 
 <script type="text/javascript">
+    var showDebugContent = true;
+    
     var waitUntillFullyLoaded = false;
 
     var baseNameViewer = "${contextPath}";
@@ -568,11 +570,13 @@
 <div id="tab_container">
     <div id="treevak" style="display: none;" class="tabvak">
         <div>
+            
+            
             <form action=""  id="treeForm">
                 <div id="layermaindiv" style="display: none;"></div>
             </form></div>
-        <div id="timings"></div>
-
+        <div id="debug-content"></div>        
+        
         <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
             <div id="layerTreeDiv_${status.count}"></div>
         </c:forEach>

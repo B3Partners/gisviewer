@@ -31,13 +31,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
         
         <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
-        <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
+        <link href="<html:rewrite page='/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
-        <link href="styles/jcarousel/skin.css" rel="stylesheet" type="text/css">
+        <link href="<html:rewrite page='/styles/jcarousel/skin.css' module=''/>" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.jcarousel.min.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.mousewheel.min.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.qtip-1.0.0-rc3.min.js' module=''/>"></script>

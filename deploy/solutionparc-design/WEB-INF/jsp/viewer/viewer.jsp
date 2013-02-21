@@ -773,6 +773,8 @@
         document.write('<div id="rightControl" class="right_open border_balk" onclick="panelResize(\'right\');"><a href="#"></a></div>');
     }
     
+    var buttonbar = 20;
+    if(usePopup || !usePanel) buttonbar = 0;
     if(ieVersion <= 6 && ieVersion != -1) {
         var content_viewer = document.getElementById('content_viewer');
         var leftcontent = document.getElementById('leftcontent');
@@ -783,9 +785,9 @@
         var leftcontent_width = 0;
         if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
 
-        document.getElementById('mapcontent').style.width = (contentwidth - ((tabWidth==0?3:tabWidth+6) - 20) - ((leftcontent_width==0?3:leftcontent_width+6))) + 'px';
+        document.getElementById('mapcontent').style.width = (contentwidth - ((tabWidth==0?3:tabWidth+6) - buttonbar) - ((leftcontent_width==0?3:leftcontent_width+6))) + 'px';
     } else {
-        document.getElementById('mapcontent').style.right = (tabWidth==0?3:(tabWidth + 6)) + 20 + 'px';
+        document.getElementById('mapcontent').style.right = (tabWidth==0?3:(tabWidth + 6)) + buttonbar + 'px';
     }
 
     if(noOfTabs == 0) {
@@ -853,6 +855,8 @@
     if(usePopup || !usePanel) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
+        document.getElementById('tabjes').style.right = '3px';
+        document.getElementById('tab_container').style.right = '3px';
         document.getElementById('mapcontent').style.bottom = '3px';
         //document.getElementById('dataframediv').style.display = 'none';
         //document.getElementById('informatiebalk').style.display = 'none';
@@ -1066,6 +1070,27 @@
     <div class="embedded_icon">
         <a href="#" onclick="getLatLonForGoogleMaps();">
             <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
+        </a>
+    </div>
+
+    <div class="embedded_icon">
+        <a href="#" onclick="getBookMark();">
+            <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
+        </a>
+    </div>
+
+    <div class="embedded_icon">
+        <a href="mailto:support@b3partners.nl">
+            <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
+        </a>
+    </div>
+
+    <div class="embedded_icon">
+        <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" target="_new" styleClass="${stijlklasse}" module="">
+            <img src="<html:rewrite page="/images/search_list.png"/>" alt="Zoeken met lijsten" title="Zoeken met lijsten" border="0" />
+        </html:link>
+    </div>
+</div>title="Toon Google Map van de kaart" border="0" />
         </a>
     </div>
 

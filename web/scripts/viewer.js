@@ -710,7 +710,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     document.forms[0].geom.value=geom;
     
     var schaal;    
-    if (tilingResolutions && tilingResolutions == "") {
+    if (tilingResolutions && tilingResolutions !== "") {
         schaal = webMapController.getMap().getResolution();
     } else {
         schaal = webMapController.getMap().getScaleHint();
@@ -2168,7 +2168,7 @@ function doRefreshLayer() {
 function checkScaleForLayers() {
     
     var currentscale;    
-    if (tilingResolutions && tilingResolutions == "") {
+    if (tilingResolutions && tilingResolutions !== "") {
         currentscale = webMapController.getMap().getResolution();
     } else {
         currentscale = webMapController.getMap().getScaleHint();
@@ -2833,8 +2833,8 @@ function getLayerIdsAsString(onlyWithinScale) {
                 continue;
         }
         if (onlyWithinScale){
-            var currentscale;    
-            if (tilingResolutions && tilingResolutions == "") {
+            var currentscale;
+            if (tilingResolutions && tilingResolutions !== "") {
                 currentscale = webMapController.getMap().getResolution();
             } else {
                 currentscale = webMapController.getMap().getScaleHint();
@@ -3157,7 +3157,7 @@ function refreshLegendBox() {
     resetLegendImageQueue();
     
     var res;    
-    if (tilingResolutions && tilingResolutions == "") {
+    if (tilingResolutions && tilingResolutions !== "") {
         res = webMapController.getMap().getResolution();
     } else {
         res = webMapController.getMap().getScaleHint();
@@ -3697,7 +3697,7 @@ function getWMSLayersUrls() {
         var item = getItemFromWmsLayer(fgLayers[k]);        
         
         var currentscale;    
-        if (tilingResolutions && tilingResolutions == "") {
+        if (tilingResolutions && tilingResolutions !== "") {
             currentscale = webMapController.getMap().getResolution();
         } else {
             currentscale = webMapController.getMap().getScaleHint();
@@ -4151,7 +4151,7 @@ function highLightThemaObject(geom) {
     }
 
     var scale;    
-    if (tilingResolutions && tilingResolutions == "") {
+    if (tilingResolutions && tilingResolutions !== "") {
         scale = webMapController.getMap().getResolution();
     } else {
         scale = webMapController.getMap().getScaleHint();
@@ -4170,7 +4170,7 @@ function selectRedlineObject(geom) {
      * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
     */
     var scale;    
-    if (tilingResolutions && tilingResolutions == "") {
+    if (tilingResolutions && tilingResolutions !== "") {
         scale = webMapController.getMap().getResolution();
     } else {
         scale = webMapController.getMap().getScaleHint();
@@ -4235,7 +4235,7 @@ function handlePopupValue(value) {
      */
 
     var scale;    
-    if (tilingResolutions && tilingResolutions == "") {
+    if (tilingResolutions && tilingResolutions !== "") {
         scale = webMapController.getMap().getResolution();
     } else {
         scale = webMapController.getMap().getScaleHint();
@@ -4462,7 +4462,7 @@ function createPermaLink(){
     var reso = "";
     
     var controllerRes;    
-    if (tilingResolutions && tilingResolutions == "") {
+    if (tilingResolutions && tilingResolutions !== "") {
         controllerRes = webMapController.getMap().getResolution();
     } else {
         controllerRes = webMapController.getMap().getScaleHint();

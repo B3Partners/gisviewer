@@ -19,6 +19,8 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>
 
 <script type="text/javascript">
+    var showDebugContent = false;
+    
     var waitUntillFullyLoaded = false;
 
     var baseNameViewer = "${contextPath}";
@@ -313,7 +315,8 @@
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"},
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
         "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"},
-        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"}
+        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"},
+        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points" }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -570,8 +573,8 @@
             <form action=""  id="treeForm">
                 <div id="layermaindiv" style="display: none;"></div>
             </form></div>
-        <div id="timings"></div>
-
+        <div id="debug-content"></div>        
+        
         <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
             <div id="layerTreeDiv_${status.count}"></div>
         </c:forEach>
@@ -763,6 +766,8 @@
     <div id="wktvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="wktframeViewer" name="wktframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="tekenenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="tekenenframeViewer" name="tekenenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+    
+    <div id="uploadtemppointsvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="uploadtemppointsframeViewer" name="uploadtemppointsframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">
@@ -829,7 +834,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js?v=3"/>"></script>
 
 <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
     <script type="text/javascript">

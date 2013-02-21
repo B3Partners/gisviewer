@@ -709,7 +709,14 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
 
     document.forms[0].geom.value=geom;
     
-    document.forms[0].scale.value=webMapController.getMap().getResolution();
+    var schaal;    
+    if (tilingResolutions && tilingResolutions == "") {
+        schaal = webMapController.getMap().getResolution();
+    } else {
+        schaal = webMapController.getMap().getScaleHint();
+    }
+    
+    document.forms[0].scale.value=schaal;
     document.forms[0].tolerance.value=tolerance;
 
     if (selectionWithinObject) {
@@ -2159,7 +2166,13 @@ function doRefreshLayer() {
 
 /*Check scale for all layers*/
 function checkScaleForLayers() {
-    var currentscale = webMapController.getMap().getResolution();
+    
+    var currentscale;    
+    if (tilingResolutions && tilingResolutions == "") {
+        currentscale = webMapController.getMap().getResolution();
+    } else {
+        currentscale = webMapController.getMap().getScaleHint();
+    } 
     
     setScaleForTree(themaTree, currentscale);
 }
@@ -2820,7 +2833,13 @@ function getLayerIdsAsString(onlyWithinScale) {
                 continue;
         }
         if (onlyWithinScale){
-            var currentscale = webMapController.getMap().getResolution();
+            var currentscale;    
+            if (tilingResolutions && tilingResolutions == "") {
+                currentscale = webMapController.getMap().getResolution();
+            } else {
+                currentscale = webMapController.getMap().getScaleHint();
+            } 
+            
             if (!isItemInScale(enabledLayerItems[i],currentscale)){
                 continue;
             }
@@ -3137,7 +3156,12 @@ function refreshMapVolgorde() {
 function refreshLegendBox() { 
     resetLegendImageQueue();
     
-    var res = webMapController.getMap().getResolution();
+    var res;    
+    if (tilingResolutions && tilingResolutions == "") {
+        res = webMapController.getMap().getResolution();
+    } else {
+        res = webMapController.getMap().getScaleHint();
+    }
     
     webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
     
@@ -3672,7 +3696,14 @@ function getWMSLayersUrls() {
          * vreemde printvoorbeelden als je daarvoor al een keer een print hebt gemaakt
          * waarbij de voorgrond nog wel binnen schaal viel. Fix voor ticket #618 Limburg */
         var item = getItemFromWmsLayer(fgLayers[k]);        
-        var currentscale = webMapController.getMap().getResolution();
+        
+        var currentscale;    
+        if (tilingResolutions && tilingResolutions == "") {
+            currentscale = webMapController.getMap().getResolution();
+        } else {
+            currentscale = webMapController.getMap().getScaleHint();
+        }
+            
         var inScale = isItemInScale(item, currentscale);
         
         /* Also add tem points url in print */
@@ -4120,7 +4151,13 @@ function highLightThemaObject(geom) {
         iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300, true, false);
     }
 
-    var scale = webMapController.getMap().getResolution();
+    var scale;    
+    if (tilingResolutions && tilingResolutions == "") {
+        scale = webMapController.getMap().getResolution();
+    } else {
+        scale = webMapController.getMap().getScaleHint();
+    }
+        
     var tol = tolerance;
 
     if (highlightLayers.length == 1) {
@@ -4133,7 +4170,13 @@ function selectRedlineObject(geom) {
      * geom: Klikpunt op de kaart. Een POINT wkt string.
      * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
     */
-    var scale = webMapController.getMap().getResolution();
+    var scale;    
+    if (tilingResolutions && tilingResolutions == "") {
+        scale = webMapController.getMap().getResolution();
+    } else {
+        scale = webMapController.getMap().getScaleHint();
+    }
+    
     var tol = tolerance;
 
     EditUtil.getIdAndWktForRedliningObject(geom, redLineGegevensbronId, scale, tol, returnRedlineObject);
@@ -4192,7 +4235,13 @@ function handlePopupValue(value) {
      * setActiveCluster(item, true);
      */
 
-    var scale = webMapController.getMap().getResolution();
+    var scale;    
+    if (tilingResolutions && tilingResolutions == "") {
+        scale = webMapController.getMap().getResolution();
+    } else {
+        scale = webMapController.getMap().getScaleHint();
+    }
+    
     var tol = tolerance;
     EditUtil.getHighlightWktForThema(value, highLightGeom, scale, tol, returnHighlight);
 //handleGetAdminData(highLightGeom, value);
@@ -4412,7 +4461,14 @@ function createPermaLink(){
 
     /* kaart resolutie ophalen */
     var reso = "";
-    var controllerRes = webMapController.getMap().getResolution();
+    
+    var controllerRes;    
+    if (tilingResolutions && tilingResolutions == "") {
+        controllerRes = webMapController.getMap().getResolution();
+    } else {
+        controllerRes = webMapController.getMap().getScaleHint();
+    }
+    
     if (controllerRes != undefined && controllerRes != "") {
         reso = "&resolution=" + controllerRes;
     }

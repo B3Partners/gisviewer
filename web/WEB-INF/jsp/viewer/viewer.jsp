@@ -19,7 +19,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>
 
 <script type="text/javascript">
-    var showDebugContent = true;
+    var showDebugContent = false;
     
     var waitUntillFullyLoaded = false;
 

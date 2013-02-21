@@ -3267,7 +3267,6 @@ if(activeTab != null) {
 } else {
     switchTab(document.getElementById('themas'));
 }
-Nifty("ul#nav a","medium transparent top");
 var orderLayerBox= document.getElementById("orderLayerBox");
 
 function onChangeTool(id, event) {

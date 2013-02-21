@@ -856,7 +856,7 @@
 </c:forEach>
 
 <script type="text/javascript">
-    
+    Nifty("ul#nav a","medium transparent top");
     if(usePopup || !usePanel) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';

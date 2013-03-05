@@ -46,6 +46,17 @@
             document.forms["kaartselectieForm"]["kaartNaam"].value = "";
             return true;
         }
+        
+        function validateEmail(email) {
+            var atpos = email.indexOf("@");
+            var dotpos = email.lastIndexOf(".");
+
+            if (atpos < 1 || dotpos < atpos+2 || dotpos+2 >= email.length) {
+                return false;
+            }  
+        
+            return true;
+        }
     
         function checkOpslaanForm() {
             var viewerNaam = document.forms["kaartselectieForm"]["kaartNaam"].value;
@@ -56,6 +67,9 @@
                 return false;
             } else if (gebruikerEmail == undefined || gebruikerEmail == "") {
                 alert('E-mail is verplicht.');
+                return false;
+            } else if (!validateEmail(gebruikerEmail)) {
+                alert('E-mail is ongeldig.');
                 return false;
             } else {
                 return true;
@@ -216,10 +230,10 @@
         <p>
             <input type="button" class="submitbutton deletebutton" id="closeSelection" value="Sluiten" />
             <html:submit property="save" styleClass="leftButton submitbutton" onclick="return checkOpslaanForm();">Viewer opslaan</html:submit>
-        </p>
-    </div>
+            </p>
+        </div>
 
-    <div style="clear: both;"></div>
+        <div style="clear: both;"></div>
 
     <c:if test="${appVersion > 1}">
         <div class="kaartselectieKoppen">
@@ -373,7 +387,7 @@
         
     <c:if test="${currentAppReadOnly == '1'}">
             if (viewerNaamCheck !== undefined && viewerNaamCheck != "") {
-                $j("#kaartNaam").val("<vul hier uw viewernaam in>");
+                $j("#kaartNaam").val("");
             }
     </c:if>
         });

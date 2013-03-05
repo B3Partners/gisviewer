@@ -10,8 +10,8 @@
 
     <!-- formatter -->
     <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
-    infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"
-    zero-digit="0" digit="#" pattern-separator=";" />
+                        infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"
+                        zero-digit="0" digit="#" pattern-separator=";" />
 
     <!-- includes -->
     <xsl:include href="calc.xsl"/>
@@ -58,6 +58,12 @@
                     <fo:block-container width="7.6cm" height="2.3cm" top="26.5cm" left="12.0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
+                    
+                    <xsl:if test="count(legendItems) &gt; 0">
+                        <fo:block break-before="page">
+                            <xsl:call-template name="legend-block"/>
+                        </fo:block>
+                    </xsl:if>
                 </fo:flow>
             </fo:page-sequence>
         </fo:root>
@@ -103,52 +109,35 @@
             <fo:block margin-left="0.2cm" margin-top="0.3cm" font-size="8pt" font-style="italic">
                 <xsl:value-of select="opmerking"/>
             </fo:block>
-            
-            <!-- Extra block voor legenda plaatjes -->
-            <fo:block margin-left="0.2cm" margin-top="0.1cm">       
-                <xsl:if test="(count(legendUrls) > 0)">
-                    <fo:block color="#000000" font-size="10pt">
-                        Legenda:                 
-                    </fo:block>
-                </xsl:if>
-                  
-                <xsl:for-each select="legendUrls">
-                    <xsl:variable name="legendUrl" select="." />
-                    
-                    <fo:block margin-left="0.0cm" margin-top="0.05cm">
-                        <fo:external-graphic src="{$legendUrl}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform"/>
-                    </fo:block>
-                </xsl:for-each>
-            </fo:block>
 
         </fo:block>
     </xsl:template>
 
     <!-- create map -->    
     <xsl:template name="map-block">
-            <xsl:variable name="bbox-corrected">
-                <xsl:call-template name="correct-bbox">
-                    <xsl:with-param name="bbox" select="bbox"/>
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="px-ratio" select="format-number($map-height-px div $map-width-px,'0.##','MyFormat')" />
-            <xsl:variable name="map-height-px-corrected" select="kwaliteit"/>
-            <xsl:variable name="map-width-px-corrected" select="format-number(kwaliteit div $px-ratio,'0','MyFormat')"/>
-            <xsl:variable name="map">
-                <xsl:value-of select="imageUrl"/>
-                <xsl:text>&amp;width=</xsl:text>
-                <xsl:value-of select="$map-width-px-corrected"/>
-                <xsl:text>&amp;height=</xsl:text>
-                <xsl:value-of select="$map-height-px-corrected"/>
-                <xsl:text>&amp;bbox=</xsl:text>
-                <xsl:value-of select="$bbox-corrected"/>
-            </xsl:variable>
+        <xsl:variable name="bbox-corrected">
+            <xsl:call-template name="correct-bbox">
+                <xsl:with-param name="bbox" select="bbox"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="px-ratio" select="format-number($map-height-px div $map-width-px,'0.##','MyFormat')" />
+        <xsl:variable name="map-height-px-corrected" select="kwaliteit"/>
+        <xsl:variable name="map-width-px-corrected" select="format-number(kwaliteit div $px-ratio,'0','MyFormat')"/>
+        <xsl:variable name="map">
+            <xsl:value-of select="imageUrl"/>
+            <xsl:text>&amp;width=</xsl:text>
+            <xsl:value-of select="$map-width-px-corrected"/>
+            <xsl:text>&amp;height=</xsl:text>
+            <xsl:value-of select="$map-height-px-corrected"/>
+            <xsl:text>&amp;bbox=</xsl:text>
+            <xsl:value-of select="$bbox-corrected"/>
+        </xsl:variable>
 
-            <fo:block-container margin-top="0.5cm" height="17cm" xsl:use-attribute-sets="column-block">
-                <fo:block margin-left="0.05cm" margin-right="0.05cm">
-                    <fo:external-graphic src="{$map}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$map-width-px}" height="{$map-height-px}"/>
-                </fo:block>
-            </fo:block-container>
+        <fo:block-container margin-top="0.5cm" height="17cm" xsl:use-attribute-sets="column-block">
+            <fo:block margin-left="0.05cm" margin-right="0.05cm">
+                <fo:external-graphic src="{$map}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$map-width-px}" height="{$map-height-px}"/>
+            </fo:block>
+        </fo:block-container>
     </xsl:template>
     
     <xsl:template name="disclaimer-block">
@@ -162,4 +151,21 @@
             <fo:external-graphic src="url('b3p_logo.png')" width="231px" height="56px"/>
         </fo:block>
     </xsl:template>    
+    
+    <xsl:template name="legend-block">
+        <!-- Layername and legend image -->
+        <fo:block margin-left="0.2cm" margin-top="0.1cm">
+            <xsl:for-each select="legendItems/entry">                
+                <xsl:variable name="legendUrl" select="value" /> 
+                
+                <fo:block margin-left="0cm" margin-top="0cm">  
+                    Legenda van <xsl:value-of select="key"/>
+                </fo:block>
+                
+                <fo:block margin-left="0cm" margin-top="0.05cm" keep-with-previous.within-page="always">
+                    <fo:external-graphic src="{$legendUrl}" height="27.0cm" width="100%" content-height="scale-to-fit" content-width="100%" scaling="uniform"/>          
+                </fo:block>
+            </xsl:for-each>            
+        </fo:block>  
+    </xsl:template>
 </xsl:stylesheet>

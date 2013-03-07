@@ -26,7 +26,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html:html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="nl"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="nl"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="nl"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="nl"> <!--<![endif]-->
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
         
@@ -60,4 +63,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <div id="content_viewer"><tiles:insert attribute="content" /></div>
         <tiles:insert definition="googleAnalytics"/>
     </body>
-</html:html>
+</html>

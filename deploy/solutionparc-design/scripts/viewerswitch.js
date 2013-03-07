@@ -28,10 +28,10 @@
                 $(this).attr('href', href);
             });
         }
-        var viewerswitch = $('<p></p>').addClass('solutionparc_switch');
-        viewerswitch.append('<a href="#" id="viewerlayout" class="switcher switch_right active"><img src="' + basepath + 'images/icons/map.png" alt="Viewerweergave" /> Viewer</a>');
-        viewerswitch.append('<a href="#" id="listlayout" class="switcher switch_left"><img src="' + basepath + 'images/icons/search_list.png" alt="Lijstweergave" /> Lijst</a>');
-        viewerswitch.children('a').click(function(e) {
+        var viewerswitch = $('<ul></ul>').addClass('solutionparc_switch');
+        viewerswitch.append('<li><a href="#" id="viewerlayout" class="switcher switch_right active"><img src="' + basepath + 'images/icons/map.png" alt="Viewerweergave" /> Viewer</a></li>');
+        viewerswitch.append('<li><a href="#" id="listlayout" class="switcher switch_left"><img src="' + basepath + 'images/icons/search_list.png" alt="Lijstweergave" /> Lijst</a></li>');
+        viewerswitch.find('#viewerlayout, #listlayout').click(function(e) {
             e.preventDefault();
             $('.switcher').removeClass('active');
             $(this).addClass('active');

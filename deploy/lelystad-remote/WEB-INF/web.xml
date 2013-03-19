@@ -33,7 +33,11 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://gis.lelystad.nl:8082/kaartenbalie/services/</param-value>
+            <param-value>https://gis.lelystad.nl/kaartenbalie/services/</param-value>
+        </init-param>
+		<init-param>
+            <param-name>internalKbUrl</param-name>
+            <param-value>http://localhost:8082/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -214,7 +218,7 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            480
+            30
         </session-timeout>
     </session-config>
     <welcome-file-list>

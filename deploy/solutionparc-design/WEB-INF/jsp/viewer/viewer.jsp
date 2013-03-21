@@ -834,7 +834,7 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js?v=3"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
 
 <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
     <script type="text/javascript">

@@ -1095,25 +1095,4 @@
             <img src="<html:rewrite page="/images/search_list.png"/>" alt="Zoeken met lijsten" title="Zoeken met lijsten" border="0" />
         </html:link>
     </div>
-</div>title="Toon Google Map van de kaart" border="0" />
-        </a>
-    </div>
-
-    <div class="embedded_icon">
-        <a href="#" onclick="getBookMark();">
-            <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
-        </a>
-    </div>
-
-    <div class="embedded_icon">
-        <a href="mailto:support@b3partners.nl">
-            <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
-        </a>
-    </div>
-
-    <div class="embedded_icon">
-        <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" target="_new" styleClass="${stijlklasse}" module="">
-            <img src="<html:rewrite page="/images/search_list.png"/>" alt="Zoeken met lijsten" title="Zoeken met lijsten" border="0" />
-        </html:link>
-    </div>
 </div>

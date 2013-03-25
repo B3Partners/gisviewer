@@ -21,9 +21,9 @@
             $('a').not('.switcher').each(function() {
                 var href = $(this).attr('href');
                 if(useviewer) {
-                    if(!href.match(/forceViewer/)) href = href + '?forceViewer=true';
+                    if(!href.match(/forceViewer/)) href = href + '&forceViewer=true';
                 } else {
-                    href = href.replace('?forceViewer=true', '');
+                    href = href.replace('&forceViewer=true', '');
                 }
                 $(this).attr('href', href);
             });

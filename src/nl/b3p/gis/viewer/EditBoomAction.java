@@ -981,7 +981,7 @@ public class EditBoomAction extends ViewerCrudAction {
         dynaForm.set("vta4", false);
         dynaForm.set("vta5", false);
         dynaForm.set("vta6", false);
-        dynaForm.set("nader_onderzoek", "");
-        dynaForm.set("bereikbaarheid", "");
+        dynaForm.set("nader_onderzoek", false);
+        dynaForm.set("bereikbaarheid", false);
     }
 }

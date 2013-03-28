@@ -62,7 +62,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <style type="text/css"> .inleiding_body { background-image: url(images/homeblocksbg.gif); background-position: bottom; } </style>
         <![endif]-->
         <script type="text/javascript">
-            var basepath = '<html:rewrite page='/' module=''/>';
+            var gisviewerurls = {
+                'mapicon': '<html:rewrite page='/images/icons/map.png' module='' />',
+                'listicon': '<html:rewrite page='/images/icons/search_list.png' module='' />'
+            };
             attachOnload(checkLocation);
         </script>
     </head>

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2013 geertplaisier
+ * Copyright (C) 2013 B3Partners B.V.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,32 +17,60 @@
 
 (function($){
     $(document).ready(function() {
-        function changeViewertype(useviewer) {
+        function changeViewertype(layouttype) {
+            var useviewer = (layouttype === 'kaartlayout');
             $('a').not('.switcher').each(function() {
                 var href = $(this).attr('href');
                 if(useviewer) {
-                    if(!href.match(/forceViewer/)) href = href + '&forceViewer=true';
+                    if(!href.match(/forceViewer/)) {
+                        href = addToQueryString(href, 'forceViewer', 'true');
+                    }
                 } else {
-                    href = href.replace('&forceViewer=true', '');
+                    href = href.replace(/[\&\?]forceViewer=true/, '');
                 }
                 $(this).attr('href', href);
             });
+            saveViewerPreference(layouttype);
         }
+        function addToQueryString(url, key, value) {
+            var query = url.indexOf('?');
+            if (query === url.length - 1) {
+                // Strip any ? on the end of the URL
+                url = url.substring(0, query);
+                query = -1;
+            }
+            var anchor = url.indexOf('#');
+            return (anchor > 0 ? url.substring(0, anchor) : url)
+                 + (query > 0 ? "&" + key + "=" + value : "?" + key + "=" + value)
+                 + (anchor > 0 ? url.substring(anchor) : "");
+        }
+        function saveViewerPreference(value) {
+            document.cookie = "gisviewerpref="+value+"; path=/";
+        }
+        function readViewerPreference() {
+            var nameEQ = "gisviewerpref=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                c = c.replace(/^\s+|\s+$/g, ''); // trun
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+        var cookievalue = readViewerPreference();
+        if(cookievalue === null) cookievalue = 'kaartlayout';
         var viewerswitch = $('<ul></ul>').addClass('solutionparc_switch');
-        viewerswitch.append('<li><a href="#" id="viewerlayout" class="switcher switch_right active"><img src="' + basepath + 'images/icons/map.png" alt="Viewerweergave" /> Viewer</a></li>');
-        viewerswitch.append('<li><a href="#" id="listlayout" class="switcher switch_left"><img src="' + basepath + 'images/icons/search_list.png" alt="Lijstweergave" /> Lijst</a></li>');
-        viewerswitch.find('#viewerlayout, #listlayout').click(function(e) {
+        viewerswitch.prepend('<span>Kies weergave:</span>');
+        viewerswitch.append('<li><a href="" id="kaartlayout" class="switcher switch_right' + (cookievalue === 'kaartlayout' ? ' active' : '') + '"><img src="' + gisviewerurls.mapicon + '" alt="Kaartweergave" /> Kaart</a></li>');
+        viewerswitch.append('<li><a href="" id="tekstlayout" class="switcher switch_left' + (cookievalue === 'tekstlayout' ? ' active' : '') + '"><img src="' + gisviewerurls.listicon + '" alt="Tekstweergave" /> Tekst</a></li>');
+        viewerswitch.find('.switcher').click(function(e) {
             e.preventDefault();
             $('.switcher').removeClass('active');
             $(this).addClass('active');
-            if($(this).attr('id') === 'viewerlayout') {
-                changeViewertype(true);
-            } else {
-                changeViewertype(false);
-            }
+            changeViewertype($(this).attr('id'));
             return false;
         });
         viewerswitch.insertBefore('.solutionparc_homeblocks, .solutionparc_vervolgblocks');
-        changeViewertype(true);
+        changeViewertype(cookievalue);
     });
 }(jQuery));

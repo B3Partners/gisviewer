@@ -93,7 +93,7 @@
 <hr>
 <div>
     <div style="float: right;">
-        <address>Zonnebaan 12C</address>
+        <address>B3Partners: Zonnebaan 12C, 3542 EC, Utrecht</address>
     </div>
 </div>
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>

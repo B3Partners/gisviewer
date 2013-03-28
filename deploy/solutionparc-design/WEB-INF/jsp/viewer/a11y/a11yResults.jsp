@@ -168,7 +168,7 @@
                                 Ga naar de kaartviewer
                             </html:link>
                             <div style="float: right;">
-                                <address>Zonnebaan 12C</address>
+                                <address>B3Partners: Zonnebaan 12C, 3542 EC, Utrecht</address>
                             </div>
                         </div>
                     </div>

@@ -294,12 +294,16 @@ function MaatregelComponent(){
         this.maatregelSelectText.html("Maatregel: ");
         this.questionObject = $j("<div class='maatregel_vraag'></div>");
         this.maatregelContainer.append(this.questionObject);           
-        if (this.currentCrow.getMaatregelTekst()){
-            var tekst=this.currentCrow.getMaatregelTekst();
-            if (this.currentCrow.getCustomInputs()){
-                //backwards for string changes.
-                tekst = this.insertCustomInputs(tekst,this.currentCrow.getCustomInputs());                
-            }   
+        if (this.currentCrow.getMaatregelTeksten()){
+            var tekst="";
+            var teksten=this.currentCrow.getMaatregelTeksten();
+            for (var t = 0; t< teksten.length; t++){
+                //this.create
+                if (t!=0){
+                    tekst+="<br/>";
+                }
+                tekst+=this.createHtmlTekst(teksten[t]);
+            }
             this.questionObject.html("<div class='maatregel_vraagTekst'>"+tekst+"</div>");                    
         }if (this.currentCrow.getMaatregelEenheid()){
             var eenheidEl= $j("<div class='maatregel_vraagHoeveelheid'></div>");
@@ -322,11 +326,14 @@ function MaatregelComponent(){
                 for (var o = 0; o < vraag.vraagOpties.length; o++){
                     var optie = vraag.vraagOpties[o];
                     
-                    var tekst=optie.tekst;
-                    if (optie.customInputs){
-                        //backwards for string changes.
-                        tekst=this.insertCustomInputs(tekst, optie.customInputs,optie.deficode);
-                    }                    
+                    //var tekst=optie.tekst;
+                    var tekst="";
+                    for (var t=0; t < optie.teksten.length; t++){
+                        if (t!=0){
+                            tekst+="<br/>";
+                        }
+                        tekst+=this.createHtmlTekst(optie.teksten[t],optie.deficode);
+                    }                                     
                     var radioEl=$j("<input id="+this.defiOptionPrefix+optie.deficode+" type='radio' name='"+radioName+"' value='"+optie.deficode+"'></input>"+tekst+"<br/>");
                     //check first
                     if (o==0){
@@ -481,7 +488,36 @@ function MaatregelComponent(){
             }
         });
     },
-    
+    /**
+     *  
+     */
+    this.createHtmlTekst = function (tekstObj,extraInputId){
+        if (extraInputId==undefined || extraInputId ==null){
+            extraInputId="";
+        }
+        var tekst = tekstObj.tekst;
+        var customInputs = tekstObj.customInputs;
+        if (customInputs){
+            for (var c=customInputs.length-1; c >=0 ; c--){
+                var customInput = customInputs[c];
+
+                //there are 4 points but if length of input field is smaller then that's the length
+                var lengthOfPoints=4;
+                if (customInput.length < lengthOfPoints){
+                    lengthOfPoints=customInput.length;
+                }
+                //check if there are points at the given location.
+                if (tekst.substr(customInput.startIndex, lengthOfPoints)==".......".substr(0, lengthOfPoints)){
+                    var inputString = " <input id='"+this.customInputPrefix + extraInputId +c+"' type='text' maxlength='"+customInput.length+"' size='"+customInput.length+"'></input> ";
+                    var tempText = tekst.substring(0,customInput.startIndex);
+                    tempText+=inputString;
+                    tempText+= tekst.substring(customInput.startIndex+lengthOfPoints+1);
+                    tekst=tempText;
+                }
+            }
+        }
+        return tekst;
+    }
     /**
      * insert the customInputs in the text
      * @text the text
@@ -489,7 +525,7 @@ function MaatregelComponent(){
      * @extraInputId extra string for id for input
      * @return the tekst including html input fields
      */
-    this.insertCustomInputs = function (text,customInputs,extraInputId){
+    /*this.insertCustomInputs = function (text,customInputs,extraInputId){
         if (extraInputId==undefined || extraInputId ==null){
             extraInputId="";
         }
@@ -511,7 +547,7 @@ function MaatregelComponent(){
             }
         }
         return text;
-    }
+    }*/
     
     
     
@@ -524,18 +560,16 @@ function MaatregelComponent(){
 function CrowObject(obj){
     this.crow=obj;
     
-    this.getMaatregelTekst = function(){
-        return this.crow.tekst;
-    },  
+    this.getMaatregelTeksten = function(){
+        return this.crow.teksten;
+    },    
     this.getMaatregelEenheid = function(){
         return this.crow.eenheid;
     },
-    this.getCustomInputs = function(){
-        return this.crow.customInputs
-    },
     this.getVragen = function(){
         return this.crow.vragen;
-    },
+    },   
+     
     /**
      *Get 'eenheid' from deficode
      */

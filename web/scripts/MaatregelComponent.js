@@ -489,14 +489,18 @@ function MaatregelComponent(){
         });
     },
     /**
-     *  
+     * Give text obj and generate html (with input elements)
+     * @param textObj the textobj with
+     * @param textObj.tekst string with tekst
+     * @param textObj.customInputs array of customInputs
+     * @return a html string
      */
-    this.createHtmlTekst = function (tekstObj,extraInputId){
+    this.createHtmlTekst = function (textObj,extraInputId){
         if (extraInputId==undefined || extraInputId ==null){
             extraInputId="";
         }
-        var tekst = tekstObj.tekst;
-        var customInputs = tekstObj.customInputs;
+        var tekst = textObj.tekst;
+        var customInputs = textObj.customInputs;
         if (customInputs){
             for (var c=customInputs.length-1; c >=0 ; c--){
                 var customInput = customInputs[c];
@@ -509,8 +513,12 @@ function MaatregelComponent(){
                 //check if there are points at the given location.
                 if (tekst.substr(customInput.startIndex, lengthOfPoints)==".......".substr(0, lengthOfPoints)){
                     var inputString = " <input id='"+this.customInputPrefix + extraInputId +c+"' type='text' maxlength='"+customInput.length+"' size='"+customInput.length+"'></input> ";
+                    
                     var tempText = tekst.substring(0,customInput.startIndex);
                     tempText+=inputString;
+                    if (textObj.aanwijzing && textObj.aanwijzing !='98'){
+                        tempText+="("+textObj.aanwijzing + ") ";
+                    }
                     tempText+= tekst.substring(customInput.startIndex+lengthOfPoints+1);
                     tekst=tempText;
                 }
@@ -518,36 +526,7 @@ function MaatregelComponent(){
         }
         return tekst;
     }
-    /**
-     * insert the customInputs in the text
-     * @text the text
-     * @customInputs the customInputs
-     * @extraInputId extra string for id for input
-     * @return the tekst including html input fields
-     */
-    /*this.insertCustomInputs = function (text,customInputs,extraInputId){
-        if (extraInputId==undefined || extraInputId ==null){
-            extraInputId="";
-        }
-        for (var c=customInputs.length-1; c >=0 ; c--){
-            var customInput = customInputs[c];
-
-            //there are 4 points but if length of input field is smaller then that's the length
-            var lengthOfPoints=4;
-            if (customInput.length < lengthOfPoints){
-                lengthOfPoints=customInput.length;
-            }
-            //check if there are points at the given location.
-            if (text.substr(customInput.startIndex, lengthOfPoints)==".......".substr(0, lengthOfPoints)){
-                var inputString = " <input id='"+this.customInputPrefix + extraInputId +c+"' type='text' maxlength='"+customInput.length+"' size='"+customInput.length+"'></input> ";
-                var tempText = text.substring(0,customInput.startIndex);
-                tempText+=inputString;
-                tempText+= text.substring(customInput.startIndex+lengthOfPoints+1);
-                text=tempText;
-            }
-        }
-        return text;
-    }*/
+    
     
     
     

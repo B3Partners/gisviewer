@@ -500,6 +500,9 @@ function MaatregelComponent(){
             extraInputId="";
         }
         var tekst = textObj.tekst;
+        if(textObj.type=='C'){
+            tekst = "<span style='font-style: italic;'>"+tekst+"</span>";
+        }
         var customInputs = textObj.customInputs;
         if (customInputs){
             for (var c=customInputs.length-1; c >=0 ; c--){
@@ -520,7 +523,7 @@ function MaatregelComponent(){
                         tempText+="("+textObj.aanwijzing + ") ";
                     }
                     tempText+= tekst.substring(customInput.startIndex+lengthOfPoints+1);
-                    tekst=tempText;
+                    tekst=tempText;                    
                 }
             }
         }

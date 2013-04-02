@@ -294,6 +294,13 @@ function MaatregelComponent(){
         this.maatregelSelectText.html("Maatregel: ");
         this.questionObject = $j("<div class='maatregel_vraag'></div>");
         this.maatregelContainer.append(this.questionObject);           
+        if (this.currentCrow.getMaatregelEenheid()){
+            var eenheidEl= $j("<div class='maatregel_vraagHoeveelheid'></div>");
+            eenheidEl.append("Hoeveelheid: ");
+            eenheidEl.append($j("<input id='maatregel_hoeveelheid' type='text'></input>"));
+            eenheidEl.append(" "+this.currentCrow.getMaatregelEenheid());
+            this.questionObject.append(eenheidEl);
+        }
         if (this.currentCrow.getMaatregelTeksten()){
             var tekst="";
             var teksten=this.currentCrow.getMaatregelTeksten();
@@ -304,13 +311,10 @@ function MaatregelComponent(){
                 }
                 tekst+=this.createHtmlTekst(teksten[t]);
             }
-            this.questionObject.html("<div class='maatregel_vraagTekst'>"+tekst+"</div>");                    
-        }if (this.currentCrow.getMaatregelEenheid()){
-            var eenheidEl= $j("<div class='maatregel_vraagHoeveelheid'></div>");
-            eenheidEl.append("Hoeveelheid: ");
-            eenheidEl.append($j("<input id='maatregel_hoeveelheid' type='text'></input>"));
-            eenheidEl.append(" "+this.currentCrow.getMaatregelEenheid());
-            this.questionObject.append(eenheidEl);
+            tekst="<div class='maatregel_vraagTekst'>"+tekst+"</div>";
+            var maatregelTekstEl= $j(tekst);
+            //this.questionObject.html(this.questionObject.html()+tekst);
+            this.questionObject.append(maatregelTekstEl);                    
         }
         var me = this;
         var vragen=this.currentCrow.getVragen();
@@ -321,7 +325,7 @@ function MaatregelComponent(){
             if (vraag.vraagOpties){
                 var id="questionSelect_"+vraag.id;
                 var radioName=this.radioPrefix+vraag.id;
-                vraagEl.append("<hr/>");
+                vraagEl.append("<hr class='maatregel_hr'/>");
                 var eenheid=null;
                 for (var o = 0; o < vraag.vraagOpties.length; o++){
                     var optie = vraag.vraagOpties[o];
@@ -348,10 +352,10 @@ function MaatregelComponent(){
                     }
                 }
                 if (eenheid){
-                    var amountInput= $j("<input type='tekst'></input>");
-                    amountInput.attr("id",this.inputPrefix+vraag.id);
+                    var amountInput= $j("<div class='maatregel_optie_input'>Hoeveelheid: <input type='tekst'></input></div>");
+                    amountInput.attr("id",this.inputPrefix+vraag.id);                    
+                    amountInput.append(" "+eenheid);
                     vraagEl.append(amountInput);
-                    vraagEl.append(" "+eenheid);
                 }
             }
         }

@@ -749,18 +749,19 @@
         document.write('<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div></div>');
     }
 
+    var rightControlWidth = leftControlWidth = 0;
     if(noOfTabs === 0) {
         // Hide tabs if there are no tabs
         document.getElementById('tab_container').style.display = 'none';
         document.getElementById('tabjes').style.display = 'none';
         document.getElementById('mapcontent').style.right = '0px';
     } else {
-        var rightControlWidth = 0, rightControl = $j('#rightControl');
+        var rightControl = $j('#rightControl');
         if(rightControl && rightControl.height() > 20) rightControlWidth = rightControl.width() + 3; // For some viewers the rightcontrol extends to the bottom, in this case we need to remove the width from the right of the map
         document.getElementById('mapcontent').style.right = (tabWidth === 0 ? 3 : (tabWidth + 6)) + rightControlWidth + 'px';
     }
     if(noLeftTabs > 0) {
-        var leftControlWidth = 0, leftControl = $j('#leftControl'), leftTabWidth = leftTabController.getTabWidth();
+        var leftControl = $j('#leftControl'), leftTabWidth = leftTabController.getTabWidth();
         if(leftControl && leftControl.height() > 20) leftControlWidth = leftControl.width() + 3; // For some viewers the leftcontrol extends to the bottom, in this case we need to remove the width from the left of the map
         document.getElementById('mapcontent').style.left = (leftTabWidth === 0 ? 3 : (leftTabWidth + 6)) + leftControlWidth + 'px';
         if(usePanel && leftControlWidth !== 0) {
@@ -800,7 +801,7 @@
 </c:forEach>
 
 <script type="text/javascript">
-    var infobalk = infobalkbottom = null;
+    var infobalk = null, infobalkbottom = null, dataframebottom = 0;
     if(usePopup || !usePanel) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
@@ -816,7 +817,8 @@
         document.getElementById('tab_container').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('mapcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        var infobalk = $j('#informatiebalk'), infobalkbottom = parseInt(infobalk.css('bottom'), 10);
+        infobalk = $j('#informatiebalk');
+        infobalkbottom = parseInt(infobalk.css('bottom'), 10);
         if(infobalkbottom > 1) {
             infobalk.css('bottom', (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px');
             if(usePanelControls) {
@@ -824,7 +826,8 @@
             }
         } else {
             // In some viewers the infobalk is moved to the bottom, in this case move the dataframediv
-            document.getElementById('dataframediv').style.bottom = infobalkbottom + infobalk.height() + 6 + 'px';
+            dataframebottom = infobalkbottom + infobalk.height() + 6;
+            document.getElementById('dataframediv').style.bottom = dataframebottom + 'px';
         }
     }
 
@@ -887,9 +890,9 @@
                         $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 5)) }, 400);
                         $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
                     }
-                    document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte+2)) + 27 + 'px';
-                    document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte+2)) + 27 + 'px';
-                    document.getElementById('mapcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte+2)) + 27 + 'px';
+                    document.getElementById('leftcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
+                    document.getElementById('tab_container').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
+                    document.getElementById('mapcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
                     tabController.doResize();
                     leftTabController.doResize();
                     panelBelowCollapsed = !panelBelowCollapsed;
@@ -908,7 +911,7 @@
                 $j("#tab_container").animate({ width: panelbreedte }, 400);
                 // $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
                 $j("#tabjes").animate({ width: panelbreedte }, 200);
-                document.getElementById('mapcontent').style.right = (panelbreedte==0?0:(panelbreedte + 3)) + 23 + 'px';
+                document.getElementById('mapcontent').style.right = (panelbreedte==0?0:(panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + rightControlWidth + 'px';
             }
             if(dir == 'left') {
                 var panelbreedte = panelLeftCollapsed ? leftTabWidth : 0;
@@ -921,7 +924,7 @@
                 }
                 $j("#leftcontent").animate({ width: panelbreedte }, 400);
                 // $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-                document.getElementById('mapcontent').style.left = (panelbreedte==0?0:(panelbreedte + 3)) + 23 + 'px';
+                document.getElementById('mapcontent').style.left = (panelbreedte==0?0:(panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + leftControlWidth + 'px';
                 panelLeftCollapsed = !panelLeftCollapsed;
             }
         }

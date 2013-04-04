@@ -1098,8 +1098,10 @@
     </div>
 
     <div class="embedded_icon">
+        <%--
         <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" target="_new" styleClass="${stijlklasse}" module="">
             <img src="<html:rewrite page="/images/search_list.png"/>" alt="Zoeken met lijsten" title="Zoeken met lijsten" border="0" />
         </html:link>
+        --%>
     </div>
 </div>

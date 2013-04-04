@@ -25,18 +25,25 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <div class="contentstyle">
     <h1>Kies waarmee u wilt zoeken</h1>
-    <ul class="searchEntries">
-        <c:forEach var="zc" items="${zoekConfigs}">
-            <li>
-                <p>
-                    <c:out value="${zc.omschrijving}" />
-                </p>
-                <p>
-                    <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${zc.id}" styleClass="searchLink" module="">
-                        <c:out value="${zc.naam}" />
-                    </html:link>
-                </p>
-            </li>
-        </c:forEach>
-    </ul>
+    
+    <c:if test="${fn:length(zoekConfigs) < 1}">
+        <p>Er is momenteel nog geen zoekingang ingesteld.</p>
+    </c:if>    
+
+    <c:if test="${fn:length(zoekConfigs) > 0}">
+        <ul class="searchEntries">
+            <c:forEach var="zc" items="${zoekConfigs}">
+                <li>
+                    <p>
+                        <c:out value="${zc.omschrijving}" />
+                    </p>
+                    <p>
+                        <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${zc.id}" styleClass="searchLink" module="">
+                            <c:out value="${zc.naam}" />
+                        </html:link>
+                    </p>
+                </li>
+            </c:forEach>
+        </ul>
+    </c:if>
 </div>

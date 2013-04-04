@@ -42,7 +42,7 @@
         </init-param>
         <init-param>
             <param-name>internalKbUrl</param-name>
-            <param-value>http://localhost:8080/kaartenbalie/services/</param-value>
+            <param-value>http://solparc.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>

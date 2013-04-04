@@ -25,4 +25,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <div class="contentstyle">
     <h1>Uw startlocatie is ingesteld</h1>
+    
+    <html:link page="/index.do" styleClass="searchLink" module="">
+            Home
+        </html:link>
 </div>

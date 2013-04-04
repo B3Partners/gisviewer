@@ -161,4 +161,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </p>
     </c:if>
 
+    <p>
+        <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}" styleClass="searchLink" module="">
+            Opnieuw zoeken
+        </html:link> |
+        
+        <html:link page="/a11yViewer.do?appCode=${appCode}" styleClass="searchLink" module="">
+            Anders zoeken
+        </html:link>
+    </p>
+
 </div>

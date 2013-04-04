@@ -8,26 +8,27 @@
     <c:set var="appCode" value="${param['appCode']}"/>
     
     <a href="mailto:support@b3partners.nl" class="menulink">
-        <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
+        <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" />
     </a>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'help.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
-        <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
+    <html:link page="/help.do?id=${kaartid}" styleClass="${stijlklasse}" module="">
+        <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" />
     </html:link>
 
+    <%-- niet direct naar viewer    
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'viewer.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-
     <c:if test="${pageContext.request.remoteUser != null}">
         <html:link page="/viewer.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
     </c:if>
-
+    --%>
+    
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
         <c:set var="stijlklasse" value="activemenulink" />

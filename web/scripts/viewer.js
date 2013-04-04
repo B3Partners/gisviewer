@@ -107,15 +107,17 @@ function initMapComponent(){
             resolutions: olRes,
             //numZoomLevels: olRes.length-1,
             allOverlays: true,
-            units : 'meters',            
+            units : 'meters',
+            theme: 'styles/gisviewer_openlayers.css',
             controls : [
-            new OpenLayers.Control.Navigation({
-                zoomBoxEnabled: false
-            }),
-            new OpenLayers.Control.ArgParser()                
+                new OpenLayers.Control.Navigation({
+                    zoomBoxEnabled: false
+                }),
+                new OpenLayers.Control.ArgParser()                
             ]
         };
-        
+        OpenLayers.ImgPath = 'styles/openlayers_img/';
+
         $j("#mapcontent").html(" ");
         var olmap = webMapController.createMap('mapcontent',opt);
         $j("#mapcontent").css("border","1px solid black");
@@ -555,7 +557,7 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
     var y = (result.maxy - result.miny) / 2 + result.miny;
         
     placeSearchResultMarker(x,y);    
-    switchTab(document.getElementById("zoeken"));
+    switchTab("zoeken");
     
     /* Lagen aanzetten na zoeken */
     JZoekconfiguratieThemaUtil.getThemas(searchConfigId, function(data) {
@@ -1778,52 +1780,8 @@ function deActivateCheckbox(id) {
         document.getElementById(id).click();
 }
 
-function switchTab(obj) {
-    if (obj==undefined || obj==null)
-        return;
-    
-    // Check if user is allowed for the tab, if not select first tab
-    var allowed = false;
-    for(i in enabledtabs) {
-        var tabid = enabledtabs[i];
-        if(tabid == obj.id) allowed = true;
-    }
-    if(!allowed) {
-        obj = document.getElementById(enabledtabs[0]);
-    }
-    if(typeof obj === 'undefined' || !obj) {
-        return;
-    }
-
-    eraseCookie('activetab');
-    createCookie('activetab', obj.id, '7');
-    currentActiveTab = obj.id;
-    $j(obj).addClass("activelink");
-    for(i in tabbladen) {
-        var tabobj = tabbladen[i];
-        if(tabobj.id != obj.id) {
-            $j("#" + tabobj.id).removeClass("activelink");
-            if(cloneTabContentId == null || cloneTabContentId != tabobj.contentid) {
-                document.getElementById(tabobj.contentid).style.display = 'none';
-                if(tabobj.extracontent != undefined) {
-                    for(j in tabobj.extracontent) {
-                        if(document.getElementById(tabobj.extracontent[j])){
-                            document.getElementById(tabobj.extracontent[j]).style.display = 'none';
-                        }
-                    }
-                }
-            }
-        } else {
-            document.getElementById(tabobj.contentid).style.display = 'block';
-            if(tabobj.extracontent != undefined) {
-                for(j in tabobj.extracontent) {
-                    if(document.getElementById(tabobj.extracontent[j])){
-                        document.getElementById(tabobj.extracontent[j]).style.display = 'block';
-                    }
-                }
-            }
-        }
-    }
+function switchTab(id) {
+    tabController.setActive(id);
 }
 
 function syncLayerCookieAndForm() {
@@ -3260,12 +3218,12 @@ function getActiveLayerLabel(cookiestring) {
 }
 
 var activeTab = readCookie('activetab');
-if(activeTab != null) {
-    switchTab(document.getElementById(activeTab));
+if(activeTab !== null) {
+    switchTab(activeTab);
 } else if (demogebruiker) {
-    switchTab(document.getElementById('themas'));
+    switchTab('themas');
 } else {
-    switchTab(document.getElementById('themas'));
+    switchTab('themas');
 }
 var orderLayerBox= document.getElementById("orderLayerBox");
 

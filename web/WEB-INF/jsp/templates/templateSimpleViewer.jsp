@@ -26,12 +26,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html:html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="nl"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="nl"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="nl"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="nl"> <!--<![endif]-->
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
         
         <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
-        <link href="styles/gisviewer_simpleviewerimport.css" rel="stylesheet" type="text/css">
+        <link href="styles/gisviewer_simpleviewer.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>
@@ -60,4 +63,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <div id="content_viewer"><tiles:insert attribute="content" /></div>
         <tiles:insert definition="googleAnalytics"/>
     </body>
-</html:html>
+</html>

@@ -158,14 +158,6 @@
         multipleActiveThemas = true;
     }
 
-    /* showLeftPanel op de gewenste tab zetten als het leftPanel moet worden getoond,
-     * en op null als het leftPanel niet moet worden getoond */
-    
-    var showLeftPanel=catchEmpty(${configMap["showLeftPanel"]});
-    if(typeof showLeftPanel === 'undefined') {
-        showLeftPanel = null;
-    }
-
     /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
      * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
@@ -320,6 +312,7 @@
     };
 
     var enabledtabs = [${configMap["tabs"]}];
+    var enabledtabsLeft = [${configMap["tabsLeft"]}];
 
     /* planselectie gebruikt 2 zoekingangen (id's) */
     var planSelectieIds = catchEmpty(${configMap["planSelectieIds"]});
@@ -474,13 +467,12 @@
         attachOnresize(fixViewer);
     </script>
 <![endif]-->
+<script type="text/javascript" src="<html:rewrite page="/scripts/TabController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/viewer_design.js"/>"></script>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/niftycube.js"/>"></script>
 <div style="display: none;">
     <html:form action="/viewerdata?code=${kbcode}">
         <input type="hidden" name="admindata" />
@@ -504,9 +496,8 @@
     </html:form>
 </div>
 
-<div id="leftcontent" style="display: none;">
-    &nbsp;
-</div>
+<div id="leftcontenttabjes" style="display: none;"><ul id="leftcontentnav" class="tabsul"></ul></div>
+<div id="leftcontent" style="display: none;"></div>
 
 <div id="mapcontent">
     <div id="flashmelding"></div>
@@ -519,71 +510,23 @@
     }
 </script>
 
-<div id="tabjes">
-    <ul id="nav">
-        <script type="text/javascript">
-            var createdTabs = new Array();
-            
-            var noOfTabs = 0;
-            for(i in enabledtabs) {
-                var tabid = enabledtabs[i];
-                if(showLeftPanel == null || tabid != showLeftPanel) {
-                    noOfTabs++;
-                }
-            }
-            if(noOfTabs > 5) noOfTabs = 5;
-            var tabswidth = Math.floor((tabWidth - (noOfTabs-1)) / noOfTabs);
-            var cloneTabContentId = null;
-            for(i in enabledtabs) {
-                var tabid = enabledtabs[i];
-                var tabobj = eval("tabbladen."+tabid);
-                if(showLeftPanel != null && tabid == showLeftPanel) {
-                    cloneTabContentId = tabobj.contentid;
-                } else {
+<div id="tabjes"><ul id="nav" class="tabsul"></ul></div>
+<div id="tab_container"></div>
 
-                    if (useMouseOverTabs)
-                        document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
-                    else
-                        document.write('<li id="' + tabid + '" onclick="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
-
-                    createdTabs[i] = enabledtabs[i];
-                    if(i == 4) break;
-                }
-            }
-
-            for(i in tabbladen) {             
-                var tabid = tabbladen[i].id;
-                checkResizableContent(tabid, tabbladen[i].contentid); 
-                var tabIsEnabled = false;
-                for(j in createdTabs) {
-                    var tabide = createdTabs[j];
-                    if(tabid == tabide) tabIsEnabled = true;
-                }
-                if(!tabIsEnabled) {
-                    document.write('<li id="' + tabid + '"><a href="#" id="' + tabid + 'link" style="display: none;">' + tabbladen[i].name + '</a></li>');
-                }
-            }
-        </script>
-    </ul>
-</div>
-
-<div id="tab_container">
-    <div id="treevak" style="display: none;" class="tabvak">
+<div id="tabContentContainers" style="display: none;">
+    <div id="treevak">
         <div>
-            
-            
-            <form action=""  id="treeForm">
-                <div id="layermaindiv" style="display: none;"></div>
+            <form action="" id="treeForm">
+                <div id="layermaindiv"></div>
             </form></div>
         <div id="debug-content"></div>        
-        
+
         <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
             <div id="layerTreeDiv_${status.count}"></div>
         </c:forEach>
     </div>
-
-    <form action="" id="volgordeForm">  
-        <div id="volgordevak" style="display: none;" class="tabvak">
+    <div id="volgordevak">
+        <form action="" id="volgordeForm">  
             <div id="orderLayerBox" class="orderLayerBox tabvak_groot"></div>
 
             <!-- slider -->
@@ -624,7 +567,7 @@
 
             <%--
             <p>Bepaal de volgorde waarin de kaartlagen getoond worden</p>
-            
+
             <div>
                 <script type="text/javascript">
                     if(!useSortableFunction) {
@@ -635,10 +578,8 @@
                 </script>
             </div>
             --%>
-
-        </div>
-    </form>
-
+        </form>
+    </div>
     <div id="plannenzoeker" style="display: none; overflow: auto;" class="tabvak">
         <div class="planselectcontainer">
             <div id="kolomTekst">
@@ -679,7 +620,6 @@
             </div>
         </div>
     </div>
-
     <div id="infovak" style="display: none; overflow: auto;" class="tabvak">
         <c:if test="${!empty search}">
             <p>
@@ -720,7 +660,6 @@
             <div class="searchResultsClass" id="searchResults"></div>
         </div>
     </div>
-
     <div id="cmsvak" style="display: none; overflow: auto;" class="tabvak">
         <%-- als er maar 1 tekstblok is dan die titel plaatsen --%>
         <c:if test="${fn:length(tekstBlokken)==1}">
@@ -755,10 +694,8 @@
             </div>
         </c:forEach>
     </div>
-
     <div id="voorzieningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="voorzieningframeZoeker" name="voorzieningframeZoeker" frameborder="0" src="<html:rewrite page="/zoekVoorziening.do"/>"></iframe></div>
     <div id="vergunningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="vergunningframeZoeker" name="vergunningframeZoeker" frameborder="0" src="<html:rewrite page="/zoekVergunning.do"/>"></iframe></div>
-
     <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div> <%--<html:rewrite page='/vieweranalysedata.do'/>--%>
     <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
@@ -768,41 +705,34 @@
     <div id="wktvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="wktframeViewer" name="wktframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
     <div id="tekenenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="tekenenframeViewer" name="tekenenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    
     <div id="uploadtemppointsvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="uploadtemppointsframeViewer" name="uploadtemppointsframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
 <script type="text/javascript">
-    $j("#tab_container, #tabjes, #nav").css("width", tabWidth + 'px');
-    if(tabWidth == 0) $j("#tab_container, #tabjes, #nav").css("visibility", "hidden");
-    
-    if(ieVersion <= 6 && ieVersion != -1) {
-        var content_viewer = document.getElementById('content_viewer');
-        var leftcontent = document.getElementById('leftcontent');
-        
-        var contentwidth = 0;
-        if(content_viewer) contentwidth = document.getElementById('content_viewer').offsetParent.offsetWidth;
-
-        var leftcontent_width = 0;
-        if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
-
-        document.getElementById('mapcontent').style.width = (contentwidth - ((tabWidth==0?3:tabWidth+6)) - ((leftcontent_width==0?3:leftcontent_width+6))) + 'px';
-    } else {
-        document.getElementById('mapcontent').style.right = (tabWidth==0?3:(tabWidth + 6)) + 'px';
+    // Show left tabs when enabled
+    var showLeftPanel = false;
+    if(enabledtabsLeft.length !== 0) {
+        showLeftPanel = true;
+        $j('#leftcontenttabjes, #leftcontent').show();
+    }
+    // Init tab controllers
+    var tabController = new TabController('tabjes', 'tab_container', { 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
+    var leftTabController = new TabController('leftcontenttabjes', 'leftcontent', { 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
+    // Loop over enabled tabs
+    for(i in enabledtabs) {
+        var tabid = enabledtabs[i];
+        var tabobj = tabbladen[tabid];
+        var options = { 'contentid': tabobj.contentid, 'checkResize': true };
+        tabController.createTab(tabid, tabobj.name, options);
+    }
+    for(i in enabledtabsLeft) {
+        var tabid = enabledtabsLeft[i];
+        var tabobj = tabbladen[tabid];
+        var options = { 'contentid': tabobj.contentid, 'checkResize': true };
+        leftTabController.createTab(tabid, tabobj.name, options);
     }
 
-    if(noOfTabs == 0) {
-        // Hide tabs if there are no tabs
-        document.getElementById('tab_container').style.display = 'none';
-        document.getElementById('tabjes').style.display = 'none';
-        if(ieVersion <= 6 && ieVersion != -1) {
-            var leftcontent_width = 0;
-            if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
-            document.getElementById('mapcontent').style.width = (contentwidth - (leftcontent_width==0?0:leftcontent_width+6)) + 'px';
-        } else {
-            document.getElementById('mapcontent').style.right = '0px';
-        }
-    }
+    var noOfTabs = tabController.getTabCount(), noLeftTabs = leftTabController.getTabCount();
     if(usePanel) {
         document.write('<div class="infobalk" id="informatiebalk" style="display: block;">'
             +'     <div class="infobalk_description">INFORMATIE</div>'
@@ -812,17 +742,31 @@
             +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
             +' </div>');
     }
-
-    if(cloneTabContentId != null) {
-        document.getElementById(cloneTabContentId).style.display = 'block';
-        $j("#leftcontent").append($j("#"+cloneTabContentId));
-    }
     if(usePanelControls) {
         document.write('<div id="panelControls">');
-        if(showLeftPanel != null && cloneTabContentId != null) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"></div>');
-        if(noOfTabs > 0) document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"></div>');
-        document.write('<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div>'
-            + '</div>');
+        if(noOfTabs > 0) document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"><a href="#"></a></div>');
+        if(noLeftTabs > 0) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"><a href="#"></a></div>');
+        document.write('<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div></div>');
+    }
+
+    if(noOfTabs === 0) {
+        // Hide tabs if there are no tabs
+        document.getElementById('tab_container').style.display = 'none';
+        document.getElementById('tabjes').style.display = 'none';
+        document.getElementById('mapcontent').style.right = '0px';
+    } else {
+        var rightControlWidth = 0, rightControl = $j('#rightControl');
+        if(rightControl && rightControl.height() > 20) rightControlWidth = rightControl.width() + 3; // For some viewers the rightcontrol extends to the bottom, in this case we need to remove the width from the right of the map
+        document.getElementById('mapcontent').style.right = (tabWidth === 0 ? 3 : (tabWidth + 6)) + rightControlWidth + 'px';
+    }
+    if(noLeftTabs > 0) {
+        var leftControlWidth = 0, leftControl = $j('#leftControl'), leftTabWidth = leftTabController.getTabWidth();
+        if(leftControl && leftControl.height() > 20) leftControlWidth = leftControl.width() + 3; // For some viewers the leftcontrol extends to the bottom, in this case we need to remove the width from the left of the map
+        document.getElementById('mapcontent').style.left = (leftTabWidth === 0 ? 3 : (leftTabWidth + 6)) + leftControlWidth + 'px';
+        if(usePanel && leftControlWidth !== 0) {
+            document.getElementById('dataframediv').style.left = leftControlWidth + 'px';
+            document.getElementById('informatiebalk').style.left = leftControlWidth + 'px';
+        }
     }
 
 </script>
@@ -856,13 +800,15 @@
 </c:forEach>
 
 <script type="text/javascript">
-    Nifty("ul#nav a","medium transparent top");
+    var infobalk = infobalkbottom = null;
     if(usePopup || !usePanel) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
+        document.getElementById('tabjes').style.right = '3px';
+        document.getElementById('tab_container').style.right = '3px';
+        document.getElementById('leftcontenttabjes').style.left = '3px';
+        document.getElementById('leftcontent').style.left = '3px';
         document.getElementById('mapcontent').style.bottom = '3px';
-        //document.getElementById('dataframediv').style.display = 'none';
-        //document.getElementById('informatiebalk').style.display = 'none';
     }
     else {
         // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
@@ -870,10 +816,15 @@
         document.getElementById('tab_container').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
         document.getElementById('mapcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        document.getElementById('informatiebalk').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px';
-
-        if(usePanelControls) {
-            $j("#onderbalkControl").css("bottom", (defaultdataframehoogte==0?3:(defaultdataframehoogte + 5)));
+        var infobalk = $j('#informatiebalk'), infobalkbottom = parseInt(infobalk.css('bottom'), 10);
+        if(infobalkbottom > 1) {
+            infobalk.css('bottom', (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px');
+            if(usePanelControls) {
+                $j("#onderbalkControl").css("bottom", (defaultdataframehoogte==0?3:(defaultdataframehoogte + 5)));
+            }
+        } else {
+            // In some viewers the infobalk is moved to the bottom, in this case move the dataframediv
+            document.getElementById('dataframediv').style.bottom = infobalkbottom + infobalk.height() + 6 + 'px';
         }
     }
 
@@ -900,7 +851,7 @@
 
     <c:if test="${not empty activeTab}">
         if (document.getElementById("${activeTab}")){
-            switchTab(document.getElementById("${activeTab}"));
+            switchTab("${activeTab}");
         }
     </c:if>
 
@@ -910,101 +861,68 @@
             cfgAtiveTab = "themas";
         }
 
-        switchTab(document.getElementById(cfgAtiveTab));
+        switchTab(cfgAtiveTab);
     </c:if>
 
         var panelBelowCollapsed = false;
-        var panelLeftCollapsed = true;
+        var panelLeftCollapsed = !showLeftPanel;
         var panelRightCollapsed = false;
         function panelResize(dir)
         {
-            if(ieVersion <= 6 && ieVersion != -1) {
-                var headerheight = 0;
-                headerheight = document.getElementById('header').offsetHeight;
-                var contentheight = 0; var contentwidth = 0;
-                contentheight = content_viewer.offsetParent.offsetHeight - headerheight;
-                contentwidth = content_viewer.offsetParent.offsetWidth;
-            }
             if(dir == 'below') {
                 if(!usePopup && !useDivPopup) {
                     var dataframehoogte = defaultdataframehoogte;
                     if(panelBelowCollapsed) {
-                        $j("#informatiebalk").css("display", "block");
+                        if(infobalkbottom !== null && infobalkbottom > 1) $j("#informatiebalk").css("display", "block");
                         $j("#dataframediv").css("display", "block");
-                        $j("#onderbalkControl").removeClass("bottom_closed");
-                        $j("#onderbalkControl").addClass("bottom_open");
-                        panelBelowCollapsed = false;
+                        $j("#onderbalkControl").removeClass("bottom_closed").addClass("bottom_open");
                     } else {
                         dataframehoogte = 0;
-                        $j("#informatiebalk").css("display", "none");
+                        if(infobalkbottom !== null && infobalkbottom > 1) $j("#informatiebalk").css("display", "none");
                         $j("#dataframediv").css("display", "none");
-                        $j("#onderbalkControl").removeClass("bottom_open");
-                        $j("#onderbalkControl").addClass("bottom_closed");
-                        panelBelowCollapsed = true;
+                        $j("#onderbalkControl").removeClass("bottom_open").addClass("bottom_closed");
                     }
                     $j("#dataframediv").animate({ height: dataframehoogte }, 400);
-                    $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 5)) }, 400);
-                    $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
-                    if(ieVersion <= 6 && ieVersion != -1) {
-                        var divheighs = contentheight - 29 - (dataframehoogte==0?0:(dataframehoogte + 29));
-                        document.getElementById('leftcontent').style.height = divheighs + 'px';
-                        document.getElementById('tab_container').style.height = divheighs - 20 + 'px';
-                        document.getElementById('mapcontent').style.height = divheighs + 'px';
-                    } else {
-                        document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-                        document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
-                        document.getElementById('mapcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte + 29)) + 'px';
+                    if(infobalkbottom !== null && infobalkbottom > 1) {
+                        $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 5)) }, 400);
+                        $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
                     }
-                    resizeTabContents();
+                    document.getElementById('leftcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte+2)) + 27 + 'px';
+                    document.getElementById('tab_container').style.bottom = (dataframehoogte==0?0:(dataframehoogte+2)) + 27 + 'px';
+                    document.getElementById('mapcontent').style.bottom = (dataframehoogte==0?0:(dataframehoogte+2)) + 27 + 'px';
+                    tabController.doResize();
+                    leftTabController.doResize();
+                    panelBelowCollapsed = !panelBelowCollapsed;
                 }
             }
             if(dir == 'right') {
+                var panelbreedte = panelRightCollapsed ? tabWidth : 0;
                 if(panelRightCollapsed) {
-                    var panelbreedte = tabWidth;
-                    document.getElementById('tab_container').style.display = 'block';
-                    document.getElementById('tabjes').style.display = 'block';
-                    document.getElementById('rightControl').className = 'right_open';
-                    panelRightCollapsed = false;
+                    $j('#tab_container, #tabjes, #tabjes ul').show();
+                    $j('#rightControl').removeClass('right_closed').addClass('right_open');
                 } else {
-                    var panelbreedte = 0;
-                    document.getElementById('tab_container').style.display = 'none';
-                    document.getElementById('tabjes').style.display = 'none';
-                    document.getElementById('rightControl').className = 'right_closed';
-                    panelRightCollapsed = true;
+                    $j('#tab_container, #tabjes, #tabjes ul').hide();
+                    $j('#rightControl').removeClass('right_open').addClass('right_closed');
                 }
+                panelRightCollapsed = !panelRightCollapsed;
                 $j("#tab_container").animate({ width: panelbreedte }, 400);
                 // $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-                if(ieVersion <= 6 && ieVersion != -1) {
-                    var leftcontent_width = 0;
-                    if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
-                    document.getElementById('mapcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((leftcontent_width==0?0:leftcontent_width+6))) + 'px';
-                } else {
-                    $j("#tabjes").animate({ width: panelbreedte }, 200);
-                    document.getElementById('mapcontent').style.right = (panelbreedte==0?0:(panelbreedte + 6)) + 'px';
-                }
+                $j("#tabjes").animate({ width: panelbreedte }, 200);
+                document.getElementById('mapcontent').style.right = (panelbreedte==0?0:(panelbreedte + 3)) + 23 + 'px';
             }
             if(dir == 'left') {
+                var panelbreedte = panelLeftCollapsed ? leftTabWidth : 0;
                 if(panelLeftCollapsed) {
-                    var panelbreedte = 288;
-                    document.getElementById('leftcontent').style.display = 'block';
-                    document.getElementById('leftControl').className = 'left_open';
-                    panelLeftCollapsed = false;
+                    $j('#leftcontent, #leftcontenttabjes, #leftcontenttabjes ul').show();
+                    $j('#leftControl').removeClass('left_closed').addClass('left_open');
                 } else {
-                    var panelbreedte = 0;
-                    document.getElementById('leftcontent').style.display = 'none';
-                    document.getElementById('leftControl').className = 'left_closed';
-                    panelLeftCollapsed = true;
+                    $j('#leftcontent, #leftcontenttabjes, #leftcontenttabjes ul').hide();
+                    $j('#leftControl').removeClass('left_open').addClass('left_closed');
                 }
                 $j("#leftcontent").animate({ width: panelbreedte }, 400);
                 // $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-                if(ieVersion <= 6 && ieVersion != -1) {
-                    var tab_container_width = 0;
-                    if(tab_container) tab_container_width = tab_container.offsetWidth;
-                    document.getElementById('mapcontent').style.width = (contentwidth - ((panelbreedte==0?0:panelbreedte+6)) - ((tab_container_width==0?0:tab_container_width+6))) + 'px';
-                    document.getElementById('mapcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
-                } else {
-                    document.getElementById('mapcontent').style.left = (panelbreedte==0?3:(panelbreedte + 6)) + 'px';
-                }
+                document.getElementById('mapcontent').style.left = (panelbreedte==0?0:(panelbreedte + 3)) + 23 + 'px';
+                panelLeftCollapsed = !panelLeftCollapsed;
             }
         }
         var expandNodes=null;
@@ -1035,7 +953,8 @@
         }
 
         /* Laadscherm na 60 seconden zelf weghalen
-         * Hij zou weg moeten gaan in onAllLayersFinishedLoading in viewer.js */
+         * Hij zou weg moeten gaan in onAllLayersFinishedLoading in viewer.js
+         */
         if (waitUntillFullyLoaded) {
             var hideScreen = setTimeout("hideLoadingScreen();", 60000);
         }

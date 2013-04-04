@@ -29,6 +29,28 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:set var="kaartid" value="${param['id']}"/>
     <c:set var="appCode" value="${param['appCode']}"/>
 
+    <c:if test="${pageContext.request.remoteUser != null}">
+        <script type="text/javascript">
+            function logout() {
+                var kburl = '${kburl}';
+                var logoutLocation = '/kaartenbalie/logout.do'
+                if (kburl!='') {
+                    var pos = kburl.lastIndexOf("services");
+                    if (pos>=0) {
+                        logoutLocation = kburl.substring(0,pos) + "logout.do";
+                    }
+                }
+                lof = document.getElementById('logoutframe');
+                lof.src=logoutLocation;
+                location.href = '<html:rewrite page="/logout.do" module=""/>';
+            };
+        </script>
+        <div id="logoutvak" style="display: none;">
+            <iframe src="" id="logoutframe" name="logoutframe"></iframe>
+        </div>
+        <a href="#" class="menulink" onclick="javascript:logout();"><fmt:message key="commons.userandlogout.uitloggen"/></a>
+    </c:if>
+    
     <c:set var="stijlklasse" value="menulink" />
     <%--
     <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" target="_new" styleClass="${stijlklasse}" module="">

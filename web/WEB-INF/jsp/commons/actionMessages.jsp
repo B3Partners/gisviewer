@@ -34,4 +34,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </html:messages>
 </div> 
-
+<div style="clear: both;"></div>

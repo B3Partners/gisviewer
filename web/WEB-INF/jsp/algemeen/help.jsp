@@ -92,3 +92,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </table>
     </c:if>
 </div>
+<hr>
+<div>
+    <div style="float: right;">
+        <address>B3Partners: Zonnebaan 12C, 3542 EC, Utrecht</address>
+    </div>
+</div>

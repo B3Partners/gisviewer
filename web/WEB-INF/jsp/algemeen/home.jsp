@@ -13,206 +13,86 @@
     // -->
 </script>
 
-<tiles:insert definition="actionMessages"/>
+<!-- tiles:insert definition="actionMessages"/ -->
 <!-- Loop door tekstblokken heen -->
 
-<div id="carouselcontainerblock"></div>
+<h1><img src="<html:rewrite page="/images/solutionparc-design/pageicons/home.png"/>" alt="" /> GeoMidOffice via de Cloud: kaarten delen, objecten beheren</h1>
+    
+<p>
+    SolutionsParc brengt gemeentelijke informatie samen in een standaard gegevensmagazijn. 
+    Alle basisregistraties, de meeste kernregistraties en andere nuttige thema's vinden hun 
+    plaats in het magazijn. Koppelvlakken zijn beschikbaar om de informatie te laden. 
+    Services maken die informatie beschikbaar aan bijbehorende webapplicaties met kaarten 
+    en/of beheerfaciliteiten. Gebruikers zijn medewerkers, burgers en omliggende overheids- 
+    of adviesorganisaties. SolutionsParc biedt dit alles volledig beveiligd als Cloud-oplossing.
+</p>
 
-<c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
-    <div class="content_block item">
-        <div class="content">
-            <div class="content_title"><c:out value="${tb.titel}"/>
-                <c:if test="${tb.inlogIcon}">
-                    <html:image align="top" page="/images/icons/inlog_needed.png" title="Inlog is vereist voor deze applicatie"/>
-                </c:if>
-            </div>
-
-            <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
-            <c:if test="${tb.toonUrl}">
-                <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
-            </c:if>
-
-            <!-- Anders gewoon de tekst tonen van tekstblok -->
-            <c:if test="${!tb.toonUrl}">
-            <div class="inleiding_body">
-                ${tb.tekst}
-
-                <c:if test="${!empty tb.url}">
-                Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
-                </c:if>
-
-                <c:if test="${tb.toonUrl}">
-                    <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
-                </c:if>
-            </div>
-            </c:if>
+<div class="solutionparc_homeblocks">
+    <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
+        <div class="blockwrapper">
+            ${tb.tekst}
         </div>
-    </div>
-</c:forEach>
+    </c:forEach>
 
-<!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard
-blokken -->
-<c:if test="${empty tekstBlokken}">
-
-    <div class="content_block item">
-        <div class="content_title"><fmt:message key="algemeen.home.titel"/></div>
-
-        <div class="inleiding_body">
-            <p>
-                De B3P GIS Suite maakt informatie van overheden integraal en snel via
-                een standaard webbrowser toegankelijk. Interne medewerkers, burgers,
-                ketenpartners en externe organisaties kunnen eenvoudig toegang
-                verkrijgen tot informatie. De B3P GIS Suite is daarom bij uitstek
-                inzetbaar als organisatiebreed webGIS.
-            </p>
-
-            <table>
-                <tr>
-                    <td>E-mail:</td>
-                    <td><a href="mailto:info@b3partners.nl">info@b3partners.nl</a></td>
-                </tr>
-                <tr>
-                    <td>Web:</td>
-                    <td><a href="http://www.b3partners.nl" target="_new">www.b3partners.nl</a></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="content_block item">
-        <div class="content_title">Luchtfoto Heuvelrug</div>
-
-        <div class="inleiding_body">
-            <html:img page="/images/examples/luchtfoto_heuvelrug.png" styleClass="example_image"/>
-            <p>Luchtfoto van de Utrechtse heuvelrug</p>
-        </div>
-    </div>
-
-    <div class="content_block item">
-        <div class="content_title">Nieuwe Kaart Nederland</div>
-
-        <div class="inleiding_body">
-            <html:img page="/images/examples/nkn_utrecht.png" styleClass="example_image"/>
-            <p>Nieuwe kaart van Nederland in de omgeving van Utrecht</p>
-        </div>
-    </div>
-
-    <div class="content_block item">
-        <div class="content_title">OpenStreetMap</div>
-
-        <div class="inleiding_body">
-            <html:img page="/images/examples/osm_wijken_utrecht.png" styleClass="example_image"/>
-            <p>OpenStreetMap als achtergrondkaart met daarop de cbs wijkindeling in Utrecht</p>
-        </div>
-    </div>
-            
-    <div class="content_block item">
-        <div class="content_title">Bestemmingsplannen</div>
-
-        <div class="inleiding_body">
-            <html:img page="/images/examples/roo_osm.png" styleClass="example_image"/>
-            <p>Bestemmingsplannen van RO-Online op een achtergrond van OpenStreetMap</p>
-        </div>
-    </div>
-</c:if>
-
-<div class="content_block" id="loginblock">
-    <c:choose>
-        <c:when test="${not empty themalist || not empty clusterlist}">
-            <div class="content_title"><fmt:message key="algemeen.home.themas.titel"/></div>
-
-            <div class="content_body">
-
-            <ol>
-                <c:if test="${not empty clusterlist}">
-                    <c:forEach var="cluster" items="${clusterlist}">
-                        <c:set var="found" value="true"/>
-                        <li>
-                            <html:link page="/viewer.do?clusterId=${cluster.id}&code=${kbcode}">${cluster.naam}</html:link>
-                        </li>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${not empty themalist}">
-                    <c:forEach var="thema" items="${themalist}">
-                        <c:if test="${thema.analyse_thema}">
-                            <c:set var="found" value="true"/>
-                            <li>
-                                <html:link page="/viewer.do?id=${thema.id}&code=${kbcode}">${thema.naam}</html:link>
-                            </li>
-                        </c:if>
-                    </c:forEach>
-                </c:if>
-                <c:if test="${not found}">
-                    <li><fmt:message key="algemeen.home.themas.geengevonden"/></li>
-                    <li><fmt:message key="algemeen.home.themas.linknaarviewer"/> <html:link page="/viewer.do"><fmt:message key="algemeen.home.themas.viewer"/></html:link>.</li>
-                </c:if>
-            </ol>
-
-            </div>
-        </c:when>
-
-        <c:when test="${pageContext.request.remoteUser == null}">
-
-        <div class="content_title">Inloggen</div>
-
-        <div class="content_body">
-            
-            <form id="loginForm" action="j_security_check" method="POST">
-            <table>
-                <tr>
-                    <td><fmt:message key="algemeen.login.gebruikersnaam"/></td>
-                    <td><input class="inputfield" type="text" name="j_username" size="36"></td>
-                </tr>
-                <tr>
-                    <td><fmt:message key="algemeen.login.wachtwoord"/></td>
-                    <td><input class="inputfield" type="password" name="j_password" size="36"></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><fmt:message key="algemeen.login.of"/></td>
-                </tr>
-                <tr>
-                    <td><fmt:message key="algemeen.login.code"/></td>
-                    <td><input class="inputfield" type="text" name="j_code" size="36"></td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td><input class="inlogbutton" type="Submit" value="<fmt:message key="algemeen.login.login"/>"></td>
-                </tr>
-            </table>
-            </form>
-
-            <script type="text/javascript">
-                <!--
-                document.forms.loginForm.j_username.focus();
-                // -->
-            </script>
-            
-        </div>
-
-        </c:when>
-        <c:otherwise>
-            <div class="content_title"><fmt:message key="algemeen.home.themas.titel"/></div>
-
-            <div class="content_body">
-                <p><fmt:message key="algemeen.home.themas.geengevondenvoorinlog"/></p>
-                
-                <html:link page="/indexlist.do" module="">
-                    <fmt:message key="algemeen.home.themas.opnieuwophalen"/>
+    <!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard blokken -->
+    <c:if test="${empty tekstBlokken}">
+        <div class="blockwrapper">
+            <div class="home_tegel" id="maatschappelijkevoorzieningen">
+                <html:link page="/maatschappelijkevoorzieningen.do" title="Maatschappelijke voorzieningen">
+                    Thema Maatschappelijke voorzieningen
                 </html:link>
             </div>
-        </c:otherwise>
-    </c:choose>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="actuelezaken">
+                <html:link page="/actuelezaken.do" title="Actuele zaken">
+                    Thema Actuele zaken
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="wijkgerichtwerken">
+                <html:link page="/wijkgerichtwerken.do" title="Wijkgericht werken">
+                    Thema Wijkgericht werken
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="beheeropenbareruimte">
+                <html:link page="/beheeropenbareruimte.do" title="Beheer openbare ruimte">
+                    Thema Beheer openbare ruimte
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="natuurmilieucultuurhistorie">
+                <html:link page="/natuurmilieucultuurhistorie.do" title="Natuur, Milieu, Cultuur en Historie">
+                    Thema Natuur, Milieu, Cultuur en Historie 2
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="gemeenteopdekaart">
+                <html:link page="/gemeenteopdekaart.do" title="Gemeente op de kaart">
+                    Thema Gemeente op de kaart
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="logintegel">
+                <html:link page="/login.do" title="Inloggen">
+                    Inloggen
+                </html:link>
+            </div>
+        </div>
+        <div class="blockwrapper">
+            <div class="home_tegel" id="lokatietegel">
+                <a href="#" title="Bepaal uw positie">
+                    Bepaal uw positie
+                </a>
+            </div>
+        </div>
+     </c:if>
+ </div>
 
-</div>
-
-<c:if test="${pageContext.request.remoteUser != null}">
-    <div class="uitloggen">
-        <p><tiles:insert name="loginblock"/></p>
-    </div>
-</c:if>
-
-<div style="clear: both; padding-bottom: 25px;"></div>
-
-<!--
-<script type="text/javascript" src="<html:rewrite page='/scripts/homecarousel.js' module=''/>"></script>
--->
+<script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>

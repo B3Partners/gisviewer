@@ -39,12 +39,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <div id="content_normal">
                 <div id="content">
                     <tiles:insert attribute="content" />
-                    <hr>
-                    <div id="footer">
-                        <tiles:insert attribute="footer" />
-                    </div>
                 </div>
             </div>
+        </div>
+        <div id="footer">
+            <tiles:insert attribute="footer" />
         </div>
         <tiles:insert definition="googleAnalytics"/>
     </body>

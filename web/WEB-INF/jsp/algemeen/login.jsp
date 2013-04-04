@@ -67,6 +67,9 @@
 </form>
 </div>
 
+<div style="clear: both;"></div>
+
 <script type="text/javascript">    
     document.forms.loginForm.j_username.focus();   
 </script>
+

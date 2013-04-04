@@ -30,11 +30,4 @@
 </div>
 
 <div style="clear: both;"></div>
-
-<hr>
-<div>
-    <div style="float: right;">
-        <address>B3Partners: Zonnebaan 12C, 3542 EC, Utrecht</address>
-    </div>
-</div>
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>

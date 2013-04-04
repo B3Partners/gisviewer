@@ -36,7 +36,7 @@
       <form-login-config>
           <form-login-page>/login.do</form-login-page>
           <form-error-page>/loginError.do</form-error-page>
-          <form-default-page>/viewer.do</form-default-page>
+          <form-default-page>/indexlist.do</form-default-page>
           <form-logout-page>/logout.do</form-logout-page>
       </form-login-config>
       <cookie-auth-token-config>

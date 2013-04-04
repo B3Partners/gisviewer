@@ -73,9 +73,3 @@
     document.forms.loginForm.j_username.focus();   
 </script>
 
-<hr>
-<div>
-    <div style="float: right;">
-        <address>B3Partners: Zonnebaan 12C, 3542 EC, Utrecht</address>
-    </div>
-</div>

@@ -16,10 +16,15 @@
 <!-- tiles:insert definition="actionMessages"/ -->
 <!-- Loop door tekstblokken heen -->
 
-<h1><img src="<html:rewrite page="/images/solutionparc-design/pageicons/home.png"/>" alt="" /> Welkom bij SolutionsParc</h1>
+<h1><img src="<html:rewrite page="/images/solutionparc-design/pageicons/home.png"/>" alt="" /> GeoMidOffice via de Cloud: kaarten delen, objecten beheren</h1>
     
 <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis id sapien sapien. Quisque tincidunt elementum bibendum. Aliquam erat volutpat. Etiam facilisis commodo nulla id feugiat. Sed enim dui, lobortis non elementum eget, dictum facilisis diam. Aliquam velit urna, sollicitudin nec tempor vel, congue id velit. Curabitur id ligula nisi. Duis eget lacus et arcu blandit vestibulum facilisis nec quam. Proin tempor accumsan erat in posuere. In id velit urna. Donec ligula elit, pharetra sed consequat ac, feugiat ut mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam bibendum elit eu sem vehicula rhoncus. Duis pretium sem et dolor tempus molestie. Duis vulputate ligula mauris. 
+    SolutionsParc brengt gemeentelijke informatie samen in een standaard gegevensmagazijn. 
+    Alle basisregistraties, de meeste kernregistraties en andere nuttige thema's vinden hun 
+    plaats in het magazijn. Koppelvlakken zijn beschikbaar om de informatie te laden. 
+    Services maken die informatie beschikbaar aan bijbehorende webapplicaties met kaarten 
+    en/of beheerfaciliteiten. Gebruikers zijn medewerkers, burgers en omliggende overheids- 
+    of adviesorganisaties. SolutionsParc biedt dit alles volledig beveiligd als Cloud-oplossing.
 </p>
 
 <div class="solutionparc_homeblocks">
@@ -62,7 +67,7 @@
         <div class="blockwrapper">
             <div class="home_tegel" id="natuurmilieucultuurhistorie">
                 <html:link page="/natuurmilieucultuurhistorie.do" title="Natuur, Milieu, Cultuur en Historie">
-                    Thema Natuur, Milieu, Cultuur en Historie
+                    Thema Natuur, Milieu, Cultuur en Historie 2
                 </html:link>
             </div>
         </div>
@@ -87,13 +92,7 @@
                 </a>
             </div>
         </div>
-    </c:if>
-</div>
+     </c:if>
+ </div>
 
-<hr>
-<div>
-    <div style="float: right;">
-        <address>B3Partners: Zonnebaan 12C, 3542 EC, Utrecht</address>
-    </div>
-</div>
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>

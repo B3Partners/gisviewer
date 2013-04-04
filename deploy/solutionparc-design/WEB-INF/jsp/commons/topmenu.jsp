@@ -19,15 +19,16 @@
         <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" />
     </html:link>
 
+    <%-- niet direct naar viewer    
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'viewer.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-
     <c:if test="${pageContext.request.remoteUser != null}">
         <html:link page="/viewer.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
     </c:if>
-
+    --%>
+    
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
         <c:set var="stijlklasse" value="activemenulink" />

@@ -196,10 +196,10 @@
         </action>
         
         <action path="/a11yViewer" type="nl.b3p.gis.viewer.A11YViewerAction">
-            <forward name="list" path="/WEB-INF/jsp/viewer/a11y/a11y.jsp"/>
-            <forward name="search" path="/WEB-INF/jsp/viewer/a11y/a11ySearch.jsp"/>
-            <forward name="results" path="/WEB-INF/jsp/viewer/a11y/a11yResults.jsp"/>
-            <forward name="startLocation" path="/WEB-INF/jsp/viewer/a11y/a11yStartLocation.jsp"/>
+            <forward name="list" path="finderslist"/>
+            <forward name="search" path="findersform"/>
+            <forward name="results" path="findersresults"/>
+            <forward name="startLocation" path="startlocation"/>
         </action>
         
         <action path="/viewer" type="nl.b3p.gis.viewer.ViewerAction">

@@ -5,38 +5,60 @@
 "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
 
 <tiles-definitions>
-    <definition name="template" path="/WEB-INF/jsp/templates/template.jsp"/>
+    <definition name="template" path="/WEB-INF/jsp/templates/template.jsp">
+        <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
+        <put name="footer" value="/WEB-INF/jsp/commons/footer.jsp"/>
+     </definition>
     <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp" />
     <definition name="templateSimpleViewer" path="/WEB-INF/jsp/templates/templateSimpleViewer.jsp" />
     <definition name="templatePrint" path="/WEB-INF/jsp/templates/templatePrint.jsp"/>
+    <definition name="templateA11y" path="/WEB-INF/jsp/templates/templateA11y.jsp">
+        <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
+        <put name="footer" value="/WEB-INF/jsp/commons/footer.jsp"/>
+     </definition>
     <!-- algemeen -->
     <definition name="actionMessages" path="/WEB-INF/jsp/commons/actionMessages.jsp"/>
     <definition name="specialMessages" path="/WEB-INF/jsp/commons/specialMessages.jsp"/>
-    <definition name="algemeen" extends="template">
-        <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
-    </definition>
-    <definition name="login" extends="algemeen">
+
+    <definition name="login" extends="template">
         <put name="title" value="Inlogscherm" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/login.jsp"/>
     </definition>
-     <definition name="reset" extends="algemeen">
+     <definition name="reset" extends="template">
         <put name="title" value="Reset" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/reset.jsp"/>
     </definition>
-    <definition name="loginError" extends="algemeen">
+    <definition name="loginError" extends="template">
         <put name="title" value="Fout bij inloggen" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/loginError.jsp"/>
     </definition>
-    <definition name="help" extends="algemeen">
+    <definition name="help" extends="template">
         <put name="title" value="Help" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
     </definition>
-    <definition name="home" extends="algemeen">
+    <definition name="home" extends="template">
         <put name="title" value="Home" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>
     </definition>
+    <!-- A11y defs -->
+    <definition name="finderslist" extends="templateA11y">
+        <put name="title" value="Lijst met zoekers" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/a11y/a11y.jsp"/>
+    </definition>
+   <definition name="findersform" extends="templateA11y">
+        <put name="title" value="Zoekerformulier" type="string"/>
+         <put name="content" value="/WEB-INF/jsp/a11y/a11ySearch.jsp"/>
+    </definition>
+  <definition name="findersresults" extends="templateA11y">
+        <put name="title" value="Resultaten" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/a11y/a11yResults.jsp"/>
+    </definition>
+  <definition name="startlocation" extends="templateA11y">
+        <put name="title" value="Startlocatie" type="string"/>
+         <put name="content" value="/WEB-INF/jsp/a11y/a11yStartLocation.jsp"/>
+    </definition>
     <!-- SolParc defs -->
-    <definition name="vervolgpagina" extends="algemeen">
+    <definition name="vervolgpagina" extends="template">
         <put name="content" value="/WEB-INF/jsp/algemeen/vervolgpagina.jsp"/>
     </definition>
     <definition name="maatschappelijkevoorzieningen" extends="vervolgpagina">

@@ -121,4 +121,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     </form>
 
+    <p>
+        <html:link page="/a11yViewer.do?appCode=${appCode}" styleClass="searchLink" module="">
+            Anders zoeken
+        </html:link>
+    </p>
+
 </div>

@@ -27,72 +27,97 @@
     of adviesorganisaties. SolutionsParc biedt dit alles volledig beveiligd als Cloud-oplossing.
 </p>
 
-<div class="solutionparc_homeblocks">
+<div class="tegels">
     <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
-        <div class="blockwrapper">
-            ${tb.tekst}
+        <div class="blockwrapper" title="${tb.titel}">
+            <c:set var="style" value="" />
+            <c:if test="${!empty tb.kleur}">
+                <c:set var="style" value="${style}background-color:${tb.kleur};" />
+            </c:if>
+            <%--
+            Als hoogte is toegevoegd via gisviewerconfig deze comment weghalen
+            <c:if test="${!empty tb.hoogte}">
+                <c:set var="style" value="${style}height:${tb.hoogte};" />
+            </c:if>
+            --%>
+            <c:if test="${!empty style}">
+                <c:set var="style" value=" style=\"${style}\"" />
+            </c:if>
+            <div class="tegel"${style}>
+                <c:choose>
+                    <c:when test="${tb.toonUrl}">
+                        <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
+                    </c:when>
+                    <c:otherwise>
+                        ${tb.tekst}
+                        <c:if test="${!empty tb.url}">
+                            <a href="${tb.url}" target="_new">${tb.url}</a>
+                        </c:if>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </c:forEach>
 
     <!-- Als er geen tekstblokken zijn voor de homepagina toon dan de standaard blokken -->
     <c:if test="${empty tekstBlokken}">
         <div class="blockwrapper">
-            <div class="home_tegel" id="maatschappelijkevoorzieningen">
-                <html:link page="/maatschappelijkevoorzieningen.do" title="Maatschappelijke voorzieningen">
+            <div class="tegel" style="background-color: #F9811E;">
+                <html:link page="/maatschappelijkevoorzieningen.do" title="Maatschappelijke voorzieningen" styleId="maatschappelijkevoorzieningen" styleClass="tegellink">
                     Thema Maatschappelijke voorzieningen
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="home_tegel" id="actuelezaken">
-                <html:link page="/actuelezaken.do" title="Actuele zaken">
+            <div class="tegel" style="background-color: #E4d335;">
+                <html:link page="/actuelezaken.do" title="Actuele zaken" styleId="actuelezaken" styleClass="tegellink">
                     Thema Actuele zaken
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="home_tegel" id="wijkgerichtwerken">
-                <html:link page="/wijkgerichtwerken.do" title="Wijkgericht werken">
+            <div class="tegel" style="background-color: #9151E5;">
+                <html:link page="/wijkgerichtwerken.do" title="Wijkgericht werken" styleId="wijkgerichtwerken" styleClass="tegellink">
                     Thema Wijkgericht werken
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="home_tegel" id="beheeropenbareruimte">
-                <html:link page="/beheeropenbareruimte.do" title="Beheer openbare ruimte">
+            <div class="tegel" style="background-color: #FF5050;">
+                <html:link page="/beheeropenbareruimte.do" title="Beheer openbare ruimte" styleId="beheeropenbareruimte" styleClass="tegellink">
                     Thema Beheer openbare ruimte
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="home_tegel" id="natuurmilieucultuurhistorie">
-                <html:link page="/natuurmilieucultuurhistorie.do" title="Natuur, Milieu, Cultuur en Historie">
+            <div class="tegel" style="background-color: #96CA2D;">
+                <html:link page="/natuurmilieucultuurhistorie.do" title="Natuur, Milieu, Cultuur en Historie" styleId="natuurmilieucultuurhistorie" styleClass="tegellink">
                     Thema Natuur, Milieu, Cultuur en Historie 2
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="home_tegel" id="gemeenteopdekaart">
-                <html:link page="/gemeenteopdekaart.do" title="Gemeente op de kaart">
+            <div class="tegel" style="background-color: #00BDFF;">
+                <html:link page="/gemeenteopdekaart.do" title="Gemeente op de kaart" styleId="gemeenteopdekaart" styleClass="tegellink">
                     Thema Gemeente op de kaart
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="home_tegel" id="logintegel">
-                <html:link page="/login.do" title="Inloggen">
+            <div class="tegel" style="background-color: #515151; height: 23px;">
+                <html:link page="/login.do" title="Inloggen" styleId="logintegel" styleClass="tegellink">
                     Inloggen
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="home_tegel" id="lokatietegel">
-                <a href="#" title="Bepaal uw positie">
+            <div class="tegel" style="background-color: #515151; height: 23px;">
+                <html:link page="/" title="Bepaal uw positie" styleId="lokatietegel" styleClass="tegellink">
                     Bepaal uw positie
-                </a>
+                </html:link>
             </div>
         </div>
-     </c:if>
+    </c:if>
  </div>
 
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>

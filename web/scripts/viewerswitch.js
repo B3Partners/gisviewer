@@ -22,7 +22,7 @@
             $('a').not('.switcher').each(function() {
                 var href = $(this).attr('href');
                 if(useviewer) {
-                    if(!href.match(/forceViewer/)) {
+                    if(!href.match(/forceViewer/) && href !== '#') {
                         href = addToQueryString(href, 'forceViewer', 'true');
                     }
                 } else {
@@ -70,7 +70,7 @@
             changeViewertype($(this).attr('id'));
             return false;
         });
-        viewerswitch.insertBefore('.solutionparc_homeblocks, .solutionparc_vervolgblocks');
+        viewerswitch.insertBefore('.tegels');
         changeViewertype(cookievalue);
     });
 }(jQuery));

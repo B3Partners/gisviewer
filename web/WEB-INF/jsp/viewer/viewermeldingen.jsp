@@ -110,15 +110,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
                     <div class="meldinglabel"><fmt:message key="melding.naammelder"/></div>
                     <div class="meldingwaarde">
-                        <html:text property="naamMelder" size="40" maxlength="250"/>
+                        <html:text property="naamMelder" size="30" maxlength="250"/>
                     </div>
                     <div class="meldinglabel"><fmt:message key="melding.adresmelder"/></div>
                     <div class="meldingwaarde">
-                        <html:text property="adresMelder" size="40" maxlength="250"/>
+                        <html:text property="adresMelder" size="30" maxlength="250"/>
                     </div>
                     <div class="meldinglabel"><fmt:message key="melding.emailmelder"/></div>
                     <div class="meldingwaarde">
-                        <html:text property="emailMelder" size="40" maxlength="250"/>
+                        <html:text property="emailMelder" size="30" maxlength="250"/>
                     </div>
                     <div class="meldinglabel"><fmt:message key="melding.type"/></div>
                     <div class="meldingwaarde">
@@ -130,7 +130,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </div>
                     <div class="meldinglabel"><fmt:message key="melding.tekst"/></div>
                     <div class="meldingwaarde">
-                        <html:textarea property="meldingTekst" cols="40" rows="10"/>
+                        <html:textarea property="meldingTekst" cols="30" rows="10"/>
                     </div>
                     <html:hidden property="meldingStatus"/>
                     <html:hidden property="meldingCommentaar"/>

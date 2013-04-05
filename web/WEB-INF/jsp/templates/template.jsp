@@ -4,7 +4,7 @@ B3P Gisviewer is an extension to Flamingo MapComponents making
 it a complete webbased GIS viewer and configuration tool that
 works in cooperation with B3P Kaartenbalie.
 
-Copyright 2006, 2007, 2008 B3Partners BV
+Copyright 2006 - 2013 B3Partners BV
 
 This file is part of B3P Gisviewer.
 
@@ -33,7 +33,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
         
-        <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
+        <title><tiles:insert name='title'/> - GIS Viewer</title>
         <link href="<html:rewrite page='/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>

@@ -16,16 +16,10 @@
 <!-- tiles:insert definition="actionMessages"/ -->
 <!-- Loop door tekstblokken heen -->
 
-<h1><img src="<html:rewrite page="/images/solutionparc-design/pageicons/home.png"/>" alt="" /> GeoMidOffice via de Cloud: kaarten delen, objecten beheren</h1>
+<h1><img src="<html:rewrite page="/images/solutionparc-design/pageicons/home.png"/>" alt="" /> <fmt:message key="algemeen.home.introductie.titel"/></h1>
     
-<p>
-    SolutionsParc brengt gemeentelijke informatie samen in een standaard gegevensmagazijn. 
-    Alle basisregistraties, de meeste kernregistraties en andere nuttige thema's vinden hun 
-    plaats in het magazijn. Koppelvlakken zijn beschikbaar om de informatie te laden. 
-    Services maken die informatie beschikbaar aan bijbehorende webapplicaties met kaarten 
-    en/of beheerfaciliteiten. Gebruikers zijn medewerkers, burgers en omliggende overheids- 
-    of adviesorganisaties. SolutionsParc biedt dit alles volledig beveiligd als Cloud-oplossing.
-</p>
+<fmt:message key="algemeen.home.introductie.content1"/>
+<fmt:message key="algemeen.home.introductie.content2"/>
 
 <div class="tegels">
     <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
@@ -92,7 +86,7 @@
         <div class="blockwrapper">
             <div class="tegel" style="background-color: #96CA2D;">
                 <html:link page="/natuurmilieucultuurhistorie.do" title="Natuur, Milieu, Cultuur en Historie" styleId="natuurmilieucultuurhistorie" styleClass="tegellink">
-                    Thema Natuur, Milieu, Cultuur en Historie 2
+                    Thema Natuur, Milieu, Cultuur en Historie
                 </html:link>
             </div>
         </div>

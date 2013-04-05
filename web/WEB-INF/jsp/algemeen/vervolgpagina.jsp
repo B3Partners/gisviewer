@@ -10,7 +10,7 @@
                 <c:set var="style" value="${style}background-color:${tb.kleur};" />
             </c:if>
             
-            <c:if test="${!empty tb.hoogte}">
+            <c:if test="${!empty tb.hoogte && tb.hoogte != 0}">
                 <c:set var="style" value="${style}height:${tb.hoogte}px;" />
             </c:if>
             

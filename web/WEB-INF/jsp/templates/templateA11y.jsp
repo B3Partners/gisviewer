@@ -31,7 +31,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <link href="styles/gisviewer_a11y.css" rel="stylesheet" type="text/css">
 
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-        <title>B3P GIS Suite | <tiles:insert attribute="title" /></title>
+        <title>GIS Viewer | <tiles:insert attribute="title" /></title>
     </head>
     <body class="homebody">
         <div id="wrapper">

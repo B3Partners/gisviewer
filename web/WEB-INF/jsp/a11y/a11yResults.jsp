@@ -55,7 +55,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:set var="resultNr" value="${startIndex}" />
 
     <c:if test="${count > 1}" >
-        <p><fmt:message key="a11y.results.1"/> ${count} <fmt:message key="a11y.results.2"/> ${startIndex+1} <fmt:message key="a11y.results.3"/> ${total} <fmt:message key="a11y.results.numresults4"/></p>
+        <p><fmt:message key="a11y.results.numresults1"/> ${count} <fmt:message key="a11y.results.numresults2"/> ${startIndex+1} <fmt:message key="a11y.results.numresults3"/> ${total} <fmt:message key="a11y.results.numresults4"/></p>
     </c:if>
 
     <p>
@@ -76,7 +76,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:forEach var="result" items="${results}" begin="0" end="0">
             <div class="small">Nr.</div>
             <c:forEach var="attr" items="${result.attributen}">
-                <c:if test="${attr.type == 2 || attr.type == 120}" >
+                <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
                     <div>
                         ${attr.label}
                     </div>
@@ -91,35 +91,42 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:forEach var="result" items="${results}" varStatus="status">  
         <div class="div-table-row cf">
             <form action="a11yViewer.do" method="POST">
-                <c:if test="${startLocation == true}">
-                    <input type="hidden" name="startLocation" value="t">
-                </c:if>
-                <c:if test="${startLocation == false}">
-                    <input type="hidden" name="search" value="t">
-                </c:if>                        
+                <c:choose>
+                    <c:when test="${startLocation == true}">
+                        <input type="hidden" name="startLocation" value="t">
+                    </c:when>
+                    <c:otherwise>
+                        <input type="hidden" name="search" value="t">
+                    </c:otherwise>
+                </c:choose>
 
                 <input type="hidden" name="appCode" value="${appCode}">
 
-                <c:if test="${nextStep == true}">
+                <c:choose>
+                    <c:when test="${nextStep == true}">
                     <input type="hidden" name="searchConfigId" value="${nextSearchConfigId}">
-                </c:if>
-
-                <c:if test="${nextStep == false}">
-                    <input type="hidden" name="searchConfigId" value="${searchConfigId}">
-                </c:if>
+                    </c:when>
+                    <c:otherwise>
+                     <input type="hidden" name="searchConfigId" value="${searchConfigId}">
+                   </c:otherwise>
+                </c:choose>
 
                 <div class="small">${status.count + resultNr}</div>
 
                 <c:forEach var="attr" items="${result.attributen}">
-                    <c:if test="${attr.type == 2 || attr.type == 120}">
-                        <div>${attr.waarde}</div>
-                    </c:if>
-                    <c:if test="${attr.type == 33}">
-                        <input type="hidden" name="startGeom" value="${attr.waarde}">
-                    </c:if>
-                    <c:if test="${attr.type != 33}">
-                        <input type="hidden" name="${attr.label}" value="${attr.waarde}">
-                    </c:if>
+                    <c:choose>
+                        <c:when test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
+                            <div>
+                                ${attr.waarde}
+                            </div>
+                        </c:when>
+                        <c:when test="${attr.type == 33}">
+                            <input type="hidden" name="startGeom" value="${attr.waarde}">
+                        </c:when>
+                        <c:otherwise>
+                            <input type="hidden" name="${attr.label}" value="${attr.waarde}">
+                        </c:otherwise>
+                     </c:choose>
                 </c:forEach>
 
                 <c:if test="${nextStep == true and startLocation == false}">
@@ -142,7 +149,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:set var="resultaatUitleg" value="false" />
     <c:forEach var="veld" items="${results}">
         <c:forEach var="attr" items="${result.attributen}">
-            <c:if test="${(attr.type == 2 || attr.type == 120) && !empty attr.omschrijving}" >
+            <c:if test="${(attr.type == -1 || attr.type == 2 || attr.type == 120) && !empty attr.omschrijving}" >
                 <c:set var="resultaatUitleg" value="true" />
             </c:if>
         </c:forEach>
@@ -153,7 +160,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <p>
             <c:forEach var="result" items="${results}" begin="0" end="0">  
                 <c:forEach var="attr" items="${result.attributen}">
-                    <c:if test="${(attr.type == 2 || attr.type == 120) && !empty attr.omschrijving}" >
+                    <c:if test="${(attr.type == -1 || attr.type == 2 || attr.type == 120) && !empty attr.omschrijving}" >
                         <c:out value="${attr.label}" />: <c:out value="${attr.omschrijving}" /><br>
                     </c:if>
                 </c:forEach>

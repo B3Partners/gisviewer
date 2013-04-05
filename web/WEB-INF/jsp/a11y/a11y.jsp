@@ -35,12 +35,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:forEach var="zc" items="${zoekConfigs}">
                 <li>
                     <p>
-                        <c:out value="${zc.omschrijving}" />
-                    </p>
-                    <p>
                         <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${zc.id}" styleClass="searchLink" module="">
                             <c:out value="${zc.naam}" />
                         </html:link>
+                    </p>
+                    <p>
+                        <c:out value="${zc.omschrijving}" />
                     </p>
                 </li>
             </c:forEach>

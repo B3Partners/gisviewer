@@ -22,8 +22,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<div id="content_style" style="margin-top: -10px;">
-    <table class="kolomtabel">
+<div id="content_style">
+    <table>
         <tr>
             <td valign="top">
                 <div class="inleiding">

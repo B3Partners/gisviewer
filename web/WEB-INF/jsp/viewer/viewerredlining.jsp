@@ -36,10 +36,9 @@
             
             <table>
                 <tr>
-                    <td class="tab-row">Bestaand project</td>
+                    <td>Project</td>
                     <td>
                         <html:select styleId="projectnaam" property="projectnaam" onchange="projectChanged(this);" >
-                            <html:option value="Maak uw keuze..."/>
                             <c:forEach var="project" items="${projecten}">
                                 <html:option value="${project}"/>
                             </c:forEach>
@@ -64,11 +63,13 @@
 
             <table>
                 <tr>
-                    <td class="tab-row">Project</td>
+                <%--
+                    <td>Project</td>
                     <td><html:text styleId="new_projectnaam" property="new_projectnaam" size="20" maxlength="10"/></td>
                 </tr>
+                --%>
                 <tr>
-                    <td class="tab-row">Ontwerp</td>
+                    <td>Ontwerp</td>
                     <td>
                         <html:select styleId="ontwerp" property="ontwerp">
                             <html:option value="Constatering"/>
@@ -78,7 +79,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="tab-row">Opmerking</td>
+                    <td>Opmerking</td>
                     <td>
                         <html:textarea cols="20" rows="7" styleId="opmerking" property="opmerking"></html:textarea>
                     </td>

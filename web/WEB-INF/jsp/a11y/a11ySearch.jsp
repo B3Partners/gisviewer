@@ -81,16 +81,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:forEach var="entry" items="${dropdownResults}">
                     <c:if test="${entry.key == veld.label}">
                         <p class="cf">
-                            <c:out value="${veld.label}" />
                             <label for="${veld.label}">
-                                <select id="${veld.label}" name="${veld.label}">
-                                    <c:forEach var="results" items="${entry.value}">                        
-                                        <c:forEach var="attr" items="${results.attributen}">
-                                            <option value="${attr.waarde}">${attr.waarde}</option>
-                                        </c:forEach>
-                                    </c:forEach>
-                                </select>  
+                                <c:out value="${veld.label}" />
                             </label>
+                            <select id="${veld.label}" name="${veld.label}">
+                                <c:forEach var="results" items="${entry.value}">                        
+                                    <c:forEach var="attr" items="${results.attributen}">
+                                        <option value="${attr.waarde}">${attr.waarde}</option>
+                                    </c:forEach>
+                                </c:forEach>
+                            </select>  
                         </p>
                     </c:if>
                 </c:forEach>

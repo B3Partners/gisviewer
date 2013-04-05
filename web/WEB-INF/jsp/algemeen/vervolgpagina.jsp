@@ -9,12 +9,11 @@
             <c:if test="${!empty tb.kleur}">
                 <c:set var="style" value="${style}background-color:${tb.kleur};" />
             </c:if>
-            <%--
-            Als hoogte is toegevoegd via gisviewerconfig deze comment weghalen
+            
             <c:if test="${!empty tb.hoogte}">
                 <c:set var="style" value="${style}height:${tb.hoogte};" />
             </c:if>
-            --%>
+            
             <c:if test="${!empty style}">
                 <c:set var="style" value=" style=\"${style}\"" />
             </c:if>

@@ -27,23 +27,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <tr>
             <td valign="top">
                 <div class="inleiding">
-                    <h2>B3P GIS Suite</h2>
-                    <p>
-                        Deze B3P GIS Suite toont de mogelijkheden van de GIS viewer. 
-                        Op deze plaats vindt u later korte informatie en uitleg over
-                        het actieve thema van de kaart. Ook kunnen hier een logo en andere
-                        lay-out elementen van de opdrachtgever verwerkt worden.
-                    </p>
+                    <h2><fmt:message key="viewer.welcome.title"/></h2>
+                    <p><fmt:message key="viewer.welcome.text"/></p>
                 </div>
            </td>
             <td valign="top">               
-                <h2>Actief Thema</h2>
-                <p>
-                    Het actieve thema wordt rechts getoond in de titelbalk hierboven. U kunt
-                    informatie opvragen door met de informatie-tool in de kaart te klikken.
-                    Deze informatie verschijnt dan hier. Via zoeken of zoomen navigeert u eerst
-                    naar het juiste deel van de kaart. Voor meer hulp klik <html:link page="/help.do" module="">Help</html:link>
-                </p>
+                <h2><fmt:message key="viewer.welcome.secondtitle"/></h2>
+                <p><fmt:message key="viewer.welcome.secondtext"/></p>
            </td>
         </tr>
     </table>

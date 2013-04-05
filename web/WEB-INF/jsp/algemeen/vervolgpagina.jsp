@@ -11,7 +11,7 @@
             </c:if>
             
             <c:if test="${!empty tb.hoogte}">
-                <c:set var="style" value="${style}height:${tb.hoogte};" />
+                <c:set var="style" value="${style}height:${tb.hoogte}px;" />
             </c:if>
             
             <c:if test="${!empty style}">

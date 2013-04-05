@@ -4358,14 +4358,14 @@ function getLatLonForGoogleMaps() {
     var centerWkt = getCenterWkt();
     var minWkt = getMinWkt();
     var maxWkt = getMaxWkt();
-
+    
     JMapData.getLatLonForRDPoint(centerWkt, minWkt, maxWkt, openGoogleMaps);
 }
 
 /* Zie: http://mapki.com/wiki/Google_Map_Parameters */
 function openGoogleMaps(values) {
-    var ll = "&ll=" + values[0] + "," + values[1];
-    var spn = "&spn=" + values[2] + "," + values[3];
+    var ll = "&sll=" + values[0] + "," + values[1];
+    var spn = "&sspn=" + values[2] + "," + values[3];
     
     var options = "&hl=nl&om=0";
 

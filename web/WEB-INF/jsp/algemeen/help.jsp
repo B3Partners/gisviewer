@@ -32,7 +32,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:if>
             
             <c:if test="${!empty tb.hoogte && tb.hoogte != 0}">
-                <c:set var="style" value="${style}height:${tb.hoogte};" />
+                <c:set var="style" value="${style}height:${tb.hoogte}px;" />
             </c:if>
             
             <c:if test="${!empty style}">

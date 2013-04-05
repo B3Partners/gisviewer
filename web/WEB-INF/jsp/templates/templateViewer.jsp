@@ -70,10 +70,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <div id="loadingscreen">
             <div id="loadingfilter">
                 <div id="loadingmessage">
-                    Bezig met laden van GIS viewer<br /><br />
+                    <fmt:message key="template.viewer.loading"/><br /><br />
                 </div>
             </div>
-            <img src="images/loadingmap.jpg" alt="Bezig met laden" id="loadingimage" />
+            <img src="images/loadingmap.jpg" alt="<fmt:message key="template.viewer.loading"/>" id="loadingimage" />
         </div>
         
         <div id="content_viewer">

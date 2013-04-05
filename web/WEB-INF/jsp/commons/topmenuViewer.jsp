@@ -58,8 +58,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </html:link>
     --%>
 
-    <a href="mailto:support@b3partners.nl" class="menulink">
-        <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
+    <a href="mailto:<fmt:message key="commons.topmenu.email"/>" class="menulink">
+        <img src="<html:rewrite page="/images/email.png"/>" alt="<fmt:message key="commons.topmenu.emailmessage"/>" title="<fmt:message key="commons.topmenu.emailmessage"/>" />
     </a>
 
     <a href="#" onclick="getBookMark();" class="menulink">

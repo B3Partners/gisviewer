@@ -7,8 +7,8 @@
     
     <c:set var="appCode" value="${param['appCode']}"/>
     
-    <a href="mailto:support@b3partners.nl" class="menulink">
-        <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" />
+    <a href="mailto:<fmt:message key="commons.topmenu.email"/>" class="menulink">
+        <img src="<html:rewrite page="/images/email.png"/>" alt="<fmt:message key="commons.topmenu.emailmessage"/>" title="Stuur een e-mail naar de beheerder" />
     </a>
 
     <c:set var="stijlklasse" value="menulink" />

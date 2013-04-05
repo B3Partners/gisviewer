@@ -3378,6 +3378,8 @@ function onFrameworkLoaded(){
         
         /* Standaard pan tool activeren */
         webMapController.activateTool("toolPan");
+    } else {
+        webMapController.getMap().updateSize();
     }
     
     doInitSearch();

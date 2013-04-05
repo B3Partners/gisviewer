@@ -940,7 +940,7 @@
                 treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
             }
         }
-        // sometimes IE6 refuses to init Flamingo
+        /*
         ie6_hack_onInit();
 
         // just for fun
@@ -950,6 +950,7 @@
             document.body.appendChild(s);
             s.src='http://kottke.org/plus/misc/asteroids.js';
         }
+        */    
 
         function hideLoadingScreen() {
             $j("#loadingscreen").hide();

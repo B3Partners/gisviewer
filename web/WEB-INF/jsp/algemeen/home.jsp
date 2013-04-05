@@ -62,9 +62,9 @@
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="tegel" style="background-color: #E4d335;">
+            <div class="tegel" style="background-color: #515151;">
                 <html:link page="/actuelezaken.do" title="Actuele zaken" styleId="actuelezaken" styleClass="tegellink">
-                    Thema Actuele zaken
+                    Thema Actuele zaken 
                 </html:link>
             </div>
         </div>
@@ -76,14 +76,14 @@
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="tegel" style="background-color: #FF5050;">
+            <div class="tegel" style="background-color: #96CA2D;">
                 <html:link page="/beheeropenbareruimte.do" title="Beheer openbare ruimte" styleId="beheeropenbareruimte" styleClass="tegellink">
                     Thema Beheer openbare ruimte
                 </html:link>
             </div>
         </div>
         <div class="blockwrapper">
-            <div class="tegel" style="background-color: #96CA2D;">
+            <div class="tegel" style="background-color: #FF5050;">
                 <html:link page="/natuurmilieucultuurhistorie.do" title="Natuur, Milieu, Cultuur en Historie" styleId="natuurmilieucultuurhistorie" styleClass="tegellink">
                     Thema Natuur, Milieu, Cultuur en Historie
                 </html:link>

@@ -24,9 +24,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <div class="contentstyle">
-    <h1>Uw startlocatie is ingesteld</h1>
+    <h1><fmt:message key="a11y.startlocation.title"/></h1>
     
     <html:link page="/index.do" styleClass="searchLink" module="">
-            Home
+            <fmt:message key="a11y.startlocation.home"/>
         </html:link>
 </div>

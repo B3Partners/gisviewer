@@ -24,12 +24,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <div class="contentstyle">
-    <h1>Resultaten voor ${searchName}</h1>
+    <h1><fmt:message key="a11y.results.title"/> ${searchName}</h1>
 
     <p>
         <c:forEach var="entry" items="${searchparams}" varStatus="status">
             <c:if test="${status.count <= 1}">
-                U heeft gezocht op
+                <fmt:message key="a11y.results.searchtext"/>
             </c:if>
 
             <c:if test="${entry.value != ''}">
@@ -45,17 +45,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:if>
 
     <c:if test="${count < 1}" >
-        <p>Er zijn geen resultaten gevonden.</p>
+        <p><fmt:message key="a11y.results.noresults"/></p>
     </c:if>
 
     <c:if test="${count == 1}" >
-        <p>Er is 1 resultaat gevonden.</p>
+        <p><fmt:message key="a11y.results.oneresult"/></p>
     </c:if>
 
     <c:set var="resultNr" value="${startIndex}" />
 
     <c:if test="${count > 1}" >
-        <p>Er zijn ${count} resultaten gevonden. Resultaten ${startIndex+1} tot ${total} worden getoond.</p>
+        <p><fmt:message key="a11y.results.1"/> ${count} <fmt:message key="a11y.results.2"/> ${startIndex+1} <fmt:message key="a11y.results.3"/> ${total} <fmt:message key="a11y.results.numresults4"/></p>
     </c:if>
 
     <p>
@@ -68,7 +68,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:forEach var="entry" items="${params}">
                 <c:set var="resultParams" value="${stat.first ? '' : resultParams}&amp;${entry.key}=${entry.value}" />
             </c:forEach>
-            <c:if test="${countPrev >= 0}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink">Vorige</html:link> | </c:if><c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status"><c:set var="startIndex" value="${(i-1) * limit}" /><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink">${i}</html:link> | </c:forEach><c:if test="${countNext < count}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink">Volgende</html:link></c:if>
+            <c:if test="${countPrev >= 0}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink"><fmt:message key="a11y.results."/>Vorige</html:link> | </c:if><c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status"><c:set var="startIndex" value="${(i-1) * limit}" /><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink">${i}</html:link> | </c:forEach><c:if test="${countNext < count}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink"><fmt:message key="a11y.results.next"/></html:link></c:if>
         </c:if>
     </p>
 
@@ -84,7 +84,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:forEach>
         </c:forEach>
         <c:if test="${nextStep == true && count > 0}">
-            <div>Actie</div>
+            <div><fmt:message key="a11y.results.action"/></div>
         </c:if>
     </div>
 
@@ -125,13 +125,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:if test="${nextStep == true and startLocation == false}">
                     <div>
                         <input type="hidden" name="nextStep" value="t">
-                        <input type="submit" value="Verder zoeken">
+                        <input type="submit" value="<fmt:message key="a11y.results.continue"/>">
                     </div>
                 </c:if>  
 
                 <c:if test="${nextStep == false and startLocation == true}">
                     <div>
-                        <input type="submit" value="Als startlocatie instellen">
+                        <input type="submit" value="<fmt:message key="a11y.results.startlocation"/>">
                     </div>
                 </c:if>
             </form>
@@ -149,7 +149,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:forEach>
 
     <c:if test="${fn:length(results) > 0 and resultaatUitleg == true}">
-        <h2>Uitleg resultaatvelden</h2>
+        <h2><fmt:message key="a11y.results.explain"/></h2>
         <p>
             <c:forEach var="result" items="${results}" begin="0" end="0">  
                 <c:forEach var="attr" items="${result.attributen}">
@@ -163,11 +163,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     <p>
         <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}" styleClass="searchLink" module="">
-            Opnieuw zoeken
+            <fmt:message key="a11y.results.searchagain"/>
         </html:link> |
         
         <html:link page="/a11yViewer.do?appCode=${appCode}" styleClass="searchLink" module="">
-            Anders zoeken
+            <fmt:message key="a11y.results.othersearch"/>
         </html:link>
     </p>
 

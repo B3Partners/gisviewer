@@ -24,12 +24,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <div class="contentstyle">
-    <h1>${searchName}</h1>
+    <h1><fmt:message key="a11y.search.title"/> ${searchName}</h1>
 
     <p>
         <c:forEach var="entry" items="${a11yResultMap}" varStatus="status">
             <c:if test="${status.count <= 1}">
-                Uw vorige zoekresultaat was
+                <fmt:message key="a11y.search.lastresult"/>
             </c:if>
 
             <c:if test="${entry.value != ''}">
@@ -97,7 +97,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:if>   
         </c:forEach>
 
-        <p class="cf"><input type="submit" value="Zoeken" /></p>
+        <p class="cf"><input type="submit" value="<fmt:message key="a11y.search.label"/>" /></p>
 
         <!-- Alleen uitleg tonen als er een omschrijving in een van de velden is -->
         <c:set var="zoekUitleg" value="false" />
@@ -108,7 +108,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </c:forEach>
 
         <c:if test="${fn:length(zoekVelden) > 0 and zoekUitleg == true}">
-            <h2>Uitleg zoekvelden</h2>
+            <h2><fmt:message key="a11y.search.explain"/></h2>
             <p>
                 <c:forEach var="veld" items="${zoekVelden}">
                     <c:if test="${!empty veld.omschrijving}" >
@@ -123,7 +123,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
     <p>
         <html:link page="/a11yViewer.do?appCode=${appCode}" styleClass="searchLink" module="">
-            Anders zoeken
+            <fmt:message key="a11y.results.othersearch"/>
         </html:link>
     </p>
 

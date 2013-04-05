@@ -633,8 +633,7 @@
         </p>
 
         <p>
-            <c:forEach var="entry" items="${a11yResultMap}" varStatus="status">
-                <c:if test="${status.count <= 1}">
+            <c:if test="${!empty a11yStartWkt}">
                 <p>
                     U heeft een startlocatie ingesteld. Deze locatie staat op 
                     de kaart gemarkeerd. Bij zoekers die hier gebruik van maken
@@ -644,13 +643,6 @@
                     <input type="button" class="knop" value="Verwijder marker" onclick="removeSearchResultMarker();"/>
                 </p>
             </c:if>
-
-            <%--
-            <c:if test="${entry.value != ''}">
-                ${entry.key} "${entry.value}"                                 
-            </c:if>
-            --%>
-        </c:forEach>
         </p>
 
         <div>
@@ -950,7 +942,7 @@
             document.body.appendChild(s);
             s.src='http://kottke.org/plus/misc/asteroids.js';
         }
-        */    
+         */    
 
         function hideLoadingScreen() {
             $j("#loadingscreen").hide();

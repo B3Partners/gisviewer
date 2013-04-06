@@ -110,10 +110,10 @@ function initMapComponent(){
             units : 'meters',
             theme: 'styles/gisviewer_openlayers.css',
             controls : [
-                new OpenLayers.Control.Navigation({
-                    zoomBoxEnabled: false
-                }),
-                new OpenLayers.Control.ArgParser()                
+            new OpenLayers.Control.Navigation({
+                zoomBoxEnabled: false
+            }),
+            new OpenLayers.Control.ArgParser()                
             ]
         };
         OpenLayers.ImgPath = 'styles/openlayers_img/';
@@ -3933,14 +3933,8 @@ function checkboxOnByid(id){
  * van getActiveFeature alleen de laatste feature (een Point) terug. In
  * this.getFrameworkLayer().features[0] zit het hele polygon.
 */
-function getWktActiveFeature(index) {
-    var object;
-    
-    if (index < 0) {
-        object = webMapController.getMap().getLayer("editMap").getActiveFeature();
-    } else {
-        object = webMapController.getMap().getLayer("editMap").getActiveFeature(index);
-    }
+function getWktActiveFeature(index) {    
+    var object = webMapController.getMap().getLayer("editMap").getActiveFeature(index);
     
     if (object == null)
     {
@@ -4453,26 +4447,36 @@ function createPermaLink(){
         reso = "&resolution=" + controllerRes;
     }
 
-    var url = urlBase + appCode + id + clusterIds + extent;
+    var extraParams = "&forceViewer=true";
+    var url = urlBase + appCode + id + clusterIds + extent + extraParams;
     ; // + reso;
 
     return url;
 }
 
-function addToFavorites(url) {
-    
+function addToFavorites(url) {    
     var title = "B3P Gisviewer bookmark"
 
-    if (window.sidebar) { // Firefox
+    if (Boolean(window.chrome)) { // chrome
+        chromeBookMarkPopup(url, title);
+    } else if (window.sidebar) { // Firefox
         window.sidebar.addPanel(title, url,"");
-    } else if( window.external ) { // IE 6,7 not 8?
+    } else if( window.external) { // IE 6,7 not 8?
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
         window.external.AddFavorite(url, title);       
-    }else if(window.opera && window.print) { // Opera 
+    } else if(window.opera && window.print) { // Opera 
         return true;
     }
 
     return null;
+}
+
+function chromeBookMarkPopup(url, title) {
+    var chromePopup = window.open(url, title, "height=300, width=850,toolbar=no,scrollbars=no,menubar=no");
+    
+    var html = "<p>Voeg deze link toe aan uw Google Chrome favorieten:</p>" + url;
+    
+    chromePopup.document.write(html);
 }
 
 /* build popup functions */

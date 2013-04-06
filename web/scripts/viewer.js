@@ -588,6 +588,10 @@ function removeSearchResultMarker() {
     webMapController.getMap().removeMarker("searchResultMarker");
 }
 
+function removeAllMarkers() {
+    webMapController.getMap().removeAllMarkers();
+}
+
 /**
  * Changes the bounding box of the feature to a minimal size when this is smaller
  * than the minimal vlue.
@@ -4033,7 +4037,7 @@ function b_overview(id,event) {
 }
 
 function b_gps_stop(id, event) {
-    removeSearchResultMarker();
+    removeAllMarkers();
 }
 
 function drawFeature(ggbId, attrName, attrVal) {

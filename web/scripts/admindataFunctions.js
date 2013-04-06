@@ -1131,7 +1131,7 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
         fmco = ouder.webMapController;
     }
     var mapje = fmco.getMap();
-    var existingLayer = mapje.getLayerById("fmcLayer");
+    var existingLayer = mapje.getAllWMSLayers()[0];
     var wmsLayer=ouder.searchThemaValue(ouder.themaTree,themaid,"wmslayers");
     var visValue=trim(waardepk);
     if (waardeingevuldekolom!=null && waardeingevuldekolom.length>0){
@@ -1141,29 +1141,29 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     sldstring += "?visibleValue=" + visValue;
     sldstring += "&id=" + themaid;
     var beginChar = "?";
-    if(existingLayer.getOption("url").indexOf("?") != -1){
+    if(existingLayer.getURL().indexOf("?") != -1){
         beginChar = "&";
     }
 
     sldstring= escape(sldstring);
 
-    var sldUrl = existingLayer.getOption("url") + beginChar + "SLD=" + sldstring;
+    var sldUrl = existingLayer.getURL() + beginChar + "SLD=" + sldstring;
     var ogcOptions={
         transparent: true,
-        format: existingLayer.getFormat(),
+        format: existingLayer.getOption("format"),
         layers: wmsLayer,
-        exceptions: existingLayer.getExceptions(),
-        srs: existingLayer.getSrs(),
-        version: existingLayer.getVersion()
+        exceptions: existingLayer.getOption("exceptions"),
+        srs: existingLayer.getOption("srs"),
+        version: existingLayer.getOption("version")
     }
     var options={
         id: "sldLayer",
         timeout: "30",
         retryonerror: "10",
-        getcapabilitiesurl: existingLayer.getUrl(),
-        getfeatureinfourl: existingLayer.getUrl(),
+        getcapabilitiesurl: existingLayer.getURL(),
+        getfeatureinfourl: existingLayer.getURL(),
         showerrors: true
     };
-    var sldLayer=webMapController.createWMSLayer("sldLayer", sldUrl, ogcOptions, options);
-    fmco.getMap().addLayer(sldLayer);//true,true
+    var sldLayer=fmco.createWMSLayer("sldLayer", sldUrl, ogcOptions, options);
+    mapje.addLayer(sldLayer);//true,true
 }

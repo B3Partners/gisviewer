@@ -11,7 +11,7 @@ function getParent() {
 
 /* sendRedlining methode in action aanroepen. Een nieuw redline object
  * wordt door de back-end opgeslagen */
-function submitForm() {
+function submitForm() {    
     var ouder = getParent();
 
     if(ouder) {
@@ -30,7 +30,7 @@ function submitForm() {
     
     var new_projectnaam = document.forms[0].new_projectnaam.value;
     var ontwerp = document.forms[0].ontwerp.value;
-
+    
     if (ouder && projectnaam == "Maak uw keuze..." && new_projectnaam == "") {
         ouder.messagePopup("", "Vul een projectnaam in.", "information");
         return false;
@@ -80,9 +80,9 @@ function submitRemoveForm() {
  * geactiveerd. Als de gebruiker op de kaart klikt wordt door de onIdentify
  * de selectRedlining aangeroepen waaran het klikpunt wordt meegegeven */
 function startEditRedlining() {    
-    var ouder = getParent();
-
-    if (ouder) {
+    var ouder = getParent(); 
+    
+    if (ouder) {        
         ouder.removeAllFeatures();
         
         var gegevensbronId = document.forms[0].gegevensbron.value;
@@ -92,7 +92,7 @@ function startEditRedlining() {
 
 var startedDraw = false;
 
-function startDrawRedlineObject() {
+function startDrawRedlineObject() {    
     var ouder = getParent();
 
     if (ouder) {

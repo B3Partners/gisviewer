@@ -4885,7 +4885,11 @@ function enableEditRedlining(id) {
     editingRedlining = true;
     redLineGegevensbronId = id;
 
-    webMapController.activateTool("breinaald");
+    if(webMapController instanceof FlamingoController) {
+        webMapController.activateTool("breinaald");
+    } else {
+        webMapController.activateTool("identify");
+    }
 }
 
 function createServiceLeaf(container, item) {

@@ -53,8 +53,8 @@
             </p>
 
             <p>
-                <input type="button" value="Nieuw" class="zoek_knop" onclick="startDrawRedlineObject();" />
-                <input type="button" value="Bewerken" class="zoek_knop" onclick="startEditRedlining();" />
+                <input type="button" value="Nieuw" class="zoek_knop" onclick="startDrawRedlineObject()" />
+                <input type="button" value="Bewerken" class="zoek_knop" onclick="startEditRedlining()" />
             </p>
 
             <hr>
@@ -63,11 +63,11 @@
 
             <table>
                 <tr>
-                <%--
+                
                     <td>Project</td>
                     <td><html:text styleId="new_projectnaam" property="new_projectnaam" size="20" maxlength="10"/></td>
                 </tr>
-                --%>
+                
                 <tr>
                     <td>Ontwerp</td>
                     <td>

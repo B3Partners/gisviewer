@@ -147,6 +147,9 @@ function TabController(labelContainer, tabContainer, options) {
         if(tabObj !== null) {
             tabObj.container.show();
             tabObj.label.addClass('activelink');
+            if(tabObj.resizableContent) {
+                this.resizeTabContents(tabid);
+            }
         }
     };
     

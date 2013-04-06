@@ -3924,9 +3924,20 @@ function checkboxOnByid(id){
     }
 }
 
-function getWktActiveFeature() {
-    var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
-
+/* Voor openlayers wil je soms de hele polygon op het scherm hebben niet alleen
+ * de laatst actieve. Als je bijvoorbeeld in OL een polygon edit krijg je anders 
+ * van getActiveFeature alleen de laatste feature (een Point) terug. In
+ * this.getFrameworkLayer().features[0] zit het hele polygon.
+*/
+function getWktActiveFeature(index) {
+    var object;
+    
+    if (index < 0) {
+        object = webMapController.getMap().getLayer("editMap").getActiveFeature();
+    } else {
+        object = webMapController.getMap().getLayer("editMap").getActiveFeature(index);
+    }
+    
     if (object == null)
     {
         handler("Er is nog geen tekenobject op het scherm.");
@@ -3956,7 +3967,7 @@ function getWkt() {
 }
 
 function b_getfeatures(id,event) {
-    var wkt = getWktActiveFeature();
+    var wkt = getWktActiveFeature(-1);
 
     if (wkt) {
         handleGetAdminData(wkt, null, true);
@@ -3975,7 +3986,7 @@ function b_buffer(id, event) {
     if (multiPolygonBufferWkt != null)
         wkt = multiPolygonBufferWkt;
     else
-        wkt = getWktActiveFeature();
+        wkt = getWktActiveFeature(-1);
 
     multiPolygonBufferWkt = null;
         
@@ -4376,9 +4387,9 @@ function openGoogleMaps(values) {
     var options = "&hl=nl&om=0";
 
     var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
-
-    window.open(url);}
-
+    
+    window.open(url);
+}
 
 function createPermaLink(){
     var protocol = window.location.protocol + "//";

@@ -15,7 +15,7 @@ function submitForm() {
     var ouder = getParent();
 
     if(ouder) {
-        var wkt = ouder.getWktActiveFeature();
+        var wkt = ouder.getWktActiveFeature(0);
         if (wkt) {
             document.forms[0].wkt.value = wkt;
         } else {

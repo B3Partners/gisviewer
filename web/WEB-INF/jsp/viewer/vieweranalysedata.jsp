@@ -43,7 +43,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     function doAjaxRequest() {
         var ouder = getParent();
         if(ouder) {
-            var wkt = ouder.getWktActiveFeature();
+            var wkt = ouder.getWktActiveFeature(-1);
             var themaIdArray =  ouder.enabledLayerItems;
             var themaIds = "";
             for (var i=0; i < themaIdArray.length; i++){

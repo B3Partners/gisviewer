@@ -885,9 +885,15 @@
                     document.getElementById('leftcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
                     document.getElementById('tab_container').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
                     document.getElementById('mapcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
+                    
                     tabController.doResize();
                     leftTabController.doResize();
+                    
                     panelBelowCollapsed = !panelBelowCollapsed;
+                    
+                    if (panelBelowCollapsed) {
+                        updateSizeOL();   
+                    }
                 }
             }
             if(dir == 'right') {

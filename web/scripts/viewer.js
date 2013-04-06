@@ -3378,13 +3378,19 @@ function onFrameworkLoaded(){
         
         /* Standaard pan tool activeren */
         webMapController.activateTool("toolPan");
-    } else {
-        webMapController.getMap().updateSize();
     }
+    
+    updateSizeOL();
     
     doInitSearch();
     
     placeStartLocationMarker();
+}
+
+function updateSizeOL() {
+    if (webMapController instanceof OpenLayersController) {        
+        webMapController.getMap().updateSize();    
+    }
 }
 
 function placeStartLocationMarker() {    
@@ -4369,10 +4375,10 @@ function openGoogleMaps(values) {
     
     var options = "&hl=nl&om=0";
 
-    var url = "http://www.google.nl/maps?ie=UTF8" + ll + spn + options;
+    var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
 
-    window.open(url);
-}
+    window.open(url);}
+
 
 function createPermaLink(){
     var protocol = window.location.protocol + "//";

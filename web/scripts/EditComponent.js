@@ -237,7 +237,7 @@ function EditComponent(){
         var inputCel = document.createElement("td");
         
         var input = null;
-        if(attribute.defaultValues){
+        if(attribute.defaultValues && !readonly){
             input = document.createElement("select");
             input.setAttribute("name", attribute.columnname);
             

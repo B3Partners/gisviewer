@@ -176,7 +176,7 @@ function EditComponent(){
                 feature[val.id] = val.value;
             }
         });
-        var feat = this.vectorLayer.getActiveFeature();
+        var feat = this.vectorLayer.getActiveFeature(-1);
         if(feat){
             this.geom = feat.wkt;
             feature["geom"] = this.geom;

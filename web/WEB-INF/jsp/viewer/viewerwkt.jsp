@@ -37,27 +37,38 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </html:messages>
     </div>
     <div>
-            U kunt voor zelf getekende of geselecteerde kaartobjecten, indien er een 
-            polygoon op het scherm staat, de WKT ophalen. Nadat u op de knop heeft
-            geklikt kunt u met CTRL+C de tekst naar het klembord kopieeren.
-        
+        U kunt voor zelf getekende of geselecteerde kaartobjecten, indien er een 
+        polygoon op het scherm staat, de WKT ophalen. Nadat u op de knop heeft
+        geklikt kunt u met CTRL+C de tekst naar het klembord kopieeren.
+
         <p><input type="button" value="WKT ophalen" onclick="getActiveWkt()"/></p>        
-        
+
         <p>
             <textarea id="activeWkt" style="width: 90%; height:400px;"></textarea>
         </p>
     </div>
 
     <script type="text/javascript">
+        function getParent() {
+            if (window.opener){
+                return window.opener;
+            }else if (window.parent){
+                return window.parent;
+            }else{
+                messagePopup("", "No parent found", "error");
+                return null;
+            }
+        }
+        
         function getActiveWkt(){
-            var wmc = parent.webMapController;
-            var vectorLayer = wmc.getMap().getAllVectorLayers()[0];
-            var feature = vectorLayer.getActiveFeature();
-            
-            if (feature != undefined) {
-                $j("#activeWkt").val(feature.wkt);                
+            var ouder = getParent();
+
+            if(ouder) {
+                var wkt = ouder.getWktActiveFeature(0);
+                
+                $j("#activeWkt").val(wkt);            
                 $j('#activeWkt').focus();
-                $j('#activeWkt').select();               
+                $j('#activeWkt').select();
             }
         }
     </script>

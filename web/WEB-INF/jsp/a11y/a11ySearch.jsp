@@ -22,6 +22,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <div class="contentstyle">
     <h1><fmt:message key="a11y.search.title"/> ${searchName}</h1>
@@ -77,34 +79,52 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:if>
             </c:if>
 
+            <%-- dropdown met vooringevulde waardes of gebruikt opzoeklijst --%>
             <c:if test="${veld.inputtype == 1}">
-                <c:forEach var="entry" items="${dropdownResults}">
-                    <c:if test="${entry.key == veld.label}">
-                        <p class="cf">
-                            <label for="${veld.label}">
-                                <c:out value="${veld.label}" />
-                            </label>
-                            <select id="${veld.label}" name="${veld.label}">
-                                <c:forEach var="results" items="${entry.value}">                                    
-                                    <c:forEach var="attr" items="${results.attributen}">
-                                        <c:if test="${attr.type == 2}">
-                                            <c:set var="idParams" value="${stat.first ? '' : idParams}${attr.waarde}" />
-                                        </c:if>                                        
-                                        <c:if test="${attr.type == -1}">
-                                            <c:set var="fieldParams" value="${stat.first ? '' : fieldParams} ${attr.waarde}" />
-                                        </c:if>                                        
+                <c:if test="${veld.dropDownValues != ''}">
+                    <label for="${veld.label}">
+                        <c:out value="${veld.label}" />
+                    </label>
+
+                    <%-- vooringevuld waardes --%>
+                    <c:set var="dropdownParts" value="${fn:split(veld.dropDownValues, ',')}" />
+                    <select id="${veld.label}" name="${veld.label}">
+                        <c:forEach var="part" items="${dropdownParts}">                            
+                            <option value="${part}">${part}</option>
+                        </c:forEach>  
+                    </select>
+                </c:if>
+
+                <%-- opzoeklijst --%>
+                <c:if test="${veld.dropDownValues == ''}">
+                    <c:forEach var="entry" items="${dropdownResults}">
+                        <c:if test="${entry.key == veld.label}">
+                            <p class="cf">
+                                <label for="${veld.label}">
+                                    <c:out value="${veld.label}" />
+                                </label>
+                                <select id="${veld.label}" name="${veld.label}">
+                                    <c:forEach var="results" items="${entry.value}">                                    
+                                        <c:forEach var="attr" items="${results.attributen}">
+                                            <c:if test="${attr.type == 2}">
+                                                <c:set var="idParams" value="${stat.first ? '' : idParams}${attr.waarde}" />
+                                            </c:if>                                        
+                                            <c:if test="${attr.type == -1}">
+                                                <c:set var="fieldParams" value="${stat.first ? '' : fieldParams} ${attr.waarde}" />
+                                            </c:if>                                        
+                                        </c:forEach>
+
+                                        <option value="${idParams}">${fieldParams}</option>
+
+                                        <c:set var="idParams" value="" />
+                                        <c:set var="fieldParams" value="" />
                                     </c:forEach>
-                                    
-                                    <option value="${idParams}">${fieldParams}</option>
-                                    
-                                    <c:set var="idParams" value="" />
-                                    <c:set var="fieldParams" value="" />
-                                </c:forEach>
-                            </select>  
-                        </p>
-                    </c:if>
-                </c:forEach>
-            </c:if>   
+                                </select>  
+                            </p>
+                        </c:if>
+                    </c:forEach>
+                </c:if>   
+            </c:if>
         </c:forEach>
 
         <p class="cf"><input type="submit" value="<fmt:message key="a11y.search.label"/>" /></p>

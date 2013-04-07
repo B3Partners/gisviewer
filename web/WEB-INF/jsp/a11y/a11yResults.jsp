@@ -27,6 +27,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <h1><fmt:message key="a11y.results.title"/> ${searchName}</h1>
 
     <p>
+        <c:forEach var="entry" items="${a11yResultMap}" varStatus="status">
+            <c:if test="${status.count <= 1}">
+                Uw huidige startlocatie is:
+            </c:if>
+
+            <c:if test="${entry.value != ''}">
+                ${entry.key} "${entry.value}"                                 
+            </c:if>
+        </c:forEach>
+    </p>
+    
+    <p>
         <c:forEach var="entry" items="${searchparams}" varStatus="status">
             <c:if test="${status.count <= 1}">
                 <fmt:message key="a11y.results.searchtext"/>
@@ -116,8 +128,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:forEach var="attr" items="${result.attributen}">
                     <c:choose>
                         <c:when test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
-                            <div>
+                            <div>                                
                                 ${attr.waarde}
+                                
+                                <c:if test="${attr.label != 'afstand'}" >
+                                    <input type="hidden" name="${attr.label}" value="${attr.waarde}">
+                                </c:if>                                
                             </div>
                         </c:when>
                         <c:when test="${attr.type == 33}">

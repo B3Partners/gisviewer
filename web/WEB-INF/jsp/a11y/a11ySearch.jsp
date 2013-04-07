@@ -81,7 +81,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
             <%-- dropdown met vooringevulde waardes of gebruikt opzoeklijst --%>
             <c:if test="${veld.inputtype == 1}">
-                <c:if test="${veld.dropDownValues != ''}">
+                <c:if test="${!empty veld.dropDownValues}">
                     <label for="${veld.label}">
                         <c:out value="${veld.label}" />
                     </label>
@@ -95,31 +95,62 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </select>
                 </c:if>
 
+                <%-- Controleren of er een id veld in result zit, zo ja dan deze id 
+                gebruiken voor value in option en de andere tonen en doorgeef
+                velden als waarde achter elkaar in dropdown plakken. Opzoeklijsten zonder 
+                id veld gewoon op oude manier tonen.
+                --%>
+                <c:set var="hasIdAttr" value="0" />
+                <c:forEach var="entry" items="${dropdownResults}">
+                    <c:forEach var="results" items="${entry.value}">
+                        <c:forEach var="attr" items="${results.attributen}">
+                            <c:if test="${attr.type == 1}">
+                                <c:set var="hasIdAttr" value="1" />
+                            </c:if>   
+                        </c:forEach>
+                    </c:forEach>
+                </c:forEach>
+
                 <%-- opzoeklijst --%>
-                <c:if test="${veld.dropDownValues == ''}">
+                <c:if test="${empty veld.dropDownValues}">
                     <c:forEach var="entry" items="${dropdownResults}">
                         <c:if test="${entry.key == veld.label}">
                             <p class="cf">
                                 <label for="${veld.label}">
                                     <c:out value="${veld.label}" />
                                 </label>
-                                <select id="${veld.label}" name="${veld.label}">
-                                    <c:forEach var="results" items="${entry.value}">                                    
-                                        <c:forEach var="attr" items="${results.attributen}">
-                                            <c:if test="${attr.type == 2}">
-                                                <c:set var="idParams" value="${stat.first ? '' : idParams}${attr.waarde}" />
-                                            </c:if>                                        
-                                            <c:if test="${attr.type == -1}">
-                                                <c:set var="fieldParams" value="${stat.first ? '' : fieldParams} ${attr.waarde}" />
-                                            </c:if>                                        
+
+                                <%-- opzoeklijst met ook alleen tonen resultaatvelden--%>
+                                <c:if test="${hasIdAttr == '1'}">
+                                    <select id="${veld.label}" name="${veld.label}">
+                                        <c:forEach var="results" items="${entry.value}">
+                                            <c:forEach var="attr" items="${results.attributen}">
+                                                <c:if test="${attr.type == 1}">
+                                                    <c:set var="idParams" value="${stat.first ? '' : idParams}${attr.waarde}" />
+                                                </c:if>                                        
+                                                <c:if test="${attr.type == -1 || attr.type == 2}">
+                                                    <c:set var="fieldParams" value="${stat.first ? '' : fieldParams} ${attr.waarde}" />
+                                                </c:if>                                        
+                                            </c:forEach>
+
+                                            <option value="${idParams}">${fieldParams}</option>
+
+                                            <c:set var="idParams" value="" />
+                                            <c:set var="fieldParams" value="" />
                                         </c:forEach>
+                                    </select> 
+                                </c:if>    
 
-                                        <option value="${idParams}">${fieldParams}</option>
-
-                                        <c:set var="idParams" value="" />
-                                        <c:set var="fieldParams" value="" />
-                                    </c:forEach>
-                                </select>  
+                                <%-- opzoeklijst met alleen tonen en doorgeven resultaatvelden --%>
+                                <c:if test="${hasIdAttr == '0'}">                                    
+                                    <select id="${veld.label}" name="${veld.label}">
+                                        <c:forEach var="results" items="${entry.value}">                        
+                                            <c:forEach var="attr" items="${results.attributen}">
+                                                <option value="${attr.waarde}">${attr.waarde}</option>
+                                            </c:forEach>
+                                        </c:forEach>
+                                    </select> 
+                                </c:if>
                             </p>
                         </c:if>
                     </c:forEach>

@@ -85,10 +85,20 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 <c:out value="${veld.label}" />
                             </label>
                             <select id="${veld.label}" name="${veld.label}">
-                                <c:forEach var="results" items="${entry.value}">                        
+                                <c:forEach var="results" items="${entry.value}">                                    
                                     <c:forEach var="attr" items="${results.attributen}">
-                                        <option value="${attr.waarde}">${attr.waarde}</option>
+                                        <c:if test="${attr.type == 2}">
+                                            <c:set var="idParams" value="${stat.first ? '' : idParams}${attr.waarde}" />
+                                        </c:if>                                        
+                                        <c:if test="${attr.type == -1}">
+                                            <c:set var="fieldParams" value="${stat.first ? '' : fieldParams} ${attr.waarde}" />
+                                        </c:if>                                        
                                     </c:forEach>
+                                    
+                                    <option value="${idParams}">${fieldParams}</option>
+                                    
+                                    <c:set var="idParams" value="" />
+                                    <c:set var="idParams" value="" />
                                 </c:forEach>
                             </select>  
                         </p>

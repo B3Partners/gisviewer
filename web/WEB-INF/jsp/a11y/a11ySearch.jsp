@@ -98,7 +98,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                     <option value="${idParams}">${fieldParams}</option>
                                     
                                     <c:set var="idParams" value="" />
-                                    <c:set var="idParams" value="" />
+                                    <c:set var="fieldParams" value="" />
                                 </c:forEach>
                             </select>  
                         </p>

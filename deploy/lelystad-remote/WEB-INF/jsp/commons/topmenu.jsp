@@ -35,6 +35,7 @@
 
 </div>
 
+<!--[if lte IE 8]>
 <script type="text/javascript">
     // Give menu nice colors
     (function() {
@@ -45,3 +46,4 @@
         });
     })();
 </script>
+<![endif]-->

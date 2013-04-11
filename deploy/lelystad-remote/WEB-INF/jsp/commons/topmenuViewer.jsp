@@ -58,6 +58,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         
 </div>
 
+<!--[if lte IE 8]>
 <script type="text/javascript">
     // Give menu nice colors
     (function() {
@@ -68,3 +69,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         });
     })();
 </script>
+<![endif]-->

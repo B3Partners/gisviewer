@@ -461,12 +461,6 @@
         startLocationY = "";
     }
 </script>
-<!--[if lte IE 6]>
-    <script type="text/javascript">
-        attachOnload(fixViewer);
-        attachOnresize(fixViewer);
-    </script>
-<![endif]-->
 <script type="text/javascript" src="<html:rewrite page="/scripts/TabController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>

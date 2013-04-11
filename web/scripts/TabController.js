@@ -42,6 +42,7 @@ function TabController(labelContainer, tabContainer, options) {
     this.tabCollection = {};
     this.activeTab = null;
     this.tabvakClassname = 'tabvak';
+    this.lteie8 = jQuery('html').hasClass('lt-ie9');
     
     this.init = function() {
         this.setupContainer();
@@ -54,6 +55,11 @@ function TabController(labelContainer, tabContainer, options) {
                 var contentcontainer = jQuery('#' + options.contentid);
                 tabObj.container.html(contentcontainer.html());
                 if(contentcontainer.hasClass('tabvak_with_iframe')) {
+                    if(this.lteie8) {
+                        tabObj.container.find("iframe").each(function() {
+                            this.allowTransparency = 'allowtransparency';
+                        });
+                    }
                     tabObj.container.removeClass('tabvak').addClass('tabvak_with_iframe');
                 }
                 contentcontainer.remove();

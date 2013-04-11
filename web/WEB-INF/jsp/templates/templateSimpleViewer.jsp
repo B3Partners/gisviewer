@@ -39,25 +39,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>
         <script type="text/javascript" src="scripts/jquery.blockUI.js"></script>
-        
-
-        <!--[if lte IE 6]>
-            <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if lte IE 7]>
-            <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
-            <script type="text/javascript" src="scripts/cssfixes_ie.js"></script>
-        <![endif]-->
-        <!--[if IE]>
-        <script type="text/javascript">
-            fixTransparentBackgroundIframe = function() {
-                $j("#tab_container iframe").each(function() {
-                    this.allowTransparency = 'allowtransparency';
-                });
-            }
-            attachOnload(fixTransparentBackgroundIframe);
-        </script>
-        <![endif]-->
     </head>
     <body class="viewerbodyelement">
         <div id="content_viewer"><tiles:insert attribute="content" /></div>

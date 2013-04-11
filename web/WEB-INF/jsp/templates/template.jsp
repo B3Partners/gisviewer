@@ -48,19 +48,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="MobileOptimized" content="width=device-width; height=device-height; user-scalable=no; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="cleartype" content="on">
-        
-        <!--[if lte IE 6]>
-            <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if lte IE 7]>
-            <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if lte IE 8]>
-            <link href="styles/gisviewer_ie8.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if IE 9]>
-            <style type="text/css"> .inleiding_body { background-image: url(images/homeblocksbg.gif); background-position: bottom; } </style>
-        <![endif]-->
+
         <script type="text/javascript">
             var gisviewerurls = {
                 'mapicon': '<html:rewrite page='/images/icons/map.png' module='' />',

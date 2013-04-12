@@ -64,6 +64,7 @@ function EditComponent(){
         if(fid){
             if(typeof fid === "string"){
                 fid = fid.replace(/\./g,'_');
+                fid = fid.replace(' ','_');
             }
             this.mode = "edit";
         }else{

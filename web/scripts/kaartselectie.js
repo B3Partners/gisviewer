@@ -510,10 +510,11 @@ function createCheckboxCluster(item, checked) {
 
 function createCheckboxDefaultOnCluster(item, checked, children) {
     var checkbox;
+	
+	var imageId = 'on_' + item.id + '_cluster';
 
     if (ieVersion <= 8 && ieVersion != -1) {
-
-        var checkboxControleString = '<input style="display: none;" class="checkboxThemaOn" name="kaartgroepenDefaultAan" type="checkbox" id="on_' + item.id + '"';
+        var checkboxControleString = '<input style="display: none;" class="checkboxThemaOn" name="kaartgroepenDefaultAan" type="checkbox" id="' + imageId + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
         }
@@ -523,7 +524,7 @@ function createCheckboxDefaultOnCluster(item, checked, children) {
 
     } else {
         checkbox = document.createElement('input');
-        checkbox.id = 'on_' + item.id;
+        checkbox.id = imageId;
         checkbox.className = "checkboxThemaOn";
         checkbox.type = 'checkbox';
         checkbox.name = 'kaartgroepenDefaultAan'
@@ -540,7 +541,7 @@ function createCheckboxDefaultOnCluster(item, checked, children) {
 
     var imagetype = notcheckedimage;
     if(checked) imagetype = checkedimage;
-    var img = createImageReplacement("on_" + item.id, imagetype, item.id, '', children);
+    var img = createImageReplacement(imageId, imagetype, item.id, '', children);
 
     div.appendChild(img);
     div.appendChild(checkbox);

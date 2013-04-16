@@ -21,7 +21,7 @@
 
 <c:if test="${!empty appCodeSaved}">
     <div id="appUrl">
-        <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}"/>
+        <c:set var="appUrl" value="/viewer.do?appCode=${appCodeSaved}&amp;forceViewer=true"/>
 
         Uw persoonlijke instellingen zijn opgeslagen. U kunt de nieuwe viewer bekijken
         via de volgende <html:link page="${appUrl}" target="_top">persoonlijke url</html:link>.

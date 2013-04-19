@@ -11,7 +11,6 @@ var enabledLayerItems = new Array();
  * parameters appened with the kaartenbalie url and if available also PROJECT
  * or organization code parameters.
 */
-
 var layerUrl = "" + kburl;
 
 var cookieArray = readCookie('checkedLayers');
@@ -55,10 +54,6 @@ var alleLayers = new Array();
 var gpsComponent = null;
 var editComponent = null;
 
-/* TODO: OL height work-around for first time getMaxBounds */
-var firstTimeOLHeightAdjusted = false;
-var wierdOLDiffHeight = 224;
-
 var uploadCsvLayerOn = false;
 
 /**
@@ -73,8 +68,7 @@ initMapComponent();
 function handler(msg) {
     var message = msg;
     
-    if (message != '')
-    {
+    if (message != '') {
         messagePopup("", message, "information");
     }
 }

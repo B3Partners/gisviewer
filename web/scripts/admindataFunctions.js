@@ -355,7 +355,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     $j('#' + htmlId).append(bronContainer);
 }
 
-function handleGetGegevensBronMulti(gegevensbron) {
+function handleGetGegevensBronMulti(gegevensbron) {            
     var htmlId = gegevensbron.parentHtmlId;
 
     // Create container
@@ -363,11 +363,12 @@ function handleGetGegevensBronMulti(gegevensbron) {
         "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer"
     });
+    
     if(rootBronContainer) {
         bronContainer.addClass("rootBronContainer");
         rootBronContainer = false;
     }
-
+    
     // Create caption
     var bronCaption = createBronCaption(gegevensbron, false, null);
 
@@ -379,7 +380,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
     var bronTable = $j('<table></table>');
     var bronTableHead = $j('<thead></thead>');
     var bronTableBody = $j('<tbody></tbody>');
-
+    
     // Create table heading
     if (gegevensbron.editable && getParent().showEditTool) {
         var bewerk = {
@@ -392,7 +393,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
             type: "TYPE_DATA"
         }
         gegevensbron.labels.push(bewerk);
-    }    
+    }
     
     if (gegevensbron.records) {
         var trHead = createTableHead(gegevensbron.labels, false);
@@ -400,7 +401,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
     }
 
     // Create table content
-    if(!gegevensbron.records) {
+    if(!gegevensbron.records) {        
         var size = 1;
         if (gegevensbron.labels) {
             size = gegevensbron.labels.length;
@@ -408,14 +409,14 @@ function handleGetGegevensBronMulti(gegevensbron) {
         var tr = createEmptyRow(size);
         bronTableBody.append(tr);
     // TODO als 1 record en opgegeven aantal kolommen, dan meteen popup openen
-    } else {
-        $j.each(gegevensbron.records, function(index, record) {
+    } else {        
+        $j.each(gegevensbron.records, function(index, record) {            
             var tr = $j('<tr></tr>');
             var volgnr = $j('<td></td>').css({
                 "width": "50px"
             });
 
-            if (record.showMagicWand) {
+            if (record.showMagicWand) {                
                 var icon = $j('<img src="'+wandicon+'" alt="Selecteer object in kaart" title="Selecteer object in kaart" />')
                 .click(function() {
                     editFeature(gegevensbron.id,gegevensbron.adminPk,record.id);
@@ -425,9 +426,9 @@ function handleGetGegevensBronMulti(gegevensbron) {
             
             volgnr.append(" ");
             volgnr.append(index+1);
-
+            
             tr.append(volgnr);
-            $j.each(record.values, function(index2, waarde) {
+            $j.each(record.values, function(index2, waarde) {                
                 var td = createTableTd(waarde);
                 tr.append(td);
             });
@@ -448,8 +449,8 @@ function handleGetGegevensBronMulti(gegevensbron) {
             
             bronTableBody.append(tr);
             // Check if there are childs
-            if(record.childs != null && record.childs.length > 0) {
-                $j.each(record.childs, function(index2, child) {
+            if(record.childs != null && record.childs.length > 0) {                
+                $j.each(record.childs, function(index2, child) {                    
                     var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id) + idcounter++;
                     var childTr = $j('<tr></tr>');
                     var toggleIcon = $j('<img src="'+plusicon+'" alt="Openklappen" title="Openklappen" />')
@@ -731,15 +732,15 @@ function evalObjectDataCommando(commando) {
 
 var idcounterJsFunctions = 1;
 
-function createTableTd(waarde) {
+function createTableTd(waarde) {    
     var kolomBreedte = (waarde.kolomBreedte == 0) ? 150 : waarde.kolomBreedte;
     var td = $j('<td></td>')
     .css({
         "width": kolomBreedte + "px"
     });
-
-    if(waarde.type == 'TYPE_DATA') {
-        if (!waarde.value) {
+    
+    if(waarde.type == 'TYPE_DATA') {        
+        if (!waarde.value) {            
             td.html("-");
         } else {            
             /* In data .html vervangen door klikbare links. Gebruiken voor vervangen 
@@ -749,10 +750,14 @@ function createTableTd(waarde) {
             var type;
             var imgHtml;
             if (waarde.value.indexOf(".htm") != -1 || waarde.value.indexOf(".htm") != -1 ||
-                waarde.value.indexOf(".pdf") != -1) {                
-                links = waarde.value.trim().split(",");
+                waarde.value.indexOf(".pdf") != -1) {   
                 
-                if (links) {
+                var links;
+                if (waarde.value.indexOf(",") != -1) {                     
+                    links = trim(waarde.value, ' ').split(",");
+                }
+                
+                if (links) {                    
                     html = "";
                     for (var i in links) {
                         if (links[i].indexOf("t_") != -1) {
@@ -767,7 +772,7 @@ function createTableTd(waarde) {
                             type = links[i];
                         }
                         
-                        if (links[i].indexOf(".pdf") != -1) {
+                        if (links[i].indexOf(".pdf") != -1) {                            
                             imgHtml = "<img src=" + pdficon + " alt=\""+type+"\" title=\"" +type+ "\" border=0>";
                         } else {
                             imgHtml = "<img src=" + urlicon + " alt=\""+type+"\" title=\"" +type+ "\" border=0>";
@@ -788,7 +793,7 @@ function createTableTd(waarde) {
         }
     }
 
-    if(waarde.type == 'TYPE_URL') {
+    if(waarde.type == 'TYPE_URL') {        
         if (!waarde.value) {
             td.html("-");
         } else {
@@ -800,7 +805,7 @@ function createTableTd(waarde) {
         }
     }
 
-    if(waarde.type == 'TYPE_FUNCTION') {
+    if(waarde.type == 'TYPE_FUNCTION') {        
         if (!waarde.value) {
             td.html("-");
         } else if(waarde.value.search('###') != -1) {
@@ -824,7 +829,7 @@ function createTableTd(waarde) {
         }
     }
 
-    if (waarde.type == 'TYPE_QUERY') {
+    if (waarde.type == 'TYPE_QUERY') {        
     	if(waarde.valueList.length > 1){
 			var labels = waarde.value.split(',');
 		}
@@ -892,6 +897,7 @@ function createTableTd(waarde) {
             }
         });
     }
+    
     return td;
 }
 

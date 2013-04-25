@@ -124,8 +124,9 @@ function TabController(labelContainer, tabContainer, options) {
     };
     
     this.setupContainer = function() {
-        var newCss = { 'width': this.tabWidth + 'px' };
-        if(this.tabWidth === 0) newCss.visibility = 'hidden';
+        var newCss = {};
+        // var newCss = { 'width': this.tabWidth + 'px' };
+        // if(this.tabWidth === 0) newCss.visibility = 'hidden';
         this.labelContainer.css(newCss);
         this.tabLabelContainer.css(newCss);
         this.tabContainer.css(newCss);

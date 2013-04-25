@@ -467,6 +467,67 @@
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
 
+<c:set var="defaultMargin" value="3" />
+<c:set var="animationDuration" value=".5" />
+<style type="text/css">
+    /* Defaults -> tabs ingeklapt, dataframe ingeklapt, kaart van volledige breedte en hoogte (minus header) */
+    #content_viewer #leftcontent, #content_viewer #leftcontenttabjes, #content_viewer #leftcontentnav, #content_viewer #tab_container, #content_viewer #tabjes, #content_viewer #nav {
+        width: 0px;
+        transition: all ${animationDuration}s ease-out;
+        visibility: hidden;
+    }
+    #content_viewer #dataframediv {
+        height: 0px;
+        transition: height ${animationDuration}s ease-out;
+    }
+    #content_viewer #informatiebalk {
+        bottom: -30px;
+        visibility: hidden;
+        transition: all ${animationDuration}s linear;
+    }
+    #content_viewer #onderbalkControl {
+        bottom: 5px;
+        transition: bottom ${animationDuration}s linear;
+    }
+    #content_viewer #mapcontent {
+        left: ${defaultMargin}px;
+        right: ${defaultMargin}px;
+        bottom: ${defaultMargin}px;
+        transition: left ${animationDuration}s linear, right ${animationDuration}s linear, bottom ${animationDuration}s linear;
+    }
+    #content_viewer #leftcontent, #content_viewer #tab_container {
+        bottom: ${defaultMargin}px;
+    }
+    /* Switches */
+    #content_viewer.tablinks_open #leftcontent, #content_viewer.tablinks_open #leftcontenttabjes, #content_viewer.tablinks_open #leftcontentnav {
+        width: ${configMap["tabWidth"]}px;
+        visibility: visible;
+    }
+    #content_viewer.tablinks_open #mapcontent {
+        left: ${configMap["tabWidth"] + (2 * defaultMargin)}px;
+    }
+    #content_viewer.tabrechts_open #tab_container, #content_viewer.tabrechts_open #tabjes, #content_viewer.tabrechts_open #nav {
+        width: ${configMap["tabWidth"]}px;
+        visibility: visible;
+    }
+    #content_viewer.tabrechts_open #mapcontent {
+        right: ${configMap["tabWidth"] + (2 * defaultMargin)}px;
+    }
+    #content_viewer.dataframe_open #dataframediv {
+        height: ${configMap["defaultdataframehoogte"]}px;
+    }
+    #content_viewer.dataframe_open #informatiebalk {
+        visibility: visible;
+        bottom: ${configMap["defaultdataframehoogte"] + defaultMargin}px;
+    }
+    #content_viewer.dataframe_open #mapcontent, #content_viewer.dataframe_open #tab_container, #content_viewer.dataframe_open #leftcontent {
+        bottom: ${configMap["defaultdataframehoogte"] + (3 * defaultMargin) + 20}px;
+    }
+    #content_viewer.dataframe_open #onderbalkControl {
+        bottom: ${configMap["defaultdataframehoogte"] + 5}px;
+    }
+</style>
+
 <div style="display: none;">
     <html:form action="/viewerdata?code=${kbcode}">
         <input type="hidden" name="admindata" />
@@ -490,8 +551,8 @@
     </html:form>
 </div>
 
-<div id="leftcontenttabjes" style="display: none;"><ul id="leftcontentnav" class="tabsul"></ul></div>
-<div id="leftcontent" style="display: none;"></div>
+<div id="leftcontenttabjes"><ul id="leftcontentnav" class="tabsul"></ul></div>
+<div id="leftcontent"></div>
 
 <div id="mapcontent">
     <div id="flashmelding"></div>
@@ -720,11 +781,11 @@
 
     var noOfTabs = tabController.getTabCount(), noLeftTabs = leftTabController.getTabCount();
     if(usePanel) {
-        document.write('<div class="infobalk" id="informatiebalk" style="display: block;">'
+        document.write('<div class="infobalk" id="informatiebalk">'
             +'     <div class="infobalk_description">INFORMATIE</div>'
             +'     <div class="infobalk_actions">&nbsp;</div>'
             +' </div>'
-            +' <div id="dataframediv" class="dataframediv" style="display: block;">'
+            +' <div id="dataframediv" class="dataframediv">'
             +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
             +' </div>');
     }
@@ -735,27 +796,15 @@
         document.write('<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div></div>');
     }
 
-    var rightControlWidth = leftControlWidth = 0;
-    if(noOfTabs === 0) {
-        // Hide tabs if there are no tabs
-        document.getElementById('tab_container').style.display = 'none';
-        document.getElementById('tabjes').style.display = 'none';
-        document.getElementById('mapcontent').style.right = '0px';
-    } else {
-        var rightControl = $j('#rightControl');
-        if(rightControl && rightControl.height() > 20) rightControlWidth = rightControl.width() + 3; // For some viewers the rightcontrol extends to the bottom, in this case we need to remove the width from the right of the map
-        document.getElementById('mapcontent').style.right = (tabWidth === 0 ? 3 : (tabWidth + 6)) + rightControlWidth + 'px';
-    }
     if(noLeftTabs > 0) {
-        var leftControl = $j('#leftControl'), leftTabWidth = leftTabController.getTabWidth();
-        if(leftControl && leftControl.height() > 20) leftControlWidth = leftControl.width() + 3; // For some viewers the leftcontrol extends to the bottom, in this case we need to remove the width from the left of the map
-        document.getElementById('mapcontent').style.left = (leftTabWidth === 0 ? 3 : (leftTabWidth + 6)) + leftControlWidth + 'px';
-        if(usePanel && leftControlWidth !== 0) {
-            document.getElementById('dataframediv').style.left = leftControlWidth + 'px';
-            document.getElementById('informatiebalk').style.left = leftControlWidth + 'px';
-        }
+        $j('#content_viewer').addClass('tablinks_open');
     }
-
+    if(noOfTabs > 0) {
+        $j('#content_viewer').addClass('tabrechts_open');
+    }
+    if(!usePopup && usePanel) {
+        $j('#content_viewer').addClass('dataframe_open');
+    }
 </script>
 
 <!-- <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script> -->
@@ -787,35 +836,6 @@
 </c:forEach>
 
 <script type="text/javascript">
-    var infobalk = null, infobalkbottom = null, dataframebottom = 0;
-    if(usePopup || !usePanel) {
-        document.getElementById('leftcontent').style.bottom = '3px';
-        document.getElementById('tab_container').style.bottom = '3px';
-        document.getElementById('tabjes').style.right = '3px';
-        document.getElementById('tab_container').style.right = '3px';
-        document.getElementById('leftcontenttabjes').style.left = '3px';
-        document.getElementById('leftcontent').style.left = '3px';
-        document.getElementById('mapcontent').style.bottom = '3px';
-    }
-    else {
-        // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
-        document.getElementById('dataframediv').style.height = defaultdataframehoogte + 'px';
-        document.getElementById('tab_container').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        document.getElementById('mapcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        infobalk = $j('#informatiebalk');
-        infobalkbottom = parseInt(infobalk.css('bottom'), 10);
-        if(infobalkbottom > 1) {
-            infobalk.css('bottom', (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px');
-            if(usePanelControls) {
-                $j("#onderbalkControl").css("bottom", (defaultdataframehoogte==0?3:(defaultdataframehoogte + 5)));
-            }
-        } else {
-            // In some viewers the infobalk is moved to the bottom, in this case move the dataframediv
-            dataframebottom = infobalkbottom + infobalk.height() + 6;
-            document.getElementById('dataframediv').style.bottom = dataframebottom + 'px';
-        }
-    }
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
     var expandAll=catchEmpty(${configMap["expandAll"]});
@@ -858,66 +878,17 @@
         var panelRightCollapsed = false;
         function panelResize(dir)
         {
-            if(dir == 'below') {
-                if(!usePopup && !useDivPopup) {
-                    var dataframehoogte = defaultdataframehoogte;
-                    if(panelBelowCollapsed) {
-                        if(infobalkbottom !== null && infobalkbottom > 1) $j("#informatiebalk").css("display", "block");
-                        $j("#dataframediv").css("display", "block");
-                        $j("#onderbalkControl").removeClass("bottom_closed").addClass("bottom_open");
-                    } else {
-                        dataframehoogte = 0;
-                        if(infobalkbottom !== null && infobalkbottom > 1) $j("#informatiebalk").css("display", "none");
-                        $j("#dataframediv").css("display", "none");
-                        $j("#onderbalkControl").removeClass("bottom_open").addClass("bottom_closed");
-                    }
-                    $j("#dataframediv").animate({ height: dataframehoogte }, 400);
-                    if(infobalkbottom !== null && infobalkbottom > 1) {
-                        $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 5)) }, 400);
-                        $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
-                    }
-                    document.getElementById('leftcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
-                    document.getElementById('tab_container').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
-                    document.getElementById('mapcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
-                    
-                    tabController.doResize();
-                    leftTabController.doResize();
-                    
-                    panelBelowCollapsed = !panelBelowCollapsed;
-                    
-                    if (panelBelowCollapsed) {
-                        updateSizeOL();   
-                    }
-                }
+            if(dir === 'left') {
+                if($j('#content_viewer').hasClass('tablinks_open')) $j('#content_viewer').removeClass('tablinks_open').addClass('tablinks_dicht');
+                else $j('#content_viewer').addClass('tablinks_open').removeClass('tablinks_dicht');
             }
-            if(dir == 'right') {
-                var panelbreedte = panelRightCollapsed ? tabWidth : 0;
-                if(panelRightCollapsed) {
-                    $j('#tab_container, #tabjes, #tabjes ul').show();
-                    $j('#rightControl').removeClass('right_closed').addClass('right_open');
-                } else {
-                    $j('#tab_container, #tabjes, #tabjes ul').hide();
-                    $j('#rightControl').removeClass('right_open').addClass('right_closed');
-                }
-                panelRightCollapsed = !panelRightCollapsed;
-                $j("#tab_container").animate({ width: panelbreedte }, 400);
-                // $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-                $j("#tabjes").animate({ width: panelbreedte }, 200);
-                document.getElementById('mapcontent').style.right = (panelbreedte==0?0:(panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + rightControlWidth + 'px';
+            if(dir === 'right') {
+                if($j('#content_viewer').hasClass('tabrechts_open')) $j('#content_viewer').removeClass('tabrechts_open').addClass('tabrechts_dicht');
+                else $j('#content_viewer').addClass('tabrechts_open').removeClass('tabrechts_dicht');
             }
-            if(dir == 'left') {
-                var panelbreedte = panelLeftCollapsed ? leftTabWidth : 0;
-                if(panelLeftCollapsed) {
-                    $j('#leftcontent, #leftcontenttabjes, #leftcontenttabjes ul').show();
-                    $j('#leftControl').removeClass('left_closed').addClass('left_open');
-                } else {
-                    $j('#leftcontent, #leftcontenttabjes, #leftcontenttabjes ul').hide();
-                    $j('#leftControl').removeClass('left_open').addClass('left_closed');
-                }
-                $j("#leftcontent").animate({ width: panelbreedte }, 400);
-                // $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-                document.getElementById('mapcontent').style.left = (panelbreedte==0?0:(panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + leftControlWidth + 'px';
-                panelLeftCollapsed = !panelLeftCollapsed;
+            if(dir === 'below') {
+                if($j('#content_viewer').hasClass('dataframe_open')) $j('#content_viewer').removeClass('dataframe_open').addClass('dataframe_dicht');
+                else $j('#content_viewer').addClass('dataframe_open').removeClass('dataframe_dicht');
             }
         }
         var expandNodes=null;

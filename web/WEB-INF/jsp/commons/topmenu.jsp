@@ -28,9 +28,8 @@
         <html:link page="/viewer.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
     </c:if>
     --%>
-    
     <c:set var="stijlklasse" value="menulink" />
-    <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
+    <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq 'gisviewer' or requestJSP eq ''}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
     <html:link page="/indexlist.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>

@@ -27,7 +27,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <html lang="NL">
     <head>
-        <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
+        <%-- Themes selection --%>
+        <c:set var="theme" value="" />
+        <c:choose>
+            <c:when test="${theme eq ''}">
+                <%-- Fallback to B3P style --%>
+                <link href="<html:rewrite page='/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+            </c:when>
+            <c:otherwise>
+                <%-- Select theme style --%>
+                <link href="<html:rewrite page='/themes/${theme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+            </c:otherwise>
+        </c:choose>
         <link href="styles/gisviewer_a11y.css" rel="stylesheet" type="text/css">
 
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">

@@ -34,7 +34,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
         
         <title><tiles:insert name='title'/> - GIS Viewer</title>
-        <link href="styles/gisviewer_base.css" rel="stylesheet" type="text/css">
+        <%-- Themes selection --%>
+        <c:set var="theme" value="" />
+        <c:choose>
+            <c:when test="${theme eq ''}">
+                <%-- Fallback to B3P style --%>
+                <link href="<html:rewrite page='/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+            </c:when>
+            <c:otherwise>
+                <%-- Select theme style --%>
+                <link href="<html:rewrite page='/themes/${theme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+            </c:otherwise>
+        </c:choose>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>

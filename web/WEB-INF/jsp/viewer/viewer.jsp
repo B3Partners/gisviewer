@@ -433,8 +433,6 @@
         return vergunningConfigStraal;
     }
 
-    var tekstblokken = ${tekstBlokken};
-
     /* Boomsortering */
     var treeOrder = catchEmpty("${configMap["treeOrder"]}");
     if(typeof treeOrder === 'undefined' || !treeOrder) {

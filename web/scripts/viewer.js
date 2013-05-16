@@ -57,11 +57,6 @@ var editComponent = null;
 var uploadCsvLayerOn = false;
 
 /**
- * Start off with initMapComponent()
-*/
-initMapComponent();
-
-/**
  * Shows a message in a popup window.
  * @param msg The message to display.
 */
@@ -1779,7 +1774,7 @@ function deActivateCheckbox(id) {
 }
 
 function switchTab(id) {
-    tabController.setActive(id);
+    tabComponent.setActive(id);
 }
 
 function syncLayerCookieAndForm() {
@@ -3214,16 +3209,6 @@ function getActiveLayerLabel(cookiestring) {
     var items = cookiestring.split('##');
     return items[1];
 }
-
-var activeTab = readCookie('activetab');
-if(activeTab !== null) {
-    switchTab(activeTab);
-} else if (demogebruiker) {
-    switchTab('themas');
-} else {
-    switchTab('themas');
-}
-var orderLayerBox= document.getElementById("orderLayerBox");
 
 function onChangeTool(id, event) {
     if (id == 'identify') {
@@ -5132,99 +5117,20 @@ function addTempUploadedPointsWms() {
 var popupCreated = false;
 $j(document).ready(function() {
     /* Alleen tabs vullen als ze ook echt aanstaan */
-    var analyseTabOn = false;
-    var meldingenTabOn = false;
     var vergunningTabOn = false;
     var zoekenTabOn = false;
-    var redliningTabOn = false;
-    var bagTabOn = false;
-    var wktTabOn = false;
-    var transparantieTabOn = false;
-    var tekenTabOn = false;
-    var uploadPointsTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
-        if (enabledtabs[i] == "analyse")
-            analyseTabOn = true;
-
-        if (enabledtabs[i] == "meldingen")
-            meldingenTabOn = true;
 
         if (enabledtabs[i] == "vergunningen")
             vergunningTabOn = true;
 
-        if (enabledtabs[i] == "redlining")
-            redliningTabOn = true;
-
-        if (enabledtabs[i] == "bag")
-            bagTabOn = true;
-
         if (enabledtabs[i] == "zoeken")
             zoekenTabOn = true;
-        
-        if (enabledtabs[i] == "wkt")
-            wktTabOn = true;
-        
-        if (enabledtabs[i] == "transparantie")
-            transparantieTabOn = true;
-        
-        if (enabledtabs[i] == "tekenen")
-            tekenTabOn = true;
-        
-        if (enabledtabs[i] == "uploadpoints")
-            uploadPointsTabOn = true;
-    }
-
-    if (analyseTabOn) {
-        if (document.getElementById('analyseframeViewer')) {
-            document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
-        }
-    }
-
-    if (meldingenTabOn) {
-        if(document.getElementById('meldingenframeViewer')) {
-            document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
-        }
-    }
-
-    if (redliningTabOn) {
-        if(document.getElementById('redliningframeViewer')) {
-            document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
-        }
-    }
-
-    if (bagTabOn) {
-        if(document.getElementById('bagframeViewer')) {
-            document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
-        }
-    }
-    
-    if (wktTabOn) {
-        if(document.getElementById('wktframeViewer')) {
-            document.getElementById('wktframeViewer').src='/gisviewer/viewerwkt.do';
-        }
-    }
-    
-    if (transparantieTabOn) {
-        if(document.getElementById('transparantieframeViewer')) {
-            document.getElementById('transparantieframeViewer').src='/gisviewer/viewertransparantie.do';
-        }
-    }
-    
-    if (tekenTabOn) {
-        if(document.getElementById('tekenenframeViewer')) {
-            document.getElementById('tekenenframeViewer').src='/gisviewer/viewerteken.do';
-        }
     }
 
     if (zoekenTabOn || vergunningTabOn) {
         createSearchConfigurations();
-    }
-    
-    if (uploadPointsTabOn) {
-        if(document.getElementById('uploadtemppointsframeViewer')) {
-            document.getElementById('uploadtemppointsframeViewer').src='/gisviewer/uploadtemppoints.do';
-        }
     }
 
     var pwCreated = false;

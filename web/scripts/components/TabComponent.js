@@ -16,40 +16,47 @@
  */
 
 /**
- * Tabcontroller for Gisviewer
+ * Tabcomponent for Gisviewer
  * 
  * @requires jQuery (> 1.3.2)
  * @requires cookiefunctions.js
  * 
- * @param string labelContainer
- * @param string tabContainer
  * @param object options
- * @returns {TabController}
+ * @returns {TabComponent}
  */
-function TabController(labelContainer, tabContainer, options) {
+B3PGissuite.defineComponent('TabComponent', {
     
-    this.defaultOptions = {
+    'defaultOptions': {
         width: 288,
         useClick: false,
-        useHover: true
-    };
+        useHover: true,
+        tabvakClassname: 'tabvak'
+    },
+
+    constructor: function(options) {
+        
+        var me = this;
+        me.options = jQuery.extend(me.defaultOptions, options),
+        me.labelContainer = jQuery('#' + me.options.labelContainer),
+        me.tabLabelContainer = me.labelContainer.find('ul'),
+        me.tabContainer = jQuery('#' + me.options.tabContainer),
+        me.tabWidth = options.width,
+        me.tabCollection = {},
+        me.activeTab = null,
+        me.lteie8 = jQuery('html').hasClass('lt-ie9')
+        
+        var resizeTimer = null;
+        jQuery(window).bind('resize', function() {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                me.doResize();
+            }, 100);
+        });
+        me.setupContainer();
+    },
     
-    this.options = jQuery.extend(this.defaultOptions, options);
-    this.labelContainer = jQuery('#' + labelContainer);
-    this.tabLabelContainer = this.labelContainer.find('ul');
-    this.tabContainer = jQuery('#' + tabContainer);
-    this.tabWidth = options.width;
-    this.tabCollection = {};
-    this.activeTab = null;
-    this.tabvakClassname = 'tabvak';
-    this.lteie8 = jQuery('html').hasClass('lt-ie9');
-    
-    this.init = function() {
-        this.setupContainer();
-    };
-    
-    this.createTab = function(tabid, label, options) {
-        var tabObj = this.appendTab(this.createTabObject(tabid, label), options);
+    createTab: function(tabid, label, options) {
+        var tabObj = this.appendTab(this.createTabObject(tabid, label, options), options);
         if(options) {
             if(options.hasOwnProperty('contentid')) {
                 var contentcontainer = jQuery('#' + options.contentid);
@@ -72,23 +79,23 @@ function TabController(labelContainer, tabContainer, options) {
             }
         }
         return tabObj.container.attr('id');
-    };
+    },
     
-    this.createTabObject = function(tabid, label) {
+    createTabObject: function(tabid, label, options) {
         return {
             'id': tabid,
             'label': this.createLabel(tabid, label),
-            'container': this.createTabContainer(tabid),
+            'container': this.createTabContainer(tabid, options),
             'resizableContent': false
         };
-    };
+    },
     
-    this.createTabContainer = function(tabid) {
-        var tab = jQuery('<div></div>').css({'display': 'none'}).addClass(this.tabvakClassname).attr('id', tabid);
+    createTabContainer: function(tabid, options) {
+        var tab = jQuery('<div></div>').css({'display': 'none'}).addClass(options.tabvakClassname || this.options.tabvakClassname).attr('id', tabid);
         return tab;
-    };
+    },
     
-    this.createLabel = function(tabid, labeltxt) {
+    createLabel: function(tabid, labeltxt) {
         var me = this;
         var label = jQuery('<li></li>');
         
@@ -102,9 +109,9 @@ function TabController(labelContainer, tabContainer, options) {
             .append('<a href="#">' + labeltxt + '</a>');
 
         return label;
-    };
+    },
     
-    this.appendTab = function(tabObj, options) {
+    appendTab: function(tabObj, options) {
         if(options && options.hasOwnProperty('containerid')) {
             $j("#" + options.containerid).append(tabObj.container.show());
             return tabObj;
@@ -115,36 +122,36 @@ function TabController(labelContainer, tabContainer, options) {
             this.resizeLabels();
             return this.tabCollection[tabObj.id];
         }
-    };
+    },
     
-    this.resizeLabels = function() {
+    resizeLabels: function() {
         var noOfTabs = this.getTabCount();
         var tabWidth = Math.floor((this.tabWidth - (noOfTabs-1)) / noOfTabs);
         this.tabLabelContainer.find('a').width(tabWidth);
-    };
+    },
     
-    this.setupContainer = function() {
+    setupContainer: function() {
         var newCss = {};
         // var newCss = { 'width': this.tabWidth + 'px' };
         // if(this.tabWidth === 0) newCss.visibility = 'hidden';
         this.labelContainer.css(newCss);
         this.tabLabelContainer.css(newCss);
         this.tabContainer.css(newCss);
-    };
+    },
     
-    this.handleTabClick = function(tabid, e) {
+    handleTabClick: function(tabid, e) {
         e.preventDefault();
         if(!this.options.useClick) return;
         this.setActive(tabid);
-    };
+    },
     
-    this.handleTabHover = function(tabid, e) {
+    handleTabHover: function(tabid, e) {
         e.preventDefault();
         if(!this.options.useHover) return;
         this.setActive(tabid);
-    };
+    },
 
-    this.setVisible = function(tabid) {
+    setVisible: function(tabid) {
         var currentTab = this.getActiveTab();
         if(currentTab !== null) {
             currentTab.container.hide();
@@ -158,34 +165,34 @@ function TabController(labelContainer, tabContainer, options) {
                 this.resizeTabContents(tabid);
             }
         }
-    };
+    },
     
-    this.setActive = function(tabid) {
+    setActive: function(tabid) {
         this.setVisible(tabid);
         this.activeTab = tabid;
         eraseCookie('activetab');
         createCookie('activetab', tabid, '7');
-    };
+    },
     
-    this.getActiveTab = function() {
+    getActiveTab: function() {
         return this.getTab(this.activeTab);
-    };
+    },
     
-    this.getTab = function(tabid) {
+    getTab: function(tabid) {
         if(!this.tabCollection.hasOwnProperty(tabid)) return null;
         return this.tabCollection[tabid];
-    };
+    },
     
-    this.doResize = function() {
+    doResize: function() {
         var tabid;
         for (tabid in this.tabCollection) {
             if(this.tabCollection.hasOwnProperty(tabid) && this.tabCollection[tabid].resizableContent) {
                 this.resizeTabContents(tabid);
             }
         }
-    };
+    },
     
-    this.resizeTabContents = function(tabid) {
+    resizeTabContents: function(tabid) {
         var tabObj = this.tabCollection[tabid];
         var tabContainer = tabObj.container;
         var contentHeight = 0;
@@ -200,32 +207,21 @@ function TabController(labelContainer, tabContainer, options) {
         if(elementHeight > 0) { 
             tabContainer.find('.tabvak_groot').height(elementHeight);
         }
-    };
+    },
     
-    this.getTabCount = function() {
+    getTabCount: function() {
         var size = 0, key;
         for (key in this.tabCollection) {
             if (this.tabCollection.hasOwnProperty(key)) size++;
         }
         return size;
-    };
+    },
     
-    this.getTabHeight = function() {
+    getTabHeight: function() {
         return this.tabContainer.height();
-    };
+    },
     
-    this.getTabWidth = function() {
+    getTabWidth: function() {
         return this.tabWidth;
-    };
-    
-    this.init();
-    
-    var me = this;
-    var resizeTimer = null;
-    jQuery(window).bind('resize', function() {
-        if (resizeTimer) clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            me.doResize();
-        }, 100);
-    });
-}
+    }
+});

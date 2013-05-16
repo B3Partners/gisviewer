@@ -285,30 +285,37 @@
         useMouseOverTabs = true;
     }
     
+    // Tree expand all
+    var expandAll=catchEmpty(${configMap["expandAll"]});
+    if(typeof expandAll === 'undefined') {
+        expandAll = false;
+    } 
+    
     /* TODO: voorzieningen en vergunning even uitgecomment deze geven
      * document.getElementById(tabobj.contentid).style.display = 'none'; is null
      * als de iframes uitstaan en ze wel in de var tabbladen aanstaan.
 
      * De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
      * de naam en eventueel extra Content-divs die geopend moeten worden */
+    
     var tabbladen = {
-        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "extracontent": ["layermaindiv"] },
+        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "extracontent": ["layermaindiv"], "class": "TreeComponent", 'options': { 'tree': themaTree, 'servicestrees': ${servicesTrees}, 'expandAll': expandAll } },
         "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken" },
-        "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden" },
-        "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse" },
+        "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
+        "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse", "class": "IframeComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
         "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
-        "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
+        "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie" },
-        "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
-        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
-        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
-        "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" },
+        "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
+        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
+        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
+        "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
         "cms": {id: "cms", contentid: "cmsvak", name: "Extra"},
-        "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"},
-        "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
-        "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"},
-        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"},
-        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points" }
+        "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
+        "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
+        "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
+        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
+        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } }
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -426,6 +433,8 @@
         return vergunningConfigStraal;
     }
 
+    var tekstblokken = ${tekstBlokken};
+
     /* Boomsortering */
     var treeOrder = catchEmpty("${configMap["treeOrder"]}");
     if(typeof treeOrder === 'undefined' || !treeOrder) {
@@ -461,7 +470,6 @@
         startLocationY = "";
     }
 </script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/TabController.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
@@ -569,17 +577,6 @@
 <div id="tab_container"></div>
 
 <div id="tabContentContainers" style="display: none;">
-    <div id="treevak">
-        <div>
-            <form action="" id="treeForm">
-                <div id="layermaindiv"></div>
-            </form></div>
-        <div id="debug-content"></div>        
-
-        <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
-            <div id="layerTreeDiv_${status.count}"></div>
-        </c:forEach>
-    </div>
     <div id="volgordevak">
         <form action="" id="volgordeForm">  
             <div id="orderLayerBox" class="orderLayerBox tabvak_groot"></div>
@@ -741,20 +738,21 @@
             </div>
         </c:forEach>
     </div>
-    <div id="voorzieningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="voorzieningframeZoeker" name="voorzieningframeZoeker" frameborder="0" src="<html:rewrite page="/zoekVoorziening.do"/>"></iframe></div>
-    <div id="vergunningzoeker" style="display: none;" class="tabvak_with_iframe"><iframe id="vergunningframeZoeker" name="vergunningframeZoeker" frameborder="0" src="<html:rewrite page="/zoekVergunning.do"/>"></iframe></div>
-    <div id="objectvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="objectframeViewer" name="objectframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="analysevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="analyseframeViewer" name="analyseframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div> <%--<html:rewrite page='/vieweranalysedata.do'/>--%>
-    <div id="beschrijvingvak" style="display: none;" class="tabvak_with_iframe"><iframe id="beschrijvingVakViewer" name="beschrijvingVakViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="meldingenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="meldingenframeViewer" name="meldingenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="redliningvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="redliningframeViewer" name="redliningframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="bagvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="bagframeViewer" name="bagframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="wktvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="wktframeViewer" name="wktframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="transparantievakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="transparantieframeViewer" name="transparantieframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="tekenenvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="tekenenframeViewer" name="tekenenframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
-    <div id="uploadtemppointsvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="uploadtemppointsframeViewer" name="uploadtemppointsframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
 </div>
 
+<!-- Mapviewer JS -->
+<script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
+<!-- Tabcomponents JS -->
+<script type="text/javascript" src="<html:rewrite page="/scripts/components/ViewerComponent.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/components/TabComponent.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/components/IframeComponent.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/components/TreeComponent.js"/>"></script>
+        
 <script type="text/javascript">
     // Show left tabs when enabled
     var showLeftPanel = false;
@@ -762,24 +760,45 @@
         showLeftPanel = true;
         $j('#leftcontenttabjes, #leftcontent').show();
     }
+    // Function to create a tab
+    function createTabcomponent(tabno, tabComponent) {
+        // Get tabid
+        var tabid = enabledtabs[tabno];
+        // Get tabobj from tabbladen defs
+        var tabobj = tabbladen[tabid];
+        // If a class is defined, create class
+        if(tabobj.class) {
+            // Extend default options by options from tabbladen defs
+            var options = jQuery.extend({
+                tabid: tabid,
+                id: tabobj.contentid,
+                title: tabobj.name
+            }, tabobj.options || {});
+            // Create the defined component
+            var comp = B3PGissuite.createComponent(tabobj.class, options);
+            // Render the component to the tab
+            comp.renderTab(tabComponent);
+        // Else create a tab from existing content
+        } else {
+            // Set taboptions
+            var options = { 'contentid': tabobj.contentid, 'checkResize': true };
+            // Create a tab
+            tabComponent.createTab(tabid, tabobj.name, options);
+        }
+    }
     // Init tab controllers
-    var tabController = new TabController('tabjes', 'tab_container', { 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
-    var leftTabController = new TabController('leftcontenttabjes', 'leftcontent', { 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
+    var tabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'tabjes', 'tabContainer': 'tab_container', 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
+    var leftTabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'leftcontenttabjes', 'tabContainer': 'leftcontent', 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
     // Loop over enabled tabs
     for(i in enabledtabs) {
-        var tabid = enabledtabs[i];
-        var tabobj = tabbladen[tabid];
-        var options = { 'contentid': tabobj.contentid, 'checkResize': true };
-        tabController.createTab(tabid, tabobj.name, options);
+        createTabcomponent(i, tabComponent);
     }
+    // Loop over tabs on the left
     for(i in enabledtabsLeft) {
-        var tabid = enabledtabsLeft[i];
-        var tabobj = tabbladen[tabid];
-        var options = { 'contentid': tabobj.contentid, 'checkResize': true };
-        leftTabController.createTab(tabid, tabobj.name, options);
+        createTabcomponent(i, leftTabComponent);
     }
 
-    var noOfTabs = tabController.getTabCount(), noLeftTabs = leftTabController.getTabCount();
+    var noOfTabs = tabComponent.getTabCount(), noLeftTabs = leftTabComponent.getTabCount();
     if(usePanel) {
         document.write('<div class="infobalk" id="informatiebalk">'
             +'     <div class="infobalk_description">INFORMATIE</div>'
@@ -805,58 +824,26 @@
     if(!usePopup && usePanel) {
         $j('#content_viewer').addClass('dataframe_open');
     }
+    
+    /**
+    * Start off with initMapComponent()
+    */
+    initMapComponent();
+    
+    var activeTab = readCookie('activetab');
+    if(activeTab !== null) {
+        switchTab(activeTab);
+    } else if (demogebruiker) {
+        switchTab('themas');
+    } else {
+        switchTab('themas');
+    }
+    var orderLayerBox= document.getElementById("orderLayerBox");
 </script>
-
-<!-- <script type="text/javascript" src="<html:rewrite page="/scripts/flamingo/FlamingoController.js"/>"></script> -->
-<script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
-<!--script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js"/>"></script-->
-<script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
-
-<c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
-    <script type="text/javascript">
-        treeview_create({
-            "id": 'layerTreeDiv_${status.count}',
-            "root": ${serviceTree},
-            "rootChildrenAsRoots": false,
-            "itemLabelCreatorFunction": createServiceLeaf,
-            "toggleImages": {
-                "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
-                "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
-                "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
-            },
-            "saveExpandedState": true,
-            "streeaveScrollState": true,
-            "expandAll": true
-        });
-    </script>
-</c:forEach>
 
 <script type="text/javascript">
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
-    var expandAll=catchEmpty(${configMap["expandAll"]});
-    if(typeof expandAll === 'undefined') {
-        expandAll = false;
-    }    
-
-    treeview_create({
-        "id": "layermaindiv",
-        "root": themaTree,
-        "rootChildrenAsRoots": true,
-        "itemLabelCreatorFunction": createLabel,
-        "toggleImages": {
-            "collapsed": "<html:rewrite page="/images/treeview/plus.gif"/>",
-            "expanded": "<html:rewrite page="/images/treeview/minus.gif"/>",
-            "leaf": "<html:rewrite page="/images/treeview/leaft.gif"/>"
-        },
-        "saveExpandedState": true,
-        "saveScrollState": true,
-        "expandAll": expandAll
-    });    
 
     <c:if test="${not empty activeTab}">
         if (document.getElementById("${activeTab}")){
@@ -903,17 +890,6 @@
                 treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
             }
         }
-        /*
-        ie6_hack_onInit();
-
-        // just for fun
-        if (navigator.appName!="Microsoft Internet Explorer" && refreshDelay==666){
-            var s =document.createElement('script');
-            s.type='text/javascript';
-            document.body.appendChild(s);
-            s.src='http://kottke.org/plus/misc/asteroids.js';
-        }
-         */    
 
         function hideLoadingScreen() {
             $j("#loadingscreen").hide();

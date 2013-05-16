@@ -1,27 +1,27 @@
-function IframeComponent(options) {
-    var defaultOptions = {
-        src: '',
-        id: '',
-        title: ''
-    };
-    ViewerComponent.call(this, jQuery.apply(defaultOptions, options));
-}
-// Extend ViewerComponent
-IframeComponent.prototype = new ViewerComponent();
-IframeComponent.prototype.constructor = IframeComponent;
-
-IframeComponent.prototype.init = function() {
-    this.component = jQuery('<iframe></iframe>').attr({
-        src: this.options.src,
-        id: this.options.id,
-        name: this.options.id,
-        frameborder: 0
-    });
-};
-
-IframeComponent.prototype.renderTab = function(tabController) {
-    var domId = tabController.createTab(this.options.id, this.options.title, {
-        tabvakClassname: 'tabvak_with_iframe'
-    });
-    this.render(domId);
-};
+B3PGissuite.defineComponent('IframeComponent', {
+    extend: 'ViewerComponent',
+    defaultOptions: {
+        src: ''
+    },
+    constructor: function IframeComponent(options) {
+        this.callParent(options);
+        this.init();
+    },
+    init: function() {
+        this.component = jQuery('<iframe></iframe>').attr({
+            src: this.options.src,
+            id: this.options.id,
+            name: this.options.id,
+            frameborder: 0
+        });
+        if(jQuery('html').hasClass('lt-ie9')) {
+            this.component[0].allowTransparency = 'allowtransparency';
+        }
+    },
+    renderTab: function(tabComponent) {
+        var domId = tabComponent.createTab(this.options.tabid, this.options.title, {
+            tabvakClassname: 'tabvak_with_iframe'
+        });
+        this.render(domId);
+    }
+});

@@ -1,0 +1,67 @@
+<project name="viewer-js" default="minify" basedir=".">
+
+    <!-- http://code.google.com/p/closure-compiler/wiki/BuildingWithAnt -->    
+    
+    <property name="minify.outputdir" value="${basedir}/web/scripts"/>
+    <property name="viewerhtml.path" value="${basedir}/web/scripts"/>
+    <property name="design.folder" value="${basedir}/design"/>
+
+	<target name="minify" description="Minify source JavaScript files with Closure Compiler">
+        <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="./libs/GoogleClosureCompiler/compiler.jar"/>
+        <jscomp output="${minify.outputdir}/viewer-min.js" compilationLevel="simple" prettyPrint="true" printInputDelimiter="true" debug="false">
+          
+          <sources dir="${viewerhtml.path}">
+            <file name="swfobject.js" />
+            <file name="simple_treeview.js" />
+            <file name="selectbox.js" />
+            <file name="moveLayers.js" />
+            <file name="proj4js-compressed.js" />
+            <file name="viewer.js" />
+            <file name="zoeker.js" />
+            <file name="GPSComponent.js" />
+            <file name="EditComponent.js" />
+            <file name="MaatregelComponent.js" />
+          </sources>
+          
+          <sources dir="${viewerhtml.path}/openlayers">
+            <file name="Openlayers.js" />
+          </sources>
+
+          <sources dir="${viewerhtml.path}/webmapcontroller">
+            <file name="Controller.js" />
+            <file name="FlamingoController.js" />
+            <file name="OpenLayersController.js" />
+          </sources>
+
+          <sources dir="${viewerhtml.path}/components">
+            <file name="ViewerComponent.js" />
+            <file name="TabComponent.js" />
+            <file name="IframeComponent.js" />
+            <file name="TreeComponent.js" />
+            <file name="LegendComponent.js" />
+            <file name="PlanSelectionComponent.js" />
+            <file name="SearchComponent.js" /> 
+          </sources>          
+
+        </jscomp>
+	</target>
+
+	<target name="minify-clean">
+		<delete file="${minify.outputdir}/viewer-min.js"/>
+	</target>
+    
+    <target name="checkforchanges">
+        <uptodate property="nochanges" targetfile="${design.folder}/.flagfile">
+            <srcfiles dir="${design.folder}" includes="**/*.scss"/>
+        </uptodate>
+    </target>
+    
+    <target name="compile-css" depends="checkforchanges" unless="nochanges">
+        <java classname="org.jruby.Main" fork="true" failonerror="true" classpath="./libs/jRuby/jruby-complete-1.7.4.jar">  
+            <arg line="${design.folder}/compile.rb ${design.folder} compile ${design.folder}"/>  
+        </java>
+        <echo file="${design.folder}/.flagfile" append="false">Compiled</echo>
+    </target>
+    
+</project>
+

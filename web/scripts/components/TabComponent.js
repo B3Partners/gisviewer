@@ -27,7 +27,6 @@
 B3PGissuite.defineComponent('TabComponent', {
     
     'defaultOptions': {
-        width: 288,
         useClick: false,
         useHover: true,
         tabvakClassname: 'tabvak'
@@ -36,14 +35,13 @@ B3PGissuite.defineComponent('TabComponent', {
     constructor: function(options) {
         
         var me = this;
-        me.options = jQuery.extend(me.defaultOptions, options),
-        me.labelContainer = jQuery('#' + me.options.labelContainer),
-        me.tabLabelContainer = me.labelContainer.find('ul'),
-        me.tabContainer = jQuery('#' + me.options.tabContainer),
-        me.tabWidth = options.width,
-        me.tabCollection = {},
-        me.activeTab = null,
-        me.lteie8 = jQuery('html').hasClass('lt-ie9')
+        me.options = jQuery.extend(me.defaultOptions, options);
+        me.labelContainer = jQuery('#' + me.options.labelContainer);
+        me.tabLabelContainer = me.labelContainer.find('ul');
+        me.tabContainer = jQuery('#' + me.options.tabContainer);
+        me.tabCollection = {};
+        me.activeTab = null;
+        me.lteie8 = jQuery('html').hasClass('lt-ie9');
         
         var resizeTimer = null;
         jQuery(window).bind('resize', function() {
@@ -52,7 +50,6 @@ B3PGissuite.defineComponent('TabComponent', {
                 me.doResize();
             }, 100);
         });
-        me.setupContainer();
     },
     
     createTab: function(tabid, label, options) {
@@ -86,7 +83,7 @@ B3PGissuite.defineComponent('TabComponent', {
             'id': tabid,
             'label': this.createLabel(tabid, label),
             'container': this.createTabContainer(tabid, options),
-            'resizableContent': false
+            'resizableContent': options.resizableContent || false
         };
     },
     
@@ -126,17 +123,9 @@ B3PGissuite.defineComponent('TabComponent', {
     
     resizeLabels: function() {
         var noOfTabs = this.getTabCount();
-        var tabWidth = Math.floor((this.tabWidth - (noOfTabs-1)) / noOfTabs);
+        var totalWidth = this.tabContainer.width();
+        var tabWidth = Math.floor((totalWidth - (noOfTabs-1)) / noOfTabs);
         this.tabLabelContainer.find('a').width(tabWidth);
-    },
-    
-    setupContainer: function() {
-        var newCss = {};
-        // var newCss = { 'width': this.tabWidth + 'px' };
-        // if(this.tabWidth === 0) newCss.visibility = 'hidden';
-        this.labelContainer.css(newCss);
-        this.tabLabelContainer.css(newCss);
-        this.tabContainer.css(newCss);
     },
     
     handleTabClick: function(tabid, e) {

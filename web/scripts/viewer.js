@@ -4,7 +4,7 @@ dwr.engine.setErrorHandler(handler);
  * Array with the current visible layers in correct order.
  * The last is rendered on top.
 */ 
-var enabledLayerItems = new Array();
+B3PGissuite.vars.enabledLayerItems = new Array();
 
 /**
  * String that forms the request to the service. It contains the normal wms request
@@ -148,8 +148,10 @@ function getMaxBounds() {
 
     var screenWidth = $j("#mapcontent").width();
     var heightMapContent = $j("#mapcontent").height();
+    var dataframehoogte = $j("#dataframediv").height();
     
-    var screenHeight = heightMapContent + defaultdataframehoogte + 75;
+    // TODO: Fix this, what is this 75?
+    var screenHeight = heightMapContent + dataframehoogte + 75;
 
     var ratio = screenWidth / screenHeight;
     var mapRatio = oldMapWidth / oldMapHeight;
@@ -2067,14 +2069,14 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
 /* als order niet aangepast mag worden dan moet hier een sort komen */
 function addLayerToEnabledLayerItems(theItem){
     var foundLayerItem = null;
-    for (var i=0; i < enabledLayerItems.length; i++){
-        if (enabledLayerItems[i].id==theItem.id){
-            foundLayerItem = enabledLayerItems[i];
+    for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++){
+        if (B3PGissuite.vars.enabledLayerItems[i].id==theItem.id){
+            foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
             break;
         }
     }
     if (foundLayerItem == null) {
-        enabledLayerItems.push(theItem);
+        B3PGissuite.vars.enabledLayerItems.push(theItem);
     }
 }
 
@@ -2086,10 +2088,10 @@ function removeItemAsLayer(theItem){
 }
 
 function removeLayerFromEnabledLayerItems(itemId){
-    for (var i=0; i < enabledLayerItems.length; i++){
-        if (enabledLayerItems[i].id==itemId){
-            var foundLayerItem = enabledLayerItems[i];
-            enabledLayerItems.splice(i,1);
+    for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++){
+        if (B3PGissuite.vars.enabledLayerItems[i].id==itemId){
+            var foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
+            B3PGissuite.vars.enabledLayerItems.splice(i,1);
             return foundLayerItem;
         }
     }
@@ -2128,14 +2130,14 @@ function checkScaleForLayers() {
     setScaleForTree(themaTree, currentscale);
 }
 
-
-/*Controleert of een item in de huidige schaal past.
+/**
+ * Controleert of een item in de huidige schaal past.
  * Voor een enkele layer wordt gekeken of die er in past
  * Voor een cluster wordt gekeken of er 1 van de layers in de schaal past.
  * @param item json thema of cluster
  * @param scale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
  * @return boolean wel of niet zichtbaar in scale.
- **/
+ */
 function isItemInScale(item, scale) {
     if (scale == 'NaN' || scale < 0 || !item) {
         return false;
@@ -2286,8 +2288,8 @@ function refreshLayer(doRefreshOrder) {
     var backgroundLayerItems = new Array();
     var item;
 
-    for (var i=0; i<enabledLayerItems.length; i++){
-        item = enabledLayerItems[i];
+    for (var i=0; i<B3PGissuite.vars.enabledLayerItems.length; i++){
+        item = B3PGissuite.vars.enabledLayerItems[i];
 
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
@@ -2773,10 +2775,10 @@ function getLayerIdsAsString(onlyWithinScale) {
     var ret = "";
     var firstTime = true;
 
-    for (var i=0; i < enabledLayerItems.length; i++) {
+    for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
 
         if (useInheritCheckbox) {
-            var object = document.getElementById(enabledLayerItems[i].id);
+            var object = document.getElementById(B3PGissuite.vars.enabledLayerItems[i].id);
             /* Item alleen toevoegen aan de layers indien
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
@@ -2791,15 +2793,15 @@ function getLayerIdsAsString(onlyWithinScale) {
                 currentscale = webMapController.getMap().getScaleHint();
             } 
             
-            if (!isItemInScale(enabledLayerItems[i],currentscale)){
+            if (!isItemInScale(B3PGissuite.vars.enabledLayerItems[i],currentscale)){
                 continue;
             }
         }
         if(firstTime) {
-            ret += enabledLayerItems[i].id;
+            ret += B3PGissuite.vars.enabledLayerItems[i].id;
             firstTime = false;
         } else {
-            ret += "," + enabledLayerItems[i].id;
+            ret += "," + B3PGissuite.vars.enabledLayerItems[i].id;
         }
     }
   
@@ -3119,8 +3121,8 @@ function refreshLegendBox() {
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
     
-    for (var k=0; k<enabledLayerItems.length; k++){
-        var item = enabledLayerItems[k];
+    for (var k=0; k<B3PGissuite.vars.enabledLayerItems.length; k++){
+        var item = B3PGissuite.vars.enabledLayerItems[k];
         var found = false;
         
         // ouder moet aan staan en binnen schaal
@@ -3146,7 +3148,7 @@ function refreshLegendBox() {
         }
     }
     
-    enabledLayerItems = new Array();
+    B3PGissuite.vars.enabledLayerItems = new Array();
     var totalLength = orderLayerBox.childNodes.length;
     //Kijk of ze al bestaan en in die volgorde staan.
     for(var i = (totalLength - 1); i > -1; i--) {
@@ -3155,7 +3157,7 @@ function refreshLegendBox() {
         for (var m=0; m < visibleLayerItems.length; m++){
             if (visibleLayerItems[m].id==itemId){
                 var foundLayerItem = visibleLayerItems[m];
-                enabledLayerItems.push(foundLayerItem);
+                B3PGissuite.vars.enabledLayerItems.push(foundLayerItem);
                 visibleLayerItems.splice(m, 1);
                 stillVisible=true;
             }
@@ -3168,19 +3170,19 @@ function refreshLegendBox() {
     }
     
     if (visibleLayerItems.length>0) {
-        enabledLayerItems = enabledLayerItems.concat(visibleLayerItems);
+        B3PGissuite.vars.enabledLayerItems = B3PGissuite.vars.enabledLayerItems.concat(visibleLayerItems);
     }
     
     resetLegendImageQueue();
     
-    for (var j=0; j < enabledLayerItems.length; j++){
-        item = enabledLayerItems[j];
+    for (var j=0; j < B3PGissuite.vars.enabledLayerItems.length; j++){
+        item = B3PGissuite.vars.enabledLayerItems[j];
         
         addLayerToLegendBox(item, false);
     }
     
     if (invisibleLayerItems.length > 0) {
-        enabledLayerItems = enabledLayerItems.concat(invisibleLayerItems);
+        B3PGissuite.vars.enabledLayerItems = B3PGissuite.vars.enabledLayerItems.concat(invisibleLayerItems);
     }
 }
 
@@ -3190,7 +3192,7 @@ function deleteAllLayers() {
         document.getElementById(splitValue(orderLayerBox.childNodes[i].id)[0]).checked = false;
         orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
     }
-    enabledLayerItems=new Array();
+    B3PGissuite.vars.enabledLayerItems=new Array();
     syncLayerCookieAndForm();
     doRefreshLayer();
 }
@@ -3714,9 +3716,9 @@ function getLegendUrls() {
     var urlString = "";
     var firstURL = true;
     
-    if (enabledLayerItems instanceof Array) {
-        for (var i=0; i < enabledLayerItems.length; i++) {
-            layerItems.push(enabledLayerItems[i]);    
+    if (B3PGissuite.vars.enabledLayerItems instanceof Array) {
+        for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
+            layerItems.push(B3PGissuite.vars.enabledLayerItems[i]);    
         }
     }  
     
@@ -4080,8 +4082,8 @@ function highLightThemaObject(geom) {
     highLightGeom = geom;
 
     /* indien meerdere analyse themas dan popup voor keuze */
-    for (var i=0; i < enabledLayerItems.length; i++) {
-        var item = enabledLayerItems[i];
+    for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
+        var item = B3PGissuite.vars.enabledLayerItems[i];
 
         var object = document.getElementById(item.id);
 

@@ -23,8 +23,8 @@ var planIds = null;
 if (planSelectieIds)
     planIds=(""+planSelectieIds).split(",");
 
-var planEigenaarId = planIds[0];
-var planId = planIds[1];
+var planEigenaarId = (planIds === null ? null : planIds[0]);
+var planId = (planIds === null ? null : planIds[1]);
 
 /*Hier begint het zoeken:*/
 

@@ -59,6 +59,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <![endif]-->
         
         <script type="text/javascript">
+            /* B3PGissuite namespace */
+            var B3PGissuite = {
+                component: {},
+                instances: {},
+                idregistry: {},
+                vars: {}
+            };
             attachOnload(checkLocation);
         </script>
     </head>

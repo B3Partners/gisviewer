@@ -1,10 +1,16 @@
-/* B3PGissuite namespace for components */
-var B3PGissuite = {
-    component: {}
-};
 /* Helper function to create a Component */
 B3PGissuite.createComponent = function(className, options) {
-    return new B3PGissuite.component[className](options);
+    if(typeof B3PGissuite.component[className] === 'undefined') {
+        throw('The class ' + className + ' is not defined. Maybe you forgot to include the source file?');
+    }
+    if(typeof B3PGissuite.idregistry[className] === 'undefined') {
+        B3PGissuite.idregistry[className] = 0;
+    }
+    var nextid = B3PGissuite.idregistry[className]++;
+    // Component id is lowercased className + incremental number
+    var instanceId = (className.charAt(0).toLowerCase() + className.slice(1)) + nextid;
+    B3PGissuite.instances[instanceId] = new B3PGissuite.component[className](options);
+    return B3PGissuite.instances[instanceId];
 };
 /* Helper function to define a Component */
 B3PGissuite.defineComponent = function(className, classDefinition) {
@@ -27,6 +33,16 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
         };
     }
 };
+/* Helper function to get access to a component (for example var tree = B3PGissuite.get('TreeComponent'); ) */
+B3PGissuite.get = function(className, id) {
+    // Default instanceid is zero (the first instance)
+    var idnumber = id || 0;
+    var instanceId = (className.charAt(0).toLowerCase() + className.slice(1)) + idnumber;
+    if(typeof B3PGissuite.instances[instanceId] === 'undefined') {
+        return null;
+    }
+    return B3PGissuite.instances[instanceId];
+};
 
 /* ViewerComponent: basecomponent */
 B3PGissuite.defineComponent('ViewerComponent', {
@@ -47,7 +63,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         this.afterRender();
     },
     renderTab: function(tabComponent) {
-        var domId = tabComponent.createTab(this.options.tabid, this.options.title, {});
+        var domId = tabComponent.createTab(this.options.tabid, this.options.title, this.options.taboptions || {});
         this.render(domId);
     },
     afterRender: function() {}

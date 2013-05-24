@@ -29,7 +29,7 @@
         <fmt:message key="commons.topmenu.help"/>
     </html:link>
     
-    <a href="mailto:support@b3partners.nl" class="menulink">
+    <a href="mailto:JM.Koeckhoven@Lelystad.nl" class="menulink">
         <fmt:message key="commons.topmenu.contact"/>
     </a>
 

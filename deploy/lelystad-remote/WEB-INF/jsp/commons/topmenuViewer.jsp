@@ -52,7 +52,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <fmt:message key="commons.topmenuviewer.bookmark"/>
     </a>
 
-    <a href="mailto:support@b3partners.nl" class="menulink">
+    <a href="mailto:JM.Koeckhoven@Lelystad.nl" class="menulink">
         <fmt:message key="commons.topmenu.contact"/>
     </a>
         

@@ -3366,13 +3366,18 @@ function onFrameworkLoaded(){
     mapInitialized=true;
     webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
     
-    /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt.
-     * Let op: Bij OpenLayers gebeurt dit al bij maken Map */
-    if (webMapController instanceof FlamingoController) {        
-        var maxBounds = getMaxBounds();
-        var olRes = getTilingResolutions(maxBounds, false);
+    /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus
+     * overneemt. Indien geen resoluties opgegeven kun je in Flamingo gewoon
+     * oneindig ver blijven inzoomen Let op: Bij OpenLayers gebeurt dit
+     * al bij maken Map */
+    if (webMapController instanceof FlamingoController) {
         
-        webMapController.getMap("map1").setTilingResolutions(olRes);
+        if (tilingResolutions && tilingResolutions != '') {            
+            var maxBounds = getMaxBounds();
+            var olRes = getTilingResolutions(maxBounds, false);
+            
+            webMapController.getMap("map1").setTilingResolutions(olRes);
+        }
         
         /* Standaard pan tool activeren */
         webMapController.activateTool("toolPan");

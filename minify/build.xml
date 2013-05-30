@@ -4,7 +4,10 @@
     
     <property name="minify.outputdir" value="${basedir}/web/scripts"/>
     <property name="viewerhtml.path" value="${basedir}/web/scripts"/>
+    <property name="compile.location" value="${basedir}/design"/>
     <property name="design.folder" value="${basedir}/design"/>
+    <property name="themes.folder" value="${basedir}/themes"/>
+    <property name="themes.output.folder" value="${basedir}/web/themes"/>
 
 	<target name="minify" description="Minify source JavaScript files with Closure Compiler">
         <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="./libs/GoogleClosureCompiler/compiler.jar"/>
@@ -40,7 +43,8 @@
             <file name="TreeComponent.js" />
             <file name="LegendComponent.js" />
             <file name="PlanSelectionComponent.js" />
-            <file name="SearchComponent.js" /> 
+            <file name="SearchComponent.js" />
+            <file name="CMSComponent.js" />
           </sources>          
 
         </jscomp>
@@ -51,16 +55,47 @@
 	</target>
     
     <target name="checkforchanges">
-        <uptodate property="nochanges" targetfile="${design.folder}/.flagfile">
-            <srcfiles dir="${design.folder}" includes="**/*.scss"/>
+        <uptodate property="nochanges" targetfile="${dir}/.flagfile">
+            <srcfiles dir="${dir}" includes="**/*.scss"/>
         </uptodate>
     </target>
     
     <target name="compile-css" depends="checkforchanges" unless="nochanges">
         <java classname="org.jruby.Main" fork="true" failonerror="true" classpath="./libs/jRuby/jruby-complete-1.7.4.jar">  
-            <arg line="${design.folder}/compile.rb ${design.folder} compile ${design.folder}"/>  
+            <arg line="${compile.location}/compile.rb ${dir} compile ${dir}"/>  
         </java>
-        <echo file="${design.folder}/.flagfile" append="false">Compiled</echo>
+        <echo file="${dir}/.flagfile" append="false">Compiled</echo>
+    </target>
+    
+    <target name="compile-main-css">
+        <antcall target="compile-css">
+            <param name="dir" value="${design.folder}" />
+        </antcall>
+    </target>
+    
+    <target name="compile-themes">
+        <mkdir dir="${themes.output.folder}" />
+        <antcall target="compile-theme">
+            <param name="theme" value="gouda"/>
+        </antcall>
+        <antcall target="compile-theme">
+            <param name="theme" value="dronten"/>
+        </antcall>
+        <antcall target="compile-theme">
+            <param name="theme" value="solutionparc"/>
+        </antcall>
+    </target>
+    
+    <target name="compile-theme">
+        <antcall target="compile-css">
+            <param name="dir" value="${themes.folder}/${theme}/design" />
+        </antcall>
+        <copy todir="${themes.output.folder}/${theme}/images">
+            <fileset dir="${themes.folder}/${theme}/images"/>
+        </copy>
+        <copy todir="${themes.output.folder}/${theme}/styles">
+            <fileset dir="${themes.folder}/${theme}/styles"/>
+        </copy>
     </target>
     
 </project>

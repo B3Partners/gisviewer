@@ -43,10 +43,7 @@
     var kburl="${kburl}";
     var kbcode="${kbcode}";
 
-    var themaTree=catchEmpty(${tree});
-    if(typeof themaTree === 'undefined' || !themaTree) {
-        themaTree = null;
-    }
+    var themaTree=catchEmpty(${tree}, null);
     
     var organizationcode="${organizationcode}";
     var fullbbox='${fullExtent}';
@@ -197,7 +194,7 @@
         "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
         "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
         "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
-        "cms": {id: "cms", contentid: "cmsvak", name: "Extra" },
+        "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSComponent", 'options': { 'tekstBlokken': ${tekstBlokken} } },
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
         "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
@@ -309,44 +306,6 @@
 
 <div id="tabjes"><ul id="nav" class="tabsul"></ul></div>
 <div id="tab_container"></div>
-
-<div id="tabContentContainers" style="display: none;">
-    <div id="cmsvak" style="display: none; overflow: auto;" class="tabvak">
-        <%-- als er maar 1 tekstblok is dan die titel plaatsen
-        <c:if test="${fn:length(tekstBlokken)==1}">
-            <script type="text/javascript">
-                $j("#cmslink").html("${tekstBlokken[0].titel}");
-            </script>
-        </c:if>
-        <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
-            <div class="content_block_tab">
-                <div class="content_title"><c:out value="${tb.titel}"/></div>
-                <!-- Indien toonUrl aangevinkt is dan inhoud van url in iFrame tonen -->
-                <c:choose>
-                    <c:when test="${tb.toonUrl}">
-                        <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
-                    </c:when>
-
-                    <%-- Anders gewoon de tekst tonen van tekstblok
-                    <c:when test="${!tb.toonUrl}">
-                        <div class="inleiding_body">
-                            ${tb.tekst}
-
-                            <c:if test="${!empty tb.url}">
-                                Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
-                            </c:if>
-
-                            <c:if test="${tb.toonUrl}">
-                                <iframe id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
-                            </c:if>
-                        </div>
-                    </c:when>
-                </c:choose>
-            </div>
-        </c:forEach>
-         --%>
-    </div>
-</div>
         
 <script type="text/javascript">
 

@@ -68,7 +68,8 @@
     <import file="minify/build.xml"/>
     <target name="-post-compile">
 		<antcall target="minify"/>
-        <antcall target="compile-css"/>
+        <antcall target="compile-main-css"/>
+        <antcall target="compile-themes"/>
     </target>
     <target name="-post-clean">
 		<antcall target="minify-clean"/>

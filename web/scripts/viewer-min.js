@@ -2474,33 +2474,51 @@ Proj4js.Proj.moll = {init:function() {
 // Input 5
 dwr.engine.setErrorHandler(handler);
 B3PGissuite.vars.enabledLayerItems = [];
-var layerUrl = "" + kburl, cookieArray = readCookie("checkedLayers"), cookieClusterArray = readCookie("checkedClusters"), activeAnalyseThemaId = "", activeClusterId = "", layersAan = [], clustersAan = [], featureInfoTimeOut = 30, webMapController, startLayerIndex = 0, balloon, zoomBox, pan, prevExtent, identify, mapInitialized = false, searchExtent, sldSearchServlet, highlightThemaId, multiPolygonBufferWkt, alleLayers = [], gpsComponent = null, editComponent = null, uploadCsvLayerOn = false;
+B3PGissuite.vars.dataframepopupHandle = null;
+B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl;
+B3PGissuite.vars.cookieArray = B3PGissuite.config.useCookies ? readCookie("checkedLayers") : null;
+B3PGissuite.vars.cookieClusterArray = B3PGissuite.config.useCookies ? readCookie("checkedClusters") : null;
+B3PGissuite.vars.activeAnalyseThemaId = "";
+B3PGissuite.vars.activeClusterId = "";
+B3PGissuite.vars.layersAan = [];
+B3PGissuite.vars.clustersAan = [];
+B3PGissuite.vars.webMapController = null;
+B3PGissuite.vars.startLayerIndex = 0;
+B3PGissuite.vars.balloon = null;
+var zoomBox, pan, prevExtent, identify, mapInitialized = false, searchExtent, sldSearchServlet, highlightThemaId, multiPolygonBufferWkt, alleLayers = [], gpsComponent = null, editComponent = null, uploadCsvLayerOn = false, prevRadioButton = null, widthMetadataPopup = 800, heightMetadataPopup = 600, widthDownloadPopup = 425, heightDownloadPopup = 250, downloadPopupBlocksViewer = true, metadataPopupBlocksViewer = true, originalLayerUrl = B3PGissuite.vars.layerUrl, refresh_timeout_handle, loadingLegendImages = 
+{}, legendImageQueue = [], legendImageLoadingSpace = 1, teller = 0, frameWorkInitialized = false, nextIdentifyExtent = null;
+B3PGissuite.config.useSortableFunction && document.getElementById("orderLayerBox").sortable({stop:function() {
+  setTimerForReload()
+}, start:function() {
+  clearTimerForReload()
+}});
+var reloadTimer, exportMapWindow, btn_highLightSelected = false, popupWindowRef = null, highLightGeom = null, analyseThemas = [], initialized = false, currentpopupleft = null, currentpopuptop = null, editingRedlining = false, redLineGegevensbronId = -1, popupCreated = false;
 function handler(a) {
   a != "" && messagePopup("", a, "information")
 }
 function initMapComponent() {
-  mapviewer = viewerType;
+  mapviewer = B3PGissuite.config.viewerType;
   window.location.href.indexOf("flamingo") > 0 && (mapviewer = "flamingo");
   if(mapviewer == "flamingo") {
-    webMapController = new FlamingoController("mapcontent");
-    var a = webMapController.createMap("map1");
-    webMapController.addMap(a)
+    B3PGissuite.vars.webMapController = new FlamingoController("mapcontent");
+    var a = B3PGissuite.vars.webMapController.createMap("map1");
+    B3PGissuite.vars.webMapController.addMap(a)
   }else {
     if(mapviewer == "openlayers") {
-      webMapController = new OpenLayersController;
+      B3PGissuite.vars.webMapController = new OpenLayersController;
       var a = getMaxBounds(), b = getTilingResolutions(a, true);
       Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs";
       a = {projection:new OpenLayers.Projection("EPSG:28992"), maxExtent:a, resolutions:b, allOverlays:true, units:"meters", theme:"styles/gisviewer_openlayers.css", controls:[new OpenLayers.Control.Navigation({zoomBoxEnabled:false}), new OpenLayers.Control.ArgParser]};
       OpenLayers.ImgPath = "styles/openlayers_img/";
       $j("#mapcontent").html(" ");
-      a = webMapController.createMap("mapcontent", a);
+      a = B3PGissuite.vars.webMapController.createMap("mapcontent", a);
       $j("#mapcontent").css("border", "1px solid black");
-      webMapController.addMap(a)
+      B3PGissuite.vars.webMapController.addMap(a)
     }
   }
-  webMapController.initEvents();
-  webMapController.registerEvent(Event.ON_GET_CAPABILITIES, webMapController.getMap(), onGetCapabilities);
-  webMapController.registerEvent(Event.ON_CONFIG_COMPLETE, webMapController, onConfigComplete)
+  B3PGissuite.vars.webMapController.initEvents();
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_GET_CAPABILITIES, B3PGissuite.vars.webMapController.getMap(), onGetCapabilities);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_CONFIG_COMPLETE, B3PGissuite.vars.webMapController, onConfigComplete)
 }
 function getNLExtent() {
   return"12000,304000,280000,620000"
@@ -2510,7 +2528,8 @@ function getNLMaxBounds() {
 }
 function getMaxBounds() {
   var a;
-  !bbox && fullbbox ? a = Utils.createBounds(new Extent(fullbbox)) : bbox && appExtent ? a = Utils.createBounds(new Extent(appExtent)) : bbox && fullbbox ? a = Utils.createBounds(new Extent(fullbbox)) : bbox && !fullbbox ? a = Utils.createBounds(new Extent(bbox)) : (a = getNLMaxBounds(), a = new OpenLayers.Bounds(a.left, a.bottom, a.right, a.top));
+  !B3PGissuite.config.bbox && B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox)) : B3PGissuite.config.bbox && B3PGissuite.config.appExtent ? a = Utils.createBounds(new Extent(B3PGissuite.config.appExtent)) : B3PGissuite.config.bbox && B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox)) : B3PGissuite.config.bbox && !B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.bbox)) : (a = getNLMaxBounds(), 
+  a = new OpenLayers.Bounds(a.left, a.bottom, a.right, a.top));
   var b = a.right - a.left, c = a.top - a.bottom, d = $j("#mapcontent").width(), e = $j("#mapcontent").height(), f = $j("#dataframediv").height();
   d /= e + f + 75;
   d < b / c ? (b /= d, a.bottom -= (b - c) / 2, a.top = a.bottom + b) : (c *= d, a.left -= (c - b) / 2, a.right = a.left + c);
@@ -2518,8 +2537,8 @@ function getMaxBounds() {
 }
 function getTilingResolutions(a, b) {
   var c = a.right - a.left, d;
-  if(tilingResolutions) {
-    var e = tilingResolutions;
+  if(B3PGissuite.config.tilingResolutions) {
+    var e = B3PGissuite.config.tilingResolutions;
     if((e = e.indexOf(",") != -1 ? e.split(",") : e.split(" ")) && e.length > 0) {
       d = [];
       for(var f in e) {
@@ -2527,9 +2546,9 @@ function getTilingResolutions(a, b) {
       }
     }
   }else {
-    tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125", d = [680, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125]
+    B3PGissuite.config.tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125", d = [680, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125]
   }
-  if(tilingResolutions) {
+  if(B3PGissuite.config.tilingResolutions) {
     f = $j("#mapcontent").width();
     c = c / f * (72 / 0.0254) / 1E3;
     f = [];
@@ -2548,83 +2567,80 @@ function getTilingResolutions(a, b) {
   }
   return d
 }
-if(typeof String.prototype.trim !== "function") {
-  String.prototype.trim = function() {
-    return this.replace(/^\s+|\s+$/g, "")
-  }
-}
 function hideIdentifyIcon() {
-  webMapController instanceof FlamingoController && webMapController.getMap().getFrameworkMap().callMethod("map1_identifyicon", "hide")
+  B3PGissuite.vars.webMapController instanceof FlamingoController && B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod("map1_identifyicon", "hide")
 }
 function showIdentifyIcon() {
-  webMapController instanceof FlamingoController && webMapController.getMap().getFrameworkMap().callMethod("map1_identifyicon", "show")
+  B3PGissuite.vars.webMapController instanceof FlamingoController && B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod("map1_identifyicon", "show")
 }
 function initializeButtons() {
   if(ieVersion != void 0 && ieVersion <= 7) {
-    var a = webMapController.getMap().getFrameworkMap().id;
+    var a = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
     if(a = document.getElementById(a + "_OpenLayers_ViewPort")) {
       a.style.position = "absolute"
     }
   }
-  webMapController.createPanel("toolGroup");
-  webMapController.addTool(webMapController.createTool("loading", Tool.LOADING_BAR));
-  zoomBox = webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {title:"inzoomen via selectie"});
-  webMapController.addTool(zoomBox);
-  pan = webMapController.createTool("b_pan", Tool.PAN, {title:"kaartbeeld slepem"});
-  webMapController.addTool(pan);
-  webMapController instanceof OpenLayersController && webMapController.activateTool("b_pan");
-  prevExtent = webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {title:"stap terug"});
-  webMapController.addTool(prevExtent);
-  a = webMapController.createTool("b_measure", Tool.MEASURE, {title:"afstand meten"});
-  webMapController.addTool(a);
+  B3PGissuite.vars.webMapController.createPanel("toolGroup");
+  B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading", Tool.LOADING_BAR));
+  zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {title:"inzoomen via selectie"});
+  B3PGissuite.vars.webMapController.addTool(zoomBox);
+  pan = B3PGissuite.vars.webMapController.createTool("b_pan", Tool.PAN, {title:"kaartbeeld slepem"});
+  B3PGissuite.vars.webMapController.addTool(pan);
+  B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.vars.webMapController.activateTool("b_pan");
+  prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {title:"stap terug"});
+  B3PGissuite.vars.webMapController.addTool(prevExtent);
+  a = B3PGissuite.vars.webMapController.createTool("b_measure", Tool.MEASURE, {title:"afstand meten"});
+  B3PGissuite.vars.webMapController.addTool(a);
   a = {};
   a.handlerGetFeatureHandler = onIdentifyData;
   a.handlerBeforeGetFeatureHandler = onIdentify;
   a.title = "informatie opvragen";
-  identify = webMapController.createTool("identify", Tool.GET_FEATURE_INFO, a);
-  webMapController.addTool(identify);
-  webMapController.registerEvent(Event.ON_SET_TOOL, identify, onChangeTool);
-  a = webMapController.createVectorLayer("editMap");
-  webMapController.getMap().addLayer(a);
-  webMapController.getMap().setLayerIndex(a, webMapController.getMap().getLayers().length + startLayerIndex);
-  var b = webMapController.createTool("redLiningContainer", Tool.DRAW_FEATURE, {layer:a});
-  webMapController.addTool(b);
-  b = webMapController.createTool("b_polyMeasure", Tool.MEASURED_POLYGON, {title:"oppervlakte meten", displayClass:"olControlb_polyMeasure"});
-  webMapController.addTool(b);
-  b = webMapController.createTool("b_buffer", Tool.BUTTON, {layer:a, title:"buffer het tekenobject"});
-  webMapController.addTool(b);
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_buffer);
-  b = webMapController.createTool("b_highlight", Tool.BUTTON, {layer:a, title:"selecteer een object in de kaart"});
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_highlight);
-  webMapController.addTool(b);
-  b = webMapController.createTool("b_getfeatures", Tool.BUTTON, {layer:a, title:"selecteer binnen geselecteerd kaartobject"});
-  webMapController.addTool(b);
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_getfeatures);
-  b = webMapController.createTool("b_removePolygons", Tool.BUTTON, {layer:a, title:"verwijder het tekenobject"});
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_removePolygons);
-  webMapController.addTool(b);
-  b = webMapController.createTool("b_printMap", Tool.BUTTON, {layer:a, title:"printvoorbeeld"});
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_print);
-  webMapController.addTool(b);
-  b = webMapController.createTool("b_layerSelection", Tool.BUTTON, {layer:a, title:"kaartselectie"});
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_layerSelection);
-  webMapController.addTool(b);
-  gpsBuffer < 1 && (gpsBuffer = 500);
-  gpsComponent = new GPSComponent(gpsBuffer);
-  b = webMapController.createTool("b_gps", Tool.GPS, {layer:a, title:"zet GPS locatie aan/uit"});
-  webMapController.registerEvent(Event.ON_EVENT_UP, b, gpsComponent.stopPolling);
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, b, gpsComponent.startPolling);
-  webMapController.registerEvent(Event.ON_EVENT_UP, b, b_gps_stop);
-  webMapController.addTool(b);
-  a = webMapController.createTool("b_showOverzicht", Tool.BUTTON, {layer:a, title:"overzichtskaart"});
-  webMapController.registerEvent(Event.ON_EVENT_DOWN, a, b_overview);
-  webMapController.addTool(a);
-  a = webMapController.createTool("scalebar", Tool.SCALEBAR);
-  webMapController.addTool(a);
-  a = webMapController.createTool("zoombar", Tool.ZOOM_BAR);
-  webMapController.addTool(a);
+  identify = B3PGissuite.vars.webMapController.createTool("identify", Tool.GET_FEATURE_INFO, a);
+  B3PGissuite.vars.webMapController.addTool(identify);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_SET_TOOL, identify, onChangeTool);
+  a = B3PGissuite.vars.webMapController.createVectorLayer("editMap");
+  B3PGissuite.vars.webMapController.getMap().addLayer(a);
+  B3PGissuite.vars.webMapController.getMap().setLayerIndex(a, B3PGissuite.vars.webMapController.getMap().getLayers().length + B3PGissuite.vars.startLayerIndex);
+  var b = B3PGissuite.vars.webMapController.createTool("redLiningContainer", Tool.DRAW_FEATURE, {layer:a});
+  B3PGissuite.vars.webMapController.addTool(b);
+  b = B3PGissuite.vars.webMapController.createTool("b_polyMeasure", Tool.MEASURED_POLYGON, {title:"oppervlakte meten", displayClass:"olControlb_polyMeasure"});
+  B3PGissuite.vars.webMapController.addTool(b);
+  b = B3PGissuite.vars.webMapController.createTool("b_buffer", Tool.BUTTON, {layer:a, title:"buffer het tekenobject"});
+  B3PGissuite.vars.webMapController.addTool(b);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_buffer);
+  b = B3PGissuite.vars.webMapController.createTool("b_highlight", Tool.BUTTON, {layer:a, title:"selecteer een object in de kaart"});
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_highlight);
+  B3PGissuite.vars.webMapController.addTool(b);
+  b = B3PGissuite.vars.webMapController.createTool("b_getfeatures", Tool.BUTTON, {layer:a, title:"selecteer binnen geselecteerd kaartobject"});
+  B3PGissuite.vars.webMapController.addTool(b);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_getfeatures);
+  b = B3PGissuite.vars.webMapController.createTool("b_removePolygons", Tool.BUTTON, {layer:a, title:"verwijder het tekenobject"});
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_removePolygons);
+  B3PGissuite.vars.webMapController.addTool(b);
+  b = B3PGissuite.vars.webMapController.createTool("b_printMap", Tool.BUTTON, {layer:a, title:"printvoorbeeld"});
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_print);
+  B3PGissuite.vars.webMapController.addTool(b);
+  b = B3PGissuite.vars.webMapController.createTool("b_layerSelection", Tool.BUTTON, {layer:a, title:"kaartselectie"});
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_layerSelection);
+  B3PGissuite.vars.webMapController.addTool(b);
+  if(B3PGissuite.config.gpsBuffer < 1) {
+    B3PGissuite.config.gpsBuffer = 500
+  }
+  gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
+  b = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {layer:a, title:"zet GPS locatie aan/uit"});
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, b, gpsComponent.stopPolling);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, gpsComponent.startPolling);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, b, b_gps_stop);
+  B3PGissuite.vars.webMapController.addTool(b);
+  a = B3PGissuite.vars.webMapController.createTool("b_showOverzicht", Tool.BUTTON, {layer:a, title:"overzichtskaart"});
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, a, b_overview);
+  B3PGissuite.vars.webMapController.addTool(a);
+  a = B3PGissuite.vars.webMapController.createTool("scalebar", Tool.SCALEBAR);
+  B3PGissuite.vars.webMapController.addTool(a);
+  a = B3PGissuite.vars.webMapController.createTool("zoombar", Tool.ZOOM_BAR);
+  B3PGissuite.vars.webMapController.addTool(a);
   editComponent = new EditComponent;
-  viewerTemplate == "embedded" && displayEmbeddedMenuIcons()
+  B3PGissuite.config.viewerTemplate == "embedded" && displayEmbeddedMenuIcons()
 }
 function displayEmbeddedMenuIcons() {
   $j("#embedded_icons").css("position", "absolute");
@@ -2633,41 +2649,41 @@ function displayEmbeddedMenuIcons() {
   $j("#embedded_icons .embedded_icon").css("float", "left");
   $j("#embedded_icons .embedded_icon").css("padding-top", "7px");
   $j("#embedded_icons .embedded_icon").css("padding-left", "15px");
-  webMapController instanceof OpenLayersController ? ($j("#embedded_icons").css("left", "670px"), $j("#embedded_icons").css("top", "6px"), $j("#embedded_icons").css("border", "solid 1px #808080"), $j("#embedded_icons").css("background-color", "#eeeeee")) : ($j("#embedded_icons").css("left", "630px"), $j("#embedded_icons").css("top", "2px"));
+  B3PGissuite.vars.webMapController instanceof OpenLayersController ? ($j("#embedded_icons").css("left", "670px"), $j("#embedded_icons").css("top", "6px"), $j("#embedded_icons").css("border", "solid 1px #808080"), $j("#embedded_icons").css("background-color", "#eeeeee")) : ($j("#embedded_icons").css("left", "630px"), $j("#embedded_icons").css("top", "2px"));
   $j("#embedded_icons").show()
 }
 function getBaseUrl() {
-  return window.location.protocol + "//" + window.location.host + baseNameViewer
+  return window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer
 }
 function doInitSearch() {
-  if(searchConfigId.length > 0 && search.length > 0) {
+  if(B3PGissuite.config.searchConfigId.length > 0 && B3PGissuite.config.search.length > 0) {
     showLoading();
-    var a = search.split(",");
-    JZoeker.zoek(Array(searchConfigId), a, 0, handleInitSearch)
+    var a = B3PGissuite.config.search.split(",");
+    JZoeker.zoek(Array(B3PGissuite.config.searchConfigId), a, 0, handleInitSearch)
   }
 }
 function handleInitSearch(a) {
   hideLoading();
-  a.length > 0 && handleInitSearchResult(a[0], searchAction, searchId, searchClusterId, searchSldVisibleValue)
+  a.length > 0 && handleInitSearchResult(a[0], B3PGissuite.config.searchAction, B3PGissuite.config.searchId, B3PGissuite.config.searchClusterId, B3PGissuite.config.searchSldVisibleValue)
 }
 function handleInitSearchResult(a, b, c, d, e) {
   var f = true, g = b = false;
-  searchAction && (searchAction.toLowerCase().indexOf("zoom") == -1 && (f = false), searchAction.toLowerCase().indexOf("highlight") >= 0 ? b = true : searchAction.toLowerCase().indexOf("filter") >= 0 && (g = true));
+  B3PGissuite.config.searchAction && (B3PGissuite.config.searchAction.toLowerCase().indexOf("zoom") == -1 && (f = false), B3PGissuite.config.searchAction.toLowerCase().indexOf("highlight") >= 0 ? b = true : B3PGissuite.config.searchAction.toLowerCase().indexOf("filter") >= 0 && (g = true));
   if(b || g) {
-    var h = "", j = null, j = e ? e : a.id ? a.id : search;
+    var h = "", j = null, j = e ? e : a.id ? a.id : B3PGissuite.config.search;
     j != null && (h += h.indexOf("?") >= 0 ? "&" : "?", h += "visibleValue=" + j);
     c && (h += h.indexOf("?") >= 0 ? "&" : "?", h += "themaId=" + c);
     d && (h += h.indexOf("?") >= 0 ? "&" : "?", h += "clusterId=" + d);
     h += h.indexOf("?") >= 0 ? "&" : "?";
     b && (h += "sldType=UserStyle");
     g && (h += "sldType=NamedStyle");
-    c = sldServletUrl + h;
+    c = B3PGissuite.config.sldServletUrl + h;
     mapInitialized ? setSldOnDefaultMap(c, true) : sldSearchServlet = c
   }
   a = getBboxMinSize2(a);
   placeSearchResultMarker((a.maxx - a.minx) / 2 + a.minx, (a.maxy - a.miny) / 2 + a.miny);
   switchTab("zoeken");
-  JZoekconfiguratieThemaUtil.getThemas(searchConfigId, function(b) {
+  JZoekconfiguratieThemaUtil.getThemas(B3PGissuite.config.searchConfigId, function(b) {
     zoekconfiguratieThemasCallBack(b);
     switchLayersOn();
     if(f) {
@@ -2676,17 +2692,17 @@ function handleInitSearchResult(a, b, c, d, e) {
   })
 }
 function placeSearchResultMarker(a, b) {
-  webMapController.getMap().setMarker("searchResultMarker", a, b)
+  B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", a, b)
 }
 function removeSearchResultMarker() {
-  webMapController.getMap().removeMarker("searchResultMarker")
+  B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker")
 }
 function removeAllMarkers() {
-  webMapController.getMap().removeAllMarkers()
+  B3PGissuite.vars.webMapController.getMap().removeAllMarkers()
 }
 function getBboxMinSize2(a) {
-  if(Number(a.maxx - a.minx) < minBboxZoeken) {
-    var b = Number((minBboxZoeken - (a.maxx - a.minx)) / 2), c = Number((minBboxZoeken - (a.maxy - a.miny)) / 2);
+  if(Number(a.maxx - a.minx) < B3PGissuite.config.minBboxZoeken) {
+    var b = Number((B3PGissuite.config.minBboxZoeken - (a.maxx - a.minx)) / 2), c = Number((B3PGissuite.config.minBboxZoeken - (a.maxy - a.miny)) / 2);
     a.minx = Number(a.minx - b);
     a.maxx = Number(Number(a.maxx) + Number(b));
     a.miny = Number(a.miny - c);
@@ -2695,9 +2711,9 @@ function getBboxMinSize2(a) {
   return a
 }
 function setSldOnDefaultMap(a, b) {
-  var c = webMapController.getMap("map1").getLayer("fmcLayer");
+  var c = B3PGissuite.vars.webMapController.getMap("map1").getLayer("fmcLayer");
   c.setSld(escape(a));
-  b && (webMapController.getMap("map1").removeLayerById(c.getId(), false), webMapController.getMap("map1").addLayer(c))
+  b && (B3PGissuite.vars.webMapController.getMap("map1").removeLayerById(c.getId(), false), B3PGissuite.vars.webMapController.getMap("map1").addLayer(c))
 }
 function loadBusyJSP(a, b) {
   var c = null;
@@ -2707,8 +2723,8 @@ function loadBusyJSP(a, b) {
   c != null && c.html('<div id="content_style"><table class="kolomtabel"><tr><td valign="top"><div class="loadingMessage"><table><tr><td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td><td><h2>Bezig met laden ...</h2><p>Bezig met zoeken naar administratieve gegevens.</p></td></tr></table></div></td></tr></table></div>')
 }
 function handleGetAdminData(a, b, c, d, e) {
-  if(usePopup || usePanel || useBalloonPopup) {
-    if(d == void 0 && (d = multipleActiveThemas ? getLayerIdsAsString(true) : activeAnalyseThemaId, d == null || d == "")) {
+  if(B3PGissuite.config.usePopup || B3PGissuite.config.usePanel || B3PGissuite.config.useBalloonPopup) {
+    if(d == void 0 && (d = B3PGissuite.config.multipleActiveThemas ? getLayerIdsAsString(true) : B3PGissuite.vars.activeAnalyseThemaId, d == null || d == "")) {
       hideLoading();
       return
     }
@@ -2721,35 +2737,37 @@ function handleGetAdminData(a, b, c, d, e) {
     document.forms[0].objectdata.value = "";
     document.forms[0].themaid.value = d;
     document.forms[0].lagen.value = "";
-    if(searchAction.toLowerCase().indexOf("filter") >= 0) {
-      document.forms[0].search.value = search, document.forms[0].searchId.value = searchId, document.forms[0].searchClusterId.value = searchClusterId
+    if(B3PGissuite.config.searchAction.toLowerCase().indexOf("filter") >= 0) {
+      document.forms[0].search.value = B3PGissuite.config.search, document.forms[0].B3PGissuite.config.searchId.value = B3PGissuite.config.searchId, document.forms[0].B3PGissuite.config.searchClusterId.value = B3PGissuite.config.searchClusterId
     }
     document.forms[0].geom.value = a;
-    d = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint();
+    d = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
     document.forms[0].scale.value = d;
-    document.forms[0].tolerance.value = tolerance;
+    document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
     c ? (document.forms[0].withinObject.value = "1", document.forms[0].onlyFeaturesInGeom.value = "true") : (document.forms[0].withinObject.value = "-1", document.forms[0].onlyFeaturesInGeom.value = "false");
-    if(bookmarkAppcode != null) {
-      document.forms[0].bookmarkAppcode.value = bookmarkAppcode
+    if(B3PGissuite.config.bookmarkAppcode != null) {
+      document.forms[0].B3PGissuite.config.bookmarkAppcode.value = B3PGissuite.config.bookmarkAppcode
     }
     if(b != null) {
       document.forms[0].themaid.value = b
     }
-    if(usePopup) {
-      if(dataframepopupHandle == null || dataframepopupHandle.closed) {
-        dataframepopupHandle = useDivPopup ? popUpData("dataframedivpopup", 680, 225, true) : popUpData("dataframepopup", 680, 225, false)
+    if(B3PGissuite.config.usePopup) {
+      if(B3PGissuite.vars.dataframepopupHandle == null || B3PGissuite.vars.dataframepopupHandle.closed) {
+        B3PGissuite.vars.dataframepopupHandle = B3PGissuite.config.useDivPopup ? popUpData("dataframedivpopup", 680, 225, true) : popUpData("dataframepopup", 680, 225, false)
       }
-      useDivPopup ? (document.forms[0].target = "dataframedivpopup", loadBusyJSP(dataframepopupHandle, "div")) : (document.forms[0].target = "dataframepopup", loadBusyJSP(dataframepopupHandle, "window"))
+      B3PGissuite.config.useDivPopup ? (document.forms[0].target = "dataframedivpopup", loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, "div")) : (document.forms[0].target = "dataframepopup", loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, "window"))
     }else {
-      if(useBalloonPopup) {
-        balloon || (b = 0, webMapController instanceof FlamingoController && (b = 36), balloon = new Balloon($j("#mapcontent"), webMapController, "infoBalloon", 300, 300, 0, b));
+      if(B3PGissuite.config.useBalloonPopup) {
+        if(!B3PGissuite.vars.balloon) {
+          b = 0, B3PGissuite.vars.webMapController instanceof FlamingoController && (b = 36), B3PGissuite.vars.balloon = new Balloon($j("#mapcontent"), B3PGissuite.vars.webMapController, "infoBalloon", 300, 300, 0, b)
+        }
         document.forms[0].target = "dataframeballoonpopup";
         for(var a = a.replace(/POLYGON/g, "").replace(/POINT/, "").replace(/\(/g, "").replace(/\)/g, "").split(","), f, g, h, j, b = 0;b < a.length;b++) {
           d = a[b].split(" "), c = Number(d[0]), d = Number(d[1]), f == void 0 && (g = f = c), h == void 0 && (j = h = d), c > g && (g = c), c < f && (f = c), d > j && (j = d), d < h && (h = d)
         }
-        balloon.setPosition((f + g) / 2, (h + j) / 2, true);
+        B3PGissuite.vars.balloon.setPosition((f + g) / 2, (h + j) / 2, true);
         f = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">');
-        balloon.getContentElement().html(f)
+        B3PGissuite.vars.balloon.getContentElement().html(f)
       }else {
         document.forms[0].target = "dataframe", loadBusyJSP("dataframe", "panel")
       }
@@ -2761,10 +2779,10 @@ function openUrlInIframe(a) {
   document.getElementById("dataframe").src = a
 }
 function getLayerPosition(a) {
-  if(cookieArray == null || !useCookies) {
+  if(B3PGissuite.vars.cookieArray == null || !B3PGissuite.config.useCookies) {
     return a.visible == "on" || a.analyse == "active" ? -1 : 0
   }
-  var b = cookieArray.split(",");
+  var b = B3PGissuite.vars.cookieArray.split(",");
   for(i = 0;i < b.length;i++) {
     if(b[i] == a.id) {
       return i + 1
@@ -2773,10 +2791,10 @@ function getLayerPosition(a) {
   return a.analyse == "active" ? -1 : 0
 }
 function getClusterPosition(a) {
-  if(cookieClusterArray == null || !useCookies) {
+  if(B3PGissuite.vars.cookieClusterArray == null || !B3PGissuite.config.useCookies) {
     return a.visible || a.active ? -1 : 0
   }
-  var b = cookieClusterArray.split(",");
+  var b = B3PGissuite.vars.cookieClusterArray.split(",");
   for(i = 0;i < b.length;i++) {
     if(b[i] == a.id) {
       return i + 1
@@ -2785,10 +2803,10 @@ function getClusterPosition(a) {
   return a.active ? -1 : 0
 }
 function setActiveCluster(a, b) {
-  if(((activeAnalyseThemaId == null || activeAnalyseThemaId.length == 0) && (activeClusterId == null || activeClusterId.length == 0) || b) && a != void 0 & a != null) {
+  if(((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || b) && a != void 0 & a != null) {
     var c = a.title, d = document.getElementById("actief_thema");
     if(d && c && d != null && c != null) {
-      activeClusterId = a.id, d.innerHTML = "" + c
+      B3PGissuite.vars.activeClusterId = a.id, d.innerHTML = "" + c
     }
     if(a.metadatalink && a.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer")) {
       document.getElementById("beschrijvingVakViewer").src = a.metadatalink
@@ -2797,10 +2815,10 @@ function setActiveCluster(a, b) {
 }
 function setActiveThema(a, b, c) {
   if(!a || !(a != null && b && b != null && c)) {
-    return activeAnalyseThemaId
+    return B3PGissuite.vars.activeAnalyseThemaId
   }
-  if((activeAnalyseThemaId == null || activeAnalyseThemaId.length == 0) && (activeClusterId == null || activeClusterId.length == 0) || c) {
-    activeAnalyseThemaId = a;
+  if((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || c) {
+    B3PGissuite.vars.activeAnalyseThemaId = a;
     if((a = document.getElementById("actief_thema")) && b && a != null && b != null) {
       a.innerHTML = "" + b
     }
@@ -2810,21 +2828,20 @@ function setActiveThema(a, b, c) {
       onIdentify("", {minx:b, miny:a, maxx:c, maxy:d})
     }
   }
-  return activeAnalyseThemaId
+  return B3PGissuite.vars.activeAnalyseThemaId
 }
 function radioClick(a) {
-  var b = activeAnalyseThemaId;
-  if(a && a != null && a.theItem && a.theItem != null && a.theItem.id && a.theItem.title && (activeAnalyseThemaId = setActiveThema(a.theItem.id, a.theItem.title, true), activateCheckbox(a.theItem.id), deActivateCheckbox(b), a.theItem.metadatalink && a.theItem.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer"))) {
+  var b = B3PGissuite.vars.activeAnalyseThemaId;
+  if(a && a != null && a.theItem && a.theItem != null && a.theItem.id && a.theItem.title && (B3PGissuite.vars.activeAnalyseThemaId = setActiveThema(a.theItem.id, a.theItem.title, true), activateCheckbox(a.theItem.id), deActivateCheckbox(b), a.theItem.metadatalink && a.theItem.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer"))) {
     document.getElementById("beschrijvingVakViewer").src = a.theItem.metadatalink
   }
 }
-var prevRadioButton = null;
 function isActiveItem(a) {
   if(!a) {
     return false
   }
   a.analyse == "on" ? setActiveThema(a.id, a.title) : a.analyse == "active" && setActiveThema(a.id, a.title, true);
-  if(activeAnalyseThemaId != a.id) {
+  if(B3PGissuite.vars.activeAnalyseThemaId != a.id) {
     return false
   }
   if(a.analyse == "active" && prevRadioButton != null) {
@@ -2919,7 +2936,6 @@ function createInvisibleDiv(a) {
   b.style.display = "none";
   return b
 }
-var widthMetadataPopup = 800, heightMetadataPopup = 600, widthDownloadPopup = 425, heightDownloadPopup = 250, downloadPopupBlocksViewer = true, metadataPopupBlocksViewer = true;
 function createMetadataLink(a) {
   var b = document.createElement("a");
   b.innerHTML = a.title ? a.title : a.id;
@@ -2932,8 +2948,8 @@ function createMetadataLink(a) {
       }, Url:function() {
         if($j("#dialog-download-metadata").dialog("isOpen")) {
           $j(this).dialog("close");
-          var a;
-          $j("#input_wmsserviceurl").val(kburl + "service=WMS&request=GetCapabilities&version=1.0.0");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          $j("#input_wmsserviceurl").val(a);
           unblockViewerUI();
           $j("#dialog-wmsservice-url").dialog("open")
         }
@@ -2948,23 +2964,23 @@ function createMetadataLink(a) {
   }
   if((a.metadatalink == void 0 || a.metadatalink == "#") && a.gegevensbronid && a.gegevensbronid > 0) {
     return b.onclick = function() {
-      datasetDownload && showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
+      B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
         $j("#dialog-download-metadata").dialog("isOpen") && (getWktForDownload() == "" && alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden."), iFramePopup("download.do?id=" + a.gegevensbronid, false, c, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false), $j(this).dialog("close"))
       }, Url:function() {
         if($j("#dialog-download-metadata").dialog("isOpen")) {
           $j(this).dialog("close");
-          var a;
-          $j("#input_wmsserviceurl").val(kburl + "service=WMS&request=GetCapabilities&version=1.0.0");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          $j("#input_wmsserviceurl").val(a);
           unblockViewerUI();
           $j("#dialog-wmsservice-url").dialog("open")
         }
       }, Annuleren:function() {
         $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }}) : !datasetDownload && showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Url:function() {
+      }}) : !B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Url:function() {
         if($j("#dialog-download-metadata").dialog("isOpen")) {
           $j(this).dialog("close");
-          var a;
-          $j("#input_wmsserviceurl").val(kburl + "service=WMS&request=GetCapabilities&version=1.0.0");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          $j("#input_wmsserviceurl").val(a);
           unblockViewerUI();
           $j("#dialog-wmsservice-url").dialog("open")
         }
@@ -2981,27 +2997,27 @@ function createMetadataLink(a) {
   }
   if(a.metadatalink && a.metadatalink.length > 1 && a.gegevensbronid && a.gegevensbronid > 0) {
     return b.onclick = function() {
-      datasetDownload && showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
+      B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
         $j("#dialog-download-metadata").dialog("isOpen") && (getWktForDownload() == "" && alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden."), iFramePopup("download.do?id=" + a.gegevensbronid, false, c, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false), $j(this).dialog("close"))
       }, Metadata:function() {
         $j("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true), $j(this).dialog("close"))
       }, Url:function() {
         if($j("#dialog-download-metadata").dialog("isOpen")) {
           $j(this).dialog("close");
-          var a;
-          $j("#input_wmsserviceurl").val(kburl + "service=WMS&request=GetCapabilities&version=1.0.0");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          $j("#input_wmsserviceurl").val(a);
           unblockViewerUI();
           $j("#dialog-wmsservice-url").dialog("open")
         }
       }, Annuleren:function() {
         $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }}) : !datasetDownload && showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
+      }}) : !B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
         $j("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true), $j(this).dialog("close"))
       }, Url:function() {
         if($j("#dialog-download-metadata").dialog("isOpen")) {
           $j(this).dialog("close");
-          var a;
-          $j("#input_wmsserviceurl").val(kburl + "service=WMS&request=GetCapabilities&version=1.0.0");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          $j("#input_wmsserviceurl").val(a);
           unblockViewerUI();
           $j("#dialog-wmsservice-url").dialog("open")
         }
@@ -3018,13 +3034,13 @@ function createMetadataLink(a) {
       $j("#dialog-download-metadata").dialog("open")
     }, b
   }
-  if((a.metadatalink == void 0 || a.metadatalink == "#") && (a.gegevensbronid == void 0 || a.gegevensbronid < 1) && showServiceUrl) {
+  if((a.metadatalink == void 0 || a.metadatalink == "#") && (a.gegevensbronid == void 0 || a.gegevensbronid < 1) && B3PGissuite.config.showServiceUrl) {
     b.onclick = function() {
       $j("#dialog-download-metadata").dialog("option", "buttons", {Url:function() {
         if($j("#dialog-download-metadata").dialog("isOpen")) {
           $j(this).dialog("close");
-          var a;
-          $j("#input_wmsserviceurl").val(kburl + "service=WMS&request=GetCapabilities&version=1.0.0");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          $j("#input_wmsserviceurl").val(a);
           unblockViewerUI();
           $j("#dialog-wmsservice-url").dialog("open")
         }
@@ -3050,14 +3066,14 @@ function createLabel(a, b) {
     if(b.callable) {
       var c = false;
       getClusterPosition(b) != 0 && (c = true);
-      var d = null, e = getParentItem(themaTree, b), d = e.exclusive_childs ? createRadioCluster(b, c, e.id) : createCheckboxCluster(b, c);
+      var d = null, e = getParentItem(B3PGissuite.config.themaTree, b), d = e.exclusive_childs ? createRadioCluster(b, c, e.id) : createCheckboxCluster(b, c);
       d.theItem = b;
       a.appendChild(d);
-      c && clustersAan.push(d);
+      c && B3PGissuite.vars.clustersAan.push(d);
       b.active && setActiveCluster(b, true)
     }
     c = false;
-    if(b.hide_tree && b.callable && (c = document.createElement("img"), c.setAttribute("border", "0"), c.src = globalTreeOptions.layermaindiv.toggleImages.leaf, c.theItem = b, a.togglea = c, showLegendInTree && b.children)) {
+    if(b.hide_tree && b.callable && (c = document.createElement("img"), c.setAttribute("border", "0"), c.src = globalTreeOptions.layermaindiv.toggleImages.leaf, c.theItem = b, a.togglea = c, B3PGissuite.config.showLegendInTree && b.children)) {
       c = false;
       for(d = 0;d < b.children.length && !c;d++) {
         e = b.children[d], !e.cluster && e.legendurl != void 0 && (c = true)
@@ -3081,19 +3097,19 @@ function createLabel(a, b) {
         d = getLayerPosition(b);
         d != 0 && (c = true);
         e = null;
-        e = getParentItem(themaTree, b);
+        e = getParentItem(B3PGissuite.config.themaTree, b);
         e = e.exclusive_childs ? createRadioThema(b, c, e.id) : createCheckboxThema(b, c);
         e.theItem = b;
-        c && (d < 0 ? layersAan.unshift(e) : layersAan.push(e));
+        c && (d < 0 ? B3PGissuite.vars.layersAan.unshift(e) : B3PGissuite.vars.layersAan.push(e));
         if(b.analyse == "on" || b.analyse == "active") {
-          multipleActiveThemas ? isActiveItem(b) : (c = createRadioSingleActiveThema(b), a.appendChild(c))
+          B3PGissuite.config.multipleActiveThemas ? isActiveItem(b) : (c = createRadioSingleActiveThema(b), a.appendChild(c))
         }
         a.appendChild(e)
       }
-      b.legendurl != void 0 && showLegendInTree && (a.appendChild(document.createTextNode("  ")), a.appendChild(createTreeLegendIcon()));
+      b.legendurl != void 0 && B3PGissuite.config.showLegendInTree && (a.appendChild(document.createTextNode("  ")), a.appendChild(createTreeLegendIcon()));
       a.appendChild(document.createTextNode("  "));
       a.appendChild(createMetadataLink(b));
-      b.legendurl != void 0 && showLegendInTree && a.appendChild(createTreeLegendDiv(b))
+      b.legendurl != void 0 && B3PGissuite.config.showLegendInTree && a.appendChild(createTreeLegendDiv(b))
     }
   }
   return false
@@ -3192,12 +3208,12 @@ function switchTab(a) {
 function syncLayerCookieAndForm() {
   var a = getLayerIdsAsString();
   a == "" && (a = "ALL");
-  useCookies && (eraseCookie("checkedLayers"), a != null && createCookie("checkedLayers", a, "7"));
+  B3PGissuite.config.useCookies && (eraseCookie("checkedLayers"), a != null && createCookie("checkedLayers", a, "7"));
   document.forms[0].lagen.value = a
 }
 function checkboxClick(a, b) {
   var c = a.theItem;
-  a.checked ? (addItemAsLayer(c), useInheritCheckbox && (c = document.getElementById(c.id), enableParentClusters(c))) : removeItemAsLayer(c);
+  a.checked ? (addItemAsLayer(c), B3PGissuite.config.useInheritCheckbox && (c = document.getElementById(c.id), enableParentClusters(c))) : removeItemAsLayer(c);
   a.type == "radio" && a.checked && (c = $j("input[name='" + a.name + "']"), $j.each(c, function(b, c) {
     a.id != c.id && checkboxClick(c, true)
   }));
@@ -3205,27 +3221,29 @@ function checkboxClick(a, b) {
 }
 function clusterCheckboxClick(a, b) {
   if(!(a == void 0 || a == null)) {
-    layerUrl == null && (layerUrl = "" + kburl);
+    if(B3PGissuite.vars.layerUrl == null) {
+      B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl
+    }
     if(a.checked) {
-      for(var c = false, d = 0;d < clustersAan.length;d++) {
-        clustersAan[d].id == a.id && (c = true)
+      for(var c = false, d = 0;d < B3PGissuite.vars.clustersAan.length;d++) {
+        B3PGissuite.vars.clustersAan[d].id == a.id && (c = true)
       }
-      c || clustersAan.push(a)
+      c || B3PGissuite.vars.clustersAan.push(a)
     }else {
       c = [];
-      for(d = 0;d < clustersAan.length;d++) {
-        clustersAan[d].id != a.id && c.push(clustersAan[d])
+      for(d = 0;d < B3PGissuite.vars.clustersAan.length;d++) {
+        B3PGissuite.vars.clustersAan[d].id != a.id && c.push(B3PGissuite.vars.clustersAan[d])
       }
-      clustersAan = c
+      B3PGissuite.vars.clustersAan = c
     }
     c = a.theItem;
-    useCookies && (a.checked ? addClusterIdToCookie(c.id) : removeClusterIdFromCookie(c.id));
-    if(!useInheritCheckbox || c.hide_tree) {
+    B3PGissuite.config.useCookies && (a.checked ? addClusterIdToCookie(c.id) : removeClusterIdFromCookie(c.id));
+    if(!B3PGissuite.config.useInheritCheckbox || c.hide_tree) {
       if(a.checked) {
         for(d = c.children.length;d > 0;d--) {
           var e = c.children[d - 1];
           if(e.cluster) {
-            if(e.callable && !useInheritCheckbox) {
+            if(e.callable && !B3PGissuite.config.useInheritCheckbox) {
               e = document.getElementById(e.id), e.checked = true, clusterCheckboxClick(e, b)
             }
           }else {
@@ -3238,7 +3256,7 @@ function clusterCheckboxClick(a, b) {
         if(c.children) {
           for(d = 0;d < c.children.length;d++) {
             if(e = c.children[d], e.cluster) {
-              if(e.callable && !useInheritCheckbox) {
+              if(e.callable && !B3PGissuite.config.useInheritCheckbox) {
                 e = document.getElementById(e.id), e.checked = false, clusterCheckboxClick(e, b)
               }
             }else {
@@ -3250,7 +3268,7 @@ function clusterCheckboxClick(a, b) {
         }
       }
     }
-    if(useInheritCheckbox) {
+    if(B3PGissuite.config.useInheritCheckbox) {
       for(d = 0;d < c.children.length;d++) {
         e = c.children[d], a.checked ? enableLayer(e.id) : disableLayer(e.id)
       }
@@ -3271,15 +3289,15 @@ function addClusterIdToCookie(a) {
   createCookie("checkedClusters", b, "7")
 }
 function removeAllFeatures() {
-  webMapController.getMap().getLayer("editMap").removeAllFeatures()
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures()
 }
 function stopDrawPolygon() {
-  webMapController.getMap().getLayer("editMap").removeAllFeatures();
-  webMapController.getMap().getLayer("editMap").stopDrawDrawFeature()
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").stopDrawDrawFeature()
 }
 function startDrawPolygon(a) {
-  webMapController.getMap().getLayer("editMap").removeAllFeatures();
-  webMapController.getMap().getLayer("editMap").drawFeature(a)
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(a)
 }
 function removeClusterIdFromCookie(a) {
   var b = readCookie("checkedClusters"), c = [];
@@ -3292,18 +3310,23 @@ function removeClusterIdFromCookie(a) {
 function addItemAsLayer(a) {
   addLayerToEnabledLayerItems(a);
   syncLayerCookieAndForm();
-  if(a.wmslayers) {
-    a = a.organizationcodekey, organizationcode != void 0 && organizationcode != null && organizationcode != "" && a != void 0 && a != "" && layerUrl.indexOf(a) <= 0 && (layerUrl += layerUrl.indexOf("?") > 0 ? "&" : "?", layerUrl = layerUrl + a + "=" + organizationcode)
+  if(a.wmslayers && (a = a.organizationcodekey, B3PGissuite.config.organizationcode != void 0 && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != "" && a != void 0 && a != "" && B3PGissuite.vars.layerUrl.indexOf(a) <= 0)) {
+    B3PGissuite.vars.layerUrl += B3PGissuite.vars.layerUrl.indexOf("?") > 0 ? "&" : "?", B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + a + "=" + B3PGissuite.config.organizationcode
   }
 }
 function isStringEmpty(a) {
   return!a || 0 === a.length
 }
-var originalLayerUrl = layerUrl;
 function reloadRedliningLayer(a, b, c) {
-  isStringEmpty(organizationcode) || (layerUrl = originalLayerUrl + "GROEPNAAM=" + organizationcode);
-  isStringEmpty(b) || (layerUrl = originalLayerUrl + "PROJECTNAAM=" + b);
-  !isStringEmpty(organizationcode) && !isStringEmpty(b) && (layerUrl = originalLayerUrl + "GROEPNAAM=" + organizationcode + "&PROJECTNAAM=" + b);
+  if(!isStringEmpty(B3PGissuite.config.organizationcode)) {
+    B3PGissuite.vars.layerUrl = originalLayerUrl + "GROEPNAAM=" + B3PGissuite.config.organizationcode
+  }
+  if(!isStringEmpty(b)) {
+    B3PGissuite.vars.layerUrl = originalLayerUrl + "PROJECTNAAM=" + b
+  }
+  if(!isStringEmpty(B3PGissuite.config.organizationcode) && !isStringEmpty(b)) {
+    B3PGissuite.vars.layerUrl = originalLayerUrl + "GROEPNAAM=" + B3PGissuite.config.organizationcode + "&PROJECTNAAM=" + b
+  }
   c && removeAllFeatures();
   deActivateCheckbox(a);
   activateCheckbox(a)
@@ -3328,21 +3351,20 @@ function removeLayerFromEnabledLayerItems(a) {
   }
   return null
 }
-var refresh_timeout_handle;
 function refreshLayerWithDelay() {
   showLoading();
   refresh_timeout_handle && (clearTimeout(refresh_timeout_handle), hideLoading());
-  refresh_timeout_handle = setTimeout("doRefreshLayer();", refreshDelay)
+  refresh_timeout_handle = setTimeout("doRefreshLayer();", B3PGissuite.config.refreshDelay)
 }
 function doRefreshLayer() {
-  webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, webMapController.getMap(), refreshLegendBox);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
   refreshLayer();
   refreshLegendBox()
 }
 function checkScaleForLayers() {
   var a;
-  a = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint();
-  setScaleForTree(themaTree, a)
+  a = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
+  setScaleForTree(B3PGissuite.config.themaTree, a)
 }
 function isItemInScale(a, b) {
   if(b == "NaN" || b < 0 || !a) {
@@ -3371,7 +3393,7 @@ function isItemInScale(a, b) {
   return c
 }
 function calcScaleForCurrentExtent() {
-  var a = webMapController.getMap().getExtent(), a = a.maxx - a.minx, b = $j("#mapcontent").width();
+  var a = B3PGissuite.vars.webMapController.getMap().getExtent(), a = a.maxx - a.minx, b = $j("#mapcontent").width();
   return Math.round(Number(a / (b * 2.8E-4)))
 }
 function setScaleForTree(a, b) {
@@ -3393,13 +3415,13 @@ function setScaleForTree(a, b) {
 }
 function refreshLayer() {
   var a = refresh_timeout_handle;
-  if(layerUrl == void 0 || layerUrl == null) {
+  if(B3PGissuite.vars.layerUrl == void 0 || B3PGissuite.vars.layerUrl == null) {
     hideLoading()
   }else {
-    layerUrl.toLowerCase().indexOf("?service=") == -1 && layerUrl.toLowerCase().indexOf("&service=") == -1 && (layerUrl += layerUrl.indexOf("?") > 0 ? "&" : "?", layerUrl += "SERVICE=WMS");
+    B3PGissuite.vars.layerUrl.toLowerCase().indexOf("?service=") == -1 && B3PGissuite.vars.layerUrl.toLowerCase().indexOf("&service=") == -1 && (B3PGissuite.vars.layerUrl += B3PGissuite.vars.layerUrl.indexOf("?") > 0 ? "&" : "?", B3PGissuite.vars.layerUrl += "SERVICE=WMS");
     for(var b = [], c = [], d, e = 0;e < B3PGissuite.vars.enabledLayerItems.length;e++) {
       d = B3PGissuite.vars.enabledLayerItems[e];
-      if(useInheritCheckbox) {
+      if(B3PGissuite.config.useInheritCheckbox) {
         var f = document.getElementById(d.id);
         if(f == void 0 || f == null) {
           f = $j("#input").find("l_" + d.id)
@@ -3415,14 +3437,14 @@ function refreshLayer() {
     }
     for(var e = [], e = e.concat(c), e = e.concat(b), b = [], g, f = c = "", h = 0;h < e.length;h++) {
       d = e[h];
-      f = layerGrouping == "lg_layer" || d.tiled ? "fmc" + d.id : layerGrouping == "lg_cluster" ? "fmc" + d.clusterid : layerGrouping == "lg_forebackground" ? d.background ? "fmcback" : "fmctop" : "fmcall";
+      f = B3PGissuite.config.layerGrouping == "lg_layer" || d.tiled ? "fmc" + d.id : B3PGissuite.config.layerGrouping == "lg_cluster" ? "fmc" + d.clusterid : B3PGissuite.config.layerGrouping == "lg_forebackground" ? d.background ? "fmcback" : "fmctop" : "fmcall";
       if(c == "" || f != c) {
-        g = [], layerGrouping == "lg_cluster" ? g.push(f + "_" + d.id) : g.push(f), b.push(g)
+        g = [], B3PGissuite.config.layerGrouping == "lg_cluster" ? g.push(f + "_" + d.id) : g.push(f), b.push(g)
       }
       g.push(d);
       c = f
     }
-    g = webMapController.getMap().getLayers();
+    g = B3PGissuite.vars.webMapController.getMap().getLayers();
     f = [];
     for(e = 0;e < g.length;e++) {
       g[e].getType() == Layer.RASTER_TYPE && f.push(g[e])
@@ -3443,35 +3465,35 @@ function refreshLayer() {
       m || h.push(j)
     }
     for(g = 0;g < h.length;g++) {
-      webMapController.getMap().removeLayerById(h[g])
+      B3PGissuite.vars.webMapController.getMap().removeLayerById(h[g])
     }
     for(e = 0;e < b.length;e++) {
       g = b[e];
       d = g[0];
-      if(webMapController.getMap().getLayer(d) == null) {
+      if(B3PGissuite.vars.webMapController.getMap().getLayer(d) == null) {
         g.splice(0, 1);
         for(c = 0;c < g.length;c++) {
-          g[c].serviceid != void 0 ? (d = g[c].name, f = g[c].service_url, h = [], h[0] = g[c], addLayerToViewer(d, f, h), d = getValidLayerId(d)) : addLayerToViewer(d, layerUrl, g)
+          g[c].serviceid != void 0 ? (d = g[c].name, f = g[c].service_url, h = [], h[0] = g[c], addLayerToViewer(d, f, h), d = getValidLayerId(d)) : addLayerToViewer(d, B3PGissuite.vars.layerUrl, g)
         }
       }
-      g = webMapController.getMap().getLayer(d);
-      g != null && webMapController.getMap().setLayerIndex(g, e + startLayerIndex)
+      g = B3PGissuite.vars.webMapController.getMap().getLayer(d);
+      g != null && B3PGissuite.vars.webMapController.getMap().setLayerIndex(g, e + B3PGissuite.vars.startLayerIndex)
     }
     hideLoading();
     if(a == refresh_timeout_handle) {
       refresh_timeout_handle = 0;
-      a = webMapController.getMap().getAllVectorLayers();
-      (b = webMapController.getMap().getAllTilingLayers()) && a.concat(b);
-      b = webMapController.getMap().getLayers().length;
+      a = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
+      (b = B3PGissuite.vars.webMapController.getMap().getAllTilingLayers()) && a.concat(b);
+      b = B3PGissuite.vars.webMapController.getMap().getLayers().length;
       for(g = 0;g < a.length;g++) {
-        e = a[g], webMapController.getMap().setLayerIndex(e, b + startLayerIndex)
+        e = a[g], B3PGissuite.vars.webMapController.getMap().setLayerIndex(e, b + B3PGissuite.vars.startLayerIndex)
       }
       checkTempUploadedPointsWms(uploadCsvLayerOn)
     }
   }
 }
 function getLayerById(a) {
-  a = webMapController.getMap().getLayer(a);
+  a = B3PGissuite.vars.webMapController.getMap().getLayer(a);
   return a != null ? a : null
 }
 function layersOnlyHaveDefaultStyles(a) {
@@ -3497,14 +3519,14 @@ function addLayerToViewer(a, b, c) {
     d.BBOX = c.tileBoundingBox;
     d.background = c.background;
     var e = getMaxBounds(), e = getTilingResolutions(e, false);
-    webMapController instanceof OpenLayersController && tilingResolutions && (d.serverResolutions = e);
+    B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions && (d.serverResolutions = e);
     d.RESOLUTIONS = e;
     d.TILEHEIGHT = c.tileHeight;
     d.TILEWIDTH = c.tileWidth;
     if(c.resolutions && (e = c.resolutions, (c = e.split(" ")) && c.length < 1 && (c = e.split(",")), c && c.length > 0)) {
       e = c[0], d.minscale = c[c.length - 1], d.maxscale = e
     }
-    a = webMapController.createWMScLayer(a, b, d)
+    a = B3PGissuite.vars.webMapController.createWMScLayer(a, b, d)
   }else {
     var d = b, d = {id:getValidLayerId(a), timeout:30, retryonerror:10, getcapabilitiesurl:d, ratio:1, showerrors:true, initService:false}, f = {format:"image/png", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, g = "", h = "", j = "", l = -1, m = -1, n = "", o = layersOnlyHaveDefaultStyles(c);
     b.indexOf("&sld=") != -1 && (o = true);
@@ -3535,15 +3557,15 @@ function addLayerToViewer(a, b, c) {
       }
       r.wmsquerylayers && (h.length > 0 && (h += ","), h += r.wmsquerylayers);
       if(c[q].maptipfield) {
-        j.length != 0 && (j += ","), j += c[q].wmslayers, r = c[q].wmslayers, ingelogdeGebruiker && ingelogdeGebruiker.length > 0 && (r = r.substring(r.indexOf("_") + 1)), r = new MapTip(c[q].wmslayers, c[q].maptipfield, r), e.push(r)
+        j.length != 0 && (j += ","), j += c[q].wmslayers, r = c[q].wmslayers, B3PGissuite.config.user.ingelogdeGebruiker && B3PGissuite.config.user.ingelogdeGebruiker.length > 0 && (r = r.substring(r.indexOf("_") + 1)), r = new MapTip(c[q].wmslayers, c[q].maptipfield, r), e.push(r)
       }
     }
     l != null && l > 0 && (d.minscale = l);
     m != null && m > 0 && (d.maxscale = m);
-    if(webMapController instanceof FlamingoController) {
+    if(B3PGissuite.vars.webMapController instanceof FlamingoController) {
       d.maxResolution && (d.maxscale = d.maxResolution), d.minResolution && (d.minscale = d.minResolution), delete d.maxResolution, delete d.minResolution
     }else {
-      if(webMapController instanceof OpenLayersController) {
+      if(B3PGissuite.vars.webMapController instanceof OpenLayersController) {
         d.maxResolution != void 0 && d.minResolution == void 0 && (d.minResolution = "auto"), d.minResolution != void 0 && d.maxResolution == void 0 && (d.maxResolution = "auto")
       }
     }
@@ -3551,37 +3573,33 @@ function addLayerToViewer(a, b, c) {
     f.layers = g;
     f.query_layers = h;
     d.maptip_layers = j;
-    p.length > 0 && (b += "sld=" + (window.location.protocol + "//" + window.location.host + baseNameViewer) + "/services/createUserSld?layerids=" + p);
-    a = webMapController.createWMSLayer(a, b, f, d);
+    p.length > 0 && (b += "sld=" + (window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer) + "/services/createUserSld?layerids=" + p);
+    a = B3PGissuite.vars.webMapController.createWMSLayer(a, b, f, d);
     a.setMapTips(e)
   }
-  webMapController.getMap().addLayer(a)
+  B3PGissuite.vars.webMapController.getMap().addLayer(a)
 }
 function loadObjectInfo(a) {
-  for(i in enabledtabs) {
-    if(enabledtabs[i] == "gebieden") {
-      document.forms[0].admindata.value = "";
-      document.forms[0].metadata.value = "";
-      document.forms[0].themaid.value = multipleActiveThemas ? getLayerIdsAsString() : activeAnalyseThemaId;
-      document.forms[0].analysethemaid.value = activeAnalyseThemaId;
-      document.forms[0].geom.value = a;
-      document.forms[0].scale.value = "";
-      document.forms[0].objectdata.value = "t";
-      document.forms[0].target = "objectframeViewer";
-      document.forms[0].submit();
-      break
-    }
+  var b = false;
+  for(i in B3PGissuite.config.enabledtabs) {
+    B3PGissuite.config.enabledtabs[i] === "gebieden" && (b = true)
+  }
+  for(i in B3PGissuite.config.enabledtabsLeft) {
+    B3PGissuite.config.enabledtabsLeft[i] === "gebieden" && (b = true)
+  }
+  if(b) {
+    document.forms[0].admindata.value = "", document.forms[0].metadata.value = "", document.forms[0].themaid.value = B3PGissuite.config.multipleActiveThemas ? getLayerIdsAsString() : B3PGissuite.vars.activeAnalyseThemaId, document.forms[0].analysethemaid.value = B3PGissuite.vars.activeAnalyseThemaId, document.forms[0].geom.value = a, document.forms[0].scale.value = "", document.forms[0].objectdata.value = "t", document.forms[0].target = "objectframeViewer", document.forms[0].submit()
   }
 }
 function getLayerIdsAsString(a) {
   for(var b = "", c = true, d = 0;d < B3PGissuite.vars.enabledLayerItems.length;d++) {
-    if(useInheritCheckbox) {
+    if(B3PGissuite.config.useInheritCheckbox) {
       var e = document.getElementById(B3PGissuite.vars.enabledLayerItems[d].id);
       if(!itemHasAllParentsEnabled(e)) {
         continue
       }
     }
-    if(a && (e = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint(), !isItemInScale(B3PGissuite.vars.enabledLayerItems[d], e))) {
+    if(a && (e = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint(), !isItemInScale(B3PGissuite.vars.enabledLayerItems[d], e))) {
       continue
     }
     c ? (b += B3PGissuite.vars.enabledLayerItems[d].id, c = false) : b += "," + B3PGissuite.vars.enabledLayerItems[d].id
@@ -3623,7 +3641,6 @@ function parentHasCheckBox(a) {
   a = getItemName(a);
   return document.getElementById(a) ? true : false
 }
-var loadingLegendImages = {};
 function createLegendDiv(a) {
   var b = a.id + "##" + a.wmslayers, c = new Image;
   c.name = a.title;
@@ -3695,7 +3712,6 @@ function addLayerToLegendBox(a, b) {
     legendImageQueue.push({theItem:a, atBottomOfType:b}), loadNextInLegendImageQueue()
   }
 }
-var legendImageQueue = [], legendImageLoadingSpace = 1;
 function loadNextInLegendImageQueue() {
   if(legendImageLoadingSpace > 0 && legendImageQueue.length > 0) {
     legendImageLoadingSpace--;
@@ -3754,11 +3770,11 @@ function refreshMapVolgorde() {
 function refreshLegendBox() {
   resetLegendImageQueue();
   var a;
-  a = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint();
-  webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, webMapController.getMap(), refreshLegendBox, this);
+  a = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
+  B3PGissuite.vars.webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), refreshLegendBox, this);
   for(var b = [], c = [], d = 0;d < B3PGissuite.vars.enabledLayerItems.length;d++) {
     var e = B3PGissuite.vars.enabledLayerItems[d], f = false;
-    if(useInheritCheckbox) {
+    if(B3PGissuite.config.useInheritCheckbox) {
       var g = document.getElementById(e.id);
       if(!itemHasAllParentsEnabled(g) || !isItemInScale(e, a)) {
         f = true, c.push(e)
@@ -3809,18 +3825,17 @@ function onChangeTool(a) {
   a == "identify" && (btn_highLightSelected = false, hideIdentifyIcon())
 }
 function onIdentify(a, b) {
-  if(usePopup || usePanel || useBalloonPopup) {
+  if(B3PGissuite.config.usePopup || B3PGissuite.config.usePanel || B3PGissuite.config.useBalloonPopup) {
     b == void 0 && (b = a);
     var c = "";
     b.minx != b.maxx && b.miny != b.maxy ? (c += "POLYGON((", c += b.minx + " " + b.miny + ",", c += b.maxx + " " + b.miny + ",", c += b.maxx + " " + b.maxy + ",", c += b.minx + " " + b.maxy + ",", c += b.minx + " " + b.miny, c += "))") : (c += "POINT(", c += b.minx + " " + b.miny, c += ")");
-    webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    editingRedlining ? (hideIdentifyIcon(), selectRedlineObject(c)) : (btn_highLightSelected ? (webMapController instanceof FlamingoController ? webMapController.activateTool("breinaald") : webMapController.activateTool("identify"), hideIdentifyIcon(), highLightThemaObject(c)) : (btn_highLightSelected = false, webMapController.activateTool("identify"), showIdentifyIcon(), handleGetAdminData(c, null, false)), loadObjectInfo(c))
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    editingRedlining ? (hideIdentifyIcon(), selectRedlineObject(c)) : (btn_highLightSelected ? (B3PGissuite.vars.webMapController instanceof FlamingoController ? B3PGissuite.vars.webMapController.activateTool("breinaald") : B3PGissuite.vars.webMapController.activateTool("identify"), hideIdentifyIcon(), highLightThemaObject(c)) : (btn_highLightSelected = false, B3PGissuite.vars.webMapController.activateTool("identify"), showIdentifyIcon(), handleGetAdminData(c, null, false)), loadObjectInfo(c))
   }
 }
-var teller = 0;
 function updateGetFeatureInfo(a) {
   teller++;
-  teller > featureInfoTimeOut ? teller = 0 : usePopup && dataframepopupHandle.contentWindow.writeFeatureInfoData ? (dataframepopupHandle.contentWindow.writeFeatureInfoData(a), a = null) : window.frames.dataframe.writeFeatureInfoData ? (window.frames.dataframe.writeFeatureInfoData(a), a = null) : setTimeout(function() {
+  teller > 30 ? teller = 0 : B3PGissuite.config.usePopup && B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData ? (B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData(a), a = null) : window.frames.dataframe.writeFeatureInfoData ? (window.frames.dataframe.writeFeatureInfoData(a), a = null) : setTimeout(function() {
     updateGetFeatureInfo(a)
   }, 1E3)
 }
@@ -3831,42 +3846,41 @@ function onIdentifyData(a, b) {
 function layerBoxSort(a, b) {
   return a.theItem.order - b.theItem.order
 }
-var frameWorkInitialized = false;
 function onFrameworkLoaded() {
   document.getElementById("treeForm") && ieVersion <= 8 && ieVersion != -1 && document.getElementById("treeForm").reset();
   if(!frameWorkInitialized) {
-    for(var a = clustersAan.length - 1;a >= 0;a--) {
-      clusterCheckboxClick(clustersAan[a], true)
+    for(var a = B3PGissuite.vars.clustersAan.length - 1;a >= 0;a--) {
+      clusterCheckboxClick(B3PGissuite.vars.clustersAan[a], true)
     }
-    layersAan.sort(layerBoxSort);
-    for(a = layersAan.length - 1;a >= 0;a--) {
-      checkboxClick(layersAan[a], true)
+    B3PGissuite.vars.layersAan.sort(layerBoxSort);
+    for(a = B3PGissuite.vars.layersAan.length - 1;a >= 0;a--) {
+      checkboxClick(B3PGissuite.vars.layersAan[a], true)
     }
     setStartExtent();
     doRefreshLayer()
   }
   mapInitialized = frameWorkInitialized = true;
-  webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, webMapController.getMap(), onAllLayersFinishedLoading);
-  webMapController instanceof FlamingoController && (a = getMaxBounds(), a = getTilingResolutions(a, false), webMapController.getMap("map1").setTilingResolutions(a), webMapController.activateTool("toolPan"));
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
+  B3PGissuite.vars.webMapController instanceof FlamingoController && (a = getMaxBounds(), a = getTilingResolutions(a, false), B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(a), B3PGissuite.vars.webMapController.activateTool("toolPan"));
   updateSizeOL();
   doInitSearch();
   placeStartLocationMarker()
 }
 function updateSizeOL() {
-  webMapController instanceof OpenLayersController && webMapController.getMap().updateSize()
+  B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.vars.webMapController.getMap().updateSize()
 }
 function placeStartLocationMarker() {
-  startLocationX != "" && startLocationY != "" && placeSearchResultMarker(startLocationX, startLocationY)
+  B3PGissuite.config.startLocationX != "" && B3PGissuite.config.startLocationY != "" && placeSearchResultMarker(B3PGissuite.config.startLocationX, B3PGissuite.config.startLocationY)
 }
 function initFullExtent() {
-  if(bbox != null && bbox.length > 0 && bbox.split(",").length == 4) {
-    appExtent != null && appExtent.length > 0 && appExtent.split(",").length == 4 ? setFullExtent(appExtent.split(",")[0], appExtent.split(",")[1], appExtent.split(",")[2], appExtent.split(",")[3]) : setFullExtent(bbox.split(",")[0], bbox.split(",")[1], bbox.split(",")[2], bbox.split(",")[3])
+  if(B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
+    B3PGissuite.config.appExtent != null && B3PGissuite.config.appExtent.length > 0 && B3PGissuite.config.appExtent.split(",").length == 4 ? setFullExtent(B3PGissuite.config.appExtent.split(",")[0], B3PGissuite.config.appExtent.split(",")[1], B3PGissuite.config.appExtent.split(",")[2], B3PGissuite.config.appExtent.split(",")[3]) : setFullExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3])
   }else {
-    if(fullbbox != null && fullbbox.length > 0 && fullbbox.split(",").length == 4) {
-      setFullExtent(fullbbox.split(",")[0], fullbbox.split(",")[1], fullbbox.split(",")[2], fullbbox.split(",")[3])
+    if(B3PGissuite.config.fullbbox != null && B3PGissuite.config.fullbbox.length > 0 && B3PGissuite.config.fullbbox.split(",").length == 4) {
+      setFullExtent(B3PGissuite.config.fullbbox.split(",")[0], B3PGissuite.config.fullbbox.split(",")[1], B3PGissuite.config.fullbbox.split(",")[2], B3PGissuite.config.fullbbox.split(",")[3])
     }else {
-      bbox = getNLExtent();
-      fullbbox = getNLExtent();
+      B3PGissuite.config.bbox = getNLExtent();
+      B3PGissuite.config.fullbbox = getNLExtent();
       var a = getNLMaxBounds();
       setFullExtent(a.left, a.bottom, a.right, a.top)
     }
@@ -3874,25 +3888,25 @@ function initFullExtent() {
 }
 function setStartExtent() {
   initFullExtent();
-  if(!(searchConfigId != null && searchConfigId > 0)) {
+  if(!(B3PGissuite.config.searchConfigId != null && B3PGissuite.config.searchConfigId > 0)) {
     if(searchExtent != null) {
-      webMapController.getMap("map1").moveToExtent(searchExtent)
+      B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(searchExtent)
     }else {
-      if(bbox != null && bbox.length > 0 && bbox.split(",").length == 4) {
+      if(B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
         setTimeout(function() {
-          moveToExtent(bbox.split(",")[0], bbox.split(",")[1], bbox.split(",")[2], bbox.split(",")[3])
+          moveToExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3])
         }, 1)
       }else {
-        if(fullbbox != null && fullbbox.length > 0 && fullbbox.split(",").length == 4) {
+        if(B3PGissuite.config.fullbbox != null && B3PGissuite.config.fullbbox.length > 0 && B3PGissuite.config.fullbbox.split(",").length == 4) {
           setTimeout(function() {
-            moveToExtent(fullbbox.split(",")[0], fullbbox.split(",")[1], fullbbox.split(",")[2], fullbbox.split(",")[3])
+            moveToExtent(B3PGissuite.config.fullbbox.split(",")[0], B3PGissuite.config.fullbbox.split(",")[1], B3PGissuite.config.fullbbox.split(",")[2], B3PGissuite.config.fullbbox.split(",")[3])
           }, 1)
         }else {
-          if(resolution) {
-            webMapController.getMap().zoomToResolution(resolution)
+          if(B3PGissuite.config.resolution) {
+            B3PGissuite.vars.webMapController.getMap().zoomToResolution(B3PGissuite.config.resolution)
           }else {
-            bbox = getNLExtent();
-            fullbbox = getNLExtent();
+            B3PGissuite.config.bbox = getNLExtent();
+            B3PGissuite.config.fullbbox = getNLExtent();
             var a = getNLMaxBounds();
             setTimeout(function() {
               moveToExtent(a.left, a.bottom, a.right, a.top)
@@ -3907,16 +3921,15 @@ function ie6_hack_onInit() {
   navigator.appVersion.indexOf("MSIE") != -1 && (version = parseFloat(navigator.appVersion.split("MSIE")[1]), version == 6 && setTimeout("doOnInit=true; onFrameworkLoaded();", 5E3))
 }
 function moveToExtent(a, b, c, d) {
-  webMapController.getMap().zoomToExtent({minx:a, miny:b, maxx:c, maxy:d}, 0)
+  B3PGissuite.vars.webMapController.getMap().zoomToExtent({minx:a, miny:b, maxx:c, maxy:d}, 0)
 }
 function setFullExtent(a, b, c, d) {
-  webMapController.getMap().setMaxExtent({minx:a, miny:b, maxx:c, maxy:d})
+  B3PGissuite.vars.webMapController.getMap().setMaxExtent({minx:a, miny:b, maxx:c, maxy:d})
 }
 function doIdentify(a, b) {
-  webMapController.getMap().doIdentify({minx:a, miny:b});
-  webMapController.activateTool("identify")
+  B3PGissuite.vars.webMapController.getMap().doIdentify({minx:a, miny:b});
+  B3PGissuite.vars.webMapController.activateTool("identify")
 }
-var nextIdentifyExtent = null;
 function doIdentifyAfterUpdate(a, b, c, d) {
   nextIdentifyExtent = {};
   nextIdentifyExtent.minx = a;
@@ -3933,22 +3946,16 @@ function moveAndIdentify(a, b, c, d) {
 function onAllLayersFinishedLoading() {
   checkScaleForLayers();
   nextIdentifyExtent != null && (doIdentify(nextIdentifyExtent.minx, nextIdentifyExtent.miny, nextIdentifyExtent.maxx, nextIdentifyExtent.maxy), nextIdentifyExtent = null);
-  waitUntillFullyLoaded && $j("#loadingscreen").hide();
+  B3PGissuite.config.waitUntillFullyLoaded && $j("#loadingscreen").hide();
   refreshLegendBox();
-  showDebugContent && setDebugContent()
+  B3PGissuite.config.showDebugContent && setDebugContent()
 }
 function setDebugContent() {
   var a = "<p><b>Schaal 1 : " + calcScaleForCurrentExtent() + "</b></p>";
   $j("#debug-content").html(a)
 }
-useSortableFunction && document.getElementById("orderLayerBox").sortable({stop:function() {
-  setTimerForReload()
-}, start:function() {
-  clearTimerForReload()
-}});
-var reloadTimer;
 function setTimerForReload() {
-  reloadTimer = setTimeout("refreshMapVolgorde()", layerDelay)
+  reloadTimer = setTimeout("refreshMapVolgorde()", B3PGissuite.config.layerDelay)
 }
 function clearTimerForReload() {
   clearTimeout(reloadTimer)
@@ -3990,24 +3997,24 @@ function getParentItem(a, b) {
   return null
 }
 function getWMSLayersUrls() {
-  for(var a, b = [], c = [], d = "", e = true, f = webMapController.getMap("map1").getAllWMSLayers(), g = 0;g < f.length;g++) {
+  for(var a, b = [], c = [], d = "", e = true, f = B3PGissuite.vars.webMapController.getMap("map1").getAllWMSLayers(), g = 0;g < f.length;g++) {
     f[g].getURL() != null && ((a = f[g].getOption("background")) ? b.push(f[g]) : c.push(f[g]))
   }
   for(a = 0;a < b.length;a++) {
     b[a].getURL() != null && (e ? e = false : d += ";", d += b[a].getURL(), b[a].getAlpha && b[a].getAlpha() != null && (d += "#" + b[a].getAlpha()))
   }
   for(b = 0;b < c.length;b++) {
-    if(a = getItemFromWmsLayer(c[b]), f = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint(), a = isItemInScale(a, f), f = false, c[b].getURL().indexOf("tempPointsLayer") !== -1 && (f = true), c[b].getURL() != null && a || f) {
+    if(a = getItemFromWmsLayer(c[b]), f = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint(), a = isItemInScale(a, f), f = false, c[b].getURL().indexOf("tempPointsLayer") !== -1 && (f = true), c[b].getURL() != null && a || f) {
       e ? e = false : d += ";", d += c[b].getURL(), c[b].getAlpha && c[b].getAlpha() != null && (d += "#" + c[b].getAlpha())
     }
   }
   return d
 }
 function getItemFromWmsLayer(a) {
-  return a.options ? getItemByLayer(themaTree, a.options.layers) : a.getFrameworkLayer()
+  return a.options ? getItemByLayer(B3PGissuite.config.themaTree, a.options.layers) : a.getFrameworkLayer()
 }
 function getWktStringForPrint() {
-  for(var a = webMapController.getMap().getAllVectorLayers(), b = "", c = 0;c < a.length;c++) {
+  for(var a = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers(), b = "", c = 0;c < a.length;c++) {
     for(var d = a[c].getAllFeatures(), e = 0;e < d.length;e++) {
       b += d[e].getWkt(), b += "#ff0000", d[e].label && (b += "|" + d[e].label), b += ";"
     }
@@ -4027,7 +4034,6 @@ function getLegendUrls() {
   }
   return b
 }
-var exportMapWindow;
 function exportMap() {
   var a = document.createElement("FORM");
   document.body.appendChild(a);
@@ -4059,7 +4065,7 @@ function exportMap() {
   c.type = "hidden";
   c.value = b;
   a.appendChild(c);
-  var b = webMapController.getMap("map1").getScreenWidth(), c = webMapController.getMap("map1").getScreenHeight(), d = webMapController.getMap("map1").getExtent().minx, e = webMapController.getMap("map1").getExtent().miny, f = webMapController.getMap("map1").getExtent().maxx, g = webMapController.getMap("map1").getExtent().maxy, d = d + "," + e + "," + f + "," + g, e = document.createElement("input");
+  var b = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), c = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), d = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, d = d + "," + e + "," + f + "," + g, e = document.createElement("input");
   e.id = "mapsizes";
   e.name = "mapsizes";
   e.type = "hidden";
@@ -4073,9 +4079,9 @@ function exportMap() {
   }
 }
 function getTilingLayer() {
-  for(var a = "", b = webMapController.getMap("map1").getAllTilingLayers(), c = 0;c < b.length;c++) {
-    var d = webMapController.getMap().getResolution(), e;
-    e = b[c].options ? getItemByLayer(themaTree, b[c].options.LAYERS) : b[c].getFrameworkLayer();
+  for(var a = "", b = B3PGissuite.vars.webMapController.getMap("map1").getAllTilingLayers(), c = 0;c < b.length;c++) {
+    var d = B3PGissuite.vars.webMapController.getMap().getResolution(), e;
+    e = b[c].options ? getItemByLayer(B3PGissuite.config.themaTree, b[c].options.LAYERS) : b[c].getFrameworkLayer();
     if(isItemInScale(e, d)) {
       d = b[c].getOption("BBOX");
       e = b[c].getOption("RESOLUTIONS");
@@ -4111,15 +4117,15 @@ function checkboxOnByid(a) {
   }
 }
 function getWktActiveFeature(a) {
-  a = webMapController.getMap().getLayer("editMap").getActiveFeature(a);
+  a = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(a);
   return a == null ? (handler("Er is nog geen tekenobject op het scherm."), null) : a.getWkt()
 }
 function getWktForDownload() {
-  var a = webMapController.getMap().getLayer("editMap").getActiveFeature();
+  var a = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
   return a == null ? "" : a.getWkt()
 }
 function getWkt() {
-  var a = webMapController.getMap().getLayer("editMap").getActiveFeature();
+  var a = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
   return a == null ? null : a.wktgeom
 }
 function b_getfeatures() {
@@ -4142,7 +4148,7 @@ function b_layerSelection() {
   iFramePopup("kaartselectie.do", false, "Kaartselectie", 800, 600, true, true)
 }
 function b_overview() {
-  webMapController instanceof FlamingoController && webMapController.getMap().getFrameworkMap().callMethod("overviewwindow", "show")
+  B3PGissuite.vars.webMapController instanceof FlamingoController && B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod("overviewwindow", "show")
 }
 function b_gps_stop() {
   removeAllMarkers()
@@ -4157,12 +4163,12 @@ function drawWkt(a) {
   a.length > 0 && (a = new Feature(61502, a), drawObject(a))
 }
 function drawObject(a) {
-  webMapController.getMap().getLayer("editMap").removeAllFeatures();
-  webMapController.getMap().getLayer("editMap").addFeature(a)
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").addFeature(a)
 }
 function b_removePolygons() {
-  webMapController.getMap().getLayer("editMap").removeAllFeatures();
-  if(webMapController instanceof OpenLayersController) {
+  B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+  if(B3PGissuite.vars.webMapController instanceof OpenLayersController) {
     var a = document.getElementById("olControlMeasurePolygonValue");
     if(a) {
       a.style.display = "none"
@@ -4171,24 +4177,24 @@ function b_removePolygons() {
 }
 function b_highlight() {
   btn_highLightSelected = true;
-  webMapController instanceof FlamingoController ? webMapController.activateTool("breinaald") : webMapController.activateTool("identify")
+  B3PGissuite.vars.webMapController instanceof FlamingoController ? B3PGissuite.vars.webMapController.activateTool("breinaald") : B3PGissuite.vars.webMapController.activateTool("identify")
 }
-var btn_highLightSelected = false, popupWindowRef = null, highLightGeom = null, analyseThemas = [];
 function highLightThemaObject(a) {
   highlightLayers = [];
   highLightGeom = a;
   for(var b = 0;b < B3PGissuite.vars.enabledLayerItems.length;b++) {
     var c = B3PGissuite.vars.enabledLayerItems[b], d = document.getElementById(c.id);
-    (!useInheritCheckbox || itemHasAllParentsEnabled(d)) && c.highlight == "on" && highlightLayers.push(c)
+    (!B3PGissuite.config.useInheritCheckbox || itemHasAllParentsEnabled(d)) && c.highlight == "on" && highlightLayers.push(c)
   }
   highlightLayers.length > 1 && iFramePopup("viewerhighlight.do", false, "Kaartlaag selectie", 400, 300, true, false);
-  b = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint();
-  highlightLayers.length == 1 && EditUtil.getHighlightWktForThema(highlightLayers[0].id, a, b, tolerance, returnHighlight)
+  b = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
+  c = B3PGissuite.config.tolerance;
+  highlightLayers.length == 1 && EditUtil.getHighlightWktForThema(highlightLayers[0].id, a, b, c, returnHighlight)
 }
 function selectRedlineObject(a) {
   var b;
-  b = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint();
-  EditUtil.getIdAndWktForRedliningObject(a, redLineGegevensbronId, b, tolerance, returnRedlineObject)
+  b = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
+  EditUtil.getIdAndWktForRedliningObject(a, redLineGegevensbronId, b, B3PGissuite.config.tolerance, returnRedlineObject)
 }
 function returnRedlineObject(a) {
   if(a == "-1") {
@@ -4209,8 +4215,8 @@ function handlePopupValue(a) {
   analyseThemas = [];
   var b = document.getElementById(a);
   setActiveThema(a, b.theItem.title, true);
-  b = tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint();
-  EditUtil.getHighlightWktForThema(a, highLightGeom, b, tolerance, returnHighlight)
+  b = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
+  EditUtil.getHighlightWktForThema(a, highLightGeom, b, B3PGissuite.config.tolerance, returnHighlight)
 }
 function returnHighlight(a) {
   a.length > 0 && a == "-1" && messagePopup("", "Geen object gevonden.", "information");
@@ -4221,20 +4227,19 @@ function returnHighlight(a) {
   }
 }
 function checkDisplayButtons() {
-  showRedliningTools ? webMapController.getTool("redLiningContainer") ? webMapController.getTool("redLiningContainer").setVisible(true) : (webMapController.getTool("redLiningContainer_point").setVisible(true), webMapController.getTool("redLiningContainer_line").setVisible(true), webMapController.getTool("redLiningContainer_polygon").setVisible(true)) : webMapController.getTool("redLiningContainer") ? webMapController.getTool("redLiningContainer").setVisible(false) : (webMapController.getTool("redLiningContainer_point").setVisible(false), 
-  webMapController.getTool("redLiningContainer_line").setVisible(false), webMapController.getTool("redLiningContainer_polygon").setVisible(false));
-  showBufferTool ? webMapController.getTool("b_buffer").setVisible(true) : webMapController.getTool("b_buffer").setVisible(false);
-  showSelectBulkTool ? webMapController.getTool("b_getfeatures").setVisible(true) : webMapController.getTool("b_getfeatures").setVisible(false);
-  showNeedleTool ? webMapController.getTool("b_highlight").setVisible(true) : webMapController.getTool("b_highlight").setVisible(false);
-  showRedliningTools || showNeedleTool ? webMapController.getTool("b_removePolygons").setVisible(true) : webMapController.getTool("b_removePolygons").setVisible(false);
-  showPrintTool ? webMapController.getTool("b_printMap").setVisible(true) : webMapController.getTool("b_printMap").setVisible(false);
-  showLayerSelectionTool ? webMapController.getTool("b_layerSelection").setVisible(true) : webMapController.getTool("b_layerSelection").setVisible(false);
-  showGPSTool ? webMapController.getTool("b_gps").setVisible(true) : webMapController.getTool("b_gps").setVisible(false)
+  B3PGissuite.config.showRedliningTools ? B3PGissuite.vars.webMapController.getTool("redLiningContainer") ? B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(true) : (B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(true), B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(true), B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(true)) : B3PGissuite.vars.webMapController.getTool("redLiningContainer") ? 
+  B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(false) : (B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(false), B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(false), B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(false));
+  B3PGissuite.config.showBufferTool ? B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(true) : B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(false);
+  B3PGissuite.config.showSelectBulkTool ? B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(true) : B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(false);
+  B3PGissuite.config.showNeedleTool ? B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(true) : B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(false);
+  B3PGissuite.config.showRedliningTools || B3PGissuite.config.showNeedleTool ? B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(true) : B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(false);
+  B3PGissuite.config.showPrintTool ? B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(true) : B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(false);
+  B3PGissuite.config.showLayerSelectionTool ? B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(true) : B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(false);
+  B3PGissuite.config.showGPSTool ? B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(true) : B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(false)
 }
 function onGetCapabilities() {
   hideLoading()
 }
-var initialized = false;
 function onConfigComplete() {
   initialized || (initialized = true, initializeButtons(), checkDisplayButtons(), onFrameworkLoaded())
 }
@@ -4243,7 +4248,7 @@ function getBookMark() {
   addToFavorites(a)
 }
 function getFullExtent() {
-  return webMapController.getMap().getExtent()
+  return B3PGissuite.vars.webMapController.getMap().getExtent()
 }
 function getCenterWkt() {
   var a = getFullExtent(), b = Math.round(Number(a.minx) + 1), c = Math.round(Number(a.miny) + 1), d = Math.round(Number(a.maxx) - 1), a = Math.round(Number(a.maxy) - 1);
@@ -4265,22 +4270,22 @@ function openGoogleMaps(a) {
   window.open("https://maps.google.com/maps?ie=UTF8" + ("&sll=" + a[0] + "," + a[1]) + ("&sspn=" + a[2] + "," + a[3]) + "&hl=nl&om=0")
 }
 function createPermaLink() {
-  var a = window.location.protocol + "//" + window.location.host + baseNameViewer + "/viewer.do?", b = "";
-  bookmarkAppcode != void 0 && bookmarkAppcode != "" && (b = "appCode=" + bookmarkAppcode);
+  var a = window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer + "/viewer.do?", b = "";
+  B3PGissuite.config.bookmarkAppcode != void 0 && B3PGissuite.config.bookmarkAppcode != "" && (b = "appCode=" + B3PGissuite.config.bookmarkAppcode);
   var c = "", d = getLayerIdsAsString();
   d != void 0 && d != "" && (c = "&id=" + d);
   d = "";
-  if(clustersAan != void 0 && clustersAan.length > 0) {
+  if(B3PGissuite.vars.clustersAan != void 0 && B3PGissuite.vars.clustersAan.length > 0) {
     d += "&clusterId=";
-    for(var e = 0;e < clustersAan.length;e++) {
-      d.length > 0 && (d += ","), d += clustersAan[e].theItem.id.substring(1)
+    for(var e = 0;e < B3PGissuite.vars.clustersAan.length;e++) {
+      d.length > 0 && (d += ","), d += B3PGissuite.vars.clustersAan[e].theItem.id.substring(1)
     }
   }
-  var f = "", e = webMapController.getMap().getExtent();
+  var f = "", e = B3PGissuite.vars.webMapController.getMap().getExtent();
   if(e != void 0 && e != "") {
     var f = Math.round(Number(e.minx) + 1), g = Math.round(Number(e.miny) + 1), h = Math.round(Number(e.maxx) - 1), e = Math.round(Number(e.maxy) - 1), f = "&extent=" + f + "," + g + "," + h + "," + e
   }
-  tilingResolutions && tilingResolutions !== "" ? webMapController.getMap().getResolution() : webMapController.getMap().getScaleHint();
+  B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
   return a + b + c + d + f + "&forceViewer=true"
 }
 function addToFavorites(a) {
@@ -4304,8 +4309,7 @@ function addToFavorites(a) {
 function chromeBookMarkPopup(a, b) {
   window.open(a, b, "height=300, width=850,toolbar=no,scrollbars=no,menubar=no").document.write("<p>Voeg deze link toe aan uw Google Chrome favorieten:</p>" + a)
 }
-var currentpopupleft = null, currentpopuptop = null;
-popUp = function(a, b, c, d, e) {
+function popUp(a, b, c, d, e) {
   var f = 600, g = 500, h = false;
   c && (f = c);
   d && (g = d);
@@ -4320,8 +4324,8 @@ popUp = function(a, b, c, d, e) {
     return properties = "toolbar = 0, scrollbars = 1, location = 0, statusbar = 1, menubar = 0, resizable = 1, width = " + f + ", height = " + g + ", top = " + j + ", left = " + e, eval("page" + b + " = window.open('" + a + "', '" + b + "', properties);")
   }
   return null
-};
-popUpData = function(a, b, c, d) {
+}
+function popUpData(a, b, c, d) {
   var e = 600, f = 500, g = false;
   b && (e = b);
   c && (f = c);
@@ -4331,8 +4335,8 @@ popUpData = function(a, b, c, d) {
   c = screen.height ? (screen.height - f) / 2 : 100;
   currentpopuptop != null && (currentpopuptop = c);
   return g ? (popupCreated || initPopup(), document.getElementById("popupWindow_Title").innerHTML = "Gisviewer Informatie", $j("#popupWindow").show(), ieVersion <= 6 && ieVersion != -1 && fixPopup(), document.getElementById("dataframedivpopup")) : (properties = "toolbar = 0, scrollbars = 1, location = 0, statusbar = 1, menubar = 0, resizable = 1, width = " + e + ", height = " + f + ", top = " + c + ", left = " + b, window.open("admindatabusy.do", a, properties))
-};
-buildPopup = function() {
+}
+function buildPopup() {
   var a = document.createElement("div");
   a.styleClass = "popup_Window";
   a.id = "popupWindow";
@@ -4366,10 +4370,10 @@ buildPopup = function() {
   b = document.createElement("div");
   b.styleClass = "popupWindow_Windowbackground";
   b.id = "popupWindow_Windowbackground";
-  $j(a).css({height:popupHeight, width:popupWidth, left:popupLeft, top:popupTop, display:"none"});
+  $j(a).css({height:B3PGissuite.config.popupHeight, width:B3PGissuite.config.popupWidth, left:B3PGissuite.config.popupLeft, top:B3PGissuite.config.popupTop, display:"none"});
   document.body.appendChild(a);
   document.body.appendChild(b)
-};
+}
 function Balloon(a, b, c, d, e, f, g, h, j) {
   this.mapDiv = a;
   this.webMapController = b;
@@ -4396,15 +4400,15 @@ function Balloon(a, b, c, d, e, f, g, h, j) {
   if(g) {
     this.offsetY = g
   }
-  this._createBalloon = function(a, c) {
+  this._createBalloon = function(a, b) {
     this.balloon = $j("<div class='infoBalloon' id='" + this.balloonId + "'></div>");
     this.balloon.css("position", "absolute");
     this.balloon.css("width", "" + this.balloonWidth + "px");
     this.balloon.css("height", "" + this.balloonHeight + "px");
     this.balloon.css("z-index", "13000");
-    var d = this.balloonHeight - this.balloonArrowHeight * 2 + 2 - this.balloonCornerSize;
-    this.balloon.append($j("<div class='balloonCornerTopLeft'><img style='position: absolute;' src='images/infoBalloon/round.png'/></div>").css("width", this.balloonCornerSize + "px").css("height", this.balloonCornerSize + "px").css("left", "0px").css("top", this.balloonArrowHeight - 1 + "px").css("width", this.balloonWidth - this.balloonCornerSize + "px").css("height", d + "px"));
-    this.balloon.append($j("<div class='balloonCornerTopRight'><img style='position: absolute; left: -1004px;' src='images/infoBalloon/round.png'/></div>").css("width", this.balloonCornerSize + "px").css("height", d + "px").css("top", this.balloonArrowHeight - 1 + "px").css("right", "0px"));
+    var c = this.balloonHeight - this.balloonArrowHeight * 2 + 2 - this.balloonCornerSize;
+    this.balloon.append($j("<div class='balloonCornerTopLeft'><img style='position: absolute;' src='images/infoBalloon/round.png'/></div>").css("width", this.balloonCornerSize + "px").css("height", this.balloonCornerSize + "px").css("left", "0px").css("top", this.balloonArrowHeight - 1 + "px").css("width", this.balloonWidth - this.balloonCornerSize + "px").css("height", c + "px"));
+    this.balloon.append($j("<div class='balloonCornerTopRight'><img style='position: absolute; left: -1004px;' src='images/infoBalloon/round.png'/></div>").css("width", this.balloonCornerSize + "px").css("height", c + "px").css("top", this.balloonArrowHeight - 1 + "px").css("right", "0px"));
     this.balloon.append($j("<div class='balloonCornerBottomLeft'><img style='position: absolute; top: -748px;' src='images/infoBalloon/round.png'/></div>").css("height", this.balloonCornerSize + "px").css("left", "0px").css("bottom", this.balloonArrowHeight - 1 + "px").css("width", this.balloonWidth - this.balloonCornerSize));
     this.balloon.append($j("<div class='balloonCornerBottomRight'><img style='position: absolute; top: -748px; left: -1004px;' src='images/infoBalloon/round.png'/></div>").css("width", this.balloonCornerSize + "px").css("height", this.balloonCornerSize + "px").css("right", "0px").css("bottom", this.balloonArrowHeight - 1 + "px"));
     this.balloon.append($j("<div class='balloonArrow balloonArrowTopLeft' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
@@ -4412,16 +4416,16 @@ function Balloon(a, b, c, d, e, f, g, h, j) {
     this.balloon.append($j("<div class='balloonArrow balloonArrowBottomLeft' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
     this.balloon.append($j("<div class='balloonArrow balloonArrowBottomRight' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
     this.balloon.append($j("<div class='balloonContent'></div>").css("top", this.balloonArrowHeight + 20 + "px").css("bottom", this.balloonArrowHeight + 4 + "px"));
-    var e = this;
+    var d = this;
     this.balloon.append($j("<div class='balloonCloseButton'></div>").css("right", "7px").css("top", "" + (this.balloonArrowHeight + 3) + "px").click(function() {
-      e.remove();
+      d.remove();
       return false
     }));
     this.xCoord = a;
-    this.yCoord = c;
-    this._resetPositionOfBalloon(a, c);
+    this.yCoord = b;
+    this._resetPositionOfBalloon(a, b);
     $j(this.mapDiv).append(this.balloon);
-    this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT, b.getMap(), this.setPosition, this)
+    this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT, this.webMapController.getMap(), this.setPosition, this)
   };
   this._resetPositionOfBalloon = function(a, b) {
     var c = this.webMapController.getMap().getCenter(), c = this.webMapController.getMap().coordinateToPixel(c.x, c.y), d = this.webMapController.getMap().coordinateToPixel(a, b);
@@ -4446,7 +4450,7 @@ function Balloon(a, b, c, d, e, f, g, h, j) {
   };
   this.remove = function() {
     this.balloon.remove();
-    this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT, b.getMap(), this.setPosition, this);
+    this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT, this.webMapController.getMap(), this.setPosition, this);
     delete this.balloon
   };
   this.getContentElement = function() {
@@ -4466,11 +4470,10 @@ function showTabvakLoading(a) {
 function hideTabvakLoading() {
   $j("#tab_container").find(".tabvakloading").remove()
 }
-var editingRedlining = false, redLineGegevensbronId = -1;
 function enableEditRedlining(a) {
   editingRedlining = true;
   redLineGegevensbronId = a;
-  webMapController instanceof FlamingoController ? webMapController.activateTool("breinaald") : webMapController.activateTool("identify")
+  B3PGissuite.vars.webMapController instanceof FlamingoController ? B3PGissuite.vars.webMapController.activateTool("breinaald") : B3PGissuite.vars.webMapController.activateTool("identify")
 }
 function createServiceLeaf(a, b) {
   if(b.id == 0) {
@@ -4562,21 +4565,23 @@ function getItemByLayer(a, b) {
   return null
 }
 function getBaseUrl() {
-  return window.location.protocol + "//" + window.location.host + baseNameViewer
+  return window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer
 }
 function checkTempUploadedPointsWms(a) {
   uploadCsvLayerOn = a;
-  var b = webMapController.getMap().getLayer("uploadedPoints");
-  a && b == null ? addTempUploadedPointsWms() : a && b ? b.setVisible(true) : !a && b && webMapController.getMap().removeLayer(b)
+  var b = B3PGissuite.vars.webMapController.getMap().getLayer("uploadedPoints");
+  a && b == null ? addTempUploadedPointsWms() : a && b ? b.setVisible(true) : !a && b && B3PGissuite.vars.webMapController.getMap().removeLayer(b)
 }
 function addTempUploadedPointsWms() {
-  var a = getBaseUrl() + "/UploadedPointsWmsServlet", a = webMapController.createWMSLayer("uploadedPoints", a, {format:"image/png", layers:"tempPointsLayer", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, {id:"uploadedPoints", timeout:30, retryonerror:10, ratio:1, showerrors:true, initService:false, minscale:0, maxscale:5E5});
-  webMapController.getMap().addLayer(a)
+  var a = getBaseUrl() + "/UploadedPointsWmsServlet", a = B3PGissuite.vars.webMapController.createWMSLayer("uploadedPoints", a, {format:"image/png", layers:"tempPointsLayer", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, {id:"uploadedPoints", timeout:30, retryonerror:10, ratio:1, showerrors:true, initService:false, minscale:0, maxscale:5E5});
+  B3PGissuite.vars.webMapController.getMap().addLayer(a)
 }
-var popupCreated = false;
 $j(document).ready(function() {
-  for(var a = false, b = false, c = 0;c < enabledtabs.length;c++) {
-    enabledtabs[c] == "vergunningen" && (a = true), enabledtabs[c] == "zoeken" && (b = true)
+  for(var a = false, b = false, c = 0;c < B3PGissuite.config.enabledtabs.length;c++) {
+    B3PGissuite.config.enabledtabs[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabs[c] === "zoeken" && (b = true)
+  }
+  for(c = 0;c < B3PGissuite.config.enabledtabsLeft.length;c++) {
+    B3PGissuite.config.enabledtabsLeft[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabsLeft[c] === "zoeken" && (b = true)
   }
   (b || a) && createSearchConfigurations();
   a = false;
@@ -4594,8 +4599,8 @@ $j(document).ready(function() {
   }, stop:function() {
     stopResize()
   }}), $j("#popupWindow_Close").click(function() {
-    if(dataframepopupHandle) {
-      dataframepopupHandle.closed = true
+    if(B3PGissuite.vars.dataframepopupHandle) {
+      B3PGissuite.vars.dataframepopupHandle.closed = true
     }
     $j("#popupWindow").hide()
   }));
@@ -4606,16 +4611,16 @@ $j(document).ready(function() {
 // Input 6
 var plannen = {}, bestemmingen = {}, selectedPlan = null, plantypeAttribuutNaam = "typePlan", planStatusAttribuutNaam = "planstatus", tekstAttribuutNaam = "documenten", eigenaarSelectName = "eigenaarselect", planSelectName = "planselect", plantypeSelectName = "plantypeselect", statusSelectName = "statusselect", eigenaarSelect = document.getElementById(eigenaarSelectName), planSelect = document.getElementById(planSelectName), plantypeSelect = document.getElementById(plantypeSelectName), statusSelect = 
 document.getElementById(statusSelectName), planIds = null;
-planSelectieIds && (planIds = ("" + planSelectieIds).split(","));
+B3PGissuite.config.planSelectieIds && (planIds = ("" + B3PGissuite.config.planSelectieIds).split(","));
 var planEigenaarId = planIds === null ? null : planIds[0], planId = planIds === null ? null : planIds[1];
-planEigenaarId != null && planEigenaarId > 0 && planId != null && planId > 0 && JZoeker.zoek(Array(planEigenaarId), "*", maxResults, handleGetEigenaar);
+planEigenaarId != null && planEigenaarId > 0 && planId != null && planId > 0 && JZoeker.zoek(Array(planEigenaarId), "*", B3PGissuite.config.maxResults, handleGetEigenaar);
 function handleGetEigenaar(a) {
   eigenaarSelect.disabled = false;
   a != null && a.length > 0 && (dwr.util.removeAllOptions(eigenaarSelectName), dwr.util.addOptions(eigenaarSelectName, a, "id", "label"))
 }
 function eigenaarchanged(a) {
   if(a.value != "") {
-    dwr.util.removeAllOptions(plantypeSelectName), dwr.util.removeAllOptions(statusSelectName), dwr.util.removeAllOptions(planSelectName), dwr.util.addOptions(plantypeSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(statusSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(planSelectName, ["Bezig met ophalen..."]), JZoeker.zoek(Array(planId), a.value, maxResults, handleGetPlannen), eigenaarSelect.disabled = true, setSelectedPlan(null)
+    dwr.util.removeAllOptions(plantypeSelectName), dwr.util.removeAllOptions(statusSelectName), dwr.util.removeAllOptions(planSelectName), dwr.util.addOptions(plantypeSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(statusSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(planSelectName, ["Bezig met ophalen..."]), JZoeker.zoek(Array(planId), a.value, B3PGissuite.config.maxResults, handleGetPlannen), eigenaarSelect.disabled = true, setSelectedPlan(null)
   }
 }
 function handleGetPlannen(a) {
@@ -4665,7 +4670,7 @@ function planchanged(a) {
       }
     }
     if(b) {
-      setSelectedPlan(b), a = {}, a.minx = b.minx, a.miny = b.miny, a.maxx = b.maxx, a.maxy = b.maxy, webMapController.getMap("map1").zoomToExtent(a)
+      setSelectedPlan(b), a = {}, a.minx = b.minx, a.miny = b.miny, a.maxx = b.maxx, a.maxy = b.maxy, B3PGissuite.vars.webMapController.getMap("map1").zoomToExtent(a)
     }
   }
 }
@@ -4694,15 +4699,15 @@ function setSelectedPlan(a) {
 var inputSearchDropdown = null;
 function createSearchConfigurations() {
   var a = $j("#searchConfigurationsContainer");
-  if(zoekconfiguraties != null) {
+  if(B3PGissuite.config.zoekconfiguraties != null) {
     var b = $j("<select></select>");
     b.attr("id", "searchSelect");
     b.change(function() {
       searchConfigurationsSelectChanged($j(this))
     });
     b.append($j("<option></option>").html("Maak uw keuze ...").val(""));
-    for(var c = 0;c < zoekconfiguraties.length;c++) {
-      showZoekConfiguratie(zoekconfiguraties[c]) && b.append($j("<option></option>").html(zoekconfiguraties[c].naam).val(c))
+    for(var c = 0;c < B3PGissuite.config.zoekconfiguraties.length;c++) {
+      showZoekConfiguratie(B3PGissuite.config.zoekconfiguraties[c]) && b.append($j("<option></option>").html(B3PGissuite.config.zoekconfiguraties[c].naam).val(c))
     }
     a.append("<strong>Zoek op</strong><br />");
     a.append(b)
@@ -4712,7 +4717,7 @@ function createSearchConfigurations() {
   inputSearchDropdown = b
 }
 function performSearch() {
-  var a = zoekconfiguraties[currentSearchSelectId], b = a.zoekVelden, c = "%";
+  var a = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId], b = a.zoekVelden, c = "%";
   a.bron.url.indexOf("http") != -1 && (c = "*");
   for(var a = [], d = 0;d < b.length;d++) {
     var e = $j("#" + b[d].attribuutnaam).val();
@@ -4740,7 +4745,7 @@ function performSearch() {
             }
             f = $j("#mapcontent").width();
             e = e * f * 2.8E-4 / f;
-            webMapController.getMap().zoomToScale(e)
+            B3PGissuite.vars.webMapController.getMap().zoomToScale(e)
           }else {
             a[d] = e
           }
@@ -4750,8 +4755,8 @@ function performSearch() {
   }
   showTabvakLoading("Bezig met zoeken");
   $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
-  webMapController.getMap().removeMarker("searchResultMarker");
-  JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id, a, maxResults, searchCallBack)
+  B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
+  JZoeker.zoek(B3PGissuite.config.zoekconfiguraties[currentSearchSelectId].id, a, B3PGissuite.config.maxResults, searchCallBack)
 }
 function handleZoekResultaat(a) {
   a = foundValues[a];
@@ -4759,8 +4764,8 @@ function handleZoekResultaat(a) {
   if(a.minx != 0 && a.miny != 0 && a.maxx != 0 && a.maxy) {
     moveToExtent(a.minx, a.miny, a.maxx, a.maxy);
     var b = (a.maxx + a.minx) / 2, c = (a.maxy + a.miny) / 2;
-    webMapController.getMap().removeMarker("searchResultMarker");
-    webMapController.getMap().setMarker("searchResultMarker", b, c)
+    B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
+    B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", b, c)
   }
   b = a.zoekConfiguratie.parentZoekConfiguratie;
   if(b == null) {
@@ -4769,10 +4774,10 @@ function handleZoekResultaat(a) {
   if(b.zoekVelden == void 0 || b.zoekVelden.length == 0) {
     return messagePopup("Zoeken", "Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: " + b.id, "error"), false
   }
-  for(c = 0;c < zoekconfiguraties.length;c++) {
-    zoekconfiguraties[c].id == b.id && (currentSearchSelectId = c)
+  for(c = 0;c < B3PGissuite.config.zoekconfiguraties.length;c++) {
+    B3PGissuite.config.zoekconfiguraties[c].id == b.id && (currentSearchSelectId = c)
   }
-  b = zoekconfiguraties[currentSearchSelectId];
+  b = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
   a = createZoekStringsFromZoekResultaten(b, a);
   fillSearchDiv($j("#searchInputFieldsContainer"), b.zoekVelden, a);
   return false
@@ -4858,8 +4863,8 @@ function switchLayersOn() {
   }
 }
 function getBboxMinSize2(a) {
-  if(Number(a.maxx - a.minx) < minBboxZoeken) {
-    var b = Number((minBboxZoeken - (a.maxx - a.minx)) / 2), c = Number((minBboxZoeken - (a.maxy - a.miny)) / 2);
+  if(Number(a.maxx - a.minx) < B3PGissuite.config.minBboxZoeken) {
+    var b = Number((B3PGissuite.config.minBboxZoeken - (a.maxx - a.minx)) / 2), c = Number((B3PGissuite.config.minBboxZoeken - (a.maxy - a.miny)) / 2);
     a.minx = Number(a.minx - b);
     a.maxx = Number(Number(a.maxx) + Number(b));
     a.miny = Number(a.miny - c);
@@ -4870,12 +4875,12 @@ function getBboxMinSize2(a) {
 var currentSearchSelectId = "";
 function searchConfigurationsSelectChanged(a) {
   var b = $j("#searchInputFieldsContainer");
-  !a || a.val() == "" ? (clearConfigurationsSelect(b), b = $j("#searchResults"), clearConfigurationsSelect(b)) : (currentSearchSelectId = a.val(), a = zoekconfiguraties[currentSearchSelectId], JZoekconfiguratieThemaUtil.getThemas(a.id, zoekconfiguratieThemasCallBack), fillSearchDiv(b, a.zoekVelden, null))
+  !a || a.val() == "" ? (clearConfigurationsSelect(b), b = $j("#searchResults"), clearConfigurationsSelect(b)) : (currentSearchSelectId = a.val(), a = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId], JZoekconfiguratieThemaUtil.getThemas(a.id, zoekconfiguratieThemasCallBack), fillSearchDiv(b, a.zoekVelden, null))
 }
 function clearConfigurationsSelect(a) {
   currentSearchSelectId = "";
   a.html("");
-  webMapController.getMap().removeMarker("searchResultMarker");
+  B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
   zoekconfiguratieThemas = null
 }
 function fillSearchDiv(a, b, c) {
@@ -4901,12 +4906,12 @@ function fillSearchDiv(a, b, c) {
         g.append($j("<option></option>").html("Bezig met laden..."));
         a.append(g).append("<br /><br />");
         var e = e.inputZoekConfiguratie, h;
-        for(k = 0;k < zoekconfiguraties.length;k++) {
-          zoekconfiguraties[k].id == e && (h = zoekconfiguraties[k])
+        for(k = 0;k < B3PGissuite.config.zoekconfiguraties.length;k++) {
+          B3PGissuite.config.zoekconfiguraties[k].id == e && (h = B3PGissuite.config.zoekconfiguraties[k])
         }
         var e = createZoekStringsFromZoekVelden(h, b, c), j = Array(1);
         j[0] = h.id;
-        JZoeker.zoek(j, e, maxResults, handleZoekVeldinputList)
+        JZoeker.zoek(j, e, B3PGissuite.config.maxResults, handleZoekVeldinputList)
       }else {
         if(e.inputType == 3 && e.inputZoekConfiguratie) {
           g = $j('<input type="text" />'), g.attr({id:e.attribuutnaam, name:e.attribuutnaam, size:40, maxlength:e.inputSize}).keyup(function(a) {
@@ -4956,17 +4961,17 @@ function fillSearchDiv(a, b, c) {
   b.length > 0 && (a.append($j('<input type="button" />').attr("value", " Zoek ").attr("id", "searchButton").addClass("knop").click(function() {
     performSearch()
   })), a.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
-    webMapController.getMap().removeMarker("searchResultMarker");
+    B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
     searchConfigurationsSelectChanged(inputSearchDropdown)
-  })), !search && startLocationX == "" && startLocationY == "" && a.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
-    webMapController.getMap().removeMarker("searchResultMarker")
+  })), !search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "" && a.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
+    B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker")
   })));
   $j("#searchResults").empty();
   return a
 }
 function handleZoekVeldinputList(a) {
   if(a != null && a.length > 0) {
-    for(var b, c = zoekconfiguraties[currentSearchSelectId], d = a[0].zoekConfiguratie, e = 0;e < c.zoekVelden.length;e++) {
+    for(var b, c = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId], d = a[0].zoekConfiguratie, e = 0;e < c.zoekVelden.length;e++) {
       var f = c.zoekVelden[e];
       if(f.inputZoekConfiguratie == d.id) {
         b = f.attribuutnaam
@@ -5000,7 +5005,7 @@ function performSearchOnEnterKey(a) {
   b == 13 && performSearch()
 }
 function showZoekConfiguratie(a) {
-  for(var b = zoekConfigIds.split(","), c = 0;c < b.length;c++) {
+  for(var b = B3PGissuite.config.zoekConfigIds.split(","), c = 0;c < b.length;c++) {
     if(a.id == b[c]) {
       return true
     }
@@ -5029,8 +5034,8 @@ function GPSComponent(a) {
   };
   this.receiveLocation = function(a) {
     var a = gpsComponent.transformLatLon(Number(a.coords.longitude), Number(a.coords.latitude)), c = new Extent(a.x - gpsComponent.buffer, a.y - gpsComponent.buffer, a.x + gpsComponent.buffer, a.y + gpsComponent.buffer);
-    webMapController.getMap().zoomToExtent(c);
-    webMapController.getMap().setMarker("searchResultMarker", a.x, a.y)
+    B3PGissuite.vars.webMapController.getMap().zoomToExtent(c);
+    B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", a.x, a.y)
   };
   this.errorHandler = function() {
     alert("Kan locatie niet bepalen")
@@ -5046,7 +5051,7 @@ function GPSComponent(a) {
 function EditComponent() {
   this.mode = this.vectorLayer = this.currentFID = this.geom = null;
   this.init = function() {
-    var a = webMapController.getMap().getAllVectorLayers();
+    var a = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
     a.length > 0 ? this.vectorLayer = a[0] : alert("Geen vectorlayer aanwezig")
   };
   this.edit = function(a, b) {
@@ -5152,8 +5157,8 @@ function EditComponent() {
       this.vectorLayer.addFeature(new Feature("editComponent" + this.currentFID, this.geom))
     }else {
       var b = this;
-      webMapController.registerEvent(Event.ON_FEATURE_ADDED, this.vectorLayer, function(a, d) {
-        webMapController.unRegisterEvent(parent.Event.ON_FEATURE_ADDED, b.vectorLayer, arguments.callee);
+      B3PGissuite.vars.webMapController.registerEvent(Event.ON_FEATURE_ADDED, this.vectorLayer, function(a, d) {
+        B3PGissuite.vars.webMapController.unRegisterEvent(parent.Event.ON_FEATURE_ADDED, b.vectorLayer, arguments.callee);
         b.geomFinished(a, d)
       });
       this.vectorLayer.drawFeature(a)
@@ -5203,13 +5208,13 @@ function EditComponent() {
     return c
   };
   this.saveCallback = function(a) {
-    a ? webMapController.getMap().update() : alert("Bewerken mislukt");
+    a ? B3PGissuite.vars.webMapController.getMap().update() : alert("Bewerken mislukt");
     this.mode = null;
     lightBoxPopUp.dialog("close");
     this.removeCurrentEditWindow()
   };
   this.removeCallback = function(a) {
-    a ? webMapController.getMap().update() : alert("Verwijderen mislukt");
+    a ? B3PGissuite.vars.webMapController.getMap().update() : alert("Verwijderen mislukt");
     this.mode = null;
     lightBoxPopUp.dialog("close");
     this.removeCurrentEditWindow()
@@ -23250,6 +23255,7 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
+var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -23261,7 +23267,6 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
-webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -25131,8 +25136,7 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
 }, setActive:function(a) {
   this.setVisible(a);
   this.activeTab = a;
-  eraseCookie("activetab");
-  createCookie("activetab", a, "7")
+  B3PGissuite.config.useCookies && (eraseCookie("activetab"), createCookie("activetab", a, "7"))
 }, getActiveTab:function() {
   return this.getTab(this.activeTab)
 }, getTab:function(a) {
@@ -25211,7 +25215,7 @@ B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaul
   })), this.component.append(a))
 }, afterRender:function() {
   jQuery("#" + this.options.sliderId).slider({min:0, max:100, value:100, animate:true, change:function(a, b) {
-    for(var c = 1 - b.value / 100, d = webMapController.getMap().getLayers(), e = 0;e < d.length;e++) {
+    for(var c = 1 - b.value / 100, d = B3PGissuite.vars.webMapController.getMap().getLayers(), e = 0;e < d.length;e++) {
       var f = d[e];
       f.getOption("background") || f.setOpacity(c)
     }

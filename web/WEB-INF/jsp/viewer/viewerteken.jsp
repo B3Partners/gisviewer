@@ -56,7 +56,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     var title = "${tekenTitel}";
     var gegevensbron ="${tekenGegevensbron}";
 
-    var webMapController = parent.webMapController;
+    var webMapController = parent.B3PGissuite.vars.webMapController;
 
 </script>
 <script type='text/javascript' src='dwr/interface/JEditFeature.js'></script>

@@ -14,254 +14,197 @@
 <script type='text/javascript' src='dwr/interface/JMaatregelService.js'></script>
 <script type='text/javascript' src='dwr/util.js'></script>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/cookiefunctions.js"/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/flashdetect.js"/>"></script>
-
 <script type="text/javascript">
-    var showDebugContent = false;
-    
-    var waitUntillFullyLoaded = false;
-
-    var baseNameViewer = "${contextPath}";
     
     function catchEmpty(defval, emptyvalue){
         return defval || emptyvalue;
     }
 
-    var beheerder = <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>;
-    var organisatiebeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>;
-    var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
-    var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
-    var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
-    var anoniem= !beheerder && !organisatiebeheerder && !themabeheerder && !gebruiker && !demogebruiker;
-    
-    var sldServletUrl=window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>";
+    B3PGissuite.config = {
+        'showDebugContent': false,
+        'waitUntillFullyLoaded': false,
+        'baseNameViewer': "${contextPath}",
+        'user': {
+            'ingelogdeGebruiker': "<c:out value='${pageContext.request.remoteUser}'/>",
+            'beheerder': <c:out value="${f:isUserInRole(pageContext.request, 'beheerder')}"/>,
+            'organisatiebeheerder': <c:out value="${f:isUserInRole(pageContext.request, 'organisatiebeheerder')}"/>,
+            'themabeheerder': <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>,
+            'gebruiker': <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>,
+            'demogebruiker': <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>
+        },
+        'sldServletUrl': window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>",
+        'zoekconfiguraties': catchEmpty(${zoekconfiguraties}, [{}]),
+        'kburl': "${kburl}",
+        'kbcode': "${kbcode}",
+        'themaTree': catchEmpty(${tree}, null),
+        'serviceTrees': catchEmpty(${servicesTrees}, []),
+        'organizationcode': "${organizationcode}",
+        'fullbbox': '${fullExtent}',
+        'bbox': '${extent}',
+        /* Applicatie extent */
+        'appExtent': catchEmpty("${configMap["extent"]}", "12000,304000,280000,620000"),
+        // Resolution
+        'resolution': catchEmpty(${resolution}),
+        /* init search */
+        'searchConfigId': '${searchConfigId}',
+        'search': '${search}',
+        /* search with sld result (searchAction: filter or highlight and zoom) */
+        'searchAction': '${searchAction}',
+        'searchId': '${searchId}',
+        'searchClusterId': '${searchClusterId}',
+        'searchSldVisibleValue': '${searchSldVisibleValue}',
+        /* Viewer type */
+        'viewerType': catchEmpty("${configMap["viewerType"]}", "flamingo"),
+        /* Viewer type */
+        'viewerTemplate': catchEmpty("${configMap["viewerTemplate"]}", "standalone"),
+        /* ObjectInfo type */
+        'objectInfoType': catchEmpty("${configMap["objectInfoType"]}", "popup"),
+        /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
+        'usePanelControls': catchEmpty(${configMap["usePanelControls"]}, true),
+        /* True als de admin- of metadata in een popup wordt getoond
+         * False als deze onder de kaart moet worden getoond
+         * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
+        'useDivPopup': catchEmpty(${configMap["useDivPopup"]}, false),
+        'usePopup': false,
+        'usePanel': false,
+        'useBalloonPopup': false,
+        // Use cookies
+        'useCookies': catchEmpty(${configMap["useCookies"]}, true),
+        /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
+         * False als je maximaal van 1 thema data kan ophalen. (radiobuttons) */
+        'multipleActiveThemas': catchEmpty(${configMap["multipleActiveThemas"]}, true),
+        /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
+         * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
+         * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
+         * als de admindata automatisch moeten worden doorgestuurd) */
+        'autoRedirect': catchEmpty(${configMap["autoRedirect"]}, 2),
+        /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
+         * en info wordt opgevraagd. Dus een tolerantie. */
+        'tolerance': catchEmpty(${configMap["tolerance"]}, 1),
+        /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
+        'showLegendInTree': catchEmpty(${configMap["showLegendInTree"]}, true),
+        /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
+         * kaartlaag zichtbaar is in viewer. Default op true */
+        'useInheritCheckbox': catchEmpty(${configMap["useInheritCheckbox"]}, true),
+        /*
+         * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis
+         * de kaart wordt na het slepen automatisch herladen na x aantal (instellen door layerDelay) seconden
+         * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
+         * 
+         * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
+        'useSortableFunction': catchEmpty(${configMap["useSortableFunction"]}, false),
+        // instellen in ms, dus 5000 voor 5 seconden
+        'layerDelay': catchEmpty(${configMap["layerDelay"]}, 5000),
+        /* de vertraging voor het refreshen van de kaart. */
+        'refreshDelay': catchEmpty(${configMap["refreshDelay"]}, 100),
+        /*
+         * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
+         * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
+         * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
+        'zoekConfigIds': catchEmpty(${configMap["zoekConfigIds"]}, ""),
+        /* Voorzieningen */
+        'voorzieningConfigIds': catchEmpty(${configMap["voorzieningConfigIds"]}, ""),
+        'voorzieningConfigStraal': catchEmpty(${configMap["voorzieningConfigStraal"]}, ""),
+        'voorzieningConfigTypes': catchEmpty(${configMap["voorzieningConfigTypes"]}, ""),
+        /* Vergunningen */
+        'vergunningConfigIds': catchEmpty(${configMap["vergunningConfigIds"]}, ""),
+        'vergunningConfigStraal': catchEmpty(${configMap["vergunningConfigStraal"]}, ""),
+        /*
+         * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
+         * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
+        'minBboxZoeken': catchEmpty(${configMap["minBboxZoeken"]}, 1000),
+        /* Maximaal aantal zoekresultaten */
+        'maxResults': catchEmpty(${configMap["maxResults"]}, 25),
+        /* Gebruiker wisselt tabbladen door er met de muis overheen te gaan. Indien false
+         * dan zijn de tabbladen te wisselen door te klikken */
+        'useMouseOverTabs': catchEmpty(${configMap["useMouseOverTabs"]}, true),
+        // Tree expand all
+        'expandAll': catchEmpty(${configMap["expandAll"]}, false),
+        'enabledtabs': [${configMap["tabs"]}],
+        'enabledtabsLeft': [${configMap["tabsLeft"]}],
+        /* planselectie gebruikt 2 zoekingangen (id's) */
+        'planSelectieIds': catchEmpty(${configMap["planSelectieIds"]}, "0,0"),
+        /* Buttons boven viewer aan / uit */
+        'showRedliningTools': catchEmpty(${configMap["showRedliningTools"]}, false),
+        'showBufferTool': catchEmpty(${configMap["showBufferTool"]}, false),
+        'showSelectBulkTool': catchEmpty(${configMap["showSelectBulkTool"]}, false),
+        'showNeedleTool': catchEmpty(${configMap["showNeedleTool"]}, false),
+        'showPrintTool': catchEmpty(${configMap["showPrintTool"]}, false),
+        'showLayerSelectionTool': catchEmpty(${configMap["showLayerSelectionTool"]}, false),
+        'showGPSTool': catchEmpty(${configMap["showGPSTool"]}, false),
+        'showEditTool': catchEmpty(${configMap["showEditTool"]}, false),
+        'gpsBuffer': catchEmpty("${configMap["gpsBuffer"]}", false),
+        'layerGrouping': catchEmpty("${configMap["layerGrouping"]}", "lg_forebackground"),
+        'popupWidth': catchEmpty("${configMap["popupWidth"]}", "90%"),
+        'popupHeight': catchEmpty("${configMap["popupHeight"]}", "20%"),
+        'popupLeft': catchEmpty("${configMap["popupLeft"]}", "5%"),
+        'popupTop': catchEmpty("${configMap["popupTop"]}", "75%"),
+        'bookmarkAppcode': catchEmpty("${bookmarkAppcode}", ""),
+        'tekstBlokken': catchEmpty(${tekstBlokken}, []),
+        'datasetDownload': catchEmpty(${configMap["datasetDownload"]}, false),
+        'tilingResolutions': catchEmpty("${configMap["tilingResolutions"]}", ""),
+        'showServiceUrl': catchEmpty(${configMap["showServiceUrl"]}, false),
+        'startLocationX': catchEmpty("${startLocationX}", ""),
+        'startLocationY': catchEmpty("${startLocationY}", "")
+    };
 
-    var zoekconfiguraties = catchEmpty(${zoekconfiguraties}, [{}]);
-
-    var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
-    var kburl="${kburl}";
-    var kbcode="${kbcode}";
-
-    var themaTree=catchEmpty(${tree}, null);
-    
-    var organizationcode="${organizationcode}";
-    var fullbbox='${fullExtent}';
-
-    var bbox='${extent}';
-    
-    /* Applicatie extent */
-    var appExtent = catchEmpty("${configMap["extent"]}", "12000,304000,280000,620000");
-    // Resolution
-    var resolution=catchEmpty(${resolution});
-    /* init search */
-    var searchConfigId='${searchConfigId}';
-    var search='${search}';
-    /* search with sld result (searchAction: filter or highlight and zoom) */
-    var searchAction='${searchAction}';
-    var searchId='${searchId}';
-    var searchClusterId='${searchClusterId}';
-    var searchSldVisibleValue='${searchSldVisibleValue}';
-    /* Viewer type */
-    var viewerType = catchEmpty("${configMap["viewerType"]}", "flamingo");
-    /* If viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
-    if(viewerType === 'flamingo') {
-        var flashVersion = ua().pv;
+    /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
+    if(B3PGissuite.config.viewerType === 'flamingo') {
+        var flashVersion = flashCheck().pv;
         if(flashVersion[0] === 0) {
-            viewerType = 'openlayers';
+            B3PGissuite.config.viewerType = 'openlayers';
         }
     }
-    /* Viewer type */
-    var viewerTemplate = catchEmpty("${configMap["viewerTemplate"]}", "standalone");
-    /* ObjectInfo type */
-    var objectInfoType = catchEmpty("${configMap["objectInfoType"]}", "popup");
-    /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
-    var usePanelControls=catchEmpty(${configMap["usePanelControls"]}, true);
-    /* True als de admin- of metadata in een popup wordt getoond
-     * False als deze onder de kaart moet worden getoond
-     * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
-    var useDivPopup=catchEmpty(${configMap["useDivPopup"]}, false);
+    if(B3PGissuite.config.objectInfoType === "geen") {
+        B3PGissuite.config.usePopup = false;
+        B3PGissuite.config.usePanel = false;
+        B3PGissuite.config.usePanelControls =  false;
+        B3PGissuite.config.useDivPopup = false;
+        B3PGissuite.config.useBalloonPopup = false;
+    }
+    if(B3PGissuite.config.objectInfoType === "popup") {
+        B3PGissuite.config.usePopup = true;
+        B3PGissuite.config.usePanel = false;
+        B3PGissuite.config.usePanelControls =  false;
+        B3PGissuite.config.useDivPopup = true;
+        B3PGissuite.config.useBalloonPopup = false;
+    }
+    if(B3PGissuite.config.objectInfoType === "paneel") {
+        B3PGissuite.config.usePopup = false;
+        B3PGissuite.config.usePanel = true;
+        B3PGissuite.config.useDivPopup = false;
+        B3PGissuite.config.useBalloonPopup = false;
+    }
+    if (B3PGissuite.config.objectInfoType === "balloon"){
+        B3PGissuite.config.usePopup = false;
+        B3PGissuite.config.usePanel = false;
+        B3PGissuite.config.usePanelControls =  false;
+        B3PGissuite.config.useDivPopup = false;
+        B3PGissuite.config.useBalloonPopup = true;
+    }
 
-    if(objectInfoType === "geen") {
-        usePopup = false;
-        usePanel = false;
-        usePanelControls =  false;
-        useDivPopup = false;
-        useBalloonPopup=false;
-    }
-    if(objectInfoType === "popup") {
-        usePopup = true;
-        usePanel = false;
-        usePanelControls =  false;
-        useDivPopup = true;
-        useBalloonPopup=false;
-    }
-    if(objectInfoType === "paneel") {
-        usePopup = false;
-        usePanel = true;
-        useDivPopup = false;
-        useBalloonPopup=false;
-    }
-    if (objectInfoType === "balloon"){
-        usePopup=false;
-        usePanel = false;
-        usePanelControls =  false;
-        useDivPopup = false;
-        useBalloonPopup=true;
-    }
-    var dataframepopupHandle = null;
-    // Use cookies
-    var useCookies=catchEmpty(${configMap["useCookies"]}, true);
-    /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
-     * False als je maximaal van 1 thema data kan ophalen. (radiobuttons) */
-    var multipleActiveThemas=catchEmpty(${configMap["multipleActiveThemas"]}, true);
-    /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
-     * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
-     * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
-     * als de admindata automatisch moeten worden doorgestuurd) */
-    var autoRedirect=catchEmpty(${configMap["autoRedirect"]}, 2);
-    /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
-     * en info wordt opgevraagd. Dus een tolerantie. */
-    var tolerance=catchEmpty(${configMap["tolerance"]}, 1);
-    /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
-    var showLegendInTree = catchEmpty(${configMap["showLegendInTree"]}, true);
-    /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
-     * kaartlaag zichtbaar is in viewer. Default op true */
-    var useInheritCheckbox = catchEmpty(${configMap["useInheritCheckbox"]}, true);
-    /*
-     * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
-     * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen */
-    var loggedInUser = readCookie('loggedInUser');
-    if(loggedInUser != null) {
-        if(loggedInUser != '<c:out value="${pageContext.request.remoteUser}"/>') {
-            eraseCookie('activelayer');
-            eraseCookie('activetab');
-            eraseCookie('checkedLayers');
-            eraseCookie('checkedClusters');
-        }
-    }
-    createCookie('loggedInUser', '<c:out value="${pageContext.request.remoteUser}"/>', '7');
-	
-    /*
-     * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis
-     * de kaart wordt na het slepen automatisch herladen na x aantal (instellen door layerDelay) seconden
-     * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
-     * 
-     * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
-    var useSortableFunction=catchEmpty(${configMap["useSortableFunction"]}, false);
-    // instellen in ms, dus 5000 voor 5 seconden
-    var layerDelay = catchEmpty(${configMap["layerDelay"]}, 5000);
-    /* de vertraging voor het refreshen van de kaart. */
-    var refreshDelay=catchEmpty(${configMap["refreshDelay"]}, 100);
-    /*
-     * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
-     * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
-     * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
-    var zoekConfigIds = catchEmpty(${configMap["zoekConfigIds"]}, "");
-    /* Voorzieningen */
-    var voorzieningConfigIds = catchEmpty(${configMap["voorzieningConfigIds"]}, "");
-    var voorzieningConfigStraal = catchEmpty(${configMap["voorzieningConfigStraal"]}, "");
-    var voorzieningConfigTypes = catchEmpty(${configMap["voorzieningConfigTypes"]}, "");
-    /* Vergunningen */
-    var vergunningConfigIds = catchEmpty(${configMap["vergunningConfigIds"]}, "");
-    var vergunningConfigStraal = catchEmpty(${configMap["vergunningConfigStraal"]}, "");
-    /*
-     * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
-     * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
-    var minBboxZoeken=catchEmpty(${configMap["minBboxZoeken"]}, 1000);
-    /* Maximaal aantal zoekresultaten */
-    var maxResults=catchEmpty(${configMap["maxResults"]}, 25);
-    /* Gebruiker wisselt tabbladen door er met de muis overheen te gaan. Indien false
-     * dan zijn de tabbladen te wisselen door te klikken */
-    var useMouseOverTabs = catchEmpty(${configMap["useMouseOverTabs"]}, true);
-    // Tree expand all
-    var expandAll=catchEmpty(${configMap["expandAll"]}, false);
-    /* TODO: voorzieningen en vergunning even uitgecomment deze geven
-     * document.getElementById(tabobj.contentid).style.display = 'none'; is null
-     * als de iframes uitstaan en ze wel in de var tabbladen aanstaan.
-
-     * De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
-     * de naam en eventueel extra Content-divs die geopend moeten worden */
+    /* 
+     * Definitie beschikbare tabbladen.
+     */
     var tabbladen = {
-        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "extracontent": ["layermaindiv"], "class": "TreeComponent", 'options': { 'tree': themaTree, 'servicestrees': ${servicesTrees}, 'expandAll': expandAll } },
-        "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchComponent", "options": { "hasSearch": ${!empty search}, "hasA11yStartWkt": ${!empty a11yStartWkt} } },
+        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeComponent", 'options': { 'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll } },
+        "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchComponent", "options": { "hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt} } },
         "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
         "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse", "class": "IframeComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
-        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true, "class": "LegendComponent" },
+        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendComponent", 'options': { 'useSortableFunction': B3PGissuite.config.useSortableFunction } },
         "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionComponent" },
         "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
         "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
         "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
         "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
-        "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSComponent", 'options': { 'tekstBlokken': ${tekstBlokken} } },
+        "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSComponent", 'options': { 'tekstBlokken': B3PGissuite.config.tekstBlokken } },
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
         "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
         "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
         "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } }
     };
-
-    var enabledtabs = [${configMap["tabs"]}];
-    var enabledtabsLeft = [${configMap["tabsLeft"]}];
-
-    /* planselectie gebruikt 2 zoekingangen (id's) */
-    var planSelectieIds = catchEmpty(${configMap["planSelectieIds"]}, "0,0");
-    /* Buttons boven viewer aan / uit */
-    var showRedliningTools = catchEmpty(${configMap["showRedliningTools"]}, false);
-    var showBufferTool = catchEmpty(${configMap["showBufferTool"]}, false);
-    var showSelectBulkTool = catchEmpty(${configMap["showSelectBulkTool"]}, false);
-    var showNeedleTool = catchEmpty(${configMap["showNeedleTool"]}, false);
-    var showPrintTool = catchEmpty(${configMap["showPrintTool"]}, false);
-    var showLayerSelectionTool = catchEmpty(${configMap["showLayerSelectionTool"]}, false);
-    var showGPSTool = catchEmpty(${configMap["showGPSTool"]}, false);
-    var showEditTool = catchEmpty(${configMap["showEditTool"]}, false);
-    var gpsBuffer = catchEmpty("${configMap["gpsBuffer"]}", false);
-    
-    var layerGrouping = catchEmpty("${configMap["layerGrouping"]}", "lg_forebackground");
-
-    var popupWidth = catchEmpty("${configMap["popupWidth"]}", "90%");
-    var popupHeight = catchEmpty("${configMap["popupHeight"]}", "20%");
-    var popupLeft = catchEmpty("${configMap["popupLeft"]}", "5%");
-    var popupTop = catchEmpty("${configMap["popupTop"]}", "75%");
-
-    var bookmarkAppcode = catchEmpty("${bookmarkAppcode}", "");
-	
-    /* Variable wordt gebruikt om de huidige active tab in op te slaan */
-    var currentActiveTab = null;
-    
-    function getZoekconfiguraties(){
-        return zoekconfiguraties;
-    }
-    function getVoorzieningConfigIds(){
-        return voorzieningConfigIds;
-    }
-    function getMaxResults(){
-        return maxResults;
-    }
-    function getVoorzieningConfigStraal(){
-        return voorzieningConfigStraal;
-    }
-    function getVoorzieningConfigTypes(){
-        return voorzieningConfigTypes;
-    }
-    function getVergunningConfigIds(){
-        return vergunningConfigIds;
-    }
-    function getVergunningConfigStraal(){
-        return vergunningConfigStraal;
-    }
-
-    var tekstblokken = ${tekstBlokken};
-
-    /* Boomsortering */
-    var treeOrder = catchEmpty("${configMap["treeOrder"]}", 'volgorde');
-    var useUserWmsDropdown = catchEmpty(${configMap["useUserWmsDropdown"]}, true);
-    var datasetDownload = catchEmpty(${configMap["datasetDownload"]}, false);
-    var tilingResolutions = catchEmpty("${configMap["tilingResolutions"]}", "");
-    var showServiceUrl = catchEmpty(${configMap["showServiceUrl"]}, false);
-    var startLocationX = catchEmpty("${startLocationX}", ""); 
-    var startLocationY = catchEmpty("${startLocationY}", "");
 </script>
 
 <!-- Total (minified) viewer JS -->
@@ -297,7 +240,7 @@
     <div id="flashmelding"></div>
 </div>
 <script type="text/javascript">
-    if(viewerType === 'flamingo') {
+    if(B3PGissuite.config.viewerType === 'flamingo') {
         setTimeout(function() {
             $j("#flashmelding").html('<strong class="noflamingoerror"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>');
         }, 2000);
@@ -314,9 +257,7 @@
     $j('#content_viewer').addClass('tabrechts_open');
     
     // Function to create a tab
-    function createTabcomponent(tabno, tabComponent) {
-        // Get tabid
-        var tabid = enabledtabs[tabno];
+    function createTabcomponent(tabid, tabComponent) {
         // Get tabobj from tabbladen defs
         var tabobj = tabbladen[tabid];
         // If a class is defined, create class
@@ -340,19 +281,19 @@
         }
     }
     // Init tab controllers
-    var tabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'tabjes', 'tabContainer': 'tab_container', useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
-    var leftTabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'leftcontenttabjes', 'tabContainer': 'leftcontent', useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
+    var tabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'tabjes', 'tabContainer': 'tab_container', useClick: !B3PGissuite.config.useMouseOverTabs, useHover: B3PGissuite.config.useMouseOverTabs });
+    var leftTabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'leftcontenttabjes', 'tabContainer': 'leftcontent', useClick: !B3PGissuite.config.useMouseOverTabs, useHover: B3PGissuite.config.useMouseOverTabs });
     // Loop over enabled tabs
-    for(i in enabledtabs) {
-        createTabcomponent(i, tabComponent);
+    for(i in B3PGissuite.config.enabledtabs) {
+        createTabcomponent(B3PGissuite.config.enabledtabs[i], tabComponent);
     }
     // Loop over tabs on the left
-    for(i in enabledtabsLeft) {
-        createTabcomponent(i, leftTabComponent);
+    for(i in B3PGissuite.config.enabledtabsLeft) {
+        createTabcomponent(B3PGissuite.config.enabledtabsLeft[i], leftTabComponent);
     }
 
     var noOfTabs = tabComponent.getTabCount(), noLeftTabs = leftTabComponent.getTabCount();
-    if(usePanel) {
+    if(B3PGissuite.config.usePanel) {
         document.write('<div class="infobalk" id="informatiebalk">'
             +'     <div class="infobalk_description">INFORMATIE</div>'
             +'     <div class="infobalk_actions">&nbsp;</div>'
@@ -361,7 +302,7 @@
             +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
             +' </div>');
     }
-    if(usePanelControls) {
+    if(B3PGissuite.config.usePanelControls) {
         document.write('<div id="panelControls">');
         if(noOfTabs > 0) document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"><a href="#"></a></div>');
         if(noLeftTabs > 0) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"><a href="#"></a></div>');
@@ -372,20 +313,20 @@
     if(noLeftTabs === 0) $j('#content_viewer').addClass('tablinks_dicht').removeClass('tablinks_open');
     if(noOfTabs === 0) $j('#content_viewer').addClass('tablinks_dicht').removeClass('tablinks_open');
     // Show infopanel below when set
-    if(!usePopup && usePanel) $j('#content_viewer').addClass('dataframe_open');
+    if(!B3PGissuite.config.usePopup && B3PGissuite.config.usePanel) $j('#content_viewer').addClass('dataframe_open');
     
     /**
     * Start off with initMapComponent()
     */
     initMapComponent();
     
-    var activeTab = readCookie('activetab');
+    var activeTab = (B3PGissuite.config.useCookies ? readCookie('activetab') : null);
     if(activeTab !== null) {
         switchTab(activeTab);
-    } else if (demogebruiker) {
-        switchTab('themas');
+    } else if (B3PGissuite.config.user.demogebruiker) {
+        switchTab('themas'); // read default tab from config ?
     } else {
-        switchTab('themas');
+        switchTab('themas'); // read default tab from config ?
     }
     var orderLayerBox= document.getElementById("orderLayerBox");
 </script>
@@ -393,21 +334,6 @@
 <script type="text/javascript">
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
-
-    <c:if test="${not empty activeTab}">
-        if (document.getElementById("${activeTab}")){
-            switchTab("${activeTab}");
-        }
-    </c:if>
-
-    <c:if test="${empty activeTab}">
-        var cfgAtiveTab = catchEmpty("${configMap["activeTab"]}");
-        if(typeof cfgAtiveTab === 'undefined' || !cfgAtiveTab) {
-            cfgAtiveTab = "themas";
-        }
-
-        switchTab(cfgAtiveTab);
-    </c:if>
         
         function panelResize(dir)
         {
@@ -425,17 +351,15 @@
             }
         }
         var expandNodes=null;
-
-    <c:if test="${not empty expandNodes}">
-        expandNodes=${expandNodes};
-    </c:if>
-
-        if(expandNodes!=null){
-            for (var i=0; i < expandNodes.length; i++){
-                messagePopup("", expandNodes[i], "information");
-                treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
+        <c:if test="${not empty expandNodes}">
+            expandNodes=${expandNodes};
+            if(expandNodes !== null){
+                for (var i=0; i < expandNodes.length; i++){
+                    messagePopup("", expandNodes[i], "information");
+                    treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
+                }
             }
-        }
+        </c:if>
 
         function hideLoadingScreen() {
             $j("#loadingscreen").hide();
@@ -444,20 +368,16 @@
         /* Laadscherm na 60 seconden zelf weghalen
          * Hij zou weg moeten gaan in onAllLayersFinishedLoading in viewer.js
          */
-        if (waitUntillFullyLoaded) {
+        if (B3PGissuite.config.waitUntillFullyLoaded) {
             var hideScreen = setTimeout("hideLoadingScreen();", 60000);
         }
+        /* Weghalen als viewer.jsp klaar is */
+        if (!B3PGissuite.config.waitUntillFullyLoaded) {
+            $j(document).ready(function(){
+                $j("#loadingscreen").hide();
+            });
+        }
 </script>
-
-<script type="text/javascript">
-    /* Weghalen als viewer.jsp klaar is */
-    if (!waitUntillFullyLoaded) {
-        $j(document).ready(function(){
-            $j("#loadingscreen").hide();
-        });
-    }
-</script>
-
 <div id="dialog-download-metadata" title="Kaartlaag opties" style="display: none;">
     <p>
         <span class="ui-icon ui-icon-info" style="float:left; margin:0 7px 20px 0;"></span>

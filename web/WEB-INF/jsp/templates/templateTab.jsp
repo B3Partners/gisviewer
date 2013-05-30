@@ -51,11 +51,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>
 
         <script type="text/javascript">
-            var usePopup = false;
-            if(opener) {
-                usePopup = opener.usePopup;
-            }
-            attachOnload(checkLocationPopup);
+            $j(document).ready(function() {
+                var usePopup = false;
+                if(opener) {
+                    usePopup = opener.B3PGissuite.config.usePopup;
+                }
+                checkLocationPopup(usePopup);
+            });
         </script>
 
     </head>

@@ -26,7 +26,7 @@ function EditComponent(){
     this.mode = null;
     
     this.init = function(){
-        var lagen = webMapController.getMap().getAllVectorLayers();
+        var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
         if(lagen.length >0 ){
             this.vectorLayer = lagen[0];
         }else{
@@ -214,8 +214,8 @@ function EditComponent(){
             this.vectorLayer.addFeature(feature);
         }else{
             var me = this;
-            webMapController.registerEvent(Event.ON_FEATURE_ADDED,this.vectorLayer,function (layerName,object){
-                webMapController.unRegisterEvent(parent.Event.ON_FEATURE_ADDED,me.vectorLayer,arguments.callee);
+            B3PGissuite.vars.webMapController.registerEvent(Event.ON_FEATURE_ADDED,this.vectorLayer,function (layerName,object){
+                B3PGissuite.vars.webMapController.unRegisterEvent(parent.Event.ON_FEATURE_ADDED,me.vectorLayer,arguments.callee);
                 me.geomFinished(layerName, object);
             });
             this.vectorLayer.drawFeature(type);
@@ -310,7 +310,7 @@ function EditComponent(){
         if(!success){
             alert("Bewerken mislukt");
         }else{
-            webMapController.getMap().update();
+            B3PGissuite.vars.webMapController.getMap().update();
         }
         this.mode = null;
         lightBoxPopUp.dialog("close");
@@ -321,7 +321,7 @@ function EditComponent(){
         if(!success){
             alert("Verwijderen mislukt");
         }else{
-            webMapController.getMap().update();
+            B3PGissuite.vars.webMapController.getMap().update();
         }
         this.mode = null;
         lightBoxPopUp.dialog("close");

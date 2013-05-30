@@ -33,7 +33,7 @@ function addNew(){
 }
 
 function selectFeature(){    
-    var lagen = webMapController.getMap().getAllVectorLayers();
+    var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
     if(lagen.length >0){
         var laag = lagen[0]
         var me = this;
@@ -51,12 +51,12 @@ function selectFeature(){
 
 function retrievePoint(layerName,object){
     if(isEditting){
-        var lagen = webMapController.getMap().getAllVectorLayers();
+        var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
         var laag = lagen[0]
         laag.stopDrawDrawFeature();
         isEditting = false;
         var feature = object.wkt;
-        var scale = webMapController.getMap().getScale();
+        var scale = B3PGissuite.vars.webMapController.getMap().getScale();
         var distance = scale * 4;
         var me = this;
         laag.removeAllFeatures();
@@ -108,11 +108,11 @@ function openLink(index){
 }
 
 function init(){
-    var lagen = webMapController.getMap().getAllVectorLayers();
+    var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
     if(lagen.length > 0 ){
         var laag = lagen[0]
         var me = this;
-        webMapController.registerEvent(parent.Event.ON_FEATURE_ADDED,laag,function(layerName,object){
+        B3PGissuite.vars.webMapController.registerEvent(parent.Event.ON_FEATURE_ADDED,laag,function(layerName,object){
             retrievePoint(layerName,object);
         },me);
     }else{

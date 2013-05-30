@@ -33,7 +33,7 @@ var inputSearchDropdown = null;
 
 function createSearchConfigurations(){
     var container=$j("#vergunningConfigurationsContainer");
-    if (parent.zoekconfiguraties!=null) {
+    if (parent.B3PGissuite.config.zoekconfiguraties!=null) {
 
         var selectbox = $j('<select></select>');
         selectbox.attr("id", "searchSelect");
@@ -43,9 +43,9 @@ function createSearchConfigurations(){
 
         selectbox.append($j('<option></option>').html("Maak uw keuze ...").val(""));
 
-        for (var i=0; i < parent.zoekconfiguraties.length; i++){
-            if(showZoekConfiguratie(parent.zoekconfiguraties[i])){
-                selectbox.append($j('<option></option>').html(parent.zoekconfiguraties[i].naam).val(i));
+        for (var i=0; i < parent.B3PGissuite.config.zoekconfiguraties.length; i++){
+            if(showZoekConfiguratie(parent.B3PGissuite.config.zoekconfiguraties[i])){
+                selectbox.append($j('<option></option>').html(parent.B3PGissuite.config.zoekconfiguraties[i].naam).val(i));
             }
         }
 
@@ -60,7 +60,7 @@ function createSearchConfigurations(){
 
 // Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
 function performSearch() {
-    var zoekConfig = parent.zoekconfiguraties[currentSearchSelectId];
+    var zoekConfig = parent.B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
     var zoekVelden=zoekConfig.zoekVelden;
     var bron = zoekConfig.bron.url;
     var searchOp = "%";
@@ -86,7 +86,7 @@ function performSearch() {
     showLoading();
     $j("#vergunningResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
 
-    JZoeker.zoek(parent.zoekconfiguraties[currentSearchSelectId].id,waarde,parent.maxResults,searchCallBack);
+    JZoeker.zoek(parent.B3PGissuite.config.zoekconfiguraties[currentSearchSelectId].id,waarde,parent.B3PGissuite.config.maxResults,searchCallBack);
 }
 
 function handleZoekResultaat(searchResultId){
@@ -108,12 +108,12 @@ function handleZoekResultaat(searchResultId){
         return false;
     }
 
-    for (var i=0; i < parent.zoekconfiguraties.length; i++){
-        if(parent.zoekconfiguraties[i].id == parentZc.id) {
+    for (var i=0; i < parent.B3PGissuite.config.zoekconfiguraties.length; i++){
+        if(parent.B3PGissuite.config.zoekconfiguraties[i].id == parentZc.id) {
             currentSearchSelectId = i;
         }
     }
-    parentZc = parent.zoekconfiguraties[currentSearchSelectId];
+    parentZc = parent.B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
 
     // Doe de volgende zoekopdracht
     var zoekStrings = createZoekStringsFromZoekResultaten(parentZc, searchResult);
@@ -217,9 +217,9 @@ function searchCallBack(values){
 
 
 function getBboxMinSize2(feature){
-    if ((Number(feature.maxx-feature.minx) < parent.minBboxZoeken)){
-        var addX=Number((parent.minBboxZoeken-(feature.maxx-feature.minx))/2);
-        var addY=Number((parent.minBboxZoeken-(feature.maxy-feature.miny))/2);
+    if ((Number(feature.maxx-feature.minx) < parent.B3PGissuite.config.minBboxZoeken)){
+        var addX=Number((parent.B3PGissuite.config.minBboxZoeken-(feature.maxx-feature.minx))/2);
+        var addY=Number((parent.B3PGissuite.config.minBboxZoeken-(feature.maxy-feature.miny))/2);
         feature.minx=Number(feature.minx-addX);
         feature.maxx=Number(Number(feature.maxx)+Number(addX));
         feature.miny=Number(feature.miny-addY);
@@ -241,7 +241,7 @@ function searchConfigurationsSelectChanged(element){
     }
     currentSearchSelectId=element.val();
 
-    var zc = parent.zoekconfiguraties[currentSearchSelectId];
+    var zc = parent.B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
     var zoekVelden=zc.zoekVelden;
     fillSearchDiv(container, zoekVelden, null);
 }
@@ -302,13 +302,13 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             //option lijst ophalen
             var optionZcId = zoekVeld.inputZoekConfiguratie;
             var optionListZc;
-            for (k=0; k < parent.zoekconfiguraties.length; k++){
-                if(parent.zoekconfiguraties[k].id == optionZcId) optionListZc = parent.zoekconfiguraties[k];
+            for (k=0; k < parent.B3PGissuite.config.zoekconfiguraties.length; k++){
+                if(parent.B3PGissuite.config.zoekconfiguraties[k].id == optionZcId) optionListZc = parent.B3PGissuite.config.zoekconfiguraties[k];
             }
             var optionListStrings = createZoekStringsFromZoekVelden(optionListZc, zoekVelden, zoekStrings);
             var ida = new Array(1);
             ida[0] = optionListZc.id;
-            JZoeker.zoek(ida, optionListStrings, parent.maxResults, handleZoekVeldinputList);
+            JZoeker.zoek(ida, optionListStrings, parent.B3PGissuite.config.maxResults, handleZoekVeldinputList);
 
         } else {
 
@@ -319,7 +319,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
                     name: zoekVeld.attribuutnaam
                 });
 
-                var straalWaardes = parent.vergunningConfigStraal.split(",");
+                var straalWaardes = parent.B3PGissuite.config.vergunningConfigStraal.split(",");
                 for (var i=0; i < straalWaardes.length; i++){
                     inputfield.append($j('<option></option>').html(straalWaardes[i]).val(straalWaardes[i]));
                 }
@@ -383,7 +383,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 function handleZoekVeldinputList(list){
     if (list!=null && list.length > 0){
         var controlElementName;
-        var zc = parent.zoekconfiguraties[currentSearchSelectId];
+        var zc = parent.B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
         var optionListZc = list[0].zoekConfiguratie;
         for (var i=0; i < zc.zoekVelden.length; i++) {
             var zoekVeld=zc.zoekVelden[i];
@@ -427,7 +427,7 @@ function performSearchOnEnterKey(ev){
 }
 
 function showZoekConfiguratie(zoekconfiguratie){
-    var visibleIds = parent.vergunningConfigIds.split(",");
+    var visibleIds = parent.B3PGissuite.config.vergunningConfigIds.split(",");
     for (var i=0; i < visibleIds.length; i++){
         if (zoekconfiguratie.id == visibleIds[i]){
             return true;

@@ -86,7 +86,7 @@ checkLocation = function() {
     }
 }
 
-checkLocationPopup = function() {
+checkLocationPopup = function(usePopup) {
    if(!usePopup) {
         if (top.location == self.location) {
             top.location = '/gisviewer/index.do';
@@ -386,4 +386,92 @@ function messagePopup(title, message, msgType) {
     $messageDialog.find(".msgText").html(message);
     $messageDialog.dialog("option", "title", title);
     $messageDialog.dialog('open');
+}
+
+function createCookie(name,value,days) {
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        expires = "; expires="+date.toGMTString();
+    }
+    else expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+
+}
+
+function eraseCookie(name) {
+    createCookie(name,"",-1);
+}
+
+/* trim for IE8 */
+if (typeof String.prototype.trim !== 'function') {
+    String.prototype.trim = function() {
+        return this.replace(/^\s+|\s+$/g, '');
+    }
+}
+
+/*
+ * Flash detection script, based on SWFobject 2.2
+ **/
+var flashCheck = function() {
+
+    var UNDEF = "undefined",
+    OBJECT = "object",
+    SHOCKWAVE_FLASH = "Shockwave Flash",
+    SHOCKWAVE_FLASH_AX = "ShockwaveFlash.ShockwaveFlash",
+    FLASH_MIME_TYPE = "application/x-shockwave-flash",
+    EXPRESS_INSTALL_ID = "SWFObjectExprInst",
+    ON_READY_STATE_CHANGE = "onreadystatechange",
+    win = window,
+    doc = document,
+    nav = navigator,
+    plugin = false;
+
+    var w3cdom = typeof doc.getElementById != UNDEF && typeof doc.getElementsByTagName != UNDEF && typeof doc.createElement != UNDEF,
+            u = nav.userAgent.toLowerCase(),
+            p = nav.platform.toLowerCase(),
+            windows = p ? /win/.test(p) : /win/.test(u),
+            mac = p ? /mac/.test(p) : /mac/.test(u),
+            webkit = /webkit/.test(u) ? parseFloat(u.replace(/^.*webkit\/(\d+(\.\d+)?).*$/, "$1")) : false, // returns either the webkit version or false if not webkit
+            ie = !+"\v1", // feature detection based on Andrea Giammarchi's solution: http://webreflection.blogspot.com/2009/01/32-bytes-to-know-if-your-browser-is-ie.html
+            playerVersion = [0,0,0],
+            d = null;
+    if (typeof nav.plugins != UNDEF && typeof nav.plugins[SHOCKWAVE_FLASH] == OBJECT) {
+            d = nav.plugins[SHOCKWAVE_FLASH].description;
+            if (d && !(typeof nav.mimeTypes != UNDEF && nav.mimeTypes[FLASH_MIME_TYPE] && !nav.mimeTypes[FLASH_MIME_TYPE].enabledPlugin)) { // navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin indicates whether plug-ins are enabled or disabled in Safari 3+
+                    plugin = true;
+                    ie = false; // cascaded feature detection for Internet Explorer
+                    d = d.replace(/^.*\s+(\S+\s+\S+$)/, "$1");
+                    playerVersion[0] = parseInt(d.replace(/^(.*)\..*$/, "$1"), 10);
+                    playerVersion[1] = parseInt(d.replace(/^.*\.(.*)\s.*$/, "$1"), 10);
+                    playerVersion[2] = /[a-zA-Z]/.test(d) ? parseInt(d.replace(/^.*[a-zA-Z]+(.*)$/, "$1"), 10) : 0;
+            }
+    }
+    else if (typeof win.ActiveXObject != UNDEF) {
+            try {
+                    var a = new ActiveXObject(SHOCKWAVE_FLASH_AX);
+                    if (a) { // a will return null when ActiveX is disabled
+                            d = a.GetVariable("$version");
+                            if (d) {
+                                    ie = true; // cascaded feature detection for Internet Explorer
+                                    d = d.split(" ")[1].split(",");
+                                    playerVersion = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
+                            }
+                    }
+            }
+            catch(e) {}
+    }
+    return { w3:w3cdom, pv:playerVersion, wk:webkit, ie:ie, win:windows, mac:mac };
 }

@@ -61,8 +61,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     function tekenMelding(geomType) {
-        getParent().webMapController.getMap().getLayer("editMap").removeAllFeatures();
-        getParent().webMapController.getMap().getLayer("editMap").drawFeature(geomType);
+        getParent().B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+        getParent().B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(geomType);
     }
 </script>
 
@@ -90,7 +90,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <script type="text/javascript">
                             var ouder = getParent();
                             if(ouder) {
-                                //ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+                                //ouder.B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                             }
                         </script>
                     </c:if>
@@ -163,8 +163,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                                 var yend = point.indexOf(")", xstart);
                                 var coords = point.substring(xstart+1, yend).split(" ");
                                 if (coords.length == 2) {
-                                    ouder.webMapController.getMap().setMarker("${kenmerk}", Number(coords[0]),Number(coords[1]), "");
-                                    ouder.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+                                    ouder.B3PGissuite.vars.webMapController.getMap().setMarker("${kenmerk}", Number(coords[0]),Number(coords[1]), "");
+                                    ouder.B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                                 }
                             }
                         }

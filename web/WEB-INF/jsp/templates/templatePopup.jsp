@@ -49,14 +49,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         
-        <script type="text/javascript" src="scripts/commonfunctions.js"></script>     
-
-        <script type="text/javascript">
-            var usePopup = false;
-            if(opener) {
-                usePopup = opener.usePopup;
-            }
-        </script>
+        <script type="text/javascript" src="scripts/commonfunctions.js"></script>
 
     </head>
     <body class="admindatabody" id="adminDataBodyId">

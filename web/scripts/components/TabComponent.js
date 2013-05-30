@@ -19,7 +19,7 @@
  * Tabcomponent for Gisviewer
  * 
  * @requires jQuery (> 1.3.2)
- * @requires cookiefunctions.js
+ * @requires commonfunctions.js
  * 
  * @param object options
  * @returns {TabComponent}
@@ -159,8 +159,10 @@ B3PGissuite.defineComponent('TabComponent', {
     setActive: function(tabid) {
         this.setVisible(tabid);
         this.activeTab = tabid;
-        eraseCookie('activetab');
-        createCookie('activetab', tabid, '7');
+        if(B3PGissuite.config.useCookies) {
+            eraseCookie('activetab');
+            createCookie('activetab', tabid, '7');
+        }
     },
     
     getActiveTab: function() {

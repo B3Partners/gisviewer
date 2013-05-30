@@ -382,7 +382,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
     var bronTableBody = $j('<tbody></tbody>');
     
     // Create table heading
-    if (gegevensbron.editable && getParent().showEditTool) {
+    if (gegevensbron.editable && getParent().B3PGissuite.config.showEditTool) {
         var bewerk = {
             commando: null,
             eenheid:null,
@@ -437,7 +437,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 "width": "50px"
             });
             
-            if (gegevensbron.editable && getParent().showEditTool) {
+            if (gegevensbron.editable && getParent().B3PGissuite.config.showEditTool) {
                 var icon = $j('<img src="'+pencil+'" alt="Edit object" title="Edit object" />')
                 .click(function() {
                     var ec = getParent().editComponent;
@@ -1131,14 +1131,14 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     //"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
     
     var ouder = getParent();
-    var fmco = getParent().webMapController;
+    var fmco = getParent().B3PGissuite.vars.webMapController;
     if(fmco == undefined){
         ouder = getParent().getParent();
-        fmco = ouder.webMapController;
+        fmco = ouder.B3PGissuite.vars.webMapController;
     }
     var mapje = fmco.getMap();
     var existingLayer = mapje.getAllWMSLayers()[0];
-    var wmsLayer=ouder.searchThemaValue(ouder.themaTree,themaid,"wmslayers");
+    var wmsLayer=ouder.searchThemaValue(ouder.B3PGissuite.config.themaTree,themaid,"wmslayers");
     var visValue=trim(waardepk);
     if (waardeingevuldekolom!=null && waardeingevuldekolom.length>0){
         visValue=trim(waardeingevuldekolom);

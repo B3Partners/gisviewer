@@ -25,7 +25,6 @@
             plusmin.style.marginTop = '-4px';
         }
     }
-    var usePopup = true;
     var autoPopupRedirect = false;
     var maxExtraInfo=100;
     var styleObjects = new Array();
@@ -233,7 +232,7 @@
                 Table.sort(document.getElementById('data_table' + i), {sorttype:Sort['numeric'], col:0});
             }
 
-            if(opener && opener.usePopup) {
+            if(opener && opener.B3PGissuite.config.usePopup) {
                 for(i = 2; i < (${nuOfTables} + 1); i++) {
                     toggleList(i);
                 }
@@ -269,14 +268,14 @@
             attachOnresize(fixAdmindataWidths);
             
             var noOfColumnsRedirect = 1;
-            if(parent && parent.autoRedirect) noOfColumnsRedirect = parent.autoRedirect;
-            if(opener && opener.autoRedirect) noOfColumnsRedirect = opener.autoRedirect;
+            if(parent && parent.B3PGissuite.config.autoRedirect) noOfColumnsRedirect = parent.B3PGissuite.config.autoRedirect;
+            if(opener && opener.B3PGissuite.config.autoRedirect) noOfColumnsRedirect = opener.B3PGissuite.config.autoRedirect;
             if(isNaN(noOfColumnsRedirect)) noOfColumnsRedirect = 1;
             if(${nuOfTables} == 1 && ${nuOfRegels} == 1 && ${nuOfColumns} == noOfColumnsRedirect && '${refreshURL}' != '') {
-                if(opener && opener.usePopup) {
+                if(opener && opener.B3PGissuite.config.usePopup) {
                     window.location = '${refreshURL}';
                     autoPopupRedirect = true;
-                } else if(parent && parent.useDivPopup) {
+                } else if(parent && parent.B3PGissuite.config.useDivPopup) {
                     popUp('${refreshURL}', 'externe_link', 600, 500);
                     autoPopupRedirect = true;
                 } else {
@@ -383,7 +382,7 @@
         parent.hideLoading();
     }
 
-    if(!(opener && opener.usePopup) && !(parent && parent.useDivPopup) && !autoPopupRedirect) {
+    if(!(opener && opener.B3PGissuite.config.usePopup) && !(parent && parent.B3PGissuite.config.useDivPopup) && !autoPopupRedirect) {
         if(parent) {
             if(parent.panelBelowCollapsed) {
                 parent.panelResize('below');

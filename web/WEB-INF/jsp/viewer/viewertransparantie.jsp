@@ -62,7 +62,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         });
         function transparency(value){
             var opacity = 1.0 - value/100;
-            var layers = parent.webMapController.getMap().getLayers();
+            var layers = parent.B3PGissuite.vars.webMapController.getMap().getLayers();
             for( var i = 0 ; i < layers.length ; i++ ){
                 var l = layers[i];
                 if(!l.getOption("background")){

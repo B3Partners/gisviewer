@@ -85,7 +85,7 @@ B3PGissuite.defineComponent('LegendComponent', {
             animate: true,
             change: function(event, ui) {
                 var opacity = 1.0 - (ui.value)/100;
-                var layers = webMapController.getMap().getLayers();
+                var layers = B3PGissuite.vars.webMapController.getMap().getLayers();
                 for( var i = 0 ; i < layers.length ; i++ ){
                     var l = layers[i];
                     if(!l.getOption("background")) {

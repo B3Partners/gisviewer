@@ -20,8 +20,8 @@ var statusSelect=document.getElementById(statusSelectName);
 /* de geconfigureerde planselectie id's staan als volgt in db
  * 3,1 waarbij eerste id voor eigenaren is en tweede voor plannen */
 var planIds = null;
-if (planSelectieIds)
-    planIds=(""+planSelectieIds).split(",");
+if (B3PGissuite.config.planSelectieIds)
+    planIds=(""+B3PGissuite.config.planSelectieIds).split(",");
 
 var planEigenaarId = (planIds === null ? null : planIds[0]);
 var planId = (planIds === null ? null : planIds[1]);
@@ -29,7 +29,7 @@ var planId = (planIds === null ? null : planIds[1]);
 /*Hier begint het zoeken:*/
 
 if (planEigenaarId != null && planEigenaarId > 0 && planId !=null && planId > 0) {
-    JZoeker.zoek(new Array(planEigenaarId),"*",maxResults,handleGetEigenaar);
+    JZoeker.zoek(new Array(planEigenaarId),"*",B3PGissuite.config.maxResults,handleGetEigenaar);
 }
 
 function handleGetEigenaar(list){
@@ -52,7 +52,7 @@ function eigenaarchanged(element){
         dwr.util.addOptions(statusSelectName,[ "Bezig met ophalen..."]);
         dwr.util.addOptions(planSelectName,[ "Bezig met ophalen..."]);
 
-        JZoeker.zoek(new Array(planId),element.value,maxResults,handleGetPlannen);
+        JZoeker.zoek(new Array(planId),element.value,B3PGissuite.config.maxResults,handleGetPlannen);
         //geen nieuwe eigenaar kiezen tijdens de zoek opdracht
         eigenaarSelect.disabled=true;
         setSelectedPlan(null);
@@ -140,7 +140,7 @@ function planchanged(element){
             ext.maxx=plan.maxx;
             ext.maxy=plan.maxy;
 
-            webMapController.getMap("map1").zoomToExtent(ext);
+            B3PGissuite.vars.webMapController.getMap("map1").zoomToExtent(ext);
         }
     }
 }
@@ -221,13 +221,13 @@ af aan.
     document.write('<div id="searchInputFieldsContainer">&nbsp;</div>')
 */
 
-//var zoekconfiguraties = [{"id":1,"zoekVelden":[{"id":1,"attribuutnaam":"fid","label":"Plannen","type":0,"naam":""}],"featureType":"app:Plangebied","resultaatVelden":[{"id":1,"attribuutnaam":"naam","label":"plan naam","type":2,"naam":"plannaam"},{"id":2,"attribuutnaam":"identificatie","label":"plan id","type":1,"naam":"planid"},{"id":3,"attribuutnaam":"verwijzingNaarTekst","label":"documenten","type":0,"naam":"documenten"},{"id":4,"attribuutnaam":"typePlan","label":"plantype","type":0,"naam":"plantype"},{"id":5,"attribuutnaam":"planstatus","label":"planstatus","type":0,"naam":"planstatus"},{"id":6,"attribuutnaam":"geometrie","label":"geometry","type":3,"naam":"geometry"}],"bron":{"id":1,"naam":"nlrpp","volgorde":1,"url":"http://afnemers.ruimtelijkeplannen.nl/afnemers/services?Version=1.0.0"},"naam":"iets"}];
+//var B3PGissuite.config.zoekconfiguraties = [{"id":1,"zoekVelden":[{"id":1,"attribuutnaam":"fid","label":"Plannen","type":0,"naam":""}],"featureType":"app:Plangebied","resultaatVelden":[{"id":1,"attribuutnaam":"naam","label":"plan naam","type":2,"naam":"plannaam"},{"id":2,"attribuutnaam":"identificatie","label":"plan id","type":1,"naam":"planid"},{"id":3,"attribuutnaam":"verwijzingNaarTekst","label":"documenten","type":0,"naam":"documenten"},{"id":4,"attribuutnaam":"typePlan","label":"plantype","type":0,"naam":"plantype"},{"id":5,"attribuutnaam":"planstatus","label":"planstatus","type":0,"naam":"planstatus"},{"id":6,"attribuutnaam":"geometrie","label":"geometry","type":3,"naam":"geometry"}],"bron":{"id":1,"naam":"nlrpp","volgorde":1,"url":"http://afnemers.ruimtelijkeplannen.nl/afnemers/services?Version=1.0.0"},"naam":"iets"}];
 
 var inputSearchDropdown = null;
 
 function createSearchConfigurations(){
     var container=$j("#searchConfigurationsContainer");
-    if (zoekconfiguraties!=null) {
+    if (B3PGissuite.config.zoekconfiguraties!=null) {
 
         var selectbox = $j('<select></select>');
         selectbox.attr("id", "searchSelect");
@@ -237,9 +237,9 @@ function createSearchConfigurations(){
 
         selectbox.append($j('<option></option>').html("Maak uw keuze ...").val(""));
 
-        for (var i=0; i < zoekconfiguraties.length; i++){
-            if(showZoekConfiguratie(zoekconfiguraties[i])){
-                selectbox.append($j('<option></option>').html(zoekconfiguraties[i].naam).val(i));
+        for (var i=0; i < B3PGissuite.config.zoekconfiguraties.length; i++){
+            if(showZoekConfiguratie(B3PGissuite.config.zoekconfiguraties[i])){
+                selectbox.append($j('<option></option>').html(B3PGissuite.config.zoekconfiguraties[i].naam).val(i));
             }
         }
 
@@ -254,7 +254,7 @@ function createSearchConfigurations(){
 
 // Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
 function performSearch() {
-    var zoekConfig = zoekconfiguraties[currentSearchSelectId];
+    var zoekConfig = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
     var zoekVelden=zoekConfig.zoekVelden;
     var bron = zoekConfig.bron.url;
     var searchOp = "%";
@@ -298,7 +298,7 @@ function performSearch() {
                 var newMapWidth = invoer * (screenWidthPx * 0.00028);
                 var res = newMapWidth / screenWidthPx;
                 
-                webMapController.getMap().zoomToScale(res);                
+                B3PGissuite.vars.webMapController.getMap().zoomToScale(res);                
             } else {
                 waarde[i]=veld;
             }
@@ -307,8 +307,8 @@ function performSearch() {
 
     showTabvakLoading('Bezig met zoeken');
     $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
-    webMapController.getMap().removeMarker("searchResultMarker");
-    JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id,waarde,maxResults,searchCallBack);
+    B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
+    JZoeker.zoek(B3PGissuite.config.zoekconfiguraties[currentSearchSelectId].id,waarde,B3PGissuite.config.maxResults,searchCallBack);
 }
 
 function handleZoekResultaat(searchResultId){
@@ -320,8 +320,8 @@ function handleZoekResultaat(searchResultId){
         moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
         var x =(searchResult.maxx + searchResult.minx)/2;
         var y = (searchResult.maxy + searchResult.miny)/2;
-        webMapController.getMap().removeMarker("searchResultMarker");
-        webMapController.getMap().setMarker("searchResultMarker", x,y);
+        B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
+        B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", x,y);
     }
     
     //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan een ouder heeft.
@@ -339,12 +339,12 @@ function handleZoekResultaat(searchResultId){
         return false;
     }
 
-    for (var i=0; i < zoekconfiguraties.length; i++){
-        if(zoekconfiguraties[i].id == parentZc.id) {
+    for (var i=0; i < B3PGissuite.config.zoekconfiguraties.length; i++){
+        if(B3PGissuite.config.zoekconfiguraties[i].id == parentZc.id) {
             currentSearchSelectId = i;
         }
     }
-    parentZc = zoekconfiguraties[currentSearchSelectId];
+    parentZc = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
 
     // Doe de volgende zoekopdracht
     var zoekStrings = createZoekStringsFromZoekResultaten(parentZc, searchResult);
@@ -462,9 +462,9 @@ function switchLayersOn(){
 }
 
 function getBboxMinSize2(feature){
-    if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
-        var addX=Number((minBboxZoeken-(feature.maxx-feature.minx))/2);
-        var addY=Number((minBboxZoeken-(feature.maxy-feature.miny))/2);
+    if ((Number(feature.maxx-feature.minx) < B3PGissuite.config.minBboxZoeken)){
+        var addX=Number((B3PGissuite.config.minBboxZoeken-(feature.maxx-feature.minx))/2);
+        var addY=Number((B3PGissuite.config.minBboxZoeken-(feature.maxy-feature.miny))/2);
         feature.minx=Number(feature.minx-addX);
         feature.maxx=Number(Number(feature.maxx)+Number(addX));
         feature.miny=Number(feature.miny-addY);
@@ -488,7 +488,7 @@ function searchConfigurationsSelectChanged(element){
     }
     currentSearchSelectId=element.val();
 
-    var zc = zoekconfiguraties[currentSearchSelectId];
+    var zc = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
     JZoekconfiguratieThemaUtil.getThemas(zc.id,zoekconfiguratieThemasCallBack);
     var zoekVelden=zc.zoekVelden;
     fillSearchDiv(container, zoekVelden, null);
@@ -497,7 +497,7 @@ function searchConfigurationsSelectChanged(element){
 function clearConfigurationsSelect(container) {
     currentSearchSelectId = "";
     container.html("");
-    webMapController.getMap().removeMarker("searchResultMarker");
+    B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
     zoekconfiguratieThemas = null;
 }
 
@@ -554,13 +554,13 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             //option lijst ophalen
             var optionZcId = zoekVeld.inputZoekConfiguratie;
             var optionListZc;
-            for (k=0; k < zoekconfiguraties.length; k++){
-                if(zoekconfiguraties[k].id == optionZcId) optionListZc = zoekconfiguraties[k];
+            for (k=0; k < B3PGissuite.config.zoekconfiguraties.length; k++){
+                if(B3PGissuite.config.zoekconfiguraties[k].id == optionZcId) optionListZc = B3PGissuite.config.zoekconfiguraties[k];
             }
             var optionListStrings = createZoekStringsFromZoekVelden(optionListZc, zoekVelden, zoekStrings);
             var ida = new Array(1);
             ida[0] = optionListZc.id;
-            JZoeker.zoek(ida, optionListStrings, maxResults, handleZoekVeldinputList);
+            JZoeker.zoek(ida, optionListStrings, B3PGissuite.config.maxResults, handleZoekVeldinputList);
 
         }else if (zoekVeld.inputType == 3 && zoekVeld.inputZoekConfiguratie) {
             inputfield = $j('<input type="text" />');
@@ -703,14 +703,14 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
         }));
 
         container.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
-            webMapController.getMap().removeMarker("searchResultMarker");
+            B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
             
             searchConfigurationsSelectChanged(inputSearchDropdown);
         }));  
         
-        if (!search && startLocationX == "" && startLocationY == "") {
+        if (!search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "") {
             container.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
-                webMapController.getMap().removeMarker("searchResultMarker");
+                B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
             }));
         }
     }
@@ -723,7 +723,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 function handleZoekVeldinputList(list){
     if (list!=null && list.length > 0){
         var controlElementName;
-        var zc = zoekconfiguraties[currentSearchSelectId];
+        var zc = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
         var optionListZc = list[0].zoekConfiguratie;
         for (var i=0; i < zc.zoekVelden.length; i++) {
             var zoekVeld=zc.zoekVelden[i];
@@ -791,7 +791,7 @@ function performSearchOnEnterKey(ev){
 }
 
 function showZoekConfiguratie(zoekconfiguratie){
-    var visibleIds = zoekConfigIds.split(",");
+    var visibleIds = B3PGissuite.config.zoekConfigIds.split(",");
     for (var i=0; i < visibleIds.length; i++){
         if (zoekconfiguratie.id == visibleIds[i]){
             return true;

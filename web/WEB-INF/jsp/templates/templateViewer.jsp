@@ -64,7 +64,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 component: {},
                 instances: {},
                 idregistry: {},
-                vars: {}
+                vars: {},
+                config: {}
             };
             attachOnload(checkLocation);
         </script>

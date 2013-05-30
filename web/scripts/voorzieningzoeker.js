@@ -14,11 +14,11 @@ if (window.parent){
 
 $j(document).ready(function(){
     if (window.parent){
-        zoekconfiguraties = window.parent.getZoekconfiguraties();
-        voorzieningConfigIds = window.parent.getVoorzieningConfigIds();
-        maxResults = window.parent.getMaxResults();
-        voorzieningConfigStraal = window.parent.getVoorzieningConfigStraal();
-        voorzieningConfigTypes = window.parent.getVoorzieningConfigTypes();
+        zoekconfiguraties = window.parent.B3PGissuite.config.zoekconfiguraties;
+        voorzieningConfigIds = window.parent.B3PGissuite.config.voorzieningConfigIds;
+        maxResults = window.parent.B3PGissuite.config.maxResults;
+        voorzieningConfigStraal = window.parent.B3PGissuite.config.voorzieningConfigStraal;
+        voorzieningConfigTypes = window.parent.B3PGissuite.config.voorzieningConfigTypes;
     }
 
     var container=$j("#voorzieningConfigurationsContainer");

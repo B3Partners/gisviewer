@@ -50,12 +50,12 @@ fixPopup = function() {
         var popupWindow = document.getElementById('popupWindow');
 
         if (popupWindow)
-            popupHeight = popupWindow.offsetHeight;
+            B3PGissuite.config.popupHeight = popupWindow.offsetHeight;
 
         var popupContent = document.getElementById('popupWindow_Content');
 
         if (popupContent)
-            popupContent.style.height = (popupHeight - 36) + 'px';
+            popupContent.style.height = (B3PGissuite.config.popupHeight - 36) + 'px';
     }
 }
 
@@ -92,7 +92,7 @@ fixViewer = function() {
         if(tab_container) tab_container_width = tab_container.offsetWidth;
         var leftcontent_width = 0;
         if(leftcontent) leftcontent_width = leftcontent.offsetWidth;
-        if(usePopup) {
+        if(B3PGissuite.config.usePopup) {
             if(tab_container) {
                 tab_container.style.height = (contentheight - 20 - viewerinfobalkheight) + 'px';
             }

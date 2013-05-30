@@ -53,9 +53,9 @@ function GPSComponent(buffer){
         var maxy = point.y + gpsComponent.buffer;
         
         var extent = new Extent(minx,miny,maxx,maxy);
-        webMapController.getMap().zoomToExtent(extent);
+        B3PGissuite.vars.webMapController.getMap().zoomToExtent(extent);
         
-        webMapController.getMap().setMarker("searchResultMarker", point.x, point.y);
+        B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", point.x, point.y);
     }
     
     this.errorHandler = function (error){

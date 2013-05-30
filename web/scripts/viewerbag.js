@@ -57,7 +57,7 @@ function getBagObjects(){
     extraCriteria[pandenGegevensBronId]="";
     extraCriteria[verblijfsObjectenGegevensBronId]="";
     //bbox
-    var extent = parent.webMapController.getMap().getExtent();
+    var extent = parent.B3PGissuite.vars.webMapController.getMap().getExtent();
     extraCriteria[pandenGegevensBronId]+= "BBOX("+geomAttributeName+", "+extent.minx+","+extent.miny+","+extent.maxx+","+extent.maxy+")";
     
     /*if (minOpp > configMinOpp){

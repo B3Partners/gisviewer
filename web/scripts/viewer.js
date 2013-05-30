@@ -1,42 +1,44 @@
 dwr.engine.setErrorHandler(handler);
-
 /**
  * Array with the current visible layers in correct order.
  * The last is rendered on top.
 */ 
-B3PGissuite.vars.enabledLayerItems = new Array();
-
+B3PGissuite.vars.enabledLayerItems = [];
+B3PGissuite.vars.dataframepopupHandle = null;
 /**
  * String that forms the request to the service. It contains the normal wms request
  * parameters appened with the kaartenbalie url and if available also PROJECT
  * or organization code parameters.
 */
-var layerUrl = "" + kburl;
-
-var cookieArray = readCookie('checkedLayers');
-var cookieClusterArray = readCookie('checkedClusters');
-
-var activeAnalyseThemaId = '';
-var activeClusterId = '';
-
+B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl;
+/**
+ * Cookie arrays with checked layers and clusters (csv string)
+ */
+B3PGissuite.vars.cookieArray = (B3PGissuite.config.useCookies ? readCookie('checkedLayers') : null);
+B3PGissuite.vars.cookieClusterArray = (B3PGissuite.config.useCookies ? readCookie('checkedClusters') : null);
+/**
+ * Actieve laag en actief cluster
+ */
+B3PGissuite.vars.activeAnalyseThemaId = '';
+B3PGissuite.vars.activeClusterId = '';
 /**
  * Temporary list for init.
 */
-var layersAan= new Array();
-var clustersAan = new Array();
-
-var featureInfoTimeOut = 30;
-var webMapController;
-
+B3PGissuite.vars.layersAan = [];
+B3PGissuite.vars.clustersAan = [];
+/**
+ * The web map controller
+ */
+B3PGissuite.vars.webMapController = null;
 /**
  * Index used when adding layers. So its possible to leave indexes not used.
 */
-var startLayerIndex = 0;
+B3PGissuite.vars.startLayerIndex = 0;
 
 /**
  * Ballon reference.
 */
-var balloon;
+B3PGissuite.vars.balloon = null;
 
 var zoomBox;
 var pan;
@@ -56,6 +58,55 @@ var editComponent = null;
 
 var uploadCsvLayerOn = false;
 
+var prevRadioButton = null;
+
+var widthMetadataPopup = 800;
+var heightMetadataPopup = 600;
+var widthDownloadPopup = 425;
+var heightDownloadPopup = 250;
+var downloadPopupBlocksViewer = true;
+var metadataPopupBlocksViewer = true;
+
+var originalLayerUrl = B3PGissuite.vars.layerUrl;
+var refresh_timeout_handle;
+
+//the loading legend images (needed to abort loading)
+var loadingLegendImages= new Object();
+//queue of the legend objects that needs to be loaded
+var legendImageQueue = new Array();
+//slots that can be used to load the legend objects
+var legendImageLoadingSpace=1;
+
+var teller=0;
+var frameWorkInitialized = false;
+var nextIdentifyExtent=null;
+if(B3PGissuite.config.useSortableFunction) {
+    document.getElementById("orderLayerBox").sortable({
+        stop:function(){
+            setTimerForReload();
+        },
+        start:function(){
+            clearTimerForReload();
+        }
+    });
+}
+var reloadTimer;
+var exportMapWindow;
+var btn_highLightSelected = false;
+
+var popupWindowRef = null;
+var highLightGeom = null;
+
+var analyseThemas = new Array();
+//do only ones.
+var initialized = false;
+/* build popup functions */
+var currentpopupleft = null;
+var currentpopuptop = null;
+var editingRedlining = false;
+var redLineGegevensbronId = -1;
+var popupCreated = false;
+
 /**
  * Shows a message in a popup window.
  * @param msg The message to display.
@@ -73,18 +124,18 @@ function handler(msg) {
  * Flamingo or OpenLayers. It also registers the events that can be fired.
 */
 function initMapComponent(){
-    mapviewer = viewerType;
+    mapviewer = B3PGissuite.config.viewerType;
 
     if (window.location.href.indexOf("flamingo")>0)
         mapviewer = "flamingo";
     if (mapviewer == "flamingo"){
-        webMapController = new FlamingoController('mapcontent');
+        B3PGissuite.vars.webMapController = new FlamingoController('mapcontent');
         
-        var map = webMapController.createMap("map1");        
-        webMapController.addMap(map);
+        var map = B3PGissuite.vars.webMapController.createMap("map1");        
+        B3PGissuite.vars.webMapController.addMap(map);
         
     } else if (mapviewer == "openlayers") {
-        webMapController = new OpenLayersController();
+        B3PGissuite.vars.webMapController = new OpenLayersController();
         
         var maxBounds = getMaxBounds();
         var olRes = getTilingResolutions(maxBounds, true);       
@@ -108,15 +159,15 @@ function initMapComponent(){
         OpenLayers.ImgPath = 'styles/openlayers_img/';
 
         $j("#mapcontent").html(" ");
-        var olmap = webMapController.createMap('mapcontent',opt);
+        var olmap = B3PGissuite.vars.webMapController.createMap('mapcontent',opt);
         $j("#mapcontent").css("border","1px solid black");
         
-        webMapController.addMap(olmap);
+        B3PGissuite.vars.webMapController.addMap(olmap);
     }
     
-    webMapController.initEvents();
-    webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
-    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
+    B3PGissuite.vars.webMapController.initEvents();
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_GET_CAPABILITIES,B3PGissuite.vars.webMapController.getMap(),onGetCapabilities);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,B3PGissuite.vars.webMapController,onConfigComplete);
 }
 
 function getNLExtent() {
@@ -129,14 +180,14 @@ function getNLMaxBounds() {
 
 function getMaxBounds() {
     var maxBounds;        
-    if (!bbox && fullbbox){
-        maxBounds = Utils.createBounds(new Extent(fullbbox));
-    } else if (bbox && appExtent) {
-        maxBounds = Utils.createBounds(new Extent(appExtent));
-    } else if (bbox && fullbbox) {
-        maxBounds = Utils.createBounds(new Extent(fullbbox));
-    } else if (bbox && !fullbbox) {
-        maxBounds = Utils.createBounds(new Extent(bbox));    
+    if (!B3PGissuite.config.bbox && B3PGissuite.config.fullbbox){
+        maxBounds = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox));
+    } else if (B3PGissuite.config.bbox && B3PGissuite.config.appExtent) {
+        maxBounds = Utils.createBounds(new Extent(B3PGissuite.config.appExtent));
+    } else if (B3PGissuite.config.bbox && B3PGissuite.config.fullbbox) {
+        maxBounds = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox));
+    } else if (B3PGissuite.config.bbox && !B3PGissuite.config.fullbbox) {
+        maxBounds = Utils.createBounds(new Extent(B3PGissuite.config.bbox));    
     } else {
         var bounds = getNLMaxBounds();        
         maxBounds = new OpenLayers.Bounds(bounds.left, bounds.bottom, bounds.right, bounds.top);
@@ -178,8 +229,8 @@ function getTilingResolutions(maxBounds, returnArray) {
 
     /* Alle tiling resoluties in een lijst zetten */
     var olRes;
-    if (tilingResolutions) {
-        var res = tilingResolutions; //.trim();
+    if (B3PGissuite.config.tilingResolutions) {
+        var res = B3PGissuite.config.tilingResolutions; //.trim();
 
         var list;            
         if (res.indexOf(",") != -1) {
@@ -196,12 +247,12 @@ function getTilingResolutions(maxBounds, returnArray) {
             }
         }
     } else {
-        tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125";
+        B3PGissuite.config.tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125";
         olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
     }
 
     /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
-    if (tilingResolutions) {            
+    if (B3PGissuite.config.tilingResolutions) {            
         /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
          * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
          * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
@@ -241,19 +292,12 @@ function getTilingResolutions(maxBounds, returnArray) {
     return olRes;
 }
 
-/* trim for IE8 */
-if (typeof String.prototype.trim !== 'function') {
-    String.prototype.trim = function() {
-        return this.replace(/^\s+|\s+$/g, '');
-    }
-}
-
 /**
  * Hides the I-tool icon. (Flamingo only)
 */
 function hideIdentifyIcon(){
-    if(webMapController instanceof FlamingoController) {
-        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
+    if(B3PGissuite.vars.webMapController instanceof FlamingoController) {
+        B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
     }
 }
 
@@ -261,8 +305,8 @@ function hideIdentifyIcon(){
  * Shows the I-tool icon. (Flamingo only)
 */
 function showIdentifyIcon(){
-    if(webMapController instanceof FlamingoController) {
-        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','show');
+    if(B3PGissuite.vars.webMapController instanceof FlamingoController) {
+        B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','show');
     }
 }
 
@@ -273,159 +317,159 @@ function showIdentifyIcon(){
 function initializeButtons() {
     /*ie bug fix*/
     if (ieVersion!=undefined && ieVersion <= 7){
-        var mapId = webMapController.getMap().getFrameworkMap().id;
+        var mapId = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
         var viewport= document.getElementById(mapId+ '_OpenLayers_ViewPort');
         if (viewport){
             viewport.style.position="absolute";
         }
     }
 
-    webMapController.createPanel("toolGroup");    
+    B3PGissuite.vars.webMapController.createPanel("toolGroup");    
 
-    webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
+    B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading",Tool.LOADING_BAR));
     
     /* Zoom tool */
-    zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {
+    zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {
         title: 'inzoomen via selectie'
     });
-    webMapController.addTool(zoomBox);
+    B3PGissuite.vars.webMapController.addTool(zoomBox);
     
     /* Pan tool */
-    pan = webMapController.createTool("b_pan",Tool.PAN, {
+    pan = B3PGissuite.vars.webMapController.createTool("b_pan",Tool.PAN, {
         title: 'kaartbeeld slepem'
     });
-    webMapController.addTool(pan);
+    B3PGissuite.vars.webMapController.addTool(pan);
     //set default tool pan so the cursor is ok.
-    if (webMapController instanceof OpenLayersController) {
-        webMapController.activateTool("b_pan");
+    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+        B3PGissuite.vars.webMapController.activateTool("b_pan");
     }
     
     /* Previous extent tool */
-    prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
+    prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
         title: 'stap terug'
     });
-    webMapController.addTool(prevExtent);
+    B3PGissuite.vars.webMapController.addTool(prevExtent);
 
     /* Afstand meten tool */
-    var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {
+    var bu_measure = B3PGissuite.vars.webMapController.createTool("b_measure",Tool.MEASURE, {
         title: 'afstand meten'
     });
-    //webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
-    webMapController.addTool(bu_measure);
+    //B3PGissuite.vars.webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
+    B3PGissuite.vars.webMapController.addTool(bu_measure);
     
     /* I-tool */
     var options = new Object();
     options["handlerGetFeatureHandler"] = onIdentifyData;
     options["handlerBeforeGetFeatureHandler"] = onIdentify;
     options["title"] = "informatie opvragen";
-    identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
-    webMapController.addTool(identify);
-    webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
+    identify = B3PGissuite.vars.webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
+    B3PGissuite.vars.webMapController.addTool(identify);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
     
-    var editLayer = webMapController.createVectorLayer("editMap");
-    webMapController.getMap().addLayer(editLayer);
-    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length+startLayerIndex);
+    var editLayer = B3PGissuite.vars.webMapController.createVectorLayer("editMap");
+    B3PGissuite.vars.webMapController.getMap().addLayer(editLayer);
+    B3PGissuite.vars.webMapController.getMap().setLayerIndex(editLayer, B3PGissuite.vars.webMapController.getMap().getLayers().length+B3PGissuite.vars.startLayerIndex);
        
     /* Redlining tools */
-    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {
+    var edittingtb = B3PGissuite.vars.webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {
         layer: editLayer
     });
-    webMapController.addTool(edittingtb);
+    B3PGissuite.vars.webMapController.addTool(edittingtb);
     
     /* Draw Polygon with measured surface area  */
-    var bu_polyMeasure = webMapController.createTool("b_polyMeasure",Tool.MEASURED_POLYGON, {
+    var bu_polyMeasure = B3PGissuite.vars.webMapController.createTool("b_polyMeasure",Tool.MEASURED_POLYGON, {
         title: 'oppervlakte meten',
         displayClass: 'olControlb_polyMeasure'
     });
-    webMapController.addTool(bu_polyMeasure);
+    B3PGissuite.vars.webMapController.addTool(bu_polyMeasure);
     
     /* Buffer tool */
-    var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, {
+    var bu_buffer = B3PGissuite.vars.webMapController.createTool("b_buffer",Tool.BUTTON, {
         layer: editLayer,
         title: 'buffer het tekenobject'
     });
-    webMapController.addTool(bu_buffer);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_buffer,b_buffer);
+    B3PGissuite.vars.webMapController.addTool(bu_buffer);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_buffer,b_buffer);
     
     /* Selecteer kaartobject tool */
-    var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, {
+    var bu_highlight = B3PGissuite.vars.webMapController.createTool("b_highlight",Tool.BUTTON, {
         layer: editLayer,
         title: 'selecteer een object in de kaart'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
-    webMapController.addTool(bu_highlight);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
+    B3PGissuite.vars.webMapController.addTool(bu_highlight);
     
     /* Selecteer binnen kaartobject tool */
-    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, {
+    var bu_getfeatures = B3PGissuite.vars.webMapController.createTool("b_getfeatures",Tool.BUTTON, {
         layer: editLayer,
         title: 'selecteer binnen geselecteerd kaartobject'
     });
-    webMapController.addTool(bu_getfeatures);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
+    B3PGissuite.vars.webMapController.addTool(bu_getfeatures);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
     
     /* Verwijder polygon tool */
-    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, {
+    var bu_removePolygons = B3PGissuite.vars.webMapController.createTool("b_removePolygons",Tool.BUTTON, {
         layer: editLayer,
         title: 'verwijder het tekenobject'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
-    webMapController.addTool(bu_removePolygons);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
+    B3PGissuite.vars.webMapController.addTool(bu_removePolygons);
 
     /* Print tool */
-    var bu_print = webMapController.createTool("b_printMap",Tool.BUTTON, {
+    var bu_print = B3PGissuite.vars.webMapController.createTool("b_printMap",Tool.BUTTON, {
         layer: editLayer,
         title: 'printvoorbeeld'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_print,b_print);
-    webMapController.addTool(bu_print);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_print,b_print);
+    B3PGissuite.vars.webMapController.addTool(bu_print);
 
     /* Kaartselectie tool */
-    var bu_layerSelection = webMapController.createTool("b_layerSelection",Tool.BUTTON, {
+    var bu_layerSelection = B3PGissuite.vars.webMapController.createTool("b_layerSelection",Tool.BUTTON, {
         layer: editLayer,
         title: 'kaartselectie'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_layerSelection,b_layerSelection);
-    webMapController.addTool(bu_layerSelection);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_layerSelection,b_layerSelection);
+    B3PGissuite.vars.webMapController.addTool(bu_layerSelection);
     
     
     /* GPS tool */
-    if (gpsBuffer < 1) {
-        gpsBuffer = 500;
+    if (B3PGissuite.config.gpsBuffer < 1) {
+        B3PGissuite.config.gpsBuffer = 500;
     }
     
-    gpsComponent = new GPSComponent(gpsBuffer);
+    gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
     
-    var bu_gps = webMapController.createTool("b_gps",Tool.GPS, {
+    var bu_gps = B3PGissuite.vars.webMapController.createTool("b_gps",Tool.GPS, {
         layer: editLayer,
         title: 'zet GPS locatie aan/uit'
     });    
     
-    webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, gpsComponent.stopPolling);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, gpsComponent.stopPolling);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
     
     /* off event voor weghalen marker */
-    webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
     
-    webMapController.addTool(bu_gps);
+    B3PGissuite.vars.webMapController.addTool(bu_gps);
     
     /* Overzichtskaart tool */
-    var bu_overview = webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
+    var bu_overview = B3PGissuite.vars.webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
         layer: editLayer,
         title: 'overzichtskaart'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_overview,b_overview);
-    webMapController.addTool(bu_overview);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_overview,b_overview);
+    B3PGissuite.vars.webMapController.addTool(bu_overview);
 
-    var scalebar = webMapController.createTool("scalebar",Tool.SCALEBAR);
-    webMapController.addTool(scalebar);
+    var scalebar = B3PGissuite.vars.webMapController.createTool("scalebar",Tool.SCALEBAR);
+    B3PGissuite.vars.webMapController.addTool(scalebar);
 
 
-    var zoombar= webMapController.createTool("zoombar",Tool.ZOOM_BAR);
-    webMapController.addTool(zoombar);
+    var zoombar= B3PGissuite.vars.webMapController.createTool("zoombar",Tool.ZOOM_BAR);
+    B3PGissuite.vars.webMapController.addTool(zoombar);
     
     editComponent = new EditComponent();
     
-    if (viewerTemplate == "embedded") {
+    if (B3PGissuite.config.viewerTemplate == "embedded") {
         displayEmbeddedMenuIcons();
     }
 }
@@ -439,7 +483,7 @@ function displayEmbeddedMenuIcons() {
     $j("#embedded_icons .embedded_icon").css('padding-top', '7px');
     $j("#embedded_icons .embedded_icon").css('padding-left', '15px');
     
-    if (webMapController instanceof OpenLayersController) {        
+    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {        
         $j("#embedded_icons").css('left', '670px');
         $j("#embedded_icons").css('top', '6px');
         $j("#embedded_icons").css('border', 'solid 1px #808080');
@@ -456,7 +500,7 @@ function getBaseUrl() {
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
 
-    return protocol + host  + baseNameViewer;
+    return protocol + host  + B3PGissuite.config.baseNameViewer;
 }
 
 /**
@@ -464,11 +508,11 @@ function getBaseUrl() {
  * params and is called when the viewer (framework) is loaded.
 */
 function doInitSearch() {
-    if (searchConfigId.length > 0 && search.length > 0){
+    if (B3PGissuite.config.searchConfigId.length > 0 && B3PGissuite.config.search.length > 0){
         showLoading();
 
-        var termen = search.split(",");
-        JZoeker.zoek(new Array(searchConfigId),termen,0,handleInitSearch);
+        var termen = B3PGissuite.config.search.split(",");
+        JZoeker.zoek(new Array(B3PGissuite.config.searchConfigId),termen,0,handleInitSearch);
     }
 }
 
@@ -480,7 +524,7 @@ function doInitSearch() {
 function handleInitSearch(list){
     hideLoading();
     if (list.length > 0){
-        handleInitSearchResult(list[0],searchAction, searchId,searchClusterId,searchSldVisibleValue);
+        handleInitSearchResult(list[0],B3PGissuite.config.searchAction, B3PGissuite.config.searchId,B3PGissuite.config.searchClusterId,B3PGissuite.config.searchSldVisibleValue);
     }
 }
 
@@ -497,12 +541,12 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
     var doZoom= true;
     var doHighlight=false;
     var doFilter=false;
-    if (searchAction){
-        if (searchAction.toLowerCase().indexOf("zoom")==-1)
+    if (B3PGissuite.config.searchAction){
+        if (B3PGissuite.config.searchAction.toLowerCase().indexOf("zoom")==-1)
             doZoom=false;
-        if (searchAction.toLowerCase().indexOf("highlight")>=0)
+        if (B3PGissuite.config.searchAction.toLowerCase().indexOf("highlight")>=0)
             doHighlight=true;
-        else if (searchAction.toLowerCase().indexOf("filter")>=0)
+        else if (B3PGissuite.config.searchAction.toLowerCase().indexOf("filter")>=0)
             doFilter=true;
     }
     
@@ -514,7 +558,7 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
         else if (result.id)
             visval=result.id;
         else
-            visval=search;
+            visval=B3PGissuite.config.search;
         if (visval!=null){
             sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
             sldOptions+="visibleValue="+visval;
@@ -534,7 +578,7 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
         if (doFilter){
             sldOptions+="sldType=NamedStyle";
         }
-        var sldUrl=sldServletUrl+sldOptions;
+        var sldUrl = B3PGissuite.config.sldServletUrl + sldOptions;
         if(mapInitialized){
             setSldOnDefaultMap(sldUrl,true);
         }else{
@@ -551,7 +595,7 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
     switchTab("zoeken");
     
     /* Lagen aanzetten na zoeken */
-    JZoekconfiguratieThemaUtil.getThemas(searchConfigId, function(data) {
+    JZoekconfiguratieThemaUtil.getThemas(B3PGissuite.config.searchConfigId, function(data) {
         zoekconfiguratieThemasCallBack(data);
         switchLayersOn();
         
@@ -572,15 +616,15 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
 }
 
 function placeSearchResultMarker(x,y) {
-    webMapController.getMap().setMarker("searchResultMarker", x, y);
+    B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", x, y);
 }
 
 function removeSearchResultMarker() {
-    webMapController.getMap().removeMarker("searchResultMarker");
+    B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
 }
 
 function removeAllMarkers() {
-    webMapController.getMap().removeAllMarkers();
+    B3PGissuite.vars.webMapController.getMap().removeAllMarkers();
 }
 
 /**
@@ -590,9 +634,9 @@ function removeAllMarkers() {
  * @return Returns the feature with adjusted bbox.
 */
 function getBboxMinSize2(feature){
-    if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
-        var addX=Number((minBboxZoeken-(feature.maxx-feature.minx))/2);
-        var addY=Number((minBboxZoeken-(feature.maxy-feature.miny))/2);
+    if ((Number(feature.maxx-feature.minx) < B3PGissuite.config.minBboxZoeken)){
+        var addX=Number((B3PGissuite.config.minBboxZoeken-(feature.maxx-feature.minx))/2);
+        var addY=Number((B3PGissuite.config.minBboxZoeken-(feature.maxy-feature.miny))/2);
         feature.minx=Number(feature.minx-addX);
         feature.maxx=Number(Number(feature.maxx)+Number(addX));
         feature.miny=Number(feature.miny-addY);
@@ -609,12 +653,12 @@ function getBboxMinSize2(feature){
  * @param reAddLayer If true the layer will be removed and added again.
 */
 function setSldOnDefaultMap(sldUrl, reAddLayer){
-    var kbLayer = webMapController.getMap("map1").getLayer("fmcLayer");
+    var kbLayer = B3PGissuite.vars.webMapController.getMap("map1").getLayer("fmcLayer");
     kbLayer.setSld(escape(sldUrl));
 
     if (reAddLayer){
-        webMapController.getMap("map1").removeLayerById(kbLayer.getId(), false);
-        webMapController.getMap("map1").addLayer(kbLayer);
+        B3PGissuite.vars.webMapController.getMap("map1").removeLayerById(kbLayer.getId(), false);
+        B3PGissuite.vars.webMapController.getMap("map1").addLayer(kbLayer);
     }
 }
 
@@ -667,12 +711,12 @@ function loadBusyJSP(handle, type) {
  * @param extraCriteria JavaScript object with CQL criteria that is used as filter for getting the features.
 */
 function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, themaIds, extraCriteria) {
-    if (!usePopup && !usePanel && !useBalloonPopup) {
+    if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
     }
     if (themaIds==undefined){
-        if (!multipleActiveThemas){
-            themaIds = activeAnalyseThemaId;
+        if (!B3PGissuite.config.multipleActiveThemas){
+            themaIds = B3PGissuite.vars.activeAnalyseThemaId;
         } else {
             themaIds = getLayerIdsAsString(true);
         }
@@ -697,24 +741,24 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     document.forms[0].lagen.value='';
 
     //als er een init search is meegegeven (dus ook een sld is gemaakt)
-    if (searchAction.toLowerCase().indexOf("filter")>=0){
+    if (B3PGissuite.config.searchAction.toLowerCase().indexOf("filter")>=0){
         
-        document.forms[0].search.value=search;
-        document.forms[0].searchId.value=searchId;
-        document.forms[0].searchClusterId.value=searchClusterId;
+        document.forms[0].search.value=B3PGissuite.config.search;
+        document.forms[0].B3PGissuite.config.searchId.value=B3PGissuite.config.searchId;
+        document.forms[0].B3PGissuite.config.searchClusterId.value=B3PGissuite.config.searchClusterId;
     }
 
     document.forms[0].geom.value=geom;
     
     var schaal;    
-    if (tilingResolutions && tilingResolutions !== "") {
-        schaal = webMapController.getMap().getResolution();
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        schaal = B3PGissuite.vars.webMapController.getMap().getResolution();
     } else {
-        schaal = webMapController.getMap().getScaleHint();
+        schaal = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     }
     
     document.forms[0].scale.value=schaal;
-    document.forms[0].tolerance.value=tolerance;
+    document.forms[0].tolerance.value=B3PGissuite.config.tolerance;
 
     if (selectionWithinObject) {
         document.forms[0].withinObject.value = "1";
@@ -724,44 +768,44 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
         document.forms[0].onlyFeaturesInGeom.value="false";
     }
     
-    if (bookmarkAppcode != null) {
-        document.forms[0].bookmarkAppcode.value=bookmarkAppcode;
+    if (B3PGissuite.config.bookmarkAppcode != null) {
+        document.forms[0].B3PGissuite.config.bookmarkAppcode.value=B3PGissuite.config.bookmarkAppcode;
     }
 
     if (highlightThemaId != null) {
         document.forms[0].themaid.value = highlightThemaId;
     }
 
-    if (usePopup) {
+    if (B3PGissuite.config.usePopup) {
         // open popup when not opened en submit form to popup
-        if(dataframepopupHandle == null || dataframepopupHandle.closed) {
-            if(useDivPopup) {
-                dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
+        if(B3PGissuite.vars.dataframepopupHandle == null || B3PGissuite.vars.dataframepopupHandle.closed) {
+            if(B3PGissuite.config.useDivPopup) {
+                B3PGissuite.vars.dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
             } else {
-                dataframepopupHandle = popUpData('dataframepopup', 680, 225, false);
+                B3PGissuite.vars.dataframepopupHandle = popUpData('dataframepopup', 680, 225, false);
             }
         }
 
-        if(useDivPopup) {
+        if(B3PGissuite.config.useDivPopup) {
             //$j("#popupWindow").show();
             document.forms[0].target = 'dataframedivpopup';
-            loadBusyJSP(dataframepopupHandle, 'div');
+            loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'div');
         } else {
             document.forms[0].target = 'dataframepopup';
-            loadBusyJSP(dataframepopupHandle, 'window');
+            loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'window');
         }
 
-    } else if(useBalloonPopup){
-        if(!balloon){
+    } else if(B3PGissuite.config.useBalloonPopup){
+        if(!B3PGissuite.vars.balloon){
             var offsetX = 0;
             var offsetY = 0;
 
             /* offsetY nodig voor de flamingo toolbalk boven de kaart */
-            if (webMapController instanceof FlamingoController){
+            if (B3PGissuite.vars.webMapController instanceof FlamingoController){
                 offsetY=36;
             }
             
-            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,offsetX,offsetY);
+            B3PGissuite.vars.balloon = new Balloon($j("#mapcontent"),B3PGissuite.vars.webMapController,'infoBalloon',300,300,offsetX,offsetY);
         }
         document.forms[0].target = 'dataframeballoonpopup';
         /*Bepaal midden van vraag geometry*/      
@@ -800,11 +844,11 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
         var centerX=(minx+maxx)/2;
         var centerY=(miny+maxy)/2;
 
-        //balloon.resetPositionOfBalloon(centerX,centerY);
-        balloon.setPosition(centerX,centerY,true);
+        //B3PGissuite.vars.balloon.resetPositionOfBalloon(centerX,centerY);
+        B3PGissuite.vars.balloon.setPosition(centerX,centerY,true);
 
         var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
-        balloon.getContentElement().html(iframeElement);
+        B3PGissuite.vars.balloon.getContentElement().html(iframeElement);
     } else {
         document.forms[0].target = 'dataframe';
         loadBusyJSP('dataframe', 'panel');
@@ -830,14 +874,14 @@ function openUrlInIframe(url){
 */
 function getLayerPosition(item) {
 
-    if((cookieArray == null) || !useCookies) {
+    if((B3PGissuite.vars.cookieArray == null) || !B3PGissuite.config.useCookies) {
         if (item.visible=="on" || item.analyse=="active")
             return -1;
         else
             return 0;
     }
 
-    var arr = cookieArray.split(',');
+    var arr = B3PGissuite.vars.cookieArray.split(',');
 
     for(i = 0; i < arr.length; i++) {
         if(arr[i] == item.id) {
@@ -858,13 +902,13 @@ function getLayerPosition(item) {
  * @return 0 = Not in cookie or visible, -1 = No cookie but visible, 1 = In cookie.
 */
 function getClusterPosition(item) {
-    if ((cookieClusterArray == null) || !useCookies) {
+    if ((B3PGissuite.vars.cookieClusterArray == null) || !B3PGissuite.config.useCookies) {
         if (item.visible || item.active)
             return -1;
         else
             return 0;
     }
-    var arr = cookieClusterArray.split(',');
+    var arr = B3PGissuite.vars.cookieClusterArray.split(',');
     for(i = 0; i < arr.length; i++) {
         if(arr[i] == item.id) {
             return i+1;
@@ -882,12 +926,12 @@ function getClusterPosition(item) {
  * @param overrule When true overrule the current active item.
 */
 function setActiveCluster(item,overrule){
-    if(((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
+    if(((B3PGissuite.vars.activeAnalyseThemaId==null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId==null || B3PGissuite.vars.activeClusterId.length==0)) || overrule){
         if(item != undefined & item != null) {
             var activeClusterTitle = item.title;
             var atlabel = document.getElementById('actief_thema');
             if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
-                activeClusterId = item.id;
+                B3PGissuite.vars.activeClusterId = item.id;
                 atlabel.innerHTML = '' + activeClusterTitle;
             }
             if(item.metadatalink && item.metadatalink.length > 1){
@@ -906,13 +950,13 @@ function setActiveCluster(item,overrule){
 */
 function setActiveThema(id, label, overrule) {
     if (!(id && id!=null && label && label!=null && overrule)) {
-        return activeAnalyseThemaId;
+        return B3PGissuite.vars.activeAnalyseThemaId;
     }
 
-    if (((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) &&
-        (activeClusterId==null || activeClusterId.length==0)) || overrule){
+    if (((B3PGissuite.vars.activeAnalyseThemaId==null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) &&
+        (B3PGissuite.vars.activeClusterId==null || B3PGissuite.vars.activeClusterId.length==0)) || overrule){
 
-        activeAnalyseThemaId = id;
+        B3PGissuite.vars.activeAnalyseThemaId = id;
 
         var atlabel = document.getElementById('actief_thema');
         if (atlabel && label && atlabel!=null && label!=null) {
@@ -940,7 +984,7 @@ function setActiveThema(id, label, overrule) {
             })
         }
     }
-    return activeAnalyseThemaId;
+    return B3PGissuite.vars.activeAnalyseThemaId;
 }
 
 /**
@@ -949,9 +993,9 @@ function setActiveThema(id, label, overrule) {
  * @param obj The selected raio element.
 */
 function radioClick(obj) {
-    var oldActiveThemaId = activeAnalyseThemaId;
+    var oldActiveThemaId = B3PGissuite.vars.activeAnalyseThemaId;
     if (obj && obj!=null && obj.theItem && obj.theItem!=null && obj.theItem.id && obj.theItem.title) {
-        activeAnalyseThemaId = setActiveThema(obj.theItem.id, obj.theItem.title, true);
+        B3PGissuite.vars.activeAnalyseThemaId = setActiveThema(obj.theItem.id, obj.theItem.title, true);
         activateCheckbox(obj.theItem.id);
         deActivateCheckbox(oldActiveThemaId);
 
@@ -960,8 +1004,6 @@ function radioClick(obj) {
         }
     }
 }
-
-var prevRadioButton = null;
 
 /**
  * Check if the item is the current active thema.
@@ -978,7 +1020,7 @@ function isActiveItem(item) {
         setActiveThema(item.id, item.title, true);
     }
 
-    if (activeAnalyseThemaId != item.id) {
+    if (B3PGissuite.vars.activeAnalyseThemaId != item.id) {
         return false;
     }
     
@@ -1201,13 +1243,6 @@ function createInvisibleDiv(id) {
  * @param item The item with the metadata.
  * @return The link element.
 */
-var widthMetadataPopup = 800;
-var heightMetadataPopup = 600;
-var widthDownloadPopup = 425;
-var heightDownloadPopup = 250;
-var downloadPopupBlocksViewer = true;
-var metadataPopupBlocksViewer = true;
-
 function createMetadataLink(item){
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
@@ -1230,7 +1265,7 @@ function createMetadataLink(item){
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
                         $j(this).dialog("close");                        
                         
-                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                        var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                         $j("#input_wmsserviceurl").val(url);
                         
                         unblockViewerUI();
@@ -1261,7 +1296,7 @@ function createMetadataLink(item){
         lnk.onclick = function() {
             
             /* Wel download en url button tonen */
-            if (datasetDownload && showServiceUrl) {
+            if (B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Download": function() {                    
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
@@ -1279,7 +1314,7 @@ function createMetadataLink(item){
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
                             $j(this).dialog("close");                        
 
-                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
 
                             unblockViewerUI();
@@ -1293,13 +1328,13 @@ function createMetadataLink(item){
                         }
                     }
                 });
-            } else if (!datasetDownload && showServiceUrl) {
+            } else if (!B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {                    
                     "Url": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
                             $j(this).dialog("close");                        
 
-                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
 
                             unblockViewerUI();
@@ -1339,7 +1374,7 @@ function createMetadataLink(item){
         lnk.onclick = function() {
             
             /* Wel download button tonen */
-            if (datasetDownload && showServiceUrl) {
+            if (B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Download": function() {            
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
@@ -1363,7 +1398,7 @@ function createMetadataLink(item){
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
                             $j(this).dialog("close");                        
 
-                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
 
                             unblockViewerUI();
@@ -1377,7 +1412,7 @@ function createMetadataLink(item){
                         }
                     }
                 });
-            } else if (!datasetDownload && showServiceUrl) {
+            } else if (!B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {                    
                     "Metadata": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
@@ -1389,7 +1424,7 @@ function createMetadataLink(item){
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
                             $j(this).dialog("close");                        
 
-                            var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
 
                             unblockViewerUI();
@@ -1432,14 +1467,14 @@ function createMetadataLink(item){
     }
     
     /* Alleen url en Annuleren */
-    if ( (item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) && (showServiceUrl) ) {
+    if ( (item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) && (B3PGissuite.config.showServiceUrl) ) {
         lnk.onclick = function() {
             $j("#dialog-download-metadata").dialog("option", "buttons", {                
                 "Url": function() {
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
                         $j(this).dialog("close");                        
                         
-                        var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                        var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                         $j("#input_wmsserviceurl").val(url);
                         
                         unblockViewerUI();
@@ -1505,7 +1540,7 @@ function createLabel(container, item) {
                 checkboxChecked = true;
             }
             var checkbox = null;
-            var parentItem=getParentItem(themaTree,item);
+            var parentItem=getParentItem(B3PGissuite.config.themaTree,item);
             if (parentItem.exclusive_childs){
                 checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
             }else{
@@ -1516,7 +1551,7 @@ function createLabel(container, item) {
             container.appendChild(checkbox);
 
             if (checkboxChecked){
-                clustersAan.push(checkbox);
+                B3PGissuite.vars.clustersAan.push(checkbox);
             }
 
             // alleen een callable item kan active zijn
@@ -1535,7 +1570,7 @@ function createLabel(container, item) {
             container.togglea = img;
 
             // als een cluster childs heeft en legend moet in tree worden getoond.
-            if (showLegendInTree && item.children){
+            if (B3PGissuite.config.showLegendInTree && item.children){
                 //controleer of er een NIET cluster child een legend heeft.
                 hasChildsWithLegend=false;
                 for (var i=0; i < item.children.length && !hasChildsWithLegend; i++){
@@ -1571,7 +1606,7 @@ function createLabel(container, item) {
             }
 
             var themaCheckbox = null;
-            parentItem=getParentItem(themaTree,item);
+            parentItem=getParentItem(B3PGissuite.config.themaTree,item);
             if (parentItem.exclusive_childs){
                 themaCheckbox=createRadioThema(item,checkboxChecked,parentItem.id);
             }else{
@@ -1581,14 +1616,14 @@ function createLabel(container, item) {
 
             if (checkboxChecked) {
                 if (layerPos<0) {
-                    layersAan.unshift(themaCheckbox);
+                    B3PGissuite.vars.layersAan.unshift(themaCheckbox);
                 } else {
-                    layersAan.push(themaCheckbox);
+                    B3PGissuite.vars.layersAan.push(themaCheckbox);
                 }
             }
 
             if(item.analyse=="on" || item.analyse=="active"){
-                if (!multipleActiveThemas){
+                if (!B3PGissuite.config.multipleActiveThemas){
                     var labelRadio = createRadioSingleActiveThema(item);
                     container.appendChild(labelRadio);
                 } else {
@@ -1598,7 +1633,7 @@ function createLabel(container, item) {
             container.appendChild(themaCheckbox);
         }
 
-        if (item.legendurl != undefined && showLegendInTree) {
+        if (item.legendurl != undefined && B3PGissuite.config.showLegendInTree) {
             container.appendChild(document.createTextNode('  '));
             container.appendChild(createTreeLegendIcon());
         }
@@ -1606,7 +1641,7 @@ function createLabel(container, item) {
         container.appendChild(document.createTextNode('  '));
         container.appendChild(createMetadataLink(item));
 
-        if (item.legendurl != undefined && showLegendInTree) {
+        if (item.legendurl != undefined && B3PGissuite.config.showLegendInTree) {
             container.appendChild(createTreeLegendDiv(item));
         }
         
@@ -1784,7 +1819,7 @@ function syncLayerCookieAndForm() {
     if (layerString == "") {
         layerString = 'ALL';
     }
-    if (useCookies) {
+    if (B3PGissuite.config.useCookies) {
         eraseCookie('checkedLayers');
         if (layerString!=null) {
             createCookie('checkedLayers', layerString, '7');
@@ -1798,7 +1833,7 @@ function checkboxClick(obj, dontRefresh) {
     var item = obj.theItem;
     if(obj.checked) {        
         addItemAsLayer(item);
-        if (useInheritCheckbox) {
+        if (B3PGissuite.config.useInheritCheckbox) {
             //zet bovenliggende cluster vinkjes aan
             var object = document.getElementById(item.id);
             enableParentClusters(object);
@@ -1830,41 +1865,41 @@ function checkboxClick(obj, dontRefresh) {
 function clusterCheckboxClick(element,dontRefresh){
     if (element==undefined || element==null)
         return;
-    if (layerUrl==null){
-        layerUrl=""+kburl;
+    if (B3PGissuite.vars.layerUrl==null){
+        B3PGissuite.vars.layerUrl=""+B3PGissuite.config.kburl;
     }
     var status=element.checked;
     if (status){
         var found=false;
-        for (var i=0; i < clustersAan.length; i++){
-            if (clustersAan[i].id==element.id){
+        for (var i=0; i < B3PGissuite.vars.clustersAan.length; i++){
+            if (B3PGissuite.vars.clustersAan[i].id==element.id){
                 found=true;
             }
         }
         if (!found)
-            clustersAan.push(element);
+            B3PGissuite.vars.clustersAan.push(element);
     }else{
         var newClustersAan = new Array();
-        for (var j=0; j < clustersAan.length; j++){
-            if (clustersAan[j].id!=element.id){
-                newClustersAan.push(clustersAan[j]);
+        for (var j=0; j < B3PGissuite.vars.clustersAan.length; j++){
+            if (B3PGissuite.vars.clustersAan[j].id!=element.id){
+                newClustersAan.push(B3PGissuite.vars.clustersAan[j]);
             }
         }
-        clustersAan=newClustersAan;
+        B3PGissuite.vars.clustersAan=newClustersAan;
     }
     /* indien cookies aan dan cluster id in cookie stoppen */
     var cluster=element.theItem;
-    if (useCookies) {      
+    if (B3PGissuite.config.useCookies) {      
         if (element.checked) {
             addClusterIdToCookie(cluster.id);
         }else {
             removeClusterIdFromCookie(cluster.id);
         }
     }
-    // Als er niet naar de useInheritCheckbox wordt gekeken (dus het vinkje bij 'Kaartgroep overerving' is uit)
+    // Als er niet naar de B3PGissuite.config.useInheritCheckbox wordt gekeken (dus het vinkje bij 'Kaartgroep overerving' is uit)
     // of
     // als een tree gehide is (gebruiker kan de layers niet aan/uit vinken)
-    if (!useInheritCheckbox || cluster.hide_tree) {
+    if (!B3PGissuite.config.useInheritCheckbox || cluster.hide_tree) {
         if (element.checked) {
 
             /* Cluster is net aangevinkt. Children omgekeerd aanzetten zodat
@@ -1879,7 +1914,7 @@ function clusterCheckboxClick(element,dontRefresh){
                     }
                 } else {
                     //if cluster is callable AND not 'kaartgroep overerving'
-                    if (child.callable && !useInheritCheckbox){
+                    if (child.callable && !B3PGissuite.config.useInheritCheckbox){
                         var elemin = document.getElementById(child.id);
                         elemin.checked=true;
                         clusterCheckboxClick(elemin,dontRefresh);
@@ -1896,7 +1931,7 @@ function clusterCheckboxClick(element,dontRefresh){
                     }
                 } else {
                     //if cluster is callable AND not 'kaartgroep overerving'
-                    if (child1.callable && !useInheritCheckbox){
+                    if (child1.callable && !B3PGissuite.config.useInheritCheckbox){
                         var elemout = document.getElementById(child1.id);
                         elemout.checked=false;
                         clusterCheckboxClick(elemout,dontRefresh);
@@ -1905,8 +1940,8 @@ function clusterCheckboxClick(element,dontRefresh){
             }
         }     
     }
-    /*Als useInheritCheckbox dan grafisch in de tree aangegeven dat onderliggende layers niet zichtbaar zijn.*/
-    if (useInheritCheckbox){        
+    /*Als B3PGissuite.config.useInheritCheckbox dan grafisch in de tree aangegeven dat onderliggende layers niet zichtbaar zijn.*/
+    if (B3PGissuite.config.useInheritCheckbox){        
         for (var m=0; m < cluster.children.length;m++){
             child=cluster.children[m];
             if (element.checked) {
@@ -1978,17 +2013,17 @@ function addClusterIdToCookie(id) {
 }
 
 function removeAllFeatures() {
-    webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
 }
 
 function stopDrawPolygon() {
-    webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    webMapController.getMap().getLayer("editMap").stopDrawDrawFeature();
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").stopDrawDrawFeature();
 }
 
 function startDrawPolygon(geomType) {
-    webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    webMapController.getMap().getLayer("editMap").drawFeature(geomType);
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(geomType);
 }
 
 function removeClusterIdFromCookie(id) {
@@ -2019,13 +2054,13 @@ function addItemAsLayer(theItem){
     //If there is a orgainization code key then add this to the service url.
     if (theItem.wmslayers){
         var organizationCodeKey = theItem.organizationcodekey;
-        if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
-            if(layerUrl.indexOf(organizationCodeKey)<=0){
-                if(layerUrl.indexOf('?')> 0)
-                    layerUrl+='&';
+        if(B3PGissuite.config.organizationcode!=undefined && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
+            if(B3PGissuite.vars.layerUrl.indexOf(organizationCodeKey)<=0){
+                if(B3PGissuite.vars.layerUrl.indexOf('?')> 0)
+                    B3PGissuite.vars.layerUrl+='&';
                 else
-                    layerUrl+='?';
-                layerUrl = layerUrl + organizationCodeKey + "="+organizationcode;
+                    B3PGissuite.vars.layerUrl+='?';
+                B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + organizationCodeKey + "="+B3PGissuite.config.organizationcode;
             }
         }
     }    
@@ -2035,23 +2070,20 @@ function isStringEmpty(str) {
     return (!str || 0 === str.length);
 }
 
-var originalLayerUrl = layerUrl;
-
 function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
     var groepParam = "GROEPNAAM";
     var projectParam = "PROJECTNAAM";
 
-    if (!isStringEmpty(organizationcode)) {
-        layerUrl = originalLayerUrl + groepParam + "=" + organizationcode;
+    if (!isStringEmpty(B3PGissuite.config.organizationcode)) {
+        B3PGissuite.vars.layerUrl = originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode;
     }
 
     if (!isStringEmpty(projectnaam)) {
-        layerUrl = originalLayerUrl + projectParam + "=" + projectnaam;
+        B3PGissuite.vars.layerUrl = originalLayerUrl + projectParam + "=" + projectnaam;
     }
 
-    if (!isStringEmpty(organizationcode) && !isStringEmpty(projectnaam)) {
-        layerUrl = originalLayerUrl + groepParam + "=" + organizationcode + "&"
-        + projectParam + "=" + projectnaam;
+    if (!isStringEmpty(B3PGissuite.config.organizationcode) && !isStringEmpty(projectnaam)) {
+        B3PGissuite.vars.layerUrl = originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode + "&" + projectParam + "=" + projectnaam;
     }
 
     /* tekenobject van kaart afhalen */
@@ -2097,8 +2129,7 @@ function removeLayerFromEnabledLayerItems(itemId){
     }
     return null;
 }
-
-var refresh_timeout_handle;    
+  
 function refreshLayerWithDelay() {
     showLoading();
 
@@ -2106,12 +2137,12 @@ function refreshLayerWithDelay() {
         clearTimeout(refresh_timeout_handle);
         hideLoading();
     } 
-    refresh_timeout_handle = setTimeout("doRefreshLayer();", refreshDelay);
+    refresh_timeout_handle = setTimeout("doRefreshLayer();", B3PGissuite.config.refreshDelay);
 }     
 
 function doRefreshLayer() {    
     //register after loading
-    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
     refreshLayer();
 
     refreshLegendBox();
@@ -2121,13 +2152,13 @@ function doRefreshLayer() {
 function checkScaleForLayers() {
     
     var currentscale;    
-    if (tilingResolutions && tilingResolutions !== "") {
-        currentscale = webMapController.getMap().getResolution();
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
     } else {
-        currentscale = webMapController.getMap().getScaleHint();
+        currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     } 
     
-    setScaleForTree(themaTree, currentscale);
+    setScaleForTree(B3PGissuite.config.themaTree, currentscale);
 }
 
 /**
@@ -2218,7 +2249,7 @@ function isItemInScale(item, scale) {
  * could be made into a config setting in gisviewerconfig.
 */
 function calcScaleForCurrentExtent() {
-    var extent = webMapController.getMap().getExtent();
+    var extent = B3PGissuite.vars.webMapController.getMap().getExtent();
     var newMapWidth = extent.maxx - extent.minx;    
     
     var screenWidth = $j("#mapcontent").width();
@@ -2270,18 +2301,18 @@ function refreshLayer(doRefreshOrder) {
         doRefreshOrder = false;
     }
 
-    if (layerUrl==undefined || layerUrl==null) {
+    if (B3PGissuite.vars.layerUrl==undefined || B3PGissuite.vars.layerUrl==null) {
         hideLoading();
         return;
     }
 
-    if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1) {
-        if (layerUrl.indexOf('?')> 0) {
-            layerUrl+='&';
+    if(B3PGissuite.vars.layerUrl.toLowerCase().indexOf("?service=")==-1 && B3PGissuite.vars.layerUrl.toLowerCase().indexOf("&service=" )==-1) {
+        if (B3PGissuite.vars.layerUrl.indexOf('?')> 0) {
+            B3PGissuite.vars.layerUrl+='&';
         } else {
-            layerUrl+='?';
+            B3PGissuite.vars.layerUrl+='?';
         }
-        layerUrl+="SERVICE=WMS";
+        B3PGissuite.vars.layerUrl+="SERVICE=WMS";
     }
 
     var topLayerItems = new Array();
@@ -2291,7 +2322,7 @@ function refreshLayer(doRefreshOrder) {
     for (var i=0; i<B3PGissuite.vars.enabledLayerItems.length; i++){
         item = B3PGissuite.vars.enabledLayerItems[i];
 
-        if (useInheritCheckbox) {
+        if (B3PGissuite.config.useInheritCheckbox) {
             var object = document.getElementById(item.id);
             
             /* Indien object nog niet gevonden dan is het item
@@ -2331,11 +2362,11 @@ function refreshLayer(doRefreshOrder) {
         item = orderedLayerItems[j];
         //als layergrouping afzonderlijke layers is of als de layer een tiling layer is
         //maak dan een afzonderlijke layer.
-        if (layerGrouping == "lg_layer" || item.tiled) {
+        if (B3PGissuite.config.layerGrouping == "lg_layer" || item.tiled) {
             localGroupName = "fmc" + item.id;
-        } else if (layerGrouping == "lg_cluster") {
+        } else if (B3PGissuite.config.layerGrouping == "lg_cluster") {
             localGroupName = "fmc" + item.clusterid;
-        }else if (layerGrouping == "lg_forebackground") {
+        }else if (B3PGissuite.config.layerGrouping == "lg_forebackground") {
             if (item.background){
                 localGroupName = "fmcback";
             }else{
@@ -2346,7 +2377,7 @@ function refreshLayer(doRefreshOrder) {
         }
         if (lastGroupName == "" || localGroupName != lastGroupName) {
             layerGroup = new Array();
-            if (layerGrouping == "lg_cluster") {
+            if (B3PGissuite.config.layerGrouping == "lg_cluster") {
                 layerGroup.push(localGroupName + "_" + item.id);
             } else {
                 layerGroup.push(localGroupName);
@@ -2359,7 +2390,7 @@ function refreshLayer(doRefreshOrder) {
     }
 
     // verwijderen ontbrekende layers
-    var allLayers=webMapController.getMap().getLayers();
+    var allLayers=B3PGissuite.vars.webMapController.getMap().getLayers();
     var shownLayers= new Array();
     for (var a=0; a < allLayers.length; a++){
         if (allLayers[a].getType()==Layer.RASTER_TYPE){
@@ -2394,7 +2425,7 @@ function refreshLayer(doRefreshOrder) {
         }
     }
     for (var n=0; n < removedLayers.length; n++){
-        webMapController.getMap().removeLayerById(removedLayers[n]);//false
+        B3PGissuite.vars.webMapController.getMap().removeLayerById(removedLayers[n]);//false
     }
 
     // toevoegen lagen
@@ -2402,7 +2433,7 @@ function refreshLayer(doRefreshOrder) {
         layerGroup = layerGroups[i];
         var layerId = layerGroup[0];
         
-        if (webMapController.getMap().getLayer(layerId)==null){
+        if (B3PGissuite.vars.webMapController.getMap().getLayer(layerId)==null){
             layerGroup.splice(0,1); // verwijder eerste element
             
             for (k=0; k < layerGroup.length; k++) {                
@@ -2422,15 +2453,15 @@ function refreshLayer(doRefreshOrder) {
                     addLayerToViewer(lName, lUrl, layers);
                     layerId = getValidLayerId(lName);
                 } else {                    
-                    addLayerToViewer(layerId, layerUrl, layerGroup);                  
+                    addLayerToViewer(layerId, B3PGissuite.vars.layerUrl, layerGroup);                  
                 }
             }
         }
 
-        var layer=webMapController.getMap().getLayer(layerId);
+        var layer=B3PGissuite.vars.webMapController.getMap().getLayer(layerId);
         if (layer!=null){
-            var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i+startLayerIndex);
-            if (i+startLayerIndex != oldOrderIndex){
+            var oldOrderIndex=B3PGissuite.vars.webMapController.getMap().setLayerIndex(layer,i+B3PGissuite.vars.startLayerIndex);
+            if (i+B3PGissuite.vars.startLayerIndex != oldOrderIndex){
                 doRefreshOrder=true;
             }
         }
@@ -2447,22 +2478,22 @@ function refreshLayer(doRefreshOrder) {
     }
     if (doRefreshOrder) {
     //TODO: WebMapController
-    //webMapController.getMap().refreshLayerOrder();
+    //B3PGissuite.vars.webMapController.getMap().refreshLayerOrder();
     }
     
     // flamingoController.getMap().update();
 
-    var lagen = webMapController.getMap().getAllVectorLayers();
-    var tilingLayers = webMapController.getMap().getAllTilingLayers();
+    var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
+    var tilingLayers = B3PGissuite.vars.webMapController.getMap().getAllTilingLayers();
     
     if (tilingLayers) {
         lagen.concat(tilingLayers);
     }
     
-    var totalLayers = webMapController.getMap().getLayers().length;
+    var totalLayers = B3PGissuite.vars.webMapController.getMap().getLayers().length;
     for(var p = 0 ; p < lagen.length;p++){
         var laag = lagen[p];
-        webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
+        B3PGissuite.vars.webMapController.getMap().setLayerIndex(laag,totalLayers+B3PGissuite.vars.startLayerIndex);
     }
     
     /* Tijdelijke punten ook tonen */
@@ -2470,7 +2501,7 @@ function refreshLayer(doRefreshOrder) {
 }
 
 function getLayerById(id) {
-    var layer = webMapController.getMap().getLayer(id);
+    var layer = B3PGissuite.vars.webMapController.getMap().getLayer(id);
 
     if (layer != null) {
         return layer;
@@ -2511,8 +2542,8 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         var maxBounds = getMaxBounds();
         var olRes = getTilingResolutions(maxBounds, false); 
             
-        if (webMapController instanceof OpenLayersController && tilingResolutions) {
-            options["serverResolutions"] = olRes; // tilingResolutions
+        if (B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions) {
+            options["serverResolutions"] = olRes; // B3PGissuite.config.tilingResolutions
         }
         
         options["RESOLUTIONS"] = olRes; //tileItem.resolutions;
@@ -2542,8 +2573,8 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             }
         }
         
-        var tileLayer=webMapController.createWMScLayer(lname, layerUrl,options);        
-        webMapController.getMap().addLayer(tileLayer);
+        var tileLayer=B3PGissuite.vars.webMapController.createWMScLayer(lname, layerUrl,options);        
+        B3PGissuite.vars.webMapController.getMap().addLayer(tileLayer);
         
     } else {
         //wms layer    
@@ -2679,7 +2710,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
                 var aka=layerItems[i].wmslayers;
                 //Als de gebruiker ingelogd is dan zal het waarschijnlijk een kaartenbalie service zijn
                 //Daarom moet er een andere aka worden gemaakt voor de map tip.
-                if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
+                if (B3PGissuite.config.user.ingelogdeGebruiker && B3PGissuite.config.user.ingelogdeGebruiker.length > 0){
                     aka=aka.substring(aka.indexOf("_")+1);
                 }
                 var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
@@ -2696,7 +2727,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             options["maxscale"]=largestMaxscale;
         }
 
-        if (webMapController instanceof FlamingoController){
+        if (B3PGissuite.vars.webMapController instanceof FlamingoController){
             if(options["maxResolution"]){
                 options["maxscale"]=options["maxResolution"];
             }
@@ -2705,7 +2736,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             }
             delete options["maxResolution"];
             delete options["minResolution"];
-        }else if (webMapController instanceof OpenLayersController){
+        }else if (B3PGissuite.vars.webMapController instanceof OpenLayersController){
             if (options["maxResolution"]!=undefined && options["minResolution"]==undefined){
                 options["minResolution"]="auto";
             }
@@ -2727,45 +2758,49 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             var protocol = window.location.protocol + "//";
             var host = window.location.host;
 
-            var baseUrl = protocol + host  + baseNameViewer;
+            var baseUrl = protocol + host  + B3PGissuite.config.baseNameViewer;
             var sldUrl = "sld=" + baseUrl + "/services/createUserSld?layerids=" + sldIds;
 
             layerUrl += sldUrl;
         }
 
-        var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+        var newLayer=B3PGissuite.vars.webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 
         newLayer.setMapTips(maptips);
         
-        webMapController.getMap().addLayer(newLayer);//false, true, false
+        B3PGissuite.vars.webMapController.getMap().addLayer(newLayer);//false, true, false
     }
 }
 
 function loadObjectInfo(geom) {
-    for(i in enabledtabs) {
-        if (enabledtabs[i] == "gebieden") {
-            // vul object frame
-            document.forms[0].admindata.value = '';
-            document.forms[0].metadata.value = '';
-            if (!multipleActiveThemas){
-                document.forms[0].themaid.value = activeAnalyseThemaId;
-            } else {
-                document.forms[0].themaid.value = getLayerIdsAsString();
-            }
-
-            document.forms[0].analysethemaid.value = activeAnalyseThemaId;
-
-            document.forms[0].geom.value=geom;
-            document.forms[0].scale.value ='';
-
-            // vul adressen/locatie
-            document.forms[0].objectdata.value = 't';
-            document.forms[0].target = 'objectframeViewer';
-
-            document.forms[0].submit();
-            break;
-        }
+    var gebiedenTabActive = false;
+    for(i in B3PGissuite.config.enabledtabs) {
+        if (B3PGissuite.config.enabledtabs[i] === "gebieden") gebiedenTabActive = true;
     }
+    for(i in B3PGissuite.config.enabledtabsLeft) {
+        if (B3PGissuite.config.enabledtabsLeft[i] === "gebieden") gebiedenTabActive = true;
+    }
+    if(!gebiedenTabActive) return;
+    
+    // vul object frame
+    document.forms[0].admindata.value = '';
+    document.forms[0].metadata.value = '';
+    if (!B3PGissuite.config.multipleActiveThemas){
+        document.forms[0].themaid.value = B3PGissuite.vars.activeAnalyseThemaId;
+    } else {
+        document.forms[0].themaid.value = getLayerIdsAsString();
+    }
+
+    document.forms[0].analysethemaid.value = B3PGissuite.vars.activeAnalyseThemaId;
+
+    document.forms[0].geom.value=geom;
+    document.forms[0].scale.value ='';
+
+    // vul adressen/locatie
+    document.forms[0].objectdata.value = 't';
+    document.forms[0].target = 'objectframeViewer';
+
+    document.forms[0].submit();
 }
 /**
  * Get alle enabled layer items
@@ -2777,7 +2812,7 @@ function getLayerIdsAsString(onlyWithinScale) {
 
     for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
 
-        if (useInheritCheckbox) {
+        if (B3PGissuite.config.useInheritCheckbox) {
             var object = document.getElementById(B3PGissuite.vars.enabledLayerItems[i].id);
             /* Item alleen toevoegen aan de layers indien
              * parent cluster(s) allemaal aangevinkt staan of
@@ -2787,10 +2822,10 @@ function getLayerIdsAsString(onlyWithinScale) {
         }
         if (onlyWithinScale){
             var currentscale;
-            if (tilingResolutions && tilingResolutions !== "") {
-                currentscale = webMapController.getMap().getResolution();
+            if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+                currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
             } else {
-                currentscale = webMapController.getMap().getScaleHint();
+                currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
             } 
             
             if (!isItemInScale(B3PGissuite.vars.enabledLayerItems[i],currentscale)){
@@ -2911,8 +2946,7 @@ function parentHasCheckBox(parent) {
     }
     return false;
 }
-//the loading legend images (needed to abort loading)
-var loadingLegendImages= new Object();
+
 function createLegendDiv(item) {
     var id=item.id + '##' + item.wmslayers;
     var myImage = new Image();
@@ -3019,10 +3053,6 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
     });
     loadNextInLegendImageQueue();
 }
-//queue of the legend objects that needs to be loaded
-var legendImageQueue = new Array();
-//slots that can be used to load the legend objects
-var legendImageLoadingSpace=1;
 /**
 Load the next image object.
 */
@@ -3110,13 +3140,13 @@ function refreshLegendBox() {
     resetLegendImageQueue();
     
     var res;    
-    if (tilingResolutions && tilingResolutions !== "") {
-        res = webMapController.getMap().getResolution();
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        res = B3PGissuite.vars.webMapController.getMap().getResolution();
     } else {
-        res = webMapController.getMap().getScaleHint();
+        res = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     }
     
-    webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
+    B3PGissuite.vars.webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,B3PGissuite.vars.webMapController.getMap(), refreshLegendBox,this);
     
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
@@ -3126,7 +3156,7 @@ function refreshLegendBox() {
         var found = false;
         
         // ouder moet aan staan en binnen schaal
-        if (useInheritCheckbox) {
+        if (B3PGissuite.config.useInheritCheckbox) {
             var object = document.getElementById(item.id);
             //Item alleen toevoegen aan de layers indien
             //parent cluster(s) allemaal aangevinkt staan of
@@ -3221,7 +3251,7 @@ function onChangeTool(id, event) {
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
 function onIdentify(movie,extend) {
-    if(!usePopup && !usePanel && !useBalloonPopup) {
+    if(!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
     }
 
@@ -3247,7 +3277,7 @@ function onIdentify(movie,extend) {
         geom += ")";
     }
 
-    webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
 
     /* kijken of bezig met editen redline objecten */
     if (editingRedlining) {
@@ -3262,10 +3292,10 @@ function onIdentify(movie,extend) {
          * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
          * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
          * de gisviewer aan.*/
-        if (webMapController instanceof FlamingoController) {
-            webMapController.activateTool("breinaald");
+        if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+            B3PGissuite.vars.webMapController.activateTool("breinaald");
         } else {
-            webMapController.activateTool("identify");
+            B3PGissuite.vars.webMapController.activateTool("identify");
         }
 
         hideIdentifyIcon();
@@ -3273,7 +3303,7 @@ function onIdentify(movie,extend) {
     } else {
         btn_highLightSelected = false;
         
-        webMapController.activateTool("identify");
+        B3PGissuite.vars.webMapController.activateTool("identify");
 
         showIdentifyIcon();
         handleGetAdminData(geom, null, false);
@@ -3282,14 +3312,13 @@ function onIdentify(movie,extend) {
     loadObjectInfo(geom);
 }
 
-var teller=0;
 //update the getFeatureInfo in the feature window.
 function updateGetFeatureInfo(data){
     
     /* TODO: Deze methode geeft geen GetFeatureInfo weer in Firefox.
      * Werkt wel in IE en Chrome
     */
-    
+    var featureInfoTimeOut = 30;
     teller++;
 	
     //if times out return;
@@ -3299,8 +3328,8 @@ function updateGetFeatureInfo(data){
     }
 	
     //if the admindata window is loaded then update the page (add the featureinfo thats given by the getFeatureInfo request.
-    if (usePopup && dataframepopupHandle.contentWindow.writeFeatureInfoData){
-        dataframepopupHandle.contentWindow.writeFeatureInfoData(data);
+    if (B3PGissuite.config.usePopup && B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData){
+        B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData(data);
         data=null;
     } else if (window.frames.dataframe.writeFeatureInfoData){
         window.frames.dataframe.writeFeatureInfoData(data);
@@ -3318,12 +3347,9 @@ function onIdentifyData(id,data){
     updateGetFeatureInfo(data);
 }
 
-
 function layerBoxSort(a, b) {
     return a.theItem.order - b.theItem.order;
 }
-
-var frameWorkInitialized = false;
 
 function onFrameworkLoaded(){    
     if (document.getElementById("treeForm") && (ieVersion <= 8 && ieVersion != -1)){
@@ -3334,14 +3360,14 @@ function onFrameworkLoaded(){
         // layer added in reverse order
         // layer with lowest order number should be on top
         // so added last
-        for (var i=clustersAan.length-1; i >=0 ; i--){
-            clusterCheckboxClick(clustersAan[i], true);
+        for (var i=B3PGissuite.vars.clustersAan.length-1; i >=0 ; i--){
+            clusterCheckboxClick(B3PGissuite.vars.clustersAan[i], true);
         }
         // layers bij opstart sorteren op order(belangnr+alfabet)
         /* als order niet aangepast mag worden, dan kan dit weg */
-        layersAan.sort(layerBoxSort)
-        for (var m=layersAan.length-1; m >=0 ; m--){
-            checkboxClick(layersAan[m],true);
+        B3PGissuite.vars.layersAan.sort(layerBoxSort)
+        for (var m=B3PGissuite.vars.layersAan.length-1; m >=0 ; m--){
+            checkboxClick(B3PGissuite.vars.layersAan[m],true);
         }
 
         setStartExtent();
@@ -3351,18 +3377,18 @@ function onFrameworkLoaded(){
     frameWorkInitialized = true;
     
     mapInitialized=true;
-    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
+    B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
     
     /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt.
      * Let op: Bij OpenLayers gebeurt dit al bij maken Map */
-    if (webMapController instanceof FlamingoController) {        
+    if (B3PGissuite.vars.webMapController instanceof FlamingoController) {        
         var maxBounds = getMaxBounds();
         var olRes = getTilingResolutions(maxBounds, false);
         
-        webMapController.getMap("map1").setTilingResolutions(olRes);
+        B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(olRes);
         
         /* Standaard pan tool activeren */
-        webMapController.activateTool("toolPan");
+        B3PGissuite.vars.webMapController.activateTool("toolPan");
     }
     
     updateSizeOL();
@@ -3373,34 +3399,34 @@ function onFrameworkLoaded(){
 }
 
 function updateSizeOL() {
-    if (webMapController instanceof OpenLayersController) {        
-        webMapController.getMap().updateSize();    
+    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {        
+        B3PGissuite.vars.webMapController.getMap().updateSize();    
     }
 }
 
 function placeStartLocationMarker() {    
-    if (startLocationX != "" && startLocationY != "") {
-        placeSearchResultMarker(startLocationX, startLocationY);
+    if (B3PGissuite.config.startLocationX != "" && B3PGissuite.config.startLocationY != "") {
+        placeSearchResultMarker(B3PGissuite.config.startLocationX, B3PGissuite.config.startLocationY);
     }    
 }
 
 function initFullExtent() {
     /* Extent uit url */
-    if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {        
-        if (appExtent != null && appExtent.length > 0 && appExtent.split(",").length ==4 ) {
-            setFullExtent(appExtent.split(",")[0],appExtent.split(",")[1],appExtent.split(",")[2],appExtent.split(",")[3]);
+    if (B3PGissuite.config.bbox!=null && B3PGissuite.config.bbox.length>0 && B3PGissuite.config.bbox.split(",").length==4) {        
+        if (B3PGissuite.config.appExtent != null && B3PGissuite.config.appExtent.length > 0 && B3PGissuite.config.appExtent.split(",").length ==4 ) {
+            setFullExtent(B3PGissuite.config.appExtent.split(",")[0],B3PGissuite.config.appExtent.split(",")[1],B3PGissuite.config.appExtent.split(",")[2],B3PGissuite.config.appExtent.split(",")[3]);
         } else {
-            setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+            setFullExtent(B3PGissuite.config.bbox.split(",")[0],B3PGissuite.config.bbox.split(",")[1],B3PGissuite.config.bbox.split(",")[2],B3PGissuite.config.bbox.split(",")[3]);
         }
         
     /* Extent uit Flamingo */
-    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {
-        setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);        
+    } else if (B3PGissuite.config.fullbbox!=null && B3PGissuite.config.fullbbox.length>0 && B3PGissuite.config.fullbbox.split(",").length==4) {
+        setFullExtent(B3PGissuite.config.fullbbox.split(",")[0],B3PGissuite.config.fullbbox.split(",")[1],B3PGissuite.config.fullbbox.split(",")[2],B3PGissuite.config.fullbbox.split(",")[3]);        
     
     /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
     } else {
-        bbox = getNLExtent();
-        fullbbox = getNLExtent();
+        B3PGissuite.config.bbox = getNLExtent();
+        B3PGissuite.config.fullbbox = getNLExtent();
         
         var bounds = getNLMaxBounds();        
         
@@ -3412,33 +3438,33 @@ function setStartExtent() {
     initFullExtent();
     
     /* Bij zoeken via url de handleInitSearch callback laten zoomen */
-    if (searchConfigId != null && searchConfigId > 0) {
+    if (B3PGissuite.config.searchConfigId != null && B3PGissuite.config.searchConfigId > 0) {
         return;
     }
     
     /* Eerst kijken of er een zoekextent is */
     if (searchExtent != null) {
-        webMapController.getMap("map1").moveToExtent(searchExtent);
+        B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(searchExtent);
         
     /* Extent uit url */
-    } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {          
+    } else if (B3PGissuite.config.bbox!=null && B3PGissuite.config.bbox.length>0 && B3PGissuite.config.bbox.split(",").length==4) {          
         setTimeout(function () {
-            moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+            moveToExtent(B3PGissuite.config.bbox.split(",")[0],B3PGissuite.config.bbox.split(",")[1],B3PGissuite.config.bbox.split(",")[2],B3PGissuite.config.bbox.split(",")[3]);
         }, 1);
         
     /* Extent uit Flamingo */
-    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {        
+    } else if (B3PGissuite.config.fullbbox!=null && B3PGissuite.config.fullbbox.length>0 && B3PGissuite.config.fullbbox.split(",").length==4) {        
         setTimeout(function () {
-            moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
+            moveToExtent(B3PGissuite.config.fullbbox.split(",")[0],B3PGissuite.config.fullbbox.split(",")[1],B3PGissuite.config.fullbbox.split(",")[2],B3PGissuite.config.fullbbox.split(",")[3]);
         }, 1);      
         
-    } else if (resolution) {
-        webMapController.getMap().zoomToResolution(resolution);    
+    } else if (B3PGissuite.config.resolution) {
+        B3PGissuite.vars.webMapController.getMap().zoomToResolution(B3PGissuite.config.resolution);    
     
     /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
     } else {
-        bbox = getNLExtent();
-        fullbbox = getNLExtent();
+        B3PGissuite.config.bbox = getNLExtent();
+        B3PGissuite.config.fullbbox = getNLExtent();
         
         var bounds = getNLMaxBounds();
         
@@ -3459,7 +3485,7 @@ function ie6_hack_onInit(){
 }
 
 function moveToExtent(minx,miny,maxx,maxy) { 
-    webMapController.getMap().zoomToExtent({
+    B3PGissuite.vars.webMapController.getMap().zoomToExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
@@ -3468,7 +3494,7 @@ function moveToExtent(minx,miny,maxx,maxy) {
 }
 
 function setFullExtent(minx,miny,maxx,maxy) {  
-    webMapController.getMap().setMaxExtent({
+    B3PGissuite.vars.webMapController.getMap().setMaxExtent({
         minx:minx,
         miny:miny,
         maxx:maxx,
@@ -3476,13 +3502,13 @@ function setFullExtent(minx,miny,maxx,maxy) {
     });
 }
 function doIdentify(minx,miny,maxx,maxy){
-    webMapController.getMap().doIdentify({
+    B3PGissuite.vars.webMapController.getMap().doIdentify({
         minx:minx,
         miny:miny        
     });
-    webMapController.activateTool("identify");
+    B3PGissuite.vars.webMapController.activateTool("identify");
 }
-var nextIdentifyExtent=null;
+
 function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
     nextIdentifyExtent=new Object();
     nextIdentifyExtent.minx=minx;
@@ -3507,7 +3533,7 @@ function onAllLayersFinishedLoading(mapId){
         nextIdentifyExtent=null;
     }
     
-    if (waitUntillFullyLoaded) {
+    if (B3PGissuite.config.waitUntillFullyLoaded) {
         $j("#loadingscreen").hide();
     }
     
@@ -3515,7 +3541,7 @@ function onAllLayersFinishedLoading(mapId){
     refreshLegendBox();
     
     /* Config optie maken ? */
-    if (showDebugContent) {
+    if (B3PGissuite.config.showDebugContent) {
         setDebugContent();
     }    
 }
@@ -3529,19 +3555,8 @@ function setDebugContent() {
     $j("#debug-content").html(html);
 }
 
-if(useSortableFunction) {
-    document.getElementById("orderLayerBox").sortable({
-        stop:function(){
-            setTimerForReload();
-        },
-        start:function(){
-            clearTimerForReload();
-        }
-    });
-}
-var reloadTimer;
 function setTimerForReload() {
-    reloadTimer = setTimeout("refreshMapVolgorde()", layerDelay);
+    reloadTimer = setTimeout("refreshMapVolgorde()", B3PGissuite.config.layerDelay);
 }
 
 function clearTimerForReload() {
@@ -3609,7 +3624,7 @@ function getWMSLayersUrls() {
     var urlString="";
     var firstURL = true;
 
-    var layers = webMapController.getMap("map1").getAllWMSLayers();
+    var layers = B3PGissuite.vars.webMapController.getMap("map1").getAllWMSLayers();
 
     /* eerst layers verdelen in achtergrond en voorgrond */
     for (var i=0; i < layers.length; i++){
@@ -3648,10 +3663,10 @@ function getWMSLayersUrls() {
         var item = getItemFromWmsLayer(fgLayers[k]);        
         
         var currentscale;    
-        if (tilingResolutions && tilingResolutions !== "") {
-            currentscale = webMapController.getMap().getResolution();
+        if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+            currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
         } else {
-            currentscale = webMapController.getMap().getScaleHint();
+            currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
         }
             
         var inScale = isItemInScale(item, currentscale);
@@ -3683,7 +3698,7 @@ function getWMSLayersUrls() {
 function getItemFromWmsLayer(layer) {
     var item;
     if (layer.options) {
-        item = getItemByLayer(themaTree, layer.options.layers);
+        item = getItemByLayer(B3PGissuite.config.themaTree, layer.options.layers);
     } else {
         item = layer.getFrameworkLayer();
     }
@@ -3692,7 +3707,7 @@ function getItemFromWmsLayer(layer) {
 }
 
 function getWktStringForPrint() {
-    var vectorLayers=webMapController.getMap().getAllVectorLayers();
+    var vectorLayers=B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
     var wktString="";
 
     for(var c = 0 ; c < vectorLayers.length ; c++){
@@ -3739,7 +3754,6 @@ function getLegendUrls() {
     return urlString;
 }
 
-var exportMapWindow;
 function exportMap(){    
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);
@@ -3786,13 +3800,13 @@ function exportMap(){
     /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
      * wms url in de print zit waar dit uit gehaald kan worden */
     
-    var mapWidth = webMapController.getMap("map1").getScreenWidth();
-    var mapHeight = webMapController.getMap("map1").getScreenHeight();
+    var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
+    var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
     
-    var minX = webMapController.getMap("map1").getExtent().minx;
-    var minY = webMapController.getMap("map1").getExtent().miny;
-    var maxX = webMapController.getMap("map1").getExtent().maxx;
-    var maxY = webMapController.getMap("map1").getExtent().maxy;
+    var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
+    var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
+    var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
+    var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
     
     var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
     
@@ -3817,15 +3831,15 @@ function getTilingLayer() {
     var tilingString = "";
     var firstURL = true;
 
-    var layers = webMapController.getMap("map1").getAllTilingLayers();
+    var layers = B3PGissuite.vars.webMapController.getMap("map1").getAllTilingLayers();
 
     /* tiling layers toevoegen */
     for (var j=0; j < layers.length; j++) {
-        var currentscale = webMapController.getMap().getResolution();
+        var currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
         
         var item;
         if (layers[j].options) {
-            item = getItemByLayer(themaTree,layers[j].options.LAYERS);
+            item = getItemByLayer(B3PGissuite.config.themaTree,layers[j].options.LAYERS);
         } else {
             item = layers[j].getFrameworkLayer();
         }
@@ -3915,7 +3929,7 @@ function checkboxOnByid(id){
  * this.getFrameworkLayer().features[0] zit het hele polygon.
 */
 function getWktActiveFeature(index) {    
-    var object = webMapController.getMap().getLayer("editMap").getActiveFeature(index);
+    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(index);
     
     if (object == null)
     {
@@ -3927,7 +3941,7 @@ function getWktActiveFeature(index) {
 }
 
 function getWktForDownload() {
-    var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
+    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
 
     if (object == null) {
         return "";
@@ -3937,7 +3951,7 @@ function getWktForDownload() {
 }
 
 function getWkt() {
-    var object = webMapController.getMap().getLayer("editMap").getActiveFeature();
+    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
 
     if (object == null)
         return null;
@@ -4006,8 +4020,8 @@ function b_layerSelection(id, event) {
 }
 
 function b_overview(id,event) {
-    if (webMapController instanceof FlamingoController) {
-        webMapController.getMap().getFrameworkMap().callMethod('overviewwindow','show');
+    if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+        B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('overviewwindow','show');
     }
 }
 
@@ -4034,17 +4048,17 @@ function drawWkt(wkt) {
 }
 
 function drawObject(feature) {
-    webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    webMapController.getMap().getLayer("editMap").addFeature(feature);
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").addFeature(feature);
 }
 
 /**
  * Alle geïmplementeerde eventhandling functies
  */
 function b_removePolygons(id,params){
-    webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
     
-    if (webMapController instanceof OpenLayersController) {
+    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
         var measureValueDiv=document.getElementById("olControlMeasurePolygonValue");
         if (measureValueDiv){                
             measureValueDiv.style.display="none";
@@ -4061,19 +4075,12 @@ function b_highlight( id,params) {
      * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
      * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
      * de gisviewer aan.*/
-    if (webMapController instanceof FlamingoController) {
-        webMapController.activateTool("breinaald");
+    if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+        B3PGissuite.vars.webMapController.activateTool("breinaald");
     } else {
-        webMapController.activateTool("identify");
+        B3PGissuite.vars.webMapController.activateTool("identify");
     }
 }
-
-var btn_highLightSelected = false;
-
-var popupWindowRef = null;
-var highLightGeom = null;
-
-var analyseThemas = new Array();
 
 function highLightThemaObject(geom) {    
     highlightLayers = new Array();
@@ -4088,7 +4095,7 @@ function highLightThemaObject(geom) {
         var object = document.getElementById(item.id);
 
         /* alleen uitvoern als configuratie optie hiervan op true staat */
-        if (useInheritCheckbox) {
+        if (B3PGissuite.config.useInheritCheckbox) {
             /* Item alleen toevoegen aan de layers indien
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
@@ -4107,13 +4114,13 @@ function highLightThemaObject(geom) {
     }
 
     var scale;    
-    if (tilingResolutions && tilingResolutions !== "") {
-        scale = webMapController.getMap().getResolution();
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        scale = B3PGissuite.vars.webMapController.getMap().getResolution();
     } else {
-        scale = webMapController.getMap().getScaleHint();
+        scale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     }
         
-    var tol = tolerance;
+    var tol = B3PGissuite.config.tolerance;
 
     if (highlightLayers.length == 1) {
         EditUtil.getHighlightWktForThema(highlightLayers[0].id, geom, scale, tol, returnHighlight);
@@ -4126,13 +4133,13 @@ function selectRedlineObject(geom) {
      * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
     */
     var scale;    
-    if (tilingResolutions && tilingResolutions !== "") {
-        scale = webMapController.getMap().getResolution();
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        scale = B3PGissuite.vars.webMapController.getMap().getResolution();
     } else {
-        scale = webMapController.getMap().getScaleHint();
+        scale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     }
     
-    var tol = tolerance;
+    var tol = B3PGissuite.config.tolerance;
 
     EditUtil.getIdAndWktForRedliningObject(geom, redLineGegevensbronId, scale, tol, returnRedlineObject);
 }
@@ -4191,13 +4198,13 @@ function handlePopupValue(value) {
      */
 
     var scale;    
-    if (tilingResolutions && tilingResolutions !== "") {
-        scale = webMapController.getMap().getResolution();
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        scale = B3PGissuite.vars.webMapController.getMap().getResolution();
     } else {
-        scale = webMapController.getMap().getScaleHint();
+        scale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     }
     
-    var tol = tolerance;
+    var tol = B3PGissuite.config.tolerance;
     EditUtil.getHighlightWktForThema(value, highLightGeom, scale, tol, returnHighlight);
 //handleGetAdminData(highLightGeom, value);
 }
@@ -4224,64 +4231,64 @@ function returnHighlight(wkt) {
 }
 
 function checkDisplayButtons() {
-    if (showRedliningTools) {
-        if (webMapController.getTool("redLiningContainer")){
-            webMapController.getTool("redLiningContainer").setVisible(true);
+    if (B3PGissuite.config.showRedliningTools) {
+        if (B3PGissuite.vars.webMapController.getTool("redLiningContainer")){
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(true);
         }else{
-            webMapController.getTool("redLiningContainer_point").setVisible(true);
-            webMapController.getTool("redLiningContainer_line").setVisible(true);
-            webMapController.getTool("redLiningContainer_polygon").setVisible(true);
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(true);
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(true);
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(true);
         }
     } else {
-        if (webMapController.getTool("redLiningContainer")){
-            webMapController.getTool("redLiningContainer").setVisible(false);
+        if (B3PGissuite.vars.webMapController.getTool("redLiningContainer")){
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(false);
         }else{
-            webMapController.getTool("redLiningContainer_point").setVisible(false);
-            webMapController.getTool("redLiningContainer_line").setVisible(false);
-            webMapController.getTool("redLiningContainer_polygon").setVisible(false);
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(false);
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(false);
+            B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(false);
         }
     }
 
-    if (showBufferTool) {
-        webMapController.getTool("b_buffer").setVisible(true);
+    if (B3PGissuite.config.showBufferTool) {
+        B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(true);
     } else {
-        webMapController.getTool("b_buffer").setVisible(false);
+        B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(false);
     }
         
-    if (showSelectBulkTool) {
-        webMapController.getTool("b_getfeatures").setVisible(true);
+    if (B3PGissuite.config.showSelectBulkTool) {
+        B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(true);
     } else {
-        webMapController.getTool("b_getfeatures").setVisible(false);
+        B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(false);
     }
 
-    if (showNeedleTool) {
-        webMapController.getTool("b_highlight").setVisible(true);
+    if (B3PGissuite.config.showNeedleTool) {
+        B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(true);
     } else {
-        webMapController.getTool("b_highlight").setVisible(false);
+        B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(false);
     }
 
-    if (showRedliningTools || showNeedleTool) {
-        webMapController.getTool("b_removePolygons").setVisible(true);
+    if (B3PGissuite.config.showRedliningTools || B3PGissuite.config.showNeedleTool) {
+        B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(true);
     } else {
-        webMapController.getTool("b_removePolygons").setVisible(false);
+        B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(false);
     }
 
-    if (showPrintTool) {
-        webMapController.getTool("b_printMap").setVisible(true);
+    if (B3PGissuite.config.showPrintTool) {
+        B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(true);
     } else {
-        webMapController.getTool("b_printMap").setVisible(false);
+        B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(false);
     }
 
-    if (showLayerSelectionTool) {
-        webMapController.getTool("b_layerSelection").setVisible(true);
+    if (B3PGissuite.config.showLayerSelectionTool) {
+        B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(true);
     } else {
-        webMapController.getTool("b_layerSelection").setVisible(false);
+        B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(false);
     }
     
-    if (showGPSTool) {
-        webMapController.getTool("b_gps").setVisible(true);
+    if (B3PGissuite.config.showGPSTool) {
+        B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(true);
     } else {
-        webMapController.getTool("b_gps").setVisible(false);
+        B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(false);
     }
 }
 
@@ -4289,8 +4296,6 @@ function onGetCapabilities(id,params){
     hideLoading();
 }
 
-//do only ones.
-var initialized = false;
 function onConfigComplete(id,params){    
     if (!initialized) {
         initialized = true;
@@ -4311,7 +4316,7 @@ function getBookMark() {
 }
 
 function getFullExtent() {
-    var fullExtent = webMapController.getMap().getExtent();
+    var fullExtent = B3PGissuite.vars.webMapController.getMap().getExtent();
 
     return fullExtent;
 }
@@ -4374,12 +4379,12 @@ function createPermaLink(){
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
 
-    var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
+    var urlBase = protocol + host  + B3PGissuite.config.baseNameViewer + "/viewer.do?";
 
     /* applicatie code */
     var appCode = "";
-    if (bookmarkAppcode != undefined && bookmarkAppcode != "") {
-        appCode = "appCode=" + bookmarkAppcode;
+    if (B3PGissuite.config.bookmarkAppcode != undefined && B3PGissuite.config.bookmarkAppcode != "") {
+        appCode = "appCode=" + B3PGissuite.config.bookmarkAppcode;
     }
 
     /* kaartlagen ophalen */
@@ -4391,20 +4396,20 @@ function createPermaLink(){
 
     /* kaartgroepen ophalen */
     var clusterIds = "";
-    if (clustersAan != undefined && clustersAan.length > 0){
+    if (B3PGissuite.vars.clustersAan != undefined && B3PGissuite.vars.clustersAan.length > 0){
         clusterIds += "&clusterId=";
 
-        for (var i=0; i < clustersAan.length; i++){
+        for (var i=0; i < B3PGissuite.vars.clustersAan.length; i++){
             if (clusterIds.length > 0){
                 clusterIds+=",";
             }
-            clusterIds+=clustersAan[i].theItem.id.substring(1);
+            clusterIds+=B3PGissuite.vars.clustersAan[i].theItem.id.substring(1);
         }
     }
 
     /* kaart extent ophalen */
     var extent = "";
-    var fullExtent = webMapController.getMap().getExtent();
+    var fullExtent = B3PGissuite.vars.webMapController.getMap().getExtent();
     if (fullExtent != undefined && fullExtent != "") {
         var minx = Math.round(Number(fullExtent.minx)+1);
         var miny = Math.round(Number(fullExtent.miny)+1);
@@ -4418,10 +4423,10 @@ function createPermaLink(){
     var reso = "";
     
     var controllerRes;    
-    if (tilingResolutions && tilingResolutions !== "") {
-        controllerRes = webMapController.getMap().getResolution();
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        controllerRes = B3PGissuite.vars.webMapController.getMap().getResolution();
     } else {
-        controllerRes = webMapController.getMap().getScaleHint();
+        controllerRes = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     }
     
     if (controllerRes != undefined && controllerRes != "") {
@@ -4460,11 +4465,7 @@ function chromeBookMarkPopup(url, title) {
     chromePopup.document.write(html);
 }
 
-/* build popup functions */
-var currentpopupleft = null;
-var currentpopuptop = null;
-
-popUp = function(URL, naam, width, height, useDiv) {
+function popUp(URL, naam, width, height, useDiv) {
 
     var screenwidth = 600;
     var screenheight = 500;
@@ -4528,7 +4529,7 @@ popUp = function(URL, naam, width, height, useDiv) {
     return null;
 }
 
-popUpData = function(naam, width, height, useDiv) {
+function popUpData(naam, width, height, useDiv) {
     var screenwidth = 600;
     var screenheight = 500;
     var useDivPopup = false;
@@ -4585,7 +4586,7 @@ popUpData = function(naam, width, height, useDiv) {
     }
 }
 
-buildPopup = function() {
+function buildPopup() {
     var popupDiv = document.createElement('div');
     popupDiv.styleClass = 'popup_Window';
     popupDiv.id = 'popupWindow';
@@ -4627,10 +4628,10 @@ buildPopup = function() {
     popupWindowBackground.id = 'popupWindow_Windowbackground';
 
     $j(popupDiv).css({
-        "height": popupHeight,
-        "width": popupWidth,
-        "left": popupLeft,
-        "top": popupTop,
+        "height": B3PGissuite.config.popupHeight,
+        "width": B3PGissuite.config.popupWidth,
+        "left": B3PGissuite.config.popupLeft,
+        "top": B3PGissuite.config.popupTop,
         "display": "none"
     });
 
@@ -4753,7 +4754,7 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         //append the balloon.
         $j(this.mapDiv).append(this.balloon);
 
-        this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+        this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT, this.webMapController.getMap(), this.setPosition,this);
     }
 
     /**
@@ -4853,7 +4854,7 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
     /*Remove the balloon*/
     this.remove = function(){
         this.balloon.remove();
-        this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+        this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT, this.webMapController.getMap(), this.setPosition,this);
         delete this.balloon;
     }
     /*Get the DOM element where the content can be placed.*/
@@ -4878,17 +4879,14 @@ function hideTabvakLoading() {
     $j("#tab_container").find(".tabvakloading").remove();
 }
 
-var editingRedlining = false;
-var redLineGegevensbronId = -1;
-
 function enableEditRedlining(id) {
     editingRedlining = true;
     redLineGegevensbronId = id;
 
-    if(webMapController instanceof FlamingoController) {
-        webMapController.activateTool("breinaald");
+    if(B3PGissuite.vars.webMapController instanceof FlamingoController) {
+        B3PGissuite.vars.webMapController.activateTool("breinaald");
     } else {
-        webMapController.activateTool("identify");
+        B3PGissuite.vars.webMapController.activateTool("identify");
     }
 }
 
@@ -5068,14 +5066,14 @@ function getBaseUrl() {
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
 
-    var urlBase = protocol + host  + baseNameViewer;
+    var urlBase = protocol + host  + B3PGissuite.config.baseNameViewer;
     
     return urlBase;    
 }
 
 function checkTempUploadedPointsWms(checked) { 
     uploadCsvLayerOn = checked;
-    var layer = webMapController.getMap().getLayer("uploadedPoints");
+    var layer = B3PGissuite.vars.webMapController.getMap().getLayer("uploadedPoints");
     
     if (checked && layer == null) {
         addTempUploadedPointsWms();  
@@ -5083,7 +5081,7 @@ function checkTempUploadedPointsWms(checked) {
         layer.setVisible(true);
     } else if (!checked && layer) {
         /* Removing layer otherwise it is visible in print */
-        webMapController.getMap().removeLayer(layer);
+        B3PGissuite.vars.webMapController.getMap().removeLayer(layer);
     }
 }
 
@@ -5112,23 +5110,22 @@ function addTempUploadedPointsWms() {
         noCache: true
     };
     
-    var newLayer = webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
-    webMapController.getMap().addLayer(newLayer);
+    var newLayer = B3PGissuite.vars.webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+    B3PGissuite.vars.webMapController.getMap().addLayer(newLayer);
 }
 
-var popupCreated = false;
 $j(document).ready(function() {
     /* Alleen tabs vullen als ze ook echt aanstaan */
     var vergunningTabOn = false;
     var zoekenTabOn = false;
 
-    for (var i=0; i < enabledtabs.length; i++) {
-
-        if (enabledtabs[i] == "vergunningen")
-            vergunningTabOn = true;
-
-        if (enabledtabs[i] == "zoeken")
-            zoekenTabOn = true;
+    for (var i=0; i < B3PGissuite.config.enabledtabs.length; i++) {
+        if (B3PGissuite.config.enabledtabs[i] === "vergunningen") vergunningTabOn = true;
+        if (B3PGissuite.config.enabledtabs[i] === "zoeken") zoekenTabOn = true;
+    }
+    for (var i=0; i < B3PGissuite.config.enabledtabsLeft.length; i++) {
+        if (B3PGissuite.config.enabledtabsLeft[i] === "vergunningen") vergunningTabOn = true;
+        if (B3PGissuite.config.enabledtabsLeft[i] === "zoeken") zoekenTabOn = true;
     }
 
     if (zoekenTabOn || vergunningTabOn) {
@@ -5171,8 +5168,8 @@ $j(document).ready(function() {
         });
 
         $j('#popupWindow_Close').click(function(){
-            if (dataframepopupHandle)
-                dataframepopupHandle.closed = true;
+            if (B3PGissuite.vars.dataframepopupHandle)
+                B3PGissuite.vars.dataframepopupHandle.closed = true;
 
             $j("#popupWindow").hide();
         });

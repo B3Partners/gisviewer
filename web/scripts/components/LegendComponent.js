@@ -49,9 +49,8 @@ B3PGissuite.defineComponent('LegendComponent', {
         slider.append(jQuery('<div></div>').css({ 'clear': 'both' }));
         this.component.append(slider);
         
-        this.component.append(jQuery('<p></p>').text('Bepaal de volgorde waarin de kaartlagen getoond worden'));
-        
         if(this.options.useSortableFunction) {
+            this.component.append(jQuery('<p></p>').text('Bepaal de volgorde waarin de kaartlagen getoond worden'));
             var knoppenContainer = jQuery('<div></div>');
             knoppenContainer.append(jQuery('<input />').attr({
                 type: 'button',

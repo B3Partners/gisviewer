@@ -25205,8 +25205,7 @@ B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaul
   a.append(jQuery("<div></div>").text("+").css({"float":"left", "font-size":"22px", "padding-left":"10px", "margin-top":"-6px"}));
   a.append(jQuery("<div></div>").css({clear:"both"}));
   this.component.append(a);
-  this.component.append(jQuery("<p></p>").text("Bepaal de volgorde waarin de kaartlagen getoond worden"));
-  this.options.useSortableFunction && (a = jQuery("<div></div>"), a.append(jQuery("<input />").attr({type:"button", value:"Omhoog", "class":"knop"}).click(function() {
+  this.options.useSortableFunction && (this.component.append(jQuery("<p></p>").text("Bepaal de volgorde waarin de kaartlagen getoond worden")), a = jQuery("<div></div>"), a.append(jQuery("<input />").attr({type:"button", value:"Omhoog", "class":"knop"}).click(function() {
     moveSelectedUp()
   })), a.append(jQuery("<input />").attr({type:"button", value:"Omlaag", "class":"knop"}).click(function() {
     moveSelectedDown()

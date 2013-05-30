@@ -58,7 +58,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <fmt:message key="template.viewer.loading"/><br /><br />
                 </div>
             </div>
-            <img src="images/loadingmap.jpg" alt="<fmt:message key="template.viewer.loading"/>" id="loadingimage" />
+            <img src="images/loadingmap.jpg" alt="Bezig met laden van GIS viewer..." id="loadingimage" />
         </div>
         
         <div id="content_viewer">

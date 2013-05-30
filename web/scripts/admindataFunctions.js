@@ -739,7 +739,7 @@ function createTableTd(waarde) {
         "width": kolomBreedte + "px"
     });
     
-    if(waarde.type == 'TYPE_DATA') {        
+    if(waarde.type == 'TYPE_DATA') {   
         if (!waarde.value) {            
             td.html("-");
         } else {            

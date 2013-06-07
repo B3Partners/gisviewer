@@ -24,7 +24,7 @@
         <put name="title" value="Inlogscherm" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/login.jsp"/>
     </definition>
-     <definition name="reset" extends="template">
+    <definition name="reset" extends="template">
         <put name="title" value="Reset" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/reset.jsp"/>
     </definition>
@@ -40,6 +40,12 @@
         <put name="title" value="Home" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>
     </definition>
+    
+    <definition name="cms" extends="template">
+        <put name="title" value="CMS" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/cms.jsp"/>
+    </definition>
+    
     <!-- A11y defs -->
     <definition name="finderslist" extends="templateA11y">
         <put name="title" value="Lijst met zoekers" type="string"/>

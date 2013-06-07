@@ -36,7 +36,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <title><tiles:insert name='title'/> - GIS Viewer</title>
 
         <%-- Themes selection --%>
-        <c:set var="theme" value="" />
         <c:choose>
             <c:when test="${theme eq ''}">
                 <%-- Fallback to B3P style --%>

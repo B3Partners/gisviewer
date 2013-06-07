@@ -262,6 +262,11 @@
             <forward name="failure" path="uploadtemppoints"/>
         </action>
         
+        <action path="/cms" type="nl.b3p.gis.viewer.services.CMSAction">
+            <forward name="success" path="cms"/>
+            <forward name="failure" path="cms"/>
+        </action>
+        
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

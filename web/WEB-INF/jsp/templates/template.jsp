@@ -48,8 +48,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </c:choose>
 
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
-        <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
-        <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery-1.3.2.min.js' module=''/>"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery-ui-1.8.10.custom.min.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
         <link href="<html:rewrite page='/styles/jcarousel/skin.css' module=''/>" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.jcarousel.min.js' module=''/>"></script>

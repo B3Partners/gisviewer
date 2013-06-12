@@ -205,6 +205,8 @@
         "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
         "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } }
     };
+    
+    var imageBaseUrl = "<html:rewrite page="/images/"/>";
 </script>
 
 <!-- Total (minified) viewer JS -->
@@ -333,8 +335,6 @@
 
 <script type="text/javascript">
 
-    var imageBaseUrl = "<html:rewrite page="/images/"/>";
-        
         function panelResize(dir)
         {
             if(dir === 'left') {

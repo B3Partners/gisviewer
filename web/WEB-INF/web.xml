@@ -27,9 +27,20 @@
             <param-name>validate</param-name>
             <param-value>false</param-value>
         </init-param>
-    </filter>
+    </filter>    
+    
     <filter-mapping>
         <filter-name>Security Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <filter>                
+        <filter-name>UrlRewriteFilter</filter-name>                
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>  
+    </filter>
+       
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -182,6 +193,16 @@
         <servlet-name>UploadedPointsWmsServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.UploadedPointsWmsServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetThemesServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <url-pattern>/GetThemes</url-pattern>
+    </servlet-mapping> 
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>
@@ -215,7 +236,7 @@
         <servlet-name>UserLayerSld</servlet-name>
         <url-pattern>/services/createUserSld</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>UploadedPointsWmsServlet</servlet-name>
         <url-pattern>/UploadedPointsWmsServlet</url-pattern>
     </servlet-mapping>

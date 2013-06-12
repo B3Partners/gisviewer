@@ -4,7 +4,7 @@
     <h2>${cmsPage.titel}</h2>
     <p>${cmsPage.tekst}</p>
 </c:if>
-    
+
 <c:if test="${empty cmsPage}">
     <h2>CMS</h2>
 </c:if>
@@ -16,11 +16,11 @@
             <c:if test="${!empty tb.kleur}">
                 <c:set var="style" value="${style}background-color:${tb.kleur};" />
             </c:if>
-            
+
             <c:if test="${!empty tb.hoogte && tb.hoogte != 0}">
                 <c:set var="style" value="${style}height:${tb.hoogte}px;" />
             </c:if>
-            
+
             <c:if test="${!empty style}">
                 <c:set var="style" value=" style=\"${style}\"" />
             </c:if>
@@ -39,4 +39,8 @@
             </div>
         </div>
     </c:forEach>
- </div>
+</div>
+
+<c:if test="${showPlainAndMapButton == 'true'}">
+    <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script> 
+</c:if>

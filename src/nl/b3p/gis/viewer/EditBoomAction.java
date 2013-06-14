@@ -635,12 +635,16 @@ public class EditBoomAction extends ViewerCrudAction {
         
         String query = "select boomsoort from digitree_boomsoorten where ";
         
-        for(int i = 0; i < labels.length; i++){
-            if(labels[i] != ""){
-                if(i == 0){
-                    query += "omschrijving like '%"+labels[i]+"%' ";
-                }else{
-                    query += "and omschrijving like '%"+labels[i]+"%' ";
+        if(labels.length == 1){
+            query += "omschrijving = '"+labels[0]+"' ";
+        }else{
+            for(int i = 0; i < labels.length; i++){
+                if(labels[i] != ""){
+                    if(i == 0){
+                        query += "omschrijving like '%"+labels[i]+"%' ";
+                    }else{
+                        query += "and omschrijving like '%"+labels[i]+"%' ";
+                    }
                 }
             }
         }

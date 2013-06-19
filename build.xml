@@ -64,7 +64,6 @@
 
     -->
 	<import file="deploy/build.xml"/>
-    <!--
     <import file="minify/build.xml"/>
     <target name="-post-compile">
 		<antcall target="minify"/>
@@ -74,5 +73,4 @@
     <target name="-post-clean">
 		<antcall target="minify-clean"/>
     </target>
-    -->
 </project>

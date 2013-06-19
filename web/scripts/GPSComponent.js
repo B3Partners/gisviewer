@@ -17,6 +17,7 @@
 
 
 function GPSComponent(buffer){    
+    
     this.timeoutId = null;
     this.interval = 20000;
     
@@ -30,27 +31,27 @@ function GPSComponent(buffer){
     
     this.startPolling = function (){        
         // Request repeated updates.
-        gpsComponent.timeoutId = setInterval(gpsComponent.once,gpsComponent.interval);
-        gpsComponent.once();
+        this.timeoutId = setInterval(this.once, this.interval);
+        this.once();
     }
     
     this.once = function(){
-        navigator.geolocation.getCurrentPosition(gpsComponent.receiveLocation, gpsComponent.errorHandler);
+        navigator.geolocation.getCurrentPosition(this.receiveLocation, this.errorHandler);
     }
     
     this.stopPolling = function(){
-        clearInterval(gpsComponent.timeoutId);
+        clearInterval(this.timeoutId);
     }
     
     this.receiveLocation = function (location){
         var lat = location.coords.latitude;
         var lon = location.coords.longitude;
-        var point = gpsComponent.transformLatLon(Number(lon),Number(lat));
+        var point = this.transformLatLon(Number(lon),Number(lat));
         
-        var minx = point.x - gpsComponent.buffer;
-        var miny = point.y - gpsComponent.buffer;
-        var maxx = point.x + gpsComponent.buffer;
-        var maxy = point.y + gpsComponent.buffer;
+        var minx = point.x - this.buffer;
+        var miny = point.y - this.buffer;
+        var maxx = point.x + this.buffer;
+        var maxy = point.y + this.buffer;
         
         var extent = new Extent(minx,miny,maxx,maxy);
         B3PGissuite.vars.webMapController.getMap().zoomToExtent(extent);

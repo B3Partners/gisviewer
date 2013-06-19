@@ -35,9 +35,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         
         <title><tiles:insert name='title'/> - GIS Viewer</title>
         <%-- Themes selection --%>
-        <c:set var="theme" value="" />
         <c:choose>
-            <c:when test="${theme eq ''}">
+            <c:when test="${empty theme}">
                 <%-- Fallback to B3P style --%>
                 <link href="<html:rewrite page='/styles/gisviewer_simpleviewer.css' module=''/>" rel="stylesheet" type="text/css">
             </c:when>

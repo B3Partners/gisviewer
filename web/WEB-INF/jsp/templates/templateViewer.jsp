@@ -34,10 +34,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
 
         <title><tiles:insert name='title'/> - GIS Viewer</title>
-        
+
         <%-- Themes selection --%>
         <c:choose>
-            <c:when test="${theme eq ''}">
+            <c:when test="${empty theme}">
                 <%-- Fallback to B3P style --%>
                 <link href="<html:rewrite page='/styles/gisviewer_viewer.css' module=''/>" rel="stylesheet" type="text/css">
             </c:when>

@@ -6,10 +6,13 @@ B3PGissuite.defineComponent('LegendComponent', {
         sliderBoxId: 'transSlider',
         sliderId: 'slider',
         useSortableFunction: true,
+        layerDelay: 5000,
         taboptions: {
             resizableContent: true
         }
     },
+    reloadTimer: null,
+    orderContainer: null,
     constructor: function LegendComponent(options) {
         this.callParent(options);
         this.init();
@@ -17,8 +20,8 @@ B3PGissuite.defineComponent('LegendComponent', {
     init: function() {
         this.component = jQuery('<form></form>').attr({ 'id': this.options.formId });
         
-        var orderContainer = jQuery('<div></div>').attr({ 'id': this.options.orderboxId, 'class': this.options.orderboxId + ' tabvak_groot' });
-        this.component.append(orderContainer);
+        this.orderContainer = jQuery('<div></div>').attr({ 'id': this.options.orderboxId, 'class': this.options.orderboxId + ' tabvak_groot' });
+        this.component.append(this.orderContainer);
         
         var slider = jQuery('<div></div>').attr({
             'id': this.options.sliderBoxId
@@ -93,5 +96,21 @@ B3PGissuite.defineComponent('LegendComponent', {
                 }
             }
         });
+        if(this.options.useSortableFunction) {
+            this.orderContainer.sortable({
+                stop: function() {
+                    setTimerForReload();
+                },
+                start: function() {
+                    clearTimerForReload();
+                }
+            });
+        }
+    },
+    setTimerForReload: function() {
+        this.reloadTimer = setTimeout("refreshMapVolgorde()", this.options.layerDelay);
+    },
+    clearTimerForReload: function() {
+        clearTimeout(this.reloadTimer);
     }
 });

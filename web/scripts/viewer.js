@@ -39,73 +39,34 @@ B3PGissuite.vars.startLayerIndex = 0;
  * Ballon reference.
 */
 B3PGissuite.vars.balloon = null;
-
-var zoomBox;
-var pan;
-var prevExtent;
-var identify;
-
-var mapInitialized = false;
-var searchExtent;
-var sldSearchServlet;
-
-var highlightThemaId;
-var multiPolygonBufferWkt;
-var alleLayers = new Array();
-
-var gpsComponent = null;
-var editComponent = null;
-
-var uploadCsvLayerOn = false;
-
-var prevRadioButton = null;
-
-var widthMetadataPopup = 800;
-var heightMetadataPopup = 600;
-var widthDownloadPopup = 425;
-var heightDownloadPopup = 250;
-var downloadPopupBlocksViewer = true;
-var metadataPopupBlocksViewer = true;
-
-var originalLayerUrl = B3PGissuite.vars.layerUrl;
-var refresh_timeout_handle;
-
+B3PGissuite.vars.mapInitialized = false;
+B3PGissuite.vars.searchExtent;
+B3PGissuite.vars.multiPolygonBufferWkt;
+B3PGissuite.vars.editComponent = null;
+B3PGissuite.vars.uploadCsvLayerOn = false;
+B3PGissuite.vars.prevRadioButton = null;
+B3PGissuite.vars.originalLayerUrl = "" + B3PGissuite.vars.layerUrl;
+B3PGissuite.vars.refresh_timeout_handle;
 //the loading legend images (needed to abort loading)
-var loadingLegendImages= new Object();
+B3PGissuite.vars.loadingLegendImages = {};
 //queue of the legend objects that needs to be loaded
-var legendImageQueue = new Array();
+B3PGissuite.vars.legendImageQueue = [];
 //slots that can be used to load the legend objects
-var legendImageLoadingSpace=1;
-
-var teller=0;
-var frameWorkInitialized = false;
-var nextIdentifyExtent=null;
-if(B3PGissuite.config.useSortableFunction) {
-    document.getElementById("orderLayerBox").sortable({
-        stop:function(){
-            setTimerForReload();
-        },
-        start:function(){
-            clearTimerForReload();
-        }
-    });
-}
-var reloadTimer;
-var exportMapWindow;
-var btn_highLightSelected = false;
-
-var popupWindowRef = null;
-var highLightGeom = null;
-
-var analyseThemas = new Array();
-//do only ones.
-var initialized = false;
+B3PGissuite.vars.legendImageLoadingSpace = 1;
+B3PGissuite.vars.teller = 0;
+B3PGissuite.vars.frameWorkInitialized = false;
+B3PGissuite.vars.nextIdentifyExtent=null;
+B3PGissuite.vars.exportMapWindow;
+B3PGissuite.vars.btn_highLightSelected = false;
+B3PGissuite.vars.highLightGeom = null;
+//do only once.
+B3PGissuite.vars.initialized = false;
 /* build popup functions */
-var currentpopupleft = null;
-var currentpopuptop = null;
-var editingRedlining = false;
-var redLineGegevensbronId = -1;
-var popupCreated = false;
+B3PGissuite.vars.currentpopupleft = null;
+B3PGissuite.vars.currentpopuptop = null;
+B3PGissuite.vars.editingRedlining = false;
+B3PGissuite.vars.redLineGegevensbronId = -1;
+B3PGissuite.vars.popupCreated = false;
 
 /**
  * Shows a message in a popup window.
@@ -329,13 +290,13 @@ function initializeButtons() {
     B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading",Tool.LOADING_BAR));
     
     /* Zoom tool */
-    zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {
+    var zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {
         title: 'inzoomen via selectie'
     });
     B3PGissuite.vars.webMapController.addTool(zoomBox);
     
     /* Pan tool */
-    pan = B3PGissuite.vars.webMapController.createTool("b_pan",Tool.PAN, {
+    var pan = B3PGissuite.vars.webMapController.createTool("b_pan",Tool.PAN, {
         title: 'kaartbeeld slepem'
     });
     B3PGissuite.vars.webMapController.addTool(pan);
@@ -345,7 +306,7 @@ function initializeButtons() {
     }
     
     /* Previous extent tool */
-    prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
+    var prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
         title: 'stap terug'
     });
     B3PGissuite.vars.webMapController.addTool(prevExtent);
@@ -362,7 +323,7 @@ function initializeButtons() {
     options["handlerGetFeatureHandler"] = onIdentifyData;
     options["handlerBeforeGetFeatureHandler"] = onIdentify;
     options["title"] = "informatie opvragen";
-    identify = B3PGissuite.vars.webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
+    var identify = B3PGissuite.vars.webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
     B3PGissuite.vars.webMapController.addTool(identify);
     B3PGissuite.vars.webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
     
@@ -437,7 +398,7 @@ function initializeButtons() {
         B3PGissuite.config.gpsBuffer = 500;
     }
     
-    gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
+    var gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
     
     var bu_gps = B3PGissuite.vars.webMapController.createTool("b_gps",Tool.GPS, {
         layer: editLayer,
@@ -467,7 +428,7 @@ function initializeButtons() {
     var zoombar= B3PGissuite.vars.webMapController.createTool("zoombar",Tool.ZOOM_BAR);
     B3PGissuite.vars.webMapController.addTool(zoombar);
     
-    editComponent = new EditComponent();
+    B3PGissuite.vars.editComponent = new EditComponent();
     
     if (B3PGissuite.config.viewerTemplate == "embedded") {
         displayEmbeddedMenuIcons();
@@ -579,10 +540,8 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
             sldOptions+="sldType=NamedStyle";
         }
         var sldUrl = B3PGissuite.config.sldServletUrl + sldOptions;
-        if(mapInitialized){
+        if(B3PGissuite.vars.mapInitialized){
             setSldOnDefaultMap(sldUrl,true);
-        }else{
-            sldSearchServlet=sldUrl;
         }
     }
     
@@ -606,10 +565,10 @@ function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {
             ext.miny=result.miny;
             ext.maxx=result.maxx;
             ext.maxy=result.maxy;
-            if (mapInitialized) {
+            if (B3PGissuite.vars.mapInitialized) {
                 moveToExtent(ext.minx, ext.miny, ext.maxx, ext.maxy);
             } else{
-                searchExtent=ext;
+                B3PGissuite.vars.searchExtent=ext;
             }
         }        
     });
@@ -866,643 +825,6 @@ function openUrlInIframe(url){
     iframe.src=url;
 }
 
-/**
- * Returns current state of layer item. When item analyse is "active" then it
- * always returns -1 so it will be visible.
- * @param item The layer item.
- * @return 0 = Not in cookie or visible, -1 = No cookie but visible, 1 = In cookie.
-*/
-function getLayerPosition(item) {
-
-    if((B3PGissuite.vars.cookieArray == null) || !B3PGissuite.config.useCookies) {
-        if (item.visible=="on" || item.analyse=="active")
-            return -1;
-        else
-            return 0;
-    }
-
-    var arr = B3PGissuite.vars.cookieArray.split(',');
-
-    for(i = 0; i < arr.length; i++) {
-        if(arr[i] == item.id) {
-            return i+1;
-        }
-    }
-
-    if (item.analyse=="active")
-        return -1;
-    
-    return 0;
-}
-
-/**
- * Returns current state of cluster item. When item is active then it always
- * returns -1 so it will be visible.
- * @param item The cluster item.
- * @return 0 = Not in cookie or visible, -1 = No cookie but visible, 1 = In cookie.
-*/
-function getClusterPosition(item) {
-    if ((B3PGissuite.vars.cookieClusterArray == null) || !B3PGissuite.config.useCookies) {
-        if (item.visible || item.active)
-            return -1;
-        else
-            return 0;
-    }
-    var arr = B3PGissuite.vars.cookieClusterArray.split(',');
-    for(i = 0; i < arr.length; i++) {
-        if(arr[i] == item.id) {
-            return i+1;
-        }
-    }
-    if (item.active)
-        return -1;
-
-    return 0;
-}
-
-/**
- * Set the active cluster to be able to display metadata for this cluster..
- * @param item Cluster item to be activated
- * @param overrule When true overrule the current active item.
-*/
-function setActiveCluster(item,overrule){
-    if(((B3PGissuite.vars.activeAnalyseThemaId==null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId==null || B3PGissuite.vars.activeClusterId.length==0)) || overrule){
-        if(item != undefined & item != null) {
-            var activeClusterTitle = item.title;
-            var atlabel = document.getElementById('actief_thema');
-            if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
-                B3PGissuite.vars.activeClusterId = item.id;
-                atlabel.innerHTML = '' + activeClusterTitle;
-            }
-            if(item.metadatalink && item.metadatalink.length > 1){
-                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
-            }
-        }
-    }
-}
-
-/**
- * Set the active thema to be able to fetch object info.
- * @param id The id of the thema.
- * @param label Label to display above the viewer.
- * @param overrule When true overrule the current active thema.
- * @return The active analyse thema.
-*/
-function setActiveThema(id, label, overrule) {
-    if (!(id && id!=null && label && label!=null && overrule)) {
-        return B3PGissuite.vars.activeAnalyseThemaId;
-    }
-
-    if (((B3PGissuite.vars.activeAnalyseThemaId==null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) &&
-        (B3PGissuite.vars.activeClusterId==null || B3PGissuite.vars.activeClusterId.length==0)) || overrule){
-
-        B3PGissuite.vars.activeAnalyseThemaId = id;
-
-        var atlabel = document.getElementById('actief_thema');
-        if (atlabel && label && atlabel!=null && label!=null) {
-            atlabel.innerHTML = '' + label;
-        }
-
-        if (document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0){
-            var tokens= document.forms[0].coords.value.split(",");
-            var minx = parseFloat(tokens[0]);
-            var miny = parseFloat(tokens[1]);
-            var maxx;
-            var maxy
-            if (tokens.length ==4){
-                maxx = parseFloat(tokens[2]);
-                maxy = parseFloat(tokens[3]);
-            }else{
-                maxx=minx;
-                maxy=miny;
-            }
-            onIdentify('',{
-                minx:minx,
-                miny:miny,
-                maxx:maxx,
-                maxy:maxy
-            })
-        }
-    }
-    return B3PGissuite.vars.activeAnalyseThemaId;
-}
-
-/**
- * Called when a user selects a radio element in the tree. Activates the selected
- * thema. When the thema has a metadata link it will display the info in the info tab.
- * @param obj The selected raio element.
-*/
-function radioClick(obj) {
-    var oldActiveThemaId = B3PGissuite.vars.activeAnalyseThemaId;
-    if (obj && obj!=null && obj.theItem && obj.theItem!=null && obj.theItem.id && obj.theItem.title) {
-        B3PGissuite.vars.activeAnalyseThemaId = setActiveThema(obj.theItem.id, obj.theItem.title, true);
-        activateCheckbox(obj.theItem.id);
-        deActivateCheckbox(oldActiveThemaId);
-
-        if (obj.theItem.metadatalink && obj.theItem.metadatalink.length > 1) {
-            if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=obj.theItem.metadatalink;
-        }
-    }
-}
-
-/**
- * Check if the item is the current active thema.
- * @param item The item to check.
- * @return boolean
-*/
-function isActiveItem(item) {
-    if (!item) {
-        return false;
-    }
-    if(item.analyse=="on"){
-        setActiveThema(item.id, item.title);
-    } else if(item.analyse=="active"){
-        setActiveThema(item.id, item.title, true);
-    }
-
-    if (B3PGissuite.vars.activeAnalyseThemaId != item.id) {
-        return false;
-    }
-    
-    if(item.analyse=="active" && prevRadioButton != null){
-        var rc = document.getElementById(prevRadioButton);
-        if (rc!=undefined && rc!=null) {
-            rc.checked = false;
-        }
-    }
-
-    if (item.metadatalink && item.metadatalink.length > 1) {
-        if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
-    }
-    prevRadioButton = 'radio' + item.id;
-
-    return true;
-}
-
-/**
- * Create a radio cluster element
- * @param item the cluster item (json)
- * @param checked set to true if this radio must be checked?
- * @param groupName the groupname of this radio group (the parent cluster id in most cases)
- * @return The radio element.
- */
-function createRadioCluster(item,checked,groupName){
-    var checkbox;
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input type="radio" id="' + item.id + '"';
-        if (checked) {
-            checkboxControleString += ' checked="checked"';
-        }
-        checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
-        checkboxControleString += ' name="'+groupName+'">';
-        checkbox = document.createElement(checkboxControleString);
-    }else{
-        checkbox = document.createElement('input');
-        checkbox.id = item.id;
-        checkbox.type = 'radio';
-        checkbox.value = item.id;
-        checkbox.name= groupName;
-        checkbox.onclick = function(){
-            clusterCheckboxClick(this, false);
-        }
-        if(checked) {
-            checkbox.checked = true;
-        }
-    }
-
-    return checkbox;
-}
-
-
-/**
- * Create a checkbox cluster element
- * @param item Item the cluster item (json)
- * @param checked Checked set to true if this radio must be checked?
- * @return The checkbox element.
- */
-function createCheckboxCluster(item, checked){
-
-    var checkbox;
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-        if (checked) {
-            checkboxControleString += ' checked="checked"';
-        }
-        checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
-        checkboxControleString += '>';
-        checkbox = document.createElement(checkboxControleString);
-    }else{
-        checkbox = document.createElement('input');
-        checkbox.id = item.id;
-        checkbox.type = 'checkbox';
-        checkbox.value = item.id;
-        checkbox.onclick = function(){
-            clusterCheckboxClick(this, false);
-        }
-        if(checked) {
-            checkbox.checked = true;
-        }
-    }
-    
-    return checkbox;
-}
-
-/**
- * Create a radio element for active thema.
- * @param item The thema item (json)
- * @return The radio element.
- */
-function createRadioSingleActiveThema(item){
-    var radio;
-    if (ieVersion <= 8 && ieVersion != -1) {
-        var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
-        if (isActiveItem(item)) {
-            radioControleString += ' checked="checked"';
-        }
-        radioControleString += ' onclick="radioClick(this);"';
-        radioControleString += '>';
-        radio = document.createElement(radioControleString);
-    } else {
-        radio = document.createElement('input');
-        radio.type = 'radio';
-        radio.name = 'selkaartlaag';
-        radio.value = item.id;
-        radio.id = 'radio' + item.id;
-        radio.onclick = function(){
-            radioClick(this);
-        }
-        if (isActiveItem(item)) {
-            radio.checked = true;
-        }
-    }
-    radio.theItem=item;
-    return radio;
-}
-
-/**
- * Create a radio thema
- * @param item the thema item (json)
- * @param checked set to true if this radio must be checked?
- * @param groupName the groupname of this radio group (the parent cluster id in most cases)
- * @return The radio element.
-*/
-function createRadioThema(item,checked,groupName){
-    var checkbox;
-
-    if (ieVersion <= 8 && ieVersion != -1) {
-
-        var checkboxControleString = '<input type="radio" id="' + item.id + '"';
-        if (checked) {
-            checkboxControleString += ' checked="checked"';
-        }
-        checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
-        checkboxControleString += ' name="'+groupName+'">';
-        checkbox = document.createElement(checkboxControleString);
-
-    } else {
-        checkbox = document.createElement('input');
-        checkbox.id = item.id;
-        checkbox.type = 'radio';
-        checkbox.value = item.id;
-        checkbox.name = groupName;
-        checkbox.onclick = function() {
-            checkboxClick(this, false);
-        }
-
-        if (checked) {
-            checkbox.checked = true;
-        }
-    }
-    return checkbox;
-}
-
-/**
- * Create a checkbox thema
- * @param item the thema item (json)
- * @param checked set to true if this radio must be checked?
- * @return The checkbox element.
-*/
-function createCheckboxThema(item, checked) {
-    var checkbox;
-
-    if (ieVersion <= 8 && ieVersion != -1) {
-
-        var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
-        if (checked) {
-            checkboxControleString += ' checked="checked"';
-        }
-        checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
-        checkboxControleString += '>';
-        checkbox = document.createElement(checkboxControleString);
-
-    } else {
-        checkbox = document.createElement('input');
-        checkbox.id = item.id;
-        checkbox.type = 'checkbox';
-        checkbox.value = item.id;
-
-        checkbox.onclick = function() {
-            checkboxClick(this, false);
-        }
-
-        if (checked) {
-            checkbox.checked = true;
-        }
-    }
-    return checkbox;
-}
-
-/**
- * Creates a non visible thema div
- * @param item The id for the div element
- * @return createInvisibleDiv()
-*/
-function createInvisibleThemaDiv(item) {
-    return createInvisibleDiv(item.id);
-}
-
-/**
- * Creates a non visible div
- * @param id The id for the div element.
- * @return The div element.
-*/
-function createInvisibleDiv(id) {
-    var div = document.createElement("div");
-    div.name=id;
-    div.id=id;
-    div.style.height='0';
-    div.style.width='0';
-    div.height=0;
-    div.width=0;
-    div.style.display="none";
-    return div;
-}
-
-/**
- * Creates a link element to a new iFrame with the metadata from the item.
- * @param item The item with the metadata.
- * @return The link element.
-*/
-function createMetadataLink(item){
-    var lnk = document.createElement('a');
-    lnk.innerHTML = item.title ? item.title : item.id;
-    lnk.href = '#';
-
-    var downloadTitle = 'Download dataset van ' + item.title;
-    var infoTitle = 'Informatie over ' + item.title; 
-
-    /* Metadata tonen, WMS Service url en Annuleren */
-    if (item.metadatalink && item.metadatalink.length > 1 && (item.gegevensbronid == undefined || item.gegevensbronid < 1)) {
-        lnk.onclick = function() {
-            $j("#dialog-download-metadata").dialog("option", "buttons", {                
-                "Metadata": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
-                        $j(this).dialog("close");
-                    }
-                },
-                "Url": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                        $j(this).dialog("close");                        
-                        
-                        var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                        $j("#input_wmsserviceurl").val(url);
-                        
-                        unblockViewerUI();
-                        $j("#dialog-wmsservice-url").dialog('open');
-                    }
-                },
-                "Annuleren": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        $j(this).dialog("close");
-                        unblockViewerUI();
-                    }
-                }
-            });
-
-            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
-                $j(this).html($j(this).parent().attr('text'));
-            });
-
-            //blockViewerUI();
-            $j("#dialog-download-metadata").dialog('open');
-        }
-        
-        return lnk;
-    }
-
-    /* Download tonen, WMS Service url en Annuleren */
-    if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
-        lnk.onclick = function() {
-            
-            /* Wel download en url button tonen */
-            if (B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {
-                    "Download": function() {                    
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            /* Kijken of er een polygoon is getekend voor subselectie in download */
-                            var wkt = getWktForDownload();            
-                            if (wkt == "") {
-                                alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
-                            }
-
-                            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
-                            $j(this).dialog("close");
-                        }
-                    },
-                    "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
-
-                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                            $j("#input_wmsserviceurl").val(url);
-
-                            unblockViewerUI();
-                            $j("#dialog-wmsservice-url").dialog('open');
-                        }
-                    },                
-                    "Annuleren": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            $j(this).dialog("close");
-                            unblockViewerUI();
-                        }
-                    }
-                });
-            } else if (!B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
-                    "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
-
-                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                            $j("#input_wmsserviceurl").val(url);
-
-                            unblockViewerUI();
-                            $j("#dialog-wmsservice-url").dialog('open');
-                        }
-                    },
-                    "Annuleren": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            $j(this).dialog("close");
-                            unblockViewerUI();
-                        }
-                    }
-                });
-            } else {
-                $j("#dialog-download-metadata").dialog("option", "buttons", { 
-                    "Annuleren": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            $j(this).dialog("close");
-                            unblockViewerUI();
-                        }
-                    }
-                });
-            }
-
-            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
-                $j(this).html($j(this).parent().attr('text'));
-            });
-            
-            $j("#dialog-download-metadata").dialog('open');
-        }
-        
-        return lnk;
-    }
-
-    /* Download tonen, Metadata, WMS Service url en Annuleren */
-    if (item.metadatalink && item.metadatalink.length > 1 && item.gegevensbronid && item.gegevensbronid > 0) {
-        lnk.onclick = function() {
-            
-            /* Wel download button tonen */
-            if (B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {
-                    "Download": function() {            
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            /* Kijken of er een polygoon is getekend voor subselectie in download */
-                            var wkt = getWktForDownload();            
-                            if (wkt == "") {
-                                alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
-                            }
-
-                            iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
-                            $j(this).dialog("close");
-                        }
-                    },
-                    "Metadata": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
-                            $j(this).dialog("close");
-                        }
-                    },
-                    "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
-
-                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                            $j("#input_wmsserviceurl").val(url);
-
-                            unblockViewerUI();
-                            $j("#dialog-wmsservice-url").dialog('open');
-                        }
-                    },
-                    "Annuleren": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            $j(this).dialog("close");
-                            unblockViewerUI();
-                        }
-                    }
-                });
-            } else if (!B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
-                    "Metadata": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
-                            $j(this).dialog("close");
-                        }
-                    },
-                    "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
-
-                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                            $j("#input_wmsserviceurl").val(url);
-
-                            unblockViewerUI();
-                            $j("#dialog-wmsservice-url").dialog('open');
-                        }
-                    },
-                    "Annuleren": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            $j(this).dialog("close");
-                            unblockViewerUI();
-                        }
-                    }
-                });
-            } else {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
-                    "Metadata": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
-                            $j(this).dialog("close");
-                        }
-                    },
-                    "Annuleren": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                            $j(this).dialog("close");
-                            unblockViewerUI();
-                        }
-                    }
-                });
-            }            
-
-            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
-                $j(this).html($j(this).parent().attr('text'));
-            });
-
-            //blockViewerUI();
-            $j("#dialog-download-metadata").dialog('open');
-        }
-        
-        return lnk;
-    }
-    
-    /* Alleen url en Annuleren */
-    if ( (item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) && (B3PGissuite.config.showServiceUrl) ) {
-        lnk.onclick = function() {
-            $j("#dialog-download-metadata").dialog("option", "buttons", {                
-                "Url": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                        $j(this).dialog("close");                        
-                        
-                        var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                        $j("#input_wmsserviceurl").val(url);
-                        
-                        unblockViewerUI();
-                        $j("#dialog-wmsservice-url").dialog('open');
-                    }
-                },
-                "Annuleren": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
-                        $j(this).dialog("close");
-                        unblockViewerUI();
-                    }
-                }
-            });
-
-            $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
-                $j(this).html($j(this).parent().attr('text'));
-            });
-
-            //blockViewerUI();
-            $j("#dialog-download-metadata").dialog('open');
-        }
-        
-        return lnk;
-    }
-
-    return lnk;
-}
-
 function createWMSServiceUrlDialog() {
     $j("#dialog-wmsservice-url").dialog({
         resizable: false,
@@ -1521,141 +843,6 @@ function createDownloadMetadataDialog(){
         autoOpen: false,        
         modal: false
     });
-}
-
-/**
- * Creates a leaf in the tree. Is called for each item when creating the tree.
- * @param container The tree container
- * @param item The item with the leaf info.
- * @return useless boolean ?
-*/
-function createLabel(container, item) {
-
-    if (item.cluster) {
-        //if callable
-        if (item.callable) {
-            var checkboxChecked = false;
-            var clusterPos = getClusterPosition(item);
-            if(clusterPos!=0) {
-                checkboxChecked = true;
-            }
-            var checkbox = null;
-            var parentItem=getParentItem(B3PGissuite.config.themaTree,item);
-            if (parentItem.exclusive_childs){
-                checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
-            }else{
-                checkbox=createCheckboxCluster(item, checkboxChecked);
-            }
-
-            checkbox.theItem=item;
-            container.appendChild(checkbox);
-
-            if (checkboxChecked){
-                B3PGissuite.vars.clustersAan.push(checkbox);
-            }
-
-            // alleen een callable item kan active zijn
-            if (item.active){
-                setActiveCluster(item, true);
-            }
-        }
-        var hasChildsWithLegend=false;
-        if (item.hide_tree && item.callable){
-            // hack om toggle plaatje uit te zetten als
-            // cluster onzichtbare onderliggende kaartlagen heeft
-            var img = document.createElement("img");
-            img.setAttribute("border", "0");
-            img.src = globalTreeOptions["layermaindiv"].toggleImages["leaf"]
-            img.theItem=item;
-            container.togglea = img;
-
-            // als een cluster childs heeft en legend moet in tree worden getoond.
-            if (B3PGissuite.config.showLegendInTree && item.children){
-                //controleer of er een NIET cluster child een legend heeft.
-                hasChildsWithLegend=false;
-                for (var i=0; i < item.children.length && !hasChildsWithLegend; i++){
-                    var child=item.children[i];
-                    if (!child.cluster && child.legendurl!=undefined){
-                        hasChildsWithLegend=true;
-                    }
-                }
-                if (hasChildsWithLegend){
-                    container.appendChild(document.createTextNode('  '));
-                    container.appendChild(createTreeLegendIcon());                    
-                }
-            }
-        }
-        if (!item.hide_tree || item.callable){
-            container.appendChild(document.createTextNode('  '));
-            container.appendChild(createMetadataLink(item));
-        }
-        container.appendChild(createTreeLegendDiv(item));
-        if (item.hide_tree && !item.callable){
-            return true; //hide
-        }
-
-    } else if (!item.hide_tree) {
-        if(item.wmslayers){
-
-            alleLayers.push(item);
-
-            checkboxChecked = false;
-            var layerPos = getLayerPosition(item);
-            if(layerPos!=0) {
-                checkboxChecked = true;
-            }
-
-            var themaCheckbox = null;
-            parentItem=getParentItem(B3PGissuite.config.themaTree,item);
-            if (parentItem.exclusive_childs){
-                themaCheckbox=createRadioThema(item,checkboxChecked,parentItem.id);
-            }else{
-                themaCheckbox=createCheckboxThema(item, checkboxChecked);
-            }
-            themaCheckbox.theItem=item;
-
-            if (checkboxChecked) {
-                if (layerPos<0) {
-                    B3PGissuite.vars.layersAan.unshift(themaCheckbox);
-                } else {
-                    B3PGissuite.vars.layersAan.push(themaCheckbox);
-                }
-            }
-
-            if(item.analyse=="on" || item.analyse=="active"){
-                if (!B3PGissuite.config.multipleActiveThemas){
-                    var labelRadio = createRadioSingleActiveThema(item);
-                    container.appendChild(labelRadio);
-                } else {
-                    isActiveItem(item);
-                }
-            }
-            container.appendChild(themaCheckbox);
-        }
-
-        if (item.legendurl != undefined && B3PGissuite.config.showLegendInTree) {
-            container.appendChild(document.createTextNode('  '));
-            container.appendChild(createTreeLegendIcon());
-        }
-
-        container.appendChild(document.createTextNode('  '));
-        container.appendChild(createMetadataLink(item));
-
-        if (item.legendurl != undefined && B3PGissuite.config.showLegendInTree) {
-            container.appendChild(createTreeLegendDiv(item));
-        }
-        
-    } else {
-        var divje = createInvisibleThemaDiv(item);
-        divje.theItem=item;
-        container.appendChild(divje);
-        if(item.visible=="on" && item.wmslayers){
-            addItemAsLayer(item);
-        }
-        return true;//hide
-    }
-
-    return false;
 }
 
 /**
@@ -1680,136 +867,6 @@ function enableLayer(itemid) {
     $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");
 }
 
-/**
- * Creates a new legend icon element for use in tree.
- * @return The icon element.
-*/
-function createTreeLegendIcon() {
-    var legendicon = document.createElement("img");
-    legendicon.src = imageBaseUrl + "icons/application_view_list.png";
-    legendicon.alt = "Legenda tonen";
-    legendicon.title = "Legenda tonen";
-    legendicon.width="15";
-    legendicon.height="13";
-    legendicon.className = 'treeLegendIcon imagenoborder';
-    $j(legendicon).click(function(){
-        if(!$j(this).hasClass("disabledLegendIcon")) loadTreeLegendImage($j(this).siblings("div").attr("id"));
-    });
-    return legendicon;
-}
-
-/**
- * Loads the legend image when the user clicked on a legend icon.
-*/
-function loadTreeLegendImage(divid) {
-    var divobj = document.getElementById(divid);
-    var $divobj = $j(divobj);
-    var item = divobj.theItem;
-
-    var found = $divobj.find("img.legendLoading");
-    if(found.length == 0) {
-        var legendloading = document.createElement("img");
-        legendloading.src = imageBaseUrl + "icons/loadingsmall.gif";
-        legendloading.alt = "Loading";
-        legendloading.title = "Loading";
-        legendloading.className = 'legendLoading imagenoborder';
-
-        divobj.appendChild(legendloading);
-    }
-
-    var foundlegend = $divobj.find("img.treeLegendImage");
-    if(foundlegend.length == 0) {
-        if (item.cluster){
-            var addedImages=0;
-            for (var i=0; i < item.children.length; i++){
-                var child=item.children[i];
-                if (child.legendurl!=undefined){
-                    if (addedImages>0)
-                        divobj.appendChild(document.createElement("br"));
-                    var legendimg=createTreeLegendImage(child);
-                    divobj.appendChild(legendimg);
-                    legendimg.src = child.legendurl;
-                    addedImages++;
-                }
-            }
-        }else{
-            legendimg=createTreeLegendImage(item);
-            divobj.appendChild(legendimg);
-            legendimg.src = item.legendurl;
-        }
-    }
-    $j(divobj).toggle();
-}
-
-/**
- * Creates the image element for the legend
- * @param item Item used for the image name and title
- * @return Image element.
-*/
-function createTreeLegendImage(item){
-    var legendimg = document.createElement("img");
-    legendimg.name = item.title;
-    legendimg.alt = "Legenda " + item.title;
-    legendimg.onerror=treeImageError;
-    legendimg.onload=treeImageOnload;
-    legendimg.className = 'treeLegendImage';
-    // Set src after the img element is appended to make sure onload gets called, even when image is in cache
-    // legendimg.src = item.legendurl;
-    return legendimg;
-}
-
-/**
- * Creates the tree legend div.
- * @param item Item used for the image name and title
- * @return Div element.
-*/
-function createTreeLegendDiv(item) {
-    var id=item.id + '#tree#' + item.wmslayers;
-
-    var div = document.createElement("div");
-    div.name=id;
-    div.id=id;
-    div.title =item.title;
-    div.className="treeLegendClass";
-    div.theItem=item;
-    div.style.display = 'none';
-
-    return div;
-}
-
-/**
- * Displays an error when the legend image can not be fetched.
-*/
-function treeImageError(){
-    var divobj = $j(this).parent();
-    divobj.find("img.legendLoading").hide();
-    divobj.html('<span style="color: Black;">Legenda kan niet worden opgehaald</span>');
-}
-
-/**
- * Hides the legend loading message when the legend image is loaded.
-*/
-function treeImageOnload(){
-    // TODO: Hoogte check wegehaald, ging niet altijd goed in IE7 waardoor laadicoontje niet werd weggehaald
-    // if (parseInt(this.height) > 5){
-    $j(this).parent().find("img.legendLoading").hide();
-// }
-}
-
-function activateCheckbox(id) {
-    var obj = document.getElementById(id);
-    if(obj!=undefined && obj!=null && !obj.checked)
-        document.getElementById(id).click();
-}
-
-function deActivateCheckbox(id) {
-    if (id==undefined || id==null)
-        return;
-    var obj = document.getElementById(id);
-    if(obj!=undefined && obj!=null && obj.checked)
-        document.getElementById(id).click();
-}
-
 function switchTab(id) {
     tabComponent.setActive(id);
 }
@@ -1826,162 +883,6 @@ function syncLayerCookieAndForm() {
         }
     }
     document.forms[0].lagen.value = layerString;
-}
-
-//called when a checkbox is clicked.
-function checkboxClick(obj, dontRefresh) {
-    var item = obj.theItem;
-    if(obj.checked) {        
-        addItemAsLayer(item);
-        if (B3PGissuite.config.useInheritCheckbox) {
-            //zet bovenliggende cluster vinkjes aan
-            var object = document.getElementById(item.id);
-            enableParentClusters(object);
-        }
-    } else {
-        removeItemAsLayer(item);
-    }
-
-    if (obj.type=='radio'){
-        if (obj.checked){
-            var radiogroup=$j("input[name='"+obj.name+"']");
-            $j.each(radiogroup,function(key, value){
-                if (obj.id!=value.id){
-                    checkboxClick(value,true);
-                }
-            })
-        }
-    }
-
-    if (!dontRefresh){
-        if(obj.checked) {
-            refreshLayerWithDelay();
-        }else{
-            doRefreshLayer();
-        }
-    }
-}
-//called when a clustercheckbox is clicked
-function clusterCheckboxClick(element,dontRefresh){
-    if (element==undefined || element==null)
-        return;
-    if (B3PGissuite.vars.layerUrl==null){
-        B3PGissuite.vars.layerUrl=""+B3PGissuite.config.kburl;
-    }
-    var status=element.checked;
-    if (status){
-        var found=false;
-        for (var i=0; i < B3PGissuite.vars.clustersAan.length; i++){
-            if (B3PGissuite.vars.clustersAan[i].id==element.id){
-                found=true;
-            }
-        }
-        if (!found)
-            B3PGissuite.vars.clustersAan.push(element);
-    }else{
-        var newClustersAan = new Array();
-        for (var j=0; j < B3PGissuite.vars.clustersAan.length; j++){
-            if (B3PGissuite.vars.clustersAan[j].id!=element.id){
-                newClustersAan.push(B3PGissuite.vars.clustersAan[j]);
-            }
-        }
-        B3PGissuite.vars.clustersAan=newClustersAan;
-    }
-    /* indien cookies aan dan cluster id in cookie stoppen */
-    var cluster=element.theItem;
-    if (B3PGissuite.config.useCookies) {      
-        if (element.checked) {
-            addClusterIdToCookie(cluster.id);
-        }else {
-            removeClusterIdFromCookie(cluster.id);
-        }
-    }
-    // Als er niet naar de B3PGissuite.config.useInheritCheckbox wordt gekeken (dus het vinkje bij 'Kaartgroep overerving' is uit)
-    // of
-    // als een tree gehide is (gebruiker kan de layers niet aan/uit vinken)
-    if (!B3PGissuite.config.useInheritCheckbox || cluster.hide_tree) {
-        if (element.checked) {
-
-            /* Cluster is net aangevinkt. Children omgekeerd aanzetten zodat
-             * bovenste layer in boom ook bovenop wordt getekend. */
-            for (var k = cluster.children.length; k > 0; k--){
-                var child = cluster.children[k-1];
-
-                if (!child.cluster){
-                    addItemAsLayer(child);
-                    if (!cluster.hide_tree){
-                        document.getElementById(child.id).checked=true;
-                    }
-                } else {
-                    //if cluster is callable AND not 'kaartgroep overerving'
-                    if (child.callable && !B3PGissuite.config.useInheritCheckbox){
-                        var elemin = document.getElementById(child.id);
-                        elemin.checked=true;
-                        clusterCheckboxClick(elemin,dontRefresh);
-                    }
-                }
-            }
-        } else if (cluster.children){
-            for (var d=0; d < cluster.children.length;d++) {
-                var child1=cluster.children[d];
-                if (!child1.cluster){
-                    removeItemAsLayer(child1);
-                    if (!cluster.hide_tree){
-                        document.getElementById(child1.id).checked=false;
-                    }
-                } else {
-                    //if cluster is callable AND not 'kaartgroep overerving'
-                    if (child1.callable && !B3PGissuite.config.useInheritCheckbox){
-                        var elemout = document.getElementById(child1.id);
-                        elemout.checked=false;
-                        clusterCheckboxClick(elemout,dontRefresh);
-                    }
-                }
-            }
-        }     
-    }
-    /*Als B3PGissuite.config.useInheritCheckbox dan grafisch in de tree aangegeven dat onderliggende layers niet zichtbaar zijn.*/
-    if (B3PGissuite.config.useInheritCheckbox){        
-        for (var m=0; m < cluster.children.length;m++){
-            child=cluster.children[m];
-            if (element.checked) {
-                enableLayer(child.id);
-            }else{
-                disableLayer(child.id);
-            }
-        }
-    }
-    /*if its a radio and checked,then disable the other radio's*/
-    if (element.type=='radio' && cluster.children){
-        var childDiv=$j("#layermaindiv_item_" + element.id+"_children");
-        if (element.checked){
-            //als er child elementen zijn dan die aanzetten en tree expanden.
-            if (childDiv){
-                childDiv.removeClass("disabledRadioChilds");
-                $j("#layermaindiv_item_" + element.id+"_children input").removeAttr("disabled");
-                treeview_expandItemChildren("layermaindiv",element.id);
-            }
-            //andere radio's uitzetten.
-            var jqueryElementString="input[name='"+element.name+"']";
-            var radiogroup=$j(jqueryElementString);
-            $j.each(radiogroup,function(key, value){
-                if (element.id!=value.id){
-                    clusterCheckboxClick(value,dontRefresh);
-                }
-            })
-        }else{
-            //als een andere van de group aan is dan deze disablen, mits er childs zijn.
-            if (childDiv){
-                childDiv.addClass("disabledRadioChilds");
-                treeview_collapseItemChildren("layermaindiv",element.id);
-                $j("#layermaindiv_item_" + element.id+"_children input").attr('disabled',true);
-            }
-        }
-    }
-
-    if (!dontRefresh){
-        refreshLayerWithDelay();
-    }
 }
 
 function addClusterIdToCookie(id) {
@@ -2047,25 +948,6 @@ function removeClusterIdFromCookie(id) {
     createCookie('checkedClusters', newValues, '7');
 }
 
-function addItemAsLayer(theItem){
-    addLayerToEnabledLayerItems(theItem);
-    syncLayerCookieAndForm();
-    
-    //If there is a orgainization code key then add this to the service url.
-    if (theItem.wmslayers){
-        var organizationCodeKey = theItem.organizationcodekey;
-        if(B3PGissuite.config.organizationcode!=undefined && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
-            if(B3PGissuite.vars.layerUrl.indexOf(organizationCodeKey)<=0){
-                if(B3PGissuite.vars.layerUrl.indexOf('?')> 0)
-                    B3PGissuite.vars.layerUrl+='&';
-                else
-                    B3PGissuite.vars.layerUrl+='?';
-                B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + organizationCodeKey + "="+B3PGissuite.config.organizationcode;
-            }
-        }
-    }    
-}
-
 function isStringEmpty(str) {
     return (!str || 0 === str.length);
 }
@@ -2075,15 +957,15 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
     var projectParam = "PROJECTNAAM";
 
     if (!isStringEmpty(B3PGissuite.config.organizationcode)) {
-        B3PGissuite.vars.layerUrl = originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode;
+        B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode;
     }
 
     if (!isStringEmpty(projectnaam)) {
-        B3PGissuite.vars.layerUrl = originalLayerUrl + projectParam + "=" + projectnaam;
+        B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + projectParam + "=" + projectnaam;
     }
 
     if (!isStringEmpty(B3PGissuite.config.organizationcode) && !isStringEmpty(projectnaam)) {
-        B3PGissuite.vars.layerUrl = originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode + "&" + projectParam + "=" + projectnaam;
+        B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode + "&" + projectParam + "=" + projectnaam;
     }
 
     /* tekenobject van kaart afhalen */
@@ -2094,8 +976,11 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
     /* TODO: Beetje lelijk gewoon vinkje aan uitzetten om redlining laag te refreshen
      * wellicht een keer methode schrijven voor de webmapcontroller die
      * iets dergelijks kan doen */
-    deActivateCheckbox(themaId);
-    activateCheckbox(themaId);
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if(treeComponent !== null) {
+        deActivateCheckbox(themaId);
+        activateCheckbox(themaId);
+    }
 }
 
 /* als order niet aangepast mag worden dan moet hier een sort komen */
@@ -2112,13 +997,6 @@ function addLayerToEnabledLayerItems(theItem){
     }
 }
 
-function removeItemAsLayer(theItem){
-    if (removeLayerFromEnabledLayerItems(theItem.id)!=null) {
-        syncLayerCookieAndForm();
-        return;
-    }
-}
-
 function removeLayerFromEnabledLayerItems(itemId){
     for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++){
         if (B3PGissuite.vars.enabledLayerItems[i].id==itemId){
@@ -2128,24 +1006,6 @@ function removeLayerFromEnabledLayerItems(itemId){
         }
     }
     return null;
-}
-  
-function refreshLayerWithDelay() {
-    showLoading();
-
-    if(refresh_timeout_handle) { 
-        clearTimeout(refresh_timeout_handle);
-        hideLoading();
-    } 
-    refresh_timeout_handle = setTimeout("doRefreshLayer();", B3PGissuite.config.refreshDelay);
-}     
-
-function doRefreshLayer() {    
-    //register after loading
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
-    refreshLayer();
-
-    refreshLegendBox();
 }
 
 /*Check scale for all layers*/
@@ -2295,7 +1155,7 @@ function setScaleForTree(item,scale){
 }
 
 function refreshLayer(doRefreshOrder) {    
-    var local_refresh_handle = refresh_timeout_handle;
+    var local_refresh_handle = B3PGissuite.vars.refresh_timeout_handle;
 
     if (doRefreshOrder == undefined) {
         doRefreshOrder = false;
@@ -2469,12 +1329,12 @@ function refreshLayer(doRefreshOrder) {
 
     hideLoading();
 
-    if (local_refresh_handle != refresh_timeout_handle) {
+    if (local_refresh_handle != B3PGissuite.vars.refresh_timeout_handle) {
         // check of dit een goed idee is
         // alleen refresh als er intussen geen nieuwe timeout gezet is
         return;
     }else {
-        refresh_timeout_handle = 0;
+        B3PGissuite.vars.refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
     //TODO: WebMapController
@@ -2497,7 +1357,7 @@ function refreshLayer(doRefreshOrder) {
     }
     
     /* Tijdelijke punten ook tonen */
-    checkTempUploadedPointsWms(uploadCsvLayerOn);
+    checkTempUploadedPointsWms(B3PGissuite.vars.uploadCsvLayerOn);
 }
 
 function getLayerById(id) {
@@ -2843,25 +1703,6 @@ function getLayerIdsAsString(onlyWithinScale) {
     return ret;
 }
 
-/* uitleg zie itemHasAllParentsEnabled */
-function enableParentClusters(object) {
-    if (object == null) {
-        return;
-    }
-    var parentChildrenDiv = getParentDivContainingChilds(object, 'div');
-    if (!parentChildrenDiv) {
-        return;
-    }
-    var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
-    var name = getItemName(parentDiv);
-    var checkbox = document.getElementById(name);
-    checkbox.checked = true;
-
-    enableParentClusters(parentDiv);
-
-}
-
-
 function itemHasAllParentsEnabled(object) {
 
     if (object == null) {
@@ -2977,7 +1818,7 @@ function createLegendDiv(item) {
 
     if (item.legendurl != undefined) {        
         myImage.src = item.legendurl;
-        loadingLegendImages[id]=myImage;        
+        B3PGissuite.vars.loadingLegendImages[id]=myImage;        
     } else {
         myImage.onerror();
     }
@@ -2997,12 +1838,12 @@ function imageOnerror(){
     this.height=0;
     this.width=0;
     //release 1 loading space
-    legendImageLoadingSpace++;
+    B3PGissuite.vars.legendImageLoadingSpace++;
     loadNextInLegendImageQueue();
 }
 function imageOnload(){
     //if not is a loading image then don't add to the DOM
-    if (loadingLegendImages[this.id]!=undefined){
+    if (B3PGissuite.vars.loadingLegendImages[this.id]!=undefined){
         if (parseInt(this.height) > 5){
             var legendimg = document.createElement("img"); 
             legendimg.src = this.src;
@@ -3016,9 +1857,9 @@ function imageOnload(){
             }
         }
         //done loading remove
-        delete loadingLegendImages[this.id];
+        delete B3PGissuite.vars.loadingLegendImages[this.id];
         //release 1 loading space
-        legendImageLoadingSpace++;
+        B3PGissuite.vars.legendImageLoadingSpace++;
         loadNextInLegendImageQueue();
     }
 }
@@ -3047,7 +1888,7 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
         return;
     }
     
-    legendImageQueue.push({
+    B3PGissuite.vars.legendImageQueue.push({
         theItem: theItem, 
         atBottomOfType: atBottomOfType
     });
@@ -3057,10 +1898,10 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
 Load the next image object.
 */
 function loadNextInLegendImageQueue(){
-    if (legendImageLoadingSpace>0 && legendImageQueue.length > 0){
+    if (B3PGissuite.vars.legendImageLoadingSpace>0 && B3PGissuite.vars.legendImageQueue.length > 0){
         //consume 1 loading place
-        legendImageLoadingSpace--;
-        var nextLegend=legendImageQueue.shift();
+        B3PGissuite.vars.legendImageLoadingSpace--;
+        var nextLegend=B3PGissuite.vars.legendImageQueue.shift();
         var theItem=nextLegend.theItem;
         var atBottomOfType=nextLegend.nextLegend;
 
@@ -3078,9 +1919,9 @@ function loadNextInLegendImageQueue(){
     }
 }
 function resetLegendImageQueue(){
-    //loadingLegendImages= new Object();
-    legendImageQueue = new Array();
-    legendImageLoadingSpace=2;
+    //B3PGissuite.vars.loadingLegendImages= new Object();
+    B3PGissuite.vars.legendImageQueue = new Array();
+    B3PGissuite.vars.legendImageLoadingSpace=2;
 }
 function findLayerDivInLegendBox(theItem) {
     var id=theItem.id + '##' + theItem.wmslayers;
@@ -3224,7 +2065,10 @@ function deleteAllLayers() {
     }
     B3PGissuite.vars.enabledLayerItems=new Array();
     syncLayerCookieAndForm();
-    doRefreshLayer();
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if(treeComponent !== null) {
+        treeComponent.doRefreshLayer();
+    }
 }
 
 function splitValue(val) {
@@ -3244,7 +2088,7 @@ function getActiveLayerLabel(cookiestring) {
 
 function onChangeTool(id, event) {
     if (id == 'identify') {
-        btn_highLightSelected = false;
+        B3PGissuite.vars.btn_highLightSelected = false;
         hideIdentifyIcon();
     }
 }
@@ -3280,13 +2124,13 @@ function onIdentify(movie,extend) {
     B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
 
     /* kijken of bezig met editen redline objecten */
-    if (editingRedlining) {
+    if (B3PGissuite.vars.editingRedlining) {
         hideIdentifyIcon();
         selectRedlineObject(geom);
         return;
     }
 
-    if (btn_highLightSelected) {        
+    if (B3PGissuite.vars.btn_highLightSelected) {        
         /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
          * de flamingo config een breinaald
          * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
@@ -3301,7 +2145,7 @@ function onIdentify(movie,extend) {
         hideIdentifyIcon();
         highLightThemaObject(geom);
     } else {
-        btn_highLightSelected = false;
+        B3PGissuite.vars.btn_highLightSelected = false;
         
         B3PGissuite.vars.webMapController.activateTool("identify");
 
@@ -3319,11 +2163,11 @@ function updateGetFeatureInfo(data){
      * Werkt wel in IE en Chrome
     */
     var featureInfoTimeOut = 30;
-    teller++;
+    B3PGissuite.vars.teller++;
 	
     //if times out return;
-    if (teller > featureInfoTimeOut){
-        teller = 0;
+    if (B3PGissuite.vars.teller > featureInfoTimeOut){
+        B3PGissuite.vars.teller = 0;
         return;
     }
 	
@@ -3343,7 +2187,7 @@ function updateGetFeatureInfo(data){
 }
 
 function onIdentifyData(id,data){
-    teller=0;
+    B3PGissuite.vars.teller=0;
     updateGetFeatureInfo(data);
 }
 
@@ -3356,27 +2200,22 @@ function onFrameworkLoaded(){
         document.getElementById("treeForm").reset();
     }
 
-    if (!frameWorkInitialized) {
-        // layer added in reverse order
-        // layer with lowest order number should be on top
-        // so added last
-        for (var i=B3PGissuite.vars.clustersAan.length-1; i >=0 ; i--){
-            clusterCheckboxClick(B3PGissuite.vars.clustersAan[i], true);
+    if (!B3PGissuite.vars.frameWorkInitialized) {
+        var treeComponent = B3PGissuite.get('TreeComponent');
+        if(treeComponent !== null) {
+            treeComponent.clickClusters();
+            B3PGissuite.vars.layersAan.sort(layerBoxSort);
+            treeComponent.clickLayers();
         }
-        // layers bij opstart sorteren op order(belangnr+alfabet)
-        /* als order niet aangepast mag worden, dan kan dit weg */
-        B3PGissuite.vars.layersAan.sort(layerBoxSort)
-        for (var m=B3PGissuite.vars.layersAan.length-1; m >=0 ; m--){
-            checkboxClick(B3PGissuite.vars.layersAan[m],true);
-        }
-
         setStartExtent();
-        doRefreshLayer();
+        if(treeComponent !== null) {
+            treeComponent.doRefreshLayer();
+        }
     }
 
-    frameWorkInitialized = true;
+    B3PGissuite.vars.frameWorkInitialized = true;
     
-    mapInitialized=true;
+    B3PGissuite.vars.mapInitialized=true;
     B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
     
     /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt.
@@ -3443,8 +2282,8 @@ function setStartExtent() {
     }
     
     /* Eerst kijken of er een zoekextent is */
-    if (searchExtent != null) {
-        B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(searchExtent);
+    if (B3PGissuite.vars.searchExtent != null) {
+        B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(B3PGissuite.vars.searchExtent);
         
     /* Extent uit url */
     } else if (B3PGissuite.config.bbox!=null && B3PGissuite.config.bbox.length>0 && B3PGissuite.config.bbox.split(",").length==4) {          
@@ -3510,11 +2349,11 @@ function doIdentify(minx,miny,maxx,maxy){
 }
 
 function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
-    nextIdentifyExtent=new Object();
-    nextIdentifyExtent.minx=minx;
-    nextIdentifyExtent.miny=miny;
-    nextIdentifyExtent.maxx=maxx;
-    nextIdentifyExtent.maxy=maxy;
+    B3PGissuite.vars.nextIdentifyExtent = {};
+    B3PGissuite.vars.nextIdentifyExtent.minx = minx;
+    B3PGissuite.vars.nextIdentifyExtent.miny = miny;
+    B3PGissuite.vars.nextIdentifyExtent.maxx = maxx;
+    B3PGissuite.vars.nextIdentifyExtent.maxy = maxy;
 }
 
 function moveAndIdentify(minx,miny,maxx,maxy) {    
@@ -3528,9 +2367,9 @@ function moveAndIdentify(minx,miny,maxx,maxy) {
 function onAllLayersFinishedLoading(mapId){
     checkScaleForLayers();
 
-    if(nextIdentifyExtent!=null){
-        doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
-        nextIdentifyExtent=null;
+    if(B3PGissuite.vars.nextIdentifyExtent !== null){
+        doIdentify(B3PGissuite.vars.nextIdentifyExtent.minx,B3PGissuite.vars.nextIdentifyExtent.miny,B3PGissuite.vars.nextIdentifyExtent.maxx,B3PGissuite.vars.nextIdentifyExtent.maxy);
+        B3PGissuite.vars.nextIdentifyExtent = null;
     }
     
     if (B3PGissuite.config.waitUntillFullyLoaded) {
@@ -3553,14 +2392,6 @@ function setDebugContent() {
     var html = "<p><b>Schaal 1 : "+scale+"</b></p>";
     
     $j("#debug-content").html(html);
-}
-
-function setTimerForReload() {
-    reloadTimer = setTimeout("refreshMapVolgorde()", B3PGissuite.config.layerDelay);
-}
-
-function clearTimerForReload() {
-    clearTimeout(reloadTimer);
 }
 
 /*Get de flash movie*/
@@ -3592,26 +2423,6 @@ function searchThemaValue(themaList,themaId,val){
         }
     }
 
-    return null;
-}
-
-/**
- * @param parentCandidate A parent candidate, maybe its the parent of the imte
- * @param item The item we want the parent of.
- */
-function getParentItem(parentCandidate,item){
-    if (parentCandidate.children){
-        for (var i=0; i < parentCandidate.children.length;i++){
-            if(parentCandidate.children[i]==item){
-                return parentCandidate;
-            }else if (parentCandidate.children[i].children){
-                var theParent= getParentItem(parentCandidate.children[i],item);
-                if (theParent!=null){
-                    return theParent;
-                }
-            }
-        }        
-    }
     return null;
 }
 
@@ -3821,9 +2632,9 @@ function exportMap(){
     submitForm.action= "printmap.do";
     submitForm.submit();
 
-    if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
-        exportMapWindow = window.open("", "exportMapWindowNaam");
-        exportMapWindow.focus();
+    if(B3PGissuite.vars.exportMapWindow==undefined || B3PGissuite.vars.exportMapWindow==null || B3PGissuite.vars.exportMapWindow.closed){
+        B3PGissuite.vars.exportMapWindow = window.open("", "exportMapWindowNaam");
+        B3PGissuite.vars.exportMapWindow.focus();
     }
 }
 
@@ -3907,22 +2718,6 @@ function buildTilingServiceUrl(tilingLayer) {
     return serviceUrl;        
 }
 
-function checkboxClickById(id){
-    var el2=document.getElementById(id);
-    if (el2) {
-        el2.checked=!el2.checked;
-        checkboxClick(el2,false);
-    }
-}
-
-function checkboxOnByid(id){
-    var el=document.getElementById(id);
-    if (el) {
-        el.checked=true;
-        checkboxClick(el,false);
-    }
-}
-
 /* Voor openlayers wil je soms de hele polygon op het scherm hebben niet alleen
  * de laatst actieve. Als je bijvoorbeeld in OL een polygon edit krijg je anders 
  * van getActiveFeature alleen de laatste feature (een Point) terug. In
@@ -3976,12 +2771,12 @@ function b_buffer(id, event) {
      * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
      * mis gaat. Deze is dus alleen gevuld na een highlight
      * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
-    if (multiPolygonBufferWkt != null)
-        wkt = multiPolygonBufferWkt;
+    if (B3PGissuite.vars.multiPolygonBufferWkt != null)
+        wkt = B3PGissuite.vars.multiPolygonBufferWkt;
     else
         wkt = getWktActiveFeature(-1);
 
-    multiPolygonBufferWkt = null;
+    B3PGissuite.vars.multiPolygonBufferWkt = null;
         
     if (wkt==null)
     {
@@ -4068,7 +2863,7 @@ function b_removePolygons(id,params){
 
 /* er is net op de highlight knop gedrukt */
 function b_highlight( id,params) {
-    btn_highLightSelected = true;
+    B3PGissuite.vars.btn_highLightSelected = true;
 
     /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
      * de flamingo config een breinaald
@@ -4086,7 +2881,7 @@ function highLightThemaObject(geom) {
     highlightLayers = new Array();
 
     /* geom bewaren voor callbaack van popup */
-    highLightGeom = geom;
+    B3PGissuite.vars.highLightGeom = geom;
 
     /* indien meerdere analyse themas dan popup voor keuze */
     for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
@@ -4109,7 +2904,6 @@ function highLightThemaObject(geom) {
     }
 
     if (highlightLayers.length > 1) {
-        // popupWindowRef = popUp('viewerhighlight.do', 'popupHighlight', 680, 225, true);
         iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300, true, false);
     }
 
@@ -4130,7 +2924,7 @@ function highLightThemaObject(geom) {
 function selectRedlineObject(geom) {
     /* Params
      * geom: Klikpunt op de kaart. Een POINT wkt string.
-     * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
+     * B3PGissuite.vars.redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
     */
     var scale;    
     if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
@@ -4141,7 +2935,7 @@ function selectRedlineObject(geom) {
     
     var tol = B3PGissuite.config.tolerance;
 
-    EditUtil.getIdAndWktForRedliningObject(geom, redLineGegevensbronId, scale, tol, returnRedlineObject);
+    EditUtil.getIdAndWktForRedliningObject(geom, B3PGissuite.vars.redLineGegevensbronId, scale, tol, returnRedlineObject);
 }
 
 function returnRedlineObject(jsonString) {
@@ -4180,16 +2974,16 @@ function returnRedlineObject(jsonString) {
         innerDoc.getElementById("opmerking").value = "";
     }
 
-    editingRedlining = false;
+    B3PGissuite.vars.editingRedlining = false;
 }
 
 function handlePopupValue(value) {    
     //    $j("#popupWindow").hide();
-    
-    analyseThemas = new Array();
-
     var object = document.getElementById(value);
-    setActiveThema(value, object.theItem.title, true);
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if(treeComponent !== null) {
+        treeComponent.setActiveThema(value, object.theItem.title, true);
+    }
 
     /*
      * TODO
@@ -4205,8 +2999,7 @@ function handlePopupValue(value) {
     }
     
     var tol = B3PGissuite.config.tolerance;
-    EditUtil.getHighlightWktForThema(value, highLightGeom, scale, tol, returnHighlight);
-//handleGetAdminData(highLightGeom, value);
+    EditUtil.getHighlightWktForThema(value, B3PGissuite.vars.highLightGeom, scale, tol, returnHighlight);
 }
 
 /* backend heeft wkt teruggegeven */
@@ -4226,7 +3019,7 @@ function returnHighlight(wkt) {
          * De getWktActiveFeature geeft bij sommige multipolygons niet
          * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
          * mis gaat */
-        multiPolygonBufferWkt = wkt;
+        B3PGissuite.vars.multiPolygonBufferWkt = wkt;
     }
 }
 
@@ -4297,8 +3090,8 @@ function onGetCapabilities(id,params){
 }
 
 function onConfigComplete(id,params){    
-    if (!initialized) {
-        initialized = true;
+    if (!B3PGissuite.vars.initialized) {
+        B3PGissuite.vars.initialized = true;
     
         initializeButtons();
         checkDisplayButtons();
@@ -4485,18 +3278,18 @@ function popUp(URL, naam, width, height, useDiv) {
 
     var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
 
-    if(currentpopupleft != null) {
-        popupleft = currentpopupleft;
+    if(B3PGissuite.vars.currentpopupleft != null) {
+        popupleft = B3PGissuite.vars.currentpopupleft;
     }
 
     var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
 
-    if(currentpopuptop != null) {
-        currentpopuptop = popuptop
+    if(B3PGissuite.vars.currentpopuptop != null) {
+        B3PGissuite.vars.currentpopuptop = popuptop
     }
 
     if(useDivPopup) {
-        if (!popupCreated)
+        if (!B3PGissuite.vars.popupCreated)
             initPopup();
 
         document.getElementById("dataframedivpopup").src = URL;
@@ -4547,18 +3340,18 @@ function popUpData(naam, width, height, useDiv) {
 
     var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
 
-    if(currentpopupleft != null) {
-        popupleft = currentpopupleft;
+    if(B3PGissuite.vars.currentpopupleft != null) {
+        popupleft = B3PGissuite.vars.currentpopupleft;
     }
 
     var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
 
-    if(currentpopuptop != null) {
-        currentpopuptop = popuptop
+    if(B3PGissuite.vars.currentpopuptop != null) {
+        B3PGissuite.vars.currentpopuptop = popuptop
     }
 
     if(useDivPopup) {
-        if (!popupCreated)
+        if (!B3PGissuite.vars.popupCreated)
             initPopup();
 
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
@@ -4880,8 +3673,8 @@ function hideTabvakLoading() {
 }
 
 function enableEditRedlining(id) {
-    editingRedlining = true;
-    redLineGegevensbronId = id;
+    B3PGissuite.vars.editingRedlining = true;
+    B3PGissuite.vars.redLineGegevensbronId = id;
 
     if(B3PGissuite.vars.webMapController instanceof FlamingoController) {
         B3PGissuite.vars.webMapController.activateTool("breinaald");
@@ -4970,16 +3763,15 @@ function checkboxUserLayerClick(checkbox) {
     layers[0] = item;
 
     /* laag toevoegen aan viewer */
-    if (checked) {
-        addItemAsLayer(item);        
-    } else {
-        removeItemAsLayer(item);
-    }
-
-    if (checked) {
-        refreshLayerWithDelay();
-    } else{
-        doRefreshLayer();
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if(treeComponent !== null) {
+        if (checked) {
+            treeComponent.addItemAsLayer(item);
+            treeComponent.refreshLayerWithDelay();
+        } else {
+            treeComponent.removeItemAsLayer(item);
+            treeComponent.doRefreshLayer();
+        }
     }
 }
 
@@ -5072,7 +3864,7 @@ function getBaseUrl() {
 }
 
 function checkTempUploadedPointsWms(checked) { 
-    uploadCsvLayerOn = checked;
+    B3PGissuite.vars.uploadCsvLayerOn = checked;
     var layer = B3PGissuite.vars.webMapController.getMap().getLayer("uploadedPoints");
     
     if (checked && layer == null) {
@@ -5183,7 +3975,7 @@ $j(document).ready(function() {
 
     }
 
-    popupCreated = true;
+    B3PGissuite.vars.popupCreated = true;
     createDownloadMetadataDialog();
     createWMSServiceUrlDialog();
 });

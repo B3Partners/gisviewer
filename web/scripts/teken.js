@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var editComponent = parent.editComponent;
+
 var currentResults = null;
 var isEditting = false;
 function changeTabTitle(){
@@ -25,7 +25,7 @@ function addNew(){
     parent.JEditFeature.getFeatureType(gegevensbron,function(data){
         var results = JSON.parse(data);
         if(results.success){
-            parent.editComponent.receiveFeatureAttributes(results.featuretype,false, true);
+            parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(results.featuretype,false, true);
         }else{
             alert("Ophalen van gegevens mislukt." + results.message);
         }
@@ -75,7 +75,7 @@ function receiveFeatureAttributes(data){
         this.currentResults=null;
         if(features.length == 1){
             resultsDiv.empty();
-            parent.editComponent.receiveFeatureAttributes(features[0],true);
+            parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(features[0],true);
         }else if(features.length == 0){
             alert("Ophalen van gegevens mislukt: Geen features gevonden");
         }else{
@@ -104,7 +104,7 @@ function createResult (feature, index){
 }
 
 function openLink(index){
-    parent.editComponent.receiveFeatureAttributes(this.currentResults[index],true);
+    parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(this.currentResults[index],true);
 }
 
 function init(){
@@ -122,6 +122,5 @@ function init(){
 
 $j(document).ready(function(){
     changeTabTitle();
-     editComponent = parent.editComponent;
      init();
 });

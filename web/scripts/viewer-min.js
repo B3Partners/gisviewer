@@ -169,6 +169,9 @@ function treeview_create(a) {
       if(!a.zebraEffect) {
         a.zebraEffect = false
       }
+      if(!a.scope) {
+        a.scope = a
+      }
       if(a.rootChildrenAsRoots) {
         var b = a.root.children;
         if(b) {
@@ -329,7 +332,7 @@ function treeview_createContentNode(a, b, c) {
   d.togglea = e;
   d.id = b + "_label";
   if(a.itemLabelCreatorFunction) {
-    if(a.itemLabelCreatorFunction(d, c)) {
+    if(a.itemLabelCreatorFunction.call(a.scope, d, c)) {
       return d
     }
   }else {
@@ -2485,14 +2488,25 @@ B3PGissuite.vars.clustersAan = [];
 B3PGissuite.vars.webMapController = null;
 B3PGissuite.vars.startLayerIndex = 0;
 B3PGissuite.vars.balloon = null;
-var zoomBox, pan, prevExtent, identify, mapInitialized = false, searchExtent, sldSearchServlet, highlightThemaId, multiPolygonBufferWkt, alleLayers = [], gpsComponent = null, editComponent = null, uploadCsvLayerOn = false, prevRadioButton = null, widthMetadataPopup = 800, heightMetadataPopup = 600, widthDownloadPopup = 425, heightDownloadPopup = 250, downloadPopupBlocksViewer = true, metadataPopupBlocksViewer = true, originalLayerUrl = B3PGissuite.vars.layerUrl, refresh_timeout_handle, loadingLegendImages = 
-{}, legendImageQueue = [], legendImageLoadingSpace = 1, teller = 0, frameWorkInitialized = false, nextIdentifyExtent = null;
-B3PGissuite.config.useSortableFunction && document.getElementById("orderLayerBox").sortable({stop:function() {
-  setTimerForReload()
-}, start:function() {
-  clearTimerForReload()
-}});
-var reloadTimer, exportMapWindow, btn_highLightSelected = false, popupWindowRef = null, highLightGeom = null, analyseThemas = [], initialized = false, currentpopupleft = null, currentpopuptop = null, editingRedlining = false, redLineGegevensbronId = -1, popupCreated = false;
+B3PGissuite.vars.mapInitialized = false;
+B3PGissuite.vars.editComponent = null;
+B3PGissuite.vars.uploadCsvLayerOn = false;
+B3PGissuite.vars.prevRadioButton = null;
+B3PGissuite.vars.originalLayerUrl = "" + B3PGissuite.vars.layerUrl;
+B3PGissuite.vars.loadingLegendImages = {};
+B3PGissuite.vars.legendImageQueue = [];
+B3PGissuite.vars.legendImageLoadingSpace = 1;
+B3PGissuite.vars.teller = 0;
+B3PGissuite.vars.frameWorkInitialized = false;
+B3PGissuite.vars.nextIdentifyExtent = null;
+B3PGissuite.vars.btn_highLightSelected = false;
+B3PGissuite.vars.highLightGeom = null;
+B3PGissuite.vars.initialized = false;
+B3PGissuite.vars.currentpopupleft = null;
+B3PGissuite.vars.currentpopuptop = null;
+B3PGissuite.vars.editingRedlining = false;
+B3PGissuite.vars.redLineGegevensbronId = -1;
+B3PGissuite.vars.popupCreated = false;
 function handler(a) {
   a != "" && messagePopup("", a, "information")
 }
@@ -2582,22 +2596,22 @@ function initializeButtons() {
   }
   B3PGissuite.vars.webMapController.createPanel("toolGroup");
   B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading", Tool.LOADING_BAR));
-  zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {title:"inzoomen via selectie"});
-  B3PGissuite.vars.webMapController.addTool(zoomBox);
-  pan = B3PGissuite.vars.webMapController.createTool("b_pan", Tool.PAN, {title:"kaartbeeld slepem"});
-  B3PGissuite.vars.webMapController.addTool(pan);
+  a = B3PGissuite.vars.webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {title:"inzoomen via selectie"});
+  B3PGissuite.vars.webMapController.addTool(a);
+  a = B3PGissuite.vars.webMapController.createTool("b_pan", Tool.PAN, {title:"kaartbeeld slepem"});
+  B3PGissuite.vars.webMapController.addTool(a);
   B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.vars.webMapController.activateTool("b_pan");
-  prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {title:"stap terug"});
-  B3PGissuite.vars.webMapController.addTool(prevExtent);
+  a = B3PGissuite.vars.webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {title:"stap terug"});
+  B3PGissuite.vars.webMapController.addTool(a);
   a = B3PGissuite.vars.webMapController.createTool("b_measure", Tool.MEASURE, {title:"afstand meten"});
   B3PGissuite.vars.webMapController.addTool(a);
   a = {};
   a.handlerGetFeatureHandler = onIdentifyData;
   a.handlerBeforeGetFeatureHandler = onIdentify;
   a.title = "informatie opvragen";
-  identify = B3PGissuite.vars.webMapController.createTool("identify", Tool.GET_FEATURE_INFO, a);
-  B3PGissuite.vars.webMapController.addTool(identify);
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_SET_TOOL, identify, onChangeTool);
+  a = B3PGissuite.vars.webMapController.createTool("identify", Tool.GET_FEATURE_INFO, a);
+  B3PGissuite.vars.webMapController.addTool(a);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_SET_TOOL, a, onChangeTool);
   a = B3PGissuite.vars.webMapController.createVectorLayer("editMap");
   B3PGissuite.vars.webMapController.getMap().addLayer(a);
   B3PGissuite.vars.webMapController.getMap().setLayerIndex(a, B3PGissuite.vars.webMapController.getMap().getLayers().length + B3PGissuite.vars.startLayerIndex);
@@ -2626,12 +2640,11 @@ function initializeButtons() {
   if(B3PGissuite.config.gpsBuffer < 1) {
     B3PGissuite.config.gpsBuffer = 500
   }
-  gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
-  b = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {layer:a, title:"zet GPS locatie aan/uit"});
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, b, gpsComponent.stopPolling);
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, gpsComponent.startPolling);
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, b, b_gps_stop);
-  B3PGissuite.vars.webMapController.addTool(b);
+  var b = new GPSComponent(B3PGissuite.config.gpsBuffer), c = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {layer:a, title:"zet GPS locatie aan/uit"});
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, c, b.stopPolling);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, c, b.startPolling);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, c, b_gps_stop);
+  B3PGissuite.vars.webMapController.addTool(c);
   a = B3PGissuite.vars.webMapController.createTool("b_showOverzicht", Tool.BUTTON, {layer:a, title:"overzichtskaart"});
   B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, a, b_overview);
   B3PGissuite.vars.webMapController.addTool(a);
@@ -2639,7 +2652,7 @@ function initializeButtons() {
   B3PGissuite.vars.webMapController.addTool(a);
   a = B3PGissuite.vars.webMapController.createTool("zoombar", Tool.ZOOM_BAR);
   B3PGissuite.vars.webMapController.addTool(a);
-  editComponent = new EditComponent;
+  B3PGissuite.vars.editComponent = new EditComponent;
   B3PGissuite.config.viewerTemplate == "embedded" && displayEmbeddedMenuIcons()
 }
 function displayEmbeddedMenuIcons() {
@@ -2678,7 +2691,7 @@ function handleInitSearchResult(a, b, c, d, e) {
     b && (h += "sldType=UserStyle");
     g && (h += "sldType=NamedStyle");
     c = B3PGissuite.config.sldServletUrl + h;
-    mapInitialized ? setSldOnDefaultMap(c, true) : sldSearchServlet = c
+    B3PGissuite.vars.mapInitialized && setSldOnDefaultMap(c, true)
   }
   a = getBboxMinSize2(a);
   placeSearchResultMarker((a.maxx - a.minx) / 2 + a.minx, (a.maxy - a.miny) / 2 + a.miny);
@@ -2687,7 +2700,7 @@ function handleInitSearchResult(a, b, c, d, e) {
     zoekconfiguratieThemasCallBack(b);
     switchLayersOn();
     if(f) {
-      a = getBboxMinSize2(a), b = {}, b.minx = a.minx, b.miny = a.miny, b.maxx = a.maxx, b.maxy = a.maxy, mapInitialized ? moveToExtent(b.minx, b.miny, b.maxx, b.maxy) : searchExtent = b
+      a = getBboxMinSize2(a), b = {}, b.minx = a.minx, b.miny = a.miny, b.maxx = a.maxx, b.maxy = a.maxy, B3PGissuite.vars.mapInitialized ? moveToExtent(b.minx, b.miny, b.maxx, b.maxy) : B3PGissuite.vars.searchExtent = b
     }
   })
 }
@@ -2778,341 +2791,11 @@ function handleGetAdminData(a, b, c, d, e) {
 function openUrlInIframe(a) {
   document.getElementById("dataframe").src = a
 }
-function getLayerPosition(a) {
-  if(B3PGissuite.vars.cookieArray == null || !B3PGissuite.config.useCookies) {
-    return a.visible == "on" || a.analyse == "active" ? -1 : 0
-  }
-  var b = B3PGissuite.vars.cookieArray.split(",");
-  for(i = 0;i < b.length;i++) {
-    if(b[i] == a.id) {
-      return i + 1
-    }
-  }
-  return a.analyse == "active" ? -1 : 0
-}
-function getClusterPosition(a) {
-  if(B3PGissuite.vars.cookieClusterArray == null || !B3PGissuite.config.useCookies) {
-    return a.visible || a.active ? -1 : 0
-  }
-  var b = B3PGissuite.vars.cookieClusterArray.split(",");
-  for(i = 0;i < b.length;i++) {
-    if(b[i] == a.id) {
-      return i + 1
-    }
-  }
-  return a.active ? -1 : 0
-}
-function setActiveCluster(a, b) {
-  if(((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || b) && a != void 0 & a != null) {
-    var c = a.title, d = document.getElementById("actief_thema");
-    if(d && c && d != null && c != null) {
-      B3PGissuite.vars.activeClusterId = a.id, d.innerHTML = "" + c
-    }
-    if(a.metadatalink && a.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer")) {
-      document.getElementById("beschrijvingVakViewer").src = a.metadatalink
-    }
-  }
-}
-function setActiveThema(a, b, c) {
-  if(!a || !(a != null && b && b != null && c)) {
-    return B3PGissuite.vars.activeAnalyseThemaId
-  }
-  if((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || c) {
-    B3PGissuite.vars.activeAnalyseThemaId = a;
-    if((a = document.getElementById("actief_thema")) && b && a != null && b != null) {
-      a.innerHTML = "" + b
-    }
-    if(document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0) {
-      var d = document.forms[0].coords.value.split(","), b = parseFloat(d[0]), a = parseFloat(d[1]);
-      d.length == 4 ? (c = parseFloat(d[2]), d = parseFloat(d[3])) : (c = b, d = a);
-      onIdentify("", {minx:b, miny:a, maxx:c, maxy:d})
-    }
-  }
-  return B3PGissuite.vars.activeAnalyseThemaId
-}
-function radioClick(a) {
-  var b = B3PGissuite.vars.activeAnalyseThemaId;
-  if(a && a != null && a.theItem && a.theItem != null && a.theItem.id && a.theItem.title && (B3PGissuite.vars.activeAnalyseThemaId = setActiveThema(a.theItem.id, a.theItem.title, true), activateCheckbox(a.theItem.id), deActivateCheckbox(b), a.theItem.metadatalink && a.theItem.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer"))) {
-    document.getElementById("beschrijvingVakViewer").src = a.theItem.metadatalink
-  }
-}
-function isActiveItem(a) {
-  if(!a) {
-    return false
-  }
-  a.analyse == "on" ? setActiveThema(a.id, a.title) : a.analyse == "active" && setActiveThema(a.id, a.title, true);
-  if(B3PGissuite.vars.activeAnalyseThemaId != a.id) {
-    return false
-  }
-  if(a.analyse == "active" && prevRadioButton != null) {
-    var b = document.getElementById(prevRadioButton);
-    if(b != void 0 && b != null) {
-      b.checked = false
-    }
-  }
-  if(a.metadatalink && a.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer")) {
-    document.getElementById("beschrijvingVakViewer").src = a.metadatalink
-  }
-  prevRadioButton = "radio" + a.id;
-  return true
-}
-function createRadioCluster(a, b, c) {
-  var d;
-  if(ieVersion <= 8 && ieVersion != -1) {
-    d = '<input type="radio" id="' + a.id + '"', b && (d += ' checked="checked"'), d += ' value="' + a.id + '" onclick="clusterCheckboxClick(this,false)"', d += ' name="' + c + '">', d = document.createElement(d)
-  }else {
-    if(d = document.createElement("input"), d.id = a.id, d.type = "radio", d.value = a.id, d.name = c, d.onclick = function() {
-      clusterCheckboxClick(this, false)
-    }, b) {
-      d.checked = true
-    }
-  }
-  return d
-}
-function createCheckboxCluster(a, b) {
-  var c;
-  if(ieVersion <= 8 && ieVersion != -1) {
-    c = '<input type="checkbox" id="' + a.id + '"', b && (c += ' checked="checked"'), c += ' value="' + a.id + '" onclick="clusterCheckboxClick(this,false)"', c += ">", c = document.createElement(c)
-  }else {
-    if(c = document.createElement("input"), c.id = a.id, c.type = "checkbox", c.value = a.id, c.onclick = function() {
-      clusterCheckboxClick(this, false)
-    }, b) {
-      c.checked = true
-    }
-  }
-  return c
-}
-function createRadioSingleActiveThema(a) {
-  var b;
-  if(ieVersion <= 8 && ieVersion != -1) {
-    b = '<input type="radio" id="radio' + a.id + '" name="selkaartlaag" value="' + a.id + '"', isActiveItem(a) && (b += ' checked="checked"'), b += ' onclick="radioClick(this);"', b += ">", b = document.createElement(b)
-  }else {
-    if(b = document.createElement("input"), b.type = "radio", b.name = "selkaartlaag", b.value = a.id, b.id = "radio" + a.id, b.onclick = function() {
-      radioClick(this)
-    }, isActiveItem(a)) {
-      b.checked = true
-    }
-  }
-  b.theItem = a;
-  return b
-}
-function createRadioThema(a, b, c) {
-  var d;
-  if(ieVersion <= 8 && ieVersion != -1) {
-    d = '<input type="radio" id="' + a.id + '"', b && (d += ' checked="checked"'), d += ' value="' + a.id + '" onclick="checkboxClick(this, false)"', d += ' name="' + c + '">', d = document.createElement(d)
-  }else {
-    if(d = document.createElement("input"), d.id = a.id, d.type = "radio", d.value = a.id, d.name = c, d.onclick = function() {
-      checkboxClick(this, false)
-    }, b) {
-      d.checked = true
-    }
-  }
-  return d
-}
-function createCheckboxThema(a, b) {
-  var c;
-  if(ieVersion <= 8 && ieVersion != -1) {
-    c = '<input type="checkbox" id="' + a.id + '"', b && (c += ' checked="checked"'), c += ' value="' + a.id + '" onclick="checkboxClick(this, false)"', c += ">", c = document.createElement(c)
-  }else {
-    if(c = document.createElement("input"), c.id = a.id, c.type = "checkbox", c.value = a.id, c.onclick = function() {
-      checkboxClick(this, false)
-    }, b) {
-      c.checked = true
-    }
-  }
-  return c
-}
-function createInvisibleThemaDiv(a) {
-  return createInvisibleDiv(a.id)
-}
-function createInvisibleDiv(a) {
-  var b = document.createElement("div");
-  b.name = a;
-  b.id = a;
-  b.style.height = "0";
-  b.style.width = "0";
-  b.height = 0;
-  b.width = 0;
-  b.style.display = "none";
-  return b
-}
-function createMetadataLink(a) {
-  var b = document.createElement("a");
-  b.innerHTML = a.title ? a.title : a.id;
-  b.href = "#";
-  var c = "Download dataset van " + a.title, d = "Informatie over " + a.title;
-  if(a.metadatalink && a.metadatalink.length > 1 && (a.gegevensbronid == void 0 || a.gegevensbronid < 1)) {
-    return b.onclick = function() {
-      $j("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true), $j(this).dialog("close"))
-      }, Url:function() {
-        if($j("#dialog-download-metadata").dialog("isOpen")) {
-          $j(this).dialog("close");
-          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-          $j("#input_wmsserviceurl").val(a);
-          unblockViewerUI();
-          $j("#dialog-wmsservice-url").dialog("open")
-        }
-      }, Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }});
-      $j("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
-        $j(this).html($j(this).parent().attr("text"))
-      });
-      $j("#dialog-download-metadata").dialog("open")
-    }, b
-  }
-  if((a.metadatalink == void 0 || a.metadatalink == "#") && a.gegevensbronid && a.gegevensbronid > 0) {
-    return b.onclick = function() {
-      B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && (getWktForDownload() == "" && alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden."), iFramePopup("download.do?id=" + a.gegevensbronid, false, c, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false), $j(this).dialog("close"))
-      }, Url:function() {
-        if($j("#dialog-download-metadata").dialog("isOpen")) {
-          $j(this).dialog("close");
-          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-          $j("#input_wmsserviceurl").val(a);
-          unblockViewerUI();
-          $j("#dialog-wmsservice-url").dialog("open")
-        }
-      }, Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }}) : !B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Url:function() {
-        if($j("#dialog-download-metadata").dialog("isOpen")) {
-          $j(this).dialog("close");
-          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-          $j("#input_wmsserviceurl").val(a);
-          unblockViewerUI();
-          $j("#dialog-wmsservice-url").dialog("open")
-        }
-      }, Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }}) : $j("#dialog-download-metadata").dialog("option", "buttons", {Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }});
-      $j("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
-        $j(this).html($j(this).parent().attr("text"))
-      });
-      $j("#dialog-download-metadata").dialog("open")
-    }, b
-  }
-  if(a.metadatalink && a.metadatalink.length > 1 && a.gegevensbronid && a.gegevensbronid > 0) {
-    return b.onclick = function() {
-      B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && (getWktForDownload() == "" && alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden."), iFramePopup("download.do?id=" + a.gegevensbronid, false, c, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false), $j(this).dialog("close"))
-      }, Metadata:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true), $j(this).dialog("close"))
-      }, Url:function() {
-        if($j("#dialog-download-metadata").dialog("isOpen")) {
-          $j(this).dialog("close");
-          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-          $j("#input_wmsserviceurl").val(a);
-          unblockViewerUI();
-          $j("#dialog-wmsservice-url").dialog("open")
-        }
-      }, Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }}) : !B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? $j("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true), $j(this).dialog("close"))
-      }, Url:function() {
-        if($j("#dialog-download-metadata").dialog("isOpen")) {
-          $j(this).dialog("close");
-          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-          $j("#input_wmsserviceurl").val(a);
-          unblockViewerUI();
-          $j("#dialog-wmsservice-url").dialog("open")
-        }
-      }, Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }}) : $j("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true), $j(this).dialog("close"))
-      }, Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }});
-      $j("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
-        $j(this).html($j(this).parent().attr("text"))
-      });
-      $j("#dialog-download-metadata").dialog("open")
-    }, b
-  }
-  if((a.metadatalink == void 0 || a.metadatalink == "#") && (a.gegevensbronid == void 0 || a.gegevensbronid < 1) && B3PGissuite.config.showServiceUrl) {
-    b.onclick = function() {
-      $j("#dialog-download-metadata").dialog("option", "buttons", {Url:function() {
-        if($j("#dialog-download-metadata").dialog("isOpen")) {
-          $j(this).dialog("close");
-          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-          $j("#input_wmsserviceurl").val(a);
-          unblockViewerUI();
-          $j("#dialog-wmsservice-url").dialog("open")
-        }
-      }, Annuleren:function() {
-        $j("#dialog-download-metadata").dialog("isOpen") && ($j(this).dialog("close"), unblockViewerUI())
-      }});
-      $j("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
-        $j(this).html($j(this).parent().attr("text"))
-      });
-      $j("#dialog-download-metadata").dialog("open")
-    }
-  }
-  return b
-}
 function createWMSServiceUrlDialog() {
   $j("#dialog-wmsservice-url").dialog({resizable:false, disabled:true, autoOpen:false, modal:false, width:750, height:150})
 }
 function createDownloadMetadataDialog() {
   $j("#dialog-download-metadata").dialog({resizable:false, disabled:true, autoOpen:false, modal:false})
-}
-function createLabel(a, b) {
-  if(b.cluster) {
-    if(b.callable) {
-      var c = false;
-      getClusterPosition(b) != 0 && (c = true);
-      var d = null, e = getParentItem(B3PGissuite.config.themaTree, b), d = e.exclusive_childs ? createRadioCluster(b, c, e.id) : createCheckboxCluster(b, c);
-      d.theItem = b;
-      a.appendChild(d);
-      c && B3PGissuite.vars.clustersAan.push(d);
-      b.active && setActiveCluster(b, true)
-    }
-    c = false;
-    if(b.hide_tree && b.callable && (c = document.createElement("img"), c.setAttribute("border", "0"), c.src = globalTreeOptions.layermaindiv.toggleImages.leaf, c.theItem = b, a.togglea = c, B3PGissuite.config.showLegendInTree && b.children)) {
-      c = false;
-      for(d = 0;d < b.children.length && !c;d++) {
-        e = b.children[d], !e.cluster && e.legendurl != void 0 && (c = true)
-      }
-      c && (a.appendChild(document.createTextNode("  ")), a.appendChild(createTreeLegendIcon()))
-    }
-    if(!b.hide_tree || b.callable) {
-      a.appendChild(document.createTextNode("  ")), a.appendChild(createMetadataLink(b))
-    }
-    a.appendChild(createTreeLegendDiv(b));
-    if(b.hide_tree && !b.callable) {
-      return true
-    }
-  }else {
-    if(b.hide_tree) {
-      return c = createInvisibleThemaDiv(b), c.theItem = b, a.appendChild(c), b.visible == "on" && b.wmslayers && addItemAsLayer(b), true
-    }else {
-      if(b.wmslayers) {
-        alleLayers.push(b);
-        c = false;
-        d = getLayerPosition(b);
-        d != 0 && (c = true);
-        e = null;
-        e = getParentItem(B3PGissuite.config.themaTree, b);
-        e = e.exclusive_childs ? createRadioThema(b, c, e.id) : createCheckboxThema(b, c);
-        e.theItem = b;
-        c && (d < 0 ? B3PGissuite.vars.layersAan.unshift(e) : B3PGissuite.vars.layersAan.push(e));
-        if(b.analyse == "on" || b.analyse == "active") {
-          B3PGissuite.config.multipleActiveThemas ? isActiveItem(b) : (c = createRadioSingleActiveThema(b), a.appendChild(c))
-        }
-        a.appendChild(e)
-      }
-      b.legendurl != void 0 && B3PGissuite.config.showLegendInTree && (a.appendChild(document.createTextNode("  ")), a.appendChild(createTreeLegendIcon()));
-      a.appendChild(document.createTextNode("  "));
-      a.appendChild(createMetadataLink(b));
-      b.legendurl != void 0 && B3PGissuite.config.showLegendInTree && a.appendChild(createTreeLegendDiv(b))
-    }
-  }
-  return false
 }
 function disableLayer(a) {
   a = $j("#layermaindiv_item_" + a + "_label");
@@ -3124,84 +2807,6 @@ function enableLayer(a) {
   a.removeClass("layerdisabled");
   a.find(".treeLegendIcon").removeClass("disabledLegendIcon")
 }
-function createTreeLegendIcon() {
-  var a = document.createElement("img");
-  a.src = imageBaseUrl + "icons/application_view_list.png";
-  a.alt = "Legenda tonen";
-  a.title = "Legenda tonen";
-  a.width = "15";
-  a.height = "13";
-  a.className = "treeLegendIcon imagenoborder";
-  $j(a).click(function() {
-    $j(this).hasClass("disabledLegendIcon") || loadTreeLegendImage($j(this).siblings("div").attr("id"))
-  });
-  return a
-}
-function loadTreeLegendImage(a) {
-  var a = document.getElementById(a), b = $j(a), c = a.theItem;
-  if(b.find("img.legendLoading").length == 0) {
-    var d = document.createElement("img");
-    d.src = imageBaseUrl + "icons/loadingsmall.gif";
-    d.alt = "Loading";
-    d.title = "Loading";
-    d.className = "legendLoading imagenoborder";
-    a.appendChild(d)
-  }
-  if(b.find("img.treeLegendImage").length == 0) {
-    if(c.cluster) {
-      for(d = b = 0;d < c.children.length;d++) {
-        var e = c.children[d];
-        if(e.legendurl != void 0) {
-          b > 0 && a.appendChild(document.createElement("br"));
-          var f = createTreeLegendImage(e);
-          a.appendChild(f);
-          f.src = e.legendurl;
-          b++
-        }
-      }
-    }else {
-      f = createTreeLegendImage(c), a.appendChild(f), f.src = c.legendurl
-    }
-  }
-  $j(a).toggle()
-}
-function createTreeLegendImage(a) {
-  var b = document.createElement("img");
-  b.name = a.title;
-  b.alt = "Legenda " + a.title;
-  b.onerror = treeImageError;
-  b.onload = treeImageOnload;
-  b.className = "treeLegendImage";
-  return b
-}
-function createTreeLegendDiv(a) {
-  var b = a.id + "#tree#" + a.wmslayers, c = document.createElement("div");
-  c.name = b;
-  c.id = b;
-  c.title = a.title;
-  c.className = "treeLegendClass";
-  c.theItem = a;
-  c.style.display = "none";
-  return c
-}
-function treeImageError() {
-  var a = $j(this).parent();
-  a.find("img.legendLoading").hide();
-  a.html('<span style="color: Black;">Legenda kan niet worden opgehaald</span>')
-}
-function treeImageOnload() {
-  $j(this).parent().find("img.legendLoading").hide()
-}
-function activateCheckbox(a) {
-  var b = document.getElementById(a);
-  b != void 0 && b != null && !b.checked && document.getElementById(a).click()
-}
-function deActivateCheckbox(a) {
-  if(!(a == void 0 || a == null)) {
-    var b = document.getElementById(a);
-    b != void 0 && b != null && b.checked && document.getElementById(a).click()
-  }
-}
 function switchTab(a) {
   tabComponent.setActive(a)
 }
@@ -3210,74 +2815,6 @@ function syncLayerCookieAndForm() {
   a == "" && (a = "ALL");
   B3PGissuite.config.useCookies && (eraseCookie("checkedLayers"), a != null && createCookie("checkedLayers", a, "7"));
   document.forms[0].lagen.value = a
-}
-function checkboxClick(a, b) {
-  var c = a.theItem;
-  a.checked ? (addItemAsLayer(c), B3PGissuite.config.useInheritCheckbox && (c = document.getElementById(c.id), enableParentClusters(c))) : removeItemAsLayer(c);
-  a.type == "radio" && a.checked && (c = $j("input[name='" + a.name + "']"), $j.each(c, function(b, c) {
-    a.id != c.id && checkboxClick(c, true)
-  }));
-  b || (a.checked ? refreshLayerWithDelay() : doRefreshLayer())
-}
-function clusterCheckboxClick(a, b) {
-  if(!(a == void 0 || a == null)) {
-    if(B3PGissuite.vars.layerUrl == null) {
-      B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl
-    }
-    if(a.checked) {
-      for(var c = false, d = 0;d < B3PGissuite.vars.clustersAan.length;d++) {
-        B3PGissuite.vars.clustersAan[d].id == a.id && (c = true)
-      }
-      c || B3PGissuite.vars.clustersAan.push(a)
-    }else {
-      c = [];
-      for(d = 0;d < B3PGissuite.vars.clustersAan.length;d++) {
-        B3PGissuite.vars.clustersAan[d].id != a.id && c.push(B3PGissuite.vars.clustersAan[d])
-      }
-      B3PGissuite.vars.clustersAan = c
-    }
-    c = a.theItem;
-    B3PGissuite.config.useCookies && (a.checked ? addClusterIdToCookie(c.id) : removeClusterIdFromCookie(c.id));
-    if(!B3PGissuite.config.useInheritCheckbox || c.hide_tree) {
-      if(a.checked) {
-        for(d = c.children.length;d > 0;d--) {
-          var e = c.children[d - 1];
-          if(e.cluster) {
-            if(e.callable && !B3PGissuite.config.useInheritCheckbox) {
-              e = document.getElementById(e.id), e.checked = true, clusterCheckboxClick(e, b)
-            }
-          }else {
-            if(addItemAsLayer(e), !c.hide_tree) {
-              document.getElementById(e.id).checked = true
-            }
-          }
-        }
-      }else {
-        if(c.children) {
-          for(d = 0;d < c.children.length;d++) {
-            if(e = c.children[d], e.cluster) {
-              if(e.callable && !B3PGissuite.config.useInheritCheckbox) {
-                e = document.getElementById(e.id), e.checked = false, clusterCheckboxClick(e, b)
-              }
-            }else {
-              if(removeItemAsLayer(e), !c.hide_tree) {
-                document.getElementById(e.id).checked = false
-              }
-            }
-          }
-        }
-      }
-    }
-    if(B3PGissuite.config.useInheritCheckbox) {
-      for(d = 0;d < c.children.length;d++) {
-        e = c.children[d], a.checked ? enableLayer(e.id) : disableLayer(e.id)
-      }
-    }
-    a.type == "radio" && c.children && (c = $j("#layermaindiv_item_" + a.id + "_children"), a.checked ? (c && (c.removeClass("disabledRadioChilds"), $j("#layermaindiv_item_" + a.id + "_children input").removeAttr("disabled"), treeview_expandItemChildren("layermaindiv", a.id)), c = $j("input[name='" + a.name + "']"), $j.each(c, function(c, d) {
-      a.id != d.id && clusterCheckboxClick(d, b)
-    })) : c && (c.addClass("disabledRadioChilds"), treeview_collapseItemChildren("layermaindiv", a.id), $j("#layermaindiv_item_" + a.id + "_children input").attr("disabled", true)));
-    b || refreshLayerWithDelay()
-  }
 }
 function addClusterIdToCookie(a) {
   var b = readCookie("checkedClusters"), c = [];
@@ -3307,29 +2844,21 @@ function removeClusterIdFromCookie(a) {
   }
   createCookie("checkedClusters", b, "7")
 }
-function addItemAsLayer(a) {
-  addLayerToEnabledLayerItems(a);
-  syncLayerCookieAndForm();
-  if(a.wmslayers && (a = a.organizationcodekey, B3PGissuite.config.organizationcode != void 0 && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != "" && a != void 0 && a != "" && B3PGissuite.vars.layerUrl.indexOf(a) <= 0)) {
-    B3PGissuite.vars.layerUrl += B3PGissuite.vars.layerUrl.indexOf("?") > 0 ? "&" : "?", B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + a + "=" + B3PGissuite.config.organizationcode
-  }
-}
 function isStringEmpty(a) {
   return!a || 0 === a.length
 }
 function reloadRedliningLayer(a, b, c) {
   if(!isStringEmpty(B3PGissuite.config.organizationcode)) {
-    B3PGissuite.vars.layerUrl = originalLayerUrl + "GROEPNAAM=" + B3PGissuite.config.organizationcode
+    B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + "GROEPNAAM=" + B3PGissuite.config.organizationcode
   }
   if(!isStringEmpty(b)) {
-    B3PGissuite.vars.layerUrl = originalLayerUrl + "PROJECTNAAM=" + b
+    B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + "PROJECTNAAM=" + b
   }
   if(!isStringEmpty(B3PGissuite.config.organizationcode) && !isStringEmpty(b)) {
-    B3PGissuite.vars.layerUrl = originalLayerUrl + "GROEPNAAM=" + B3PGissuite.config.organizationcode + "&PROJECTNAAM=" + b
+    B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + "GROEPNAAM=" + B3PGissuite.config.organizationcode + "&PROJECTNAAM=" + b
   }
   c && removeAllFeatures();
-  deActivateCheckbox(a);
-  activateCheckbox(a)
+  B3PGissuite.get("TreeComponent") !== null && (deActivateCheckbox(a), activateCheckbox(a))
 }
 function addLayerToEnabledLayerItems(a) {
   for(var b = null, c = 0;c < B3PGissuite.vars.enabledLayerItems.length;c++) {
@@ -3340,9 +2869,6 @@ function addLayerToEnabledLayerItems(a) {
   }
   b == null && B3PGissuite.vars.enabledLayerItems.push(a)
 }
-function removeItemAsLayer(a) {
-  removeLayerFromEnabledLayerItems(a.id) != null && syncLayerCookieAndForm()
-}
 function removeLayerFromEnabledLayerItems(a) {
   for(var b = 0;b < B3PGissuite.vars.enabledLayerItems.length;b++) {
     if(B3PGissuite.vars.enabledLayerItems[b].id == a) {
@@ -3350,16 +2876,6 @@ function removeLayerFromEnabledLayerItems(a) {
     }
   }
   return null
-}
-function refreshLayerWithDelay() {
-  showLoading();
-  refresh_timeout_handle && (clearTimeout(refresh_timeout_handle), hideLoading());
-  refresh_timeout_handle = setTimeout("doRefreshLayer();", B3PGissuite.config.refreshDelay)
-}
-function doRefreshLayer() {
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
-  refreshLayer();
-  refreshLegendBox()
 }
 function checkScaleForLayers() {
   var a;
@@ -3414,7 +2930,7 @@ function setScaleForTree(a, b) {
   }
 }
 function refreshLayer() {
-  var a = refresh_timeout_handle;
+  var a = B3PGissuite.vars.refresh_timeout_handle;
   if(B3PGissuite.vars.layerUrl == void 0 || B3PGissuite.vars.layerUrl == null) {
     hideLoading()
   }else {
@@ -3480,15 +2996,15 @@ function refreshLayer() {
       g != null && B3PGissuite.vars.webMapController.getMap().setLayerIndex(g, e + B3PGissuite.vars.startLayerIndex)
     }
     hideLoading();
-    if(a == refresh_timeout_handle) {
-      refresh_timeout_handle = 0;
+    if(a == B3PGissuite.vars.refresh_timeout_handle) {
+      B3PGissuite.vars.refresh_timeout_handle = 0;
       a = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
       (b = B3PGissuite.vars.webMapController.getMap().getAllTilingLayers()) && a.concat(b);
       b = B3PGissuite.vars.webMapController.getMap().getLayers().length;
       for(g = 0;g < a.length;g++) {
         e = a[g], B3PGissuite.vars.webMapController.getMap().setLayerIndex(e, b + B3PGissuite.vars.startLayerIndex)
       }
-      checkTempUploadedPointsWms(uploadCsvLayerOn)
+      checkTempUploadedPointsWms(B3PGissuite.vars.uploadCsvLayerOn)
     }
   }
 }
@@ -3606,13 +3122,6 @@ function getLayerIdsAsString(a) {
   }
   return b
 }
-function enableParentClusters(a) {
-  if(a != null && (a = getParentDivContainingChilds(a, "div"))) {
-    var a = getParentByTagName(a, "div"), b = getItemName(a);
-    document.getElementById(b).checked = true;
-    enableParentClusters(a)
-  }
-}
 function itemHasAllParentsEnabled(a) {
   if(a == null) {
     return false
@@ -3664,7 +3173,7 @@ function createLegendDiv(a) {
     e.style.display = "none"
   }
   if(a.legendurl != void 0) {
-    c.src = a.legendurl, loadingLegendImages[b] = c
+    c.src = a.legendurl, B3PGissuite.vars.loadingLegendImages[b] = c
   }else {
     c.onerror()
   }
@@ -3680,11 +3189,11 @@ function imageOnerror() {
   this.style.height = "0";
   this.style.width = "0";
   this.width = this.height = 0;
-  legendImageLoadingSpace++;
+  B3PGissuite.vars.legendImageLoadingSpace++;
   loadNextInLegendImageQueue()
 }
 function imageOnload() {
-  if(loadingLegendImages[this.id] != void 0) {
+  if(B3PGissuite.vars.loadingLegendImages[this.id] != void 0) {
     if(parseInt(this.height) > 5) {
       var a = document.createElement("img");
       a.src = this.src;
@@ -3695,8 +3204,8 @@ function imageOnload() {
       var b = document.getElementById(this.id);
       b && b.appendChild(a)
     }
-    delete loadingLegendImages[this.id];
-    legendImageLoadingSpace++;
+    delete B3PGissuite.vars.loadingLegendImages[this.id];
+    B3PGissuite.vars.legendImageLoadingSpace++;
     loadNextInLegendImageQueue()
   }
 }
@@ -3709,20 +3218,20 @@ function addLayerToLegendBox(a, b) {
     }
     $j(c).css("display", "block")
   }else {
-    legendImageQueue.push({theItem:a, atBottomOfType:b}), loadNextInLegendImageQueue()
+    B3PGissuite.vars.legendImageQueue.push({theItem:a, atBottomOfType:b}), loadNextInLegendImageQueue()
   }
 }
 function loadNextInLegendImageQueue() {
-  if(legendImageLoadingSpace > 0 && legendImageQueue.length > 0) {
-    legendImageLoadingSpace--;
-    var a = legendImageQueue.shift(), b = a.theItem, a = a.nextLegend, c = createLegendDiv(b), d = null;
+  if(B3PGissuite.vars.legendImageLoadingSpace > 0 && B3PGissuite.vars.legendImageQueue.length > 0) {
+    B3PGissuite.vars.legendImageLoadingSpace--;
+    var a = B3PGissuite.vars.legendImageQueue.shift(), b = a.theItem, a = a.nextLegend, c = createLegendDiv(b), d = null;
     orderLayerBox.hasChildNodes() && (d = findBeforeDivInLegendBox(b, a));
     d == null ? orderLayerBox.appendChild(c) : orderLayerBox.insertBefore(c, d)
   }
 }
 function resetLegendImageQueue() {
-  legendImageQueue = [];
-  legendImageLoadingSpace = 2
+  B3PGissuite.vars.legendImageQueue = [];
+  B3PGissuite.vars.legendImageLoadingSpace = 2
 }
 function findLayerDivInLegendBox(a) {
   for(var a = a.id + "##" + a.wmslayers, b = 0;b < orderLayerBox.childNodes.length;b++) {
@@ -3810,7 +3319,8 @@ function deleteAllLayers() {
   }
   B3PGissuite.vars.enabledLayerItems = [];
   syncLayerCookieAndForm();
-  doRefreshLayer()
+  a = B3PGissuite.get("TreeComponent");
+  a !== null && a.doRefreshLayer()
 }
 function splitValue(a) {
   return a.split("##")
@@ -3822,7 +3332,9 @@ function getActiveLayerLabel(a) {
   return!a ? null : a.split("##")[1]
 }
 function onChangeTool(a) {
-  a == "identify" && (btn_highLightSelected = false, hideIdentifyIcon())
+  if(a == "identify") {
+    B3PGissuite.vars.btn_highLightSelected = false, hideIdentifyIcon()
+  }
 }
 function onIdentify(a, b) {
   if(B3PGissuite.config.usePopup || B3PGissuite.config.usePanel || B3PGissuite.config.useBalloonPopup) {
@@ -3830,17 +3342,18 @@ function onIdentify(a, b) {
     var c = "";
     b.minx != b.maxx && b.miny != b.maxy ? (c += "POLYGON((", c += b.minx + " " + b.miny + ",", c += b.maxx + " " + b.miny + ",", c += b.maxx + " " + b.maxy + ",", c += b.minx + " " + b.maxy + ",", c += b.minx + " " + b.miny, c += "))") : (c += "POINT(", c += b.minx + " " + b.miny, c += ")");
     B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    editingRedlining ? (hideIdentifyIcon(), selectRedlineObject(c)) : (btn_highLightSelected ? (B3PGissuite.vars.webMapController instanceof FlamingoController ? B3PGissuite.vars.webMapController.activateTool("breinaald") : B3PGissuite.vars.webMapController.activateTool("identify"), hideIdentifyIcon(), highLightThemaObject(c)) : (btn_highLightSelected = false, B3PGissuite.vars.webMapController.activateTool("identify"), showIdentifyIcon(), handleGetAdminData(c, null, false)), loadObjectInfo(c))
+    B3PGissuite.vars.editingRedlining ? (hideIdentifyIcon(), selectRedlineObject(c)) : (B3PGissuite.vars.btn_highLightSelected ? (B3PGissuite.vars.webMapController instanceof FlamingoController ? B3PGissuite.vars.webMapController.activateTool("breinaald") : B3PGissuite.vars.webMapController.activateTool("identify"), hideIdentifyIcon(), highLightThemaObject(c)) : (B3PGissuite.vars.btn_highLightSelected = false, B3PGissuite.vars.webMapController.activateTool("identify"), showIdentifyIcon(), handleGetAdminData(c, 
+    null, false)), loadObjectInfo(c))
   }
 }
 function updateGetFeatureInfo(a) {
-  teller++;
-  teller > 30 ? teller = 0 : B3PGissuite.config.usePopup && B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData ? (B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData(a), a = null) : window.frames.dataframe.writeFeatureInfoData ? (window.frames.dataframe.writeFeatureInfoData(a), a = null) : setTimeout(function() {
+  B3PGissuite.vars.teller++;
+  B3PGissuite.vars.teller > 30 ? B3PGissuite.vars.teller = 0 : B3PGissuite.config.usePopup && B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData ? (B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData(a), a = null) : window.frames.dataframe.writeFeatureInfoData ? (window.frames.dataframe.writeFeatureInfoData(a), a = null) : setTimeout(function() {
     updateGetFeatureInfo(a)
   }, 1E3)
 }
 function onIdentifyData(a, b) {
-  teller = 0;
+  B3PGissuite.vars.teller = 0;
   updateGetFeatureInfo(b)
 }
 function layerBoxSort(a, b) {
@@ -3848,18 +3361,14 @@ function layerBoxSort(a, b) {
 }
 function onFrameworkLoaded() {
   document.getElementById("treeForm") && ieVersion <= 8 && ieVersion != -1 && document.getElementById("treeForm").reset();
-  if(!frameWorkInitialized) {
-    for(var a = B3PGissuite.vars.clustersAan.length - 1;a >= 0;a--) {
-      clusterCheckboxClick(B3PGissuite.vars.clustersAan[a], true)
-    }
-    B3PGissuite.vars.layersAan.sort(layerBoxSort);
-    for(a = B3PGissuite.vars.layersAan.length - 1;a >= 0;a--) {
-      checkboxClick(B3PGissuite.vars.layersAan[a], true)
-    }
+  if(!B3PGissuite.vars.frameWorkInitialized) {
+    var a = B3PGissuite.get("TreeComponent");
+    a !== null && (a.clickClusters(), B3PGissuite.vars.layersAan.sort(layerBoxSort), a.clickLayers());
     setStartExtent();
-    doRefreshLayer()
+    a !== null && a.doRefreshLayer()
   }
-  mapInitialized = frameWorkInitialized = true;
+  B3PGissuite.vars.frameWorkInitialized = true;
+  B3PGissuite.vars.mapInitialized = true;
   B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
   B3PGissuite.vars.webMapController instanceof FlamingoController && (a = getMaxBounds(), a = getTilingResolutions(a, false), B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(a), B3PGissuite.vars.webMapController.activateTool("toolPan"));
   updateSizeOL();
@@ -3889,8 +3398,8 @@ function initFullExtent() {
 function setStartExtent() {
   initFullExtent();
   if(!(B3PGissuite.config.searchConfigId != null && B3PGissuite.config.searchConfigId > 0)) {
-    if(searchExtent != null) {
-      B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(searchExtent)
+    if(B3PGissuite.vars.searchExtent != null) {
+      B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(B3PGissuite.vars.searchExtent)
     }else {
       if(B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
         setTimeout(function() {
@@ -3931,11 +3440,11 @@ function doIdentify(a, b) {
   B3PGissuite.vars.webMapController.activateTool("identify")
 }
 function doIdentifyAfterUpdate(a, b, c, d) {
-  nextIdentifyExtent = {};
-  nextIdentifyExtent.minx = a;
-  nextIdentifyExtent.miny = b;
-  nextIdentifyExtent.maxx = c;
-  nextIdentifyExtent.maxy = d
+  B3PGissuite.vars.nextIdentifyExtent = {};
+  B3PGissuite.vars.nextIdentifyExtent.minx = a;
+  B3PGissuite.vars.nextIdentifyExtent.miny = b;
+  B3PGissuite.vars.nextIdentifyExtent.maxx = c;
+  B3PGissuite.vars.nextIdentifyExtent.maxy = d
 }
 function moveAndIdentify(a, b, c, d) {
   moveToExtent(a, b, c, d);
@@ -3945,7 +3454,9 @@ function moveAndIdentify(a, b, c, d) {
 }
 function onAllLayersFinishedLoading() {
   checkScaleForLayers();
-  nextIdentifyExtent != null && (doIdentify(nextIdentifyExtent.minx, nextIdentifyExtent.miny, nextIdentifyExtent.maxx, nextIdentifyExtent.maxy), nextIdentifyExtent = null);
+  if(B3PGissuite.vars.nextIdentifyExtent !== null) {
+    doIdentify(B3PGissuite.vars.nextIdentifyExtent.minx, B3PGissuite.vars.nextIdentifyExtent.miny, B3PGissuite.vars.nextIdentifyExtent.maxx, B3PGissuite.vars.nextIdentifyExtent.maxy), B3PGissuite.vars.nextIdentifyExtent = null
+  }
   B3PGissuite.config.waitUntillFullyLoaded && $j("#loadingscreen").hide();
   refreshLegendBox();
   B3PGissuite.config.showDebugContent && setDebugContent()
@@ -3953,12 +3464,6 @@ function onAllLayersFinishedLoading() {
 function setDebugContent() {
   var a = "<p><b>Schaal 1 : " + calcScaleForCurrentExtent() + "</b></p>";
   $j("#debug-content").html(a)
-}
-function setTimerForReload() {
-  reloadTimer = setTimeout("refreshMapVolgorde()", B3PGissuite.config.layerDelay)
-}
-function clearTimerForReload() {
-  clearTimeout(reloadTimer)
 }
 function getMovie(a) {
   return navigator.appName.indexOf("Microsoft") != -1 ? window[a] : document[a]
@@ -3973,23 +3478,6 @@ function searchThemaValue(a, b, c) {
         var f = searchThemaValue(a[d][e], b, c);
         if(f != void 0 && f != null) {
           return f
-        }
-      }
-    }
-  }
-  return null
-}
-function getParentItem(a, b) {
-  if(a.children) {
-    for(var c = 0;c < a.children.length;c++) {
-      if(a.children[c] == b) {
-        return a
-      }else {
-        if(a.children[c].children) {
-          var d = getParentItem(a.children[c], b);
-          if(d != null) {
-            return d
-          }
         }
       }
     }
@@ -4074,8 +3562,8 @@ function exportMap() {
   a.target = "exportMapWindowNaam";
   a.action = "printmap.do";
   a.submit();
-  if(exportMapWindow == void 0 || exportMapWindow == null || exportMapWindow.closed) {
-    exportMapWindow = window.open("", "exportMapWindowNaam"), exportMapWindow.focus()
+  if(B3PGissuite.vars.exportMapWindow == void 0 || B3PGissuite.vars.exportMapWindow == null || B3PGissuite.vars.exportMapWindow.closed) {
+    B3PGissuite.vars.exportMapWindow = window.open("", "exportMapWindowNaam"), B3PGissuite.vars.exportMapWindow.focus()
   }
 }
 function getTilingLayer() {
@@ -4106,16 +3594,6 @@ function buildTilingServiceUrl(a) {
   !checkParam(b, "request") && !checkParam(b, "REQUEST") && (b += "&REQUEST=" + a.getOption("REQUEST"));
   return b
 }
-function checkboxClickById(a) {
-  if(a = document.getElementById(a)) {
-    a.checked = !a.checked, checkboxClick(a, false)
-  }
-}
-function checkboxOnByid(a) {
-  if(a = document.getElementById(a)) {
-    a.checked = true, checkboxClick(a, false)
-  }
-}
 function getWktActiveFeature(a) {
   a = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(a);
   return a == null ? (handler("Er is nog geen tekenobject op het scherm."), null) : a.getWkt()
@@ -4134,8 +3612,8 @@ function b_getfeatures() {
 }
 function b_buffer() {
   var a;
-  a = multiPolygonBufferWkt != null ? multiPolygonBufferWkt : getWktActiveFeature(-1);
-  multiPolygonBufferWkt = null;
+  a = B3PGissuite.vars.multiPolygonBufferWkt != null ? B3PGissuite.vars.multiPolygonBufferWkt : getWktActiveFeature(-1);
+  B3PGissuite.vars.multiPolygonBufferWkt = null;
   if(a != null) {
     var b = prompt("Geef de bufferafstand in meters", "100"), c = 0;
     b == "" || b == "undefined" || b == null || (isNaN(b) ? handler("Geen getal") : (c = b = b.replace(",", "."), c == 0 ? handler("Buffer mag niet 0 zijn") : EditUtil.buffer(a, c, returnBuffer)))
@@ -4176,12 +3654,12 @@ function b_removePolygons() {
   }
 }
 function b_highlight() {
-  btn_highLightSelected = true;
+  B3PGissuite.vars.btn_highLightSelected = true;
   B3PGissuite.vars.webMapController instanceof FlamingoController ? B3PGissuite.vars.webMapController.activateTool("breinaald") : B3PGissuite.vars.webMapController.activateTool("identify")
 }
 function highLightThemaObject(a) {
   highlightLayers = [];
-  highLightGeom = a;
+  B3PGissuite.vars.highLightGeom = a;
   for(var b = 0;b < B3PGissuite.vars.enabledLayerItems.length;b++) {
     var c = B3PGissuite.vars.enabledLayerItems[b], d = document.getElementById(c.id);
     (!B3PGissuite.config.useInheritCheckbox || itemHasAllParentsEnabled(d)) && c.highlight == "on" && highlightLayers.push(c)
@@ -4194,7 +3672,7 @@ function highLightThemaObject(a) {
 function selectRedlineObject(a) {
   var b;
   b = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
-  EditUtil.getIdAndWktForRedliningObject(a, redLineGegevensbronId, b, B3PGissuite.config.tolerance, returnRedlineObject)
+  EditUtil.getIdAndWktForRedliningObject(a, B3PGissuite.vars.redLineGegevensbronId, b, B3PGissuite.config.tolerance, returnRedlineObject)
 }
 function returnRedlineObject(a) {
   if(a == "-1") {
@@ -4208,22 +3686,21 @@ function returnRedlineObject(a) {
     e.getElementById("new_projectnaam").value = "";
     e.getElementById("ontwerp").value = d;
     b != null && b != "undefined" ? e.getElementById("opmerking").value = b : e.getElementById("opmerking").value = "";
-    editingRedlining = false
+    B3PGissuite.vars.editingRedlining = false
   }
 }
 function handlePopupValue(a) {
-  analyseThemas = [];
-  var b = document.getElementById(a);
-  setActiveThema(a, b.theItem.title, true);
+  var b = document.getElementById(a), c = B3PGissuite.get("TreeComponent");
+  c !== null && c.setActiveThema(a, b.theItem.title, true);
   b = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint();
-  EditUtil.getHighlightWktForThema(a, highLightGeom, b, B3PGissuite.config.tolerance, returnHighlight)
+  EditUtil.getHighlightWktForThema(a, B3PGissuite.vars.highLightGeom, b, B3PGissuite.config.tolerance, returnHighlight)
 }
 function returnHighlight(a) {
   a.length > 0 && a == "-1" && messagePopup("", "Geen object gevonden.", "information");
   if(a.length > 0 && a != "-1") {
     var b = new Feature(61502, a);
     drawObject(b);
-    multiPolygonBufferWkt = a
+    B3PGissuite.vars.multiPolygonBufferWkt = a
   }
 }
 function checkDisplayButtons() {
@@ -4241,7 +3718,9 @@ function onGetCapabilities() {
   hideLoading()
 }
 function onConfigComplete() {
-  initialized || (initialized = true, initializeButtons(), checkDisplayButtons(), onFrameworkLoaded())
+  if(!B3PGissuite.vars.initialized) {
+    B3PGissuite.vars.initialized = true, initializeButtons(), checkDisplayButtons(), onFrameworkLoaded()
+  }
 }
 function getBookMark() {
   var a = createPermaLink();
@@ -4315,11 +3794,15 @@ function popUp(a, b, c, d, e) {
   d && (g = d);
   e && (h = e);
   e = screen.width ? (screen.width - f) / 2 : 100;
-  currentpopupleft != null && (e = currentpopupleft);
+  if(B3PGissuite.vars.currentpopupleft != null) {
+    e = B3PGissuite.vars.currentpopupleft
+  }
   var j = screen.height ? (screen.height - g) / 2 : 100;
-  currentpopuptop != null && (currentpopuptop = j);
+  if(B3PGissuite.vars.currentpopuptop != null) {
+    B3PGissuite.vars.currentpopuptop = j
+  }
   if(h) {
-    popupCreated || initPopup(), document.getElementById("dataframedivpopup").src = a, document.getElementById("popupWindow_Title").innerHTML = "Gisviewer Informatie", $j("#popupWindow").width(c), $j("#popupWindow").height(d), $j("#popupWindow").show(), ieVersion <= 6 && ieVersion != -1 && fixPopup()
+    B3PGissuite.vars.popupCreated || initPopup(), document.getElementById("dataframedivpopup").src = a, document.getElementById("popupWindow_Title").innerHTML = "Gisviewer Informatie", $j("#popupWindow").width(c), $j("#popupWindow").height(d), $j("#popupWindow").show(), ieVersion <= 6 && ieVersion != -1 && fixPopup()
   }else {
     return properties = "toolbar = 0, scrollbars = 1, location = 0, statusbar = 1, menubar = 0, resizable = 1, width = " + f + ", height = " + g + ", top = " + j + ", left = " + e, eval("page" + b + " = window.open('" + a + "', '" + b + "', properties);")
   }
@@ -4331,10 +3814,14 @@ function popUpData(a, b, c, d) {
   c && (f = c);
   d && (g = d);
   b = screen.width ? (screen.width - e) / 2 : 100;
-  currentpopupleft != null && (b = currentpopupleft);
+  if(B3PGissuite.vars.currentpopupleft != null) {
+    b = B3PGissuite.vars.currentpopupleft
+  }
   c = screen.height ? (screen.height - f) / 2 : 100;
-  currentpopuptop != null && (currentpopuptop = c);
-  return g ? (popupCreated || initPopup(), document.getElementById("popupWindow_Title").innerHTML = "Gisviewer Informatie", $j("#popupWindow").show(), ieVersion <= 6 && ieVersion != -1 && fixPopup(), document.getElementById("dataframedivpopup")) : (properties = "toolbar = 0, scrollbars = 1, location = 0, statusbar = 1, menubar = 0, resizable = 1, width = " + e + ", height = " + f + ", top = " + c + ", left = " + b, window.open("admindatabusy.do", a, properties))
+  if(B3PGissuite.vars.currentpopuptop != null) {
+    B3PGissuite.vars.currentpopuptop = c
+  }
+  return g ? (B3PGissuite.vars.popupCreated || initPopup(), document.getElementById("popupWindow_Title").innerHTML = "Gisviewer Informatie", $j("#popupWindow").show(), ieVersion <= 6 && ieVersion != -1 && fixPopup(), document.getElementById("dataframedivpopup")) : (properties = "toolbar = 0, scrollbars = 1, location = 0, statusbar = 1, menubar = 0, resizable = 1, width = " + e + ", height = " + f + ", top = " + c + ", left = " + b, window.open("admindatabusy.do", a, properties))
 }
 function buildPopup() {
   var a = document.createElement("div");
@@ -4471,8 +3958,8 @@ function hideTabvakLoading() {
   $j("#tab_container").find(".tabvakloading").remove()
 }
 function enableEditRedlining(a) {
-  editingRedlining = true;
-  redLineGegevensbronId = a;
+  B3PGissuite.vars.editingRedlining = true;
+  B3PGissuite.vars.redLineGegevensbronId = a;
   B3PGissuite.vars.webMapController instanceof FlamingoController ? B3PGissuite.vars.webMapController.activateTool("breinaald") : B3PGissuite.vars.webMapController.activateTool("identify")
 }
 function createServiceLeaf(a, b) {
@@ -4507,8 +3994,8 @@ function checkboxUserLayerClick(a) {
   if(b.queryable) {
     c = [], c[0] = b.name, b.wmsquerylayers = c
   }
-  a ? addItemAsLayer(b) : removeItemAsLayer(b);
-  a ? refreshLayerWithDelay() : doRefreshLayer()
+  c = B3PGissuite.get("TreeComponent");
+  c !== null && (a ? (c.addItemAsLayer(b), c.refreshLayerWithDelay()) : (c.removeItemAsLayer(b), c.doRefreshLayer()))
 }
 function createServiceLayerLink(a) {
   var b = document.createElement("a");
@@ -4568,7 +4055,7 @@ function getBaseUrl() {
   return window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer
 }
 function checkTempUploadedPointsWms(a) {
-  uploadCsvLayerOn = a;
+  B3PGissuite.vars.uploadCsvLayerOn = a;
   var b = B3PGissuite.vars.webMapController.getMap().getLayer("uploadedPoints");
   a && b == null ? addTempUploadedPointsWms() : a && b ? b.setVisible(true) : !a && b && B3PGissuite.vars.webMapController.getMap().removeLayer(b)
 }
@@ -4604,7 +4091,7 @@ $j(document).ready(function() {
     }
     $j("#popupWindow").hide()
   }));
-  popupCreated = true;
+  B3PGissuite.vars.popupCreated = true;
   createDownloadMetadataDialog();
   createWMSServiceUrlDialog()
 });
@@ -4856,9 +4343,10 @@ function zoekconfiguratieThemasCallBack(a) {
   }
 }
 function switchLayersOn() {
-  if(zoekconfiguratieThemas) {
-    for(var a = 0;a < zoekconfiguratieThemas.length;a++) {
-      checkboxOnByid(zoekconfiguratieThemas[a])
+  var a = B3PGissuite.get("TreeComponent");
+  if(zoekconfiguratieThemas && a !== null) {
+    for(var b = 0;b < zoekconfiguratieThemas.length;b++) {
+      a.enableCheckBoxById(zoekconfiguratieThemas[b])
     }
   }
 }
@@ -5023,17 +4511,17 @@ function GPSComponent(a) {
   Proj4js.defs["EPSG:28992"] = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.237,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs";
   Proj4js.defs["EPSG:4236"] = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs ";
   this.startPolling = function() {
-    gpsComponent.timeoutId = setInterval(gpsComponent.once, gpsComponent.interval);
-    gpsComponent.once()
+    this.timeoutId = setInterval(this.once, this.interval);
+    this.once()
   };
   this.once = function() {
-    navigator.geolocation.getCurrentPosition(gpsComponent.receiveLocation, gpsComponent.errorHandler)
+    navigator.geolocation.getCurrentPosition(this.receiveLocation, this.errorHandler)
   };
   this.stopPolling = function() {
-    clearInterval(gpsComponent.timeoutId)
+    clearInterval(this.timeoutId)
   };
   this.receiveLocation = function(a) {
-    var a = gpsComponent.transformLatLon(Number(a.coords.longitude), Number(a.coords.latitude)), c = new Extent(a.x - gpsComponent.buffer, a.y - gpsComponent.buffer, a.x + gpsComponent.buffer, a.y + gpsComponent.buffer);
+    var a = this.transformLatLon(Number(a.coords.longitude), Number(a.coords.latitude)), c = new Extent(a.x - this.buffer, a.y - this.buffer, a.x + this.buffer, a.y + this.buffer);
     B3PGissuite.vars.webMapController.getMap().zoomToExtent(c);
     B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", a.x, a.y)
   };
@@ -5098,7 +4586,7 @@ function EditComponent() {
       h.setAttribute("id", e);
       h.setAttribute("type", "button");
       h.setAttribute("value", "Bewerk geometrie");
-      h.setAttribute("onclick", 'editComponent.editGeom("' + j + '");');
+      h.setAttribute("onclick", 'B3PGissuite.vars.editComponent.editGeom("' + j + '");');
       g.appendChild(h);
       f.appendChild(g);
       c.appendChild(f);
@@ -5110,10 +4598,10 @@ function EditComponent() {
     g.setAttribute("id", e);
     g.setAttribute("type", "button");
     g.setAttribute("value", "Opslaan");
-    g.setAttribute("onclick", "editComponent.saveFeature(this);");
+    g.setAttribute("onclick", "B3PGissuite.vars.editComponent.saveFeature(this);");
     f.appendChild(g);
     a.appendChild(f);
-    b && (b = document.createElement("td"), g = document.createElement("input"), g.setAttribute("id", e), g.setAttribute("type", "button"), g.setAttribute("value", "Verwijder"), g.setAttribute("onclick", "editComponent.removeFeature(this);"), f.appendChild(g), f.setAttribute("colspan", 2), a.appendChild(b));
+    b && (b = document.createElement("td"), g = document.createElement("input"), g.setAttribute("id", e), g.setAttribute("type", "button"), g.setAttribute("value", "Verwijder"), g.setAttribute("onclick", "B3PGissuite.vars.editComponent.removeFeature(this);"), f.appendChild(g), f.setAttribute("colspan", 2), a.appendChild(b));
     c.appendChild(a);
     b = document.createElement("form");
     b.setAttribute("id", "editForm" + e);
@@ -25187,17 +24675,489 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
   }
 }, afterRender:function() {
   for(var a in this.options.servicetrees) {
-    treeview_create({id:"layerTreeDiv_" + a, root:this.options.servicetrees[a], rootChildrenAsRoots:false, itemLabelCreatorFunction:createServiceLeaf, toggleImages:{collapsed:this.options.icons.collapsed, expanded:this.options.icons.expanded, leaf:this.options.icons.leaf}, saveExpandedState:true, streeaveScrollState:true, expandAll:true})
+    treeview_create({id:"layerTreeDiv_" + a, root:this.options.servicetrees[a], rootChildrenAsRoots:false, itemLabelCreatorFunction:createServiceLeaf, toggleImages:{collapsed:this.options.icons.collapsed, expanded:this.options.icons.expanded, leaf:this.options.icons.leaf}, saveExpandedState:true, streeaveScrollState:true, expandAll:true, scope:this})
   }
-  treeview_create({id:this.options.treeid, root:this.options.tree, rootChildrenAsRoots:true, itemLabelCreatorFunction:createLabel, toggleImages:{collapsed:this.options.icons.collapsed, expanded:this.options.icons.expanded, leaf:this.options.icons.leaf}, saveExpandedState:true, saveScrollState:true, expandAll:this.options.expandAll})
+  treeview_create({id:this.options.treeid, root:this.options.tree, rootChildrenAsRoots:true, itemLabelCreatorFunction:this.createLabel, toggleImages:{collapsed:this.options.icons.collapsed, expanded:this.options.icons.expanded, leaf:this.options.icons.leaf}, saveExpandedState:true, saveScrollState:true, expandAll:this.options.expandAll, scope:this})
+}, clickLayers:function() {
+  for(var a = B3PGissuite.vars.layersAan.length - 1;a >= 0;a--) {
+    this.checkboxClick(B3PGissuite.vars.layersAan[a], true)
+  }
+}, clickClusters:function() {
+  for(var a = B3PGissuite.vars.clustersAan.length - 1;a >= 0;a--) {
+    this.clusterCheckboxClick(B3PGissuite.vars.clustersAan[a], true)
+  }
+}, enableCheckBoxById:function(a) {
+  if(a = document.getElementById(a)) {
+    a.checked = true, this.checkboxClick(a, false)
+  }
+}, activateCheckbox:function(a) {
+  var b = document.getElementById(a);
+  b != void 0 && b != null && !b.checked && document.getElementById(a).click()
+}, deActivateCheckbox:function(a) {
+  if(!(a == void 0 || a == null)) {
+    var b = document.getElementById(a);
+    b != void 0 && b != null && b.checked && document.getElementById(a).click()
+  }
+}, setActiveThema:function(a, b, c) {
+  if(!a || !(a != null && b && b != null && c)) {
+    return B3PGissuite.vars.activeAnalyseThemaId
+  }
+  if((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || c) {
+    B3PGissuite.vars.activeAnalyseThemaId = a;
+    if((a = document.getElementById("actief_thema")) && b && a != null && b != null) {
+      a.innerHTML = "" + b
+    }
+    if(document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0) {
+      var d = document.forms[0].coords.value.split(","), b = parseFloat(d[0]), a = parseFloat(d[1]);
+      d.length == 4 ? (c = parseFloat(d[2]), d = parseFloat(d[3])) : (c = b, d = a);
+      onIdentify("", {minx:b, miny:a, maxx:c, maxy:d})
+    }
+  }
+  return B3PGissuite.vars.activeAnalyseThemaId
+}, addItemAsLayer:function(a) {
+  addLayerToEnabledLayerItems(a);
+  syncLayerCookieAndForm();
+  if(a.wmslayers && (a = a.organizationcodekey, B3PGissuite.config.organizationcode != void 0 && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != "" && a != void 0 && a != "" && B3PGissuite.vars.layerUrl.indexOf(a) <= 0)) {
+    B3PGissuite.vars.layerUrl += B3PGissuite.vars.layerUrl.indexOf("?") > 0 ? "&" : "?", B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + a + "=" + B3PGissuite.config.organizationcode
+  }
+}, removeItemAsLayer:function(a) {
+  removeLayerFromEnabledLayerItems(a.id) !== null && syncLayerCookieAndForm()
+}, refreshLayerWithDelay:function() {
+  showLoading();
+  B3PGissuite.vars.refresh_timeout_handle && (clearTimeout(B3PGissuite.vars.refresh_timeout_handle), hideLoading());
+  B3PGissuite.vars.refresh_timeout_handle = setTimeout(this.doRefreshLayer, B3PGissuite.config.refreshDelay)
+}, doRefreshLayer:function() {
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
+  refreshLayer();
+  refreshLegendBox()
+}, checkboxClick:function(a, b) {
+  var c = this, d = a.theItem;
+  a.checked ? (c.addItemAsLayer(d), B3PGissuite.config.useInheritCheckbox && (d = document.getElementById(d.id), c.enableParentClusters(d))) : c.removeItemAsLayer(d);
+  a.type == "radio" && a.checked && (d = jQuery("input[name='" + a.name + "']"), jQuery.each(d, function(b, d) {
+    a.id != d.id && c.checkboxClick(d, true)
+  }));
+  b || (a.checked ? c.refreshLayerWithDelay() : c.doRefreshLayer())
+}, radioClick:function(a) {
+  var b = B3PGissuite.vars.activeAnalyseThemaId;
+  if(a && a != null && a.theItem && a.theItem != null && a.theItem.id && a.theItem.title && (B3PGissuite.vars.activeAnalyseThemaId = this.setActiveThema(a.theItem.id, a.theItem.title, true), this.activateCheckbox(a.theItem.id), this.deActivateCheckbox(b), a.theItem.metadatalink && a.theItem.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer"))) {
+    document.getElementById("beschrijvingVakViewer").src = a.theItem.metadatalink
+  }
+}, clusterCheckboxClick:function(a, b) {
+  var c = this;
+  if(!(a == void 0 || a == null)) {
+    if(B3PGissuite.vars.layerUrl == null) {
+      B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl
+    }
+    if(a.checked) {
+      for(var d = false, e = 0;e < B3PGissuite.vars.clustersAan.length;e++) {
+        B3PGissuite.vars.clustersAan[e].id == a.id && (d = true)
+      }
+      d || B3PGissuite.vars.clustersAan.push(a)
+    }else {
+      d = [];
+      for(e = 0;e < B3PGissuite.vars.clustersAan.length;e++) {
+        B3PGissuite.vars.clustersAan[e].id != a.id && d.push(B3PGissuite.vars.clustersAan[e])
+      }
+      B3PGissuite.vars.clustersAan = d
+    }
+    d = a.theItem;
+    B3PGissuite.config.useCookies && (a.checked ? addClusterIdToCookie(d.id) : removeClusterIdFromCookie(d.id));
+    if(!B3PGissuite.config.useInheritCheckbox || d.hide_tree) {
+      if(a.checked) {
+        for(e = d.children.length;e > 0;e--) {
+          var f = d.children[e - 1];
+          if(f.cluster) {
+            if(f.callable && !B3PGissuite.config.useInheritCheckbox) {
+              f = document.getElementById(f.id), f.checked = true, c.clusterCheckboxClick(f, b)
+            }
+          }else {
+            if(c.addItemAsLayer(f), !d.hide_tree) {
+              document.getElementById(f.id).checked = true
+            }
+          }
+        }
+      }else {
+        if(d.children) {
+          for(e = 0;e < d.children.length;e++) {
+            if(f = d.children[e], f.cluster) {
+              if(f.callable && !B3PGissuite.config.useInheritCheckbox) {
+                f = document.getElementById(f.id), f.checked = false, c.clusterCheckboxClick(f, b)
+              }
+            }else {
+              if(c.removeItemAsLayer(f), !d.hide_tree) {
+                document.getElementById(f.id).checked = false
+              }
+            }
+          }
+        }
+      }
+    }
+    if(B3PGissuite.config.useInheritCheckbox) {
+      for(e = 0;e < d.children.length;e++) {
+        f = d.children[e], a.checked ? enableLayer(f.id) : disableLayer(f.id)
+      }
+    }
+    a.type == "radio" && d.children && (d = $j("#layermaindiv_item_" + a.id + "_children"), a.checked ? (d && (d.removeClass("disabledRadioChilds"), $j("#layermaindiv_item_" + a.id + "_children input").removeAttr("disabled"), treeview_expandItemChildren("layermaindiv", a.id)), d = $j("input[name='" + a.name + "']"), $j.each(d, function(d, e) {
+      a.id != e.id && c.clusterCheckboxClick(e, b)
+    })) : d && (d.addClass("disabledRadioChilds"), treeview_collapseItemChildren("layermaindiv", a.id), $j("#layermaindiv_item_" + a.id + "_children input").attr("disabled", true)));
+    b || c.refreshLayerWithDelay()
+  }
+}, createLabel:function(a, b) {
+  if(b.cluster) {
+    this.createClusterLabel(a, b)
+  }else {
+    if(b.hide_tree) {
+      var c = this.createInvisibleThemaDiv(b);
+      c.theItem = b;
+      a.appendChild(c);
+      b.visible == "on" && b.wmslayers && this.addItemAsLayer(b);
+      return true
+    }else {
+      if(b.wmslayers) {
+        checkboxChecked = false;
+        var d = this.getLayerPosition(b);
+        d !== 0 && (checkboxChecked = true);
+        c = null;
+        parentItem = this.getParentItem(this.options.tree, b);
+        c = parentItem.exclusive_childs ? this.createRadioThema(b, checkboxChecked, parentItem.id) : this.createCheckboxThema(b, checkboxChecked);
+        c.theItem = b;
+        checkboxChecked && (d < 0 ? B3PGissuite.vars.layersAan.unshift(c) : B3PGissuite.vars.layersAan.push(c));
+        if(b.analyse === "on" || b.analyse === "active") {
+          B3PGissuite.config.multipleActiveThemas ? this.isActiveItem(b) : (d = this.createRadioSingleActiveThema(b), a.appendChild(d))
+        }
+        a.appendChild(c)
+      }
+      b.legendurl != void 0 && B3PGissuite.config.showLegendInTree && (a.appendChild(document.createTextNode("  ")), a.appendChild(this.createTreeLegendIcon()));
+      a.appendChild(document.createTextNode("  "));
+      a.appendChild(this.createMetadataLink(b));
+      b.legendurl != void 0 && B3PGissuite.config.showLegendInTree && a.appendChild(this.createTreeLegendDiv(b))
+    }
+  }
+  return false
+}, createClusterLabel:function(a, b) {
+  if(b.callable) {
+    var c = false;
+    this.getClusterPosition(b) !== 0 && (c = true);
+    var d = null, d = this.getParentItem(this.options.tree, b), d = d.exclusive_childs ? this.createRadioCluster(b, c, d.id) : this.createCheckboxCluster(b, c);
+    d.theItem = b;
+    a.appendChild(d);
+    c && B3PGissuite.vars.clustersAan.push(d);
+    b.active && this.setActiveCluster(b, true)
+  }
+  c = false;
+  if(b.hide_tree && b.callable && (c = document.createElement("img"), c.setAttribute("border", "0"), c.src = globalTreeOptions.layermaindiv.toggleImages.leaf, c.theItem = b, a.togglea = c, B3PGissuite.config.showLegendInTree && b.children)) {
+    c = false;
+    for(d = 0;d < b.children.length && !c;d++) {
+      var e = b.children[d];
+      !e.cluster && e.legendurl != void 0 && (c = true)
+    }
+    c && (a.appendChild(document.createTextNode("  ")), a.appendChild(this.createTreeLegendIcon()))
+  }
+  if(!b.hide_tree || b.callable) {
+    a.appendChild(document.createTextNode("  ")), a.appendChild(this.createMetadataLink(b))
+  }
+  a.appendChild(this.createTreeLegendDiv(b));
+  if(b.hide_tree && !b.callable) {
+    return true
+  }
+}, getClusterPosition:function(a) {
+  if(B3PGissuite.vars.cookieClusterArray == null || !B3PGissuite.config.useCookies) {
+    return a.visible || a.active ? -1 : 0
+  }
+  var b = B3PGissuite.vars.cookieClusterArray.split(",");
+  for(i = 0;i < b.length;i++) {
+    if(b[i] == a.id) {
+      return i + 1
+    }
+  }
+  return a.active ? -1 : 0
+}, createCheckboxThema:function(a, b) {
+  var c = this;
+  return jQuery("<input />").attr({id:a.id, type:"checkbox", checked:b, value:a.id}).click(function() {
+    c.checkboxClick(this, false)
+  })[0]
+}, getLayerPosition:function(a) {
+  if(B3PGissuite.vars.cookieArray == null || !B3PGissuite.config.useCookies) {
+    return a.visible == "on" || a.analyse == "active" ? -1 : 0
+  }
+  var b = B3PGissuite.vars.cookieArray.split(",");
+  for(i = 0;i < b.length;i++) {
+    if(b[i] == a.id) {
+      return i + 1
+    }
+  }
+  return a.analyse == "active" ? -1 : 0
+}, getParentItem:function(a, b) {
+  if(a.children) {
+    for(var c = 0;c < a.children.length;c++) {
+      if(a.children[c] == b) {
+        return a
+      }else {
+        if(a.children[c].children) {
+          var d = this.getParentItem(a.children[c], b);
+          if(d != null) {
+            return d
+          }
+        }
+      }
+    }
+  }
+  return null
+}, createRadioThema:function(a, b, c) {
+  var d = this;
+  return jQuery("<input />").attr({id:a.id, type:"radio", checked:b, value:a.id, name:c}).click(function() {
+    d.checkboxClick(this, false)
+  })[0]
+}, isActiveItem:function(a) {
+  if(!a) {
+    return false
+  }
+  a.analyse == "on" ? this.setActiveThema(a.id, a.title) : a.analyse == "active" && this.setActiveThema(a.id, a.title, true);
+  if(B3PGissuite.vars.activeAnalyseThemaId != a.id) {
+    return false
+  }
+  if(a.analyse == "active" && B3PGissuite.vars.prevRadioButton != null) {
+    var b = document.getElementById(B3PGissuite.vars.prevRadioButton);
+    if(b != void 0 && b != null) {
+      b.checked = false
+    }
+  }
+  if(a.metadatalink && a.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer")) {
+    document.getElementById("beschrijvingVakViewer").src = a.metadatalink
+  }
+  B3PGissuite.vars.prevRadioButton = "radio" + a.id;
+  return true
+}, createRadioCluster:function(a, b, c) {
+  var d = this;
+  return jQuery("<input />").attr({id:a.id, type:"radio", checked:b, value:a.id, name:c}).click(function() {
+    d.clusterCheckboxClick(this, false)
+  })[0]
+}, createCheckboxCluster:function(a, b) {
+  var c = this;
+  return jQuery("<input />").attr({id:a.id, type:"checkbox", checked:b, value:a.id}).click(function() {
+    c.clusterCheckboxClick(this, false)
+  })[0]
+}, createRadioSingleActiveThema:function(a) {
+  var b = this, c = jQuery("<input />").attr({id:"radio" + a.id, type:"radio", checked:this.isActiveItem(a), value:a.id, name:"selkaartlaag"}).click(function() {
+    b.radioClick(this)
+  })[0];
+  c.theItem = a;
+  return c
+}, createTreeLegendIcon:function() {
+  var a = this, b = document.createElement("img");
+  b.src = imageBaseUrl + "icons/application_view_list.png";
+  b.alt = "Legenda tonen";
+  b.title = "Legenda tonen";
+  b.width = "15";
+  b.height = "13";
+  b.className = "treeLegendIcon imagenoborder";
+  jQuery(b).click(function() {
+    jQuery(this).hasClass("disabledLegendIcon") || a.loadTreeLegendImage(jQuery(this).siblings("div").attr("id"))
+  });
+  return b
+}, loadTreeLegendImage:function(a) {
+  var a = document.getElementById(a), b = jQuery(a), c = a.theItem;
+  if(b.find("img.legendLoading").length == 0) {
+    var d = document.createElement("img");
+    d.src = imageBaseUrl + "icons/loadingsmall.gif";
+    d.alt = "Loading";
+    d.title = "Loading";
+    d.className = "legendLoading imagenoborder";
+    a.appendChild(d)
+  }
+  if(b.find("img.treeLegendImage").length == 0) {
+    if(c.cluster) {
+      for(d = b = 0;d < c.children.length;d++) {
+        var e = c.children[d];
+        if(e.legendurl != void 0) {
+          b > 0 && a.appendChild(document.createElement("br"));
+          var f = this.createTreeLegendImage(e);
+          a.appendChild(f);
+          f.src = e.legendurl;
+          b++
+        }
+      }
+    }else {
+      f = this.createTreeLegendImage(c), a.appendChild(f), f.src = c.legendurl
+    }
+  }
+  jQuery(a).toggle()
+}, createTreeLegendImage:function(a) {
+  var b = document.createElement("img");
+  b.name = a.title;
+  b.alt = "Legenda " + a.title;
+  b.onerror = function() {
+    var a = jQuery(this).parent();
+    a.find("img.legendLoading").hide();
+    a.html('<span style="color: Black;">Legenda kan niet worden opgehaald</span>')
+  };
+  b.onload = function() {
+    jQuery(this).parent().find("img.legendLoading").hide()
+  };
+  b.className = "treeLegendImage";
+  return b
+}, createTreeLegendDiv:function(a) {
+  var b = a.id + "#tree#" + a.wmslayers, c = document.createElement("div");
+  c.name = b;
+  c.id = b;
+  c.title = a.title;
+  c.className = "treeLegendClass";
+  c.theItem = a;
+  c.style.display = "none";
+  return c
+}, createMetadataLink:function(a) {
+  var b = document.createElement("a");
+  b.innerHTML = a.title ? a.title : a.id;
+  b.href = "#";
+  var c = "Download dataset van " + a.title, d = "Informatie over " + a.title;
+  if(a.metadatalink && a.metadatalink.length > 1 && (a.gegevensbronid == void 0 || a.gegevensbronid < 1)) {
+    return b.onclick = function() {
+      jQuery("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, 800, 600, true, true), jQuery(this).dialog("close"))
+      }, Url:function() {
+        if(jQuery("#dialog-download-metadata").dialog("isOpen")) {
+          jQuery(this).dialog("close");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          jQuery("#input_wmsserviceurl").val(a);
+          unblockViewerUI();
+          jQuery("#dialog-wmsservice-url").dialog("open")
+        }
+      }, Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }});
+      jQuery("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
+        jQuery(this).html(jQuery(this).parent().attr("text"))
+      });
+      jQuery("#dialog-download-metadata").dialog("open")
+    }, b
+  }
+  if((a.metadatalink == void 0 || a.metadatalink == "#") && a.gegevensbronid && a.gegevensbronid > 0) {
+    return b.onclick = function() {
+      B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? jQuery("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (getWktForDownload() == "" && alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden."), iFramePopup("download.do?id=" + a.gegevensbronid, false, c, 425, 250, true, false), jQuery(this).dialog("close"))
+      }, Url:function() {
+        if(jQuery("#dialog-download-metadata").dialog("isOpen")) {
+          jQuery(this).dialog("close");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          jQuery("#input_wmsserviceurl").val(a);
+          unblockViewerUI();
+          jQuery("#dialog-wmsservice-url").dialog("open")
+        }
+      }, Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }}) : !B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? jQuery("#dialog-download-metadata").dialog("option", "buttons", {Url:function() {
+        if(jQuery("#dialog-download-metadata").dialog("isOpen")) {
+          jQuery(this).dialog("close");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          jQuery("#input_wmsserviceurl").val(a);
+          unblockViewerUI();
+          jQuery("#dialog-wmsservice-url").dialog("open")
+        }
+      }, Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }}) : jQuery("#dialog-download-metadata").dialog("option", "buttons", {Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }});
+      jQuery("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
+        jQuery(this).html(jQuery(this).parent().attr("text"))
+      });
+      jQuery("#dialog-download-metadata").dialog("open")
+    }, b
+  }
+  if(a.metadatalink && a.metadatalink.length > 1 && a.gegevensbronid && a.gegevensbronid > 0) {
+    return b.onclick = function() {
+      B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? jQuery("#dialog-download-metadata").dialog("option", "buttons", {Download:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (getWktForDownload() == "" && alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden."), iFramePopup("download.do?id=" + a.gegevensbronid, false, c, 425, 250, true, false), jQuery(this).dialog("close"))
+      }, Metadata:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, 800, 600, true, true), jQuery(this).dialog("close"))
+      }, Url:function() {
+        if(jQuery("#dialog-download-metadata").dialog("isOpen")) {
+          jQuery(this).dialog("close");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          jQuery("#input_wmsserviceurl").val(a);
+          unblockViewerUI();
+          jQuery("#dialog-wmsservice-url").dialog("open")
+        }
+      }, Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }}) : !B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl ? jQuery("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, 800, 600, true, true), jQuery(this).dialog("close"))
+      }, Url:function() {
+        if(jQuery("#dialog-download-metadata").dialog("isOpen")) {
+          jQuery(this).dialog("close");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          jQuery("#input_wmsserviceurl").val(a);
+          unblockViewerUI();
+          jQuery("#dialog-wmsservice-url").dialog("open")
+        }
+      }, Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }}) : jQuery("#dialog-download-metadata").dialog("option", "buttons", {Metadata:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (iFramePopup(a.metadatalink, false, d, 800, 600, true, true), jQuery(this).dialog("close"))
+      }, Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }});
+      jQuery("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
+        jQuery(this).html(jQuery(this).parent().attr("text"))
+      });
+      jQuery("#dialog-download-metadata").dialog("open")
+    }, b
+  }
+  if((a.metadatalink == void 0 || a.metadatalink == "#") && (a.gegevensbronid == void 0 || a.gegevensbronid < 1) && B3PGissuite.config.showServiceUrl) {
+    b.onclick = function() {
+      jQuery("#dialog-download-metadata").dialog("option", "buttons", {Url:function() {
+        if(jQuery("#dialog-download-metadata").dialog("isOpen")) {
+          jQuery(this).dialog("close");
+          var a = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+          jQuery("#input_wmsserviceurl").val(a);
+          unblockViewerUI();
+          jQuery("#dialog-wmsservice-url").dialog("open")
+        }
+      }, Annuleren:function() {
+        jQuery("#dialog-download-metadata").dialog("isOpen") && (jQuery(this).dialog("close"), unblockViewerUI())
+      }});
+      jQuery("div.ui-dialog-buttonset .ui-button .ui-button-text").each(function() {
+        jQuery(this).html(jQuery(this).parent().attr("text"))
+      });
+      jQuery("#dialog-download-metadata").dialog("open")
+    }
+  }
+  return b
+}, createInvisibleThemaDiv:function(a) {
+  var b = document.createElement("div");
+  b.name = a.id;
+  b.id = a.id;
+  b.style.height = "0";
+  b.style.width = "0";
+  b.height = 0;
+  b.width = 0;
+  b.style.display = "none";
+  return b
+}, setActiveCluster:function(a, b) {
+  if(((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || b) && a != void 0 & a != null) {
+    var c = a.title, d = document.getElementById("actief_thema");
+    if(d && c && d != null && c != null) {
+      B3PGissuite.vars.activeClusterId = a.id, d.innerHTML = "" + c
+    }
+    if(a.metadatalink && a.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer")) {
+      document.getElementById("beschrijvingVakViewer").src = a.metadatalink
+    }
+  }
+}, enableParentClusters:function(a) {
+  if(a != null && (a = getParentDivContainingChilds(a, "div"))) {
+    var a = getParentByTagName(a, "div"), b = getItemName(a);
+    document.getElementById(b).checked = true;
+    this.enableParentClusters(a)
+  }
 }});
 // Input 18
-B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaultOptions:{formid:"volgordeForm", orderboxId:"orderLayerBox", sliderBoxId:"transSlider", sliderId:"slider", useSortableFunction:true, taboptions:{resizableContent:true}}, constructor:function(a) {
+B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaultOptions:{formid:"volgordeForm", orderboxId:"orderLayerBox", sliderBoxId:"transSlider", sliderId:"slider", useSortableFunction:true, layerDelay:5E3, taboptions:{resizableContent:true}}, reloadTimer:null, orderContainer:null, constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
   this.component = jQuery("<form></form>").attr({id:this.options.formId});
-  this.component.append(jQuery("<div></div>").attr({id:this.options.orderboxId, "class":this.options.orderboxId + " tabvak_groot"}));
+  this.orderContainer = jQuery("<div></div>").attr({id:this.options.orderboxId, "class":this.options.orderboxId + " tabvak_groot"});
+  this.component.append(this.orderContainer);
   var a = jQuery("<div></div>").attr({id:this.options.sliderBoxId}).css({height:"50px", width:"260px", "padding-left":"5px"});
   a.append(jQuery("<p></p>").text("Transparantie van alle voorgrondlagen."));
   a.append(jQuery("<div></div>").text("-").css({"float":"left", "font-size":"22px", "padding-right":"3px", "margin-top":"-8px"}));
@@ -25218,7 +25178,16 @@ B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaul
       var f = d[e];
       f.getOption("background") || f.setOpacity(c)
     }
+  }});
+  this.options.useSortableFunction && this.orderContainer.sortable({stop:function() {
+    setTimerForReload()
+  }, start:function() {
+    clearTimerForReload()
   }})
+}, setTimerForReload:function() {
+  this.reloadTimer = setTimeout("refreshMapVolgorde()", this.options.layerDelay)
+}, clearTimerForReload:function() {
+  clearTimeout(this.reloadTimer)
 }});
 // Input 19
 B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"ViewerComponent", defaultOptions:{containerId:"planselectcontainer", planContainerId:"kolomTekst", selectPlanId:"selectedPlan", eigenaarSelectName:"eigenaarselect", typeSelectName:"plantypeselect", statusSelectName:"statusselect", planSelectName:"planselect"}, constructor:function(a) {

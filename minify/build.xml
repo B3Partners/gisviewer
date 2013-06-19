@@ -27,7 +27,7 @@
           </sources>
           
           <sources dir="${viewerhtml.path}/openlayers">
-            <file name="Openlayers.js" />
+            <file name="OpenLayers.js" />
           </sources>
 
           <sources dir="${viewerhtml.path}/webmapcontroller">
@@ -57,6 +57,7 @@
     <target name="checkforchanges">
         <uptodate property="nochanges" targetfile="${dir}/.flagfile">
             <srcfiles dir="${dir}" includes="**/*.scss"/>
+            <srcfiles dir="${maindir}" includes="**/*.scss" />
         </uptodate>
     </target>
     
@@ -70,6 +71,7 @@
     <target name="compile-main-css">
         <antcall target="compile-css">
             <param name="dir" value="${design.folder}" />
+            <param name="maindir" value="${design.folder}" />
         </antcall>
     </target>
     
@@ -89,6 +91,7 @@
     <target name="compile-theme">
         <antcall target="compile-css">
             <param name="dir" value="${themes.folder}/${theme}/design" />
+            <param name="maindir" value="${design.folder}" />
         </antcall>
         <copy todir="${themes.output.folder}/${theme}/images">
             <fileset dir="${themes.folder}/${theme}/images"/>

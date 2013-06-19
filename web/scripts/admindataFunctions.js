@@ -440,7 +440,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
             if (gegevensbron.editable && getParent().B3PGissuite.config.showEditTool) {
                 var icon = $j('<img src="'+pencil+'" alt="Edit object" title="Edit object" />')
                 .click(function() {
-                    var ec = getParent().editComponent;
+                    var ec = getParent().B3PGissuite.vars.editComponent;
                     ec.edit(record,gegevensbron.id);
                 });
                 editTd.append(icon);

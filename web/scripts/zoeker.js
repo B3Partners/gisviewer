@@ -453,10 +453,11 @@ function zoekconfiguratieThemasCallBack(themaIds){
 }
 
 function switchLayersOn(){
-    if(zoekconfiguratieThemas){
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if(zoekconfiguratieThemas && treeComponent !== null){
         for ( var i = 0 ; i < zoekconfiguratieThemas.length ;i++ ){
             var themaId = zoekconfiguratieThemas[i];
-            checkboxOnByid(themaId);
+            treeComponent.enableCheckBoxById(themaId);
         }
     }
 }

@@ -191,7 +191,7 @@
         "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchComponent", "options": { "hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt} } },
         "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
         "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse", "class": "IframeComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
-        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendComponent", 'options': { 'useSortableFunction': B3PGissuite.config.useSortableFunction } },
+        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendComponent", 'options': { 'useSortableFunction': B3PGissuite.config.useSortableFunction, 'layerDelay': B3PGissuite.config.layerDelay } },
         "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionComponent" },
         "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
@@ -209,8 +209,40 @@
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
 </script>
 
-<!-- Total (minified) viewer JS -->
-<script type="text/javascript" src="<html:rewrite page="/scripts/viewer-min.js"/>"></script>
+<c:choose>
+    <c:when test="${not empty param.debug}">
+        <!-- common -->
+        <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/zoeker.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/GPSComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/EditComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/MaatregelComponent.js"/>"></script>
+        <!-- openlayers -->
+        <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
+        <!-- webmapcontrollers -->
+        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
+        <!-- components -->
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/ViewerComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/TabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/IframeComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/TreeComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/LegendComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/PlanSelectionComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/SearchComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/CMSComponent.js"/>"></script>
+    </c:when>
+    <c:otherwise>
+        <!-- Total (minified) viewer JS -->
+        <script type="text/javascript" src="<html:rewrite page="/scripts/viewer-min.js"/>"></script>
+    </c:otherwise>
+</c:choose>
 
 <div style="display: none;">
     <html:form action="/viewerdata?code=${kbcode}">

@@ -58,9 +58,13 @@ function treeview_create(options) {
 		options.childrenPadding = "10px";
 	}
         
-        if(!options.zebraEffect) {
-                options.zebraEffect = false;
-        }
+	if(!options.zebraEffect) {
+	        options.zebraEffect = false;
+	}
+
+	if(!options.scope) {
+        options.scope = options;
+	}
 
 	if(!options.rootChildrenAsRoots) {
 		if(haveInnerHTML && options.itemHtmlLabelCreatorFunction) {
@@ -370,11 +374,11 @@ function treeview_createContentNode(options, id, item) {
         labelContainer.togglea = a;
 	labelContainer.id = id + "_label";
 	if(options.itemLabelCreatorFunction) {
-		var hide = options.itemLabelCreatorFunction(labelContainer, item);
-                if(hide) { // bij undefined niet hiden
-                    // return div zonder table
-                    return labelContainer;
-                }
+		var hide = options.itemLabelCreatorFunction.call(options.scope, labelContainer, item);
+        if(hide) { // bij undefined niet hiden
+            // return div zonder table
+            return labelContainer;
+        }
 	} else {
 		treeview_defaultItemLabelCreatorFunction(labelContainer, item);
 	}

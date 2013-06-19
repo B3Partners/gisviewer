@@ -118,7 +118,7 @@ function EditComponent(){
             geomBtn.setAttribute("id", fid );
             geomBtn.setAttribute("type","button");
             geomBtn.setAttribute("value","Bewerk geometrie");
-            geomBtn.setAttribute("onclick",'editComponent.editGeom("'+geomType+'");');
+            geomBtn.setAttribute("onclick",'B3PGissuite.vars.editComponent.editGeom("'+geomType+'");');
             geomCel.appendChild(geomBtn);
             geomButtonRow.appendChild(geomCel);
             table.appendChild(geomButtonRow);
@@ -131,7 +131,7 @@ function EditComponent(){
         saveBtn.setAttribute("id", fid );
         saveBtn.setAttribute("type","button");
         saveBtn.setAttribute("value","Opslaan");
-        saveBtn.setAttribute("onclick",'editComponent.saveFeature(this);');
+        saveBtn.setAttribute("onclick",'B3PGissuite.vars.editComponent.saveFeature(this);');
         
         cel.appendChild(saveBtn);
         buttonRow.appendChild(cel);
@@ -142,7 +142,7 @@ function EditComponent(){
             removeBtn.setAttribute("id", fid );
             removeBtn.setAttribute("type","button");
             removeBtn.setAttribute("value","Verwijder");
-            removeBtn.setAttribute("onclick",'editComponent.removeFeature(this);');
+            removeBtn.setAttribute("onclick",'B3PGissuite.vars.editComponent.removeFeature(this);');
             cel.appendChild(removeBtn);
             cel.setAttribute("colspan",2);
             buttonRow.appendChild(removeCel);

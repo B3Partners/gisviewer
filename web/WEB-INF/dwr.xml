@@ -29,8 +29,10 @@
         <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaat"/>
         <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaatAttribuut"/>  
         
-        <!--
-        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>                    
+        
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>     
+        
+        <!--               
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>   
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekAttribuut"/>
         -->

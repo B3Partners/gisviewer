@@ -274,7 +274,7 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
                         diff=elemOrder-gegevensbron.order;
                     }
                 });
-	    }
+            }
             if (beforeElement!=null){
                 bronContainer.insertBefore(beforeElement);
             }else{
@@ -400,6 +400,20 @@ function handleGetGegevensBronMulti(gegevensbron) {
         bronTableHead.append(trHead);
     }
 
+    if (gegevensbron.records && gegevensbron.records.length == 1) {
+        var url;
+        
+        if (gegevensbron.records[0].values[0].value) {
+            url = gegevensbron.records[0].values[0].value;
+        }
+        
+        if (gegevensbron.records[0].values[0].valueList) {
+            url = gegevensbron.records[0].values[0].valueList;
+        }
+        
+        parent.popUp(url, 'externe_link', 600, 500);
+    }
+    
     // Create table content
     if(!gegevensbron.records) {        
         var size = 1;
@@ -408,7 +422,6 @@ function handleGetGegevensBronMulti(gegevensbron) {
         }
         var tr = createEmptyRow(size);
         bronTableBody.append(tr);
-    // TODO als 1 record en opgegeven aantal kolommen, dan meteen popup openen
     } else {        
         $j.each(gegevensbron.records, function(index, record) {            
             var tr = $j('<tr></tr>');
@@ -559,7 +572,7 @@ function toggleBron(toggleIcon) {
                 $bronContent.show().removeClass("bronContentClosed").addClass("bronContentOpen");
                 toggleIcon.attr("src", minusicon);
             }
-        // It is a child element (-> Hide child, show child caption)
+            // It is a child element (-> Hide child, show child caption)
         } else {
             if($bronContent.hasClass("bronContentOpen")) {
                 $bronContent.parent().parent().siblings('.childCaption').show();
@@ -861,11 +874,11 @@ function createTableTd(waarde) {
                 var linkspan = $j('<span></span>');
                 var clickable=null;
                 if(labels){
-		    clickable = $j('<a href="#">'+labels[i]+'</a>')
-		    .attr({
-			"title": listWaarde
-		    });
-		    i++;
+                    clickable = $j('<a href="#">'+labels[i]+'</a>')
+                    .attr({
+                        "title": listWaarde
+                    });
+                    i++;
                 } else if (ext == 'pdf'){
                     clickable = $j('<a href="#"><img src="'+pdficon+'" alt="Bekijk PDF" border="0" /></a>')
                     .attr({
@@ -929,7 +942,7 @@ function createEmptyRow(size) {
  * attributeName: gekozen (in themadata) attribuut naam
  * attributeValue: waarde van het attribuut
  * eenheid: eventueel eenheid voor omrekenen
-*/
+ */
 function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
     var oldValue = element.innerHTML;
     var newValue;

@@ -484,7 +484,13 @@ function handleInitSearch(list){
     hideLoading();
     if (list.length > 0){
         handleInitSearchResult(list[0],searchAction, searchId,searchClusterId,searchSldVisibleValue);
-    }
+    } else {
+        /* Lagen aanzetten na zoeken */
+        JZoekconfiguratieThemaUtil.getThemas(searchConfigId, function(data) {
+            zoekconfiguratieThemasCallBack(data);
+            switchLayersOn();
+        });     
+    }    
 }
 
 /**

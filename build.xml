@@ -65,7 +65,7 @@
     -->
 	<import file="deploy/build.xml"/>
     <import file="minify/build.xml"/>
-    <target name="-post-compile">
+    <target name="-pre-compile">
 		<antcall target="minify"/>
         <antcall target="compile-main-css"/>
         <antcall target="compile-themes"/>

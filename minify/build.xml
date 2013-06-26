@@ -86,6 +86,9 @@
         <antcall target="compile-theme">
             <param name="theme" value="solutionparc"/>
         </antcall>
+        <antcall target="compile-theme">
+            <param name="theme" value="leerdam"/>
+        </antcall>
     </target>
     
     <target name="compile-theme">

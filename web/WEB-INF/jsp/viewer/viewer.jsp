@@ -353,15 +353,6 @@
     * Start off with initMapComponent()
     */
     initMapComponent();
-    
-    var activeTab = (B3PGissuite.config.useCookies ? readCookie('activetab') : null);
-    if(activeTab !== null) {
-        switchTab(activeTab);
-    } else if (B3PGissuite.config.user.demogebruiker) {
-        switchTab('themas'); // read default tab from config ?
-    } else {
-        switchTab('themas'); // read default tab from config ?
-    }
     var orderLayerBox= document.getElementById("orderLayerBox");
 </script>
 
@@ -381,6 +372,7 @@
                 if($j('#content_viewer').hasClass('dataframe_open')) $j('#content_viewer').removeClass('dataframe_open').addClass('dataframe_dicht');
                 else $j('#content_viewer').addClass('dataframe_open').removeClass('dataframe_dicht');
             }
+            updateSizeOL();
         }
         var expandNodes=null;
         <c:if test="${not empty expandNodes}">

@@ -3911,6 +3911,16 @@ $j(document).ready(function() {
     var vergunningTabOn = false;
     var zoekenTabOn = false;
 
+    // Set active tabs
+    var activeTab = (B3PGissuite.config.useCookies ? readCookie('activetab') : null);
+    if(activeTab !== null) {
+        switchTab(activeTab);
+    } else if (B3PGissuite.config.user.demogebruiker) {
+        switchTab('themas'); // read default tab from config ?
+    } else {
+        switchTab('themas'); // read default tab from config ?
+    }
+
     for (var i=0; i < B3PGissuite.config.enabledtabs.length; i++) {
         if (B3PGissuite.config.enabledtabs[i] === "vergunningen") vergunningTabOn = true;
         if (B3PGissuite.config.enabledtabs[i] === "zoeken") zoekenTabOn = true;

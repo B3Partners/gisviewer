@@ -229,7 +229,10 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
 
             // Append all to DOM tree
             bronContent.append(bronTable.append(bronTableBody));
-            bronContainer.append(bronCaption.css({"color":"#000000","background-color":"#ffffff"})).append(bronContent);
+            bronContainer.append(bronCaption.css({
+                "color":"#000000",
+                "background-color":"#ffffff"
+            })).append(bronContent);
         });
     }
 
@@ -400,18 +403,22 @@ function handleGetGegevensBronMulti(gegevensbron) {
         bronTableHead.append(trHead);
     }
 
+    /* Only auto open pop-up when one record is found and one objectdata field 
+     * is configured in basisregel */
     if (gegevensbron.records && gegevensbron.records.length == 1) {
         var url;
         
-        if (gegevensbron.records[0].values[0].value) {
-            url = gegevensbron.records[0].values[0].value;
-        }
+        if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
+            if (gegevensbron.records[0].values[0].value) {
+                url = gegevensbron.records[0].values[0].value;
+            }
         
-        if (gegevensbron.records[0].values[0].valueList) {
-            url = gegevensbron.records[0].values[0].valueList;
-        }
-        
-        parent.popUp(url, 'externe_link', 600, 500);
+            if (gegevensbron.records[0].values[0].valueList) {
+                url = gegevensbron.records[0].values[0].valueList;
+            }
+    
+            parent.popUp(url, 'externe_link', 800, 600);
+        }        
     }
     
     // Create table content
@@ -509,7 +516,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
                     .append(childDiv);
                     childTr.append(childTd);
                     bronTableBody.append(childTr);
-                    // toggleIcon.click();
+                // toggleIcon.click();
                 });
             }
         });
@@ -530,8 +537,8 @@ function handleGetGegevensBronMulti(gegevensbron) {
     // child loading weghalen indien aanwezig
     $j('#'+htmlId).siblings('.childLoading').hide();
 
-    // alle childs pre-loaden
-    // $j('.childCaption', bronContainer).find('img').click();
+// alle childs pre-loaden
+// $j('.childCaption', bronContainer).find('img').click();
 }
 
 function loadChild(bronContentId, beanId, wkt, beanCql) {
@@ -572,7 +579,7 @@ function toggleBron(toggleIcon) {
                 $bronContent.show().removeClass("bronContentClosed").addClass("bronContentOpen");
                 toggleIcon.attr("src", minusicon);
             }
-            // It is a child element (-> Hide child, show child caption)
+        // It is a child element (-> Hide child, show child caption)
         } else {
             if($bronContent.hasClass("bronContentOpen")) {
                 $bronContent.parent().parent().siblings('.childCaption').show();
@@ -798,10 +805,10 @@ function createTableTd(waarde) {
                 }
             } else {
                 if (waarde.eenheid) {
-					td.html(waarde.value + ' ' + waarde.eenheid);
-				} else {
-					td.html(waarde.value);
-				}
+                    td.html(waarde.value + ' ' + waarde.eenheid);
+                } else {
+                    td.html(waarde.value);
+                }
             }
         }
     }
@@ -843,11 +850,11 @@ function createTableTd(waarde) {
     }
 
     if (waarde.type == 'TYPE_QUERY') {        
-    	if(waarde.valueList.length > 1){
-			var labels = waarde.value.split(',');
-		}
+        if(waarde.valueList.length > 1){
+            var labels = waarde.value.split(',');
+        }
 		
-		/* Een Objectdata veld met een berekening, bijvoorbeeld =[A]*[B] */
+        /* Een Objectdata veld met een berekening, bijvoorbeeld =[A]*[B] */
         if(waarde.valueList.length == 1) {
             if (waarde.valueList[0].charAt(0) == '=') {                
                 var value = evalObjectDataCommando(waarde.valueList[0]);

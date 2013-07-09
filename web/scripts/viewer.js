@@ -4530,8 +4530,9 @@ popUp = function(URL, naam, width, height, useDiv) {
 
         $j("#popupWindow").show();
 
-        if(ieVersion <= 6 && ieVersion != -1)
+        if(ieVersion <= 6 && ieVersion != -1) {
             fixPopup();
+        }
 
     } else {
 
@@ -4540,13 +4541,13 @@ popUp = function(URL, naam, width, height, useDiv) {
         "location = 0, " +
         "statusbar = 1, " +
         "menubar = 0, " +
-        "resizable = 1, " +
+        "resizable = 0, " +
         "width = " + screenwidth + ", " +
         "height = " + screenheight + ", " +
         "top = " + popuptop + ", " +
         "left = " + popupleft;
-
-        return eval("page" + naam + " = window.open('" + URL + "', '" + naam + "', properties);");
+        
+        return window.open(URL , naam, properties);
     }
 
     return null;

@@ -44,7 +44,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
+            <param-value>http://192.168.1.15:8084/kaartenbalie/services/</param-value>
         </init-param>
         <init-param>
             <param-name>internalKbUrl</param-name>
@@ -188,6 +188,11 @@
         <servlet-name>UploadedPointsWmsServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.UploadedPointsWmsServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>
@@ -221,9 +226,13 @@
         <servlet-name>UserLayerSld</servlet-name>
         <url-pattern>/services/createUserSld</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>UploadedPointsWmsServlet</servlet-name>
         <url-pattern>/UploadedPointsWmsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <url-pattern>/services/getBlobServlet</url-pattern>
     </servlet-mapping>
     
     <session-config>

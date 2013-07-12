@@ -167,6 +167,29 @@
         <load-on-startup>6</load-on-startup>
     </servlet>
 	
+	<servlet>
+        <description>fetches document in background to hide actual location of document</description>
+        <servlet-name>DocFetcher</servlet-name>
+        <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
+        <init-param>
+            <param-name>locationPrefix</param-name>
+            <param-value>/mnt/ggdata/stroomlijn/data/raster/360</param-value>
+        </init-param>
+        <init-param>
+            <param-name>directoryKeepDepth</param-name>
+            <param-value>1</param-value>
+        </init-param>
+        <init-param>
+            <param-name>fetchMethod</param-name>
+            <param-value>FILE</param-value>
+        </init-param>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>DocFetcher</servlet-name>
+        <url-pattern>/services/DocFetcher/*</url-pattern>
+    </servlet-mapping>
+	
 	<servlet-mapping>
         <servlet-name>SearchAutocomplete</servlet-name>
         <url-pattern>/viewer/SearchAutocomplete.do</url-pattern>

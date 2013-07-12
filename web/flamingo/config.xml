@@ -15,7 +15,7 @@
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
             <fmc:ToolPan id="toolPan" left="60" skin="f2"/>
-            <fmc:ToolMeasure id="toolMeasure" left="90" skin="f2" decimals="2" />
+            <fmc:ToolMeasure id="toolMeasure" left="90" skin="f2" decimals="1" />
 
             <fmc:ToolIdentify id="identify" left="120" skin="f2" />
 

@@ -3938,8 +3938,17 @@ function checkboxOnByid(id){
  * van getActiveFeature alleen de laatste feature (een Point) terug. In
  * this.getFrameworkLayer().features[0] zit het hele polygon.
 */
-function getWktActiveFeature(index) {    
-    var object = webMapController.getMap().getLayer("editMap").getActiveFeature(index);
+function getWktActiveFeature(index) {
+    var object;
+    object = webMapController.getMap().getLayer("editMap").getActiveFeature(index);
+    
+    if (webMapController instanceof OpenLayersController) {
+        var arr = webMapController.getMap().getLayer("editMap").getAllFeatures();
+        
+        if (arr && arr.length == 1) {
+            object = arr[0];
+        }
+    }
     
     if (object == null)
     {
@@ -3986,11 +3995,12 @@ function b_buffer(id, event) {
      * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
      * mis gaat. Deze is dus alleen gevuld na een highlight
      * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
-    if (multiPolygonBufferWkt != null)
+    if (multiPolygonBufferWkt != null) {
         wkt = multiPolygonBufferWkt;
-    else
+    } else {
         wkt = getWktActiveFeature(-1);
-
+    }
+    
     multiPolygonBufferWkt = null;
         
     if (wkt==null)

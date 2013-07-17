@@ -855,8 +855,10 @@ function createTableTd(waarde) {
         }
 		
         /* Een Objectdata veld met een berekening, bijvoorbeeld =[A]*[B] */
-        if(waarde.valueList.length == 1) {
-            if (waarde.valueList[0].charAt(0) == '=') {                
+        if(waarde.valueList && waarde.valueList.length == 1) {
+            var commando = waarde.valueList[0];
+            
+            if (commando && commando.charAt(0) == '=') {                
                 var value = evalObjectDataCommando(waarde.valueList[0]);
                 td.append(value);
                 

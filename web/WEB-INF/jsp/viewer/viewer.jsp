@@ -53,17 +53,28 @@
     }
     
     var organizationcode="${organizationcode}";
-    var fullbbox='${fullExtent}';
-
-    var bbox='${extent}';
     
-    /* Applicatie extent */
+    /* Extents */
+    var fullbbox='${fullExtent}'; // kaartenbalie bboxen
+    var bbox='${extent}'; // Probeer url, gvc extent, daarna actief thema bbox 
+    
     var appExtent = catchEmpty("${configMap["extent"]}");
     if (typeof appExtent === 'undefined' || !appExtent) {
         appExtent = "12000,304000,280000,620000";
     }
-
-    var resolution=catchEmpty(${resolution});
+    
+    var fullExtent = catchEmpty("${configMap["fullextent"]}");
+    if (typeof fullExtent === 'undefined' || !fullExtent) {
+        fullExtent = "";
+    }
+    
+    var resolution = catchEmpty(${resolution}); // uit tile service
+    
+    /* gvc tiling res */
+    var tilingResolutions = catchEmpty("${configMap["tilingResolutions"]}");
+    if (typeof tilingResolutions === 'undefined' || !tilingResolutions) {
+        tilingResolutions = "";
+    }
 
     /* init search */
     var searchConfigId='${searchConfigId}';
@@ -440,11 +451,6 @@
     var datasetDownload = catchEmpty(${configMap["datasetDownload"]});
     if (typeof datasetDownload === 'undefined') {
         datasetDownload = false;
-    }
-    
-    var tilingResolutions = catchEmpty("${configMap["tilingResolutions"]}");
-    if (typeof tilingResolutions === 'undefined' || !tilingResolutions) {
-        tilingResolutions = "";
     }
     
     var showServiceUrl = catchEmpty(${configMap["showServiceUrl"]});

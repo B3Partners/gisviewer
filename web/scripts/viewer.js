@@ -3,14 +3,14 @@ dwr.engine.setErrorHandler(handler);
 /**
  * Array with the current visible layers in correct order.
  * The last is rendered on top.
-*/ 
+ */
 var enabledLayerItems = new Array();
 
 /**
  * String that forms the request to the service. It contains the normal wms request
  * parameters appened with the kaartenbalie url and if available also PROJECT
  * or organization code parameters.
-*/
+ */
 var layerUrl = "" + kburl;
 
 var cookieArray = readCookie('checkedLayers');
@@ -21,8 +21,8 @@ var activeClusterId = '';
 
 /**
  * Temporary list for init.
-*/
-var layersAan= new Array();
+ */
+var layersAan = new Array();
 var clustersAan = new Array();
 
 var featureInfoTimeOut = 30;
@@ -30,12 +30,12 @@ var webMapController;
 
 /**
  * Index used when adding layers. So its possible to leave indexes not used.
-*/
+ */
 var startLayerIndex = 0;
 
 /**
  * Ballon reference.
-*/
+ */
 var balloon;
 
 var zoomBox;
@@ -58,16 +58,16 @@ var uploadCsvLayerOn = false;
 
 /**
  * Start off with initMapComponent()
-*/
+ */
 initMapComponent();
 
 /**
  * Shows a message in a popup window.
  * @param msg The message to display.
-*/
+ */
 function handler(msg) {
     var message = msg;
-    
+
     if (message != '') {
         messagePopup("", message, "information");
     }
@@ -76,52 +76,52 @@ function handler(msg) {
 /**
  * Initialize the viewer. This sets the web map controller to either
  * Flamingo or OpenLayers. It also registers the events that can be fired.
-*/
-function initMapComponent(){
+ */
+function initMapComponent() {
     mapviewer = viewerType;
 
-    if (window.location.href.indexOf("flamingo")>0)
+    if (window.location.href.indexOf("flamingo") > 0)
         mapviewer = "flamingo";
-    if (mapviewer == "flamingo"){
+    if (mapviewer == "flamingo") {
         webMapController = new FlamingoController('mapcontent');
-        
-        var map = webMapController.createMap("map1");        
+
+        var map = webMapController.createMap("map1");
         webMapController.addMap(map);
-        
+
     } else if (mapviewer == "openlayers") {
         webMapController = new OpenLayersController();
-        
+
         var maxBounds = getMaxBounds();
-        var olRes = getTilingResolutions(maxBounds, true);       
-        
-        Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs"; 
+        var olRes = getTilingResolutions(maxBounds, true);
+
+        Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs";
         var opt = {
             projection: new OpenLayers.Projection("EPSG:28992"),
             maxExtent: maxBounds,
             resolutions: olRes,
             //numZoomLevels: olRes.length-1,
             allOverlays: true,
-            units : 'meters',
+            units: 'meters',
             theme: 'styles/gisviewer_openlayers.css',
-            controls : [
-            new OpenLayers.Control.Navigation({
-                zoomBoxEnabled: false
-            }),
-            new OpenLayers.Control.ArgParser()                
+            controls: [
+                new OpenLayers.Control.Navigation({
+                    zoomBoxEnabled: false
+                }),
+                new OpenLayers.Control.ArgParser()
             ]
         };
         OpenLayers.ImgPath = 'styles/openlayers_img/';
 
         $j("#mapcontent").html(" ");
-        var olmap = webMapController.createMap('mapcontent',opt);
-        $j("#mapcontent").css("border","1px solid black");
-        
+        var olmap = webMapController.createMap('mapcontent', opt);
+        $j("#mapcontent").css("border", "1px solid black");
+
         webMapController.addMap(olmap);
     }
-    
+
     webMapController.initEvents();
-    webMapController.registerEvent(Event.ON_GET_CAPABILITIES,webMapController.getMap(),onGetCapabilities);
-    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,webMapController,onConfigComplete);
+    webMapController.registerEvent(Event.ON_GET_CAPABILITIES, webMapController.getMap(), onGetCapabilities);
+    webMapController.registerEvent(Event.ON_CONFIG_COMPLETE, webMapController, onConfigComplete);
 }
 
 function getNLExtent() {
@@ -133,17 +133,17 @@ function getNLMaxBounds() {
 }
 
 function getMaxBounds() {
-    var maxBounds;        
-    if (!bbox && fullbbox){
+    var maxBounds;
+    if (!bbox && fullbbox) {
         maxBounds = Utils.createBounds(new Extent(fullbbox));
     } else if (bbox && appExtent) {
         maxBounds = Utils.createBounds(new Extent(appExtent));
     } else if (bbox && fullbbox) {
         maxBounds = Utils.createBounds(new Extent(fullbbox));
     } else if (bbox && !fullbbox) {
-        maxBounds = Utils.createBounds(new Extent(bbox));    
+        maxBounds = Utils.createBounds(new Extent(bbox));
     } else {
-        var bounds = getNLMaxBounds();        
+        var bounds = getNLMaxBounds();
         maxBounds = new OpenLayers.Bounds(bounds.left, bounds.bottom, bounds.right, bounds.top);
     }
 
@@ -153,72 +153,101 @@ function getMaxBounds() {
 
     var screenWidth = $j("#mapcontent").width();
     var heightMapContent = $j("#mapcontent").height();
-    
+
     var screenHeight = heightMapContent + defaultdataframehoogte + 75;
 
     var ratio = screenWidth / screenHeight;
     var mapRatio = oldMapWidth / oldMapHeight;
 
     // calc new map height
-    if (ratio < mapRatio) { 
+    if (ratio < mapRatio) {
         var newHeight = oldMapWidth / ratio;
-        maxBounds.bottom = maxBounds.bottom - ((newHeight-oldMapHeight) / 2);
+        maxBounds.bottom = maxBounds.bottom - ((newHeight - oldMapHeight) / 2);
         maxBounds.top = maxBounds.bottom + newHeight;
-    // calc new map width
-    } else { 
+        // calc new map width
+    } else {
         var newWidth = oldMapHeight * ratio;
         maxBounds.left = maxBounds.left - ((newWidth - oldMapWidth) / 2);
         maxBounds.right = maxBounds.left + newWidth;
     }
-    
+
     return maxBounds;
+}
+
+function getNLTilingRes() {
+    return "512,256,128,64,32,16,8,4,2,1,0.5,0.125";
+}
+
+function convertStringToArray(waarde) {
+    var lijst = new Array();
+    var arr = new Array();
+    
+    waarde = waarde.trim();
+
+    if (waarde.indexOf(",") !== -1) {
+        lijst = waarde.split(",");
+    } else {
+        lijst = waarde.split(" ");
+    }
+
+    if (lijst && lijst.length > 0) {
+        arr = new Array();
+        for (var i in lijst) {
+            lijst[i] = parseFloat(lijst[i]);
+            arr[i] = lijst[i];
+        }
+    }
+
+    return arr;
 }
 
 /* Methode herberekend ingevulde tiling resoluties o.b.v. max eetent. 
  * Geeft een array of string terug. */
-function getTilingResolutions(maxBounds, returnArray) {    
+function getTilingResolutions(maxBounds, returnArray) {
     var newMapWidth = maxBounds.right - maxBounds.left;
 
     /* Alle tiling resoluties in een lijst zetten */
     var olRes;
     if (tilingResolutions) {
-        var res = tilingResolutions; //.trim();
+        var res = tilingResolutions;
 
-        var list;            
-        if (res.indexOf(",") != -1) {
+        var list;
+        if (res.indexOf(",") !== -1) {
             list = res.split(",");
         } else {
             list = res.split(" ");
         }
 
-        if (list && list.length > 0) {                
+        if (list && list.length > 0) {
             olRes = new Array();
             for (var i in list) {
-                list[i] = parseFloat(list[i]);        
+                list[i] = parseFloat(list[i]);
                 olRes[i] = list[i];
             }
         }
-    } else {
-        tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125";
-        olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
+    } else { // wordt nu gezet in addLayerToViewer
+        tilingResolutions = getNLTilingRes();
+        olRes = convertStringToArray(tilingResolutions);
     }
 
     /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
-    if (tilingResolutions) {            
+    if (tilingResolutions && !fullExtent) {
+        alert('not fullExtent');
+        
         /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
          * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
          * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
-        */       
+         */
         var screenWidth = $j("#mapcontent").width();
         //var screenHeight = $j("#mapcontent").height() + defaultdataframehoogte + 75;
-    
+
         var resolution = newMapWidth / screenWidth;
 
         var dpm = 72 / 0.0254;
         var scale = (resolution * dpm) / 1000;
 
         var newList = new Array();
-        var counter = 0;            
+        var counter = 0;
         for (var idx in olRes) {
             if (olRes[idx] <= scale) {
                 newList[counter] = olRes[idx];
@@ -228,17 +257,19 @@ function getTilingResolutions(maxBounds, returnArray) {
 
         olRes = newList;
     }
-    
+
     if (returnArray) { // openlayers gebruikt een array
         return olRes;
     } else { // flamingo een string
-        
+
         var str = "";
         for (var k in olRes) {
             str += parseFloat(olRes[k]) + " ";
         }
-        
-        return str.trim();
+
+        var flRes = str.trim();
+
+        return flRes;
     }
 
     return olRes;
@@ -253,48 +284,48 @@ if (typeof String.prototype.trim !== 'function') {
 
 /**
  * Hides the I-tool icon. (Flamingo only)
-*/
-function hideIdentifyIcon(){
-    if(webMapController instanceof FlamingoController) {
-        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','hide');
+ */
+function hideIdentifyIcon() {
+    if (webMapController instanceof FlamingoController) {
+        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'hide');
     }
 }
 
 /**
  * Shows the I-tool icon. (Flamingo only)
-*/
-function showIdentifyIcon(){
-    if(webMapController instanceof FlamingoController) {
-        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon','show');
+ */
+function showIdentifyIcon() {
+    if (webMapController instanceof FlamingoController) {
+        webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'show');
     }
 }
 
 /**
  * Initialize the tools used in the viewer. It registers the event and handler
  * for the tool.
-*/
+ */
 function initializeButtons() {
     /*ie bug fix*/
-    if (ieVersion!=undefined && ieVersion <= 7){
+    if (ieVersion != undefined && ieVersion <= 7) {
         var mapId = webMapController.getMap().getFrameworkMap().id;
-        var viewport= document.getElementById(mapId+ '_OpenLayers_ViewPort');
-        if (viewport){
-            viewport.style.position="absolute";
+        var viewport = document.getElementById(mapId + '_OpenLayers_ViewPort');
+        if (viewport) {
+            viewport.style.position = "absolute";
         }
     }
 
-    webMapController.createPanel("toolGroup");    
+    webMapController.createPanel("toolGroup");
 
-    webMapController.addTool(webMapController.createTool("loading",Tool.LOADING_BAR));
-    
+    webMapController.addTool(webMapController.createTool("loading", Tool.LOADING_BAR));
+
     /* Zoom tool */
-    zoomBox = webMapController.createTool("toolZoomin",Tool.ZOOM_BOX, {
+    zoomBox = webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {
         title: 'inzoomen via selectie'
     });
     webMapController.addTool(zoomBox);
-    
+
     /* Pan tool */
-    pan = webMapController.createTool("b_pan",Tool.PAN, {
+    pan = webMapController.createTool("b_pan", Tool.PAN, {
         title: 'kaartbeeld slepem'
     });
     webMapController.addTool(pan);
@@ -302,147 +333,147 @@ function initializeButtons() {
     if (webMapController instanceof OpenLayersController) {
         webMapController.activateTool("b_pan");
     }
-    
+
     /* Previous extent tool */
-    prevExtent = webMapController.createTool("toolPrevExtent",Tool.NAVIGATION_HISTORY, {
+    prevExtent = webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {
         title: 'stap terug'
     });
     webMapController.addTool(prevExtent);
 
     /* Afstand meten tool */
-    var bu_measure = webMapController.createTool("b_measure",Tool.MEASURE, {
+    var bu_measure = webMapController.createTool("b_measure", Tool.MEASURE, {
         title: 'afstand meten'
     });
     //webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
     webMapController.addTool(bu_measure);
-    
+
     /* I-tool */
     var options = new Object();
     options["handlerGetFeatureHandler"] = onIdentifyData;
     options["handlerBeforeGetFeatureHandler"] = onIdentify;
     options["title"] = "informatie opvragen";
-    identify = webMapController.createTool("identify",Tool.GET_FEATURE_INFO,options);
+    identify = webMapController.createTool("identify", Tool.GET_FEATURE_INFO, options);
     webMapController.addTool(identify);
-    webMapController.registerEvent(Event.ON_SET_TOOL,identify,onChangeTool);
-    
+    webMapController.registerEvent(Event.ON_SET_TOOL, identify, onChangeTool);
+
     var editLayer = webMapController.createVectorLayer("editMap");
     webMapController.getMap().addLayer(editLayer);
-    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length+startLayerIndex);
-       
+    webMapController.getMap().setLayerIndex(editLayer, webMapController.getMap().getLayers().length + startLayerIndex);
+
     /* Redlining tools */
-    var edittingtb = webMapController.createTool("redLiningContainer",Tool.DRAW_FEATURE, {
+    var edittingtb = webMapController.createTool("redLiningContainer", Tool.DRAW_FEATURE, {
         layer: editLayer
     });
     webMapController.addTool(edittingtb);
-    
+
     /* Draw Polygon with measured surface area  */
-    var bu_polyMeasure = webMapController.createTool("b_polyMeasure",Tool.MEASURED_POLYGON, {
+    var bu_polyMeasure = webMapController.createTool("b_polyMeasure", Tool.MEASURED_POLYGON, {
         title: 'oppervlakte meten',
         displayClass: 'olControlb_polyMeasure'
     });
     webMapController.addTool(bu_polyMeasure);
-    
+
     /* Buffer tool */
-    var bu_buffer = webMapController.createTool("b_buffer",Tool.BUTTON, {
+    var bu_buffer = webMapController.createTool("b_buffer", Tool.BUTTON, {
         layer: editLayer,
         title: 'buffer het tekenobject'
     });
     webMapController.addTool(bu_buffer);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_buffer,b_buffer);
-    
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_buffer, b_buffer);
+
     /* Selecteer kaartobject tool */
-    var bu_highlight = webMapController.createTool("b_highlight",Tool.BUTTON, {
+    var bu_highlight = webMapController.createTool("b_highlight", Tool.BUTTON, {
         layer: editLayer,
         title: 'selecteer een object in de kaart'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_highlight,b_highlight);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_highlight, b_highlight);
     webMapController.addTool(bu_highlight);
-    
+
     /* Selecteer binnen kaartobject tool */
-    var bu_getfeatures = webMapController.createTool("b_getfeatures",Tool.BUTTON, {
+    var bu_getfeatures = webMapController.createTool("b_getfeatures", Tool.BUTTON, {
         layer: editLayer,
         title: 'selecteer binnen geselecteerd kaartobject'
     });
     webMapController.addTool(bu_getfeatures);
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_getfeatures,b_getfeatures);
-    
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_getfeatures, b_getfeatures);
+
     /* Verwijder polygon tool */
-    var bu_removePolygons = webMapController.createTool("b_removePolygons",Tool.BUTTON, {
+    var bu_removePolygons = webMapController.createTool("b_removePolygons", Tool.BUTTON, {
         layer: editLayer,
         title: 'verwijder het tekenobject'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_removePolygons,b_removePolygons);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_removePolygons, b_removePolygons);
     webMapController.addTool(bu_removePolygons);
 
     /* Print tool */
-    var bu_print = webMapController.createTool("b_printMap",Tool.BUTTON, {
+    var bu_print = webMapController.createTool("b_printMap", Tool.BUTTON, {
         layer: editLayer,
         title: 'printvoorbeeld'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_print,b_print);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_print, b_print);
     webMapController.addTool(bu_print);
 
     /* Kaartselectie tool */
-    var bu_layerSelection = webMapController.createTool("b_layerSelection",Tool.BUTTON, {
+    var bu_layerSelection = webMapController.createTool("b_layerSelection", Tool.BUTTON, {
         layer: editLayer,
         title: 'kaartselectie'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_layerSelection,b_layerSelection);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_layerSelection, b_layerSelection);
     webMapController.addTool(bu_layerSelection);
-    
-    
+
+
     /* GPS tool */
     if (gpsBuffer < 1) {
         gpsBuffer = 500;
     }
-    
+
     gpsComponent = new GPSComponent(gpsBuffer);
-    
-    var bu_gps = webMapController.createTool("b_gps",Tool.GPS, {
+
+    var bu_gps = webMapController.createTool("b_gps", Tool.GPS, {
         layer: editLayer,
         title: 'zet GPS locatie aan/uit'
-    });    
-    
+    });
+
     webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, gpsComponent.stopPolling);
     webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
-    
+
     /* off event voor weghalen marker */
     webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
-    
+
     webMapController.addTool(bu_gps);
-    
+
     /* Overzichtskaart tool */
-    var bu_overview = webMapController.createTool("b_showOverzicht",Tool.BUTTON, {
+    var bu_overview = webMapController.createTool("b_showOverzicht", Tool.BUTTON, {
         layer: editLayer,
         title: 'overzichtskaart'
     });
-    webMapController.registerEvent(Event.ON_EVENT_DOWN,bu_overview,b_overview);
+    webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_overview, b_overview);
     webMapController.addTool(bu_overview);
 
-    var scalebar = webMapController.createTool("scalebar",Tool.SCALEBAR);
+    var scalebar = webMapController.createTool("scalebar", Tool.SCALEBAR);
     webMapController.addTool(scalebar);
 
 
-    var zoombar= webMapController.createTool("zoombar",Tool.ZOOM_BAR);
+    var zoombar = webMapController.createTool("zoombar", Tool.ZOOM_BAR);
     webMapController.addTool(zoombar);
-    
+
     editComponent = new EditComponent();
-    
+
     if (viewerTemplate == "embedded") {
         displayEmbeddedMenuIcons();
     }
 }
 
-function displayEmbeddedMenuIcons() {  
+function displayEmbeddedMenuIcons() {
     $j("#embedded_icons").css('position', 'absolute');
     $j("#embedded_icons").css('width', '170px');
     $j("#embedded_icons").css('height', '36px');
-    
+
     $j("#embedded_icons .embedded_icon").css('float', 'left');
     $j("#embedded_icons .embedded_icon").css('padding-top', '7px');
     $j("#embedded_icons .embedded_icon").css('padding-left', '15px');
-    
-    if (webMapController instanceof OpenLayersController) {        
+
+    if (webMapController instanceof OpenLayersController) {
         $j("#embedded_icons").css('left', '670px');
         $j("#embedded_icons").css('top', '6px');
         $j("#embedded_icons").css('border', 'solid 1px #808080');
@@ -451,7 +482,7 @@ function displayEmbeddedMenuIcons() {
         $j("#embedded_icons").css('left', '630px');
         $j("#embedded_icons").css('top', '2px');
     }
-    
+
     $j("#embedded_icons").show();
 }
 
@@ -459,19 +490,19 @@ function getBaseUrl() {
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
 
-    return protocol + host  + baseNameViewer;
+    return protocol + host + baseNameViewer;
 }
 
 /**
  * Uses a search configuration and search params in the url. Is done when searching via url
  * params and is called when the viewer (framework) is loaded.
-*/
+ */
 function doInitSearch() {
-    if (searchConfigId.length > 0 && search.length > 0){
+    if (searchConfigId.length > 0 && search.length > 0) {
         showLoading();
 
         var termen = search.split(",");
-        JZoeker.zoek(new Array(searchConfigId),termen,0,handleInitSearch);
+        JZoeker.zoek(new Array(searchConfigId), termen, 0, handleInitSearch);
     }
 }
 
@@ -479,18 +510,18 @@ function doInitSearch() {
  * Callback method used in doInitSearch() function. This function hides the loading
  * screen and calls the handleInitSearchResult() method for further handling.
  * @param list List with search results from back-end.
-*/
-function handleInitSearch(list){
+ */
+function handleInitSearch(list) {
     hideLoading();
-    if (list.length > 0){
-        handleInitSearchResult(list[0],searchAction, searchId,searchClusterId,searchSldVisibleValue);
+    if (list.length > 0) {
+        handleInitSearchResult(list[0], searchAction, searchId, searchClusterId, searchSldVisibleValue);
     } else {
         /* Lagen aanzetten na zoeken */
         JZoekconfiguratieThemaUtil.getThemas(searchConfigId, function(data) {
             zoekconfiguratieThemasCallBack(data);
             switchLayersOn();
-        });     
-    }    
+        });
+    }
 }
 
 /**
@@ -501,86 +532,86 @@ function handleInitSearch(list){
  * @param clusterId Adds this value as clusterId parameter for the SLD options.
  * @param visibleValue Displays this value for the result. If none is provided
  * the result id is displayed instead.
-*/
-function handleInitSearchResult(result,action,themaId,clusterId,visibleValue) {    
-    var doZoom= true;
-    var doHighlight=false;
-    var doFilter=false;
-    if (searchAction){
-        if (searchAction.toLowerCase().indexOf("zoom")==-1)
-            doZoom=false;
-        if (searchAction.toLowerCase().indexOf("highlight")>=0)
-            doHighlight=true;
-        else if (searchAction.toLowerCase().indexOf("filter")>=0)
-            doFilter=true;
+ */
+function handleInitSearchResult(result, action, themaId, clusterId, visibleValue) {
+    var doZoom = true;
+    var doHighlight = false;
+    var doFilter = false;
+    if (searchAction) {
+        if (searchAction.toLowerCase().indexOf("zoom") == -1)
+            doZoom = false;
+        if (searchAction.toLowerCase().indexOf("highlight") >= 0)
+            doHighlight = true;
+        else if (searchAction.toLowerCase().indexOf("filter") >= 0)
+            doFilter = true;
     }
-    
-    if (doHighlight || doFilter){
-        var sldOptions="";
-        var visval=null;
+
+    if (doHighlight || doFilter) {
+        var sldOptions = "";
+        var visval = null;
         if (visibleValue)
-            visval=visibleValue;
+            visval = visibleValue;
         else if (result.id)
-            visval=result.id;
+            visval = result.id;
         else
-            visval=search;
-        if (visval!=null){
-            sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
-            sldOptions+="visibleValue="+visval;
+            visval = search;
+        if (visval != null) {
+            sldOptions += sldOptions.indexOf("?") >= 0 ? "&" : "?";
+            sldOptions += "visibleValue=" + visval;
         }
-        if(themaId){
-            sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
-            sldOptions+="themaId="+themaId;
+        if (themaId) {
+            sldOptions += sldOptions.indexOf("?") >= 0 ? "&" : "?";
+            sldOptions += "themaId=" + themaId;
         }
-        if(clusterId){
-            sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
-            sldOptions+="clusterId="+clusterId;
+        if (clusterId) {
+            sldOptions += sldOptions.indexOf("?") >= 0 ? "&" : "?";
+            sldOptions += "clusterId=" + clusterId;
         }
-        sldOptions += sldOptions.indexOf("?")>=0 ? "&" : "?";
-        if (doHighlight){
-            sldOptions+="sldType=UserStyle";
+        sldOptions += sldOptions.indexOf("?") >= 0 ? "&" : "?";
+        if (doHighlight) {
+            sldOptions += "sldType=UserStyle";
         }
-        if (doFilter){
-            sldOptions+="sldType=NamedStyle";
+        if (doFilter) {
+            sldOptions += "sldType=NamedStyle";
         }
-        var sldUrl=sldServletUrl+sldOptions;
-        if(mapInitialized){
-            setSldOnDefaultMap(sldUrl,true);
-        }else{
-            sldSearchServlet=sldUrl;
+        var sldUrl = sldServletUrl + sldOptions;
+        if (mapInitialized) {
+            setSldOnDefaultMap(sldUrl, true);
+        } else {
+            sldSearchServlet = sldUrl;
         }
     }
-    
+
     /* Place marker */
     result = getBboxMinSize2(result);
     var x = (result.maxx - result.minx) / 2 + result.minx;
     var y = (result.maxy - result.miny) / 2 + result.miny;
-        
-    placeSearchResultMarker(x,y);    
+
+    placeSearchResultMarker(x, y);
     switchTab("zoeken");
-    
+
     /* Lagen aanzetten na zoeken */
     JZoekconfiguratieThemaUtil.getThemas(searchConfigId, function(data) {
         zoekconfiguratieThemasCallBack(data);
         switchLayersOn();
-        
-        if (doZoom){
-            result=getBboxMinSize2(result);
-            var ext= new Object();
-            ext.minx=result.minx;
-            ext.miny=result.miny;
-            ext.maxx=result.maxx;
-            ext.maxy=result.maxy;
+
+        if (doZoom) {
+            result = getBboxMinSize2(result);
+            var ext = new Object();
+            ext.minx = result.minx;
+            ext.miny = result.miny;
+            ext.maxx = result.maxx;
+            ext.maxy = result.maxy;
             if (mapInitialized) {
                 moveToExtent(ext.minx, ext.miny, ext.maxx, ext.maxy);
-            } else{
-                searchExtent=ext;
+            } else {
+                searchExtent = ext;
             }
-        }        
+        }
     });
 }
 
-function placeSearchResultMarker(x,y) {
+function placeSearchResultMarker(x, y) {
     webMapController.getMap().setMarker("searchResultMarker", x, y);
 }
 
@@ -597,15 +628,15 @@ function removeAllMarkers() {
  * than the minimal vlue.
  * @param feature The feature.
  * @return Returns the feature with adjusted bbox.
-*/
-function getBboxMinSize2(feature){
-    if ((Number(feature.maxx-feature.minx) < minBboxZoeken)){
-        var addX=Number((minBboxZoeken-(feature.maxx-feature.minx))/2);
-        var addY=Number((minBboxZoeken-(feature.maxy-feature.miny))/2);
-        feature.minx=Number(feature.minx-addX);
-        feature.maxx=Number(Number(feature.maxx)+Number(addX));
-        feature.miny=Number(feature.miny-addY);
-        feature.maxy=Number(Number(feature.maxy)+Number(addY));
+ */
+function getBboxMinSize2(feature) {
+    if ((Number(feature.maxx - feature.minx) < minBboxZoeken)) {
+        var addX = Number((minBboxZoeken - (feature.maxx - feature.minx)) / 2);
+        var addY = Number((minBboxZoeken - (feature.maxy - feature.miny)) / 2);
+        feature.minx = Number(feature.minx - addX);
+        feature.maxx = Number(Number(feature.maxx) + Number(addX));
+        feature.miny = Number(feature.miny - addY);
+        feature.maxy = Number(Number(feature.maxy) + Number(addY));
     }
     return feature;
 }
@@ -616,12 +647,12 @@ function getBboxMinSize2(feature){
  * cached the last request.
  * @param sldUrl The SLD url for the layer.
  * @param reAddLayer If true the layer will be removed and added again.
-*/
-function setSldOnDefaultMap(sldUrl, reAddLayer){
+ */
+function setSldOnDefaultMap(sldUrl, reAddLayer) {
     var kbLayer = webMapController.getMap("map1").getLayer("fmcLayer");
     kbLayer.setSld(escape(sldUrl));
 
-    if (reAddLayer){
+    if (reAddLayer) {
         webMapController.getMap("map1").removeLayerById(kbLayer.getId(), false);
         webMapController.getMap("map1").addLayer(kbLayer);
     }
@@ -632,34 +663,37 @@ function setSldOnDefaultMap(sldUrl, reAddLayer){
  * cached the last request.
  * @param handle Handle to the window to display page content in.
  * @param type Type of display used (div, panel or window).
-*/
+ */
 function loadBusyJSP(handle, type) {
     var $iframebody = null;
-    if(type == 'div') $iframebody = $j(handle).contents().find("body");
-    if(type == 'panel') $iframebody = $j('#'+handle).contents().find("body");
-    if(type == 'window') $iframebody = $j(handle.document.body);
-    
+    if (type == 'div')
+        $iframebody = $j(handle).contents().find("body");
+    if (type == 'panel')
+        $iframebody = $j('#' + handle).contents().find("body");
+    if (type == 'window')
+        $iframebody = $j(handle.document.body);
+
     // "Gewoon" popup window (dus geen DIV) geeft nog niet helemaal het gewenste resultaat
-    if($iframebody != null) {
-        $iframebody.html('<div id="content_style">'+
-            '<table class="kolomtabel">'+
-            '<tr>'+
-            '<td valign="top">'+
-            '<div class="loadingMessage">'+
-            '<table>'+
-            '<tr>'+
-            '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>'+
-            '<td>'+
-            '<h2>Bezig met laden ...</h2>'+
-            '<p>Bezig met zoeken naar administratieve gegevens.</p>'+
-            '</td>'+
-            '</tr>'+
-            '</table>'+
-            '</div>'+
-            '</td>'+
-            '</tr>'+
-            '</table>'+
-            '</div>');
+    if ($iframebody != null) {
+        $iframebody.html('<div id="content_style">' +
+                '<table class="kolomtabel">' +
+                '<tr>' +
+                '<td valign="top">' +
+                '<div class="loadingMessage">' +
+                '<table>' +
+                '<tr>' +
+                '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>' +
+                '<td>' +
+                '<h2>Bezig met laden ...</h2>' +
+                '<p>Bezig met zoeken naar administratieve gegevens.</p>' +
+                '</td>' +
+                '</tr>' +
+                '</table>' +
+                '</div>' +
+                '</td>' +
+                '</tr>' +
+                '</table>' +
+                '</div>');
     }
 }
 
@@ -674,13 +708,13 @@ function loadBusyJSP(handle, type) {
  * @param themaIds the thema ids where this request must be done. If ommited the 
  * selected thema's are used. It doesn't change the checkboxes.
  * @param extraCriteria JavaScript object with CQL criteria that is used as filter for getting the features.
-*/
+ */
 function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, themaIds, extraCriteria) {
     if (!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
-    if (themaIds==undefined){
-        if (!multipleActiveThemas){
+    if (themaIds == undefined) {
+        if (!multipleActiveThemas) {
             themaIds = activeAnalyseThemaId;
         } else {
             themaIds = getLayerIdsAsString(true);
@@ -692,49 +726,49 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
         }
     }
     //set the extra criteria.
-    document.forms[0].extraCriteria.value="";
-    if(extraCriteria){
-        document.forms[0].extraCriteria.value=extraCriteria;
+    document.forms[0].extraCriteria.value = "";
+    if (extraCriteria) {
+        document.forms[0].extraCriteria.value = extraCriteria;
     }
     //set the correct action
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
     document.forms[0].objectdata.value = '';
-    
+
     document.forms[0].themaid.value = themaIds;
-    
-    document.forms[0].lagen.value='';
+
+    document.forms[0].lagen.value = '';
 
     //als er een init search is meegegeven (dus ook een sld is gemaakt)
-    if (searchAction.toLowerCase().indexOf("filter")>=0){
-        
-        document.forms[0].search.value=search;
-        document.forms[0].searchId.value=searchId;
-        document.forms[0].searchClusterId.value=searchClusterId;
+    if (searchAction.toLowerCase().indexOf("filter") >= 0) {
+
+        document.forms[0].search.value = search;
+        document.forms[0].searchId.value = searchId;
+        document.forms[0].searchClusterId.value = searchClusterId;
     }
 
-    document.forms[0].geom.value=geom;
-    
-    var schaal;    
+    document.forms[0].geom.value = geom;
+
+    var schaal;
     if (tilingResolutions && tilingResolutions !== "") {
         schaal = webMapController.getMap().getResolution();
     } else {
         schaal = webMapController.getMap().getScaleHint();
     }
-    
-    document.forms[0].scale.value=schaal;
-    document.forms[0].tolerance.value=tolerance;
+
+    document.forms[0].scale.value = schaal;
+    document.forms[0].tolerance.value = tolerance;
 
     if (selectionWithinObject) {
         document.forms[0].withinObject.value = "1";
-        document.forms[0].onlyFeaturesInGeom.value="true";
-    }else {
+        document.forms[0].onlyFeaturesInGeom.value = "true";
+    } else {
         document.forms[0].withinObject.value = "-1";
-        document.forms[0].onlyFeaturesInGeom.value="false";
+        document.forms[0].onlyFeaturesInGeom.value = "false";
     }
-    
+
     if (bookmarkAppcode != null) {
-        document.forms[0].bookmarkAppcode.value=bookmarkAppcode;
+        document.forms[0].bookmarkAppcode.value = bookmarkAppcode;
     }
 
     if (highlightThemaId != null) {
@@ -743,15 +777,15 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
 
     if (usePopup) {
         // open popup when not opened en submit form to popup
-        if(dataframepopupHandle == null || dataframepopupHandle.closed) {
-            if(useDivPopup) {
+        if (dataframepopupHandle == null || dataframepopupHandle.closed) {
+            if (useDivPopup) {
                 dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
             } else {
                 dataframepopupHandle = popUpData('dataframepopup', 680, 225, false);
             }
         }
 
-        if(useDivPopup) {
+        if (useDivPopup) {
             //$j("#popupWindow").show();
             document.forms[0].target = 'dataframedivpopup';
             loadBusyJSP(dataframepopupHandle, 'div');
@@ -760,75 +794,75 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             loadBusyJSP(dataframepopupHandle, 'window');
         }
 
-    } else if(useBalloonPopup){
-        if(!balloon){
+    } else if (useBalloonPopup) {
+        if (!balloon) {
             var offsetX = 0;
             var offsetY = 0;
 
             /* offsetY nodig voor de flamingo toolbalk boven de kaart */
-            if (webMapController instanceof FlamingoController){
-                offsetY=36;
+            if (webMapController instanceof FlamingoController) {
+                offsetY = 36;
             }
-            
-            balloon= new Balloon($j("#mapcontent"),webMapController,'infoBalloon',300,300,offsetX,offsetY);
+
+            balloon = new Balloon($j("#mapcontent"), webMapController, 'infoBalloon', 300, 300, offsetX, offsetY);
         }
         document.forms[0].target = 'dataframeballoonpopup';
-        /*Bepaal midden van vraag geometry*/      
+        /*Bepaal midden van vraag geometry*/
         //maak coord string
-        var coordString =geom.replace(/POLYGON/g,'').replace(/POINT/,'').replace(/\(/g,'').replace(/\)/g,'');
-        var xyPairs=coordString.split(",");
+        var coordString = geom.replace(/POLYGON/g, '').replace(/POINT/, '').replace(/\(/g, '').replace(/\)/g, '');
+        var xyPairs = coordString.split(",");
         var minx;
         var maxx;
         var miny;
         var maxy;
-        for (var i=0; i < xyPairs.length; i++){
-            var xy=xyPairs[i].split(" ");
-            var x=Number(xy[0]);
-            var y=Number(xy[1])
-            if (minx==undefined){
-                minx=x;
-                maxx=x;
+        for (var i = 0; i < xyPairs.length; i++) {
+            var xy = xyPairs[i].split(" ");
+            var x = Number(xy[0]);
+            var y = Number(xy[1])
+            if (minx == undefined) {
+                minx = x;
+                maxx = x;
             }
-            if(miny==undefined){
-                miny=y;
-                maxy=y;
+            if (miny == undefined) {
+                miny = y;
+                maxy = y;
             }
-            if (x > maxx){
-                maxx=x;
+            if (x > maxx) {
+                maxx = x;
             }
-            if (x < minx){
-                minx=x;
+            if (x < minx) {
+                minx = x;
             }
-            if (y > maxy){
-                maxy=y;
+            if (y > maxy) {
+                maxy = y;
             }
-            if (y < miny){
-                miny=y;
+            if (y < miny) {
+                miny = y;
             }
         }
-        var centerX=(minx+maxx)/2;
-        var centerY=(miny+maxy)/2;
+        var centerX = (minx + maxx) / 2;
+        var centerY = (miny + maxy) / 2;
 
         //balloon.resetPositionOfBalloon(centerX,centerY);
-        balloon.setPosition(centerX,centerY,true);
+        balloon.setPosition(centerX, centerY, true);
 
-        var iframeElement=$j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
+        var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
         balloon.getContentElement().html(iframeElement);
     } else {
         document.forms[0].target = 'dataframe';
         loadBusyJSP('dataframe', 'panel');
     }
-    
+
     document.forms[0].submit();
 }
 
 /**
  * Opens an url in an iFrame.
  * @param url url to open.
-*/
-function openUrlInIframe(url){
-    var iframe=document.getElementById("dataframe");
-    iframe.src=url;
+ */
+function openUrlInIframe(url) {
+    var iframe = document.getElementById("dataframe");
+    iframe.src = url;
 }
 
 /**
@@ -836,11 +870,11 @@ function openUrlInIframe(url){
  * always returns -1 so it will be visible.
  * @param item The layer item.
  * @return 0 = Not in cookie or visible, -1 = No cookie but visible, 1 = In cookie.
-*/
+ */
 function getLayerPosition(item) {
 
-    if((cookieArray == null) || !useCookies) {
-        if (item.visible=="on" || item.analyse=="active")
+    if ((cookieArray == null) || !useCookies) {
+        if (item.visible == "on" || item.analyse == "active")
             return -1;
         else
             return 0;
@@ -848,15 +882,15 @@ function getLayerPosition(item) {
 
     var arr = cookieArray.split(',');
 
-    for(i = 0; i < arr.length; i++) {
-        if(arr[i] == item.id) {
-            return i+1;
+    for (i = 0; i < arr.length; i++) {
+        if (arr[i] == item.id) {
+            return i + 1;
         }
     }
 
-    if (item.analyse=="active")
+    if (item.analyse == "active")
         return -1;
-    
+
     return 0;
 }
 
@@ -865,7 +899,7 @@ function getLayerPosition(item) {
  * returns -1 so it will be visible.
  * @param item The cluster item.
  * @return 0 = Not in cookie or visible, -1 = No cookie but visible, 1 = In cookie.
-*/
+ */
 function getClusterPosition(item) {
     if ((cookieClusterArray == null) || !useCookies) {
         if (item.visible || item.active)
@@ -874,9 +908,9 @@ function getClusterPosition(item) {
             return 0;
     }
     var arr = cookieClusterArray.split(',');
-    for(i = 0; i < arr.length; i++) {
-        if(arr[i] == item.id) {
-            return i+1;
+    for (i = 0; i < arr.length; i++) {
+        if (arr[i] == item.id) {
+            return i + 1;
         }
     }
     if (item.active)
@@ -889,18 +923,19 @@ function getClusterPosition(item) {
  * Set the active cluster to be able to display metadata for this cluster..
  * @param item Cluster item to be activated
  * @param overrule When true overrule the current active item.
-*/
-function setActiveCluster(item,overrule){
-    if(((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) && (activeClusterId==null || activeClusterId.length==0)) || overrule){
-        if(item != undefined & item != null) {
+ */
+function setActiveCluster(item, overrule) {
+    if (((activeAnalyseThemaId == null || activeAnalyseThemaId.length == 0) && (activeClusterId == null || activeClusterId.length == 0)) || overrule) {
+        if (item != undefined & item != null) {
             var activeClusterTitle = item.title;
             var atlabel = document.getElementById('actief_thema');
-            if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
+            if (atlabel && activeClusterTitle && atlabel != null && activeClusterTitle != null) {
                 activeClusterId = item.id;
                 atlabel.innerHTML = '' + activeClusterTitle;
             }
-            if(item.metadatalink && item.metadatalink.length > 1){
-                if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+            if (item.metadatalink && item.metadatalink.length > 1) {
+                if (document.getElementById('beschrijvingVakViewer'))
+                    document.getElementById('beschrijvingVakViewer').src = item.metadatalink;
             }
         }
     }
@@ -912,40 +947,40 @@ function setActiveCluster(item,overrule){
  * @param label Label to display above the viewer.
  * @param overrule When true overrule the current active thema.
  * @return The active analyse thema.
-*/
+ */
 function setActiveThema(id, label, overrule) {
-    if (!(id && id!=null && label && label!=null && overrule)) {
+    if (!(id && id != null && label && label != null && overrule)) {
         return activeAnalyseThemaId;
     }
 
-    if (((activeAnalyseThemaId==null || activeAnalyseThemaId.length == 0) &&
-        (activeClusterId==null || activeClusterId.length==0)) || overrule){
+    if (((activeAnalyseThemaId == null || activeAnalyseThemaId.length == 0) &&
+            (activeClusterId == null || activeClusterId.length == 0)) || overrule) {
 
         activeAnalyseThemaId = id;
 
         var atlabel = document.getElementById('actief_thema');
-        if (atlabel && label && atlabel!=null && label!=null) {
+        if (atlabel && label && atlabel != null && label != null) {
             atlabel.innerHTML = '' + label;
         }
 
-        if (document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0){
-            var tokens= document.forms[0].coords.value.split(",");
+        if (document.forms[0] && document.forms[0].coords && document.forms[0].coords.value.length > 0) {
+            var tokens = document.forms[0].coords.value.split(",");
             var minx = parseFloat(tokens[0]);
             var miny = parseFloat(tokens[1]);
             var maxx;
             var maxy
-            if (tokens.length ==4){
+            if (tokens.length == 4) {
                 maxx = parseFloat(tokens[2]);
                 maxy = parseFloat(tokens[3]);
-            }else{
-                maxx=minx;
-                maxy=miny;
+            } else {
+                maxx = minx;
+                maxy = miny;
             }
-            onIdentify('',{
-                minx:minx,
-                miny:miny,
-                maxx:maxx,
-                maxy:maxy
+            onIdentify('', {
+                minx: minx,
+                miny: miny,
+                maxx: maxx,
+                maxy: maxy
             })
         }
     }
@@ -956,16 +991,17 @@ function setActiveThema(id, label, overrule) {
  * Called when a user selects a radio element in the tree. Activates the selected
  * thema. When the thema has a metadata link it will display the info in the info tab.
  * @param obj The selected raio element.
-*/
+ */
 function radioClick(obj) {
     var oldActiveThemaId = activeAnalyseThemaId;
-    if (obj && obj!=null && obj.theItem && obj.theItem!=null && obj.theItem.id && obj.theItem.title) {
+    if (obj && obj != null && obj.theItem && obj.theItem != null && obj.theItem.id && obj.theItem.title) {
         activeAnalyseThemaId = setActiveThema(obj.theItem.id, obj.theItem.title, true);
         activateCheckbox(obj.theItem.id);
         deActivateCheckbox(oldActiveThemaId);
 
         if (obj.theItem.metadatalink && obj.theItem.metadatalink.length > 1) {
-            if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=obj.theItem.metadatalink;
+            if (document.getElementById('beschrijvingVakViewer'))
+                document.getElementById('beschrijvingVakViewer').src = obj.theItem.metadatalink;
         }
     }
 }
@@ -976,30 +1012,31 @@ var prevRadioButton = null;
  * Check if the item is the current active thema.
  * @param item The item to check.
  * @return boolean
-*/
+ */
 function isActiveItem(item) {
     if (!item) {
         return false;
     }
-    if(item.analyse=="on"){
+    if (item.analyse == "on") {
         setActiveThema(item.id, item.title);
-    } else if(item.analyse=="active"){
+    } else if (item.analyse == "active") {
         setActiveThema(item.id, item.title, true);
     }
 
     if (activeAnalyseThemaId != item.id) {
         return false;
     }
-    
-    if(item.analyse=="active" && prevRadioButton != null){
+
+    if (item.analyse == "active" && prevRadioButton != null) {
         var rc = document.getElementById(prevRadioButton);
-        if (rc!=undefined && rc!=null) {
+        if (rc != undefined && rc != null) {
             rc.checked = false;
         }
     }
 
     if (item.metadatalink && item.metadatalink.length > 1) {
-        if(document.getElementById('beschrijvingVakViewer')) document.getElementById('beschrijvingVakViewer').src=item.metadatalink;
+        if (document.getElementById('beschrijvingVakViewer'))
+            document.getElementById('beschrijvingVakViewer').src = item.metadatalink;
     }
     prevRadioButton = 'radio' + item.id;
 
@@ -1013,7 +1050,7 @@ function isActiveItem(item) {
  * @param groupName the groupname of this radio group (the parent cluster id in most cases)
  * @return The radio element.
  */
-function createRadioCluster(item,checked,groupName){
+function createRadioCluster(item, checked, groupName) {
     var checkbox;
     if (ieVersion <= 8 && ieVersion != -1) {
         var checkboxControleString = '<input type="radio" id="' + item.id + '"';
@@ -1021,18 +1058,18 @@ function createRadioCluster(item,checked,groupName){
             checkboxControleString += ' checked="checked"';
         }
         checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
-        checkboxControleString += ' name="'+groupName+'">';
+        checkboxControleString += ' name="' + groupName + '">';
         checkbox = document.createElement(checkboxControleString);
-    }else{
+    } else {
         checkbox = document.createElement('input');
         checkbox.id = item.id;
         checkbox.type = 'radio';
         checkbox.value = item.id;
-        checkbox.name= groupName;
-        checkbox.onclick = function(){
+        checkbox.name = groupName;
+        checkbox.onclick = function() {
             clusterCheckboxClick(this, false);
         }
-        if(checked) {
+        if (checked) {
             checkbox.checked = true;
         }
     }
@@ -1047,7 +1084,7 @@ function createRadioCluster(item,checked,groupName){
  * @param checked Checked set to true if this radio must be checked?
  * @return The checkbox element.
  */
-function createCheckboxCluster(item, checked){
+function createCheckboxCluster(item, checked) {
 
     var checkbox;
     if (ieVersion <= 8 && ieVersion != -1) {
@@ -1058,19 +1095,19 @@ function createCheckboxCluster(item, checked){
         checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this,false)"';
         checkboxControleString += '>';
         checkbox = document.createElement(checkboxControleString);
-    }else{
+    } else {
         checkbox = document.createElement('input');
         checkbox.id = item.id;
         checkbox.type = 'checkbox';
         checkbox.value = item.id;
-        checkbox.onclick = function(){
+        checkbox.onclick = function() {
             clusterCheckboxClick(this, false);
         }
-        if(checked) {
+        if (checked) {
             checkbox.checked = true;
         }
     }
-    
+
     return checkbox;
 }
 
@@ -1079,7 +1116,7 @@ function createCheckboxCluster(item, checked){
  * @param item The thema item (json)
  * @return The radio element.
  */
-function createRadioSingleActiveThema(item){
+function createRadioSingleActiveThema(item) {
     var radio;
     if (ieVersion <= 8 && ieVersion != -1) {
         var radioControleString = '<input type="radio" id="radio' + item.id + '" name="selkaartlaag" value="' + item.id + '"';
@@ -1095,14 +1132,14 @@ function createRadioSingleActiveThema(item){
         radio.name = 'selkaartlaag';
         radio.value = item.id;
         radio.id = 'radio' + item.id;
-        radio.onclick = function(){
+        radio.onclick = function() {
             radioClick(this);
         }
         if (isActiveItem(item)) {
             radio.checked = true;
         }
     }
-    radio.theItem=item;
+    radio.theItem = item;
     return radio;
 }
 
@@ -1112,8 +1149,8 @@ function createRadioSingleActiveThema(item){
  * @param checked set to true if this radio must be checked?
  * @param groupName the groupname of this radio group (the parent cluster id in most cases)
  * @return The radio element.
-*/
-function createRadioThema(item,checked,groupName){
+ */
+function createRadioThema(item, checked, groupName) {
     var checkbox;
 
     if (ieVersion <= 8 && ieVersion != -1) {
@@ -1123,7 +1160,7 @@ function createRadioThema(item,checked,groupName){
             checkboxControleString += ' checked="checked"';
         }
         checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
-        checkboxControleString += ' name="'+groupName+'">';
+        checkboxControleString += ' name="' + groupName + '">';
         checkbox = document.createElement(checkboxControleString);
 
     } else {
@@ -1148,7 +1185,7 @@ function createRadioThema(item,checked,groupName){
  * @param item the thema item (json)
  * @param checked set to true if this radio must be checked?
  * @return The checkbox element.
-*/
+ */
 function createCheckboxThema(item, checked) {
     var checkbox;
 
@@ -1183,7 +1220,7 @@ function createCheckboxThema(item, checked) {
  * Creates a non visible thema div
  * @param item The id for the div element
  * @return createInvisibleDiv()
-*/
+ */
 function createInvisibleThemaDiv(item) {
     return createInvisibleDiv(item.id);
 }
@@ -1192,16 +1229,16 @@ function createInvisibleThemaDiv(item) {
  * Creates a non visible div
  * @param id The id for the div element.
  * @return The div element.
-*/
+ */
 function createInvisibleDiv(id) {
     var div = document.createElement("div");
-    div.name=id;
-    div.id=id;
-    div.style.height='0';
-    div.style.width='0';
-    div.height=0;
-    div.width=0;
-    div.style.display="none";
+    div.name = id;
+    div.id = id;
+    div.style.height = '0';
+    div.style.width = '0';
+    div.height = 0;
+    div.width = 0;
+    div.style.display = "none";
     return div;
 }
 
@@ -1209,7 +1246,7 @@ function createInvisibleDiv(id) {
  * Creates a link element to a new iFrame with the metadata from the item.
  * @param item The item with the metadata.
  * @return The link element.
-*/
+ */
 var widthMetadataPopup = 800;
 var heightMetadataPopup = 600;
 var widthDownloadPopup = 425;
@@ -1217,18 +1254,18 @@ var heightDownloadPopup = 250;
 var downloadPopupBlocksViewer = true;
 var metadataPopupBlocksViewer = true;
 
-function createMetadataLink(item){
+function createMetadataLink(item) {
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
     lnk.href = '#';
 
     var downloadTitle = 'Download dataset van ' + item.title;
-    var infoTitle = 'Informatie over ' + item.title; 
+    var infoTitle = 'Informatie over ' + item.title;
 
     /* Metadata tonen, WMS Service url en Annuleren */
     if (item.metadatalink && item.metadatalink.length > 1 && (item.gegevensbronid == undefined || item.gegevensbronid < 1)) {
         lnk.onclick = function() {
-            $j("#dialog-download-metadata").dialog("option", "buttons", {                
+            $j("#dialog-download-metadata").dialog("option", "buttons", {
                 "Metadata": function() {
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
                         iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
@@ -1236,12 +1273,12 @@ function createMetadataLink(item){
                     }
                 },
                 "Url": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                        $j(this).dialog("close");                        
-                        
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
+
                         var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                         $j("#input_wmsserviceurl").val(url);
-                        
+
                         unblockViewerUI();
                         $j("#dialog-wmsservice-url").dialog('open');
                     }
@@ -1261,21 +1298,21 @@ function createMetadataLink(item){
             //blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         }
-        
+
         return lnk;
     }
 
     /* Download tonen, WMS Service url en Annuleren */
-    if ( (item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
+    if ((item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
-            
+
             /* Wel download en url button tonen */
             if (datasetDownload && showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {
-                    "Download": function() {                    
+                    "Download": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
                             /* Kijken of er een polygoon is getekend voor subselectie in download */
-                            var wkt = getWktForDownload();            
+                            var wkt = getWktForDownload();
                             if (wkt == "") {
                                 alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
                             }
@@ -1285,8 +1322,8 @@ function createMetadataLink(item){
                         }
                     },
                     "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
 
                             var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
@@ -1294,7 +1331,7 @@ function createMetadataLink(item){
                             unblockViewerUI();
                             $j("#dialog-wmsservice-url").dialog('open');
                         }
-                    },                
+                    },
                     "Annuleren": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
                             $j(this).dialog("close");
@@ -1303,10 +1340,10 @@ function createMetadataLink(item){
                     }
                 });
             } else if (!datasetDownload && showServiceUrl) {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
+                $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
 
                             var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
@@ -1323,7 +1360,7 @@ function createMetadataLink(item){
                     }
                 });
             } else {
-                $j("#dialog-download-metadata").dialog("option", "buttons", { 
+                $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Annuleren": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
                             $j(this).dialog("close");
@@ -1336,24 +1373,24 @@ function createMetadataLink(item){
             $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
                 $j(this).html($j(this).parent().attr('text'));
             });
-            
+
             $j("#dialog-download-metadata").dialog('open');
         }
-        
+
         return lnk;
     }
 
     /* Download tonen, Metadata, WMS Service url en Annuleren */
     if (item.metadatalink && item.metadatalink.length > 1 && item.gegevensbronid && item.gegevensbronid > 0) {
         lnk.onclick = function() {
-            
+
             /* Wel download button tonen */
             if (datasetDownload && showServiceUrl) {
                 $j("#dialog-download-metadata").dialog("option", "buttons", {
-                    "Download": function() {            
+                    "Download": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
                             /* Kijken of er een polygoon is getekend voor subselectie in download */
-                            var wkt = getWktForDownload();            
+                            var wkt = getWktForDownload();
                             if (wkt == "") {
                                 alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.")
                             }
@@ -1369,8 +1406,8 @@ function createMetadataLink(item){
                         }
                     },
                     "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
 
                             var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
@@ -1387,7 +1424,7 @@ function createMetadataLink(item){
                     }
                 });
             } else if (!datasetDownload && showServiceUrl) {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
+                $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Metadata": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
                             iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
@@ -1395,8 +1432,8 @@ function createMetadataLink(item){
                         }
                     },
                     "Url": function() {
-                        if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                            $j(this).dialog("close");                        
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
 
                             var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             $j("#input_wmsserviceurl").val(url);
@@ -1413,7 +1450,7 @@ function createMetadataLink(item){
                     }
                 });
             } else {
-                $j("#dialog-download-metadata").dialog("option", "buttons", {                    
+                $j("#dialog-download-metadata").dialog("option", "buttons", {
                     "Metadata": function() {
                         if ($j("#dialog-download-metadata").dialog("isOpen")) {
                             iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
@@ -1427,7 +1464,7 @@ function createMetadataLink(item){
                         }
                     }
                 });
-            }            
+            }
 
             $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
                 $j(this).html($j(this).parent().attr('text'));
@@ -1436,21 +1473,21 @@ function createMetadataLink(item){
             //blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         }
-        
+
         return lnk;
     }
-    
+
     /* Alleen url en Annuleren */
-    if ( (item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) && (showServiceUrl) ) {
+    if ((item.metadatalink == undefined || item.metadatalink == '#') && (item.gegevensbronid == undefined || item.gegevensbronid < 1) && (showServiceUrl)) {
         lnk.onclick = function() {
-            $j("#dialog-download-metadata").dialog("option", "buttons", {                
+            $j("#dialog-download-metadata").dialog("option", "buttons", {
                 "Url": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                        $j(this).dialog("close");                        
-                        
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
+
                         var url = kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                         $j("#input_wmsserviceurl").val(url);
-                        
+
                         unblockViewerUI();
                         $j("#dialog-wmsservice-url").dialog('open');
                     }
@@ -1470,7 +1507,7 @@ function createMetadataLink(item){
             //blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         }
-        
+
         return lnk;
     }
 
@@ -1481,18 +1518,18 @@ function createWMSServiceUrlDialog() {
     $j("#dialog-wmsservice-url").dialog({
         resizable: false,
         disabled: true,
-        autoOpen: false,        
+        autoOpen: false,
         modal: false,
         width: 750,
         height: 150
     });
 }
 
-function createDownloadMetadataDialog(){
+function createDownloadMetadataDialog() {
     $j("#dialog-download-metadata").dialog({
         resizable: false,
         disabled: true,
-        autoOpen: false,        
+        autoOpen: false,
         modal: false
     });
 }
@@ -1502,7 +1539,7 @@ function createDownloadMetadataDialog(){
  * @param container The tree container
  * @param item The item with the leaf info.
  * @return useless boolean ?
-*/
+ */
 function createLabel(container, item) {
 
     if (item.cluster) {
@@ -1510,94 +1547,94 @@ function createLabel(container, item) {
         if (item.callable) {
             var checkboxChecked = false;
             var clusterPos = getClusterPosition(item);
-            if(clusterPos!=0) {
+            if (clusterPos != 0) {
                 checkboxChecked = true;
             }
             var checkbox = null;
-            var parentItem=getParentItem(themaTree,item);
-            if (parentItem.exclusive_childs){
-                checkbox=createRadioCluster(item,checkboxChecked,parentItem.id);
-            }else{
-                checkbox=createCheckboxCluster(item, checkboxChecked);
+            var parentItem = getParentItem(themaTree, item);
+            if (parentItem.exclusive_childs) {
+                checkbox = createRadioCluster(item, checkboxChecked, parentItem.id);
+            } else {
+                checkbox = createCheckboxCluster(item, checkboxChecked);
             }
 
-            checkbox.theItem=item;
+            checkbox.theItem = item;
             container.appendChild(checkbox);
 
-            if (checkboxChecked){
+            if (checkboxChecked) {
                 clustersAan.push(checkbox);
             }
 
             // alleen een callable item kan active zijn
-            if (item.active){
+            if (item.active) {
                 setActiveCluster(item, true);
             }
         }
-        var hasChildsWithLegend=false;
-        if (item.hide_tree && item.callable){
+        var hasChildsWithLegend = false;
+        if (item.hide_tree && item.callable) {
             // hack om toggle plaatje uit te zetten als
             // cluster onzichtbare onderliggende kaartlagen heeft
             var img = document.createElement("img");
             img.setAttribute("border", "0");
             img.src = globalTreeOptions["layermaindiv"].toggleImages["leaf"]
-            img.theItem=item;
+            img.theItem = item;
             container.togglea = img;
 
             // als een cluster childs heeft en legend moet in tree worden getoond.
-            if (showLegendInTree && item.children){
+            if (showLegendInTree && item.children) {
                 //controleer of er een NIET cluster child een legend heeft.
-                hasChildsWithLegend=false;
-                for (var i=0; i < item.children.length && !hasChildsWithLegend; i++){
-                    var child=item.children[i];
-                    if (!child.cluster && child.legendurl!=undefined){
-                        hasChildsWithLegend=true;
+                hasChildsWithLegend = false;
+                for (var i = 0; i < item.children.length && !hasChildsWithLegend; i++) {
+                    var child = item.children[i];
+                    if (!child.cluster && child.legendurl != undefined) {
+                        hasChildsWithLegend = true;
                     }
                 }
-                if (hasChildsWithLegend){
+                if (hasChildsWithLegend) {
                     container.appendChild(document.createTextNode('  '));
-                    container.appendChild(createTreeLegendIcon());                    
+                    container.appendChild(createTreeLegendIcon());
                 }
             }
         }
-        if (!item.hide_tree || item.callable){
+        if (!item.hide_tree || item.callable) {
             container.appendChild(document.createTextNode('  '));
             container.appendChild(createMetadataLink(item));
         }
         container.appendChild(createTreeLegendDiv(item));
-        if (item.hide_tree && !item.callable){
+        if (item.hide_tree && !item.callable) {
             return true; //hide
         }
 
     } else if (!item.hide_tree) {
-        if(item.wmslayers){
+        if (item.wmslayers) {
 
             alleLayers.push(item);
 
             checkboxChecked = false;
             var layerPos = getLayerPosition(item);
-            if(layerPos!=0) {
+            if (layerPos != 0) {
                 checkboxChecked = true;
             }
 
             var themaCheckbox = null;
-            parentItem=getParentItem(themaTree,item);
-            if (parentItem.exclusive_childs){
-                themaCheckbox=createRadioThema(item,checkboxChecked,parentItem.id);
-            }else{
-                themaCheckbox=createCheckboxThema(item, checkboxChecked);
+            parentItem = getParentItem(themaTree, item);
+            if (parentItem.exclusive_childs) {
+                themaCheckbox = createRadioThema(item, checkboxChecked, parentItem.id);
+            } else {
+                themaCheckbox = createCheckboxThema(item, checkboxChecked);
             }
-            themaCheckbox.theItem=item;
+            themaCheckbox.theItem = item;
 
             if (checkboxChecked) {
-                if (layerPos<0) {
+                if (layerPos < 0) {
                     layersAan.unshift(themaCheckbox);
                 } else {
                     layersAan.push(themaCheckbox);
                 }
             }
 
-            if(item.analyse=="on" || item.analyse=="active"){
-                if (!multipleActiveThemas){
+            if (item.analyse == "on" || item.analyse == "active") {
+                if (!multipleActiveThemas) {
                     var labelRadio = createRadioSingleActiveThema(item);
                     container.appendChild(labelRadio);
                 } else {
@@ -1618,12 +1655,12 @@ function createLabel(container, item) {
         if (item.legendurl != undefined && showLegendInTree) {
             container.appendChild(createTreeLegendDiv(item));
         }
-        
+
     } else {
         var divje = createInvisibleThemaDiv(item);
-        divje.theItem=item;
+        divje.theItem = item;
         container.appendChild(divje);
-        if(item.visible=="on" && item.wmslayers){
+        if (item.visible == "on" && item.wmslayers) {
             addItemAsLayer(item);
         }
         return true;//hide
@@ -1635,9 +1672,9 @@ function createLabel(container, item) {
 /**
  * Disable (gray out) a layer in the tree. Function uses jQuery to edit element.
  * @param itemid Item id to disable.
-*/
+ */
 function disableLayer(itemid) {
-    var $item = $j("#layermaindiv_item_" + itemid+"_label");
+    var $item = $j("#layermaindiv_item_" + itemid + "_label");
     $item.addClass("layerdisabled");
     //$item.find("input").attr("disabled", "disabled");
     $item.find(".treeLegendIcon").addClass("disabledLegendIcon");
@@ -1646,9 +1683,9 @@ function disableLayer(itemid) {
 /**
  * Enable a layer in the tree. Function uses jQuery to edit element.
  * @param itemid Item id to enable.
-*/
+ */
 function enableLayer(itemid) {
-    var $item = $j("#layermaindiv_item_" + itemid+"_label");
+    var $item = $j("#layermaindiv_item_" + itemid + "_label");
     $item.removeClass("layerdisabled");
     //$item.find("input").removeAttr("disabled");
     $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");
@@ -1657,31 +1694,32 @@ function enableLayer(itemid) {
 /**
  * Creates a new legend icon element for use in tree.
  * @return The icon element.
-*/
+ */
 function createTreeLegendIcon() {
     var legendicon = document.createElement("img");
     legendicon.src = imageBaseUrl + "icons/application_view_list.png";
     legendicon.alt = "Legenda tonen";
     legendicon.title = "Legenda tonen";
-    legendicon.width="15";
-    legendicon.height="13";
+    legendicon.width = "15";
+    legendicon.height = "13";
     legendicon.className = 'treeLegendIcon imagenoborder';
-    $j(legendicon).click(function(){
-        if(!$j(this).hasClass("disabledLegendIcon")) loadTreeLegendImage($j(this).siblings("div").attr("id"));
+    $j(legendicon).click(function() {
+        if (!$j(this).hasClass("disabledLegendIcon"))
+            loadTreeLegendImage($j(this).siblings("div").attr("id"));
     });
     return legendicon;
 }
 
 /**
  * Loads the legend image when the user clicked on a legend icon.
-*/
+ */
 function loadTreeLegendImage(divid) {
     var divobj = document.getElementById(divid);
     var $divobj = $j(divobj);
     var item = divobj.theItem;
 
     var found = $divobj.find("img.legendLoading");
-    if(found.length == 0) {
+    if (found.length == 0) {
         var legendloading = document.createElement("img");
         legendloading.src = imageBaseUrl + "icons/loadingsmall.gif";
         legendloading.alt = "Loading";
@@ -1692,22 +1730,22 @@ function loadTreeLegendImage(divid) {
     }
 
     var foundlegend = $divobj.find("img.treeLegendImage");
-    if(foundlegend.length == 0) {
-        if (item.cluster){
-            var addedImages=0;
-            for (var i=0; i < item.children.length; i++){
-                var child=item.children[i];
-                if (child.legendurl!=undefined){
-                    if (addedImages>0)
+    if (foundlegend.length == 0) {
+        if (item.cluster) {
+            var addedImages = 0;
+            for (var i = 0; i < item.children.length; i++) {
+                var child = item.children[i];
+                if (child.legendurl != undefined) {
+                    if (addedImages > 0)
                         divobj.appendChild(document.createElement("br"));
-                    var legendimg=createTreeLegendImage(child);
+                    var legendimg = createTreeLegendImage(child);
                     divobj.appendChild(legendimg);
                     legendimg.src = child.legendurl;
                     addedImages++;
                 }
             }
-        }else{
-            legendimg=createTreeLegendImage(item);
+        } else {
+            legendimg = createTreeLegendImage(item);
             divobj.appendChild(legendimg);
             legendimg.src = item.legendurl;
         }
@@ -1719,13 +1757,13 @@ function loadTreeLegendImage(divid) {
  * Creates the image element for the legend
  * @param item Item used for the image name and title
  * @return Image element.
-*/
-function createTreeLegendImage(item){
+ */
+function createTreeLegendImage(item) {
     var legendimg = document.createElement("img");
     legendimg.name = item.title;
     legendimg.alt = "Legenda " + item.title;
-    legendimg.onerror=treeImageError;
-    legendimg.onload=treeImageOnload;
+    legendimg.onerror = treeImageError;
+    legendimg.onload = treeImageOnload;
     legendimg.className = 'treeLegendImage';
     // Set src after the img element is appended to make sure onload gets called, even when image is in cache
     // legendimg.src = item.legendurl;
@@ -1736,16 +1774,16 @@ function createTreeLegendImage(item){
  * Creates the tree legend div.
  * @param item Item used for the image name and title
  * @return Div element.
-*/
+ */
 function createTreeLegendDiv(item) {
-    var id=item.id + '#tree#' + item.wmslayers;
+    var id = item.id + '#tree#' + item.wmslayers;
 
     var div = document.createElement("div");
-    div.name=id;
-    div.id=id;
-    div.title =item.title;
-    div.className="treeLegendClass";
-    div.theItem=item;
+    div.name = id;
+    div.id = id;
+    div.title = item.title;
+    div.className = "treeLegendClass";
+    div.theItem = item;
     div.style.display = 'none';
 
     return div;
@@ -1753,8 +1791,8 @@ function createTreeLegendDiv(item) {
 
 /**
  * Displays an error when the legend image can not be fetched.
-*/
-function treeImageError(){
+ */
+function treeImageError() {
     var divobj = $j(this).parent();
     divobj.find("img.legendLoading").hide();
     divobj.html('<span style="color: Black;">Legenda kan niet worden opgehaald</span>');
@@ -1762,8 +1800,8 @@ function treeImageError(){
 
 /**
  * Hides the legend loading message when the legend image is loaded.
-*/
-function treeImageOnload(){
+ */
+function treeImageOnload() {
     // TODO: Hoogte check wegehaald, ging niet altijd goed in IE7 waardoor laadicoontje niet werd weggehaald
     // if (parseInt(this.height) > 5){
     $j(this).parent().find("img.legendLoading").hide();
@@ -1772,15 +1810,15 @@ function treeImageOnload(){
 
 function activateCheckbox(id) {
     var obj = document.getElementById(id);
-    if(obj!=undefined && obj!=null && !obj.checked)
+    if (obj != undefined && obj != null && !obj.checked)
         document.getElementById(id).click();
 }
 
 function deActivateCheckbox(id) {
-    if (id==undefined || id==null)
+    if (id == undefined || id == null)
         return;
     var obj = document.getElementById(id);
-    if(obj!=undefined && obj!=null && obj.checked)
+    if (obj != undefined && obj != null && obj.checked)
         document.getElementById(id).click();
 }
 
@@ -1795,7 +1833,7 @@ function syncLayerCookieAndForm() {
     }
     if (useCookies) {
         eraseCookie('checkedLayers');
-        if (layerString!=null) {
+        if (layerString != null) {
             createCookie('checkedLayers', layerString, '7');
         }
     }
@@ -1805,7 +1843,7 @@ function syncLayerCookieAndForm() {
 //called when a checkbox is clicked.
 function checkboxClick(obj, dontRefresh) {
     var item = obj.theItem;
-    if(obj.checked) {        
+    if (obj.checked) {
         addItemAsLayer(item);
         if (useInheritCheckbox) {
             //zet bovenliggende cluster vinkjes aan
@@ -1816,57 +1854,57 @@ function checkboxClick(obj, dontRefresh) {
         removeItemAsLayer(item);
     }
 
-    if (obj.type=='radio'){
-        if (obj.checked){
-            var radiogroup=$j("input[name='"+obj.name+"']");
-            $j.each(radiogroup,function(key, value){
-                if (obj.id!=value.id){
-                    checkboxClick(value,true);
+    if (obj.type == 'radio') {
+        if (obj.checked) {
+            var radiogroup = $j("input[name='" + obj.name + "']");
+            $j.each(radiogroup, function(key, value) {
+                if (obj.id != value.id) {
+                    checkboxClick(value, true);
                 }
             })
         }
     }
 
-    if (!dontRefresh){
-        if(obj.checked) {
+    if (!dontRefresh) {
+        if (obj.checked) {
             refreshLayerWithDelay();
-        }else{
+        } else {
             doRefreshLayer();
         }
     }
 }
 //called when a clustercheckbox is clicked
-function clusterCheckboxClick(element,dontRefresh){
-    if (element==undefined || element==null)
+function clusterCheckboxClick(element, dontRefresh) {
+    if (element == undefined || element == null)
         return;
-    if (layerUrl==null){
-        layerUrl=""+kburl;
+    if (layerUrl == null) {
+        layerUrl = "" + kburl;
     }
-    var status=element.checked;
-    if (status){
-        var found=false;
-        for (var i=0; i < clustersAan.length; i++){
-            if (clustersAan[i].id==element.id){
-                found=true;
+    var status = element.checked;
+    if (status) {
+        var found = false;
+        for (var i = 0; i < clustersAan.length; i++) {
+            if (clustersAan[i].id == element.id) {
+                found = true;
             }
         }
         if (!found)
             clustersAan.push(element);
-    }else{
+    } else {
         var newClustersAan = new Array();
-        for (var j=0; j < clustersAan.length; j++){
-            if (clustersAan[j].id!=element.id){
+        for (var j = 0; j < clustersAan.length; j++) {
+            if (clustersAan[j].id != element.id) {
                 newClustersAan.push(clustersAan[j]);
             }
         }
-        clustersAan=newClustersAan;
+        clustersAan = newClustersAan;
     }
     /* indien cookies aan dan cluster id in cookie stoppen */
-    var cluster=element.theItem;
-    if (useCookies) {      
+    var cluster = element.theItem;
+    if (useCookies) {
         if (element.checked) {
             addClusterIdToCookie(cluster.id);
-        }else {
+        } else {
             removeClusterIdFromCookie(cluster.id);
         }
     }
@@ -1878,82 +1916,82 @@ function clusterCheckboxClick(element,dontRefresh){
 
             /* Cluster is net aangevinkt. Children omgekeerd aanzetten zodat
              * bovenste layer in boom ook bovenop wordt getekend. */
-            for (var k = cluster.children.length; k > 0; k--){
-                var child = cluster.children[k-1];
+            for (var k = cluster.children.length; k > 0; k--) {
+                var child = cluster.children[k - 1];
 
-                if (!child.cluster){
+                if (!child.cluster) {
                     addItemAsLayer(child);
-                    if (!cluster.hide_tree){
-                        document.getElementById(child.id).checked=true;
+                    if (!cluster.hide_tree) {
+                        document.getElementById(child.id).checked = true;
                     }
                 } else {
                     //if cluster is callable AND not 'kaartgroep overerving'
-                    if (child.callable && !useInheritCheckbox){
+                    if (child.callable && !useInheritCheckbox) {
                         var elemin = document.getElementById(child.id);
-                        elemin.checked=true;
-                        clusterCheckboxClick(elemin,dontRefresh);
+                        elemin.checked = true;
+                        clusterCheckboxClick(elemin, dontRefresh);
                     }
                 }
             }
-        } else if (cluster.children){
-            for (var d=0; d < cluster.children.length;d++) {
-                var child1=cluster.children[d];
-                if (!child1.cluster){
+        } else if (cluster.children) {
+            for (var d = 0; d < cluster.children.length; d++) {
+                var child1 = cluster.children[d];
+                if (!child1.cluster) {
                     removeItemAsLayer(child1);
-                    if (!cluster.hide_tree){
-                        document.getElementById(child1.id).checked=false;
+                    if (!cluster.hide_tree) {
+                        document.getElementById(child1.id).checked = false;
                     }
                 } else {
                     //if cluster is callable AND not 'kaartgroep overerving'
-                    if (child1.callable && !useInheritCheckbox){
+                    if (child1.callable && !useInheritCheckbox) {
                         var elemout = document.getElementById(child1.id);
-                        elemout.checked=false;
-                        clusterCheckboxClick(elemout,dontRefresh);
+                        elemout.checked = false;
+                        clusterCheckboxClick(elemout, dontRefresh);
                     }
                 }
             }
-        }     
+        }
     }
     /*Als useInheritCheckbox dan grafisch in de tree aangegeven dat onderliggende layers niet zichtbaar zijn.*/
-    if (useInheritCheckbox){        
-        for (var m=0; m < cluster.children.length;m++){
-            child=cluster.children[m];
+    if (useInheritCheckbox) {
+        for (var m = 0; m < cluster.children.length; m++) {
+            child = cluster.children[m];
             if (element.checked) {
                 enableLayer(child.id);
-            }else{
+            } else {
                 disableLayer(child.id);
             }
         }
     }
     /*if its a radio and checked,then disable the other radio's*/
-    if (element.type=='radio' && cluster.children){
-        var childDiv=$j("#layermaindiv_item_" + element.id+"_children");
-        if (element.checked){
+    if (element.type == 'radio' && cluster.children) {
+        var childDiv = $j("#layermaindiv_item_" + element.id + "_children");
+        if (element.checked) {
             //als er child elementen zijn dan die aanzetten en tree expanden.
-            if (childDiv){
+            if (childDiv) {
                 childDiv.removeClass("disabledRadioChilds");
-                $j("#layermaindiv_item_" + element.id+"_children input").removeAttr("disabled");
-                treeview_expandItemChildren("layermaindiv",element.id);
+                $j("#layermaindiv_item_" + element.id + "_children input").removeAttr("disabled");
+                treeview_expandItemChildren("layermaindiv", element.id);
             }
             //andere radio's uitzetten.
-            var jqueryElementString="input[name='"+element.name+"']";
-            var radiogroup=$j(jqueryElementString);
-            $j.each(radiogroup,function(key, value){
-                if (element.id!=value.id){
-                    clusterCheckboxClick(value,dontRefresh);
+            var jqueryElementString = "input[name='" + element.name + "']";
+            var radiogroup = $j(jqueryElementString);
+            $j.each(radiogroup, function(key, value) {
+                if (element.id != value.id) {
+                    clusterCheckboxClick(value, dontRefresh);
                 }
             })
-        }else{
+        } else {
             //als een andere van de group aan is dan deze disablen, mits er childs zijn.
-            if (childDiv){
+            if (childDiv) {
                 childDiv.addClass("disabledRadioChilds");
-                treeview_collapseItemChildren("layermaindiv",element.id);
-                $j("#layermaindiv_item_" + element.id+"_children input").attr('disabled',true);
+                treeview_collapseItemChildren("layermaindiv", element.id);
+                $j("#layermaindiv_item_" + element.id + "_children input").attr('disabled', true);
             }
         }
     }
 
-    if (!dontRefresh){
+    if (!dontRefresh) {
         refreshLayerWithDelay();
     }
 }
@@ -1963,24 +2001,24 @@ function addClusterIdToCookie(id) {
     var arr = new Array();
     if (str != null)
         arr = str.split(',');
-    
+
     var newValues = "";
     var found = false;
-    for (var x=arr.length-1; x >=0 ; x--) {
+    for (var x = arr.length - 1; x >= 0; x--) {
         if (arr[x] == id) {
             found = true;
         }
-        if (newValues.length==0) {
+        if (newValues.length == 0) {
             newValues += arr[x];
         } else {
-            newValues += ","+arr[x];
+            newValues += "," + arr[x];
         }
     }
     if (!found) {
-        if (newValues.length==0) {
+        if (newValues.length == 0) {
             newValues += id;
         } else {
-            newValues += ","+ id;
+            newValues += "," + id;
         }
     }
     createCookie('checkedClusters', newValues, '7');
@@ -2007,37 +2045,37 @@ function removeClusterIdFromCookie(id) {
         arr = str.split(',');
 
     var newValues = "";
-    for (var x=arr.length-1; x >=0 ; x--) {
+    for (var x = arr.length - 1; x >= 0; x--) {
         /* als id niet diegene is die verwijderd moet worden
          * dan toevoegen aan nieuwe cookie value */
         if (arr[x] != id) {
-            if (x == arr.length-1)
+            if (x == arr.length - 1)
                 newValues += arr[x];
             else
-                newValues += ","+arr[x];
+                newValues += "," + arr[x];
         }
     }
 
     createCookie('checkedClusters', newValues, '7');
 }
 
-function addItemAsLayer(theItem){
+function addItemAsLayer(theItem) {
     addLayerToEnabledLayerItems(theItem);
     syncLayerCookieAndForm();
-    
+
     //If there is a orgainization code key then add this to the service url.
-    if (theItem.wmslayers){
+    if (theItem.wmslayers) {
         var organizationCodeKey = theItem.organizationcodekey;
-        if(organizationcode!=undefined && organizationcode != null && organizationcode != '' && organizationCodeKey!=undefined && organizationCodeKey != '') {
-            if(layerUrl.indexOf(organizationCodeKey)<=0){
-                if(layerUrl.indexOf('?')> 0)
-                    layerUrl+='&';
+        if (organizationcode != undefined && organizationcode != null && organizationcode != '' && organizationCodeKey != undefined && organizationCodeKey != '') {
+            if (layerUrl.indexOf(organizationCodeKey) <= 0) {
+                if (layerUrl.indexOf('?') > 0)
+                    layerUrl += '&';
                 else
-                    layerUrl+='?';
-                layerUrl = layerUrl + organizationCodeKey + "="+organizationcode;
+                    layerUrl += '?';
+                layerUrl = layerUrl + organizationCodeKey + "=" + organizationcode;
             }
         }
-    }    
+    }
 }
 
 function isStringEmpty(str) {
@@ -2060,7 +2098,7 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
 
     if (!isStringEmpty(organizationcode) && !isStringEmpty(projectnaam)) {
         layerUrl = originalLayerUrl + groepParam + "=" + organizationcode + "&"
-        + projectParam + "=" + projectnaam;
+                + projectParam + "=" + projectnaam;
     }
 
     /* tekenobject van kaart afhalen */
@@ -2076,10 +2114,10 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
 }
 
 /* als order niet aangepast mag worden dan moet hier een sort komen */
-function addLayerToEnabledLayerItems(theItem){
+function addLayerToEnabledLayerItems(theItem) {
     var foundLayerItem = null;
-    for (var i=0; i < enabledLayerItems.length; i++){
-        if (enabledLayerItems[i].id==theItem.id){
+    for (var i = 0; i < enabledLayerItems.length; i++) {
+        if (enabledLayerItems[i].id == theItem.id) {
             foundLayerItem = enabledLayerItems[i];
             break;
         }
@@ -2089,38 +2127,38 @@ function addLayerToEnabledLayerItems(theItem){
     }
 }
 
-function removeItemAsLayer(theItem){
-    if (removeLayerFromEnabledLayerItems(theItem.id)!=null) {
+function removeItemAsLayer(theItem) {
+    if (removeLayerFromEnabledLayerItems(theItem.id) != null) {
         syncLayerCookieAndForm();
         return;
     }
 }
 
-function removeLayerFromEnabledLayerItems(itemId){
-    for (var i=0; i < enabledLayerItems.length; i++){
-        if (enabledLayerItems[i].id==itemId){
+function removeLayerFromEnabledLayerItems(itemId) {
+    for (var i = 0; i < enabledLayerItems.length; i++) {
+        if (enabledLayerItems[i].id == itemId) {
             var foundLayerItem = enabledLayerItems[i];
-            enabledLayerItems.splice(i,1);
+            enabledLayerItems.splice(i, 1);
             return foundLayerItem;
         }
     }
     return null;
 }
 
-var refresh_timeout_handle;    
+var refresh_timeout_handle;
 function refreshLayerWithDelay() {
     showLoading();
 
-    if(refresh_timeout_handle) { 
+    if (refresh_timeout_handle) {
         clearTimeout(refresh_timeout_handle);
         hideLoading();
-    } 
+    }
     refresh_timeout_handle = setTimeout("doRefreshLayer();", refreshDelay);
-}     
+}
 
-function doRefreshLayer() {    
+function doRefreshLayer() {
     //register after loading
-    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox);
+    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, webMapController.getMap(), refreshLegendBox);
     refreshLayer();
 
     refreshLegendBox();
@@ -2128,14 +2166,14 @@ function doRefreshLayer() {
 
 /*Check scale for all layers*/
 function checkScaleForLayers() {
-    
-    var currentscale;    
+
+    var currentscale;
     if (tilingResolutions && tilingResolutions !== "") {
         currentscale = webMapController.getMap().getResolution();
     } else {
         currentscale = webMapController.getMap().getScaleHint();
-    } 
-    
+    }
+
     setScaleForTree(themaTree, currentscale);
 }
 
@@ -2151,42 +2189,42 @@ function isItemInScale(item, scale) {
     if (scale == 'NaN' || scale < 0 || !item) {
         return false;
     }
-    
+
     var itemVisible = true;
-    
+
     if (item.children) {
         itemVisible = false;
-        for (var i=0; i < item.children.length; i++){
-            if(isItemInScale(item.children[i],scale)){
-                itemVisible=true;
+        for (var i = 0; i < item.children.length; i++) {
+            if (isItemInScale(item.children[i], scale)) {
+                itemVisible = true;
             }
         }
     } else {
         if (item.scalehintmin != null) {
             var minscale = Number(item.scalehintmin.replace(",", "."));
-            if (scale<minscale){
-                itemVisible=false;
+            if (scale < minscale) {
+                itemVisible = false;
             }
         }
         if (item.scalehintmax != null) {
             var maxscale = Number(item.scalehintmax.replace(",", "."));
-            if (scale>maxscale){
-                itemVisible=false;
+            if (scale > maxscale) {
+                itemVisible = false;
             }
-        }       
+        }
     }
-    
+
     /* Schaal check voor Tiling lagen */
     if (item.resolutions || item.PRINTRESOLUTIONS) {
         var list;
         var res;
-        
+
         if (item.PRINTRESOLUTIONS) {
             res = item.PRINTRESOLUTIONS;
         } else {
             res = item.resolutions;
-        }        
-        
+        }
+
         if (!res instanceof Array) {
             list = res.split(" ");
 
@@ -2194,30 +2232,30 @@ function isItemInScale(item, scale) {
                 list = res.split(",");
             }
         }
-        
+
         if (list && list.length > 0) {
             var size = list.length;
             var max = list[0];
-            var min = list[size-1];
-            
+            var min = list[size - 1];
+
             if (min == "") {
-                min = list[size-2];
+                min = list[size - 2];
             }
 
             // doe W(res(kw) * 2) scalehint
-            var scaleMax = Math.sqrt((max*max) * 2);   
-            var scaleMin = Math.sqrt((min*min) * 2);
+            var scaleMax = Math.sqrt((max * max) * 2);
+            var scaleMin = Math.sqrt((min * min) * 2);
 
             var adjustedScale = scale + 0.00000000000001;
-            
+
             if (adjustedScale <= scaleMax && adjustedScale >= scaleMin) {
                 itemVisible = true;
             } else {
                 itemVisible = false;
             }
         }
-    }    
-    
+    }
+
     return itemVisible;
 }
 
@@ -2225,105 +2263,105 @@ function isItemInScale(item, scale) {
  * Calculates and returns the ??? from 1:??? for the current extent and 
  * current mapwidth in pixels. Average ppi value assumed. The 0.00028
  * could be made into a config setting in gisviewerconfig.
-*/
+ */
 function calcScaleForCurrentExtent() {
     var extent = webMapController.getMap().getExtent();
-    var newMapWidth = extent.maxx - extent.minx;    
-    
+    var newMapWidth = extent.maxx - extent.minx;
+
     var screenWidth = $j("#mapcontent").width();
     var scale = newMapWidth / (screenWidth * 0.00028);
-    
+
     return Math.round(Number(scale));
 }
 /**
  *Sets een tree item enabled or disabled (visually)
  */
-function setScaleForTree(item,scale){
+function setScaleForTree(item, scale) {
     var disabledRadio = false;
-    
+
     //if disabled radioinput dan zijn de layers al gedisabled.
     var inputElement = document.getElementById(item.id);
-    
-    disabledRadio = inputElement && inputElement.type=='radio' && !inputElement.checked;
-    
-    if (!disabledRadio){
-        if (item.children){
-            for (var i=0; i < item.children.length; i++){
-                setScaleForTree(item.children[i],scale);
+
+    disabledRadio = inputElement && inputElement.type == 'radio' && !inputElement.checked;
+
+    if (!disabledRadio) {
+        if (item.children) {
+            for (var i = 0; i < item.children.length; i++) {
+                setScaleForTree(item.children[i], scale);
             }
         }
-        var itemVisible = isItemInScale(item,scale);
+        var itemVisible = isItemInScale(item, scale);
 
         /* Als item een cluster is en aangevinkt kan worden of het item is
          * geen cluster, dus een kaartlaag dan mag dit wel of
          * niet uitgegrijst worden */
         if ((item.cluster && item.callable) || !item.cluster) {
-            if (itemVisible){
+            if (itemVisible) {
                 enableLayer(item.id);
-            }else{
+            } else {
                 disableLayer(item.id);
             }
         }
-        
+
         return itemVisible;
-        
+
     } else {
         return false;
     }
 }
 
-function refreshLayer(doRefreshOrder) {    
+function refreshLayer(doRefreshOrder) {
     var local_refresh_handle = refresh_timeout_handle;
 
     if (doRefreshOrder == undefined) {
         doRefreshOrder = false;
     }
 
-    if (layerUrl==undefined || layerUrl==null) {
+    if (layerUrl == undefined || layerUrl == null) {
         hideLoading();
         return;
     }
 
-    if(layerUrl.toLowerCase().indexOf("?service=")==-1 && layerUrl.toLowerCase().indexOf("&service=" )==-1) {
-        if (layerUrl.indexOf('?')> 0) {
-            layerUrl+='&';
+    if (layerUrl.toLowerCase().indexOf("?service=") == -1 && layerUrl.toLowerCase().indexOf("&service=") == -1) {
+        if (layerUrl.indexOf('?') > 0) {
+            layerUrl += '&';
         } else {
-            layerUrl+='?';
+            layerUrl += '?';
         }
-        layerUrl+="SERVICE=WMS";
+        layerUrl += "SERVICE=WMS";
     }
 
     var topLayerItems = new Array();
     var backgroundLayerItems = new Array();
     var item;
 
-    for (var i=0; i<enabledLayerItems.length; i++){
+    for (var i = 0; i < enabledLayerItems.length; i++) {
         item = enabledLayerItems[i];
 
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
-            
+
             /* Indien object nog niet gevonden dan is het item
              * waarschijnlijk een user layer. Object opzoeken via jQuery */
             if (object == undefined || object == null) {
-                object = $j("#input").find('l_' + item.id);                
+                object = $j("#input").find('l_' + item.id);
             }
-            
+
             if (object == undefined || object == null) {
-                object = $j("#input").find('lOn_' + item.id);                
+                object = $j("#input").find('lOn_' + item.id);
             }
-            
+
             // Item alleen toevoegen aan de layers indien
             // parent cluster(s) allemaal aangevinkt staan of
             // geen cluster heeft
             if (!itemHasAllParentsEnabled(object)) {
                 continue;
-            }  
+            }
         }
-        if (item.wmslayers){
-            if (item.background){
+        if (item.wmslayers) {
+            if (item.background) {
                 backgroundLayerItems.push(item)
-            }else{
+            } else {
                 topLayerItems.push(item);
             }
         }
@@ -2336,7 +2374,7 @@ function refreshLayer(doRefreshOrder) {
     var layerGroup;
     var lastGroupName = "";
     var localGroupName = "";
-    for (var j=0; j<orderedLayerItems.length; j++){
+    for (var j = 0; j < orderedLayerItems.length; j++) {
         item = orderedLayerItems[j];
         //als layergrouping afzonderlijke layers is of als de layer een tiling layer is
         //maak dan een afzonderlijke layer.
@@ -2344,10 +2382,10 @@ function refreshLayer(doRefreshOrder) {
             localGroupName = "fmc" + item.id;
         } else if (layerGrouping == "lg_cluster") {
             localGroupName = "fmc" + item.clusterid;
-        }else if (layerGrouping == "lg_forebackground") {
-            if (item.background){
+        } else if (layerGrouping == "lg_forebackground") {
+            if (item.background) {
                 localGroupName = "fmcback";
-            }else{
+            } else {
                 localGroupName = "fmctop";
             }
         } else {
@@ -2368,29 +2406,29 @@ function refreshLayer(doRefreshOrder) {
     }
 
     // verwijderen ontbrekende layers
-    var allLayers=webMapController.getMap().getLayers();
-    var shownLayers= new Array();
-    for (var a=0; a < allLayers.length; a++){
-        if (allLayers[a].getType()==Layer.RASTER_TYPE){
+    var allLayers = webMapController.getMap().getLayers();
+    var shownLayers = new Array();
+    for (var a = 0; a < allLayers.length; a++) {
+        if (allLayers[a].getType() == Layer.RASTER_TYPE) {
             shownLayers.push(allLayers[a]);
         }
     }
     var removedLayers = new Array();
-    for (var k=0; k < shownLayers.length; k++){
+    for (var k = 0; k < shownLayers.length; k++) {
         var lid = shownLayers[k].getId();
         var ls = shownLayers[k].getOption("layers");
         var found = false;
-        for (i=0; i<layerGroups.length && found==false; i++){
+        for (i = 0; i < layerGroups.length && found == false; i++) {
             layerGroup = layerGroups[i];
             if (lid == layerGroup[0]) {
                 // controleren of laagvolgorde hetzelfde is
                 var lsreq = "";
-                for (var m=1; m < layerGroup.length; m++){
+                for (var m = 1; m < layerGroup.length; m++) {
                     item = layerGroup[m];
-                    if (lsreq.length>0) {
-                        lsreq+=",";
+                    if (lsreq.length > 0) {
+                        lsreq += ",";
                     }
-                    lsreq+=item.wmslayers;
+                    lsreq += item.wmslayers;
                 }
                 if (ls == lsreq) {
                     found = true;
@@ -2402,45 +2440,45 @@ function refreshLayer(doRefreshOrder) {
             removedLayers.push(lid);
         }
     }
-    for (var n=0; n < removedLayers.length; n++){
+    for (var n = 0; n < removedLayers.length; n++) {
         webMapController.getMap().removeLayerById(removedLayers[n]);//false
     }
 
     // toevoegen lagen
-    for (i=0; i<layerGroups.length; i++){
+    for (i = 0; i < layerGroups.length; i++) {
         layerGroup = layerGroups[i];
         var layerId = layerGroup[0];
-        
-        if (webMapController.getMap().getLayer(layerId)==null){
-            layerGroup.splice(0,1); // verwijder eerste element
-            
-            for (k=0; k < layerGroup.length; k++) {                
+
+        if (webMapController.getMap().getLayer(layerId) == null) {
+            layerGroup.splice(0, 1); // verwijder eerste element
+
+            for (k = 0; k < layerGroup.length; k++) {
                 /* eigen wms layer */
                 if (layerGroup[k].serviceid != undefined) {
-                    var lName = layerGroup[k].name;                    
+                    var lName = layerGroup[k].name;
                     var lUrl = layerGroup[k].service_url;
                     var layers = new Array();
                     layers[0] = layerGroup[k];
 
                     /* Sld url aan service url toevoegen
-                    var sldUrl = layerGroup[k].service_sld;                    
-                    if (sldUrl != undefined && sldUrl != "" && sldUrl.length > 0) {
-                        lUrl += "&sld=" + sldUrl;
-                    } */
-                    
+                     var sldUrl = layerGroup[k].service_sld;                    
+                     if (sldUrl != undefined && sldUrl != "" && sldUrl.length > 0) {
+                     lUrl += "&sld=" + sldUrl;
+                     } */
+
                     addLayerToViewer(lName, lUrl, layers);
                     layerId = getValidLayerId(lName);
-                } else {                    
-                    addLayerToViewer(layerId, layerUrl, layerGroup);                  
+                } else {
+                    addLayerToViewer(layerId, layerUrl, layerGroup);
                 }
             }
         }
 
-        var layer=webMapController.getMap().getLayer(layerId);
-        if (layer!=null){
-            var oldOrderIndex=webMapController.getMap().setLayerIndex(layer,i+startLayerIndex);
-            if (i+startLayerIndex != oldOrderIndex){
-                doRefreshOrder=true;
+        var layer = webMapController.getMap().getLayer(layerId);
+        if (layer != null) {
+            var oldOrderIndex = webMapController.getMap().setLayerIndex(layer, i + startLayerIndex);
+            if (i + startLayerIndex != oldOrderIndex) {
+                doRefreshOrder = true;
             }
         }
     }
@@ -2451,29 +2489,29 @@ function refreshLayer(doRefreshOrder) {
         // check of dit een goed idee is
         // alleen refresh als er intussen geen nieuwe timeout gezet is
         return;
-    }else {
+    } else {
         refresh_timeout_handle = 0;
     }
     if (doRefreshOrder) {
-    //TODO: WebMapController
-    //webMapController.getMap().refreshLayerOrder();
+        //TODO: WebMapController
+        //webMapController.getMap().refreshLayerOrder();
     }
-    
+
     // flamingoController.getMap().update();
 
     var lagen = webMapController.getMap().getAllVectorLayers();
     var tilingLayers = webMapController.getMap().getAllTilingLayers();
-    
+
     if (tilingLayers) {
         lagen.concat(tilingLayers);
     }
-    
+
     var totalLayers = webMapController.getMap().getLayers().length;
-    for(var p = 0 ; p < lagen.length;p++){
+    for (var p = 0; p < lagen.length; p++) {
         var laag = lagen[p];
-        webMapController.getMap().setLayerIndex(laag,totalLayers+startLayerIndex);
+        webMapController.getMap().setLayerIndex(laag, totalLayers + startLayerIndex);
     }
-    
+
     /* Tijdelijke punten ook tonen */
     checkTempUploadedPointsWms(uploadCsvLayerOn);
 }
@@ -2492,7 +2530,7 @@ function layersOnlyHaveDefaultStyles(layerItems) {
     if (layerItems == undefined || layerItems == "")
         return true;
 
-    for (var i=0; i < layerItems.length; i++) {
+    for (var i = 0; i < layerItems.length; i++) {
         var item = layerItems[i];
 
         if (item.use_style && item.use_style != "default")
@@ -2502,35 +2540,48 @@ function layersOnlyHaveDefaultStyles(layerItems) {
     return true;
 }
 
-function addLayerToViewer(lname, layerUrl, layerItems) {       
+function addLayerToViewer(lname, layerUrl, layerItems) {
     //tiling layer
-    if (layerItems.length==1 && layerItems[0].tiled){
-        var options=new Object();
-        var tileItem=layerItems[0];
-        options["VERSION"]=tileItem.tileVersion;
-        options["LAYERS"]=tileItem.tileLayers;        
-        options["STYLES"]=tileItem.tileStyles;
-        options["FORMAT"]=tileItem.tileFormat;
-        options["SRS"]=tileItem.tileSrs;
-        options["BBOX"]=tileItem.tileBoundingBox;
-        
+    if (layerItems.length == 1 && layerItems[0].tiled) {
+        var options = new Object();
+        var tileItem = layerItems[0];
+        options["VERSION"] = tileItem.tileVersion;
+        options["LAYERS"] = tileItem.tileLayers;
+        options["STYLES"] = tileItem.tileStyles;
+        options["FORMAT"] = tileItem.tileFormat;
+        options["SRS"] = tileItem.tileSrs;
+        options["BBOX"] = tileItem.tileBoundingBox;
+
         /* voor transparantie slider */
-        options["background"]= tileItem.background;  
-        
+        options["background"] = tileItem.background;
+
         var maxBounds = getMaxBounds();
-        var olRes = getTilingResolutions(maxBounds, false); 
-            
-        if (webMapController instanceof OpenLayersController && tilingResolutions) {
-            options["serverResolutions"] = olRes; // tilingResolutions
+        var olRes;
+
+        if (tilingResolutions && tilingResolutions !== '') {
+            olRes = tilingResolutions;
+        } else if (tileItem.resolutions) {
+            olRes = tileItem.resolutions;
+        } else {
+            olRes = getTilingResolutions(maxBounds, false);
         }
         
-        options["RESOLUTIONS"] = olRes; //tileItem.resolutions;
+        tilingResolutions = olRes;
         
-        options["TILEHEIGHT"]=tileItem.tileHeight;
-        options["TILEWIDTH"]=tileItem.tileWidth;
-        
+        if (webMapController instanceof OpenLayersController && tilingResolutions) {
+            // vervang kommas voor spaties */
+            olRes = olRes.replace(/\,/g,' ');
+            
+            options["serverResolutions"] = olRes;
+        }
+
+        options["RESOLUTIONS"] = olRes;
+
+        options["TILEHEIGHT"] = tileItem.tileHeight;
+        options["TILEWIDTH"] = tileItem.tileWidth;
+
         /* Min/max scale zetten voor tiling layers */
-        if (tileItem.resolutions) {      
+        if (tileItem.resolutions) {
             var res = tileItem.resolutions;
             ; //.trim();
 
@@ -2544,23 +2595,23 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             if (list && list.length > 0) {
                 var size = list.length;
                 var max = list[0];
-                var min = list[size-1];
+                var min = list[size - 1];
 
                 options["minscale"] = min;
                 options["maxscale"] = max;
             }
         }
-        
-        var tileLayer=webMapController.createWMScLayer(lname, layerUrl,options);        
+
+        var tileLayer = webMapController.createWMScLayer(lname, layerUrl, options);
         webMapController.getMap().addLayer(tileLayer);
-        
+
     } else {
         //wms layer    
-        var capLayerUrl=layerUrl;
+        var capLayerUrl = layerUrl;
 
         var validId = getValidLayerId(lname);
 
-        var options={
+        var options = {
             id: validId,
             timeout: 30,
             retryonerror: 10,
@@ -2570,7 +2621,7 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             initService: false
         };
 
-        var ogcOptions={
+        var ogcOptions = {
             format: "image/png",
             transparent: true,
             exceptions: "application/vnd.ogc.se_inimage",
@@ -2579,9 +2630,9 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             noCache: true // TODO: Voor achtergrond kaartlagen wel cache gebruiken
         };
 
-        var theLayers="";
-        var queryLayers="";
-        var maptipLayers="";
+        var theLayers = "";
+        var queryLayers = "";
+        var maptipLayers = "";
         var smallestMinscale = -1;
         var largestMaxscale = -1;
 
@@ -2590,37 +2641,37 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         /* Kijken of layers alleen maar default styles bevatten? Zo ja
          * dan hoeven er geen styles meegegeven te worden */
         var onlyDefaultStyles = layersOnlyHaveDefaultStyles(layerItems);
-    
+
         /* 
-     * TODO: Sld parts opbouwen via sld servlet. Servlet aan layerUrl plakken
-     * Als er een hele sld in de layerUrl is meegegeven dan geen style gebruiken 
-    */
+         * TODO: Sld parts opbouwen via sld servlet. Servlet aan layerUrl plakken
+         * Als er een hele sld in de layerUrl is meegegeven dan geen style gebruiken 
+         */
         if (layerUrl.indexOf("&sld=") != -1) {
             onlyDefaultStyles = true;
         }
 
         var sldIds = "";
-    
-        var maptips=new Array();
+
+        var maptips = new Array();
         // last in list will be on top in map
-        for (var i=0; i<layerItems.length; i++){
+        for (var i = 0; i < layerItems.length; i++) {
             var item = layerItems[i];
-        
+
             var usingSldPart = false;
-            if (item.sld_part != undefined && item.sld_part != "") {            
+            if (item.sld_part != undefined && item.sld_part != "") {
                 if (sldIds.length < 1) {
                     sldIds += item.id;
                 } else {
                     sldIds += "," + item.id;
                 }
-            
+
                 usingSldPart = true;
             }
-        
+
             /* styles komma seperated aan ogc options toevoegen. style niet gebruiken
-         * als er een sld_part is voor het item. */
+             * als er een sld_part is voor het item. */
             if (item.use_style && !onlyDefaultStyles && !usingSldPart) {
-                if (i == layerItems.length-1) {
+                if (i == layerItems.length - 1) {
                     allStyles += item.use_style;
                 } else {
                     allStyles += item.use_style + ",";
@@ -2628,22 +2679,22 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
             }
 
             var minscale;
-            if (smallestMinscale!=0){
+            if (smallestMinscale != 0) {
                 if (item.scalehintmin != null) {
                     minscale = Number(item.scalehintmin.replace(",", "."));
-                    if (!isNaN(minscale)){
+                    if (!isNaN(minscale)) {
                         if (smallestMinscale == -1 || minscale < smallestMinscale) {
                             smallestMinscale = minscale;
                         }
                     }
-                }else{
+                } else {
                     //geen minscale dan moet er geen minscale worden ingesteld.
-                    smallestMinscale=0;
-                }            
+                    smallestMinscale = 0;
+                }
             }
 
             var maxscale;
-            if (largestMaxscale!=0){
+            if (largestMaxscale != 0) {
                 if (item.scalehintmax != null) {
                     maxscale = Number(item.scalehintmax.replace(",", "."));
                     if (!isNaN(maxscale)) {
@@ -2651,23 +2702,23 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
                             largestMaxscale = maxscale;
                         }
                     }
-                }else{
+                } else {
                     //geen maxscale dan moet er geen maxscale worden ingesteld.
-                    largestMaxscale=0;
+                    largestMaxscale = 0;
                 }
             }
 
-            if (item.wmslayers){
-                if (theLayers.length>0) {
-                    theLayers+=",";
+            if (item.wmslayers) {
+                if (theLayers.length > 0) {
+                    theLayers += ",";
                 }
-                theLayers+=item.wmslayers;
+                theLayers += item.wmslayers;
 
                 /* 
                  * Achtergrond optie toevoegen voor gebruik bij Print. Anders
                  * komt de laatst aangevinkte laag bovenop ook als dit een 
                  * achtergrond laag is.
-                */
+                 */
                 if (item.background) {
                     options["background"] = true;
                 } else {
@@ -2675,88 +2726,88 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
                 }
 
             }
-            if (item.wmsquerylayers){
+            if (item.wmsquerylayers) {
                 if (queryLayers.length > 0) {
-                    queryLayers+=",";
+                    queryLayers += ",";
                 }
-                queryLayers+=item.wmsquerylayers
+                queryLayers += item.wmsquerylayers
             }
-            if (layerItems[i].maptipfield){
-                if (maptipLayers.length!=0)
-                    maptipLayers+=",";
-                maptipLayers+=layerItems[i].wmslayers;
-                var aka=layerItems[i].wmslayers;
+            if (layerItems[i].maptipfield) {
+                if (maptipLayers.length != 0)
+                    maptipLayers += ",";
+                maptipLayers += layerItems[i].wmslayers;
+                var aka = layerItems[i].wmslayers;
                 //Als de gebruiker ingelogd is dan zal het waarschijnlijk een kaartenbalie service zijn
                 //Daarom moet er een andere aka worden gemaakt voor de map tip.
-                if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0){
-                    aka=aka.substring(aka.indexOf("_")+1);
+                if (ingelogdeGebruiker && ingelogdeGebruiker.length > 0) {
+                    aka = aka.substring(aka.indexOf("_") + 1);
                 }
-                var maptip=new MapTip(layerItems[i].wmslayers,layerItems[i].maptipfield,aka);
+                var maptip = new MapTip(layerItems[i].wmslayers, layerItems[i].maptipfield, aka);
                 maptips.push(maptip);
-            //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
+                //newLayer.addLayerProperty(new LayerProperty(layerItems[i].wmslayers, layerItems[i].maptipfield, aka));
             }
         }
 
         if (smallestMinscale != null && smallestMinscale > 0) {
-            options["minscale"]=smallestMinscale;
+            options["minscale"] = smallestMinscale;
         }
 
         if (largestMaxscale != null && largestMaxscale > 0) {
-            options["maxscale"]=largestMaxscale;
+            options["maxscale"] = largestMaxscale;
         }
 
-        if (webMapController instanceof FlamingoController){
-            if(options["maxResolution"]){
-                options["maxscale"]=options["maxResolution"];
+        if (webMapController instanceof FlamingoController) {
+            if (options["maxResolution"]) {
+                options["maxscale"] = options["maxResolution"];
             }
-            if(options["minResolution"]){
-                options["minscale"]=options["minResolution"];
+            if (options["minResolution"]) {
+                options["minscale"] = options["minResolution"];
             }
             delete options["maxResolution"];
             delete options["minResolution"];
-        }else if (webMapController instanceof OpenLayersController){
-            if (options["maxResolution"]!=undefined && options["minResolution"]==undefined){
-                options["minResolution"]="auto";
+        } else if (webMapController instanceof OpenLayersController) {
+            if (options["maxResolution"] != undefined && options["minResolution"] == undefined) {
+                options["minResolution"] = "auto";
             }
-            if (options["minResolution"]!=undefined && options["maxResolution"]==undefined){
-                options["maxResolution"]="auto";
+            if (options["minResolution"] != undefined && options["maxResolution"] == undefined) {
+                options["maxResolution"] = "auto";
             }
         }
 
         ogcOptions["styles"] = allStyles;
 
-        ogcOptions["layers"]=theLayers;
-        ogcOptions["query_layers"]=queryLayers;
+        ogcOptions["layers"] = theLayers;
+        ogcOptions["query_layers"] = queryLayers;
         //ogcOptions["sld"] = "http://localhost/rpbadam/rpbadam.xml";
 
-        options["maptip_layers"]=maptipLayers;
+        options["maptip_layers"] = maptipLayers;
 
         /* sld servlet gebruiken ? */
         if (sldIds.length > 0) {
             var protocol = window.location.protocol + "//";
             var host = window.location.host;
 
-            var baseUrl = protocol + host  + baseNameViewer;
+            var baseUrl = protocol + host + baseNameViewer;
             var sldUrl = "sld=" + baseUrl + "/services/createUserSld?layerids=" + sldIds;
 
             layerUrl += sldUrl;
         }
 
-        var newLayer=webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
+        var newLayer = webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
 
         newLayer.setMapTips(maptips);
-        
+
         webMapController.getMap().addLayer(newLayer);//false, true, false
     }
 }
 
 function loadObjectInfo(geom) {
-    for(i in enabledtabs) {
+    for (i in enabledtabs) {
         if (enabledtabs[i] == "gebieden") {
             // vul object frame
             document.forms[0].admindata.value = '';
             document.forms[0].metadata.value = '';
-            if (!multipleActiveThemas){
+            if (!multipleActiveThemas) {
                 document.forms[0].themaid.value = activeAnalyseThemaId;
             } else {
                 document.forms[0].themaid.value = getLayerIdsAsString();
@@ -2764,8 +2815,8 @@ function loadObjectInfo(geom) {
 
             document.forms[0].analysethemaid.value = activeAnalyseThemaId;
 
-            document.forms[0].geom.value=geom;
-            document.forms[0].scale.value ='';
+            document.forms[0].geom.value = geom;
+            document.forms[0].scale.value = '';
 
             // vul adressen/locatie
             document.forms[0].objectdata.value = 't';
@@ -2784,7 +2835,7 @@ function getLayerIdsAsString(onlyWithinScale) {
     var ret = "";
     var firstTime = true;
 
-    for (var i=0; i < enabledLayerItems.length; i++) {
+    for (var i = 0; i < enabledLayerItems.length; i++) {
 
         if (useInheritCheckbox) {
             var object = document.getElementById(enabledLayerItems[i].id);
@@ -2794,26 +2845,26 @@ function getLayerIdsAsString(onlyWithinScale) {
             if (!itemHasAllParentsEnabled(object))
                 continue;
         }
-        if (onlyWithinScale){
+        if (onlyWithinScale) {
             var currentscale;
             if (tilingResolutions && tilingResolutions !== "") {
                 currentscale = webMapController.getMap().getResolution();
             } else {
                 currentscale = webMapController.getMap().getScaleHint();
-            } 
-            
-            if (!isItemInScale(enabledLayerItems[i],currentscale)){
+            }
+
+            if (!isItemInScale(enabledLayerItems[i], currentscale)) {
                 continue;
             }
         }
-        if(firstTime) {
+        if (firstTime) {
             ret += enabledLayerItems[i].id;
             firstTime = false;
         } else {
             ret += "," + enabledLayerItems[i].id;
         }
     }
-  
+
     return ret;
 }
 
@@ -2872,11 +2923,11 @@ function getParentDivContainingChilds(obj, tag)
 {
     var obj_parent = obj.parentNode;
 
-    if ( !obj_parent || (obj_parent.id == null)  )
+    if (!obj_parent || (obj_parent.id == null))
         return false;
 
     /* alleen parent teruggeven als het ook aangevinkt kan worden */
-    if ( (obj_parent.id.indexOf("_children") != -1) && (parentHasCheckBox(obj_parent)) )
+    if ((obj_parent.id.indexOf("_children") != -1) && (parentHasCheckBox(obj_parent)))
         return obj_parent;
     else
         return getParentDivContainingChilds(obj_parent, tag);
@@ -2899,7 +2950,7 @@ function getItemName(item) {
     var str = item.id.split("_");
     var l = str.length;
 
-    var name = str[l-1];
+    var name = str[l - 1];
 
     return name;
 }
@@ -2921,67 +2972,67 @@ function parentHasCheckBox(parent) {
     return false;
 }
 //the loading legend images (needed to abort loading)
-var loadingLegendImages= new Object();
+var loadingLegendImages = new Object();
 function createLegendDiv(item) {
-    var id=item.id + '##' + item.wmslayers;
+    var id = item.id + '##' + item.wmslayers;
     var myImage = new Image();
     myImage.name = item.title;
-    myImage.id=id;
-    myImage.onerror=imageOnerror;
-    myImage.onload=imageOnload;
+    myImage.id = id;
+    myImage.onerror = imageOnerror;
+    myImage.onload = imageOnload;
 
     var spanEl = document.createElement("span");
     spanEl.innerHTML = ' ' + item.title + '<br />';
     spanEl.className = 'orderLayerSpanClass';
 
     var div = document.createElement("div");
-    div.name=id;
-    div.id=id;
-    div.title =item.title;
-    div.className="orderLayerClass";
+    div.name = id;
+    div.id = id;
+    div.title = item.title;
+    div.className = "orderLayerClass";
     div.appendChild(spanEl);
-    div.theItem=item;
-	
+    div.theItem = item;
+
     /* nieuw */
-    div.onclick=function(){
+    div.onclick = function() {
         selectLayer(this);
     };
-    if (item.hide_legend){
-        div.style.display="none";
+    if (item.hide_legend) {
+        div.style.display = "none";
     } // end
 
-    if (item.legendurl != undefined) {        
+    if (item.legendurl != undefined) {
         myImage.src = item.legendurl;
-        loadingLegendImages[id]=myImage;        
+        loadingLegendImages[id] = myImage;
     } else {
         myImage.onerror();
     }
 
-    div.onclick=function(){
+    div.onclick = function() {
         selectLayer(this);
     };
 
-    if (item.hide_legend){
-        div.style.display="none";
+    if (item.hide_legend) {
+        div.style.display = "none";
     }
     return div;
 }
-function imageOnerror(){
-    this.style.height='0';
-    this.style.width='0';
-    this.height=0;
-    this.width=0;
+function imageOnerror() {
+    this.style.height = '0';
+    this.style.width = '0';
+    this.height = 0;
+    this.width = 0;
     //release 1 loading space
     legendImageLoadingSpace++;
     loadNextInLegendImageQueue();
 }
-function imageOnload(){
+function imageOnload() {
     //if not is a loading image then don't add to the DOM
-    if (loadingLegendImages[this.id]!=undefined){
-        if (parseInt(this.height) > 5){
-            var legendimg = document.createElement("img"); 
+    if (loadingLegendImages[this.id] != undefined) {
+        if (parseInt(this.height) > 5) {
+            var legendimg = document.createElement("img");
             legendimg.src = this.src;
-            legendimg.onerror=this.onerror;
+            legendimg.onerror = this.onerror;
             legendimg.className = "imagenoborder";
             legendimg.alt = this.name;
             legendimg.title = this.name;
@@ -3000,30 +3051,30 @@ function imageOnload(){
 
 //adds a layer to the legenda
 //if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
-function addLayerToLegendBox(theItem,atBottomOfType) {
+function addLayerToLegendBox(theItem, atBottomOfType) {
     //check if already exists in legend
     var layerDiv = findLayerDivInLegendBox(theItem);
-    if (layerDiv!=null) {
-        if($j(layerDiv).css("display")=="none"){
-            var beforeChild=findBeforeDivInLegendBox(theItem,atBottomOfType);
-            if (beforeChild==null){
+    if (layerDiv != null) {
+        if ($j(layerDiv).css("display") == "none") {
+            var beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType);
+            if (beforeChild == null) {
                 $j(orderLayerBox).append($j(layerDiv));
-            }else{
+            } else {
                 /* TODO: Nagaan of bovenin toevoegen kan. */
-                if(beforeChild.id == layerDiv.id) {
+                if (beforeChild.id == layerDiv.id) {
                     $j(orderLayerBox).prepend($j(layerDiv));
                 } else {
                     $j(beforeChild).before($j(layerDiv));
                 }
-            //$j(orderLayerBox).insertBefore($j(layerDiv),beforeChild);
+                //$j(orderLayerBox).insertBefore($j(layerDiv),beforeChild);
             }
         }
-        $j(layerDiv).css("display","block");
+        $j(layerDiv).css("display", "block");
         return;
     }
-    
+
     legendImageQueue.push({
-        theItem: theItem, 
+        theItem: theItem,
         atBottomOfType: atBottomOfType
     });
     loadNextInLegendImageQueue();
@@ -3031,41 +3082,41 @@ function addLayerToLegendBox(theItem,atBottomOfType) {
 //queue of the legend objects that needs to be loaded
 var legendImageQueue = new Array();
 //slots that can be used to load the legend objects
-var legendImageLoadingSpace=1;
+var legendImageLoadingSpace = 1;
 /**
-Load the next image object.
-*/
-function loadNextInLegendImageQueue(){
-    if (legendImageLoadingSpace>0 && legendImageQueue.length > 0){
+ Load the next image object.
+ */
+function loadNextInLegendImageQueue() {
+    if (legendImageLoadingSpace > 0 && legendImageQueue.length > 0) {
         //consume 1 loading place
         legendImageLoadingSpace--;
-        var nextLegend=legendImageQueue.shift();
-        var theItem=nextLegend.theItem;
-        var atBottomOfType=nextLegend.nextLegend;
+        var nextLegend = legendImageQueue.shift();
+        var theItem = nextLegend.theItem;
+        var atBottomOfType = nextLegend.nextLegend;
 
         var div = createLegendDiv(theItem);
 
-        var beforeChild=null;
-        if(orderLayerBox.hasChildNodes()) {
+        var beforeChild = null;
+        if (orderLayerBox.hasChildNodes()) {
             beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
         }
-        if (beforeChild==null){
+        if (beforeChild == null) {
             orderLayerBox.appendChild(div);
-        }else{
-            orderLayerBox.insertBefore(div,beforeChild);
+        } else {
+            orderLayerBox.insertBefore(div, beforeChild);
         }
     }
 }
-function resetLegendImageQueue(){
+function resetLegendImageQueue() {
     //loadingLegendImages= new Object();
     legendImageQueue = new Array();
-    legendImageLoadingSpace=2;
+    legendImageLoadingSpace = 2;
 }
 function findLayerDivInLegendBox(theItem) {
-    var id=theItem.id + '##' + theItem.wmslayers;
-    for(var i=0; i < orderLayerBox.childNodes.length; i++){
+    var id = theItem.id + '##' + theItem.wmslayers;
+    for (var i = 0; i < orderLayerBox.childNodes.length; i++) {
         var child = orderLayerBox.childNodes.item(i);
-        if(child.id==id){
+        if (child.id == id) {
             return child;
         }
     }
@@ -3073,37 +3124,37 @@ function findLayerDivInLegendBox(theItem) {
 }
 
 function findBeforeDivInLegendBox(theItem, atBottomOfType) {
-    var beforeChild=null;
+    var beforeChild = null;
     //place layer before the background layers.
-    if (theItem.background){
-        if (atBottomOfType){
-            beforeChild=null;
-        }else{
-            for(var i=0; i < orderLayerBox.childNodes.length; i++){
-                var orderLayerItem=orderLayerBox.childNodes.item(i).theItem;
-                if (orderLayerItem){
-                    if (orderLayerItem.background){
-                        beforeChild=orderLayerBox.childNodes.item(i);
+    if (theItem.background) {
+        if (atBottomOfType) {
+            beforeChild = null;
+        } else {
+            for (var i = 0; i < orderLayerBox.childNodes.length; i++) {
+                var orderLayerItem = orderLayerBox.childNodes.item(i).theItem;
+                if (orderLayerItem) {
+                    if (orderLayerItem.background) {
+                        beforeChild = orderLayerBox.childNodes.item(i);
                         break;
                     }
                 }
             }
         }
-    }else{
-        if (atBottomOfType){
-            var previousChild=null;
-            for(var j=0; j < orderLayerBox.childNodes.length; j++){
-                orderLayerItem=orderLayerBox.childNodes.item(j).theItem;
-                if (orderLayerItem){
-                    if (orderLayerItem.background){
-                        beforeChild=previousChild;
+    } else {
+        if (atBottomOfType) {
+            var previousChild = null;
+            for (var j = 0; j < orderLayerBox.childNodes.length; j++) {
+                orderLayerItem = orderLayerBox.childNodes.item(j).theItem;
+                if (orderLayerItem) {
+                    if (orderLayerItem.background) {
+                        beforeChild = previousChild;
                         break;
                     }
                 }
-                previousChild=orderLayerBox.childNodes.item(j);
+                previousChild = orderLayerBox.childNodes.item(j);
             }
-        }else{
-            beforeChild=orderLayerBox.firstChild;
+        } else {
+            beforeChild = orderLayerBox.firstChild;
         }
     }
     return beforeChild;
@@ -3115,25 +3166,25 @@ function refreshMapVolgorde() {
     syncLayerCookieAndForm();
 }
 
-function refreshLegendBox() { 
+function refreshLegendBox() {
     resetLegendImageQueue();
-    
-    var res;    
+
+    var res;
     if (tilingResolutions && tilingResolutions !== "") {
         res = webMapController.getMap().getResolution();
     } else {
         res = webMapController.getMap().getScaleHint();
     }
-    
-    webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), refreshLegendBox,this);
-    
+
+    webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, webMapController.getMap(), refreshLegendBox, this);
+
     var visibleLayerItems = new Array();
     var invisibleLayerItems = new Array();
-    
-    for (var k=0; k<enabledLayerItems.length; k++){
+
+    for (var k = 0; k < enabledLayerItems.length; k++) {
         var item = enabledLayerItems[k];
         var found = false;
-        
+
         // ouder moet aan staan en binnen schaal
         if (useInheritCheckbox) {
             var object = document.getElementById(item.id);
@@ -3144,52 +3195,52 @@ function refreshLegendBox() {
                 found = true;
                 invisibleLayerItems.push(item);
             }
-        // alleen binnen schaal tonen in legenda
+            // alleen binnen schaal tonen in legenda
         } else {
             if (!isItemInScale(item, res)) {
                 found = true;
                 invisibleLayerItems.push(item);
             }
         }
-        
+
         if (!found) {
             visibleLayerItems.push(item);
         }
     }
-    
+
     enabledLayerItems = new Array();
     var totalLength = orderLayerBox.childNodes.length;
     //Kijk of ze al bestaan en in die volgorde staan.
-    for(var i = (totalLength - 1); i > -1; i--) {
-        var stillVisible=false;
+    for (var i = (totalLength - 1); i > -1; i--) {
+        var stillVisible = false;
         var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
-        for (var m=0; m < visibleLayerItems.length; m++){
-            if (visibleLayerItems[m].id==itemId){
+        for (var m = 0; m < visibleLayerItems.length; m++) {
+            if (visibleLayerItems[m].id == itemId) {
                 var foundLayerItem = visibleLayerItems[m];
                 enabledLayerItems.push(foundLayerItem);
                 visibleLayerItems.splice(m, 1);
-                stillVisible=true;
+                stillVisible = true;
             }
         }
-        if (!stillVisible){
+        if (!stillVisible) {
             //orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
             //$j(orderLayerBox.childNodes[i]).remove();
-            $j(orderLayerBox.childNodes[i]).css("display","none");
+            $j(orderLayerBox.childNodes[i]).css("display", "none");
         }
     }
-    
-    if (visibleLayerItems.length>0) {
+
+    if (visibleLayerItems.length > 0) {
         enabledLayerItems = enabledLayerItems.concat(visibleLayerItems);
     }
-    
+
     resetLegendImageQueue();
-    
-    for (var j=0; j < enabledLayerItems.length; j++){
+
+    for (var j = 0; j < enabledLayerItems.length; j++) {
         item = enabledLayerItems[j];
-        
+
         addLayerToLegendBox(item, false);
     }
-    
+
     if (invisibleLayerItems.length > 0) {
         enabledLayerItems = enabledLayerItems.concat(invisibleLayerItems);
     }
@@ -3197,11 +3248,11 @@ function refreshLegendBox() {
 
 function deleteAllLayers() {
     var totalLength = orderLayerBox.childNodes.length;
-    for(var i = (totalLength - 1); i > -1; i--) {
+    for (var i = (totalLength - 1); i > -1; i--) {
         document.getElementById(splitValue(orderLayerBox.childNodes[i].id)[0]).checked = false;
         orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
     }
-    enabledLayerItems=new Array();
+    enabledLayerItems = new Array();
     syncLayerCookieAndForm();
     doRefreshLayer();
 }
@@ -3211,25 +3262,27 @@ function splitValue(val) {
 }
 
 function getActiveLayerId(cookiestring) {
-    if(!cookiestring) return null;
+    if (!cookiestring)
+        return null;
     var items = cookiestring.split('##');
     return items[0];
 }
 function getActiveLayerLabel(cookiestring) {
-    if(!cookiestring) return null;
+    if (!cookiestring)
+        return null;
     var items = cookiestring.split('##');
     return items[1];
 }
 
 var activeTab = readCookie('activetab');
-if(activeTab !== null) {
+if (activeTab !== null) {
     switchTab(activeTab);
 } else if (demogebruiker) {
     switchTab('themas');
 } else {
     switchTab('themas');
 }
-var orderLayerBox= document.getElementById("orderLayerBox");
+var orderLayerBox = document.getElementById("orderLayerBox");
 
 function onChangeTool(id, event) {
     if (id == 'identify') {
@@ -3239,30 +3292,30 @@ function onChangeTool(id, event) {
 }
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
-function onIdentify(movie,extend) {
-    if(!usePopup && !usePanel && !useBalloonPopup) {
+function onIdentify(movie, extend) {
+    if (!usePopup && !usePanel && !useBalloonPopup) {
         return;
     }
 
     //todo: nog weghalen... Dit moet uniform werken.
-    if (extend==undefined){
-        extend=movie;
+    if (extend == undefined) {
+        extend = movie;
     }
 
     var geom = "";
-    if (extend.minx!=extend.maxx && extend.miny!=extend.maxy) {
+    if (extend.minx != extend.maxx && extend.miny != extend.maxy) {
         // polygon
         geom += "POLYGON((";
-        geom += extend.minx +" "+ extend.miny +",";
-        geom += extend.maxx +" "+ extend.miny +",";
-        geom += extend.maxx +" "+ extend.maxy +",";
-        geom += extend.minx +" "+ extend.maxy +",";
-        geom += extend.minx +" "+ extend.miny;
+        geom += extend.minx + " " + extend.miny + ",";
+        geom += extend.maxx + " " + extend.miny + ",";
+        geom += extend.maxx + " " + extend.maxy + ",";
+        geom += extend.minx + " " + extend.maxy + ",";
+        geom += extend.minx + " " + extend.miny;
         geom += "))";
-    }else{
+    } else {
         // point
         geom += "POINT(";
-        geom += extend.minx +" "+ extend.miny;
+        geom += extend.minx + " " + extend.miny;
         geom += ")";
     }
 
@@ -3275,7 +3328,7 @@ function onIdentify(movie,extend) {
         return;
     }
 
-    if (btn_highLightSelected) {        
+    if (btn_highLightSelected) {
         /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
          * de flamingo config een breinaald
          * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
@@ -3291,39 +3344,39 @@ function onIdentify(movie,extend) {
         highLightThemaObject(geom);
     } else {
         btn_highLightSelected = false;
-        
+
         webMapController.activateTool("identify");
 
         showIdentifyIcon();
         handleGetAdminData(geom, null, false);
     }
-    
+
     loadObjectInfo(geom);
 }
 
-var teller=0;
+var teller = 0;
 //update the getFeatureInfo in the feature window.
-function updateGetFeatureInfo(data){
-    
+function updateGetFeatureInfo(data) {
+
     /* TODO: Deze methode geeft geen GetFeatureInfo weer in Firefox.
      * Werkt wel in IE en Chrome
-    */
-    
+     */
+
     teller++;
-	
+
     //if times out return;
-    if (teller > featureInfoTimeOut){
+    if (teller > featureInfoTimeOut) {
         teller = 0;
         return;
     }
-	
+
     //if the admindata window is loaded then update the page (add the featureinfo thats given by the getFeatureInfo request.
-    if (usePopup && dataframepopupHandle.contentWindow.writeFeatureInfoData){
+    if (usePopup && dataframepopupHandle.contentWindow.writeFeatureInfoData) {
         dataframepopupHandle.contentWindow.writeFeatureInfoData(data);
-        data=null;
-    } else if (window.frames.dataframe.writeFeatureInfoData){
+        data = null;
+    } else if (window.frames.dataframe.writeFeatureInfoData) {
         window.frames.dataframe.writeFeatureInfoData(data);
-        data=null;
+        data = null;
     } else {
         //if the admindata window is not loaded yet then retry after 1sec
         setTimeout(function() {
@@ -3332,8 +3385,8 @@ function updateGetFeatureInfo(data){
     }
 }
 
-function onIdentifyData(id,data){
-    teller=0;
+function onIdentifyData(id, data) {
+    teller = 0;
     updateGetFeatureInfo(data);
 }
 
@@ -3344,8 +3397,8 @@ function layerBoxSort(a, b) {
 
 var frameWorkInitialized = false;
 
-function onFrameworkLoaded(){    
-    if (document.getElementById("treeForm") && (ieVersion <= 8 && ieVersion != -1)){
+function onFrameworkLoaded() {
+    if (document.getElementById("treeForm") && (ieVersion <= 8 && ieVersion != -1)) {
         document.getElementById("treeForm").reset();
     }
 
@@ -3353,212 +3406,210 @@ function onFrameworkLoaded(){
         // layer added in reverse order
         // layer with lowest order number should be on top
         // so added last
-        for (var i=clustersAan.length-1; i >=0 ; i--){
+        for (var i = clustersAan.length - 1; i >= 0; i--) {
             clusterCheckboxClick(clustersAan[i], true);
         }
         // layers bij opstart sorteren op order(belangnr+alfabet)
         /* als order niet aangepast mag worden, dan kan dit weg */
         layersAan.sort(layerBoxSort)
-        for (var m=layersAan.length-1; m >=0 ; m--){
-            checkboxClick(layersAan[m],true);
+        for (var m = layersAan.length - 1; m >= 0; m--) {
+            checkboxClick(layersAan[m], true);
         }
 
+        initFullExtent();
         setStartExtent();
+
         doRefreshLayer();
     }
 
     frameWorkInitialized = true;
-    
-    mapInitialized=true;
-    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,webMapController.getMap(), onAllLayersFinishedLoading);
-    
+
+    mapInitialized = true;
+    webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, webMapController.getMap(), onAllLayersFinishedLoading);
+
     /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus
      * overneemt. Indien geen resoluties opgegeven kun je in Flamingo gewoon
      * oneindig ver blijven inzoomen Let op: Bij OpenLayers gebeurt dit
      * al bij maken Map */
     if (webMapController instanceof FlamingoController) {
-        
-        if (tilingResolutions && tilingResolutions != '') {            
-            var maxBounds = getMaxBounds();
-            var olRes = getTilingResolutions(maxBounds, false);
-            
-            webMapController.getMap("map1").setTilingResolutions(olRes);
+
+        if (tilingResolutions && tilingResolutions != '') {
+            webMapController.getMap("map1").setTilingResolutions(tilingResolutions);
         }
-        
+
         /* Standaard pan tool activeren */
         webMapController.activateTool("toolPan");
     }
-    
+
     updateSizeOL();
-    
+
     doInitSearch();
-    
+
     placeStartLocationMarker();
 }
 
 function updateSizeOL() {
-    if (webMapController instanceof OpenLayersController) {        
-        webMapController.getMap().updateSize();    
+    if (webMapController instanceof OpenLayersController) {
+        webMapController.getMap().updateSize();
     }
 }
 
-function placeStartLocationMarker() {    
+function placeStartLocationMarker() {
     if (startLocationX != "" && startLocationY != "") {
         placeSearchResultMarker(startLocationX, startLocationY);
-    }    
+    }
 }
 
 function initFullExtent() {
     /* Extent uit url */
-    if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {        
-        if (appExtent != null && appExtent.length > 0 && appExtent.split(",").length ==4 ) {
-            setFullExtent(appExtent.split(",")[0],appExtent.split(",")[1],appExtent.split(",")[2],appExtent.split(",")[3]);
+    if (bbox != null && bbox.length > 0 && bbox.split(",").length == 4) {
+        if (fullExtent != null && fullExtent.length > 0 && fullExtent.split(",").length == 4) {
+            setFullExtent(fullExtent.split(",")[0], fullExtent.split(",")[1], fullExtent.split(",")[2], fullExtent.split(",")[3]);
         } else {
-            setFullExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+            setFullExtent(bbox.split(",")[0], bbox.split(",")[1], bbox.split(",")[2], bbox.split(",")[3]);
         }
-        
-    /* Extent uit Flamingo */
-    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {
-        setFullExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);        
-    
-    /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
+
+        /* Extent uit Flamingo */
+    } else if (fullbbox != null && fullbbox.length > 0 && fullbbox.split(",").length == 4) {
+        setFullExtent(fullbbox.split(",")[0], fullbbox.split(",")[1], fullbbox.split(",")[2], fullbbox.split(",")[3]);
+
+        /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
     } else {
         bbox = getNLExtent();
         fullbbox = getNLExtent();
-        
-        var bounds = getNLMaxBounds();        
-        
+
+        var bounds = getNLMaxBounds();
+
         setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
     }
 }
 
-function setStartExtent() {   
-    initFullExtent();
-    
+function setStartExtent() {
     /* Bij zoeken via url de handleInitSearch callback laten zoomen */
     if (searchConfigId != null && searchConfigId > 0) {
         return;
     }
-    
+
     /* Eerst kijken of er een zoekextent is */
     if (searchExtent != null) {
         webMapController.getMap("map1").moveToExtent(searchExtent);
-        
-    /* Extent uit url */
-    } else if (bbox!=null && bbox.length>0 && bbox.split(",").length==4) {          
-        setTimeout(function () {
-            moveToExtent(bbox.split(",")[0],bbox.split(",")[1],bbox.split(",")[2],bbox.split(",")[3]);
+
+        /* Extent uit url */
+    } else if (bbox != null && bbox.length > 0 && bbox.split(",").length == 4) {
+        setTimeout(function() {
+            moveToExtent(bbox.split(",")[0], bbox.split(",")[1], bbox.split(",")[2], bbox.split(",")[3]);
         }, 1);
-        
-    /* Extent uit Flamingo */
-    } else if (fullbbox!=null && fullbbox.length>0 && fullbbox.split(",").length==4) {        
-        setTimeout(function () {
-            moveToExtent(fullbbox.split(",")[0],fullbbox.split(",")[1],fullbbox.split(",")[2],fullbbox.split(",")[3]);
-        }, 1);      
-        
+
+        /* Extent uit Flamingo */
+    } else if (fullbbox != null && fullbbox.length > 0 && fullbbox.split(",").length == 4) {
+        setTimeout(function() {
+            moveToExtent(fullbbox.split(",")[0], fullbbox.split(",")[1], fullbbox.split(",")[2], fullbbox.split(",")[3]);
+        }, 1);
+
     } else if (resolution) {
-        webMapController.getMap().zoomToResolution(resolution);    
-    
-    /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
+        webMapController.getMap().zoomToResolution(resolution);
+
+        /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
     } else {
         bbox = getNLExtent();
         fullbbox = getNLExtent();
-        
+
         var bounds = getNLMaxBounds();
-        
-        setTimeout(function () {
+
+        setTimeout(function() {
             moveToExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
         }, 1);
     }
 }
 
-function ie6_hack_onInit(){
+function ie6_hack_onInit() {
     if (navigator.appVersion.indexOf("MSIE") != -1) {
         version = parseFloat(navigator.appVersion.split("MSIE")[1]);
-        
+
         if (version == 6) {
-            setTimeout("doOnInit=true; onFrameworkLoaded();",5000);
+            setTimeout("doOnInit=true; onFrameworkLoaded();", 5000);
         }
     }
 }
 
-function moveToExtent(minx,miny,maxx,maxy) { 
+function moveToExtent(minx, miny, maxx, maxy) {
     webMapController.getMap().zoomToExtent({
-        minx:minx,
-        miny:miny,
-        maxx:maxx,
-        maxy:maxy
+        minx: minx,
+        miny: miny,
+        maxx: maxx,
+        maxy: maxy
     }, 0);
 }
 
-function setFullExtent(minx,miny,maxx,maxy) {  
+function setFullExtent(minx, miny, maxx, maxy) {
     webMapController.getMap().setMaxExtent({
-        minx:minx,
-        miny:miny,
-        maxx:maxx,
-        maxy:maxy
+        minx: minx,
+        miny: miny,
+        maxx: maxx,
+        maxy: maxy
     });
 }
-function doIdentify(minx,miny,maxx,maxy){
+
+function doIdentify(minx, miny, maxx, maxy) {
     webMapController.getMap().doIdentify({
-        minx:minx,
-        miny:miny        
+        minx: minx,
+        miny: miny
     });
     webMapController.activateTool("identify");
 }
-var nextIdentifyExtent=null;
-function doIdentifyAfterUpdate(minx,miny,maxx,maxy){
-    nextIdentifyExtent=new Object();
-    nextIdentifyExtent.minx=minx;
-    nextIdentifyExtent.miny=miny;
-    nextIdentifyExtent.maxx=maxx;
-    nextIdentifyExtent.maxy=maxy;
+var nextIdentifyExtent = null;
+function doIdentifyAfterUpdate(minx, miny, maxx, maxy) {
+    nextIdentifyExtent = new Object();
+    nextIdentifyExtent.minx = minx;
+    nextIdentifyExtent.miny = miny;
+    nextIdentifyExtent.maxx = maxx;
+    nextIdentifyExtent.maxy = maxy;
 }
 
-function moveAndIdentify(minx,miny,maxx,maxy) {    
-    moveToExtent(minx,miny,maxx,maxy);
-    var centerX=Number(Number(Number(minx)+Number(maxx))/2);
-    var centerY=Number(Number(Number(miny)+Number(maxy))/2);
+function moveAndIdentify(minx, miny, maxx, maxy) {
+    moveToExtent(minx, miny, maxx, maxy);
+    var centerX = Number(Number(Number(minx) + Number(maxx)) / 2);
+    var centerY = Number(Number(Number(miny) + Number(maxy)) / 2);
     //doIdentify(centerX,centerY,centerX,centerY);
-    doIdentifyAfterUpdate(centerX,centerY,centerX,centerY);
+    doIdentifyAfterUpdate(centerX, centerY, centerX, centerY);
 }
 
-function onAllLayersFinishedLoading(mapId){
+function onAllLayersFinishedLoading(mapId) {
     checkScaleForLayers();
 
-    if(nextIdentifyExtent!=null){
-        doIdentify(nextIdentifyExtent.minx,nextIdentifyExtent.miny,nextIdentifyExtent.maxx,nextIdentifyExtent.maxy);
-        nextIdentifyExtent=null;
+    if (nextIdentifyExtent != null) {
+        doIdentify(nextIdentifyExtent.minx, nextIdentifyExtent.miny, nextIdentifyExtent.maxx, nextIdentifyExtent.maxy);
+        nextIdentifyExtent = null;
     }
-    
+
     if (waitUntillFullyLoaded) {
         $j("#loadingscreen").hide();
     }
-    
+
     /* Do again so that layers outside of scale dont show up in legend tab at startup */
     refreshLegendBox();
-    
+
     /* Config optie maken ? */
     if (showDebugContent) {
         setDebugContent();
-    }    
+    }
 }
 
 /* Kan gebruikt worden om wat debug info onderin de kaartboom weer te geven zoals
  * specifieke timings of huidig omgerekende schaal */
 function setDebugContent() {
-    var scale = calcScaleForCurrentExtent(); 
-    var html = "<p><b>Schaal 1 : "+scale+"</b></p>";
-    
+    var scale = calcScaleForCurrentExtent();
+    var html = "<p><b>Schaal 1 : " + scale + "</b></p>";
+
     $j("#debug-content").html(html);
 }
 
-if(useSortableFunction) {
+if (useSortableFunction) {
     document.getElementById("orderLayerBox").sortable({
-        stop:function(){
+        stop: function() {
             setTimerForReload();
         },
-        start:function(){
+        start: function() {
             clearTimerForReload();
         }
     });
@@ -3576,7 +3627,7 @@ function clearTimerForReload() {
 function getMovie(movieName) {
     if (navigator.appName.indexOf("Microsoft") != -1) {
         return window[movieName];
-    }else {
+    } else {
         return document[movieName];
     }
 }
@@ -3584,16 +3635,16 @@ function getMovie(movieName) {
 /**
  *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
  **/
-function searchThemaValue(themaList,themaId,val){
-    for (var i in themaList){        
-        if (i=="id" && themaList[i]==themaId){
+function searchThemaValue(themaList, themaId, val) {
+    for (var i in themaList) {
+        if (i == "id" && themaList[i] == themaId) {
             return themaList[val];
         }
 
-        if (i=="children"){
-            for (var ichild in themaList[i]){
-                var returnValue=searchThemaValue(themaList[i][ichild],themaId,val);
-                if (returnValue!=undefined && returnValue!=null){
+        if (i == "children") {
+            for (var ichild in themaList[i]) {
+                var returnValue = searchThemaValue(themaList[i][ichild], themaId, val);
+                if (returnValue != undefined && returnValue != null) {
                     return returnValue;
                 }
 
@@ -3608,18 +3659,18 @@ function searchThemaValue(themaList,themaId,val){
  * @param parentCandidate A parent candidate, maybe its the parent of the imte
  * @param item The item we want the parent of.
  */
-function getParentItem(parentCandidate,item){
-    if (parentCandidate.children){
-        for (var i=0; i < parentCandidate.children.length;i++){
-            if(parentCandidate.children[i]==item){
+function getParentItem(parentCandidate, item) {
+    if (parentCandidate.children) {
+        for (var i = 0; i < parentCandidate.children.length; i++) {
+            if (parentCandidate.children[i] == item) {
                 return parentCandidate;
-            }else if (parentCandidate.children[i].children){
-                var theParent= getParentItem(parentCandidate.children[i],item);
-                if (theParent!=null){
+            } else if (parentCandidate.children[i].children) {
+                var theParent = getParentItem(parentCandidate.children[i], item);
+                if (theParent != null) {
                     return theParent;
                 }
             }
-        }        
+        }
     }
     return null;
 }
@@ -3630,14 +3681,14 @@ function getWMSLayersUrls() {
     var bgLayers = new Array();
     var fgLayers = new Array();
 
-    var urlString="";
+    var urlString = "";
     var firstURL = true;
 
     var layers = webMapController.getMap("map1").getAllWMSLayers();
 
     /* eerst layers verdelen in achtergrond en voorgrond */
-    for (var i=0; i < layers.length; i++){
-        if(layers[i].getURL() != null){
+    for (var i = 0; i < layers.length; i++) {
+        if (layers[i].getURL() != null) {
             background = layers[i].getOption("background");
 
             if (background) {
@@ -3649,58 +3700,58 @@ function getWMSLayersUrls() {
     }
 
     /* eerst achtergrond url's toevoegen */
-    for (var j=0; j < bgLayers.length; j++){
-        if(bgLayers[j].getURL() != null){
-            if(!firstURL){
-                urlString+=";";
-            }else{
+    for (var j = 0; j < bgLayers.length; j++) {
+        if (bgLayers[j].getURL() != null) {
+            if (!firstURL) {
+                urlString += ";";
+            } else {
                 firstURL = false;
             }
 
-            urlString+=bgLayers[j].getURL();
-            if(bgLayers[j].getAlpha && bgLayers[j].getAlpha() != null){
-                urlString+="#"+bgLayers[j].getAlpha();
+            urlString += bgLayers[j].getURL();
+            if (bgLayers[j].getAlpha && bgLayers[j].getAlpha() != null) {
+                urlString += "#" + bgLayers[j].getAlpha();
             }
         }
     }
 
     /* dan voorgrond url's toevoegen */
-    for (var k=0; k < fgLayers.length; k++){
+    for (var k = 0; k < fgLayers.length; k++) {
         /* Niet in print als voorgrond niet binnen schaal valt. Anders ontstaan er
          * vreemde printvoorbeelden als je daarvoor al een keer een print hebt gemaakt
          * waarbij de voorgrond nog wel binnen schaal viel. Fix voor ticket #618 Limburg */
-        var item = getItemFromWmsLayer(fgLayers[k]);        
-        
-        var currentscale;    
+        var item = getItemFromWmsLayer(fgLayers[k]);
+
+        var currentscale;
         if (tilingResolutions && tilingResolutions !== "") {
             currentscale = webMapController.getMap().getResolution();
         } else {
             currentscale = webMapController.getMap().getScaleHint();
         }
-            
+
         var inScale = isItemInScale(item, currentscale);
-        
+
         /* Also add tem points url in print */
-        var testUrl = fgLayers[k].getURL();  
+        var testUrl = fgLayers[k].getURL();
         var isTempPointsLayer = false;
         if (testUrl.indexOf("tempPointsLayer") !== -1) {
             isTempPointsLayer = true;
-        }  
-        
-        if(fgLayers[k].getURL() != null && inScale || isTempPointsLayer){
-            if(!firstURL){
-                urlString+=";";
-            }else{
+        }
+
+        if (fgLayers[k].getURL() != null && inScale || isTempPointsLayer) {
+            if (!firstURL) {
+                urlString += ";";
+            } else {
                 firstURL = false;
             }
 
-            urlString+=fgLayers[k].getURL();
-            if(fgLayers[k].getAlpha && fgLayers[k].getAlpha() != null){
-                urlString+="#"+fgLayers[k].getAlpha();
+            urlString += fgLayers[k].getURL();
+            if (fgLayers[k].getAlpha && fgLayers[k].getAlpha() != null) {
+                urlString += "#" + fgLayers[k].getAlpha();
             }
         }
     }
-    
+
     return urlString;
 }
 
@@ -3711,24 +3762,24 @@ function getItemFromWmsLayer(layer) {
     } else {
         item = layer.getFrameworkLayer();
     }
-    
+
     return item;
 }
 
 function getWktStringForPrint() {
-    var vectorLayers=webMapController.getMap().getAllVectorLayers();
-    var wktString="";
+    var vectorLayers = webMapController.getMap().getAllVectorLayers();
+    var wktString = "";
 
-    for(var c = 0 ; c < vectorLayers.length ; c++){
+    for (var c = 0; c < vectorLayers.length; c++) {
         var vectorLayer = vectorLayers[c];
         var features = vectorLayer.getAllFeatures();
-        for (var b=0; b < features.length; b++){
-            wktString+=features[b].getWkt();
-            wktString+="#ff0000";
+        for (var b = 0; b < features.length; b++) {
+            wktString += features[b].getWkt();
+            wktString += "#ff0000";
             if (features[b].label) {
-                wktString+="|"+features[b].label;
+                wktString += "|" + features[b].label;
             }
-            wktString+=";";
+            wktString += ";";
         }
     }
 
@@ -3739,20 +3790,20 @@ function getLegendUrls() {
     var layerItems = new Array();
     var urlString = "";
     var firstURL = true;
-    
+
     if (enabledLayerItems instanceof Array) {
-        for (var i=0; i < enabledLayerItems.length; i++) {
-            layerItems.push(enabledLayerItems[i]);    
+        for (var i = 0; i < enabledLayerItems.length; i++) {
+            layerItems.push(enabledLayerItems[i]);
         }
-    }  
-    
-    for (var k=0; k < layerItems.length; k++) { 
+    }
+
+    for (var k = 0; k < layerItems.length; k++) {
         var layer = layerItems[k];
-        
-        if (layer.legendurl){
-            if(!firstURL){
+
+        if (layer.legendurl) {
+            if (!firstURL) {
                 urlString += ";";
-            }else{
+            } else {
                 firstURL = false;
             }
 
@@ -3764,7 +3815,7 @@ function getLegendUrls() {
 }
 
 var exportMapWindow;
-function exportMap(){    
+function exportMap() {
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);
     submitForm.method = "POST";
@@ -3787,7 +3838,7 @@ function exportMap(){
     legendUrlInput.type = 'hidden';
     legendUrlInput.value = legendUrlsString;
     submitForm.appendChild(legendUrlInput);
-    
+
     var wktString = getWktStringForPrint();
 
     var wktInput = document.createElement('input');
@@ -3796,30 +3847,30 @@ function exportMap(){
     wktInput.type = 'hidden';
     wktInput.value = wktString;
     submitForm.appendChild(wktInput);
-    
+
     /* Tiling spullen meegeven voor CombineImageSettings */
     var tilingString = getTilingLayer();
-    
+
     var tilingInput = document.createElement('input');
     tilingInput.id = 'tilings';
     tilingInput.name = 'tilings';
     tilingInput.type = 'hidden';
     tilingInput.value = tilingString;
     submitForm.appendChild(tilingInput);
-    
+
     /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
      * wms url in de print zit waar dit uit gehaald kan worden */
-    
+
     var mapWidth = webMapController.getMap("map1").getScreenWidth();
     var mapHeight = webMapController.getMap("map1").getScreenHeight();
-    
+
     var minX = webMapController.getMap("map1").getExtent().minx;
     var minY = webMapController.getMap("map1").getExtent().miny;
     var maxX = webMapController.getMap("map1").getExtent().maxx;
     var maxY = webMapController.getMap("map1").getExtent().maxy;
-    
+
     var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
-    
+
     var mapSizeInput = document.createElement('input');
     mapSizeInput.id = 'mapsizes';
     mapSizeInput.name = 'mapsizes';
@@ -3827,11 +3878,11 @@ function exportMap(){
     mapSizeInput.value = mapWidth + ";" + mapHeight + ";" + mapBbox;
     submitForm.appendChild(mapSizeInput);
 
-    submitForm.target="exportMapWindowNaam";
-    submitForm.action= "printmap.do";
+    submitForm.target = "exportMapWindowNaam";
+    submitForm.action = "printmap.do";
     submitForm.submit();
 
-    if(exportMapWindow==undefined || exportMapWindow==null || exportMapWindow.closed){
+    if (exportMapWindow == undefined || exportMapWindow == null || exportMapWindow.closed) {
         exportMapWindow = window.open("", "exportMapWindowNaam");
         exportMapWindow.focus();
     }
@@ -3844,57 +3895,57 @@ function getTilingLayer() {
     var layers = webMapController.getMap("map1").getAllTilingLayers();
 
     /* tiling layers toevoegen */
-    for (var j=0; j < layers.length; j++) {
+    for (var j = 0; j < layers.length; j++) {
         var currentscale = webMapController.getMap().getResolution();
-        
+
         var item;
         if (layers[j].options) {
-            item = getItemByLayer(themaTree,layers[j].options.LAYERS);
+            item = getItemByLayer(themaTree, layers[j].options.LAYERS);
         } else {
             item = layers[j].getFrameworkLayer();
         }
-    
+
         var inScale = isItemInScale(item, currentscale);
-        
+
         if (!inScale) {
             continue;
         }
-        
+
         var bbox = layers[j].getOption("BBOX");
         var resolutions = layers[j].getOption("RESOLUTIONS");
         var tileWidth = layers[j].getOption("TILEWIDTH");
         var tileHeight = layers[j].getOption("TILEHEIGHT");
-        
+
         /* parameters aan service url plakken om in back-end nieuwe url 
          * te kunnen opbouwen. alleen als ze er nog niet instaan. */
         var url = buildTilingServiceUrl(layers[j]);
-        
-        tilingString += bbox + ";"+ resolutions + ";" + tileWidth + ";" + tileHeight + ";" + url;
+
+        tilingString += bbox + ";" + resolutions + ";" + tileWidth + ";" + tileHeight + ";" + url;
     }
 
     return tilingString;
 }
 
 function checkParam(url, name) {
-    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-    
-    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
-    
+
     var results = regex.exec(url);
     if (results == null) {
-        return false;  
-    }        
-    
-    return true;  
+        return false;
+    }
+
+    return true;
 }
 
-function buildTilingServiceUrl(tilingLayer) {    
+function buildTilingServiceUrl(tilingLayer) {
     var serviceUrl = tilingLayer.getOption("url");
-    
+
     if (!checkParam(serviceUrl, "service") && !checkParam(serviceUrl, "SERVICE")) {
         serviceUrl += "&SERVICE=" + tilingLayer.getOption("SERVICE");
-    }    
+    }
     if (!checkParam(serviceUrl, "version") && !checkParam(serviceUrl, "VERSION")) {
         serviceUrl += "&VERSION=" + tilingLayer.getOption("VERSION");
     }
@@ -3913,23 +3964,23 @@ function buildTilingServiceUrl(tilingLayer) {
     if (!checkParam(serviceUrl, "request") && !checkParam(serviceUrl, "REQUEST")) {
         serviceUrl += "&REQUEST=" + tilingLayer.getOption("REQUEST");
     }
-        
-    return serviceUrl;        
+
+    return serviceUrl;
 }
 
-function checkboxClickById(id){
-    var el2=document.getElementById(id);
+function checkboxClickById(id) {
+    var el2 = document.getElementById(id);
     if (el2) {
-        el2.checked=!el2.checked;
-        checkboxClick(el2,false);
+        el2.checked = !el2.checked;
+        checkboxClick(el2, false);
     }
 }
 
-function checkboxOnByid(id){
-    var el=document.getElementById(id);
+function checkboxOnByid(id) {
+    var el = document.getElementById(id);
     if (el) {
-        el.checked=true;
-        checkboxClick(el,false);
+        el.checked = true;
+        checkboxClick(el, false);
     }
 }
 
@@ -3937,19 +3988,19 @@ function checkboxOnByid(id){
  * de laatst actieve. Als je bijvoorbeeld in OL een polygon edit krijg je anders 
  * van getActiveFeature alleen de laatste feature (een Point) terug. In
  * this.getFrameworkLayer().features[0] zit het hele polygon.
-*/
+ */
 function getWktActiveFeature(index) {
     var object;
     object = webMapController.getMap().getLayer("editMap").getActiveFeature(index);
-    
+
     if (webMapController instanceof OpenLayersController) {
         var arr = webMapController.getMap().getLayer("editMap").getAllFeatures();
-        
+
         if (arr && arr.length == 1) {
             object = arr[0];
         }
     }
-    
+
     if (object == null)
     {
         handler("Er is nog geen tekenobject op het scherm.");
@@ -3978,7 +4029,7 @@ function getWkt() {
     return object.wktgeom;
 }
 
-function b_getfeatures(id,event) {
+function b_getfeatures(id, event) {
     var wkt = getWktActiveFeature(-1);
 
     if (wkt) {
@@ -3986,7 +4037,7 @@ function b_getfeatures(id,event) {
     }
 }
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
-function b_buffer(id, event) {    
+function b_buffer(id, event) {
     var wkt;
 
     /* Indien door highlight de global var is gevuld deze
@@ -4000,10 +4051,10 @@ function b_buffer(id, event) {
     } else {
         wkt = getWktActiveFeature(-1);
     }
-    
+
     multiPolygonBufferWkt = null;
-        
-    if (wkt==null)
+
+    if (wkt == null)
     {
         return;
     }
@@ -4011,14 +4062,14 @@ function b_buffer(id, event) {
     var str = prompt('Geef de bufferafstand in meters', '100');
     var afstand = 0;
 
-    if((str == '') || ( str == 'undefined') || ( str == null))
+    if ((str == '') || (str == 'undefined') || (str == null))
         return;
 
-    if( !isNaN( str) ) {
-        str = str.replace( ",", ".");
+    if (!isNaN(str)) {
+        str = str.replace(",", ".");
         afstand = str;
     } else {
-        handler( "Geen getal" );
+        handler("Geen getal");
         return;
     }
 
@@ -4031,17 +4082,17 @@ function b_buffer(id, event) {
     EditUtil.buffer(wkt, afstand, returnBuffer);
 }
 
-function b_print(id, event) {    
+function b_print(id, event) {
     exportMap();
 }
 
-function b_layerSelection(id, event) {    
+function b_layerSelection(id, event) {
     iFramePopup('kaartselectie.do', false, 'Kaartselectie', 800, 600, true, true);
 }
 
-function b_overview(id,event) {
+function b_overview(id, event) {
     if (webMapController instanceof FlamingoController) {
-        webMapController.getMap().getFrameworkMap().callMethod('overviewwindow','show');
+        webMapController.getMap().getFrameworkMap().callMethod('overviewwindow', 'show');
     }
 }
 
@@ -4061,7 +4112,7 @@ function returnBuffer(wkt) {
 function drawWkt(wkt) {
     if (wkt.length > 0)
     {
-        var polyObject = new Feature(61502,wkt);
+        var polyObject = new Feature(61502, wkt);
 
         drawObject(polyObject);
     }
@@ -4073,21 +4124,21 @@ function drawObject(feature) {
 }
 
 /**
- * Alle geïmplementeerde eventhandling functies
+ * Alle geï¿½mplementeerde eventhandling functies
  */
-function b_removePolygons(id,params){
+function b_removePolygons(id, params) {
     webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    
+
     if (webMapController instanceof OpenLayersController) {
-        var measureValueDiv=document.getElementById("olControlMeasurePolygonValue");
-        if (measureValueDiv){                
-            measureValueDiv.style.display="none";
+        var measureValueDiv = document.getElementById("olControlMeasurePolygonValue");
+        if (measureValueDiv) {
+            measureValueDiv.style.display = "none";
         }
     }
 }
 
 /* er is net op de highlight knop gedrukt */
-function b_highlight( id,params) {
+function b_highlight(id, params) {
     btn_highLightSelected = true;
 
     /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
@@ -4109,14 +4160,14 @@ var highLightGeom = null;
 
 var analyseThemas = new Array();
 
-function highLightThemaObject(geom) {    
+function highLightThemaObject(geom) {
     highlightLayers = new Array();
 
     /* geom bewaren voor callbaack van popup */
     highLightGeom = geom;
 
     /* indien meerdere analyse themas dan popup voor keuze */
-    for (var i=0; i < enabledLayerItems.length; i++) {
+    for (var i = 0; i < enabledLayerItems.length; i++) {
         var item = enabledLayerItems[i];
 
         var object = document.getElementById(item.id);
@@ -4140,13 +4191,13 @@ function highLightThemaObject(geom) {
         iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300, true, false);
     }
 
-    var scale;    
+    var scale;
     if (tilingResolutions && tilingResolutions !== "") {
         scale = webMapController.getMap().getResolution();
     } else {
         scale = webMapController.getMap().getScaleHint();
     }
-        
+
     var tol = tolerance;
 
     if (highlightLayers.length == 1) {
@@ -4158,14 +4209,14 @@ function selectRedlineObject(geom) {
     /* Params
      * geom: Klikpunt op de kaart. Een POINT wkt string.
      * redLineGegevensbronId: geconfigureerde gegevensbronId voor redlining
-    */
-    var scale;    
+     */
+    var scale;
     if (tilingResolutions && tilingResolutions !== "") {
         scale = webMapController.getMap().getResolution();
     } else {
         scale = webMapController.getMap().getScaleHint();
     }
-    
+
     var tol = tolerance;
 
     EditUtil.getIdAndWktForRedliningObject(geom, redLineGegevensbronId, scale, tol, returnRedlineObject);
@@ -4183,7 +4234,7 @@ function returnRedlineObject(jsonString) {
 
     if (wkt.length > 0 && wkt != "-1")
     {
-        var polyObject = new Feature(61502,wkt);
+        var polyObject = new Feature(61502, wkt);
         drawObject(polyObject);
     }
 
@@ -4210,9 +4261,9 @@ function returnRedlineObject(jsonString) {
     editingRedlining = false;
 }
 
-function handlePopupValue(value) {    
+function handlePopupValue(value) {
     //    $j("#popupWindow").hide();
-    
+
     analyseThemas = new Array();
 
     var object = document.getElementById(value);
@@ -4224,13 +4275,13 @@ function handlePopupValue(value) {
      * setActiveCluster(item, true);
      */
 
-    var scale;    
+    var scale;
     if (tilingResolutions && tilingResolutions !== "") {
         scale = webMapController.getMap().getResolution();
     } else {
         scale = webMapController.getMap().getScaleHint();
     }
-    
+
     var tol = tolerance;
     EditUtil.getHighlightWktForThema(value, highLightGeom, scale, tol, returnHighlight);
 //handleGetAdminData(highLightGeom, value);
@@ -4244,8 +4295,8 @@ function returnHighlight(wkt) {
     }
 
     if (wkt.length > 0 && wkt != "-1")
-    {        
-        var polyObject = new Feature(61502,wkt);
+    {
+        var polyObject = new Feature(61502, wkt);
         drawObject(polyObject);
 
         /* verkregen back-end polygon voor highlight even in global var opslaan
@@ -4259,17 +4310,17 @@ function returnHighlight(wkt) {
 
 function checkDisplayButtons() {
     if (showRedliningTools) {
-        if (webMapController.getTool("redLiningContainer")){
+        if (webMapController.getTool("redLiningContainer")) {
             webMapController.getTool("redLiningContainer").setVisible(true);
-        }else{
+        } else {
             webMapController.getTool("redLiningContainer_point").setVisible(true);
             webMapController.getTool("redLiningContainer_line").setVisible(true);
             webMapController.getTool("redLiningContainer_polygon").setVisible(true);
         }
     } else {
-        if (webMapController.getTool("redLiningContainer")){
+        if (webMapController.getTool("redLiningContainer")) {
             webMapController.getTool("redLiningContainer").setVisible(false);
-        }else{
+        } else {
             webMapController.getTool("redLiningContainer_point").setVisible(false);
             webMapController.getTool("redLiningContainer_line").setVisible(false);
             webMapController.getTool("redLiningContainer_polygon").setVisible(false);
@@ -4281,7 +4332,7 @@ function checkDisplayButtons() {
     } else {
         webMapController.getTool("b_buffer").setVisible(false);
     }
-        
+
     if (showSelectBulkTool) {
         webMapController.getTool("b_getfeatures").setVisible(true);
     } else {
@@ -4311,7 +4362,7 @@ function checkDisplayButtons() {
     } else {
         webMapController.getTool("b_layerSelection").setVisible(false);
     }
-    
+
     if (showGPSTool) {
         webMapController.getTool("b_gps").setVisible(true);
     } else {
@@ -4319,16 +4370,16 @@ function checkDisplayButtons() {
     }
 }
 
-function onGetCapabilities(id,params){    
+function onGetCapabilities(id, params) {
     hideLoading();
 }
 
 //do only ones.
 var initialized = false;
-function onConfigComplete(id,params){    
+function onConfigComplete(id, params) {
     if (!initialized) {
         initialized = true;
-    
+
         initializeButtons();
         checkDisplayButtons();
 
@@ -4338,9 +4389,9 @@ function onConfigComplete(id,params){
     }
 }
 
-function getBookMark() {    
+function getBookMark() {
     /* url base */
-    var url=createPermaLink();
+    var url = createPermaLink();
     addToFavorites(url);
 }
 
@@ -4353,10 +4404,10 @@ function getFullExtent() {
 function getCenterWkt() {
     var fullExtent = getFullExtent();
 
-    var minx = Math.round(Number(fullExtent.minx)+1);
-    var miny = Math.round(Number(fullExtent.miny)+1);
-    var maxx = Math.round(Number(fullExtent.maxx)-1);
-    var maxy = Math.round(Number(fullExtent.maxy)-1);
+    var minx = Math.round(Number(fullExtent.minx) + 1);
+    var miny = Math.round(Number(fullExtent.miny) + 1);
+    var maxx = Math.round(Number(fullExtent.maxx) - 1);
+    var maxy = Math.round(Number(fullExtent.maxy) - 1);
 
     var x = (minx + maxx) / 2;
     var y = (miny + maxy) / 2;
@@ -4367,8 +4418,8 @@ function getCenterWkt() {
 function getMinWkt() {
     var fullExtent = getFullExtent();
 
-    var minx = Math.round(Number(fullExtent.minx)+1);
-    var miny = Math.round(Number(fullExtent.miny)+1);
+    var minx = Math.round(Number(fullExtent.minx) + 1);
+    var miny = Math.round(Number(fullExtent.miny) + 1);
 
     return "POINT(" + minx + " " + miny + ");";
 }
@@ -4376,8 +4427,8 @@ function getMinWkt() {
 function getMaxWkt() {
     var fullExtent = getFullExtent();
 
-    var maxx = Math.round(Number(fullExtent.maxx)-1);
-    var maxy = Math.round(Number(fullExtent.maxy)-1);
+    var maxx = Math.round(Number(fullExtent.maxx) - 1);
+    var maxy = Math.round(Number(fullExtent.maxy) - 1);
 
     return "POINT(" + maxx + " " + maxy + ");";
 }
@@ -4388,7 +4439,7 @@ function getLatLonForGoogleMaps() {
     var centerWkt = getCenterWkt();
     var minWkt = getMinWkt();
     var maxWkt = getMaxWkt();
-    
+
     JMapData.getLatLonForRDPoint(centerWkt, minWkt, maxWkt, openGoogleMaps);
 }
 
@@ -4396,19 +4447,19 @@ function getLatLonForGoogleMaps() {
 function openGoogleMaps(values) {
     var ll = "&sll=" + values[0] + "," + values[1];
     var spn = "&sspn=" + values[2] + "," + values[3];
-    
+
     var options = "&hl=nl&om=0";
 
     var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
-    
+
     window.open(url);
 }
 
-function createPermaLink(){
+function createPermaLink() {
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
 
-    var urlBase = protocol + host  + baseNameViewer + "/viewer.do?";
+    var urlBase = protocol + host + baseNameViewer + "/viewer.do?";
 
     /* applicatie code */
     var appCode = "";
@@ -4425,14 +4476,14 @@ function createPermaLink(){
 
     /* kaartgroepen ophalen */
     var clusterIds = "";
-    if (clustersAan != undefined && clustersAan.length > 0){
+    if (clustersAan != undefined && clustersAan.length > 0) {
         clusterIds += "&clusterId=";
 
-        for (var i=0; i < clustersAan.length; i++){
-            if (clusterIds.length > 0){
-                clusterIds+=",";
+        for (var i = 0; i < clustersAan.length; i++) {
+            if (clusterIds.length > 0) {
+                clusterIds += ",";
             }
-            clusterIds+=clustersAan[i].theItem.id.substring(1);
+            clusterIds += clustersAan[i].theItem.id.substring(1);
         }
     }
 
@@ -4440,24 +4491,24 @@ function createPermaLink(){
     var extent = "";
     var fullExtent = webMapController.getMap().getExtent();
     if (fullExtent != undefined && fullExtent != "") {
-        var minx = Math.round(Number(fullExtent.minx)+1);
-        var miny = Math.round(Number(fullExtent.miny)+1);
-        var maxx = Math.round(Number(fullExtent.maxx)-1);
-        var maxy = Math.round(Number(fullExtent.maxy)-1);
+        var minx = Math.round(Number(fullExtent.minx) + 1);
+        var miny = Math.round(Number(fullExtent.miny) + 1);
+        var maxx = Math.round(Number(fullExtent.maxx) - 1);
+        var maxy = Math.round(Number(fullExtent.maxy) - 1);
 
-        extent = "&extent="+minx+","+miny+","+maxx+","+maxy;
+        extent = "&extent=" + minx + "," + miny + "," + maxx + "," + maxy;
     }
 
     /* kaart resolutie ophalen */
     var reso = "";
-    
-    var controllerRes;    
+
+    var controllerRes;
     if (tilingResolutions && tilingResolutions !== "") {
         controllerRes = webMapController.getMap().getResolution();
     } else {
         controllerRes = webMapController.getMap().getScaleHint();
     }
-    
+
     if (controllerRes != undefined && controllerRes != "") {
         reso = "&resolution=" + controllerRes;
     }
@@ -4469,17 +4520,17 @@ function createPermaLink(){
     return url;
 }
 
-function addToFavorites(url) {    
+function addToFavorites(url) {
     var title = "B3P Gisviewer bookmark"
 
     if (Boolean(window.chrome)) { // chrome
         chromeBookMarkPopup(url, title);
     } else if (window.sidebar) { // Firefox
-        window.sidebar.addPanel(title, url,"");
-    } else if( window.external) { // IE 6,7 not 8?
+        window.sidebar.addPanel(title, url, "");
+    } else if (window.external) { // IE 6,7 not 8?
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
-        window.external.AddFavorite(url, title);       
-    } else if(window.opera && window.print) { // Opera 
+        window.external.AddFavorite(url, title);
+    } else if (window.opera && window.print) { // Opera 
         return true;
     }
 
@@ -4488,9 +4539,9 @@ function addToFavorites(url) {
 
 function chromeBookMarkPopup(url, title) {
     var chromePopup = window.open(url, title, "height=300, width=850,toolbar=no,scrollbars=no,menubar=no");
-    
+
     var html = "<p>Voeg deze link toe aan uw Google Chrome favorieten:</p>" + url;
-    
+
     chromePopup.document.write(html);
 }
 
@@ -4504,31 +4555,31 @@ popUp = function(URL, naam, width, height, useDiv) {
     var screenheight = 500;
     var useDivPopup = false;
 
-    if (width){
-        screenwidth=width;
+    if (width) {
+        screenwidth = width;
     }
 
-    if (height){
-        screenheight=height;
+    if (height) {
+        screenheight = height;
     }
 
-    if(useDiv) {
+    if (useDiv) {
         useDivPopup = useDiv;
     }
 
-    var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+    var popupleft = (screen.width) ? (screen.width - screenwidth) / 2 : 100;
 
-    if(currentpopupleft != null) {
+    if (currentpopupleft != null) {
         popupleft = currentpopupleft;
     }
 
-    var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+    var popuptop = (screen.height) ? (screen.height - screenheight) / 2 : 100;
 
-    if(currentpopuptop != null) {
+    if (currentpopuptop != null) {
         currentpopuptop = popuptop
     }
 
-    if(useDivPopup) {
+    if (useDivPopup) {
         if (!popupCreated)
             initPopup();
 
@@ -4540,24 +4591,24 @@ popUp = function(URL, naam, width, height, useDiv) {
 
         $j("#popupWindow").show();
 
-        if(ieVersion <= 6 && ieVersion != -1) {
+        if (ieVersion <= 6 && ieVersion != -1) {
             fixPopup();
         }
 
     } else {
 
         properties = "toolbar = 0, " +
-        "scrollbars = 1, " +
-        "location = 0, " +
-        "statusbar = 1, " +
-        "menubar = 0, " +
-        "resizable = 0, " +
-        "width = " + screenwidth + ", " +
-        "height = " + screenheight + ", " +
-        "top = " + popuptop + ", " +
-        "left = " + popupleft;
-        
-        return window.open(URL , naam, properties);
+                "scrollbars = 1, " +
+                "location = 0, " +
+                "statusbar = 1, " +
+                "menubar = 0, " +
+                "resizable = 0, " +
+                "width = " + screenwidth + ", " +
+                "height = " + screenheight + ", " +
+                "top = " + popuptop + ", " +
+                "left = " + popupleft;
+
+        return window.open(URL, naam, properties);
     }
 
     return null;
@@ -4568,37 +4619,37 @@ popUpData = function(naam, width, height, useDiv) {
     var screenheight = 500;
     var useDivPopup = false;
 
-    if (width){
-        screenwidth=width;
+    if (width) {
+        screenwidth = width;
     }
-    if (height){
-        screenheight=height;
+    if (height) {
+        screenheight = height;
     }
 
-    if(useDiv) {
+    if (useDiv) {
         useDivPopup = useDiv;
     }
 
-    var popupleft =(screen.width) ? (screen.width - screenwidth) / 2:100;
+    var popupleft = (screen.width) ? (screen.width - screenwidth) / 2 : 100;
 
-    if(currentpopupleft != null) {
+    if (currentpopupleft != null) {
         popupleft = currentpopupleft;
     }
 
-    var popuptop = (screen.height) ? (screen.height - screenheight) / 2:100;
+    var popuptop = (screen.height) ? (screen.height - screenheight) / 2 : 100;
 
-    if(currentpopuptop != null) {
+    if (currentpopuptop != null) {
         currentpopuptop = popuptop
     }
 
-    if(useDivPopup) {
+    if (useDivPopup) {
         if (!popupCreated)
             initPopup();
 
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
         $j("#popupWindow").show();
 
-        if(ieVersion <= 6 && ieVersion != -1)
+        if (ieVersion <= 6 && ieVersion != -1)
             fixPopup();
 
         return document.getElementById("dataframedivpopup");
@@ -4606,15 +4657,15 @@ popUpData = function(naam, width, height, useDiv) {
     } else {
 
         properties = "toolbar = 0, " +
-        "scrollbars = 1, " +
-        "location = 0, " +
-        "statusbar = 1, " +
-        "menubar = 0, " +
-        "resizable = 1, " +
-        "width = " + screenwidth + ", " +
-        "height = " + screenheight + ", " +
-        "top = " + popuptop + ", " +
-        "left = " + popupleft;
+                "scrollbars = 1, " +
+                "location = 0, " +
+                "statusbar = 1, " +
+                "menubar = 0, " +
+                "resizable = 1, " +
+                "width = " + screenwidth + ", " +
+                "height = " + screenheight + ", " +
+                "top = " + popuptop + ", " +
+                "left = " + popupleft;
 
         return window.open('admindatabusy.do', naam, properties);
     }
@@ -4642,7 +4693,7 @@ buildPopup = function() {
     popupContent.styleClass = 'popup_Content';
     popupContent.id = 'popupWindow_Content';
     var popupIframe = null;
-    if(ieVersion <= 7 && ieVersion != -1) {
+    if (ieVersion <= 7 && ieVersion != -1) {
         popupIframe = document.createElement('<iframe name="dataframedivpopup">');
     } else {
         popupIframe = document.createElement('iframe');
@@ -4684,80 +4735,80 @@ buildPopup = function() {
  * @param balloonCornerSize the size of the rounded balloon corners of the round.png image(optional, default: 20);
  * @param balloonArrowHeight the hight of the arrowImage (optional, default: 40);
  */
-function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight, offsetX,offsetY, balloonCornerSize, balloonArrowHeight){
-    this.mapDiv=mapDiv;
-    this.webMapController=webMapController;
-    this.balloonId=balloonId;
-    this.balloonWidth=300;
-    this.balloonHeight=300;
-    this.balloonCornerSize=20;
-    this.balloonArrowHeight=40;
-    this.offsetX=0;
-    this.offsetY=0;
+function Balloon(mapDiv, webMapController, balloonId, balloonWidth, balloonHeight, offsetX, offsetY, balloonCornerSize, balloonArrowHeight) {
+    this.mapDiv = mapDiv;
+    this.webMapController = webMapController;
+    this.balloonId = balloonId;
+    this.balloonWidth = 300;
+    this.balloonHeight = 300;
+    this.balloonCornerSize = 20;
+    this.balloonArrowHeight = 40;
+    this.offsetX = 0;
+    this.offsetY = 0;
     //this.leftOfPoint;
     //this.topOfPoint;
-    
+
     //the balloon jquery dom element.
     //this.balloon;
     //this.xCoord;
     //this.yCoord;
 
-    if (balloonWidth){
-        this.balloonWidth=balloonWidth;
+    if (balloonWidth) {
+        this.balloonWidth = balloonWidth;
     }
     if (balloonHeight)
-        this.balloonHeight=balloonHeight;
-    if (balloonCornerSize){
-        this.balloonCornerSize=balloonCornerSize;
+        this.balloonHeight = balloonHeight;
+    if (balloonCornerSize) {
+        this.balloonCornerSize = balloonCornerSize;
     }
-    if (balloonArrowHeight){
-        this.balloonArrowHeight=balloonArrowHeight;
+    if (balloonArrowHeight) {
+        this.balloonArrowHeight = balloonArrowHeight;
     }
-    if (offsetX){
-        this.offsetX=offsetX;
+    if (offsetX) {
+        this.offsetX = offsetX;
     }
-    if (offsetY){
-        this.offsetY=offsetY;
+    if (offsetY) {
+        this.offsetY = offsetY;
     }
     /**
      *Private function. Don't use.
      */
-    this._createBalloon = function(x,y){
+    this._createBalloon = function(x, y) {
         //create balloon and styling.
-        this.balloon=$j("<div class='infoBalloon' id='"+this.balloonId+"'></div>");
+        this.balloon = $j("<div class='infoBalloon' id='" + this.balloonId + "'></div>");
         this.balloon.css('position', 'absolute');
-        this.balloon.css('width',""+this.balloonWidth+"px");
-        this.balloon.css('height',""+this.balloonHeight+"px");
-        this.balloon.css('z-index','13000');
+        this.balloon.css('width', "" + this.balloonWidth + "px");
+        this.balloon.css('height', "" + this.balloonHeight + "px");
+        this.balloon.css('z-index', '13000');
 
-        var maxCornerSize=this.balloonHeight-(this.balloonArrowHeight*2)+2-this.balloonCornerSize;
+        var maxCornerSize = this.balloonHeight - (this.balloonArrowHeight * 2) + 2 - this.balloonCornerSize;
         this.balloon.append($j("<div class='balloonCornerTopLeft'><img style='position: absolute;' src='images/infoBalloon/round.png'/></div>")
-            .css('width',this.balloonCornerSize+'px')
-            .css('height',this.balloonCornerSize+'px')
-            .css('left', '0px')
-            .css('top', this.balloonArrowHeight-1+'px')
-            .css('width', this.balloonWidth-this.balloonCornerSize+'px')
-            .css('height',maxCornerSize+'px')
-            );
+                .css('width', this.balloonCornerSize + 'px')
+                .css('height', this.balloonCornerSize + 'px')
+                .css('left', '0px')
+                .css('top', this.balloonArrowHeight - 1 + 'px')
+                .css('width', this.balloonWidth - this.balloonCornerSize + 'px')
+                .css('height', maxCornerSize + 'px')
+                );
         this.balloon.append($j("<div class='balloonCornerTopRight'><img style='position: absolute; left: -1004px;' src='images/infoBalloon/round.png'/></div>")
-            .css('width',this.balloonCornerSize+'px')
-            .css('height',maxCornerSize+'px')
-            .css('top', this.balloonArrowHeight-1+'px')
-            .css('right','0px')
-            );
+                .css('width', this.balloonCornerSize + 'px')
+                .css('height', maxCornerSize + 'px')
+                .css('top', this.balloonArrowHeight - 1 + 'px')
+                .css('right', '0px')
+                );
         this.balloon.append($j("<div class='balloonCornerBottomLeft'><img style='position: absolute; top: -748px;' src='images/infoBalloon/round.png'/></div>")
-            .css('height',this.balloonCornerSize+'px')
-            .css('left', '0px')
-            .css('bottom',this.balloonArrowHeight-1+'px')
-            .css('width', this.balloonWidth-this.balloonCornerSize)
-            );
+                .css('height', this.balloonCornerSize + 'px')
+                .css('left', '0px')
+                .css('bottom', this.balloonArrowHeight - 1 + 'px')
+                .css('width', this.balloonWidth - this.balloonCornerSize)
+                );
         this.balloon.append($j("<div class='balloonCornerBottomRight'><img style='position: absolute; top: -748px; left: -1004px;' src='images/infoBalloon/round.png'/></div>")
-            .css('width',this.balloonCornerSize+'px')
-            .css('height',this.balloonCornerSize+'px')
-            .css('right','0px')
-            .css('bottom',this.balloonArrowHeight-1+'px')
+                .css('width', this.balloonCornerSize + 'px')
+                .css('height', this.balloonCornerSize + 'px')
+                .css('right', '0px')
+                .css('bottom', this.balloonArrowHeight - 1 + 'px')
 
-            );
+                );
         //arrows
         this.balloon.append($j("<div class='balloonArrow balloonArrowTopLeft' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
         this.balloon.append($j("<div class='balloonArrow balloonArrowTopRight' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
@@ -4765,30 +4816,30 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
         this.balloon.append($j("<div class='balloonArrow balloonArrowBottomRight' style='display: none;'><img src='images/infoBalloon/arrow.png'/></div>"));
         //content
         this.balloon.append($j("<div class='balloonContent'></div>")
-            .css('top',this.balloonArrowHeight+20+'px')
-            .css('bottom',this.balloonArrowHeight+4+'px')
-            );
+                .css('top', this.balloonArrowHeight + 20 + 'px')
+                .css('bottom', this.balloonArrowHeight + 4 + 'px')
+                );
         //closing button
-        var thisObj=this;
+        var thisObj = this;
         this.balloon.append($j("<div class='balloonCloseButton'></div>")
-            .css('right','7px')
-            .css('top',''+(this.balloonArrowHeight+3)+'px')
-            .click(function(){
-                thisObj.remove();
-                return false;
-            })
+                .css('right', '7px')
+                .css('top', '' + (this.balloonArrowHeight + 3) + 'px')
+                .click(function() {
+            thisObj.remove();
+            return false;
+        })
 
-            );
-        this.xCoord=x;
-        this.yCoord=y;
+                );
+        this.xCoord = x;
+        this.yCoord = y;
 
         //calculate position
-        this._resetPositionOfBalloon(x,y);
-        
+        this._resetPositionOfBalloon(x, y);
+
         //append the balloon.
         $j(this.mapDiv).append(this.balloon);
 
-        this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+        this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT, webMapController.getMap(), this.setPosition, this);
     }
 
     /**
@@ -4798,38 +4849,38 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
      *@param x the x coord
      *@param y the y coord
      */
-    this._resetPositionOfBalloon = function(x,y){
+    this._resetPositionOfBalloon = function(x, y) {
         //calculate position
-        var centerCoord= this.webMapController.getMap().getCenter();
-        var centerPixel= this.webMapController.getMap().coordinateToPixel(centerCoord.x,centerCoord.y);
-        var infoPixel= this.webMapController.getMap().coordinateToPixel(x,y);
+        var centerCoord = this.webMapController.getMap().getCenter();
+        var centerPixel = this.webMapController.getMap().coordinateToPixel(centerCoord.x, centerCoord.y);
+        var infoPixel = this.webMapController.getMap().coordinateToPixel(x, y);
 
         //determine the left and top.
-        if (infoPixel.x > centerPixel.x){
-            this.leftOfPoint=true;
-        }else{
-            this.leftOfPoint=false;
+        if (infoPixel.x > centerPixel.x) {
+            this.leftOfPoint = true;
+        } else {
+            this.leftOfPoint = false;
         }
-        if (infoPixel.y > centerPixel.y){
-            this.topOfPoint=true;
-        }else{
-            this.topOfPoint=false;
+        if (infoPixel.y > centerPixel.y) {
+            this.topOfPoint = true;
+        } else {
+            this.topOfPoint = false;
         }
         //display the right arrow
-        this.balloon.find(".balloonArrow").css('display','none');
+        this.balloon.find(".balloonArrow").css('display', 'none');
         //$j("#infoBalloon > .balloonArrow").css('display', 'block');
-        if (!this.leftOfPoint && !this.topOfPoint){
+        if (!this.leftOfPoint && !this.topOfPoint) {
             //popup is bottom right of the point
-            this.balloon.find(".balloonArrowTopLeft").css("display","block");
-        }else if (this.leftOfPoint && !this.topOfPoint){
+            this.balloon.find(".balloonArrowTopLeft").css("display", "block");
+        } else if (this.leftOfPoint && !this.topOfPoint) {
             //popup is bottom left of the point
-            this.balloon.find(".balloonArrowTopRight").css("display","block");
-        }else if (this.leftOfPoint && this.topOfPoint){
+            this.balloon.find(".balloonArrowTopRight").css("display", "block");
+        } else if (this.leftOfPoint && this.topOfPoint) {
             //popup is top left of the point
-            this.balloon.find(".balloonArrowBottomRight").css("display","block");
-        }else{
+            this.balloon.find(".balloonArrowBottomRight").css("display", "block");
+        } else {
             //pop up is top right of the point
-            this.balloon.find(".balloonArrowBottomLeft").css("display","block");
+            this.balloon.find(".balloonArrowBottomLeft").css("display", "block");
         }
     }
 
@@ -4840,72 +4891,72 @@ function Balloon(mapDiv,webMapController,balloonId, balloonWidth, balloonHeight,
      *@param resetPositionOfBalloon boolean if true the balloon arrow will be
      *redrawn (this.resetPositionOfBalloon is called)
      */
-    this.setPosition = function (x,y,resetPositionOfBalloon){
-        if (this.balloon==undefined){
-            this._createBalloon(x,y);
-        }else if(resetPositionOfBalloon){
-            this._resetPositionOfBalloon(x,y);
+    this.setPosition = function(x, y, resetPositionOfBalloon) {
+        if (this.balloon == undefined) {
+            this._createBalloon(x, y);
+        } else if (resetPositionOfBalloon) {
+            this._resetPositionOfBalloon(x, y);
         }
-        if (x!=undefined && y != undefined){
-            this.xCoord=x;
-            this.yCoord=y;
-        }else if (this.xCoord ==undefined || this.yCoord == undefined){
+        if (x != undefined && y != undefined) {
+            this.xCoord = x;
+            this.yCoord = y;
+        } else if (this.xCoord == undefined || this.yCoord == undefined) {
             throw "No coords found for this balloon";
-        }else{
-            x=this.xCoord;
-            y=this.yCoord;
+        } else {
+            x = this.xCoord;
+            y = this.yCoord;
         }
         //if the point is out of the extent hide balloon
-        var curExt=this.webMapController.getMap().getExtent();
+        var curExt = this.webMapController.getMap().getExtent();
         if (curExt.minx > x ||
-            curExt.maxx < x ||
-            curExt.miny > y ||
-            curExt.maxy < y){
+                curExt.maxx < x ||
+                curExt.miny > y ||
+                curExt.maxy < y) {
             /*TODO wat doen als hij er buiten valt.*/
-            this.balloon.css('display','none');
+            this.balloon.css('display', 'none');
             return;
-        }else{
+        } else {
             /*TODO wat doen als hij er weer binnen valt*/
-            this.balloon.css('display','block');
+            this.balloon.css('display', 'block');
         }
 
         //calculate position
-        var infoPixel= this.webMapController.getMap().coordinateToPixel(x,y);
+        var infoPixel = this.webMapController.getMap().coordinateToPixel(x, y);
 
         //determine the left and top.
-        var left=infoPixel.x+this.offsetX;
-        var top =infoPixel.y+this.offsetY;
-        if (this.leftOfPoint){
-            left=left-this.balloonWidth;
+        var left = infoPixel.x + this.offsetX;
+        var top = infoPixel.y + this.offsetY;
+        if (this.leftOfPoint) {
+            left = left - this.balloonWidth;
         }
-        if (this.topOfPoint){
-            top= top-this.balloonHeight;
+        if (this.topOfPoint) {
+            top = top - this.balloonHeight;
         }
         //set position of balloon
-        this.balloon.css('left', ""+left+"px");
-        this.balloon.css('top', ""+top+"px");
+        this.balloon.css('left', "" + left + "px");
+        this.balloon.css('top', "" + top + "px");
     }
     /*Remove the balloon*/
-    this.remove = function(){
+    this.remove = function() {
         this.balloon.remove();
-        this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT,webMapController.getMap(), this.setPosition,this);
+        this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT, webMapController.getMap(), this.setPosition, this);
         delete this.balloon;
     }
     /*Get the DOM element where the content can be placed.*/
-    this.getContentElement = function(){
+    this.getContentElement = function() {
         return this.balloon.find('.balloonContent');
     }
-    this.hide = function(){
-        this.balloon.css("display",'none');
+    this.hide = function() {
+        this.balloon.css("display", 'none');
     }
-    this.show = function(){
-        this.balloon.css("display",'block');
+    this.show = function() {
+        this.balloon.css("display", 'block');
     }
 }
 
 // Aanroepen voor een loading screen in de tabs.
 function showTabvakLoading(message) {
-    $j("#tab_container").append('<div class="tabvakloading"><div>'+message+'<br /><br /><img src="/gisviewer/images/icons/loadingsmall.gif" alt="Bezig met laden..." /></div></div>');
+    $j("#tab_container").append('<div class="tabvakloading"><div>' + message + '<br /><br /><img src="/gisviewer/images/icons/loadingsmall.gif" alt="Bezig met laden..." /></div></div>');
     $j("#tab_container").find(".tabvakloading").fadeTo(0, 0.8);
 }
 
@@ -4920,7 +4971,7 @@ function enableEditRedlining(id) {
     editingRedlining = true;
     redLineGegevensbronId = id;
 
-    if(webMapController instanceof FlamingoController) {
+    if (webMapController instanceof FlamingoController) {
         webMapController.activateTool("breinaald");
     } else {
         webMapController.activateTool("identify");
@@ -4964,7 +5015,7 @@ function createCheckboxUserLayer(item, checked) {
 
     } else {
         checkbox = document.createElement('input');
-        checkbox.id = 'ul_' +item.id;
+        checkbox.id = 'ul_' + item.id;
         checkbox.type = 'checkbox';
         checkbox.name = 'userLayers'
         checkbox.value = item.id;
@@ -5008,19 +5059,19 @@ function checkboxUserLayerClick(checkbox) {
 
     /* laag toevoegen aan viewer */
     if (checked) {
-        addItemAsLayer(item);        
+        addItemAsLayer(item);
     } else {
         removeItemAsLayer(item);
     }
 
     if (checked) {
         refreshLayerWithDelay();
-    } else{
+    } else {
         doRefreshLayer();
     }
 }
 
-function createServiceLayerLink(item){
+function createServiceLayerLink(item) {
     var lnk = document.createElement('a');
     lnk.innerHTML = item.title ? item.title : item.id;
     lnk.href = '#';
@@ -5029,12 +5080,12 @@ function createServiceLayerLink(item){
         lnk.onclick = function() {
             $j("#dialog-download-metadata").dialog("option", "buttons", {
                 "Url": function() {
-                    if ($j("#dialog-download-metadata").dialog("isOpen")) {                        
-                        $j(this).dialog("close");  
-        
+                    if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                        $j(this).dialog("close");
+
                         var url = item.service_url + "service=WMS&request=GetCapabilities&version=1.0.0";
                         $j("#input_wmsserviceurl").val(url);
-                        
+
                         unblockViewerUI();
                         $j("#dialog-wmsservice-url").dialog('open');
                     }
@@ -5072,48 +5123,48 @@ function getValidLayerId(lname) {
  * @param layers the layers string of a layer object
  * @return the item
  */
-function getItemByLayer(item,layers){
-    if (item.children){
-        for (var i=0; i < item.children.length; i++){
+function getItemByLayer(item, layers) {
+    if (item.children) {
+        for (var i = 0; i < item.children.length; i++) {
             var child = item.children[i];
-            
-            if (child.wmslayers && child.wmslayers==layers){
+
+            if (child.wmslayers && child.wmslayers == layers) {
                 return child;
             } else if (child.wmslayers && child.wmslayers != layers) {
                 var mLayers = layers.split(",");
-                
-                for (var j in mLayers) {                    
+
+                for (var j in mLayers) {
                     if (child.wmslayers == mLayers[j]) {
                         return child;
-                    }                    
-                }                
-            } else if (child.children){
-                var foundItem=getItemByLayer(child,layers);
-                if (foundItem!=null){
+                    }
+                }
+            } else if (child.children) {
+                var foundItem = getItemByLayer(child, layers);
+                if (foundItem != null) {
                     return foundItem;
                 }
             }
         }
     }
-    
-    return null;        
+
+    return null;
 }
 
 function getBaseUrl() {
     var protocol = window.location.protocol + "//";
     var host = window.location.host;
 
-    var urlBase = protocol + host  + baseNameViewer;
-    
-    return urlBase;    
+    var urlBase = protocol + host + baseNameViewer;
+
+    return urlBase;
 }
 
-function checkTempUploadedPointsWms(checked) { 
+function checkTempUploadedPointsWms(checked) {
     uploadCsvLayerOn = checked;
     var layer = webMapController.getMap().getLayer("uploadedPoints");
-    
+
     if (checked && layer == null) {
-        addTempUploadedPointsWms();  
+        addTempUploadedPointsWms();
     } else if (checked && layer) {
         layer.setVisible(true);
     } else if (!checked && layer) {
@@ -5122,11 +5173,11 @@ function checkTempUploadedPointsWms(checked) {
     }
 }
 
-function addTempUploadedPointsWms() {     
+function addTempUploadedPointsWms() {
     var lname = "uploadedPoints";
     var layerUrl = getBaseUrl() + "/UploadedPointsWmsServlet";
-                
-    var options={
+
+    var options = {
         id: lname,
         timeout: 30,
         retryonerror: 10,
@@ -5134,10 +5185,10 @@ function addTempUploadedPointsWms() {
         showerrors: true,
         initService: false,
         minscale: 0,
-        maxscale: 500000        
+        maxscale: 500000
     };
-    
-    var ogcOptions={
+
+    var ogcOptions = {
         format: "image/png",
         layers: "tempPointsLayer",
         transparent: true,
@@ -5146,7 +5197,7 @@ function addTempUploadedPointsWms() {
         version: "1.1.1",
         noCache: true
     };
-    
+
     var newLayer = webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
     webMapController.getMap().addLayer(newLayer);
 }
@@ -5165,7 +5216,7 @@ $j(document).ready(function() {
     var tekenTabOn = false;
     var uploadPointsTabOn = false;
 
-    for (var i=0; i < enabledtabs.length; i++) {
+    for (var i = 0; i < enabledtabs.length; i++) {
         if (enabledtabs[i] == "analyse")
             analyseTabOn = true;
 
@@ -5183,88 +5234,89 @@ $j(document).ready(function() {
 
         if (enabledtabs[i] == "zoeken")
             zoekenTabOn = true;
-        
+
         if (enabledtabs[i] == "wkt")
             wktTabOn = true;
-        
+
         if (enabledtabs[i] == "transparantie")
             transparantieTabOn = true;
-        
+
         if (enabledtabs[i] == "tekenen")
             tekenTabOn = true;
-        
+
         if (enabledtabs[i] == "uploadpoints")
             uploadPointsTabOn = true;
     }
 
     if (analyseTabOn) {
         if (document.getElementById('analyseframeViewer')) {
-            document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
+            document.getElementById('analyseframeViewer').src = '/gisviewer/vieweranalysedata.do';
         }
     }
 
     if (meldingenTabOn) {
-        if(document.getElementById('meldingenframeViewer')) {
-            document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
+        if (document.getElementById('meldingenframeViewer')) {
+            document.getElementById('meldingenframeViewer').src = '/gisviewer/viewermeldingen.do?prepareMelding=t';
         }
     }
 
     if (redliningTabOn) {
-        if(document.getElementById('redliningframeViewer')) {
-            document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
+        if (document.getElementById('redliningframeViewer')) {
+            document.getElementById('redliningframeViewer').src = '/gisviewer/viewerredlining.do?prepareRedlining=t';
         }
     }
 
     if (bagTabOn) {
-        if(document.getElementById('bagframeViewer')) {
-            document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
+        if (document.getElementById('bagframeViewer')) {
+            document.getElementById('bagframeViewer').src = '/gisviewer/viewerbag.do';
         }
     }
-    
+
     if (wktTabOn) {
-        if(document.getElementById('wktframeViewer')) {
-            document.getElementById('wktframeViewer').src='/gisviewer/viewerwkt.do';
+        if (document.getElementById('wktframeViewer')) {
+            document.getElementById('wktframeViewer').src = '/gisviewer/viewerwkt.do';
         }
     }
-    
+
     if (transparantieTabOn) {
-        if(document.getElementById('transparantieframeViewer')) {
-            document.getElementById('transparantieframeViewer').src='/gisviewer/viewertransparantie.do';
+        if (document.getElementById('transparantieframeViewer')) {
+            document.getElementById('transparantieframeViewer').src = '/gisviewer/viewertransparantie.do';
         }
     }
-    
+
     if (tekenTabOn) {
-        if(document.getElementById('tekenenframeViewer')) {
-            document.getElementById('tekenenframeViewer').src='/gisviewer/viewerteken.do';
+        if (document.getElementById('tekenenframeViewer')) {
+            document.getElementById('tekenenframeViewer').src = '/gisviewer/viewerteken.do';
         }
     }
 
     if (zoekenTabOn || vergunningTabOn) {
         createSearchConfigurations();
     }
-    
+
     if (uploadPointsTabOn) {
-        if(document.getElementById('uploadtemppointsframeViewer')) {
-            document.getElementById('uploadtemppointsframeViewer').src='/gisviewer/uploadtemppoints.do';
+        if (document.getElementById('uploadtemppointsframeViewer')) {
+            document.getElementById('uploadtemppointsframeViewer').src = '/gisviewer/uploadtemppoints.do';
         }
     }
 
     var pwCreated = false;
-    if(document.getElementById('popupWindow')) {
+    if (document.getElementById('popupWindow')) {
         pwCreated = true;
     }
 
     try {
-        if(getParent().document.getElementById('popupWindow')) {
+        if (getParent().document.getElementById('popupWindow')) {
             pwCreated = true;
         }
-    } catch(err) {}
+    } catch (err) {
+    }
 
-    if(!pwCreated) {
+    if (!pwCreated) {
         buildPopup();
 
         $j('#popupWindow').draggable({
-            handle:    '#popupWindow_Handle',
+            handle: '#popupWindow_Handle',
             iframeFix: true,
             zIndex: 200,
             containment: 'document',
@@ -5284,19 +5336,19 @@ $j(document).ready(function() {
             }
         });
 
-        $j('#popupWindow_Close').click(function(){
+        $j('#popupWindow_Close').click(function() {
             if (dataframepopupHandle)
                 dataframepopupHandle.closed = true;
 
             $j("#popupWindow").hide();
         });
 
-    /* $j("#popupWindow").mouseover(function(){
-            startDrag();
-        });
-        $j("#popupWindow").mouseout(function(){
-            stopDrag();
-        }); */
+        /* $j("#popupWindow").mouseover(function(){
+         startDrag();
+         });
+         $j("#popupWindow").mouseout(function(){
+         stopDrag();
+         }); */
 
     }
 

@@ -125,12 +125,7 @@
 	<servlet>
         <servlet-name>SearchAutocomplete</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.SearchAutocomplete</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GetBlobServlet</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
-    </servlet>
+    </servlet>      
 	
 	<servlet>
         <servlet-name>DispatcherServlet</servlet-name>
@@ -189,14 +184,19 @@
             <param-value>FILE</param-value>
         </init-param>
     </servlet>
+
+	<servlet>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>DocFetcher</servlet-name>
-        <url-pattern>/services/DocFetcher/*</url-pattern>
+        <url-pattern>/services/DocFetcher</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetBlobServlet</servlet-name>
-        <url-pattern>/services/getBlobServlet</url-pattern>
+        <url-pattern>/services/GetBlobServlet</url-pattern>
     </servlet-mapping>
 	
 	<servlet-mapping>

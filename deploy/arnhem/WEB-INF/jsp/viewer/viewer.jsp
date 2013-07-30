@@ -193,9 +193,11 @@
     }
 
     /*
-     * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
-     * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
-     * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
+     * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later 
+     * in een tabel en dan in de action alleen die configuraties ophalen 
+     * die in de settings tabel staan. Dus deze param weg 
+     * (+ bijhorende functie). Voor alles wat weg moet staat: 
+     * ZOEKCONFIGURATIEWEG (even zoeken op dus) */    
     var zoekConfigIds = catchEmpty(${configMap["zoekConfigIds"]});
     if(typeof zoekConfigIds === 'undefined' || !zoekConfigIds) {
         zoekConfigIds = "";
@@ -498,11 +500,13 @@
     </div>
 
     <div id="infovak" style="display: none; overflow: auto;" class="tabvak">
+        
         <p>
             Kies de Info-tool en klik vervolgens op een punt<br/>
             op de kaart voor administratieve informatie<br/>
             van het object.
         </p>
+        
         <div>
             <div id="searchConfigurationsContainer"></div>
             <div id="searchInputFieldsContainer"></div>

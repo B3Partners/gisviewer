@@ -181,7 +181,7 @@ function getNLTilingRes() {
 function convertStringToArray(waarde) {
     var lijst = new Array();
     var arr = new Array();
-    
+
     waarde = waarde.trim();
 
     if (waarde.indexOf(",") !== -1) {
@@ -231,7 +231,7 @@ function getTilingResolutions(maxBounds, returnArray) {
     }
 
     /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
-    if (tilingResolutions && !fullExtent) {        
+    if (tilingResolutions && !fullExtent) {
         /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
          * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
          * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
@@ -2563,13 +2563,13 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         } else {
             olRes = getTilingResolutions(maxBounds, false);
         }
-        
+
         tilingResolutions = olRes;
-        
+
         if (webMapController instanceof OpenLayersController && tilingResolutions) {
             // vervang kommas voor spaties */
-            olRes = olRes.replace(/\,/g,' ');
-            
+            olRes = olRes.replace(/\,/g, ' ');
+
             options["serverResolutions"] = olRes;
         }
 
@@ -5289,7 +5289,19 @@ $j(document).ready(function() {
     }
 
     if (zoekenTabOn || vergunningTabOn) {
-        createSearchConfigurations();
+        /* Indien 1 zoeker dan deze gelijk tonen */ 
+        var arr = zoekConfigIds.split(",");
+        var c = $j("#searchInputFieldsContainer");
+        
+        if (arr !== null && arr.length > 1) {
+            createSearchConfigurations();
+        } else if (arr !== null && arr.length === 1 && arr[0] !== '') {
+            var zc = zoekconfiguraties[0];
+            JZoekconfiguratieThemaUtil.getThemas(zc.id, zoekconfiguratieThemasCallBack);
+            var zoekVelden = zc.zoekVelden;            
+            
+            fillSearchDiv(c, zoekVelden, null);
+        }
     }
 
     if (uploadPointsTabOn) {

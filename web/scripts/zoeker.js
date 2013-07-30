@@ -251,10 +251,10 @@ function performSearch() {
 
     var arr = zoekConfigIds.split(",");
     if (arr !== null && arr.length === 1) {
-        currentSearchSelectId = 0;
+        currentSearchSelectIndex = 0;
     }
 
-    zoekConfig = zoekconfiguraties[currentSearchSelectId];
+    zoekConfig = zoekconfiguraties[currentSearchSelectIndex];
 
     var zoekVelden = zoekConfig.zoekVelden;
     var bron = zoekConfig.bron.url;
@@ -316,7 +316,7 @@ function performSearch() {
     $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
     webMapController.getMap().removeMarker("searchResultMarker");
 
-    JZoeker.zoek(zoekconfiguraties[currentSearchSelectId].id, waarde, maxResults, searchCallBack);
+    JZoeker.zoek(zoekconfiguraties[currentSearchSelectIndex].id, waarde, maxResults, searchCallBack);
 }
 
 function handleZoekResultaat(searchResultId) {
@@ -349,10 +349,10 @@ function handleZoekResultaat(searchResultId) {
 
     for (var i = 0; i < zoekconfiguraties.length; i++) {
         if (zoekconfiguraties[i].id == parentZc.id) {
-            currentSearchSelectId = i;
+            currentSearchSelectIndex = i;
         }
     }
-    parentZc = zoekconfiguraties[currentSearchSelectId];
+    parentZc = zoekconfiguraties[currentSearchSelectIndex];
 
     // Doe de volgende zoekopdracht
     var zoekStrings = createZoekStringsFromZoekResultaten(parentZc, searchResult);
@@ -483,7 +483,7 @@ function getBboxMinSize2(feature) {
     return feature;
 }
 
-var currentSearchSelectId = "";
+var currentSearchSelectIndex;
 function searchConfigurationsSelectChanged(element) {
     var container = $j("#searchInputFieldsContainer");
 
@@ -494,9 +494,9 @@ function searchConfigurationsSelectChanged(element) {
         return;
     }
 
-    currentSearchSelectId = element.val();
+    currentSearchSelectIndex = element.val();
 
-    var zc = zoekconfiguraties[currentSearchSelectId];
+    var zc = zoekconfiguraties[currentSearchSelectIndex];
     JZoekconfiguratieThemaUtil.getThemas(zc.id, zoekconfiguratieThemasCallBack);
     var zoekVelden = zc.zoekVelden;
 
@@ -504,7 +504,7 @@ function searchConfigurationsSelectChanged(element) {
 }
 
 function clearConfigurationsSelect(container) {
-    currentSearchSelectId = "";
+    currentSearchSelectIndex = null;
     container.html("");
     webMapController.getMap().removeMarker("searchResultMarker");
     zoekconfiguratieThemas = null;
@@ -736,7 +736,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 function handleZoekVeldinputList(list) {
     if (list != null && list.length > 0) {
         var controlElementName;
-        var zc = zoekconfiguraties[currentSearchSelectId];
+        var zc = zoekconfiguraties[currentSearchSelectIndex];
         var optionListZc = list[0].zoekConfiguratie;
         for (var i = 0; i < zc.zoekVelden.length; i++) {
             var zoekVeld = zc.zoekVelden[i];

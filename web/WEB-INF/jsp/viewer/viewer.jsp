@@ -20,12 +20,12 @@
 
 <script type="text/javascript">
     var showDebugContent = false;
-    
+
     var waitUntillFullyLoaded = false;
 
     var baseNameViewer = "${contextPath}";
-    
-    function catchEmpty(defval){
+
+    function catchEmpty(defval) {
         return defval;
     }
 
@@ -34,42 +34,42 @@
     var themabeheerder = <c:out value="${f:isUserInRole(pageContext.request, 'themabeheerder')}"/>;
     var gebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>;
     var demogebruiker = <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>;
-    var anoniem= !beheerder && !organisatiebeheerder && !themabeheerder && !gebruiker && !demogebruiker;
-    
-    var sldServletUrl=window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>";
+    var anoniem = !beheerder && !organisatiebeheerder && !themabeheerder && !gebruiker && !demogebruiker;
+
+    var sldServletUrl = window.location.protocol + "//" + window.location.host + "<html:rewrite page='/CreateSLD'/>";
 
     var zoekconfiguraties = catchEmpty(${zoekconfiguraties});
-    if(typeof zoekconfiguraties === 'undefined' || !zoekconfiguraties) {  
+    if (typeof zoekconfiguraties === 'undefined' || !zoekconfiguraties) {
         zoekconfiguraties = [{}];
     }
 
-    var ingelogdeGebruiker="<c:out value='${pageContext.request.remoteUser}'/>";
-    var kburl="${kburl}";
-    var kbcode="${kbcode}";
+    var ingelogdeGebruiker = "<c:out value='${pageContext.request.remoteUser}'/>";
+    var kburl = "${kburl}";
+    var kbcode = "${kbcode}";
 
-    var themaTree=catchEmpty(${tree});
-    if(typeof themaTree === 'undefined' || !themaTree) {
+    var themaTree = catchEmpty(${tree});
+    if (typeof themaTree === 'undefined' || !themaTree) {
         themaTree = null;
     }
-    
-    var organizationcode="${organizationcode}";
-    
+
+    var organizationcode = "${organizationcode}";
+
     /* Extents */
-    var fullbbox='${fullExtent}'; // kaartenbalie bboxen
-    var bbox='${extent}'; // Probeer url, gvc extent, daarna actief thema bbox 
-    
+    var fullbbox = '${fullExtent}'; // kaartenbalie bboxen
+    var bbox = '${extent}'; // Probeer url, gvc extent, daarna actief thema bbox 
+
     var appExtent = catchEmpty("${configMap["extent"]}");
     if (typeof appExtent === 'undefined' || !appExtent) {
         appExtent = "12000,304000,280000,620000";
     }
-    
+
     var fullExtent = catchEmpty("${configMap["fullextent"]}");
     if (typeof fullExtent === 'undefined' || !fullExtent) {
         fullExtent = "";
     }
-    
+
     var resolution = catchEmpty(${resolution}); // uit tile service
-    
+
     /* gvc tiling res */
     var tilingResolutions = catchEmpty("${configMap["tilingResolutions"]}");
     if (typeof tilingResolutions === 'undefined' || !tilingResolutions) {
@@ -77,95 +77,95 @@
     }
 
     /* init search */
-    var searchConfigId='${searchConfigId}';
-    var search='${search}';
+    var searchConfigId = '${searchConfigId}';
+    var search = '${search}';
 
     /* search with sld result (searchAction: filter or highlight and zoom) */
-    var searchAction='${searchAction}';
-    var searchId='${searchId}';
-    var searchClusterId='${searchClusterId}';
-    var searchSldVisibleValue='${searchSldVisibleValue}';
+    var searchAction = '${searchAction}';
+    var searchId = '${searchId}';
+    var searchClusterId = '${searchClusterId}';
+    var searchSldVisibleValue = '${searchSldVisibleValue}';
 
     /* Viewer type */
     var viewerType = catchEmpty("${configMap["viewerType"]}");
-    if(typeof viewerType === 'undefined' || !viewerType) {
+    if (typeof viewerType === 'undefined' || !viewerType) {
         viewerType = 'flamingo';
     }
 
     /* If viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
-    if(viewerType == 'flamingo') {
+    if (viewerType == 'flamingo') {
         var flashVersion = ua().pv;
-        if(flashVersion[0] == 0) {
+        if (flashVersion[0] == 0) {
             viewerType = 'openlayers';
         }
     }
 
     /* Viewer type */
     var viewerTemplate = catchEmpty("${configMap["viewerTemplate"]}");
-    if(typeof viewerTemplate === 'undefined' || !viewerTemplate) {
+    if (typeof viewerTemplate === 'undefined' || !viewerTemplate) {
         viewerTemplate = 'standalone';
     }
 
     /* ObjectInfo type */
     var objectInfoType = catchEmpty("${configMap["objectInfoType"]}");
-    if(typeof objectInfoType === 'undefined' || !objectInfoType) {
+    if (typeof objectInfoType === 'undefined' || !objectInfoType) {
         objectInfoType = 'popup';
     }
 
 
     /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
-    var usePanelControls=catchEmpty(${configMap["usePanelControls"]});
-    if(typeof usePanelControls === 'undefined') {
+    var usePanelControls = catchEmpty(${configMap["usePanelControls"]});
+    if (typeof usePanelControls === 'undefined') {
         usePanelControls = true;
     }
 
     /* True als de admin- of metadata in een popup wordt getoond
      * False als deze onder de kaart moet worden getoond
      * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
-    var useDivPopup=catchEmpty(${configMap["useDivPopup"]});
-    if(typeof useDivPopup === 'undefined') {
+    var useDivPopup = catchEmpty(${configMap["useDivPopup"]});
+    if (typeof useDivPopup === 'undefined') {
         useDivPopup = false;
     }
 
-    if(objectInfoType == "geen") {
+    if (objectInfoType == "geen") {
         usePopup = false;
         usePanel = false;
-        usePanelControls =  false;
+        usePanelControls = false;
         useDivPopup = false;
-        useBalloonPopup=false;
+        useBalloonPopup = false;
     }
-    if(objectInfoType == "popup") {
+    if (objectInfoType == "popup") {
         usePopup = true;
         usePanel = false;
-        usePanelControls =  false;
+        usePanelControls = false;
         useDivPopup = true;
-        useBalloonPopup=false;
+        useBalloonPopup = false;
     }
-    if(objectInfoType == "paneel") {
+    if (objectInfoType == "paneel") {
         usePopup = false;
         usePanel = true;
         useDivPopup = false;
-        useBalloonPopup=false;
+        useBalloonPopup = false;
     }
-    if (objectInfoType== "balloon"){
-        usePopup=false;
+    if (objectInfoType == "balloon") {
+        usePopup = false;
         usePanel = false;
-        usePanelControls =  false;
+        usePanelControls = false;
         useDivPopup = false;
-        useBalloonPopup=true;
+        useBalloonPopup = true;
     }
 
     var dataframepopupHandle = null;
 
-    var useCookies=catchEmpty(${configMap["useCookies"]});
-    if(typeof useCookies === 'undefined') {
+    var useCookies = catchEmpty(${configMap["useCookies"]});
+    if (typeof useCookies === 'undefined') {
         useCookies = true;
     }
 
     /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
      * False als je maximaal van 1 thema data kan ophalen. (radiobuttons) */
-    var multipleActiveThemas=catchEmpty(${configMap["multipleActiveThemas"]});
-    if(typeof multipleActiveThemas === 'undefined') {
+    var multipleActiveThemas = catchEmpty(${configMap["multipleActiveThemas"]});
+    if (typeof multipleActiveThemas === 'undefined') {
         multipleActiveThemas = true;
     }
 
@@ -173,15 +173,15 @@
      * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
      * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
      * als de admindata automatisch moeten worden doorgestuurd) */
-    var autoRedirect=catchEmpty(${configMap["autoRedirect"]});
-    if(typeof autoRedirect === 'undefined' || !autoRedirect) {
+    var autoRedirect = catchEmpty(${configMap["autoRedirect"]});
+    if (typeof autoRedirect === 'undefined' || !autoRedirect) {
         autoRedirect = 2;
     }
 
     /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
      * en info wordt opgevraagd. Dus een tolerantie. */
-    var tolerance=catchEmpty(${configMap["tolerance"]});
-    if(typeof tolerance === 'undefined' || !tolerance) {
+    var tolerance = catchEmpty(${configMap["tolerance"]});
+    if (typeof tolerance === 'undefined' || !tolerance) {
         tolerance = 1;
     }
 
@@ -194,8 +194,8 @@
     /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
      * kaartlaag zichtbaar is in viewer. Default op true */
     var useInheritCheckbox = catchEmpty(${configMap["useInheritCheckbox"]});
-    
-    if(typeof useInheritCheckbox === 'undefined') {
+
+    if (typeof useInheritCheckbox === 'undefined') {
         useInheritCheckbox = true;
     }
 
@@ -208,8 +208,8 @@
      * Kijkt of de ingelogde gebruiker ook de vorige ingelogde gebruiker is,
      * zo nee, worden eerst alle cookies gewist, zodat een nieuwe gebruiker opnieuw kan beginnen */
     var loggedInUser = readCookie('loggedInUser');
-    if(loggedInUser != null) {
-        if(loggedInUser != '<c:out value="${pageContext.request.remoteUser}"/>') {
+    if (loggedInUser != null) {
+        if (loggedInUser != '<c:out value="${pageContext.request.remoteUser}"/>') {
             eraseCookie('activelayer');
             eraseCookie('activetab');
             eraseCookie('checkedLayers');
@@ -217,25 +217,25 @@
         }
     }
     createCookie('loggedInUser', '<c:out value="${pageContext.request.remoteUser}"/>', '7');
-	
+
     /*
      * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis
      * de kaart wordt na het slepen automatisch herladen na x aantal (instellen door layerDelay) seconden
      * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
      * 
      * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
-    var useSortableFunction=catchEmpty(${configMap["useSortableFunction"]});
-    if(typeof useSortableFunction === 'undefined') {
+    var useSortableFunction = catchEmpty(${configMap["useSortableFunction"]});
+    if (typeof useSortableFunction === 'undefined') {
         useSortableFunction = false;
     }
     var layerDelay = catchEmpty(${configMap["layerDelay"]}); // instellen in ms, dus 5000 voor 5 seconden
-    if(typeof layerDelay === 'undefined' || !layerDelay) {
+    if (typeof layerDelay === 'undefined' || !layerDelay) {
         layerDelay = 5000;
     }
 
     /* de vertraging voor het refreshen van de kaart. */
-    var refreshDelay=catchEmpty(${configMap["refreshDelay"]});
-    if(typeof refreshDelay === 'undefined' || !refreshDelay) {
+    var refreshDelay = catchEmpty(${configMap["refreshDelay"]});
+    if (typeof refreshDelay === 'undefined' || !refreshDelay) {
         refreshDelay = 1000;
     }
 
@@ -244,48 +244,48 @@
      * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
      * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
     var zoekConfigIds = catchEmpty(${configMap["zoekConfigIds"]});
-    if(typeof zoekConfigIds === 'undefined' || !zoekConfigIds) {
+    if (typeof zoekConfigIds === 'undefined' || !zoekConfigIds) {
         zoekConfigIds = "";
     }
 
     /* Voorzieningen */
     var voorzieningConfigIds = catchEmpty(${configMap["voorzieningConfigIds"]});
-    if(typeof voorzieningConfigIds === 'undefined' || !voorzieningConfigIds) {
+    if (typeof voorzieningConfigIds === 'undefined' || !voorzieningConfigIds) {
         voorzieningConfigIds = "";
     }
 
     var voorzieningConfigStraal = catchEmpty(${configMap["voorzieningConfigStraal"]});
-    if(typeof voorzieningConfigStraal === 'undefined' || !voorzieningConfigStraal) {
+    if (typeof voorzieningConfigStraal === 'undefined' || !voorzieningConfigStraal) {
         voorzieningConfigStraal = "";
     }
 
     var voorzieningConfigTypes = catchEmpty(${configMap["voorzieningConfigTypes"]});
-    if(typeof voorzieningConfigTypes === 'undefined' || !voorzieningConfigTypes) {
+    if (typeof voorzieningConfigTypes === 'undefined' || !voorzieningConfigTypes) {
         voorzieningConfigTypes = "";
     }
 
     /* Vergunningen */
     var vergunningConfigIds = catchEmpty(${configMap["vergunningConfigIds"]});
-    if(typeof vergunningConfigIds === 'undefined' || !vergunningConfigIds) {
+    if (typeof vergunningConfigIds === 'undefined' || !vergunningConfigIds) {
         vergunningConfigIds = "";
     }
 
     var vergunningConfigStraal = catchEmpty(${configMap["vergunningConfigStraal"]});
-    if(typeof vergunningConfigStraal === 'undefined' || !vergunningConfigStraal) {
+    if (typeof vergunningConfigStraal === 'undefined' || !vergunningConfigStraal) {
         vergunningConfigStraal = "";
     }
-    
+
     /*
      * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
      * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
-    var minBboxZoeken=catchEmpty(${configMap["minBboxZoeken"]});
-    if(typeof minBboxZoeken === 'undefined' || !minBboxZoeken) {
+    var minBboxZoeken = catchEmpty(${configMap["minBboxZoeken"]});
+    if (typeof minBboxZoeken === 'undefined' || !minBboxZoeken) {
         minBboxZoeken = 1000;
     }
 
     /* Maximaal aantal zoekresultaten */
-    var maxResults=catchEmpty(${configMap["maxResults"]});
-    if(typeof maxResults === 'undefined' || !maxResults) {
+    var maxResults = catchEmpty(${configMap["maxResults"]});
+    if (typeof maxResults === 'undefined' || !maxResults) {
         maxResults = 25;
     }
 
@@ -295,31 +295,31 @@
     if (typeof useMouseOverTabs === 'undefined') {
         useMouseOverTabs = true;
     }
-    
+
     /* TODO: voorzieningen en vergunning even uitgecomment deze geven
      * document.getElementById(tabobj.contentid).style.display = 'none'; is null
      * als de iframes uitstaan en ze wel in de var tabbladen aanstaan.
-
+     
      * De beschikbare tabbladen. Het ID van de tab, de bijbehoorden Content-div,
      * de naam en eventueel extra Content-divs die geopend moeten worden */
     var tabbladen = {
-        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "extracontent": ["layermaindiv"] },
-        "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken" },
-        "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden" },
-        "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse" },
-        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true },
-        "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie" },
-        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie" },
-        "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding" },
-        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening" },
-        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning" },
-        "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining" },
+        "themas": {"id": "themas", "contentid": "treevak", "name": "Kaarten", "extracontent": ["layermaindiv"]},
+        "zoeken": {"id": "zoeken", "contentid": "infovak", "name": "Zoeken"},
+        "gebieden": {"id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden"},
+        "analyse": {"id": "analyse", "contentid": "analysevakViewer", "name": "Analyse"},
+        "legenda": {"id": "legenda", "contentid": "volgordevak", "name": "Legenda", "resizableContent": true},
+        "informatie": {"id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie"},
+        "planselectie": {"id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie"},
+        "meldingen": {"id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding"},
+        "voorzieningen": {"id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening"},
+        "vergunningen": {"id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning"},
+        "redlining": {"id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining"},
         "cms": {id: "cms", contentid: "cmsvak", name: "Extra"},
         "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG"},
         "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT"},
         "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie"},
-        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"},
-        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points" }
+        "tekenen": {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen"},
+        "uploadpoints": {"id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points"}
     };
 
     var enabledtabs = [${configMap["tabs"]}];
@@ -327,7 +327,7 @@
 
     /* planselectie gebruikt 2 zoekingangen (id's) */
     var planSelectieIds = catchEmpty(${configMap["planSelectieIds"]});
-    if(typeof planSelectieIds === 'undefined' || !planSelectieIds) {
+    if (typeof planSelectieIds === 'undefined' || !planSelectieIds) {
         planSelectieIds = "0,0";
     }
 
@@ -361,110 +361,115 @@
     if (typeof showLayerSelectionTool === 'undefined') {
         showLayerSelectionTool = false;
     }
-    
+
     var showGPSTool = catchEmpty(${configMap["showGPSTool"]});
     if (typeof showGPSTool === 'undefined') {
         showGPSTool = false;
     }
-    
+
     var showEditTool = catchEmpty(${configMap["showEditTool"]});
     if (typeof showEditTool === 'undefined') {
         showEditTool = false;
     }
-    
+
     var gpsBuffer = catchEmpty(${configMap["gpsBuffer"]});
     if (typeof gpsBuffer === 'undefined') {
         gpsBuffer = false;
     }
 
     var layerGrouping = catchEmpty("${configMap["layerGrouping"]}");
-    if(typeof layerGrouping === 'undefined' || !layerGrouping) {
+    if (typeof layerGrouping === 'undefined' || !layerGrouping) {
         layerGrouping = "lg_forebackground";
     }
 
     var popupWidth = catchEmpty("${configMap["popupWidth"]}");
-    if(typeof popupWidth === 'undefined' || !popupWidth) {
+    if (typeof popupWidth === 'undefined' || !popupWidth) {
         popupWidth = "90%";
     }
 
     var popupHeight = catchEmpty("${configMap["popupHeight"]}");
-    if(typeof popupHeight === 'undefined' || !popupHeight) {
+    if (typeof popupHeight === 'undefined' || !popupHeight) {
         popupHeight = "20%";
     }
 
     var popupLeft = catchEmpty("${configMap["popupLeft"]}");
-    if(typeof popupLeft === 'undefined' || !popupLeft) {
+    if (typeof popupLeft === 'undefined' || !popupLeft) {
         popupLeft = "5%";
     }
 
     var popupTop = catchEmpty("${configMap["popupTop"]}");
-    if(typeof popupTop === 'undefined' || !popupTop) {
+    if (typeof popupTop === 'undefined' || !popupTop) {
         popupTop = "75%";
     }
 
     var defaultdataframehoogte = catchEmpty(${configMap["defaultdataframehoogte"]});
-    if(typeof defaultdataframehoogte === 'undefined' || !defaultdataframehoogte) {
+    if (typeof defaultdataframehoogte === 'undefined' || !defaultdataframehoogte) {
         defaultdataframehoogte = 150;
     }
 
     var bookmarkAppcode = catchEmpty("${bookmarkAppcode}");
-    if(typeof bookmarkAppcode === 'undefined' || !bookmarkAppcode) {
+    if (typeof bookmarkAppcode === 'undefined' || !bookmarkAppcode) {
         bookmarkAppcode = "";
     }
-	
+
     /* Variable wordt gebruikt om de huidige active tab in op te slaan */
     var currentActiveTab = null;
-    
-    function getZoekconfiguraties(){
+
+    function getZoekconfiguraties() {
         return zoekconfiguraties;
     }
-    function getVoorzieningConfigIds(){
+    function getVoorzieningConfigIds() {
         return voorzieningConfigIds;
     }
-    function getMaxResults(){
+    function getMaxResults() {
         return maxResults;
     }
-    function getVoorzieningConfigStraal(){
+    function getVoorzieningConfigStraal() {
         return voorzieningConfigStraal;
     }
-    function getVoorzieningConfigTypes(){
+    function getVoorzieningConfigTypes() {
         return voorzieningConfigTypes;
     }
-    function getVergunningConfigIds(){
+    function getVergunningConfigIds() {
         return vergunningConfigIds;
     }
-    function getVergunningConfigStraal(){
+    function getVergunningConfigStraal() {
         return vergunningConfigStraal;
     }
 
     /* Boomsortering */
     var treeOrder = catchEmpty("${configMap["treeOrder"]}");
-    if(typeof treeOrder === 'undefined' || !treeOrder) {
+    if (typeof treeOrder === 'undefined' || !treeOrder) {
         treeOrder = 'volgorde';
     }
-    
+
     var useUserWmsDropdown = catchEmpty(${configMap["useUserWmsDropdown"]});
-    if(typeof useUserWmsDropdown === 'undefined') {
+    if (typeof useUserWmsDropdown === 'undefined') {
         useUserWmsDropdown = true;
     }
-    
+
     var datasetDownload = catchEmpty(${configMap["datasetDownload"]});
     if (typeof datasetDownload === 'undefined') {
         datasetDownload = false;
     }
-    
+
     var showServiceUrl = catchEmpty(${configMap["showServiceUrl"]});
     if (typeof showServiceUrl === 'undefined') {
         showServiceUrl = false;
     }
-    
+
     var startLocationX = catchEmpty(${startLocationX});
     if (typeof startLocationX === 'undefined' || !startLocationX) {
         startLocationX = "";
-    }  
+    }
     var startLocationY = catchEmpty(${startLocationY});
     if (typeof startLocationY === 'undefined' || !startLocationY) {
         startLocationY = "";
+    }
+
+    var cfgActiveTab = catchEmpty("${configMap["activeTab"]}");
+    if (typeof cfgActiveTab === 'undefined' || !cfgActiveTab) {
+        cfgActiveTab = "themas";
     }
 </script>
 <script type="text/javascript" src="<html:rewrite page="/scripts/TabController.js"/>"></script>
@@ -503,7 +508,7 @@
     <div id="flashmelding"></div>
 </div>
 <script type="text/javascript">
-    if(viewerType == 'flamingo') {
+    if (viewerType == 'flamingo') {
         setTimeout(function() {
             $j("#flashmelding").html('<strong class="noflamingoerror"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>');
         }, 2000);
@@ -523,47 +528,21 @@
 
         <c:forEach var="serviceTree" items="${servicesTrees}" varStatus="status">
             <div id="layerTreeDiv_${status.count}"></div>
-        </c:forEach>
+        </c:forEach>   
+
+        <!-- Slider -->
+        <c:if test="${transSliderTab == 'themas'}">
+            <%@include file="viewertransparantie.jsp" %>
+        </c:if>
     </div>
     <div id="volgordevak">
         <form action="" id="volgordeForm">  
             <div id="orderLayerBox" class="orderLayerBox tabvak_groot"></div>
 
-            <!-- slider -->
-            <div id="transSlider" style="height: 50px; width: 260px; padding-left: 5px;">
-                <p>
-                    Transparantie van alle voorgrondlagen.
-                </p>
-
-                <div style="float: left; font-size: 22px; padding-right: 3px; margin-top: -8px;">-</div>
-                <div id="slider" style="width: 215px; float: left"></div>
-                <div style="float: left; font-size: 22px; padding-left: 10px; margin-top: -6px;">+</div>
-                <div style="clear: both;"></div>
-            </div>
-
-            <script type="text/javascript">
-                $j(function() {
-                    $j("#slider").slider({
-                        min: 0,
-                        max: 100,
-                        value: 100,
-                        animate: true,
-                        change: function(event, ui) { 
-                            transparency(ui.value); 
-                        }
-                    });
-                });
-                function transparency(value){
-                    var opacity = 1.0 - value/100;
-                    var layers = parent.webMapController.getMap().getLayers();
-                    for( var i = 0 ; i < layers.length ; i++ ){
-                        var l = layers[i];
-                        if(!l.getOption("background")){
-                            l.setOpacity (opacity);
-                        }
-                    }
-                }
-            </script>
+            <!-- Slider -->
+            <c:if test="${transSliderTab == 'legenda'}">
+                <%@include file="viewertransparantie.jsp" %>
+            </c:if>
 
             <%--
             <p>Bepaal de volgorde waarin de kaartlagen getoond worden</p>
@@ -634,15 +613,15 @@
 
         <p>
             <c:if test="${!empty a11yStartWkt}">
-                <p>
-                    U heeft een startlocatie ingesteld. Deze locatie staat op 
-                    de kaart gemarkeerd. Bij zoekers die hier gebruik van maken
-                    wordt de afstand naar de startlocatie getoond.
-                </p>
-                <p>
-                    <input type="button" class="knop" value="Verwijder marker" onclick="removeSearchResultMarker();"/>
-                </p>
-            </c:if>
+            <p>
+                U heeft een startlocatie ingesteld. Deze locatie staat op 
+                de kaart gemarkeerd. Bij zoekers die hier gebruik van maken
+                wordt de afstand naar de startlocatie getoond.
+            </p>
+            <p>
+                <input type="button" class="knop" value="Verwijder marker" onclick="removeSearchResultMarker();"/>
+            </p>
+        </c:if>
         </p>
 
         <div>
@@ -651,12 +630,18 @@
             <br>
             <div class="searchResultsClass" id="searchResults"></div>
         </div>
+        
+        <!-- Slider -->
+        <c:if test="${transSliderTab == 'zoeken'}">
+            <%@include file="viewertransparantie.jsp" %>
+        </c:if>
     </div>
+        
     <div id="cmsvak" style="display: none; overflow: auto;" class="tabvak">
         <%-- als er maar 1 tekstblok is dan die titel plaatsen --%>
         <c:if test="${fn:length(tekstBlokken)==1}">
             <script type="text/javascript">
-                $j("#cmslink").html("${tekstBlokken[0].titel}");
+    $j("#cmslink").html("${tekstBlokken[0].titel}");
             </script>
         </c:if>
         <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
@@ -703,60 +688,64 @@
 <script type="text/javascript">
     // Show left tabs when enabled
     var showLeftPanel = false;
-    if(enabledtabsLeft.length !== 0) {
+    if (enabledtabsLeft.length !== 0) {
         showLeftPanel = true;
         $j('#leftcontenttabjes, #leftcontent').show();
     }
     // Init tab controllers
-    var tabController = new TabController('tabjes', 'tab_container', { 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
-    var leftTabController = new TabController('leftcontenttabjes', 'leftcontent', { 'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs });
+    var tabController = new TabController('tabjes', 'tab_container', {'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs});
+    var leftTabController = new TabController('leftcontenttabjes', 'leftcontent', {'width': tabWidth, useClick: !useMouseOverTabs, useHover: useMouseOverTabs});
     // Loop over enabled tabs
-    for(i in enabledtabs) {
+    for (i in enabledtabs) {
         var tabid = enabledtabs[i];
         var tabobj = tabbladen[tabid];
-        var options = { 'contentid': tabobj.contentid, 'checkResize': true };
+        var options = {'contentid': tabobj.contentid, 'checkResize': true};
         tabController.createTab(tabid, tabobj.name, options);
     }
-    for(i in enabledtabsLeft) {
+    for (i in enabledtabsLeft) {
         var tabid = enabledtabsLeft[i];
         var tabobj = tabbladen[tabid];
-        var options = { 'contentid': tabobj.contentid, 'checkResize': true };
+        var options = {'contentid': tabobj.contentid, 'checkResize': true};
         leftTabController.createTab(tabid, tabobj.name, options);
     }
 
     var noOfTabs = tabController.getTabCount(), noLeftTabs = leftTabController.getTabCount();
-    if(usePanel) {
+    if (usePanel) {
         document.write('<div class="infobalk" id="informatiebalk" style="display: block;">'
-            +'     <div class="infobalk_description">INFORMATIE</div>'
-            +'     <div class="infobalk_actions">&nbsp;</div>'
-            +' </div>'
-            +' <div id="dataframediv" class="dataframediv" style="display: block;">'
-            +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
-            +' </div>');
+                + '     <div class="infobalk_description">INFORMATIE</div>'
+                + '     <div class="infobalk_actions">&nbsp;</div>'
+                + ' </div>'
+                + ' <div id="dataframediv" class="dataframediv" style="display: block;">'
+                + '     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
+                + ' </div>');
     }
-    if(usePanelControls) {
+    if (usePanelControls) {
         document.write('<div id="panelControls">');
-        if(noOfTabs > 0) document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"><a href="#"></a></div>');
-        if(noLeftTabs > 0) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"><a href="#"></a></div>');
+        if (noOfTabs > 0)
+            document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"><a href="#"></a></div>');
+        if (noLeftTabs > 0)
+            document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"><a href="#"></a></div>');
         document.write('<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div></div>');
     }
 
     var rightControlWidth = leftControlWidth = 0;
-    if(noOfTabs === 0) {
+    if (noOfTabs === 0) {
         // Hide tabs if there are no tabs
         document.getElementById('tab_container').style.display = 'none';
         document.getElementById('tabjes').style.display = 'none';
         document.getElementById('mapcontent').style.right = '0px';
     } else {
         var rightControl = $j('#rightControl');
-        if(rightControl && rightControl.height() > 20) rightControlWidth = rightControl.width() + 3; // For some viewers the rightcontrol extends to the bottom, in this case we need to remove the width from the right of the map
+        if (rightControl && rightControl.height() > 20)
+            rightControlWidth = rightControl.width() + 3; // For some viewers the rightcontrol extends to the bottom, in this case we need to remove the width from the right of the map
         document.getElementById('mapcontent').style.right = (tabWidth === 0 ? 3 : (tabWidth + 6)) + rightControlWidth + 'px';
     }
-    if(noLeftTabs > 0) {
+    if (noLeftTabs > 0) {
         var leftControl = $j('#leftControl'), leftTabWidth = leftTabController.getTabWidth();
-        if(leftControl && leftControl.height() > 20) leftControlWidth = leftControl.width() + 3; // For some viewers the leftcontrol extends to the bottom, in this case we need to remove the width from the left of the map
+        if (leftControl && leftControl.height() > 20)
+            leftControlWidth = leftControl.width() + 3; // For some viewers the leftcontrol extends to the bottom, in this case we need to remove the width from the left of the map
         document.getElementById('mapcontent').style.left = (leftTabWidth === 0 ? 3 : (leftTabWidth + 6)) + leftControlWidth + 'px';
-        if(usePanel && leftControlWidth !== 0) {
+        if (usePanel && leftControlWidth !== 0) {
             document.getElementById('dataframediv').style.left = leftControlWidth + 'px';
             document.getElementById('informatiebalk').style.left = leftControlWidth + 'px';
         }
@@ -794,7 +783,7 @@
 
 <script type="text/javascript">
     var infobalk = null, infobalkbottom = null, dataframebottom = 0;
-    if(usePopup || !usePanel) {
+    if (usePopup || !usePanel) {
         document.getElementById('leftcontent').style.bottom = '3px';
         document.getElementById('tab_container').style.bottom = '3px';
         document.getElementById('tabjes').style.right = '3px';
@@ -806,15 +795,15 @@
     else {
         // Deze hoogtes aanpassen om het details vak qua hoogte te wijzigen
         document.getElementById('dataframediv').style.height = defaultdataframehoogte + 'px';
-        document.getElementById('tab_container').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
-        document.getElementById('mapcontent').style.bottom = (defaultdataframehoogte==0?0:(defaultdataframehoogte + 29)) + 'px';
+        document.getElementById('tab_container').style.bottom = (defaultdataframehoogte == 0 ? 0 : (defaultdataframehoogte + 29)) + 'px';
+        document.getElementById('leftcontent').style.bottom = (defaultdataframehoogte == 0 ? 0 : (defaultdataframehoogte + 29)) + 'px';
+        document.getElementById('mapcontent').style.bottom = (defaultdataframehoogte == 0 ? 0 : (defaultdataframehoogte + 29)) + 'px';
         infobalk = $j('#informatiebalk');
         infobalkbottom = parseInt(infobalk.css('bottom'), 10);
-        if(infobalkbottom > 1) {
-            infobalk.css('bottom', (defaultdataframehoogte==0?0:(defaultdataframehoogte + 3)) + 'px');
-            if(usePanelControls) {
-                $j("#onderbalkControl").css("bottom", (defaultdataframehoogte==0?3:(defaultdataframehoogte + 5)));
+        if (infobalkbottom > 1) {
+            infobalk.css('bottom', (defaultdataframehoogte == 0 ? 0 : (defaultdataframehoogte + 3)) + 'px');
+            if (usePanelControls) {
+                $j("#onderbalkControl").css("bottom", (defaultdataframehoogte == 0 ? 3 : (defaultdataframehoogte + 5)));
             }
         } else {
             // In some viewers the infobalk is moved to the bottom, in this case move the dataframediv
@@ -824,10 +813,10 @@
     }
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
-    var expandAll=catchEmpty(${configMap["expandAll"]});
-    if(typeof expandAll === 'undefined') {
+    var expandAll = catchEmpty(${configMap["expandAll"]});
+    if (typeof expandAll === 'undefined') {
         expandAll = false;
-    }    
+    }
 
     treeview_create({
         "id": "layermaindiv",
@@ -842,21 +831,16 @@
         "saveExpandedState": true,
         "saveScrollState": true,
         "expandAll": expandAll
-    });    
+    });
 
     <c:if test="${not empty activeTab}">
-        if (document.getElementById("${activeTab}")){
-            switchTab("${activeTab}");
-        }
+    if (document.getElementById("${activeTab}")) {
+        switchTab("${activeTab}");
+    }
     </c:if>
 
     <c:if test="${empty activeTab}">
-        var cfgAtiveTab = catchEmpty("${configMap["activeTab"]}");
-        if(typeof cfgAtiveTab === 'undefined' || !cfgAtiveTab) {
-            cfgAtiveTab = "themas";
-        }
-
-        switchTab(cfgAtiveTab);
+        switchTab(cfgActiveTab);
     </c:if>
 
         var panelBelowCollapsed = false;
@@ -864,41 +848,43 @@
         var panelRightCollapsed = false;
         function panelResize(dir)
         {
-            if(dir == 'below') {
-                if(!usePopup && !useDivPopup) {
+            if (dir == 'below') {
+                if (!usePopup && !useDivPopup) {
                     var dataframehoogte = defaultdataframehoogte;
-                    if(panelBelowCollapsed) {
-                        if(infobalkbottom !== null && infobalkbottom > 1) $j("#informatiebalk").css("display", "block");
+                    if (panelBelowCollapsed) {
+                        if (infobalkbottom !== null && infobalkbottom > 1)
+                            $j("#informatiebalk").css("display", "block");
                         $j("#dataframediv").css("display", "block");
                         $j("#onderbalkControl").removeClass("bottom_closed").addClass("bottom_open");
                     } else {
                         dataframehoogte = 0;
-                        if(infobalkbottom !== null && infobalkbottom > 1) $j("#informatiebalk").css("display", "none");
+                        if (infobalkbottom !== null && infobalkbottom > 1)
+                            $j("#informatiebalk").css("display", "none");
                         $j("#dataframediv").css("display", "none");
                         $j("#onderbalkControl").removeClass("bottom_open").addClass("bottom_closed");
                     }
-                    $j("#dataframediv").animate({ height: dataframehoogte }, 400);
-                    if(infobalkbottom !== null && infobalkbottom > 1) {
-                        $j("#onderbalkControl").animate({ bottom: (dataframehoogte==0?3:(dataframehoogte + 5)) }, 400);
-                        $j("#informatiebalk").animate({ bottom: (dataframehoogte==0?0:(dataframehoogte + 3)) }, 400);
+                    $j("#dataframediv").animate({height: dataframehoogte}, 400);
+                    if (infobalkbottom !== null && infobalkbottom > 1) {
+                        $j("#onderbalkControl").animate({bottom: (dataframehoogte == 0 ? 3 : (dataframehoogte + 5))}, 400);
+                        $j("#informatiebalk").animate({bottom: (dataframehoogte == 0 ? 0 : (dataframehoogte + 3))}, 400);
                     }
-                    document.getElementById('leftcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
-                    document.getElementById('tab_container').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
-                    document.getElementById('mapcontent').style.bottom = (dataframehoogte === 0 ? 0: ( dataframehoogte + (29 - dataframebottom) )) + dataframebottom + 'px';
-                    
+                    document.getElementById('leftcontent').style.bottom = (dataframehoogte === 0 ? 0 : (dataframehoogte + (29 - dataframebottom))) + dataframebottom + 'px';
+                    document.getElementById('tab_container').style.bottom = (dataframehoogte === 0 ? 0 : (dataframehoogte + (29 - dataframebottom))) + dataframebottom + 'px';
+                    document.getElementById('mapcontent').style.bottom = (dataframehoogte === 0 ? 0 : (dataframehoogte + (29 - dataframebottom))) + dataframebottom + 'px';
+
                     tabController.doResize();
                     leftTabController.doResize();
-                    
+
                     panelBelowCollapsed = !panelBelowCollapsed;
-                    
+
                     if (panelBelowCollapsed) {
-                        updateSizeOL();   
+                        updateSizeOL();
                     }
                 }
             }
-            if(dir == 'right') {
+            if (dir == 'right') {
                 var panelbreedte = panelRightCollapsed ? tabWidth : 0;
-                if(panelRightCollapsed) {
+                if (panelRightCollapsed) {
                     $j('#tab_container, #tabjes, #tabjes ul').show();
                     $j('#rightControl').removeClass('right_closed').addClass('right_open');
                 } else {
@@ -906,49 +892,49 @@
                     $j('#rightControl').removeClass('right_open').addClass('right_closed');
                 }
                 panelRightCollapsed = !panelRightCollapsed;
-                $j("#tab_container").animate({ width: panelbreedte }, 400);
+                $j("#tab_container").animate({width: panelbreedte}, 400);
                 // $j("#rightControl").animate({ right: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-                $j("#tabjes").animate({ width: panelbreedte }, 200);
-                document.getElementById('mapcontent').style.right = (panelbreedte==0?0:(panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + rightControlWidth + 'px';
+                $j("#tabjes").animate({width: panelbreedte}, 200);
+                document.getElementById('mapcontent').style.right = (panelbreedte == 0 ? 0 : (panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + rightControlWidth + 'px';
             }
-            if(dir == 'left') {
+            if (dir == 'left') {
                 var panelbreedte = panelLeftCollapsed ? leftTabWidth : 0;
-                if(panelLeftCollapsed) {
+                if (panelLeftCollapsed) {
                     $j('#leftcontent, #leftcontenttabjes, #leftcontenttabjes ul').show();
                     $j('#leftControl').removeClass('left_closed').addClass('left_open');
                 } else {
                     $j('#leftcontent, #leftcontenttabjes, #leftcontenttabjes ul').hide();
                     $j('#leftControl').removeClass('left_open').addClass('left_closed');
                 }
-                $j("#leftcontent").animate({ width: panelbreedte }, 400);
+                $j("#leftcontent").animate({width: panelbreedte}, 400);
                 // $j("#leftControl").animate({ left: (panelbreedte==0?3:(panelbreedte + 3)) }, 200);
-                document.getElementById('mapcontent').style.left = (panelbreedte==0?0:(panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + leftControlWidth + 'px';
+                document.getElementById('mapcontent').style.left = (panelbreedte == 0 ? 0 : (panelbreedte + (rightControlWidth === 0 ? 6 : 0))) + leftControlWidth + 'px';
                 panelLeftCollapsed = !panelLeftCollapsed;
             }
         }
-        var expandNodes=null;
+        var expandNodes = null;
 
     <c:if test="${not empty expandNodes}">
-        expandNodes=${expandNodes};
+        expandNodes =${expandNodes};
     </c:if>
 
-        if(expandNodes!=null){
-            for (var i=0; i < expandNodes.length; i++){
+        if (expandNodes != null) {
+            for (var i = 0; i < expandNodes.length; i++) {
                 messagePopup("", expandNodes[i], "information");
-                treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
+                treeview_expandItemChildren("layermaindiv", "c" + expandNodes[i]);
             }
         }
         /*
-        ie6_hack_onInit();
-
-        // just for fun
-        if (navigator.appName!="Microsoft Internet Explorer" && refreshDelay==666){
-            var s =document.createElement('script');
-            s.type='text/javascript';
-            document.body.appendChild(s);
-            s.src='http://kottke.org/plus/misc/asteroids.js';
-        }
-         */    
+         ie6_hack_onInit();
+         
+         // just for fun
+         if (navigator.appName!="Microsoft Internet Explorer" && refreshDelay==666){
+         var s =document.createElement('script');
+         s.type='text/javascript';
+         document.body.appendChild(s);
+         s.src='http://kottke.org/plus/misc/asteroids.js';
+         }
+         */
 
         function hideLoadingScreen() {
             $j("#loadingscreen").hide();
@@ -969,7 +955,7 @@
 <script type="text/javascript">
     /* Weghalen als viewer.jsp klaar is */
     if (!waitUntillFullyLoaded) {
-        $j(document).ready(function(){
+        $j(document).ready(function() {
             $j("#loadingscreen").hide();
         });
     }

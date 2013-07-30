@@ -231,9 +231,7 @@ function getTilingResolutions(maxBounds, returnArray) {
     }
 
     /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
-    if (tilingResolutions && !fullExtent) {
-        alert('not fullExtent');
-        
+    if (tilingResolutions && !fullExtent) {        
         /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
          * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
          * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
@@ -4003,7 +4001,7 @@ function getWktActiveFeature(index) {
 
     if (object == null)
     {
-        handler("Er is nog geen tekenobject op het scherm.");
+        messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "error");
         return null;
     }
 
@@ -4069,13 +4067,13 @@ function b_buffer(id, event) {
         str = str.replace(",", ".");
         afstand = str;
     } else {
-        handler("Geen getal");
+        messagePopup("Melding", "Geen getal.", "error");
         return;
     }
 
     if (afstand == 0)
     {
-        handler("Buffer mag niet 0 zijn");
+        messagePopup("Melding", "Buffer mag niet 0 zijn.", "error");
         return;
     }
 

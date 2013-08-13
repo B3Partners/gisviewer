@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/gisviewer">
+
+<!-- Postgres -->
+<Resource 
+    auth="Container" 
+    driverClassName="org.postgresql.Driver" 
+    logAbandoned="true" 
+    maxActive="100" 
+    maxIdle="30" 
+    maxWait="10000" 
+    minEvictableIdleTimeMillis="10000" 
+    name="jdbc/gisviewer" 
+    username="venray" 
+    password="***REMOVED***"
+	url="jdbc:postgresql://localhost:5432/venray_gisviewer40"
+    removeAbandoned="true" 
+    removeAbandonedTimeout="60" 
+    timeBetweenEvictionRunsMillis="60000" 
+    type="javax.sql.DataSource"    
+    validationQuery="select 1"
+/>
+</Context>

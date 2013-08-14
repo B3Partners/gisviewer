@@ -1,9 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <%--
 B3P Gisviewer is an extension to Flamingo MapComponents making
 it a complete webbased GIS viewer and configuration tool that
 works in cooperation with B3P Kaartenbalie.
 
-Copyright 2006, 2007, 2008 B3Partners BV
+Copyright 2006 - 2013 B3Partners BV
 
 This file is part of B3P Gisviewer.
 
@@ -25,31 +26,47 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@page isELIgnored="false"%>
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html:html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="nl"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="nl"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="nl"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="nl"> <!--<![endif]-->
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
         
-        <title><tiles:insert name='title'/> - B3P GIS Viewer</title>
-        <link href="styles/gisviewer_basisimport.css" rel="stylesheet" type="text/css">
+        <title><tiles:insert name='title'/> - GIS Viewer</title>
+
+        <%-- Themes selection --%>
+        <c:set var="theme" value="venray" />
+        <c:choose>
+            <c:when test="${theme eq ''}">
+                <%-- Fallback to B3P style --%>
+                <link href="<html:rewrite page='/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+            </c:when>
+            <c:otherwise>
+                <%-- Select theme style --%>
+                <link href="<html:rewrite page='/themes/${theme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+            </c:otherwise>
+        </c:choose>
+
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
-        <link href="styles/jcarousel/skin.css" rel="stylesheet" type="text/css">
+        <link href="<html:rewrite page='/styles/jcarousel/skin.css' module=''/>" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.jcarousel.min.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.mousewheel.min.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.qtip-1.0.0-rc3.min.js' module=''/>"></script>
-        <!--[if lte IE 6]>
-            <link href="styles/gisviewer_ie6.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if lte IE 7]>
-            <link href="styles/gisviewer_ie7.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
-        <!--[if lte IE 8]>
-            <link href="styles/gisviewer_ie8.css" rel="stylesheet" type="text/css" />
-        <![endif]-->
+        
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="width=device-width; height=device-height; user-scalable=no; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="cleartype" content="on">
+
         <script type="text/javascript">
+            var gisviewerurls = {
+                'mapicon': '<html:rewrite page='/images/icons/map.png' module='' />',
+                'listicon': '<html:rewrite page='/images/icons/search_list.png' module='' />'
+            };
             attachOnload(checkLocation);
         </script>
     </head>
@@ -63,9 +80,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         </div>
         <div id="footer">
-            <div id="footer_content"></div>
+            <tiles:insert attribute="footer" />
         </div>
 
         <tiles:insert definition="googleAnalytics"/>
     </body>
-</html:html>
+</html>

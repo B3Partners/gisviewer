@@ -183,6 +183,33 @@ function getMaxBounds() {
     return maxBounds;
 }
 
+function getNLTilingRes() {
+    return "512,256,128,64,32,16,8,4,2,1,0.5,0.125";
+}
+
+function convertStringToArray(waarde) {
+    var lijst = [];
+    var arr = [];
+    
+    waarde = waarde.trim();
+
+    if (waarde.indexOf(",") !== -1) {
+        lijst = waarde.split(",");
+    } else {
+        lijst = waarde.split(" ");
+    }
+
+    if (lijst && lijst.length > 0) {
+        arr = [];
+        for (var i in lijst) {
+            lijst[i] = parseFloat(lijst[i]);
+            arr[i] = lijst[i];
+        }
+    }
+
+    return arr;
+}
+
 /* Methode herberekend ingevulde tiling resoluties o.b.v. max eetent. 
  * Geeft een array of string terug. */
 function getTilingResolutions(maxBounds, returnArray) {    
@@ -194,7 +221,7 @@ function getTilingResolutions(maxBounds, returnArray) {
         var res = B3PGissuite.config.tilingResolutions; //.trim();
 
         var list;            
-        if (res.indexOf(",") != -1) {
+        if (res.indexOf(",") !== -1) {
             list = res.split(",");
         } else {
             list = res.split(" ");
@@ -207,13 +234,13 @@ function getTilingResolutions(maxBounds, returnArray) {
                 olRes[i] = list[i];
             }
         }
-    } else {
-        B3PGissuite.config.tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125";
-        olRes = [680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125];
+    } else { // wordt nu gezet in addLayerToViewer
+        B3PGissuite.config.tilingResolutions = getNLTilingRes();
+        olRes = convertStringToArray(B3PGissuite.config.tilingResolutions);
     }
 
     /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
-    if (B3PGissuite.config.tilingResolutions) {            
+    if (B3PGissuite.config.tilingResolutions && !B3PGissuite.config.fullExtent) {
         /* TODO: Kijken of deze berekeningen niet later kunnen. Bijvoorbeeld
          * na het maken van de map en het opbouwen van de layout. Ivm het ophalen
          * van de hoogte of als de gebruiker het scherm groter of kleiner maakt
@@ -247,7 +274,9 @@ function getTilingResolutions(maxBounds, returnArray) {
             str += parseFloat(olRes[k]) + " ";
         }
         
-        return str.trim();
+        var flRes = str.trim();
+
+        return flRes;
     }
 
     return olRes;
@@ -486,6 +515,12 @@ function handleInitSearch(list){
     hideLoading();
     if (list.length > 0){
         handleInitSearchResult(list[0],B3PGissuite.config.searchAction, B3PGissuite.config.searchId,B3PGissuite.config.searchClusterId,B3PGissuite.config.searchSldVisibleValue);
+    } else {
+        /* Lagen aanzetten na zoeken */
+        JZoekconfiguratieThemaUtil.getThemas(B3PGissuite.config.searchConfigId, function(data) {
+            zoekconfiguratieThemasCallBack(data);
+            switchLayersOn();
+        });     
     }
 }
 
@@ -1375,13 +1410,26 @@ function addLayerToViewer(lname, layerUrl, layerItems) {
         options["background"]= tileItem.background;  
         
         var maxBounds = getMaxBounds();
-        var olRes = getTilingResolutions(maxBounds, false); 
-            
-        if (B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions) {
-            options["serverResolutions"] = olRes; // B3PGissuite.config.tilingResolutions
+        var olRes;
+
+        if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== '') {
+            olRes = B3PGissuite.config.tilingResolutions;
+        } else if (tileItem.resolutions) {
+            olRes = tileItem.resolutions;
+        } else {
+            olRes = getTilingResolutions(maxBounds, false);
         }
         
-        options["RESOLUTIONS"] = olRes; //tileItem.resolutions;
+        B3PGissuite.config.tilingResolutions = olRes;
+            
+        if (B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions) {
+            // vervang kommas voor spaties */
+            olRes = olRes.replace(/\,/g,' ');
+            
+            options["serverResolutions"] = olRes;
+        }
+        
+        options["RESOLUTIONS"] = olRes;
         
         options["TILEHEIGHT"]=tileItem.tileHeight;
         options["TILEWIDTH"]=tileItem.tileWidth;
@@ -2182,6 +2230,7 @@ function onFrameworkLoaded(){
             B3PGissuite.vars.layersAan.sort(layerBoxSort);
             treeComponent.clickLayers();
         }
+        initFullExtent();
         setStartExtent();
         if(treeComponent !== null) {
             treeComponent.doRefreshLayer();
@@ -2193,13 +2242,15 @@ function onFrameworkLoaded(){
     B3PGissuite.vars.mapInitialized=true;
     B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
     
-    /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus overneemt.
-     * Let op: Bij OpenLayers gebeurt dit al bij maken Map */
+    /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus
+     * overneemt. Indien geen resoluties opgegeven kun je in Flamingo gewoon
+     * oneindig ver blijven inzoomen Let op: Bij OpenLayers gebeurt dit
+     * al bij maken Map */
     if (B3PGissuite.vars.webMapController instanceof FlamingoController) {        
-        var maxBounds = getMaxBounds();
-        var olRes = getTilingResolutions(maxBounds, false);
         
-        B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(olRes);
+        if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions != '') {
+            B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(B3PGissuite.config.tilingResolutions);
+        }
         
         /* Standaard pan tool activeren */
         B3PGissuite.vars.webMapController.activateTool("toolPan");
@@ -2227,8 +2278,8 @@ function placeStartLocationMarker() {
 function initFullExtent() {
     /* Extent uit url */
     if (B3PGissuite.config.bbox!=null && B3PGissuite.config.bbox.length>0 && B3PGissuite.config.bbox.split(",").length==4) {        
-        if (B3PGissuite.config.appExtent != null && B3PGissuite.config.appExtent.length > 0 && B3PGissuite.config.appExtent.split(",").length ==4 ) {
-            setFullExtent(B3PGissuite.config.appExtent.split(",")[0],B3PGissuite.config.appExtent.split(",")[1],B3PGissuite.config.appExtent.split(",")[2],B3PGissuite.config.appExtent.split(",")[3]);
+        if (B3PGissuite.config.fullExtent != null && B3PGissuite.config.fullExtent.length > 0 && B3PGissuite.config.fullExtent.split(",").length ==4 ) {
+            setFullExtent(B3PGissuite.config.fullExtent.split(",")[0],B3PGissuite.config.fullExtent.split(",")[1],B3PGissuite.config.fullExtent.split(",")[2],B3PGissuite.config.fullExtent.split(",")[3]);
         } else {
             setFullExtent(B3PGissuite.config.bbox.split(",")[0],B3PGissuite.config.bbox.split(",")[1],B3PGissuite.config.bbox.split(",")[2],B3PGissuite.config.bbox.split(",")[3]);
         }
@@ -2248,8 +2299,7 @@ function initFullExtent() {
     }
 }
 
-function setStartExtent() {   
-    initFullExtent();
+function setStartExtent() {
     
     /* Bij zoeken via url de handleInitSearch callback laten zoomen */
     if (B3PGissuite.config.searchConfigId != null && B3PGissuite.config.searchConfigId > 0) {
@@ -2698,12 +2748,21 @@ function buildTilingServiceUrl(tilingLayer) {
  * van getActiveFeature alleen de laatste feature (een Point) terug. In
  * this.getFrameworkLayer().features[0] zit het hele polygon.
 */
-function getWktActiveFeature(index) {    
-    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(index);
+function getWktActiveFeature(index) {
+    var object; 
+    object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(index);
     
+    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+        var arr = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getAllFeatures();
+        
+        if (arr && arr.length == 1) {
+            object = arr[0];
+        }
+    }
+
     if (object == null)
     {
-        handler("Er is nog geen tekenobject op het scherm.");
+        messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "error");
         return null;
     }
 
@@ -2746,10 +2805,11 @@ function b_buffer(id, event) {
      * een correcte wkt terug. er mist dan een , ( of ) waardoor bufferen
      * mis gaat. Deze is dus alleen gevuld na een highlight
      * voor anders getekende polygons wordt gewoon de active feature gebruikt. */
-    if (B3PGissuite.vars.multiPolygonBufferWkt != null)
+    if (B3PGissuite.vars.multiPolygonBufferWkt != null) {
         wkt = B3PGissuite.vars.multiPolygonBufferWkt;
-    else
+    } else {
         wkt = getWktActiveFeature(-1);
+    }
 
     B3PGissuite.vars.multiPolygonBufferWkt = null;
         
@@ -2768,13 +2828,13 @@ function b_buffer(id, event) {
         str = str.replace( ",", ".");
         afstand = str;
     } else {
-        handler( "Geen getal" );
+        messagePopup("Melding", "Geen getal.", "error");
         return;
     }
 
     if (afstand == 0)
     {
-        handler("Buffer mag niet 0 zijn");
+        messagePopup("Melding", "Buffer mag niet 0 zijn.", "error");
         return;
     }
 
@@ -3275,8 +3335,9 @@ function popUp(URL, naam, width, height, useDiv) {
 
         $j("#popupWindow").show();
 
-        if(ieVersion <= 6 && ieVersion != -1)
+        if(ieVersion <= 6 && ieVersion != -1) {
             fixPopup();
+        }
 
     } else {
 
@@ -3285,13 +3346,13 @@ function popUp(URL, naam, width, height, useDiv) {
         "location = 0, " +
         "statusbar = 1, " +
         "menubar = 0, " +
-        "resizable = 1, " +
+        "resizable = 0, " +
         "width = " + screenwidth + ", " +
         "height = " + screenheight + ", " +
         "top = " + popuptop + ", " +
         "left = " + popupleft;
 
-        return eval("page" + naam + " = window.open('" + URL + "', '" + naam + "', properties);");
+        return window.open(URL , naam, properties);
     }
 
     return null;
@@ -3896,7 +3957,18 @@ $j(document).ready(function() {
     }
 
     if (zoekenTabOn || vergunningTabOn) {
-        createSearchConfigurations();
+        /* Indien 1 zoeker dan deze gelijk tonen */ 
+        var arr = B3PGissuite.config.zoekConfigIds.split(",");
+        var c = $j("#searchInputFieldsContainer");
+        
+        if (arr !== null && arr.length > 1) {
+            createSearchConfigurations();
+        } else if (arr !== null && arr.length === 1 && arr[0] !== '') {
+            var zc = zoekconfiguraties[0];
+            JZoekconfiguratieThemaUtil.getThemas(zc.id, zoekconfiguratieThemasCallBack);
+            var zoekVelden = zc.zoekVelden;
+            fillSearchDiv(c, zoekVelden, null);
+        }
     }
 
     // Timeout so we are sure that all CSS transitions are complete
@@ -3908,7 +3980,7 @@ $j(document).ready(function() {
         } else if (B3PGissuite.config.user.demogebruiker) {
             switchTab('themas'); // read default tab from config ?
         } else {
-            switchTab('themas'); // read default tab from config ?
+            switchTab(B3PGissuite.config.cfgActiveTab);
         }
     }, 250);
 

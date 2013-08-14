@@ -229,7 +229,10 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
 
             // Append all to DOM tree
             bronContent.append(bronTable.append(bronTableBody));
-            bronContainer.append(bronCaption.css({"color":"#000000","background-color":"#ffffff"})).append(bronContent);
+            bronContainer.append(bronCaption.css({
+                "color":"#000000",
+                "background-color":"#ffffff"
+            })).append(bronContent);
         });
     }
 
@@ -274,7 +277,7 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
                         diff=elemOrder-gegevensbron.order;
                     }
                 });
-	    }
+            }
             if (beforeElement!=null){
                 bronContainer.insertBefore(beforeElement);
             }else{
@@ -400,6 +403,24 @@ function handleGetGegevensBronMulti(gegevensbron) {
         bronTableHead.append(trHead);
     }
 
+    /* Only auto open pop-up when one record is found and one objectdata field 
+     * is configured in basisregel */
+    if (gegevensbron.records && gegevensbron.records.length == 1) {
+        var url;
+        
+        if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
+            if (gegevensbron.records[0].values[0].value) {
+                url = gegevensbron.records[0].values[0].value;
+            }
+        
+            if (gegevensbron.records[0].values[0].valueList) {
+                url = gegevensbron.records[0].values[0].valueList;
+            }
+    
+            parent.popUp(url, 'externe_link', 800, 600);
+        }        
+    }
+    
     // Create table content
     if(!gegevensbron.records) {        
         var size = 1;
@@ -408,7 +429,6 @@ function handleGetGegevensBronMulti(gegevensbron) {
         }
         var tr = createEmptyRow(size);
         bronTableBody.append(tr);
-    // TODO als 1 record en opgegeven aantal kolommen, dan meteen popup openen
     } else {        
         $j.each(gegevensbron.records, function(index, record) {            
             var tr = $j('<tr></tr>');
@@ -496,7 +516,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
                     .append(childDiv);
                     childTr.append(childTd);
                     bronTableBody.append(childTr);
-                    // toggleIcon.click();
+                // toggleIcon.click();
                 });
             }
         });
@@ -517,8 +537,8 @@ function handleGetGegevensBronMulti(gegevensbron) {
     // child loading weghalen indien aanwezig
     $j('#'+htmlId).siblings('.childLoading').hide();
 
-    // alle childs pre-loaden
-    // $j('.childCaption', bronContainer).find('img').click();
+// alle childs pre-loaden
+// $j('.childCaption', bronContainer).find('img').click();
 }
 
 function loadChild(bronContentId, beanId, wkt, beanCql) {
@@ -739,7 +759,7 @@ function createTableTd(waarde) {
         "width": kolomBreedte + "px"
     });
     
-    if(waarde.type == 'TYPE_DATA') {        
+    if(waarde.type == 'TYPE_DATA') {   
         if (!waarde.value) {            
             td.html("-");
         } else {            
@@ -785,10 +805,10 @@ function createTableTd(waarde) {
                 }
             } else {
                 if (waarde.eenheid) {
-					td.html(waarde.value + ' ' + waarde.eenheid);
-				} else {
-					td.html(waarde.value);
-				}
+                    td.html(waarde.value + ' ' + waarde.eenheid);
+                } else {
+                    td.html(waarde.value);
+                }
             }
         }
     }
@@ -830,13 +850,15 @@ function createTableTd(waarde) {
     }
 
     if (waarde.type == 'TYPE_QUERY') {        
-    	if(waarde.valueList.length > 1){
-			var labels = waarde.value.split(',');
-		}
+        if(waarde.valueList.length > 1){
+            var labels = waarde.value.split(',');
+        }
 		
-		/* Een Objectdata veld met een berekening, bijvoorbeeld =[A]*[B] */
-        if(waarde.valueList.length == 1) {
-            if (waarde.valueList[0].charAt(0) == '=') {                
+        /* Een Objectdata veld met een berekening, bijvoorbeeld =[A]*[B] */
+        if(waarde.valueList && waarde.valueList.length == 1) {
+            var commando = waarde.valueList[0];
+            
+            if (commando && commando.charAt(0) == '=') {                
                 var value = evalObjectDataCommando(waarde.valueList[0]);
                 td.append(value);
                 
@@ -861,11 +883,11 @@ function createTableTd(waarde) {
                 var linkspan = $j('<span></span>');
                 var clickable=null;
                 if(labels){
-		    clickable = $j('<a href="#">'+labels[i]+'</a>')
-		    .attr({
-			"title": listWaarde
-		    });
-		    i++;
+                    clickable = $j('<a href="#">'+labels[i]+'</a>')
+                    .attr({
+                        "title": listWaarde
+                    });
+                    i++;
                 } else if (ext == 'pdf'){
                     clickable = $j('<a href="#"><img src="'+pdficon+'" alt="Bekijk PDF" border="0" /></a>')
                     .attr({
@@ -929,7 +951,7 @@ function createEmptyRow(size) {
  * attributeName: gekozen (in themadata) attribuut naam
  * attributeValue: waarde van het attribuut
  * eenheid: eventueel eenheid voor omrekenen
-*/
+ */
 function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
     var oldValue = element.innerHTML;
     var newValue;

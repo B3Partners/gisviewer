@@ -19,10 +19,10 @@ B3PGissuite.defineComponent('LegendComponent', {
     },
     init: function() {
         this.component = jQuery('<form></form>').attr({ 'id': this.options.formId });
-        
+
         this.orderContainer = jQuery('<div></div>').attr({ 'id': this.options.orderboxId, 'class': this.options.orderboxId + ' tabvak_groot' });
         this.component.append(this.orderContainer);
-        
+
         var slider = jQuery('<div></div>').attr({
             'id': this.options.sliderBoxId
         }).css({
@@ -51,7 +51,7 @@ B3PGissuite.defineComponent('LegendComponent', {
         }));
         slider.append(jQuery('<div></div>').css({ 'clear': 'both' }));
         this.component.append(slider);
-        
+
         if(this.options.useSortableFunction) {
             this.component.append(jQuery('<p></p>').text('Bepaal de volgorde waarin de kaartlagen getoond worden'));
             var knoppenContainer = jQuery('<div></div>');

@@ -254,7 +254,14 @@ function createSearchConfigurations(){
 
 // Roept dmv ajax een java functie aan die de coordinaten zoekt met de ingevulde zoekwaarden.
 function performSearch() {
-    var zoekConfig = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
+    var zoekConfig;
+
+    var arr = B3PGissuite.config.zoekConfigIds.split(",");
+    if (arr !== null && arr.length === 1) {
+        currentSearchSelectId = 0;
+    }
+
+    zoekConfig = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
     var zoekVelden=zoekConfig.zoekVelden;
     var bron = zoekConfig.bron.url;
     var searchOp = "%";
@@ -703,11 +710,14 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             performSearch();
         }));
 
-        container.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
-            B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
-            
-            searchConfigurationsSelectChanged(inputSearchDropdown);
-        }));  
+        var arr = B3PGissuite.config.zoekConfigIds.split(",");
+        if (arr !== null && arr.length > 1) {
+            container.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
+                B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
+                
+                searchConfigurationsSelectChanged(inputSearchDropdown);
+            }));
+        } 
         
         if (!search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "") {
             container.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {

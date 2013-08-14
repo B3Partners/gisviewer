@@ -329,12 +329,16 @@ function iFramePopup(url, newpopup, title, width, height, blockviewer, showScrol
     showdiv.dialog('open');
 
     if (ieVersion != -1 && ieVersion <= 7) {
-        showdiv.find('iframe').load(function (){
+        showdiv.find('iframe').load(function () {
             $j(this).width((width-30) + 'px');
             $j(this).height((height-30) + 'px');
 
             $j(this).css('height', (height-50) + 'px');
             $j(this).css('width', (width-40) + 'px');
+
+            setTimeout(function() {
+                showdiv.dialog("option", "height", height);
+            }, 0);
         });
     }
     

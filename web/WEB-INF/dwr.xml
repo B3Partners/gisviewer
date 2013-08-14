@@ -27,20 +27,26 @@
         </create>
         
         <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaat"/>
-        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaatAttribuut"/>
-        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>
+        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaatAttribuut"/>  
+        
+        
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>     
+        
+        <!--               
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>   
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekAttribuut"/>
-        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>
-
+        -->
+        
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron">
+            <param name="exclude" value="gebruikersnaam, wachtwoord"/>
+        </convert>
+        
         <convert converter="bean" match="nl.b3p.gis.viewer.admindata.GegevensBronBean"/>
         <convert converter="bean" match="nl.b3p.gis.viewer.admindata.LabelBean"/>
         <convert converter="bean" match="nl.b3p.gis.viewer.admindata.RecordBean"/>
         <convert converter="bean" match="nl.b3p.gis.viewer.admindata.RecordValueBean"/>
         <convert converter="bean" match="nl.b3p.gis.viewer.admindata.RecordChildBean"/>
-
-        <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron">
-            <param name="exclude" value="gebruikersnaam, wachtwoord"/>
-        </convert>
+                
         <convert match="java.lang.Exception" converter="exception">
             <param name='include' value='message,lineNumber'/>
         </convert>

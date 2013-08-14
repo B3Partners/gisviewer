@@ -43,8 +43,10 @@
         'bbox': '${extent}',
         /* Applicatie extent */
         'appExtent': catchEmpty("${configMap["extent"]}", "12000,304000,280000,620000"),
+        'fullExtent': catchEmpty("${configMap["fullextent"]}", ""),
         // Resolution
         'resolution': catchEmpty(${resolution}),
+        'tilingResolutions': catchEmpty("${configMap["tilingResolutions"]}", ""),
         /* init search */
         'searchConfigId': '${searchConfigId}',
         'search': '${search}',
@@ -142,10 +144,10 @@
         'bookmarkAppcode': catchEmpty("${bookmarkAppcode}", ""),
         'tekstBlokken': catchEmpty(${tekstBlokken}, []),
         'datasetDownload': catchEmpty(${configMap["datasetDownload"]}, false),
-        'tilingResolutions': catchEmpty("${configMap["tilingResolutions"]}", ""),
         'showServiceUrl': catchEmpty(${configMap["showServiceUrl"]}, false),
         'startLocationX': catchEmpty("${startLocationX}", ""),
-        'startLocationY': catchEmpty("${startLocationY}", "")
+        'startLocationY': catchEmpty("${startLocationY}", ""),
+        'cfgActiveTab': catchEmpty("${configMap["activeTab"]}", "themas")
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */

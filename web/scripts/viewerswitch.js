@@ -70,7 +70,7 @@
             changeViewertype($(this).attr('id'));
             return false;
         });
-        viewerswitch.insertBefore('.tegels');
+        viewerswitch.insertBefore('.tegels, .viewerswitch');
         changeViewertype(cookievalue);
     });
 }(jQuery));

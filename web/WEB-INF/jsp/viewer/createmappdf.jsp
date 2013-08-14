@@ -128,7 +128,7 @@
 
             <tr>
                 <td>Schaal</td>
-                <td><b>1 : <html:text property="scale"/> cm</b></td>
+                <td><b>1 : <html:text property="scale"/></b></td>
             </tr>
 
             <tr>

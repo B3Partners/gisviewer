@@ -2858,24 +2858,8 @@ function reloadRedliningLayer(a, b, c) {
     B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + "GROEPNAAM=" + B3PGissuite.config.organizationcode + "&PROJECTNAAM=" + b
   }
   c && removeAllFeatures();
-  B3PGissuite.get("TreeComponent") !== null && (deActivateCheckbox(a), activateCheckbox(a))
-}
-function addLayerToEnabledLayerItems(a) {
-  for(var b = null, c = 0;c < B3PGissuite.vars.enabledLayerItems.length;c++) {
-    if(B3PGissuite.vars.enabledLayerItems[c].id == a.id) {
-      b = B3PGissuite.vars.enabledLayerItems[c];
-      break
-    }
-  }
-  b == null && B3PGissuite.vars.enabledLayerItems.push(a)
-}
-function removeLayerFromEnabledLayerItems(a) {
-  for(var b = 0;b < B3PGissuite.vars.enabledLayerItems.length;b++) {
-    if(B3PGissuite.vars.enabledLayerItems[b].id == a) {
-      return a = B3PGissuite.vars.enabledLayerItems[b], B3PGissuite.vars.enabledLayerItems.splice(b, 1), a
-    }
-  }
-  return null
+  b = B3PGissuite.get("TreeComponent");
+  b !== null && (b.deActivateCheckbox(a), b.activateCheckbox(a))
 }
 function checkScaleForLayers() {
   var a;
@@ -4071,6 +4055,10 @@ $j(document).ready(function() {
     B3PGissuite.config.enabledtabsLeft[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabsLeft[c] === "zoeken" && (b = true)
   }
   (b || a) && createSearchConfigurations();
+  window.setTimeout(function() {
+    var a = B3PGissuite.config.useCookies ? readCookie("activetab") : null;
+    a !== null ? switchTab(a) : switchTab("themas")
+  }, 250);
   a = false;
   document.getElementById("popupWindow") && (a = true);
   try {
@@ -24663,7 +24651,7 @@ B3PGissuite.defineComponent("IframeComponent", {extend:"ViewerComponent", defaul
   }
 }});
 // Input 17
-B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultOptions:{treeid:"layermaindiv", tree:[], servicetrees:[], icons:{collapsed:"/gisviewer/images/treeview/plus.gif", expanded:"/gisviewer/images/treeview/minus.gif", leaf:"/gisviewer/images/treeview/leaft.gif"}, expandAll:false}, constructor:function(a) {
+B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultOptions:{treeid:"layermaindiv", tree:[], servicetrees:[], icons:{collapsed:"/gisviewer/images/treeview/plus.gif", expanded:"/gisviewer/images/treeview/minus.gif", leaf:"/gisviewer/images/treeview/leaft.gif"}, expandAll:false}, activeAnalyseThemaId:"", activeClusterId:"", constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
@@ -24715,13 +24703,13 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
   }
   return B3PGissuite.vars.activeAnalyseThemaId
 }, addItemAsLayer:function(a) {
-  addLayerToEnabledLayerItems(a);
+  this.addLayerToEnabledLayerItems(a);
   syncLayerCookieAndForm();
   if(a.wmslayers && (a = a.organizationcodekey, B3PGissuite.config.organizationcode != void 0 && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != "" && a != void 0 && a != "" && B3PGissuite.vars.layerUrl.indexOf(a) <= 0)) {
     B3PGissuite.vars.layerUrl += B3PGissuite.vars.layerUrl.indexOf("?") > 0 ? "&" : "?", B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + a + "=" + B3PGissuite.config.organizationcode
   }
 }, removeItemAsLayer:function(a) {
-  removeLayerFromEnabledLayerItems(a.id) !== null && syncLayerCookieAndForm()
+  this.removeLayerFromEnabledLayerItems(a.id) !== null && syncLayerCookieAndForm()
 }, refreshLayerWithDelay:function() {
   showLoading();
   B3PGissuite.vars.refresh_timeout_handle && (clearTimeout(B3PGissuite.vars.refresh_timeout_handle), hideLoading());
@@ -25149,6 +25137,21 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
     document.getElementById(b).checked = true;
     this.enableParentClusters(a)
   }
+}, addLayerToEnabledLayerItems:function(a) {
+  for(var b = null, c = 0;c < B3PGissuite.vars.enabledLayerItems.length;c++) {
+    if(B3PGissuite.vars.enabledLayerItems[c].id == a.id) {
+      b = B3PGissuite.vars.enabledLayerItems[c];
+      break
+    }
+  }
+  b == null && B3PGissuite.vars.enabledLayerItems.push(a)
+}, removeLayerFromEnabledLayerItems:function(a) {
+  for(var b = 0;b < B3PGissuite.vars.enabledLayerItems.length;b++) {
+    if(B3PGissuite.vars.enabledLayerItems[b].id == a) {
+      return a = B3PGissuite.vars.enabledLayerItems[b], B3PGissuite.vars.enabledLayerItems.splice(b, 1), a
+    }
+  }
+  return null
 }});
 // Input 18
 B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaultOptions:{formid:"volgordeForm", orderboxId:"orderLayerBox", sliderBoxId:"transSlider", sliderId:"slider", useSortableFunction:true, layerDelay:5E3, taboptions:{resizableContent:true}}, reloadTimer:null, orderContainer:null, constructor:function(a) {

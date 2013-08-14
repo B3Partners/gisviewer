@@ -978,34 +978,9 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
      * iets dergelijks kan doen */
     var treeComponent = B3PGissuite.get('TreeComponent');
     if(treeComponent !== null) {
-        deActivateCheckbox(themaId);
-        activateCheckbox(themaId);
+        treeComponent.deActivateCheckbox(themaId);
+        treeComponent.activateCheckbox(themaId);
     }
-}
-
-/* als order niet aangepast mag worden dan moet hier een sort komen */
-function addLayerToEnabledLayerItems(theItem){
-    var foundLayerItem = null;
-    for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++){
-        if (B3PGissuite.vars.enabledLayerItems[i].id==theItem.id){
-            foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
-            break;
-        }
-    }
-    if (foundLayerItem == null) {
-        B3PGissuite.vars.enabledLayerItems.push(theItem);
-    }
-}
-
-function removeLayerFromEnabledLayerItems(itemId){
-    for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++){
-        if (B3PGissuite.vars.enabledLayerItems[i].id==itemId){
-            var foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
-            B3PGissuite.vars.enabledLayerItems.splice(i,1);
-            return foundLayerItem;
-        }
-    }
-    return null;
 }
 
 /*Check scale for all layers*/
@@ -3911,16 +3886,6 @@ $j(document).ready(function() {
     var vergunningTabOn = false;
     var zoekenTabOn = false;
 
-    // Set active tabs
-    var activeTab = (B3PGissuite.config.useCookies ? readCookie('activetab') : null);
-    if(activeTab !== null) {
-        switchTab(activeTab);
-    } else if (B3PGissuite.config.user.demogebruiker) {
-        switchTab('themas'); // read default tab from config ?
-    } else {
-        switchTab('themas'); // read default tab from config ?
-    }
-
     for (var i=0; i < B3PGissuite.config.enabledtabs.length; i++) {
         if (B3PGissuite.config.enabledtabs[i] === "vergunningen") vergunningTabOn = true;
         if (B3PGissuite.config.enabledtabs[i] === "zoeken") zoekenTabOn = true;
@@ -3933,6 +3898,19 @@ $j(document).ready(function() {
     if (zoekenTabOn || vergunningTabOn) {
         createSearchConfigurations();
     }
+
+    // Timeout so we are sure that all CSS transitions are complete
+    window.setTimeout(function() {
+        // Set active tabs
+        var activeTab = (B3PGissuite.config.useCookies ? readCookie('activetab') : null);
+        if(activeTab !== null) {
+            switchTab(activeTab);
+        } else if (B3PGissuite.config.user.demogebruiker) {
+            switchTab('themas'); // read default tab from config ?
+        } else {
+            switchTab('themas'); // read default tab from config ?
+        }
+    }, 250);
 
     var pwCreated = false;
     if(document.getElementById('popupWindow')) {

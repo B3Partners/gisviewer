@@ -11,6 +11,11 @@ B3PGissuite.defineComponent('TreeComponent', {
         },
         expandAll: false
     },
+    /**
+     * Actieve laag en actief cluster
+     */
+    activeAnalyseThemaId: '',
+    activeClusterId: '',
     constructor: function TreeComponent(options) {
         this.callParent(options);
         this.init();
@@ -159,7 +164,7 @@ B3PGissuite.defineComponent('TreeComponent', {
     },
 
     addItemAsLayer: function(theItem){
-        addLayerToEnabledLayerItems(theItem);
+        this.addLayerToEnabledLayerItems(theItem);
         syncLayerCookieAndForm();
         
         //If there is a orgainization code key then add this to the service url.
@@ -179,7 +184,7 @@ B3PGissuite.defineComponent('TreeComponent', {
     },
 
     removeItemAsLayer: function(theItem){
-        if (removeLayerFromEnabledLayerItems(theItem.id) !== null) {
+        if (this.removeLayerFromEnabledLayerItems(theItem.id) !== null) {
             syncLayerCookieAndForm();
             return;
         }
@@ -1171,6 +1176,31 @@ B3PGissuite.defineComponent('TreeComponent', {
         checkbox.checked = true;
 
         this.enableParentClusters(parentDiv);
+    },
+            
+    /* als order niet aangepast mag worden dan moet hier een sort komen */
+    addLayerToEnabledLayerItems: function(theItem){
+        var foundLayerItem = null;
+        for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++){
+            if (B3PGissuite.vars.enabledLayerItems[i].id==theItem.id){
+                foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
+                break;
+            }
+        }
+        if (foundLayerItem == null) {
+            B3PGissuite.vars.enabledLayerItems.push(theItem);
+        }
+    },
+
+    removeLayerFromEnabledLayerItems: function(itemId){
+        for (var i=0; i < B3PGissuite.vars.enabledLayerItems.length; i++){
+            if (B3PGissuite.vars.enabledLayerItems[i].id==itemId){
+                var foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
+                B3PGissuite.vars.enabledLayerItems.splice(i,1);
+                return foundLayerItem;
+            }
+        }
+        return null;
     }
 
 });

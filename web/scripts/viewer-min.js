@@ -2549,20 +2549,33 @@ function getMaxBounds() {
   d < b / c ? (b /= d, a.bottom -= (b - c) / 2, a.top = a.bottom + b) : (c *= d, a.left -= (c - b) / 2, a.right = a.left + c);
   return a
 }
+function getNLTilingRes() {
+  return"512,256,128,64,32,16,8,4,2,1,0.5,0.125"
+}
+function convertStringToArray(a) {
+  var b = [], c = [], a = a.trim();
+  if((b = a.indexOf(",") !== -1 ? a.split(",") : a.split(" ")) && b.length > 0) {
+    var c = [], d;
+    for(d in b) {
+      b[d] = parseFloat(b[d]), c[d] = b[d]
+    }
+  }
+  return c
+}
 function getTilingResolutions(a, b) {
   var c = a.right - a.left, d;
   if(B3PGissuite.config.tilingResolutions) {
     var e = B3PGissuite.config.tilingResolutions;
-    if((e = e.indexOf(",") != -1 ? e.split(",") : e.split(" ")) && e.length > 0) {
+    if((e = e.indexOf(",") !== -1 ? e.split(",") : e.split(" ")) && e.length > 0) {
       d = [];
       for(var f in e) {
         e[f] = parseFloat(e[f]), d[f] = e[f]
       }
     }
   }else {
-    B3PGissuite.config.tilingResolutions = "680,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125", d = [680, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25, 0.125]
+    B3PGissuite.config.tilingResolutions = getNLTilingRes(), d = convertStringToArray(B3PGissuite.config.tilingResolutions)
   }
-  if(B3PGissuite.config.tilingResolutions) {
+  if(B3PGissuite.config.tilingResolutions && !B3PGissuite.config.fullExtent) {
     f = $j("#mapcontent").width();
     c = c / f * (72 / 0.0254) / 1E3;
     f = [];
@@ -2677,7 +2690,10 @@ function doInitSearch() {
 }
 function handleInitSearch(a) {
   hideLoading();
-  a.length > 0 && handleInitSearchResult(a[0], B3PGissuite.config.searchAction, B3PGissuite.config.searchId, B3PGissuite.config.searchClusterId, B3PGissuite.config.searchSldVisibleValue)
+  a.length > 0 ? handleInitSearchResult(a[0], B3PGissuite.config.searchAction, B3PGissuite.config.searchId, B3PGissuite.config.searchClusterId, B3PGissuite.config.searchSldVisibleValue) : JZoekconfiguratieThemaUtil.getThemas(B3PGissuite.config.searchConfigId, function(a) {
+    zoekconfiguratieThemasCallBack(a);
+    switchLayersOn()
+  })
 }
 function handleInitSearchResult(a, b, c, d, e) {
   var f = true, g = b = false;
@@ -3018,8 +3034,11 @@ function addLayerToViewer(a, b, c) {
     d.SRS = c.tileSrs;
     d.BBOX = c.tileBoundingBox;
     d.background = c.background;
-    var e = getMaxBounds(), e = getTilingResolutions(e, false);
-    B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions && (d.serverResolutions = e);
+    var e = getMaxBounds(), e = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.config.tilingResolutions : c.resolutions ? c.resolutions : getTilingResolutions(e, false);
+    B3PGissuite.config.tilingResolutions = e;
+    if(B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions) {
+      e = e.replace(/\,/g, " "), d.serverResolutions = e
+    }
     d.RESOLUTIONS = e;
     d.TILEHEIGHT = c.tileHeight;
     d.TILEWIDTH = c.tileWidth;
@@ -3348,13 +3367,14 @@ function onFrameworkLoaded() {
   if(!B3PGissuite.vars.frameWorkInitialized) {
     var a = B3PGissuite.get("TreeComponent");
     a !== null && (a.clickClusters(), B3PGissuite.vars.layersAan.sort(layerBoxSort), a.clickLayers());
+    initFullExtent();
     setStartExtent();
     a !== null && a.doRefreshLayer()
   }
   B3PGissuite.vars.frameWorkInitialized = true;
   B3PGissuite.vars.mapInitialized = true;
   B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
-  B3PGissuite.vars.webMapController instanceof FlamingoController && (a = getMaxBounds(), a = getTilingResolutions(a, false), B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(a), B3PGissuite.vars.webMapController.activateTool("toolPan"));
+  B3PGissuite.vars.webMapController instanceof FlamingoController && (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions != "" && B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(B3PGissuite.config.tilingResolutions), B3PGissuite.vars.webMapController.activateTool("toolPan"));
   updateSizeOL();
   doInitSearch();
   placeStartLocationMarker()
@@ -3367,7 +3387,7 @@ function placeStartLocationMarker() {
 }
 function initFullExtent() {
   if(B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
-    B3PGissuite.config.appExtent != null && B3PGissuite.config.appExtent.length > 0 && B3PGissuite.config.appExtent.split(",").length == 4 ? setFullExtent(B3PGissuite.config.appExtent.split(",")[0], B3PGissuite.config.appExtent.split(",")[1], B3PGissuite.config.appExtent.split(",")[2], B3PGissuite.config.appExtent.split(",")[3]) : setFullExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3])
+    B3PGissuite.config.fullExtent != null && B3PGissuite.config.fullExtent.length > 0 && B3PGissuite.config.fullExtent.split(",").length == 4 ? setFullExtent(B3PGissuite.config.fullExtent.split(",")[0], B3PGissuite.config.fullExtent.split(",")[1], B3PGissuite.config.fullExtent.split(",")[2], B3PGissuite.config.fullExtent.split(",")[3]) : setFullExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3])
   }else {
     if(B3PGissuite.config.fullbbox != null && B3PGissuite.config.fullbbox.length > 0 && B3PGissuite.config.fullbbox.split(",").length == 4) {
       setFullExtent(B3PGissuite.config.fullbbox.split(",")[0], B3PGissuite.config.fullbbox.split(",")[1], B3PGissuite.config.fullbbox.split(",")[2], B3PGissuite.config.fullbbox.split(",")[3])
@@ -3380,7 +3400,6 @@ function initFullExtent() {
   }
 }
 function setStartExtent() {
-  initFullExtent();
   if(!(B3PGissuite.config.searchConfigId != null && B3PGissuite.config.searchConfigId > 0)) {
     if(B3PGissuite.vars.searchExtent != null) {
       B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(B3PGissuite.vars.searchExtent)
@@ -3580,7 +3599,11 @@ function buildTilingServiceUrl(a) {
 }
 function getWktActiveFeature(a) {
   a = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(a);
-  return a == null ? (handler("Er is nog geen tekenobject op het scherm."), null) : a.getWkt()
+  if(B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+    var b = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getAllFeatures();
+    b && b.length == 1 && (a = b[0])
+  }
+  return a == null ? (messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "error"), null) : a.getWkt()
 }
 function getWktForDownload() {
   var a = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
@@ -3600,7 +3623,7 @@ function b_buffer() {
   B3PGissuite.vars.multiPolygonBufferWkt = null;
   if(a != null) {
     var b = prompt("Geef de bufferafstand in meters", "100"), c = 0;
-    b == "" || b == "undefined" || b == null || (isNaN(b) ? handler("Geen getal") : (c = b = b.replace(",", "."), c == 0 ? handler("Buffer mag niet 0 zijn") : EditUtil.buffer(a, c, returnBuffer)))
+    b == "" || b == "undefined" || b == null || (isNaN(b) ? messagePopup("Melding", "Geen getal.", "error") : (c = b = b.replace(",", "."), c == 0 ? messagePopup("Melding", "Buffer mag niet 0 zijn.", "error") : EditUtil.buffer(a, c, returnBuffer)))
   }
 }
 function b_print() {
@@ -3788,7 +3811,7 @@ function popUp(a, b, c, d, e) {
   if(h) {
     B3PGissuite.vars.popupCreated || initPopup(), document.getElementById("dataframedivpopup").src = a, document.getElementById("popupWindow_Title").innerHTML = "Gisviewer Informatie", $j("#popupWindow").width(c), $j("#popupWindow").height(d), $j("#popupWindow").show(), ieVersion <= 6 && ieVersion != -1 && fixPopup()
   }else {
-    return properties = "toolbar = 0, scrollbars = 1, location = 0, statusbar = 1, menubar = 0, resizable = 1, width = " + f + ", height = " + g + ", top = " + j + ", left = " + e, eval("page" + b + " = window.open('" + a + "', '" + b + "', properties);")
+    return properties = "toolbar = 0, scrollbars = 1, location = 0, statusbar = 1, menubar = 0, resizable = 0, width = " + f + ", height = " + g + ", top = " + j + ", left = " + e, window.open(a, b, properties)
   }
   return null
 }
@@ -4054,10 +4077,12 @@ $j(document).ready(function() {
   for(c = 0;c < B3PGissuite.config.enabledtabsLeft.length;c++) {
     B3PGissuite.config.enabledtabsLeft[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabsLeft[c] === "zoeken" && (b = true)
   }
-  (b || a) && createSearchConfigurations();
+  if(b || a) {
+    b = B3PGissuite.config.zoekConfigIds.split(","), a = $j("#searchInputFieldsContainer"), b !== null && b.length > 1 ? createSearchConfigurations() : b !== null && b.length === 1 && b[0] !== "" && (b = zoekconfiguraties[0], JZoekconfiguratieThemaUtil.getThemas(b.id, zoekconfiguratieThemasCallBack), fillSearchDiv(a, b.zoekVelden, null))
+  }
   window.setTimeout(function() {
     var a = B3PGissuite.config.useCookies ? readCookie("activetab") : null;
-    a !== null ? switchTab(a) : switchTab("themas")
+    a !== null ? switchTab(a) : B3PGissuite.config.user.demogebruiker ? switchTab("themas") : switchTab(B3PGissuite.config.cfgActiveTab)
   }, 250);
   a = false;
   document.getElementById("popupWindow") && (a = true);
@@ -4192,9 +4217,13 @@ function createSearchConfigurations() {
   inputSearchDropdown = b
 }
 function performSearch() {
-  var a = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId], b = a.zoekVelden, c = "%";
+  var a, b = B3PGissuite.config.zoekConfigIds.split(",");
+  b !== null && b.length === 1 && (currentSearchSelectId = 0);
+  a = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
+  var b = a.zoekVelden, c = "%";
   a.bron.url.indexOf("http") != -1 && (c = "*");
-  for(var a = [], d = 0;d < b.length;d++) {
+  a = [];
+  for(var d = 0;d < b.length;d++) {
     var e = $j("#" + b[d].attribuutnaam).val();
     if(e == "") {
       a[d] = ""
@@ -4436,7 +4465,7 @@ function fillSearchDiv(a, b, c) {
   }
   b.length > 0 && (a.append($j('<input type="button" />').attr("value", " Zoek ").attr("id", "searchButton").addClass("knop").click(function() {
     performSearch()
-  })), a.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
+  })), b = B3PGissuite.config.zoekConfigIds.split(","), b !== null && b.length > 1 && a.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
     B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
     searchConfigurationsSelectChanged(inputSearchDropdown)
   })), !search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "" && a.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
@@ -23405,6 +23434,9 @@ FlamingoMap.prototype.setTilingResolutions = function(a) {
   a = a.trim();
   a.indexOf(",") == -1 && (a = replaceAll(a, " ", ","));
   this.getFrameworkMap().callMethod(this.getId(), "setResolutionsByString", a)
+};
+FlamingoMap.prototype.getTilingResolutions = function() {
+  return this.getFrameworkMap().callMethod(this.getId(), "getResolutions")
 };
 FlamingoMap.prototype.updateSize = function() {
 };

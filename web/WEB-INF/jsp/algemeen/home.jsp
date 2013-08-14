@@ -30,7 +30,7 @@
 
 <tiles:insert definition="actionMessages"/>
 
-<div class="tegels"></div>
+<div class="viewerswitch"></div>
 
 <!-- Loop door tekstblokken heen -->
 <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">

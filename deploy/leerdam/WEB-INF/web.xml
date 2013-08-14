@@ -33,11 +33,11 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://gis.gouda.nl/kaartenbalie/services/</param-value>
+            <param-value>http://leerdam.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
 		<init-param>
             <param-name>internalKbUrl</param-name>
-            <param-value>http://gis.gouda.nl/kaartenbalie/services/</param-value>
+            <param-value></param-value>
         </init-param>
         <init-param>
             <param-name>anonymous_user</param-name>
@@ -75,26 +75,6 @@
         <servlet-name>Data2CSV</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.Data2CSV</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>CreateMapPDF</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.services.CreateMapPDF</servlet-class>
-        <init-param>
-            <param-name>addFooter</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>logoPath</param-name>
-            <param-value>/images/barneveld/bg_top_bv.gif</param-value>
-        </init-param>
-        <init-param>
-            <param-name>extraImagePath</param-name>
-            <param-value>/images/barneveld/noordpijl.png</param-value>
-        </init-param>
-        <init-param>
-            <param-name>disclaimer</param-name>
-            <param-value>- Aan deze afdruk kunnen geen rechten worden ontleend -</param-value>
-        </init-param>
-    </servlet>
 	 <servlet>
         <servlet-name>PrintServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>        
@@ -125,7 +105,7 @@
 	<servlet>
         <servlet-name>SearchAutocomplete</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.SearchAutocomplete</servlet-class>
-    </servlet>      
+    </servlet>
 	
 	<servlet>
         <servlet-name>DispatcherServlet</servlet-name>
@@ -150,54 +130,22 @@
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
         <init-param>
             <param-name>downloadPath</param-name>
-            <param-value>/srv/downloads/</param-value>
+            <param-value>/srv/downloads/leerdam.kaartenbalie.nl/</param-value>
         </init-param>
         <init-param>
             <param-name>smtpHost</param-name>
-            <param-value>smtp.gouda.nl</param-value>
+            <param-value>kmail.b3partners.nl</param-value>
         </init-param>
         <init-param>
             <param-name>contactEmail</param-name>
-            <param-value>gis@gouda.nl</param-value>
+            <param-value>geo@leerdam.nl</param-value>
         </init-param>
 		<init-param>
             <param-name>emailSuffix</param-name>
-            <param-value>@gouda.nl</param-value>
+            <param-value>@leerdam.nl</param-value>
         </init-param>
         <load-on-startup>6</load-on-startup>
     </servlet>
-	
-	<servlet>
-        <description>fetches document in background to hide actual location of document</description>
-        <servlet-name>DocFetcher</servlet-name>
-        <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
-        <init-param>
-            <param-name>locationPrefix</param-name>
-            <param-value>/mnt/ggdata/stroomlijn/data/raster/360</param-value>
-        </init-param>
-        <init-param>
-            <param-name>directoryKeepDepth</param-name>
-            <param-value>1</param-value>
-        </init-param>
-        <init-param>
-            <param-name>fetchMethod</param-name>
-            <param-value>FILE</param-value>
-        </init-param>
-    </servlet>
-
-	<servlet>
-        <servlet-name>GetBlobServlet</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
-    </servlet>
-    
-    <servlet-mapping>
-        <servlet-name>DocFetcher</servlet-name>
-        <url-pattern>/services/DocFetcher</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GetBlobServlet</servlet-name>
-        <url-pattern>/services/GetBlobServlet</url-pattern>
-    </servlet-mapping>
 	
 	<servlet-mapping>
         <servlet-name>SearchAutocomplete</servlet-name>
@@ -243,10 +191,6 @@
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CreateMapPDF</servlet-name>
-        <url-pattern>/services/CreateMapPDF</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

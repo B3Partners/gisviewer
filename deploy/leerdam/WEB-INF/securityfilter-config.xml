@@ -13,7 +13,6 @@
             <url-pattern>/indexlist.do</url-pattern>
             <url-pattern>/services/PrintServlet</url-pattern>
             <url-pattern>/services/createUserSld</url-pattern>
-			<url-pattern>/services/DocFetcher/*</url-pattern>
         </web-resource-collection>
     </security-constraint>
 
@@ -42,8 +41,8 @@
       <cookie-auth-token-config>
           <set-cookies>true</set-cookies>
           <accept-cookie>false</accept-cookie>
-            <secret-key>B6A12237C219361832B8CC3ABF426905</secret-key>
-            <extra-hash-string>AQGgP3nKvuHjHQh0l6dT</extra-hash-string>
+            <secret-key>15EF4E96357FED917D520A4DC0A0801E</secret-key>
+            <extra-hash-string>mdJoQDReyksaZcGk</extra-hash-string>
           <cookie-paths>/kaartenbalie</cookie-paths>
           <cookie-expire>28800</cookie-expire>
       </cookie-auth-token-config>

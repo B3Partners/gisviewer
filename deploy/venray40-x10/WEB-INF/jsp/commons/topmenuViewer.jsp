@@ -24,45 +24,39 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 
 <div id="topmenu">
+    <a href="mailto:geo@venray.nl" class="menulink">
+        <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
+    </a>
+
+    <a href="#" onclick="getBookMark();" class="menulink">
+        <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
+    </a>
     
     <c:set var="requestURI" value="${fn:split(requestScope['javax.servlet.forward.request_uri'], '/')}" />
     <c:set var="requestJSP" value="${requestURI[fn:length(requestURI) - 1]}" />
     <c:set var="kaartid" value="${param['id']}"/>
-    <c:set var="appCode" value="${param['appCode']}"/>
-    
+	<c:set var="appCode" value="${param['appCode']}"/>
+
+    <c:set var="stijlklasse" value="menulink" />
+    <c:if test="${requestJSP eq 'help.do'}">
+        <c:set var="stijlklasse" value="activemenulink" />
+    </c:if>
+        
+    <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
+        <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
+    </html:link>
+
+    <c:set var="stijlklasse" value="menulink" />
+    <c:if test="${requestJSP eq 'viewer.do'}">
+        <c:set var="stijlklasse" value="activemenulink" />
+    </c:if>
+    <html:link page="/viewer.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
+
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
     <html:link page="/indexlist.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
-    
-    <c:set var="stijlklasse" value="menulink" />
-    <c:if test="${requestJSP eq 'help.do'}">
-        <c:set var="stijlklasse" value="activemenulink" />
-    </c:if>
-    <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
-        <fmt:message key="commons.topmenu.help"/>
-    </html:link>
-    
-    <a href="#" onclick="getBookMark();" class="menulink">
-        <fmt:message key="commons.topmenuviewer.bookmark"/>
-    </a>
-
-    <a href="mailto:helpdesk@lelystad.nl" class="menulink">
-        <fmt:message key="commons.topmenu.contact"/>
-    </a>
-        
 </div>
 
-<!--[if lte IE 8]>
-<script type="text/javascript">
-    // Give menu nice colors
-    (function() {
-        var counter = 1;
-        $j('#topmenu').find('a').each(function() {
-            $j(this).addClass('menuitem' + counter++);
-            if(counter === 6) counter = 1;
-        });
-    })();
-</script>
-<![endif]-->
+

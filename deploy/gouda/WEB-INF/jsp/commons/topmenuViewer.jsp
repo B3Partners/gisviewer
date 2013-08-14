@@ -43,12 +43,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
         <fmt:message key="commons.topmenu.help"/>
     </html:link>
+
+    <a href="#" onclick="getLatLonForGoogleMaps();" class="menulink">
+        <fmt:message key="commons.topmenuviewer.googlemaps"/>
+    </a>
     
     <a href="#" onclick="getBookMark();" class="menulink">
         <fmt:message key="commons.topmenuviewer.bookmark"/>
     </a>
 
-    <a href="mailto:helpdesk@lelystad.nl" class="menulink">
+    <a href="mailto:jeroen.rijkse@gouda.nl" class="menulink">
         <fmt:message key="commons.topmenu.contact"/>
     </a>
         

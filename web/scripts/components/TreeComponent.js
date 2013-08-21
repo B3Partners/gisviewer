@@ -12,6 +12,11 @@ B3PGissuite.defineComponent('TreeComponent', {
         expandAll: false
     },
     /**
+     * Temporary list for init.
+     */
+    layersAan: [],
+    clustersAan: [],
+    /**
      * Actieve laag en actief cluster
      */
     activeAnalyseThemaId: '',
@@ -70,14 +75,33 @@ B3PGissuite.defineComponent('TreeComponent', {
             "scope": this
         });
     },
-
+    /**
+     * Sort the layersAan variable
+     */
+    sortLayersAan: function() {
+        this.layersAan.sort(function(a, b) {
+            return a.theItem.order - b.theItem.order;
+        });
+    },
+    /**
+     * Get clustersAan
+     */
+    getClustersAan: function() {
+        return this.clustersAan;
+    },
+    /**
+     * Get activeAnalyseThemaId
+     */
+    getActiveAnalyseThemaId: function() {
+        return this.activeAnalyseThemaId;
+    },
     /**
      * layers bij opstart sorteren op order(belangnr+alfabet)
      * als order niet aangepast mag worden, dan kan dit weg
      */
     clickLayers: function() {
-        for (var m=B3PGissuite.vars.layersAan.length-1; m >=0 ; m--){
-            this.checkboxClick(B3PGissuite.vars.layersAan[m],true);
+        for (var m=this.layersAan.length-1; m >=0 ; m--){
+            this.checkboxClick(this.layersAan[m],true);
         }
     },
 
@@ -87,11 +111,10 @@ B3PGissuite.defineComponent('TreeComponent', {
      * so added last
      */
     clickClusters: function() {
-        for (var i=B3PGissuite.vars.clustersAan.length-1; i >=0 ; i--){
-            this.clusterCheckboxClick(B3PGissuite.vars.clustersAan[i], true);
+        for (var i=this.clustersAan.length-1; i >=0 ; i--){
+            this.clusterCheckboxClick(this.clustersAan[i], true);
         }
     },
-
     enableCheckBoxById: function(id) {
         var el=document.getElementById(id);
         if (el) {
@@ -126,13 +149,13 @@ B3PGissuite.defineComponent('TreeComponent', {
     */
     setActiveThema: function(id, label, overrule) {
         if (!(id && id!=null && label && label!=null && overrule)) {
-            return B3PGissuite.vars.activeAnalyseThemaId;
+            return this.activeAnalyseThemaId;
         }
 
-        if (((B3PGissuite.vars.activeAnalyseThemaId==null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) &&
-            (B3PGissuite.vars.activeClusterId==null || B3PGissuite.vars.activeClusterId.length==0)) || overrule){
+        if (((this.activeAnalyseThemaId==null || this.activeAnalyseThemaId.length == 0) &&
+            (this.activeClusterId==null || this.activeClusterId.length==0)) || overrule){
 
-            B3PGissuite.vars.activeAnalyseThemaId = id;
+            this.activeAnalyseThemaId = id;
 
             var atlabel = document.getElementById('actief_thema');
             if (atlabel && label && atlabel!=null && label!=null) {
@@ -160,7 +183,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                 })
             }
         }
-        return B3PGissuite.vars.activeAnalyseThemaId;
+        return this.activeAnalyseThemaId;
     },
 
     addItemAsLayer: function(theItem){
@@ -249,9 +272,9 @@ B3PGissuite.defineComponent('TreeComponent', {
      * @param obj The selected raio element.
     */
     radioClick: function(obj) {
-        var oldActiveThemaId = B3PGissuite.vars.activeAnalyseThemaId;
+        var oldActiveThemaId = this.activeAnalyseThemaId;
         if (obj && obj!=null && obj.theItem && obj.theItem!=null && obj.theItem.id && obj.theItem.title) {
-            B3PGissuite.vars.activeAnalyseThemaId = this.setActiveThema(obj.theItem.id, obj.theItem.title, true);
+            this.activeAnalyseThemaId = this.setActiveThema(obj.theItem.id, obj.theItem.title, true);
             this.activateCheckbox(obj.theItem.id);
             this.deActivateCheckbox(oldActiveThemaId);
 
@@ -413,9 +436,9 @@ B3PGissuite.defineComponent('TreeComponent', {
                 themaCheckbox.theItem = item;
                 if (checkboxChecked) {
                     if (layerPos < 0) {
-                        B3PGissuite.vars.layersAan.unshift(themaCheckbox);
+                        this.layersAan.unshift(themaCheckbox);
                     } else {
-                        B3PGissuite.vars.layersAan.push(themaCheckbox);
+                        this.layersAan.push(themaCheckbox);
                     }
                 }
                 if(item.analyse === "on" || item.analyse === "active") {
@@ -648,7 +671,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             this.setActiveThema(item.id, item.title, true);
         }
 
-        if (B3PGissuite.vars.activeAnalyseThemaId != item.id) {
+        if (this.activeAnalyseThemaId != item.id) {
             return false;
         }
         
@@ -1144,12 +1167,12 @@ B3PGissuite.defineComponent('TreeComponent', {
      * @param overrule When true overrule the current active item.
     */
     setActiveCluster: function(item, overrule){
-        if(((B3PGissuite.vars.activeAnalyseThemaId==null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId==null || B3PGissuite.vars.activeClusterId.length==0)) || overrule){
+        if(((this.activeAnalyseThemaId==null || this.activeAnalyseThemaId.length == 0) && (this.activeClusterId==null || this.activeClusterId.length==0)) || overrule){
             if(item != undefined & item != null) {
                 var activeClusterTitle = item.title;
                 var atlabel = document.getElementById('actief_thema');
                 if (atlabel && activeClusterTitle && atlabel!=null && activeClusterTitle!=null){
-                    B3PGissuite.vars.activeClusterId = item.id;
+                    this.activeClusterId = item.id;
                     atlabel.innerHTML = '' + activeClusterTitle;
                 }
                 if(item.metadatalink && item.metadatalink.length > 1){

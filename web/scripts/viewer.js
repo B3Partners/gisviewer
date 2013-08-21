@@ -17,16 +17,6 @@ B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl;
 B3PGissuite.vars.cookieArray = (B3PGissuite.config.useCookies ? readCookie('checkedLayers') : null);
 B3PGissuite.vars.cookieClusterArray = (B3PGissuite.config.useCookies ? readCookie('checkedClusters') : null);
 /**
- * Actieve laag en actief cluster
- */
-B3PGissuite.vars.activeAnalyseThemaId = '';
-B3PGissuite.vars.activeClusterId = '';
-/**
- * Temporary list for init.
-*/
-B3PGissuite.vars.layersAan = [];
-B3PGissuite.vars.clustersAan = [];
-/**
  * The web map controller
  */
 B3PGissuite.vars.webMapController = null;
@@ -708,9 +698,10 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
     }
-    if (themaIds==undefined){
-        if (!B3PGissuite.config.multipleActiveThemas){
-            themaIds = B3PGissuite.vars.activeAnalyseThemaId;
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if (themaIds === undefined){
+        if (!B3PGissuite.config.multipleActiveThemas && treeComponent !== null) {
+            themaIds = treeComponent.getActiveAnalyseThemaId();
         } else {
             themaIds = getLayerIdsAsString(true);
         }
@@ -1665,16 +1656,22 @@ function loadObjectInfo(geom) {
     }
     if(!gebiedenTabActive) return;
     
+    var activeAnalyseThemaId = '';
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if (treeComponent !== null) {
+        activeAnalyseThemaId = treeComponent.getActiveAnalyseThemaId();
+    }
+    
     // vul object frame
     document.forms[0].admindata.value = '';
     document.forms[0].metadata.value = '';
     if (!B3PGissuite.config.multipleActiveThemas){
-        document.forms[0].themaid.value = B3PGissuite.vars.activeAnalyseThemaId;
+        document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
         document.forms[0].themaid.value = getLayerIdsAsString();
     }
 
-    document.forms[0].analysethemaid.value = B3PGissuite.vars.activeAnalyseThemaId;
+    document.forms[0].analysethemaid.value = activeAnalyseThemaId;
 
     document.forms[0].geom.value=geom;
     document.forms[0].scale.value ='';
@@ -2214,10 +2211,6 @@ function onIdentifyData(id,data){
     updateGetFeatureInfo(data);
 }
 
-function layerBoxSort(a, b) {
-    return a.theItem.order - b.theItem.order;
-}
-
 function onFrameworkLoaded(){    
     if (document.getElementById("treeForm") && (ieVersion <= 8 && ieVersion != -1)){
         document.getElementById("treeForm").reset();
@@ -2227,7 +2220,7 @@ function onFrameworkLoaded(){
         var treeComponent = B3PGissuite.get('TreeComponent');
         if(treeComponent !== null) {
             treeComponent.clickClusters();
-            B3PGissuite.vars.layersAan.sort(layerBoxSort);
+            treeComponent.sortLayersAan();
             treeComponent.clickLayers();
         }
         initFullExtent();
@@ -3224,14 +3217,17 @@ function createPermaLink(){
 
     /* kaartgroepen ophalen */
     var clusterIds = "";
-    if (B3PGissuite.vars.clustersAan != undefined && B3PGissuite.vars.clustersAan.length > 0){
-        clusterIds += "&clusterId=";
-
-        for (var i=0; i < B3PGissuite.vars.clustersAan.length; i++){
-            if (clusterIds.length > 0){
-                clusterIds+=",";
+    var treeComponent = B3PGissuite.get('TreeComponent');
+    if(treeComponent !== null) {
+        var clustersAan = treeComponent.getClustersAan();
+        if(clustersAan.length > 0) {
+            clusterIds += "&clusterId=";
+            for (var i=0; i < clustersAan.length; i++){
+                if (clusterIds.length > 0){
+                    clusterIds+=",";
+                }
+                clusterIds+=clustersAan[i].theItem.id.substring(1);
             }
-            clusterIds+=B3PGissuite.vars.clustersAan[i].theItem.id.substring(1);
         }
     }
 

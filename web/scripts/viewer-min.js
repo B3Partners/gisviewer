@@ -4071,7 +4071,9 @@ function addTempUploadedPointsWms() {
   B3PGissuite.vars.webMapController.getMap().addLayer(a)
 }
 $j(document).ready(function() {
-  for(var a = false, b = false, c = 0;c < B3PGissuite.config.enabledtabs.length;c++) {
+  var a = false, b = false, c = B3PGissuite.config.useCookies ? readCookie("activetab") : null;
+  c !== null ? switchTab(c) : switchTab("themas");
+  for(c = 0;c < B3PGissuite.config.enabledtabs.length;c++) {
     B3PGissuite.config.enabledtabs[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabs[c] === "zoeken" && (b = true)
   }
   for(c = 0;c < B3PGissuite.config.enabledtabsLeft.length;c++) {
@@ -22760,7 +22762,6 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
-var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22772,6 +22773,7 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
+var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -23036,6 +23038,9 @@ Map.prototype.setTilingResolutions = function() {
 };
 Map.prototype.updateSize = function() {
   throw"Map.updateSize() Not implemented! Must be implemented in sub-class";
+};
+Map.prototype.isUpdating = function() {
+  throw"Map.isUpdating() Not implemented! Must be implemented in sub-class";
 };
 function Layer(a, b) {
   this.frameworkLayer = a;
@@ -23395,7 +23400,7 @@ FlamingoMap.prototype.doIdentify = function() {
 };
 FlamingoMap.prototype.getExtent = function() {
   var a = this.getFrameworkMap().callMethod(this.getId(), "getCurrentExtent");
-  return new Extent(a.minx, a.miny, a.maxx, a.maxy)
+  return a ? new Extent(a.minx, a.miny, a.maxx, a.maxy) : null
 };
 FlamingoMap.prototype.update = function() {
   this.getFrameworkMap().callMethod(this.getId(), "update", 100, true)
@@ -23429,6 +23434,9 @@ FlamingoMap.prototype.getScreenWidth = function() {
 };
 FlamingoMap.prototype.getScreenHeight = function() {
   return this.getFrameworkMap().callMethod(this.getId(), "getMovieClipHeight")
+};
+FlamingoMap.prototype.isUpdating = function() {
+  return this.getFrameworkMap().callMethod(this.getId(), "isUpdating")
 };
 FlamingoMap.prototype.setTilingResolutions = function(a) {
   a = a.trim();
@@ -23782,7 +23790,9 @@ OpenLayersController.prototype.createTool = function(a, b, c) {
                                 b.style.display = "block";
                                 c = document.getElementById("olControlMeasureValueText");
                                 a = this.getBestLength(a.parent);
-                                c.innerHTML = a[0].toFixed(3) + " " + a[1]
+                                a[1] == "km" && (a[1] = "m", a[0] *= 1E3);
+                                a = (a[0].toFixed(1) + " " + a[1]).replace(".", ",");
+                                c.innerHTML = a
                               }
                             }}, a = new OpenLayersTool(a, new OpenLayers.Control.Measure(OpenLayers.Handler.Path, c), b), a.getFrameworkTool().events.register("measure", a.getFrameworkTool(), function() {
                               var a = document.getElementById("olControlMeasureValue");
@@ -23856,7 +23866,9 @@ function createPolygonMeasureTool(a, b, c) {
       b.style.left = c.x + 25 + "px";
       b.style.display = "block";
       c = document.getElementById("olControlMeasurePolygonValueText");
-      a = this.getBestArea(a.parent)[0].toFixed(3);
+      a = this.getBestArea(a.parent);
+      a[1] == "km" ? (a[1] = " m2", a[0] *= 1E3) : a[1] = " m2";
+      a = (a[0].toFixed(1) + " " + a[1]).replace(".", ",");
       c.innerHTML = a
     }
   }};
@@ -24040,7 +24052,8 @@ OpenLayersController.prototype.onIdentifyHandler = function(a) {
 $j(document).ready(function() {
   if(webMapController instanceof OpenLayersController) {
     var a = webMapController.getSpecificEventName(Event.ON_CONFIG_COMPLETE);
-    webMapController.handleEvent(a)
+    webMapController.handleEvent(a);
+    webMapController.maps[0].updateSize()
   }
 });
 function OpenLayersMap(a) {
@@ -24150,7 +24163,7 @@ OpenLayersMap.prototype.getScreenHeight = function() {
 };
 OpenLayersMap.prototype.getExtent = function() {
   var a = Utils.createExtent(this.getFrameworkMap().getExtent());
-  return new Extent(a.minx, a.miny, a.maxx, a.maxy)
+  return a ? new Extent(a.minx, a.miny, a.maxx, a.maxy) : null
 };
 OpenLayersMap.prototype.setMarker = function(a, b, c) {
   if(this.markerLayer == null) {
@@ -24202,8 +24215,15 @@ OpenLayersMap.prototype.getResolution = function() {
   return this.getFrameworkMap().getResolution()
 };
 OpenLayersMap.prototype.getScaleHint = function() {
-  var a = Utils.createExtent(this.getFrameworkMap().getExtent()), b = this.getScreenWidth(), c = this.getScreenHeight(), b = (a.maxx - a.minx) / b, a = (a.maxy - a.miny) / c;
-  return Math.sqrt(a * a + b * b)
+  var a = Utils.createExtent(this.getFrameworkMap().getExtent()), b;
+  if(a) {
+    var c = this.getScreenWidth();
+    b = this.getScreenHeight();
+    c = (a.maxx - a.minx) / c;
+    a = (a.maxy - a.miny) / b;
+    b = Math.sqrt(a * a + c * c)
+  }
+  return b
 };
 OpenLayersMap.prototype.coordinateToPixel = function(a, b) {
   return this.getFrameworkMap().getPixelFromLonLat(new OpenLayers.LonLat(a, b))
@@ -24226,6 +24246,9 @@ OpenLayersMap.prototype.setTilingResolutions = function() {
 };
 OpenLayersMap.prototype.updateSize = function() {
   this.getFrameworkMap().updateSize()
+};
+OpenLayersMap.prototype.isUpdating = function() {
+  return layersLoading != 0
 };
 OpenLayersMap.prototype.update = function() {
   for(var a = this.getFrameworkMap().layers, b = 0;b < a.length;b++) {
@@ -24454,7 +24477,9 @@ Utils.createBounds = function(a) {
   return new OpenLayers.Bounds(a.minx, a.miny, a.maxx, a.maxy)
 };
 Utils.createExtent = function(a) {
-  return new Extent(a.left, a.bottom, a.right, a.top)
+  if(a) {
+    return new Extent(a.left, a.bottom, a.right, a.top)
+  }
 };
 OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {button:null, defaultHandlerOptions:{single:true, "double":true, pixelTolerance:0, stopSingle:false, stopDouble:false}, initialize:function(a) {
   this.handlerOptions = OpenLayers.Util.extend({}, this.defaultHandlerOptions);

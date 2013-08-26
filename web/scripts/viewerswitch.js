@@ -22,7 +22,7 @@
             $('a').not('.switcher').each(function() {
                 var href = $(this).attr('href');
                 if(useviewer) {
-                    if(!href.match(/forceViewer/) && href !== '#') {
+                    if(!href.match(/forceViewer/) && href.match(/viewer.do/) && href !== '#') {
                         href = addToQueryString(href, 'forceViewer', 'true');
                     }
                 } else {

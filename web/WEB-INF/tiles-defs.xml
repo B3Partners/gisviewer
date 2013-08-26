@@ -9,6 +9,7 @@
         <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
         <put name="footer" value="/WEB-INF/jsp/commons/footer.jsp"/>
      </definition>
+     
     <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp" />
     <definition name="templateSimpleViewer" path="/WEB-INF/jsp/templates/templateSimpleViewer.jsp" />
     <definition name="templatePrint" path="/WEB-INF/jsp/templates/templatePrint.jsp"/>
@@ -36,13 +37,12 @@
         <put name="title" value="Help" type="string"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
     </definition>
-    <definition name="home" extends="template">
-        <put name="title" value="Home" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/algemeen/home.jsp"/>
-    </definition>
+    
+    <definition name="home" path="/WEB-INF/jsp/algemeen/home.jsp" />
     
     <definition name="cms" extends="template">
         <put name="title" value="CMS" type="string"/>
+        <put name="menu" value="/WEB-INF/jsp/commons/cmsmenu.jsp"/>
         <put name="content" value="/WEB-INF/jsp/algemeen/cms.jsp"/>
     </definition>
     

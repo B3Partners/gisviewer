@@ -152,6 +152,10 @@
             <forward name="logout" path="/index.do" redirect="true"/>
             <forward name="help" path="help"/>
         </action>
+        
+        <action path="/http_404" forward="/WEB-INF/jsp/algemeen/http-404.jsp"/>
+        <action path="/http_500" forward="/WEB-INF/jsp/algemeen/http-500.jsp"/>
+        <action path="/http_503" forward="/WEB-INF/jsp/algemeen/http-503.jsp"/>
 
         <action path="/reset" type="nl.b3p.gis.viewer.services.ResetAction">
             <forward name="success" path="reset"/>

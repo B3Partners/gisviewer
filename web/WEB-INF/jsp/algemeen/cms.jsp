@@ -6,8 +6,13 @@
 </c:if>
 
 <c:if test="${empty cmsPage}">
-    <h2>CMS</h2>
+    <h2>CMS Pagina</h2>
 </c:if>
+
+<script type="text/javascript">
+    /* cmd id klaarzetten voor viewer links */
+    var cmsPageId = ${cmsPage.id};
+</script>
 
 <div class="tegels">
     <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
@@ -44,3 +49,5 @@
 <c:if test="${showPlainAndMapButton == 'true'}">
     <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script> 
 </c:if>
+
+<script type="text/javascript" src="<html:rewrite page='/scripts/viewerAddCmsId.js' module=''/>"></script>

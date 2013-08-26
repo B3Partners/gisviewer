@@ -290,4 +290,16 @@
         <error-code>403</error-code>
         <location>/loginError.do</location>
     </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/http_404.do</location>
+    </error-page>    
+    <error-page>
+        <error-code>500</error-code>
+        <location>/http_500.do</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/http_503.do</location>
+    </error-page>
 </web-app>

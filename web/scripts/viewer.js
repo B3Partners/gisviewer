@@ -695,9 +695,11 @@ function loadBusyJSP(handle, type) {
  * @param extraCriteria JavaScript object with CQL criteria that is used as filter for getting the features.
 */
 function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, themaIds, extraCriteria) {
+    
     if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
     }
+    
     var treeComponent = B3PGissuite.get('TreeComponent');
     if (themaIds === undefined){
         if (!B3PGissuite.config.multipleActiveThemas && treeComponent !== null) {
@@ -711,6 +713,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             return;
         }
     }
+    
     //set the extra criteria.
     document.forms[0].extraCriteria.value="";
     if(extraCriteria){
@@ -732,7 +735,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
         document.forms[0].B3PGissuite.config.searchId.value=B3PGissuite.config.searchId;
         document.forms[0].B3PGissuite.config.searchClusterId.value=B3PGissuite.config.searchClusterId;
     }
-
+    
     document.forms[0].geom.value=geom;
     
     var schaal;    
@@ -754,7 +757,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     }
     
     if (B3PGissuite.config.bookmarkAppcode != null) {
-        document.forms[0].B3PGissuite.config.bookmarkAppcode.value=B3PGissuite.config.bookmarkAppcode;
+        document.forms[0].bookmarkAppcode.value=B3PGissuite.config.bookmarkAppcode;
     }
 
     if (highlightThemaId != null) {

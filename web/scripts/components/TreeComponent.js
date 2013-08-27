@@ -296,21 +296,21 @@ B3PGissuite.defineComponent('TreeComponent', {
         var status=element.checked;
         if (status){
             var found=false;
-            for (var i=0; i < B3PGissuite.vars.clustersAan.length; i++){
-                if (B3PGissuite.vars.clustersAan[i].id==element.id){
+            for (var i=0; i < me.clustersAan.length; i++){
+                if (me.clustersAan[i].id==element.id){
                     found=true;
                 }
             }
             if (!found)
-                B3PGissuite.vars.clustersAan.push(element);
+                me.clustersAan.push(element);
         }else{
             var newClustersAan = new Array();
-            for (var j=0; j < B3PGissuite.vars.clustersAan.length; j++){
-                if (B3PGissuite.vars.clustersAan[j].id!=element.id){
-                    newClustersAan.push(B3PGissuite.vars.clustersAan[j]);
+            for (var j=0; j < me.clustersAan.length; j++){
+                if (me.clustersAan[j].id!=element.id){
+                    newClustersAan.push(me.clustersAan[j]);
                 }
             }
-            B3PGissuite.vars.clustersAan=newClustersAan;
+            me.clustersAan=newClustersAan;
         }
         /* indien cookies aan dan cluster id in cookie stoppen */
         var cluster=element.theItem;
@@ -495,7 +495,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             container.appendChild(checkbox);
 
             if (checkboxChecked){
-                B3PGissuite.vars.clustersAan.push(checkbox);
+                this.clustersAan.push(checkbox);
             }
 
             // alleen een callable item kan active zijn

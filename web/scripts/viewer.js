@@ -31,7 +31,7 @@ B3PGissuite.vars.startLayerIndex = 0;
 B3PGissuite.vars.balloon = null;
 B3PGissuite.vars.mapInitialized = false;
 B3PGissuite.vars.searchExtent = null;
-B3PGissuite.vars.multiPolygonBufferWkt;
+B3PGissuite.vars.multiPolygonBufferWkt = null;
 B3PGissuite.vars.editComponent = null;
 B3PGissuite.vars.uploadCsvLayerOn = false;
 B3PGissuite.vars.prevRadioButton = null;

@@ -4083,7 +4083,7 @@ $j(document).ready(function() {
     B3PGissuite.config.enabledtabsLeft[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabsLeft[c] === "zoeken" && (b = true)
   }
   if(b || a) {
-    b = B3PGissuite.config.zoekConfigIds.split(","), a = $j("#searchInputFieldsContainer"), b !== null && b.length > 1 ? createSearchConfigurations() : b !== null && b.length === 1 && b[0] !== "" && (b = b[0], JZoekconfiguratieThemaUtil.getThemas(b.id, zoekconfiguratieThemasCallBack), fillSearchDiv(a, b.zoekVelden, null))
+    b = B3PGissuite.config.zoekConfigIds.split(","), a = $j("#searchInputFieldsContainer"), b !== null && b.length > 1 ? createSearchConfigurations() : b !== null && b.length === 1 && b[0] !== "" && (b = B3PGissuite.config.zoekconfiguraties[0], JZoekconfiguratieThemaUtil.getThemas(b.id, zoekconfiguratieThemasCallBack), fillSearchDiv(a, b.zoekVelden, null))
   }
   window.setTimeout(function() {
     var a = B3PGissuite.config.useCookies ? readCookie("activetab") : null;
@@ -4473,7 +4473,7 @@ function fillSearchDiv(a, b, c) {
   })), b = B3PGissuite.config.zoekConfigIds.split(","), b !== null && b.length > 1 && a.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
     B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
     searchConfigurationsSelectChanged(inputSearchDropdown)
-  })), !search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "" && a.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
+  })), !B3PGissuite.config.search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "" && a.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
     B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker")
   })));
   $j("#searchResults").empty();
@@ -22765,6 +22765,7 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
+var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22776,7 +22777,6 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
-var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };

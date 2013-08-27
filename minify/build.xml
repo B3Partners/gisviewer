@@ -53,7 +53,7 @@
 	<target name="minify-clean">
 		<delete file="${minify.outputdir}/viewer-min.js"/>
 	</target>
-    
+
     <target name="checkforchanges">
         <uptodate property="nochanges" targetfile="${dir}/.flagfile">
             <srcfiles dir="${dir}" includes="**/*.scss"/>
@@ -77,18 +77,11 @@
     
     <target name="compile-themes">
         <mkdir dir="${themes.output.folder}" />
-        <antcall target="compile-theme">
-            <param name="theme" value="gouda"/>
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="dronten"/>
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="solutionparc"/>
-        </antcall>
-        <antcall target="compile-theme">
-            <param name="theme" value="leerdam"/>
-        </antcall>
+        <subant target="compile-theme-folder">
+            <dirset dir="${themes.folder}" includes="*" />
+            <property name="builddir" value="${basedir}"/>
+            <property name="buildfile" value="${basedir}/build.xml"/>
+        </subant>
     </target>
     
     <target name="compile-theme">

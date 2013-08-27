@@ -719,7 +719,7 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
             }));
         } 
         
-        if (!search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "") {
+        if (!B3PGissuite.config.search && B3PGissuite.config.startLocationX == "" && B3PGissuite.config.startLocationY == "") {
             container.append($j('<input type="button" />').attr("value", " Verwijder marker").addClass("knop").click(function() {
                 B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
             }));

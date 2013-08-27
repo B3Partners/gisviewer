@@ -16,8 +16,11 @@
 
 <script type="text/javascript">
     
-    function catchEmpty(defval, emptyvalue){
-        return defval || emptyvalue;
+    function catchEmpty(configValue, valueIfEmpty){
+        if(typeof configValue === 'undefined' || configValue === '') {
+            return valueIfEmpty;
+        }
+        return configValue;
     }
 
     B3PGissuite.config = {

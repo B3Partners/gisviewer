@@ -2481,10 +2481,6 @@ B3PGissuite.vars.dataframepopupHandle = null;
 B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl;
 B3PGissuite.vars.cookieArray = B3PGissuite.config.useCookies ? readCookie("checkedLayers") : null;
 B3PGissuite.vars.cookieClusterArray = B3PGissuite.config.useCookies ? readCookie("checkedClusters") : null;
-B3PGissuite.vars.activeAnalyseThemaId = "";
-B3PGissuite.vars.activeClusterId = "";
-B3PGissuite.vars.layersAan = [];
-B3PGissuite.vars.clustersAan = [];
 B3PGissuite.vars.webMapController = null;
 B3PGissuite.vars.startLayerIndex = 0;
 B3PGissuite.vars.balloon = null;
@@ -2753,7 +2749,8 @@ function loadBusyJSP(a, b) {
 }
 function handleGetAdminData(a, b, c, d, e) {
   if(B3PGissuite.config.usePopup || B3PGissuite.config.usePanel || B3PGissuite.config.useBalloonPopup) {
-    if(d == void 0 && (d = B3PGissuite.config.multipleActiveThemas ? getLayerIdsAsString(true) : B3PGissuite.vars.activeAnalyseThemaId, d == null || d == "")) {
+    var f = B3PGissuite.get("TreeComponent");
+    if(d === void 0 && (d = !B3PGissuite.config.multipleActiveThemas && f !== null ? f.getActiveAnalyseThemaId() : getLayerIdsAsString(true), d == null || d == "")) {
       hideLoading();
       return
     }
@@ -2791,12 +2788,12 @@ function handleGetAdminData(a, b, c, d, e) {
           b = 0, B3PGissuite.vars.webMapController instanceof FlamingoController && (b = 36), B3PGissuite.vars.balloon = new Balloon($j("#mapcontent"), B3PGissuite.vars.webMapController, "infoBalloon", 300, 300, 0, b)
         }
         document.forms[0].target = "dataframeballoonpopup";
-        for(var a = a.replace(/POLYGON/g, "").replace(/POINT/, "").replace(/\(/g, "").replace(/\)/g, "").split(","), f, g, h, j, b = 0;b < a.length;b++) {
-          d = a[b].split(" "), c = Number(d[0]), d = Number(d[1]), f == void 0 && (g = f = c), h == void 0 && (j = h = d), c > g && (g = c), c < f && (f = c), d > j && (j = d), d < h && (h = d)
+        for(var a = a.replace(/POLYGON/g, "").replace(/POINT/, "").replace(/\(/g, "").replace(/\)/g, "").split(","), g, h, j, l, b = 0;b < a.length;b++) {
+          d = a[b].split(" "), c = Number(d[0]), d = Number(d[1]), g == void 0 && (h = g = c), j == void 0 && (l = j = d), c > h && (h = c), c < g && (g = c), d > l && (l = d), d < j && (j = d)
         }
-        B3PGissuite.vars.balloon.setPosition((f + g) / 2, (h + j) / 2, true);
-        f = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">');
-        B3PGissuite.vars.balloon.getContentElement().html(f)
+        B3PGissuite.vars.balloon.setPosition((g + h) / 2, (j + l) / 2, true);
+        g = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">');
+        B3PGissuite.vars.balloon.getContentElement().html(g)
       }else {
         document.forms[0].target = "dataframe", loadBusyJSP("dataframe", "panel")
       }
@@ -3107,7 +3104,17 @@ function loadObjectInfo(a) {
     B3PGissuite.config.enabledtabsLeft[i] === "gebieden" && (b = true)
   }
   if(b) {
-    document.forms[0].admindata.value = "", document.forms[0].metadata.value = "", document.forms[0].themaid.value = B3PGissuite.config.multipleActiveThemas ? getLayerIdsAsString() : B3PGissuite.vars.activeAnalyseThemaId, document.forms[0].analysethemaid.value = B3PGissuite.vars.activeAnalyseThemaId, document.forms[0].geom.value = a, document.forms[0].scale.value = "", document.forms[0].objectdata.value = "t", document.forms[0].target = "objectframeViewer", document.forms[0].submit()
+    var b = "", c = B3PGissuite.get("TreeComponent");
+    c !== null && (b = c.getActiveAnalyseThemaId());
+    document.forms[0].admindata.value = "";
+    document.forms[0].metadata.value = "";
+    document.forms[0].themaid.value = B3PGissuite.config.multipleActiveThemas ? getLayerIdsAsString() : b;
+    document.forms[0].analysethemaid.value = b;
+    document.forms[0].geom.value = a;
+    document.forms[0].scale.value = "";
+    document.forms[0].objectdata.value = "t";
+    document.forms[0].target = "objectframeViewer";
+    document.forms[0].submit()
   }
 }
 function getLayerIdsAsString(a) {
@@ -3359,14 +3366,11 @@ function onIdentifyData(a, b) {
   B3PGissuite.vars.teller = 0;
   updateGetFeatureInfo(b)
 }
-function layerBoxSort(a, b) {
-  return a.theItem.order - b.theItem.order
-}
 function onFrameworkLoaded() {
   document.getElementById("treeForm") && ieVersion <= 8 && ieVersion != -1 && document.getElementById("treeForm").reset();
   if(!B3PGissuite.vars.frameWorkInitialized) {
     var a = B3PGissuite.get("TreeComponent");
-    a !== null && (a.clickClusters(), B3PGissuite.vars.layersAan.sort(layerBoxSort), a.clickLayers());
+    a !== null && (a.clickClusters(), a.sortLayersAan(), a.clickLayers());
     initFullExtent();
     setStartExtent();
     a !== null && a.doRefreshLayer()
@@ -3760,14 +3764,15 @@ function createPermaLink() {
   B3PGissuite.config.bookmarkAppcode != void 0 && B3PGissuite.config.bookmarkAppcode != "" && (b = "appCode=" + B3PGissuite.config.bookmarkAppcode);
   var c = "", d = getLayerIdsAsString();
   d != void 0 && d != "" && (c = "&id=" + d);
-  d = "";
-  if(B3PGissuite.vars.clustersAan != void 0 && B3PGissuite.vars.clustersAan.length > 0) {
+  var d = "", e = B3PGissuite.get("TreeComponent");
+  if(e !== null && (e = e.getClustersAan(), e.length > 0)) {
     d += "&clusterId=";
-    for(var e = 0;e < B3PGissuite.vars.clustersAan.length;e++) {
-      d.length > 0 && (d += ","), d += B3PGissuite.vars.clustersAan[e].theItem.id.substring(1)
+    for(var f = 0;f < e.length;f++) {
+      d.length > 0 && (d += ","), d += e[f].theItem.id.substring(1)
     }
   }
-  var f = "", e = B3PGissuite.vars.webMapController.getMap().getExtent();
+  f = "";
+  e = B3PGissuite.vars.webMapController.getMap().getExtent();
   if(e != void 0 && e != "") {
     var f = Math.round(Number(e.minx) + 1), g = Math.round(Number(e.miny) + 1), h = Math.round(Number(e.maxx) - 1), e = Math.round(Number(e.maxy) - 1), f = "&extent=" + f + "," + g + "," + h + "," + e
   }
@@ -4071,16 +4076,14 @@ function addTempUploadedPointsWms() {
   B3PGissuite.vars.webMapController.getMap().addLayer(a)
 }
 $j(document).ready(function() {
-  var a = false, b = false, c = B3PGissuite.config.useCookies ? readCookie("activetab") : null;
-  c !== null ? switchTab(c) : switchTab("themas");
-  for(c = 0;c < B3PGissuite.config.enabledtabs.length;c++) {
+  for(var a = false, b = false, c = 0;c < B3PGissuite.config.enabledtabs.length;c++) {
     B3PGissuite.config.enabledtabs[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabs[c] === "zoeken" && (b = true)
   }
   for(c = 0;c < B3PGissuite.config.enabledtabsLeft.length;c++) {
     B3PGissuite.config.enabledtabsLeft[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabsLeft[c] === "zoeken" && (b = true)
   }
   if(b || a) {
-    b = B3PGissuite.config.zoekConfigIds.split(","), a = $j("#searchInputFieldsContainer"), b !== null && b.length > 1 ? createSearchConfigurations() : b !== null && b.length === 1 && b[0] !== "" && (b = zoekconfiguraties[0], JZoekconfiguratieThemaUtil.getThemas(b.id, zoekconfiguratieThemasCallBack), fillSearchDiv(a, b.zoekVelden, null))
+    b = B3PGissuite.config.zoekConfigIds.split(","), a = $j("#searchInputFieldsContainer"), b !== null && b.length > 1 ? createSearchConfigurations() : b !== null && b.length === 1 && b[0] !== "" && (b = b[0], JZoekconfiguratieThemaUtil.getThemas(b.id, zoekconfiguratieThemasCallBack), fillSearchDiv(a, b.zoekVelden, null))
   }
   window.setTimeout(function() {
     var a = B3PGissuite.config.useCookies ? readCookie("activetab") : null;
@@ -24708,7 +24711,7 @@ B3PGissuite.defineComponent("IframeComponent", {extend:"ViewerComponent", defaul
   }
 }});
 // Input 17
-B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultOptions:{treeid:"layermaindiv", tree:[], servicetrees:[], icons:{collapsed:"/gisviewer/images/treeview/plus.gif", expanded:"/gisviewer/images/treeview/minus.gif", leaf:"/gisviewer/images/treeview/leaft.gif"}, expandAll:false}, activeAnalyseThemaId:"", activeClusterId:"", constructor:function(a) {
+B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultOptions:{treeid:"layermaindiv", tree:[], servicetrees:[], icons:{collapsed:"/gisviewer/images/treeview/plus.gif", expanded:"/gisviewer/images/treeview/minus.gif", leaf:"/gisviewer/images/treeview/leaft.gif"}, expandAll:false}, layersAan:[], clustersAan:[], activeAnalyseThemaId:"", activeClusterId:"", constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
@@ -24723,13 +24726,21 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
     treeview_create({id:"layerTreeDiv_" + a, root:this.options.servicetrees[a], rootChildrenAsRoots:false, itemLabelCreatorFunction:createServiceLeaf, toggleImages:{collapsed:this.options.icons.collapsed, expanded:this.options.icons.expanded, leaf:this.options.icons.leaf}, saveExpandedState:true, streeaveScrollState:true, expandAll:true, scope:this})
   }
   treeview_create({id:this.options.treeid, root:this.options.tree, rootChildrenAsRoots:true, itemLabelCreatorFunction:this.createLabel, toggleImages:{collapsed:this.options.icons.collapsed, expanded:this.options.icons.expanded, leaf:this.options.icons.leaf}, saveExpandedState:true, saveScrollState:true, expandAll:this.options.expandAll, scope:this})
+}, sortLayersAan:function() {
+  this.layersAan.sort(function(a, b) {
+    return a.theItem.order - b.theItem.order
+  })
+}, getClustersAan:function() {
+  return this.clustersAan
+}, getActiveAnalyseThemaId:function() {
+  return this.activeAnalyseThemaId
 }, clickLayers:function() {
-  for(var a = B3PGissuite.vars.layersAan.length - 1;a >= 0;a--) {
-    this.checkboxClick(B3PGissuite.vars.layersAan[a], true)
+  for(var a = this.layersAan.length - 1;a >= 0;a--) {
+    this.checkboxClick(this.layersAan[a], true)
   }
 }, clickClusters:function() {
-  for(var a = B3PGissuite.vars.clustersAan.length - 1;a >= 0;a--) {
-    this.clusterCheckboxClick(B3PGissuite.vars.clustersAan[a], true)
+  for(var a = this.clustersAan.length - 1;a >= 0;a--) {
+    this.clusterCheckboxClick(this.clustersAan[a], true)
   }
 }, enableCheckBoxById:function(a) {
   if(a = document.getElementById(a)) {
@@ -24745,10 +24756,10 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
   }
 }, setActiveThema:function(a, b, c) {
   if(!a || !(a != null && b && b != null && c)) {
-    return B3PGissuite.vars.activeAnalyseThemaId
+    return this.activeAnalyseThemaId
   }
-  if((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || c) {
-    B3PGissuite.vars.activeAnalyseThemaId = a;
+  if((this.activeAnalyseThemaId == null || this.activeAnalyseThemaId.length == 0) && (this.activeClusterId == null || this.activeClusterId.length == 0) || c) {
+    this.activeAnalyseThemaId = a;
     if((a = document.getElementById("actief_thema")) && b && a != null && b != null) {
       a.innerHTML = "" + b
     }
@@ -24758,7 +24769,7 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
       onIdentify("", {minx:b, miny:a, maxx:c, maxy:d})
     }
   }
-  return B3PGissuite.vars.activeAnalyseThemaId
+  return this.activeAnalyseThemaId
 }, addItemAsLayer:function(a) {
   this.addLayerToEnabledLayerItems(a);
   syncLayerCookieAndForm();
@@ -24783,8 +24794,8 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
   }));
   b || (a.checked ? c.refreshLayerWithDelay() : c.doRefreshLayer())
 }, radioClick:function(a) {
-  var b = B3PGissuite.vars.activeAnalyseThemaId;
-  if(a && a != null && a.theItem && a.theItem != null && a.theItem.id && a.theItem.title && (B3PGissuite.vars.activeAnalyseThemaId = this.setActiveThema(a.theItem.id, a.theItem.title, true), this.activateCheckbox(a.theItem.id), this.deActivateCheckbox(b), a.theItem.metadatalink && a.theItem.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer"))) {
+  var b = this.activeAnalyseThemaId;
+  if(a && a != null && a.theItem && a.theItem != null && a.theItem.id && a.theItem.title && (this.activeAnalyseThemaId = this.setActiveThema(a.theItem.id, a.theItem.title, true), this.activateCheckbox(a.theItem.id), this.deActivateCheckbox(b), a.theItem.metadatalink && a.theItem.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer"))) {
     document.getElementById("beschrijvingVakViewer").src = a.theItem.metadatalink
   }
 }, clusterCheckboxClick:function(a, b) {
@@ -24866,7 +24877,7 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
         parentItem = this.getParentItem(this.options.tree, b);
         c = parentItem.exclusive_childs ? this.createRadioThema(b, checkboxChecked, parentItem.id) : this.createCheckboxThema(b, checkboxChecked);
         c.theItem = b;
-        checkboxChecked && (d < 0 ? B3PGissuite.vars.layersAan.unshift(c) : B3PGissuite.vars.layersAan.push(c));
+        checkboxChecked && (d < 0 ? this.layersAan.unshift(c) : this.layersAan.push(c));
         if(b.analyse === "on" || b.analyse === "active") {
           B3PGissuite.config.multipleActiveThemas ? this.isActiveItem(b) : (d = this.createRadioSingleActiveThema(b), a.appendChild(d))
         }
@@ -24958,7 +24969,7 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
     return false
   }
   a.analyse == "on" ? this.setActiveThema(a.id, a.title) : a.analyse == "active" && this.setActiveThema(a.id, a.title, true);
-  if(B3PGissuite.vars.activeAnalyseThemaId != a.id) {
+  if(this.activeAnalyseThemaId != a.id) {
     return false
   }
   if(a.analyse == "active" && B3PGissuite.vars.prevRadioButton != null) {
@@ -25179,10 +25190,10 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
   b.style.display = "none";
   return b
 }, setActiveCluster:function(a, b) {
-  if(((B3PGissuite.vars.activeAnalyseThemaId == null || B3PGissuite.vars.activeAnalyseThemaId.length == 0) && (B3PGissuite.vars.activeClusterId == null || B3PGissuite.vars.activeClusterId.length == 0) || b) && a != void 0 & a != null) {
+  if(((this.activeAnalyseThemaId == null || this.activeAnalyseThemaId.length == 0) && (this.activeClusterId == null || this.activeClusterId.length == 0) || b) && a != void 0 & a != null) {
     var c = a.title, d = document.getElementById("actief_thema");
     if(d && c && d != null && c != null) {
-      B3PGissuite.vars.activeClusterId = a.id, d.innerHTML = "" + c
+      this.activeClusterId = a.id, d.innerHTML = "" + c
     }
     if(a.metadatalink && a.metadatalink.length > 1 && document.getElementById("beschrijvingVakViewer")) {
       document.getElementById("beschrijvingVakViewer").src = a.metadatalink

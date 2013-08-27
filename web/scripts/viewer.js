@@ -2876,7 +2876,7 @@ function drawObject(feature) {
 }
 
 /**
- * Alle geïmplementeerde eventhandling functies
+ * Alle geï¿½mplementeerde eventhandling functies
  */
 function b_removePolygons(id,params){
     B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
@@ -3960,7 +3960,7 @@ $j(document).ready(function() {
         if (arr !== null && arr.length > 1) {
             createSearchConfigurations();
         } else if (arr !== null && arr.length === 1 && arr[0] !== '') {
-            var zc = zoekconfiguraties[0];
+            var zc = arr[0];
             JZoekconfiguratieThemaUtil.getThemas(zc.id, zoekconfiguratieThemasCallBack);
             var zoekVelden = zc.zoekVelden;
             fillSearchDiv(c, zoekVelden, null);

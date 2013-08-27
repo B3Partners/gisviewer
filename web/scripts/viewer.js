@@ -30,13 +30,13 @@ B3PGissuite.vars.startLayerIndex = 0;
 */
 B3PGissuite.vars.balloon = null;
 B3PGissuite.vars.mapInitialized = false;
-B3PGissuite.vars.searchExtent;
+B3PGissuite.vars.searchExtent = null;
 B3PGissuite.vars.multiPolygonBufferWkt;
 B3PGissuite.vars.editComponent = null;
 B3PGissuite.vars.uploadCsvLayerOn = false;
 B3PGissuite.vars.prevRadioButton = null;
 B3PGissuite.vars.originalLayerUrl = "" + B3PGissuite.vars.layerUrl;
-B3PGissuite.vars.refresh_timeout_handle;
+B3PGissuite.vars.refresh_timeout_handle = 0;
 //the loading legend images (needed to abort loading)
 B3PGissuite.vars.loadingLegendImages = {};
 //queue of the legend objects that needs to be loaded
@@ -46,7 +46,7 @@ B3PGissuite.vars.legendImageLoadingSpace = 1;
 B3PGissuite.vars.teller = 0;
 B3PGissuite.vars.frameWorkInitialized = false;
 B3PGissuite.vars.nextIdentifyExtent=null;
-B3PGissuite.vars.exportMapWindow;
+B3PGissuite.vars.exportMapWindow = null;
 B3PGissuite.vars.btn_highLightSelected = false;
 B3PGissuite.vars.highLightGeom = null;
 //do only once.
@@ -255,9 +255,7 @@ function getTilingResolutions(maxBounds, returnArray) {
         olRes = newList;
     }
     
-    if (returnArray) { // openlayers gebruikt een array
-        return olRes;
-    } else { // flamingo een string
+    if (!returnArray) { // openlayers gebruikt een array
         
         var str = "";
         for (var k in olRes) {
@@ -1340,10 +1338,10 @@ function refreshLayer(doRefreshOrder) {
     }else {
         B3PGissuite.vars.refresh_timeout_handle = 0;
     }
-    if (doRefreshOrder) {
+    //if (doRefreshOrder) {
     //TODO: WebMapController
     //B3PGissuite.vars.webMapController.getMap().refreshLayerOrder();
-    }
+    //}
     
     // flamingoController.getMap().update();
 

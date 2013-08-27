@@ -42,7 +42,6 @@ B3PGissuite.defineComponent('TreeComponent', {
     },
     afterRender: function() {
         for(var i in this.options.servicetrees) {
-            this.options.servicetrees[i];
             treeview_create({
                 "id": 'layerTreeDiv_' + i,
                 "root": this.options.servicetrees[i],

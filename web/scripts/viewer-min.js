@@ -2486,6 +2486,7 @@ B3PGissuite.vars.startLayerIndex = 0;
 B3PGissuite.vars.balloon = null;
 B3PGissuite.vars.mapInitialized = false;
 B3PGissuite.vars.searchExtent = null;
+B3PGissuite.vars.multiPolygonBufferWkt = null;
 B3PGissuite.vars.editComponent = null;
 B3PGissuite.vars.uploadCsvLayerOn = false;
 B3PGissuite.vars.prevRadioButton = null;
@@ -2775,7 +2776,7 @@ function handleGetAdminData(a, b, c, d, e) {
     document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
     c ? (document.forms[0].withinObject.value = "1", document.forms[0].onlyFeaturesInGeom.value = "true") : (document.forms[0].withinObject.value = "-1", document.forms[0].onlyFeaturesInGeom.value = "false");
     if(B3PGissuite.config.bookmarkAppcode != null) {
-      document.forms[0].B3PGissuite.config.bookmarkAppcode.value = B3PGissuite.config.bookmarkAppcode
+      document.forms[0].bookmarkAppcode.value = B3PGissuite.config.bookmarkAppcode
     }
     if(b != null) {
       document.forms[0].themaid.value = b
@@ -4078,6 +4079,20 @@ function addTempUploadedPointsWms() {
   var a = getBaseUrl() + "/UploadedPointsWmsServlet", a = B3PGissuite.vars.webMapController.createWMSLayer("uploadedPoints", a, {format:"image/png", layers:"tempPointsLayer", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, {id:"uploadedPoints", timeout:30, retryonerror:10, ratio:1, showerrors:true, initService:false, minscale:0, maxscale:5E5});
   B3PGissuite.vars.webMapController.getMap().addLayer(a)
 }
+function doIdentifyAfterSearch(a, b) {
+  if(B3PGissuite.config.usePopup || B3PGissuite.config.usePanel || B3PGissuite.config.useBalloonPopup) {
+    var c = "";
+    c += "POINT(";
+    c += a + " " + b;
+    c += ")";
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.btn_highLightSelected = false;
+    B3PGissuite.vars.webMapController.activateTool("identify");
+    showIdentifyIcon();
+    handleGetAdminData(c, null, true);
+    loadObjectInfo(c)
+  }
+}
 $j(document).ready(function() {
   for(var a = false, b = false, c = 0;c < B3PGissuite.config.enabledtabs.length;c++) {
     B3PGissuite.config.enabledtabs[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabs[c] === "zoeken" && (b = true)
@@ -4273,25 +4288,21 @@ function performSearch() {
 function handleZoekResultaat(a) {
   a = foundValues[a];
   switchLayersOn();
-  if(a.minx != 0 && a.miny != 0 && a.maxx != 0 && a.maxy) {
-    moveToExtent(a.minx, a.miny, a.maxx, a.maxy);
-    var b = (a.maxx + a.minx) / 2, c = (a.maxy + a.miny) / 2;
-    B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
-    B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", b, c)
-  }
-  b = a.zoekConfiguratie.parentZoekConfiguratie;
-  if(b == null) {
+  var b = a.minx, c = a.miny, d = a.maxx, e = a.maxy;
+  b != 0 && c != 0 && d != 0 && e && (moveToExtent(b, c, d, e), b = (d + b) / 2, c = (e + c) / 2, B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker"), B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", b, c), doIdentifyAfterSearch(b, c));
+  c = a.zoekConfiguratie.parentZoekConfiguratie;
+  if(c == null) {
     return false
   }
-  if(b.zoekVelden == void 0 || b.zoekVelden.length == 0) {
-    return messagePopup("Zoeken", "Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: " + b.id, "error"), false
+  if(c.zoekVelden == void 0 || c.zoekVelden.length == 0) {
+    return messagePopup("Zoeken", "Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: " + c.id, "error"), false
   }
-  for(c = 0;c < B3PGissuite.config.zoekconfiguraties.length;c++) {
-    B3PGissuite.config.zoekconfiguraties[c].id == b.id && (currentSearchSelectId = c)
+  for(e = 0;e < B3PGissuite.config.zoekconfiguraties.length;e++) {
+    B3PGissuite.config.zoekconfiguraties[e].id == c.id && (currentSearchSelectId = e)
   }
-  b = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
-  a = createZoekStringsFromZoekResultaten(b, a);
-  fillSearchDiv($j("#searchInputFieldsContainer"), b.zoekVelden, a);
+  c = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
+  a = createZoekStringsFromZoekResultaten(c, a);
+  fillSearchDiv($j("#searchInputFieldsContainer"), c.zoekVelden, a);
   return false
 }
 function createZoekStringsFromZoekResultaten(a, b) {
@@ -22768,7 +22779,6 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
-var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22780,6 +22790,7 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
+var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -24808,16 +24819,16 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
       B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl
     }
     if(a.checked) {
-      for(var d = false, e = 0;e < B3PGissuite.vars.clustersAan.length;e++) {
-        B3PGissuite.vars.clustersAan[e].id == a.id && (d = true)
+      for(var d = false, e = 0;e < c.clustersAan.length;e++) {
+        c.clustersAan[e].id == a.id && (d = true)
       }
-      d || B3PGissuite.vars.clustersAan.push(a)
+      d || c.clustersAan.push(a)
     }else {
       d = [];
-      for(e = 0;e < B3PGissuite.vars.clustersAan.length;e++) {
-        B3PGissuite.vars.clustersAan[e].id != a.id && d.push(B3PGissuite.vars.clustersAan[e])
+      for(e = 0;e < c.clustersAan.length;e++) {
+        c.clustersAan[e].id != a.id && d.push(c.clustersAan[e])
       }
-      B3PGissuite.vars.clustersAan = d
+      c.clustersAan = d
     }
     d = a.theItem;
     B3PGissuite.config.useCookies && (a.checked ? addClusterIdToCookie(d.id) : removeClusterIdFromCookie(d.id));
@@ -24900,7 +24911,7 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
     var d = null, d = this.getParentItem(this.options.tree, b), d = d.exclusive_childs ? this.createRadioCluster(b, c, d.id) : this.createCheckboxCluster(b, c);
     d.theItem = b;
     a.appendChild(d);
-    c && B3PGissuite.vars.clustersAan.push(d);
+    c && this.clustersAan.push(d);
     b.active && this.setActiveCluster(b, true)
   }
   c = false;

@@ -3939,6 +3939,26 @@ function addTempUploadedPointsWms() {
     B3PGissuite.vars.webMapController.getMap().addLayer(newLayer);
 }
 
+function doIdentifyAfterSearch(x, y) {
+    if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
+        return;
+    }
+
+    var geom = "";
+
+    geom += "POINT(";
+    geom += x + " " + y;
+    geom += ")";
+
+    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    B3PGissuite.vars.btn_highLightSelected = false;
+    B3PGissuite.vars.webMapController.activateTool("identify");
+
+    showIdentifyIcon();
+    handleGetAdminData(geom, null, true);
+    loadObjectInfo(geom);
+}
+
 $j(document).ready(function() {
     /* Alleen tabs vullen als ze ook echt aanstaan */
     var vergunningTabOn = false;

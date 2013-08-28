@@ -320,15 +320,26 @@ function performSearch() {
 
 function handleZoekResultaat(searchResultId){
     var searchResult = foundValues[searchResultId];
+    
     // Zet alle lagen aan die geconfigureerd staan bij deze zoekingang.
     switchLayersOn();
+    
+    var minX = searchResult.minx;
+    var minY = searchResult.miny;
+    var maxX = searchResult.maxx;
+    var maxY = searchResult.maxy;
+    
     //zoom naar het gevonden object.(als er een bbox is)
-    if (searchResult.minx != 0 && searchResult.miny != 0 && searchResult.maxx != 0 && searchResult.maxy) {
-        moveToExtent(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
-        var x =(searchResult.maxx + searchResult.minx)/2;
-        var y = (searchResult.maxy + searchResult.miny)/2;
+    if (minX != 0 && minY != 0 && maxX != 0 && maxY) {
+        moveToExtent(minX, minY, maxX, maxY);
+        
+        var x = (maxX + minX) / 2;        
+        var y = (maxY + minY) / 2;        
+        
         B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
         B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", x,y);
+    
+        doIdentifyAfterSearch(x, y);
     }
     
     //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan een ouder heeft.

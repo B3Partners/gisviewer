@@ -660,7 +660,32 @@ function createBronCaption(gegevensbron, simple, index) {
     }
 
     //Info export knop
-    var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j";
+    var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j";    
+    
+    //PDF export knop
+    var pdf_export_url = "services/Data2PDF";
+
+    var pdfFormId = "bronCaption" + htmlId + gegevensbron.id + index + "PDFfrm" + idcounter++;
+    var frm = $j('<form></form>').attr({
+        method: 'post',
+        action: pdf_export_url,
+        target: 'pdfIframe',
+        id: pdfFormId,
+        style: 'float: left;'
+    });
+    frm.append('<input type="hidden" name="gbId" value="' + gegevensbron.id + '" />');
+    frm.append('<input type="hidden" name="objectIds" value="' + gegevensbron.csvPks + '" />');
+    frm.append('<input type="hidden" name="orientation" value="staand" />');
+    
+    bronCaption.append(frm);
+
+    var iconPdf = $j('<img src="'+pdficon+'"/>').attr({
+        "alt": "Exporteer records met kaartuitsnede naar PDF",
+        "title": "Exporteer records met kaartuitsnede naar PDF"
+    }).click(function() {
+        // popUp(csv_export_url, 'csv_export', 600, 500);
+        $j("#"+pdfFormId).submit();
+    });
     
     var infoFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm" + idcounter++;
     frm = $j('<form></form>').attr({
@@ -683,10 +708,15 @@ function createBronCaption(gegevensbron, simple, index) {
         popUp(info_export_url, 'info_export', 600, 500);
         $j("#"+infoFrmId).submit();
     });
+    
     bronCaption.append(" ");
     
     if(gegevensbron.records) {
         bronCaption.append(icona);
+        
+        bronCaption.append(" ");
+        
+        bronCaption.append(iconPdf);
     }
 
     return bronCaption;

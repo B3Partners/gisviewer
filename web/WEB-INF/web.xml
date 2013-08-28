@@ -226,6 +226,14 @@
             <param-name>fetchMethod</param-name>
             <param-value>FILE</param-value>
         </init-param>
+    </servlet>    
+    <servlet>
+        <servlet-name>Data2PDF</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.Data2PDF</servlet-class>
+        <init-param>
+            <param-name>xsl_data2pdf_staand</param-name>
+            <param-value>/WEB-INF/xsl/data2pdf_staand.xsl</param-value>
+        </init-param>
     </servlet>
 
     <servlet-mapping>
@@ -244,7 +252,7 @@
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>    
     <servlet-mapping>
         <servlet-name>CreateImageServlet</servlet-name>
         <url-pattern>/CreateImage</url-pattern>
@@ -276,6 +284,10 @@
     <servlet-mapping>
         <servlet-name>DocFetcher</servlet-name>
         <url-pattern>/services/DocFetcher/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Data2PDF</servlet-name>
+        <url-pattern>/services/Data2PDF</url-pattern>
     </servlet-mapping>
     
     <session-config>

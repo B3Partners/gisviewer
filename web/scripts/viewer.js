@@ -2584,6 +2584,150 @@ function getLegendUrls() {
     return urlString;
 }
 
+function exportObjectData2PDF(htmlId, gegevensbron, index, idcounter) {    
+    var pdf_export_url = "services/Data2PDF";
+    
+    var pdfFormId = "bronCaption" + htmlId + gegevensbron.id + index + "PDFfrm" + idcounter;
+    var submitForm = $j('<form></form>').attr({
+        method: 'post',
+        action: pdf_export_url,
+        target: 'pdfIframe',
+        id: pdfFormId,
+        style: 'float: left;'
+    });
+    
+    var submitForm = document.createElement("FORM");
+    document.body.appendChild(submitForm);
+    submitForm.method = "POST";
+    
+    var gbInput = document.createElement('input');
+    gbInput.id = 'gbId';
+    gbInput.name = 'gbId';
+    gbInput.type = 'hidden';
+    gbInput.value = gegevensbron.id;
+    submitForm.appendChild(gbInput);
+    
+    var objInput = document.createElement('input');
+    objInput.id = 'objectIds';
+    objInput.name = 'objectIds';
+    objInput.type = 'hidden';
+    objInput.value = gegevensbron.csvPks;
+    submitForm.appendChild(objInput);
+    
+    var orInput = document.createElement('input');
+    orInput.id = 'orientation';
+    orInput.name = 'orientation';
+    orInput.type = 'hidden';
+    orInput.value = 'staand';
+    submitForm.appendChild(orInput);
+    
+    var urlString = getWMSLayersUrls();
+
+    var urlInput = document.createElement('input');
+    urlInput.id = 'urls';
+    urlInput.name = 'urls';
+    urlInput.type = 'hidden';
+    urlInput.value = urlString;
+    submitForm.appendChild(urlInput);
+    
+    var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
+    var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
+    
+    var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
+    var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
+    var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
+    var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
+    
+    var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
+    
+    var mapSizeInput = document.createElement('input');
+    mapSizeInput.id = 'mapsizes';
+    mapSizeInput.name = 'mapsizes';
+    mapSizeInput.type = 'hidden';
+    mapSizeInput.value = mapWidth + ";" + mapHeight + ";" + mapBbox;
+    submitForm.appendChild(mapSizeInput);
+    
+    submitForm.target = "pdfIframe";
+    submitForm.action = pdf_export_url;
+    
+    submitForm.submit();
+    
+    return;
+}
+
+function exportMap(){    
+    var submitForm = document.createElement("FORM");
+    document.body.appendChild(submitForm);
+    submitForm.method = "POST";
+
+    var urlString = getWMSLayersUrls();
+
+    var urlInput = document.createElement('input');
+    urlInput.id = 'urls';
+    urlInput.name = 'urls';
+    urlInput.type = 'hidden';
+    urlInput.value = urlString;
+    submitForm.appendChild(urlInput);
+
+    /* Legend urls */
+    var legendUrlsString = getLegendUrls();
+
+    var legendUrlInput = document.createElement('input');
+    legendUrlInput.id = 'legendUrls';
+    legendUrlInput.name = 'legendUrls';
+    legendUrlInput.type = 'hidden';
+    legendUrlInput.value = legendUrlsString;
+    submitForm.appendChild(legendUrlInput);
+    
+    var wktString = getWktStringForPrint();
+
+    var wktInput = document.createElement('input');
+    wktInput.id = 'wkts';
+    wktInput.name = 'wkts';
+    wktInput.type = 'hidden';
+    wktInput.value = wktString;
+    submitForm.appendChild(wktInput);
+    
+    /* Tiling spullen meegeven voor CombineImageSettings */
+    var tilingString = getTilingLayer();
+    
+    var tilingInput = document.createElement('input');
+    tilingInput.id = 'tilings';
+    tilingInput.name = 'tilings';
+    tilingInput.type = 'hidden';
+    tilingInput.value = tilingString;
+    submitForm.appendChild(tilingInput);
+    
+    /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
+     * wms url in de print zit waar dit uit gehaald kan worden */
+    
+    var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
+    var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
+    
+    var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
+    var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
+    var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
+    var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
+    
+    var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
+    
+    var mapSizeInput = document.createElement('input');
+    mapSizeInput.id = 'mapsizes';
+    mapSizeInput.name = 'mapsizes';
+    mapSizeInput.type = 'hidden';
+    mapSizeInput.value = mapWidth + ";" + mapHeight + ";" + mapBbox;
+    submitForm.appendChild(mapSizeInput);
+
+    submitForm.target="exportMapWindowNaam";
+    submitForm.action= "printmap.do";
+    submitForm.submit();
+
+    if(B3PGissuite.vars.exportMapWindow==undefined || B3PGissuite.vars.exportMapWindow==null || B3PGissuite.vars.exportMapWindow.closed){
+        B3PGissuite.vars.exportMapWindow = window.open("", "exportMapWindowNaam");
+        B3PGissuite.vars.exportMapWindow.focus();
+    }
+}
+
 function exportMap(){    
     var submitForm = document.createElement("FORM");
     document.body.appendChild(submitForm);

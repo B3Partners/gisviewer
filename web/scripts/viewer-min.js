@@ -3533,6 +3533,91 @@ function getLegendUrls() {
   }
   return b
 }
+function exportObjectData2PDF(a, b, c, d) {
+  a = "bronCaption" + a + b.id + c + "PDFfrm" + d;
+  a = $j("<form></form>").attr({method:"post", action:"services/Data2PDF", target:"pdfIframe", id:a, style:"float: left;"});
+  a = document.createElement("FORM");
+  document.body.appendChild(a);
+  a.method = "POST";
+  c = document.createElement("input");
+  c.id = "gbId";
+  c.name = "gbId";
+  c.type = "hidden";
+  c.value = b.id;
+  a.appendChild(c);
+  c = document.createElement("input");
+  c.id = "objectIds";
+  c.name = "objectIds";
+  c.type = "hidden";
+  c.value = b.csvPks;
+  a.appendChild(c);
+  b = document.createElement("input");
+  b.id = "orientation";
+  b.name = "orientation";
+  b.type = "hidden";
+  b.value = "staand";
+  a.appendChild(b);
+  b = getWMSLayersUrls();
+  c = document.createElement("input");
+  c.id = "urls";
+  c.name = "urls";
+  c.type = "hidden";
+  c.value = b;
+  a.appendChild(c);
+  var b = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), c = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), d = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, d = d + "," + e + "," + f + "," + g, e = document.createElement("input");
+  e.id = "mapsizes";
+  e.name = "mapsizes";
+  e.type = "hidden";
+  e.value = b + ";" + c + ";" + d;
+  a.appendChild(e);
+  a.target = "pdfIframe";
+  a.action = "services/Data2PDF";
+  a.submit()
+}
+function exportMap() {
+  var a = document.createElement("FORM");
+  document.body.appendChild(a);
+  a.method = "POST";
+  var b = getWMSLayersUrls(), c = document.createElement("input");
+  c.id = "urls";
+  c.name = "urls";
+  c.type = "hidden";
+  c.value = b;
+  a.appendChild(c);
+  b = getLegendUrls();
+  c = document.createElement("input");
+  c.id = "legendUrls";
+  c.name = "legendUrls";
+  c.type = "hidden";
+  c.value = b;
+  a.appendChild(c);
+  b = getWktStringForPrint();
+  c = document.createElement("input");
+  c.id = "wkts";
+  c.name = "wkts";
+  c.type = "hidden";
+  c.value = b;
+  a.appendChild(c);
+  b = getTilingLayer();
+  c = document.createElement("input");
+  c.id = "tilings";
+  c.name = "tilings";
+  c.type = "hidden";
+  c.value = b;
+  a.appendChild(c);
+  var b = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), c = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), d = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, d = d + "," + e + "," + f + "," + g, e = document.createElement("input");
+  e.id = "mapsizes";
+  e.name = "mapsizes";
+  e.type = "hidden";
+  e.value = b + ";" + c + ";" + d;
+  a.appendChild(e);
+  a.target = "exportMapWindowNaam";
+  a.action = "printmap.do";
+  a.submit();
+  if(B3PGissuite.vars.exportMapWindow == void 0 || B3PGissuite.vars.exportMapWindow == null || B3PGissuite.vars.exportMapWindow.closed) {
+    B3PGissuite.vars.exportMapWindow = window.open("", "exportMapWindowNaam"), B3PGissuite.vars.exportMapWindow.focus()
+  }
+}
 function exportMap() {
   var a = document.createElement("FORM");
   document.body.appendChild(a);

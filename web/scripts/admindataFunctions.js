@@ -31,56 +31,57 @@ function editFeature(ggbId, attrName, attrVal) {
 
 function popUp(link, title, width, heigth) {
     var pu = getParent().popUp(link, title, width, heigth);
-    if(window.focus) pu.focus();
+    if (window.focus)
+        pu.focus();
 }
 
 //writes the obj data from flamingo to a table
-function writeFeatureInfoData(obj){
-    var tableData="";
-    for (layer in obj){
-        tableData+="<table class=\"aanvullende_info_table\" >";
-        for (feature in obj[layer]){
-            tableData+="    <tr class=\"topRow\">";
-            tableData+="        <th colspan=\"2\" class=\"aanvullende_info_td\">&nbsp;";
-            tableData+=layer;
-            tableData+="        </th>";
-            tableData+="    </tr>";
-            var tellerAtt=0;
-            for (attribute in obj[layer][feature]){
-                if (tellerAtt%2==0){
-                    tableData+="    <tr>"
-                }else{
-                    tableData+="    <tr class=\"aanvullende_info_alternateTr\">"
+function writeFeatureInfoData(obj) {
+    var tableData = "";
+    for (layer in obj) {
+        tableData += "<table class=\"aanvullende_info_table\" >";
+        for (feature in obj[layer]) {
+            tableData += "    <tr class=\"topRow\">";
+            tableData += "        <th colspan=\"2\" class=\"aanvullende_info_td\">&nbsp;";
+            tableData += layer;
+            tableData += "        </th>";
+            tableData += "    </tr>";
+            var tellerAtt = 0;
+            for (attribute in obj[layer][feature]) {
+                if (tellerAtt % 2 == 0) {
+                    tableData += "    <tr>"
+                } else {
+                    tableData += "    <tr class=\"aanvullende_info_alternateTr\">"
                 }
                 tellerAtt++;
-                tableData+="        <td>"+attribute+"</td>"
-                tableData+="        <td>"+obj[layer][feature][attribute]+"</td>"
-                tableData+="    </tr>";
+                tableData += "        <td>" + attribute + "</td>"
+                tableData += "        <td>" + obj[layer][feature][attribute] + "</td>"
+                tableData += "    </tr>";
             }
-            tableData+="    <tr><td> </td><td> </td></tr>";
+            tableData += "    <tr><td> </td><td> </td></tr>";
         }
-        tableData+="</table>";
+        tableData += "</table>";
     }
-    if (document.getElementById("content_style")!=undefined && tableData.length>0){
-        document.getElementById("content_style").style.display="none";
+    if (document.getElementById("content_style") != undefined && tableData.length > 0) {
+        document.getElementById("content_style").style.display = "none";
     }
-    document.getElementById('getFeatureInfo').innerHTML=tableData;
+    document.getElementById('getFeatureInfo').innerHTML = tableData;
 }
 
 function writeNoResults() {
-    var tableData="";
-    tableData+="<table class=\"kolomtabel\">";
-    tableData+="<tr>";
-    tableData+="<td valign=\"top\">";
-    tableData+="<div id=\"inleiding\" class=\"loadingMessage\">";
-    tableData+="<h2>" + noResultsHeader + "</h2>";
-    tableData+="<p>" + noResultsTekst + "</p>";
-    tableData+="</div>";
-    tableData+="</td>";
-    tableData+="</tr>";
-    tableData+="</table>";
-    if (document.getElementById("content_style")!=undefined){
-        document.getElementById('content_style').innerHTML=tableData;
+    var tableData = "";
+    tableData += "<table class=\"kolomtabel\">";
+    tableData += "<tr>";
+    tableData += "<td valign=\"top\">";
+    tableData += "<div id=\"inleiding\" class=\"loadingMessage\">";
+    tableData += "<h2>" + noResultsHeader + "</h2>";
+    tableData += "<p>" + noResultsTekst + "</p>";
+    tableData += "</div>";
+    tableData += "</td>";
+    tableData += "</tr>";
+    tableData += "</table>";
+    if (document.getElementById("content_style") != undefined) {
+        document.getElementById('content_style').innerHTML = tableData;
     }
 }
 
@@ -89,7 +90,7 @@ var idcounter = 1;
 function handleGetGegevensBron(gegevensbron) {
     // aftellen verwerkte gegevensbron
     loop--;
-    if(!gegevensbron) {
+    if (!gegevensbron) {
         if (loop <= 0) {
             // geen enkele gegevensbron was gevuld!
             window.setTimeout("writeNoResults();", timeout);
@@ -102,7 +103,7 @@ function handleGetGegevensBron(gegevensbron) {
     var layout = gegevensbron.layout;
     if (layout == "admindata2") {
         handleGetGegevensBronSimpleHorizontal(gegevensbron);
-    }else if (layout == "admindata3") {
+    } else if (layout == "admindata3") {
         handleGetGegevensBronSimpleVertical(gegevensbron)
     } else if (layout.search("all_vertical") != -1) {
         handleGetGegevensAllVertical(gegevensbron, layout.replace("all_vertical_", ""));
@@ -111,7 +112,7 @@ function handleGetGegevensBron(gegevensbron) {
     }
 
     $j("#adminDataWrapper > .bronContainer").addClass("rootBronContainer");
-    if(ieVersion <= 7 && ieVersion != -1) {
+    if (ieVersion <= 7 && ieVersion != -1) {
         resizeWidthIE();
     }
 }
@@ -119,7 +120,8 @@ function handleGetGegevensBron(gegevensbron) {
 function resizeWidthIE() {
     var totalwidth = $j("#adminDataWrapper").outerWidth(true);
     $j("#adminDataWrapper > .rootBronContainer").each(function() {
-        if($j(this).outerWidth(true) < totalwidth) $j(this).width(totalwidth);
+        if ($j(this).outerWidth(true) < totalwidth)
+            $j(this).width(totalwidth);
     });
 }
 
@@ -131,16 +133,16 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
         "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer"
     });
-    if(rootBronContainer) {
+    if (rootBronContainer) {
         bronContainer.addClass("rootBronContainer");
         rootBronContainer = false;
     }
 
     // Create table content
-    if(gegevensbron.records) {
+    if (gegevensbron.records) {
         $j.each(gegevensbron.records, function(index, record) {
             // Create caption
-            var bronCaption = createBronCaption(gegevensbron, true, index+1);
+            var bronCaption = createBronCaption(gegevensbron, true, index + 1);
             // Create content table
             var bronContent = $j('<div></div>').attr({
                 "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
@@ -166,8 +168,8 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
     }
 
     // wachtmelding weghalen
-    if (document.getElementById("content_style")!=undefined){
-        document.getElementById("content_style").style.display="none";
+    if (document.getElementById("content_style") != undefined) {
+        document.getElementById("content_style").style.display = "none";
     }
 
     $j('#' + htmlId).append(bronContainer);
@@ -190,23 +192,23 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
         switchDataTab($j(this));
     }).html(tab);
 
-    if (tab=='tab1'){
+    if (tab == 'tab1') {
         tabField.html('1');
-    }else if (tab=='tab2'){
+    } else if (tab == 'tab2') {
         tabField.html('2');
-    }else if (tab=='tab3'){
+    } else if (tab == 'tab3') {
         tabField.html('3');
-    }else if (tab=='tab4'){
+    } else if (tab == 'tab4') {
         tabField.html('4');
-    }else if (tab=='tab5'){
+    } else if (tab == 'tab5') {
         tabField.html('5');
     }
 
     // Create table content
-    if(gegevensbron.records) {
+    if (gegevensbron.records) {
         $j.each(gegevensbron.records, function(index, record) {
             // Create caption
-            var bronCaption = createBronCaption(gegevensbron, true, index+1);
+            var bronCaption = createBronCaption(gegevensbron, true, index + 1);
             bronCaption.append(tab);
             // Create content table
             var bronContent = $j('<div></div>').attr({
@@ -230,19 +232,19 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
             // Append all to DOM tree
             bronContent.append(bronTable.append(bronTableBody));
             bronContainer.append(bronCaption.css({
-                "color":"#000000",
-                "background-color":"#ffffff"
+                "color": "#000000",
+                "background-color": "#ffffff"
             })).append(bronContent);
         });
     }
 
     // wachtmelding weghalen
-    if (document.getElementById("content_style")!=undefined){
-        document.getElementById("content_style").style.display="none";
+    if (document.getElementById("content_style") != undefined) {
+        document.getElementById("content_style").style.display = "none";
     }
 
     if (gegevensbron.records) {
-        if($j('#' + htmlId).find("#tabHeader").length != 1) {
+        if ($j('#' + htmlId).find("#tabHeader").length != 1) {
             var tabHeader = $j('<div></div>').attr({
                 "id": "tabHeader",
                 "class": "tabHeader",
@@ -251,13 +253,13 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
             $j('#' + htmlId).append(tabHeader);
             $j('#' + htmlId + " > #tabHeader").append(tabField.addClass("tabFieldActive"));
         } else {
-            if($j('#' + htmlId + " > #tabHeader").find("#"+tabField.attr("id")).length != 1) {
+            if ($j('#' + htmlId + " > #tabHeader").find("#" + tabField.attr("id")).length != 1) {
                 $j('#' + htmlId + " > #tabHeader").append(tabField);
             }
         }
-        bronContainerOrder[bronContainer.attr("id")]=gegevensbron.order;
+        bronContainerOrder[bronContainer.attr("id")] = gegevensbron.order;
 
-        if($j('#' + htmlId).find("#tabContainer").length != 1)
+        if ($j('#' + htmlId).find("#tabContainer").length != 1)
         {
             var tabContainer = $j('<div></div>').attr({
                 "id": "tabContainer",
@@ -266,21 +268,22 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
             $j('#' + htmlId).append(tabContainer);
             tabContainer.append(bronContainer);
         } else {
-            if(!$j("#"+tabFieldId).hasClass("tabFieldActive")) bronContainer.css("display", "none");
-            var diff=0;
-            var beforeElement=null;
-            if (gegevensbron.order!=null){
+            if (!$j("#" + tabFieldId).hasClass("tabFieldActive"))
+                bronContainer.css("display", "none");
+            var diff = 0;
+            var beforeElement = null;
+            if (gegevensbron.order != null) {
                 $j.each($j('#' + htmlId + " > #tabContainer").children(), function(index, domElement) {
-                    var elemOrder=bronContainerOrder[domElement.id];
-                    if (elemOrder > gegevensbron.order && (diff == 0 || diff > elemOrder-gegevensbron.order)){
-                        beforeElement=domElement;
-                        diff=elemOrder-gegevensbron.order;
+                    var elemOrder = bronContainerOrder[domElement.id];
+                    if (elemOrder > gegevensbron.order && (diff == 0 || diff > elemOrder - gegevensbron.order)) {
+                        beforeElement = domElement;
+                        diff = elemOrder - gegevensbron.order;
                     }
                 });
             }
-            if (beforeElement!=null){
+            if (beforeElement != null) {
                 bronContainer.insertBefore(beforeElement);
-            }else{
+            } else {
                 $j('#' + htmlId + " > #tabContainer").append(bronContainer);
             }
         }
@@ -291,7 +294,7 @@ function switchDataTab($tablink) {
     var $tabContainer = $tablink.parent().next();
     $tablink.parent().find(".tabFieldActive").removeClass("tabFieldActive");
     $tabContainer.find(".tabbedContainer").hide();
-    $tabContainer.find("."+$tablink.attr("id").replace("tabField_", "")).show();
+    $tabContainer.find("." + $tablink.attr("id").replace("tabField_", "")).show();
     $tablink.addClass("tabFieldActive");
 }
 
@@ -303,7 +306,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
         "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer"
     });
-    if(rootBronContainer) {
+    if (rootBronContainer) {
         bronContainer.addClass("rootBronContainer");
         rootBronContainer = false;
     }
@@ -327,7 +330,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     }
 
     // Create table content
-    if(!gegevensbron.records) {
+    if (!gegevensbron.records) {
         var size = 1;
         if (gegevensbron.labels) {
             size = gegevensbron.labels.length;
@@ -346,19 +349,19 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     }
 
     // wachtmelding weghalen
-    if (document.getElementById("content_style")!=undefined){
-        document.getElementById("content_style").style.display="none";
+    if (document.getElementById("content_style") != undefined) {
+        document.getElementById("content_style").style.display = "none";
     }
 
     // Append all to DOM tree
     bronContent.append(bronTable.append(bronTableHead).append(bronTableBody));
     bronContainer
-    .append(bronCaption)
-    .append(bronContent);
+            .append(bronCaption)
+            .append(bronContent);
     $j('#' + htmlId).append(bronContainer);
 }
 
-function handleGetGegevensBronMulti(gegevensbron) {            
+function handleGetGegevensBronMulti(gegevensbron) {
     var htmlId = gegevensbron.parentHtmlId;
 
     // Create container
@@ -366,12 +369,12 @@ function handleGetGegevensBronMulti(gegevensbron) {
         "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
         "class": "bronContainer"
     });
-    
-    if(rootBronContainer) {
+
+    if (rootBronContainer) {
         bronContainer.addClass("rootBronContainer");
         rootBronContainer = false;
     }
-    
+
     // Create caption
     var bronCaption = createBronCaption(gegevensbron, false, null);
 
@@ -383,12 +386,12 @@ function handleGetGegevensBronMulti(gegevensbron) {
     var bronTable = $j('<table></table>');
     var bronTableHead = $j('<thead></thead>');
     var bronTableBody = $j('<tbody></tbody>');
-    
+
     // Create table heading
     if (gegevensbron.editable && getParent().B3PGissuite.config.showEditTool) {
         var bewerk = {
             commando: null,
-            eenheid:null,
+            eenheid: null,
             id: -1,
             kolomBreedte: 0,
             kolomNaam: "bewerk",
@@ -397,7 +400,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
         }
         gegevensbron.labels.push(bewerk);
     }
-    
+
     if (gegevensbron.records) {
         var trHead = createTableHead(gegevensbron.labels, false);
         bronTableHead.append(trHead);
@@ -407,80 +410,81 @@ function handleGetGegevensBronMulti(gegevensbron) {
      * is configured in basisregel */
     if (gegevensbron.records && gegevensbron.records.length == 1) {
         var url;
-        
+
         if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
             if (gegevensbron.records[0].values[0].value) {
                 url = gegevensbron.records[0].values[0].value;
             }
-        
+
             if (gegevensbron.records[0].values[0].valueList) {
                 url = gegevensbron.records[0].values[0].valueList;
             }
-    
+
             parent.popUp(url, 'externe_link', 800, 600);
-        }        
+        }
     }
-    
+
     // Create table content
-    if(!gegevensbron.records) {        
+    if (!gegevensbron.records) {
         var size = 1;
         if (gegevensbron.labels) {
             size = gegevensbron.labels.length;
         }
         var tr = createEmptyRow(size);
         bronTableBody.append(tr);
-    } else {        
-        $j.each(gegevensbron.records, function(index, record) {            
+    } else {
+        $j.each(gegevensbron.records, function(index, record) {
             var tr = $j('<tr></tr>');
             var volgnr = $j('<td></td>').css({
                 "width": "50px"
             });
 
-            if (record.showMagicWand) {                
-                var icon = $j('<img src="'+wandicon+'" alt="Selecteer object in kaart" title="Selecteer object in kaart" />')
-                .click(function() {
-                    editFeature(gegevensbron.id,gegevensbron.adminPk,record.id);
+            if (record.showMagicWand) {
+                var icon = $j('<img src="' + wandicon + '" alt="Selecteer object in kaart" title="Selecteer object in kaart" />')
+                        .click(function() {
+                    editFeature(gegevensbron.id, gegevensbron.adminPk, record.id);
                 });
                 volgnr.append(icon);
             }
-            
+
             volgnr.append(" ");
-            volgnr.append(index+1);
-            
+            volgnr.append(index + 1);
+
             tr.append(volgnr);
-            $j.each(record.values, function(index2, waarde) {                
+            $j.each(record.values, function(index2, waarde) {
                 var td = createTableTd(waarde);
                 tr.append(td);
             });
-            
+
             var editTd = $j('<td></td>').css({
                 "width": "50px"
             });
-            
+
             if (gegevensbron.editable && getParent().B3PGissuite.config.showEditTool) {
-                var icon = $j('<img src="'+pencil+'" alt="Edit object" title="Edit object" />')
-                .click(function() {
+                var icon = $j('<img src="' + pencil + '" alt="Edit object" title="Edit object" />')
+                        .click(function() {
                     var ec = getParent().B3PGissuite.vars.editComponent;
-                    ec.edit(record,gegevensbron.id);
+                    ec.edit(record, gegevensbron.id);
                 });
                 editTd.append(icon);
             }
             tr.append(editTd);
-            
+
             bronTableBody.append(tr);
             // Check if there are childs
-            if(record.childs != null && record.childs.length > 0) {                
-                $j.each(record.childs, function(index2, child) {                    
+            if (record.childs != null && record.childs.length > 0) {
+                $j.each(record.childs, function(index2, child) {
                     var childDivId = 'bronChild' + gegevensbron.id + '_' + fixId(record.id) + '_' + fixId(child.id) + idcounter++;
                     var childTr = $j('<tr></tr>');
-                    var toggleIcon = $j('<img src="'+plusicon+'" alt="Openklappen" title="Openklappen" />')
-                    .click(function(){
-                        var childWkt=child.wkt;
-                        if (!onlyFeaturesInGeom){
-                            childWkt=null;
+                    var toggleIcon = $j('<img src="' + plusicon + '" alt="Openklappen" title="Openklappen" />')
+                            .click(function() {
+                        var childWkt = child.wkt;
+                        if (!onlyFeaturesInGeom) {
+                            childWkt = null;
                         }
                         var childLoaded = loadChild(childDivId, child.id, childWkt, child.cql);
-                        if(!childLoaded) toggleBron($j(this));
+                        if (!childLoaded)
+                            toggleBron($j(this));
                     });
                     var collapse = $j('<td></td>').css({
                         "width": "50px"
@@ -494,64 +498,64 @@ function handleGetGegevensBronMulti(gegevensbron) {
                         "class": "childCaption"
                     });
                     childCaption
-                    .append(toggleIcon)
-                    .append(' ' + child.title);
-                    if (child.aantalRecords>1) {
+                            .append(toggleIcon)
+                            .append(' ' + child.title);
+                    if (child.aantalRecords > 1) {
                         childCaption.append(' (' + child.aantalRecords + ')');
                     }
                     var childDiv = $j('<div></div>').attr({
                         "id": childDivId,
                         "class": "bronChild bronChildEmpty"
                     });
-                    var loadingIcon = $j('<img src="'+loadingicon+'" alt="Loading" title="Loading" />')
+                    var loadingIcon = $j('<img src="' + loadingicon + '" alt="Loading" title="Loading" />')
                     var childLoading = $j('<div></div>').attr({
                         "id": "childLoading" + childDivId,
                         "class": "childLoading"
                     })
-                    .append(loadingIcon)
-                    .hide();
+                            .append(loadingIcon)
+                            .hide();
                     childTd
-                    .append(childCaption)
-                    .append(childLoading)
-                    .append(childDiv);
+                            .append(childCaption)
+                            .append(childLoading)
+                            .append(childDiv);
                     childTr.append(childTd);
                     bronTableBody.append(childTr);
-                // toggleIcon.click();
+                    // toggleIcon.click();
                 });
             }
         });
     }
 
     // wachtmelding weghalen
-    if (document.getElementById("content_style")!=undefined){
-        document.getElementById("content_style").style.display="none";
+    if (document.getElementById("content_style") != undefined) {
+        document.getElementById("content_style").style.display = "none";
     }
 
     // Append all to DOM tree
     bronContent.append(bronTable.append(bronTableHead).append(bronTableBody));
     bronContainer
-    .append(bronCaption)
-    .append(bronContent)
+            .append(bronCaption)
+            .append(bronContent)
     $j('#' + htmlId).append(bronContainer);
 
     // child loading weghalen indien aanwezig
-    $j('#'+htmlId).siblings('.childLoading').hide();
+    $j('#' + htmlId).siblings('.childLoading').hide();
 
 // alle childs pre-loaden
 // $j('.childCaption', bronContainer).find('img').click();
 }
 
 function loadChild(bronContentId, beanId, wkt, beanCql) {
-    var $bronContentDiv = $j('#'+bronContentId);
+    var $bronContentDiv = $j('#' + bronContentId);
 
-    if($bronContentDiv.hasClass("bronChildEmpty"))
+    if ($bronContentDiv.hasClass("bronChildEmpty"))
     {
-        JCollectAdmindata.fillGegevensBronBean(beanId, 0, wkt, beanCql,false, bronContentId, bookmarkAppcode, handleGetGegevensBron);
+        JCollectAdmindata.fillGegevensBronBean(beanId, 0, wkt, beanCql, false, bronContentId, bookmarkAppcode, handleGetGegevensBron);
         $bronContentDiv.removeClass("bronChildEmpty").addClass("bronContentClosed");
-        $j("#childCaption"+bronContentId).hide();
-        $j('#childLoading'+bronContentId).show();
+        $j("#childCaption" + bronContentId).hide();
+        $j('#childLoading' + bronContentId).show();
         window.setTimeout(function() {
-            $j('#childLoading'+bronContentId).hide();
+            $j('#childLoading' + bronContentId).hide();
         }, timeout);
 
         return true;
@@ -563,7 +567,7 @@ function loadChild(bronContentId, beanId, wkt, beanCql) {
 function toggleBron(toggleIcon) {
     // toggleIcon = plus/min icon clicked
     // Test first if clicked icon is part of childCaption (-> hide child caption, show child)
-    if(toggleIcon.parent().hasClass("childCaption")) {
+    if (toggleIcon.parent().hasClass("childCaption")) {
         var $childBron = toggleIcon.parent().siblings(".bronChild").children();
         $childBron.children(".bronCaption").show();
         $childBron.children(".bronContent").show().removeClass("bronContentClosed").addClass("bronContentOpen");
@@ -571,17 +575,17 @@ function toggleBron(toggleIcon) {
     } else {
         var $bronContent = toggleIcon.parent().siblings('.bronContent');
         // Check if clicked icon is part of rootElement
-        if($bronContent.parent().hasClass("rootBronContainer")) {
-            if($bronContent.hasClass("bronContentOpen")) {
+        if ($bronContent.parent().hasClass("rootBronContainer")) {
+            if ($bronContent.hasClass("bronContentOpen")) {
                 $bronContent.hide().removeClass("bronContentOpen").addClass("bronContentClosed");
                 toggleIcon.attr("src", plusicon);
             } else {
                 $bronContent.show().removeClass("bronContentClosed").addClass("bronContentOpen");
                 toggleIcon.attr("src", minusicon);
             }
-        // It is a child element (-> Hide child, show child caption)
+            // It is a child element (-> Hide child, show child caption)
         } else {
-            if($bronContent.hasClass("bronContentOpen")) {
+            if ($bronContent.hasClass("bronContentOpen")) {
                 $bronContent.parent().parent().siblings('.childCaption').show();
                 $bronContent.hide().removeClass("bronContentOpen").addClass("bronContentClosed");
                 $bronContent.siblings(".bronCaption").hide();
@@ -593,7 +597,7 @@ function toggleBron(toggleIcon) {
 function fixId(myid) {
     var newId = "";
     if (typeof myid === 'string') {
-        newId = myid.replace(/(:|\.|\s)/g,'_');
+        newId = myid.replace(/(:|\.|\s)/g, '_');
     }
     return newId;
 }
@@ -623,13 +627,13 @@ function createBronCaption(gegevensbron, simple, index) {
         return bronCaption;
     }
 
-    var collapseImg = $j('<img src="'+minusicon+'" alt="Dichtklappen" title="Dichtklappen" />');
+    var collapseImg = $j('<img src="' + minusicon + '" alt="Dichtklappen" title="Dichtklappen" />');
     collapseImg.click(function() {
         toggleBron($j(this));
     });
     bronCaption.append(collapseImg);
     bronCaption.append(' ' + title);
-    
+
     //CSV export knop
     var csv_export_url = "services/Data2CSV";
 
@@ -645,48 +649,32 @@ function createBronCaption(gegevensbron, simple, index) {
     frm.append('<input type="hidden" name="objectIds" value="' + gegevensbron.csvPks + '" />');
     bronCaption.append(frm);
 
-    var icon = $j('<img src="'+csvexporticon+'"/>').attr({
+    var icon = $j('<img src="' + csvexporticon + '"/>').attr({
         "alt": "Exporteer naar CSV bestand",
         "title": "Exporteer naar CSV bestand"
     }).click(function() {
         // popUp(csv_export_url, 'csv_export', 600, 500);
-        $j("#"+csvFrmId).submit();
+        $j("#" + csvFrmId).submit();
     });
-    
+
     bronCaption.append(" ");
-    
-    if(gegevensbron.records) {
+
+    if (gegevensbron.records) {
         bronCaption.append(icon);
     }
 
     //Info export knop
-    var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks+ "&addKaart=j";    
-    
-    //PDF export knop
-    var pdf_export_url = "services/Data2PDF";
+    var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks + "&addKaart=j";
 
-    var pdfFormId = "bronCaption" + htmlId + gegevensbron.id + index + "PDFfrm" + idcounter++;
-    var frm = $j('<form></form>').attr({
-        method: 'post',
-        action: pdf_export_url,
-        target: 'pdfIframe',
-        id: pdfFormId,
-        style: 'float: left;'
-    });
-    frm.append('<input type="hidden" name="gbId" value="' + gegevensbron.id + '" />');
-    frm.append('<input type="hidden" name="objectIds" value="' + gegevensbron.csvPks + '" />');
-    frm.append('<input type="hidden" name="orientation" value="staand" />');
-    
-    bronCaption.append(frm);
+    //bronCaption.append(frm);
 
-    var iconPdf = $j('<img src="'+pdficon+'"/>').attr({
+    var iconPdf = $j('<img src="' + pdficon + '"/>').attr({
         "alt": "Exporteer records met kaartuitsnede naar PDF",
         "title": "Exporteer records met kaartuitsnede naar PDF"
-    }).click(function() {
-        // popUp(csv_export_url, 'csv_export', 600, 500);
-        $j("#"+pdfFormId).submit();
+    }).click(function() {        
+        parent.exportObjectData2PDF(htmlId, gegevensbron, index, idcounter++);
     });
-    
+
     var infoFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm" + idcounter++;
     frm = $j('<form></form>').attr({
         method: 'post',
@@ -695,27 +683,28 @@ function createBronCaption(gegevensbron, simple, index) {
         id: infoFrmId,
         style: 'float: left;'
     });
+
     frm.append('<input type="hidden" name="themaId" value="' + gegevensbron.id + '" />');
     frm.append('<input type="hidden" name="primaryKeys" value="' + gegevensbron.csvPks + '" />');
     frm.append('<input type="hidden" name="addKaart" value="j" />');
+
     bronCaption.append(frm);
 
-    var icona = $j('<img src="'+infoexporticon+'" alt="Info Export" alt="Info Export"/>').attr({
+    var icona = $j('<img src="' + infoexporticon + '" alt="Info Export" alt="Info Export"/>').attr({
         "alt": "Toon info van alle objecten in de kaartlaag",
         "title": "Toon info van alle objecten in de kaartlaag"
-    })
-    .click(function() {
+    }).click(function() {
         popUp(info_export_url, 'info_export', 600, 500);
-        $j("#"+infoFrmId).submit();
+        $j("#" + infoFrmId).submit();
     });
-    
+
     bronCaption.append(" ");
-    
-    if(gegevensbron.records) {
+
+    if (gegevensbron.records) {
         bronCaption.append(icona);
-        
+
         bronCaption.append(" ");
-        
+
         bronCaption.append(iconPdf);
     }
 
@@ -733,7 +722,7 @@ function createTableHead(labels, simple) {
         var volgnr = $j('<th></th>').css({
             "width": "50px"
         })
-        .html('Volgnr');
+                .html('Volgnr');
         trHead.append(volgnr);
     }
     $j.each(labels, function(index, label) {
@@ -746,53 +735,53 @@ function createTableHead(labels, simple) {
 function createTableTh(label) {
     var kolomBreedte = (label.kolomBreedte == 0) ? 150 : label.kolomBreedte;
     var th = $j('<th></th>')
-    .css({
+            .css({
         "width": kolomBreedte + "px"
     })
-    .html(label.label);
+            .html(label.label);
     return th;
 }
 
 /* only numbers and math operators are valid */
-function containsInvalidEvalChars(evalStr){  
-    var pattern = /[^0-9-+/*%()]/; 
-    
+function containsInvalidEvalChars(evalStr) {
+    var pattern = /[^0-9-+/*%()]/;
+
     return pattern.test(evalStr);
 }
 
-function evalObjectDataCommando(commando) {   
-    var value;  
-    
+function evalObjectDataCommando(commando) {
+    var value;
+
     /* remove = and spaces */
-    var evalString = commando.substring(1, commando.length).replace(/ /g, '');    
-      
-    if (!containsInvalidEvalChars(evalString)) {        
+    var evalString = commando.substring(1, commando.length).replace(/ /g, '');
+
+    if (!containsInvalidEvalChars(evalString)) {
         var waarde = eval(evalString);
         if (/[.,]/.test(waarde)) { // Fix to 3 decimals
             value = waarde.toFixed(3);
         } else {
             value = waarde;
-        }        
+        }
     } else {
         value = "Fout in " + evalString;
-    } 
-    
+    }
+
     return value;
 }
 
 var idcounterJsFunctions = 1;
 
-function createTableTd(waarde) {    
+function createTableTd(waarde) {
     var kolomBreedte = (waarde.kolomBreedte == 0) ? 150 : waarde.kolomBreedte;
     var td = $j('<td></td>')
-    .css({
+            .css({
         "width": kolomBreedte + "px"
     });
-    
-    if(waarde.type == 'TYPE_DATA') {   
-        if (!waarde.value) {            
+
+    if (waarde.type == 'TYPE_DATA') {
+        if (!waarde.value) {
             td.html("-");
-        } else {            
+        } else {
             /* In data .html vervangen door klikbare links. Gebruiken voor vervangen 
              * komma gescheiden html links in verwijzingNaarTekst */
             var links;
@@ -800,14 +789,14 @@ function createTableTd(waarde) {
             var type;
             var imgHtml;
             if (waarde.value.indexOf(".htm") != -1 || waarde.value.indexOf(".htm") != -1 ||
-                waarde.value.indexOf(".pdf") != -1) {   
-                
+                    waarde.value.indexOf(".pdf") != -1) {
+
                 var links;
-                if (waarde.value.indexOf(",") != -1) {                     
+                if (waarde.value.indexOf(",") != -1) {
                     links = trim(waarde.value, ' ').split(",");
                 }
-                
-                if (links) {                    
+
+                if (links) {
                     html = "";
                     for (var i in links) {
                         if (links[i].indexOf("t_") != -1) {
@@ -818,19 +807,19 @@ function createTableTd(waarde) {
                             type = "regels";
                         } else if (links[i].indexOf("rb_") != -1) {
                             type = "bijlagen";
-                        } else{
+                        } else {
                             type = links[i];
                         }
-                        
-                        if (links[i].indexOf(".pdf") != -1) {                            
-                            imgHtml = "<img src=" + pdficon + " alt=\""+type+"\" title=\"" +type+ "\" border=0>";
+
+                        if (links[i].indexOf(".pdf") != -1) {
+                            imgHtml = "<img src=" + pdficon + " alt=\"" + type + "\" title=\"" + type + "\" border=0>";
                         } else {
-                            imgHtml = "<img src=" + urlicon + " alt=\""+type+"\" title=\"" +type+ "\" border=0>";
-                        }                        
-                        
+                            imgHtml = "<img src=" + urlicon + " alt=\"" + type + "\" title=\"" + type + "\" border=0>";
+                        }
+
                         html += " <a href=" + links[i] + " target=_blank>" + imgHtml + "</a>";
-                    }   
-                    
+                    }
+
                     td.html(html);
                 }
             } else {
@@ -843,59 +832,59 @@ function createTableTd(waarde) {
         }
     }
 
-    if(waarde.type == 'TYPE_URL') {        
+    if (waarde.type == 'TYPE_URL') {
         if (!waarde.value) {
             td.html("-");
         } else {
-            var icon = $j('<img src="'+infoicon+'" alt="Aanvullende informatie" title="Aanvullende informatie" />')
-            .click(function() {
+            var icon = $j('<img src="' + infoicon + '" alt="Aanvullende informatie" title="Aanvullende informatie" />')
+                    .click(function() {
                 popUp(waarde.value, 'aanvullende_info_scherm', 500, 600);
             });
             td.html(icon);
         }
     }
 
-    if(waarde.type == 'TYPE_FUNCTION') {        
+    if (waarde.type == 'TYPE_FUNCTION') {
         if (!waarde.value) {
             td.html("-");
-        } else if(waarde.value.search('###') != -1) {
+        } else if (waarde.value.search('###') != -1) {
             var funcarray = waarde.value.split('###');
-            var fLink=null;
-            if (funcarray[0]=="null"){
-                fLink =$j('<img src="'+flagicon+'" alt="Voer functie uit" title="Voer functie uit" />');
-            }else{
-                fLink = $j('<a href="#" id="jsFunction_'+(idcounterJsFunctions++)+'">'+funcarray[0]+'</a>')
+            var fLink = null;
+            if (funcarray[0] == "null") {
+                fLink = $j('<img src="' + flagicon + '" alt="Voer functie uit" title="Voer functie uit" />');
+            } else {
+                fLink = $j('<a href="#" id="jsFunction_' + (idcounterJsFunctions++) + '">' + funcarray[0] + '</a>')
             }
             fLink.click(function() {
                 eval(funcarray[1]);
             });
             td.html(fLink);
         } else {
-            var icon3 = $j('<img src="'+flagicon+'" alt="Voer functie uit" title="Voer functie uit" />')
-            .click(function() {
+            var icon3 = $j('<img src="' + flagicon + '" alt="Voer functie uit" title="Voer functie uit" />')
+                    .click(function() {
                 eval(waarde.value);
             });
             td.html(icon3);
         }
     }
 
-    if (waarde.type == 'TYPE_QUERY') {        
-        if(waarde.valueList.length > 1){
+    if (waarde.type == 'TYPE_QUERY') {
+        if (waarde.valueList.length > 1) {
             var labels = waarde.value.split(',');
         }
-		
+
         /* Een Objectdata veld met een berekening, bijvoorbeeld =[A]*[B] */
-        if(waarde.valueList && waarde.valueList.length == 1) {
+        if (waarde.valueList && waarde.valueList.length == 1) {
             var commando = waarde.valueList[0];
-            
-            if (commando && commando.charAt(0) == '=') {                
+
+            if (commando && commando.charAt(0) == '=') {
                 var value = evalObjectDataCommando(waarde.valueList[0]);
                 td.append(value);
-                
+
                 return td;
             }
-        } 
-		
+        }
+
         var i = 0;
         $j.each(waarde.valueList, function(index3, listWaarde) {
 
@@ -904,39 +893,39 @@ function createTableTd(waarde) {
 
             if (waarde.value != null && waarde.value != '') {
                 splitWaardes = waarde.value.split(".");
-                ext = splitWaardes[splitWaardes.length-1];
+                ext = splitWaardes[splitWaardes.length - 1];
             }
 
             if (!listWaarde) {
                 td.append("-");
             } else {
                 var linkspan = $j('<span></span>');
-                var clickable=null;
-                if(labels){
-                    clickable = $j('<a href="#">'+labels[i]+'</a>')
-                    .attr({
+                var clickable = null;
+                if (labels) {
+                    clickable = $j('<a href="#">' + labels[i] + '</a>')
+                            .attr({
                         "title": listWaarde
                     });
                     i++;
-                } else if (ext == 'pdf'){
-                    clickable = $j('<a href="#"><img src="'+pdficon+'" alt="Bekijk PDF" border="0" /></a>')
-                    .attr({
+                } else if (ext == 'pdf') {
+                    clickable = $j('<a href="#"><img src="' + pdficon + '" alt="Bekijk PDF" border="0" /></a>')
+                            .attr({
                         "title": listWaarde
                     });
                 } else if (splitWaardes.length > 1 && ext != 'pdf') {
-                    clickable = $j('<a href="#"><img src="'+docicon+'" alt="Bekijk document" border="0" /></a>')
-                    .attr({
+                    clickable = $j('<a href="#"><img src="' + docicon + '" alt="Bekijk document" border="0" /></a>')
+                            .attr({
                         "title": listWaarde
                     });
-                }else if (waarde.value){
-                    clickable = $j('<a href="#">'+waarde.value+'</a>')
-                    .attr({
+                } else if (waarde.value) {
+                    clickable = $j('<a href="#">' + waarde.value + '</a>')
+                            .attr({
                         "title": listWaarde
                     });
                 } else {
                     // TODO: icon kiezen afh van extentie listWaarde
-                    clickable = $j('<img src="'+urlicon+'" alt="Externe informatie" border="0"/>')
-                    .attr({
+                    clickable = $j('<img src="' + urlicon + '" alt="Externe informatie" border="0"/>')
+                            .attr({
                         "title": listWaarde
                     })
                 }
@@ -949,7 +938,7 @@ function createTableTd(waarde) {
             }
         });
     }
-    
+
     return td;
 }
 
@@ -958,13 +947,13 @@ function createEmptyRow(size) {
     var td = $j('<td></td>').attr({
         "colSpan": size
     })
-    .html("Er zijn geen gegevens gevonden.")
-    .css("font-size", "1.2em")
-    .css("font-weight", "bold")
-    .css("color", "#808080");
-    
+            .html("Er zijn geen gegevens gevonden.")
+            .css("font-size", "1.2em")
+            .css("font-weight", "bold")
+            .css("color", "#808080");
+
     tr.append(td);
-    
+
     return tr;
 }
 
@@ -982,7 +971,7 @@ function createEmptyRow(size) {
  * attributeValue: waarde van het attribuut
  * eenheid: eventueel eenheid voor omrekenen
  */
-function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
     var oldValue = element.innerHTML;
     var newValue;
 
@@ -1001,7 +990,7 @@ function setAttributeValue(element, themaid, keyName, keyValue, attributeName, a
     JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
 }
 
-function setAttributeStringValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+function setAttributeStringValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
     var oldValue = element.innerHTML;
     var newValue;
 
@@ -1026,11 +1015,11 @@ function setAttributeStringValue(element, themaid, keyName, keyValue, attributeN
     JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
 }
 
-function setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+function setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
     var oldValue = element.innerHTML;
     var newValue;
-    
-    if(oldValue == '' || oldValue == 'Nieuw' || oldValue == 'nieuw') {
+
+    if (oldValue == '' || oldValue == 'Nieuw' || oldValue == 'nieuw') {
         newValue = 'afgemeld';
     } else {
         newValue = 'nieuw';
@@ -1039,12 +1028,12 @@ function setStatusValue(element, themaid, keyName, keyValue, attributeName, attr
     JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
 }
 
-function setStatusValueDigitree(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+function setStatusValueDigitree(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
     /* Nu wordt er gegeken naar wat de waarde is die in de link staat,
      * deze wordt gebruikt, niet attributeValue */
     var oldValue = element.innerHTML;
 
-    if(oldValue == 'Leeg' || oldValue == 'Nee' || oldValue == 'Nieuw' || oldValue == 'nieuw') {
+    if (oldValue == 'Leeg' || oldValue == 'Nee' || oldValue == 'Nieuw' || oldValue == 'nieuw') {
         var newValue = 'Ja';
         JMapData.setAttributeValue(element.id, themaid, keyName, keyValue, attributeName, attributeValue, newValue, handleSetAttribute);
     }
@@ -1060,8 +1049,8 @@ function setStatusValueDigitree(element, themaid, keyName, keyValue, attributeNa
 var currentThemaid, currentKeyName, currentKeyValue, currentAttributeName, currentEenheid;
 var isOpen = false;
 var currentEl;
-function setAttributeText(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
-    if(isOpen) {
+function setAttributeText(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+    if (isOpen) {
         currentEl.style.display = 'block';
     }
     isOpen = true;
@@ -1073,8 +1062,8 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
     currentEenheid = eenheid;
     var opmerkingenedit = document.getElementById('opmerkingenedit');
     var pos = findPos(element);
-    opmerkingenedit.style.left = pos[0]-1 + 'px';
-    opmerkingenedit.style.top = pos[1]-1 + 'px';
+    opmerkingenedit.style.left = pos[0] - 1 + 'px';
+    opmerkingenedit.style.top = pos[1] - 1 + 'px';
     opmerkingenedit.style.display = 'block';
     document.getElementById('opmText').focus();
     element.style.display = 'none';
@@ -1093,17 +1082,17 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
 /**
  * handle the returned value
  */
-function handleSetAttribute(str){
+function handleSetAttribute(str) {
     if (str[0] == null || str[0] == "") {
         messagePopup("", "Kon attribuut niet instellen.", "error");
     } else {
-        document.getElementById(str[0]).innerHTML=str[1];
+        document.getElementById(str[0]).innerHTML = str[1];
     }
 }
 
 function handleSetText(str) {
     document.getElementById('opmerkingenedit').style.display = 'none';
-    document.getElementById(str[0]).innerHTML=str[1];
+    document.getElementById(str[0]).innerHTML = str[1];
     document.getElementById(str[0]).onclick = function() {
         setAttributeText(this, currentThemaid, currentKeyName, currentKeyValue, currentAttributeName, str[1], currentEenheid);
     }
@@ -1112,7 +1101,7 @@ function handleSetText(str) {
 }
 
 /* Dummy function to test Javascript function in objectdata */
-function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){
+function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
     var msg = "elem=" + element + " themaid=" + themaid + " keyname=" + keyName + " keyval=" + keyValue + " attrname=" + attributeName + " attrval=" + attributeValue + " eenh=" + eenheid;
 
     messagePopup("doDummy", msg, "information");
@@ -1121,12 +1110,12 @@ function doDummy(element, themaid, keyName, keyValue, attributeName, attributeVa
 /**
  *Calculate the Area of the object.
  */
-function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid){   
-    if (attributeName==null || attributeValue == null){
+function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+    if (attributeName == null || attributeValue == null) {
         attributeName = keyName;
         attributeValue = keyValue;
     }
-    JMapData.getArea(element.id,themaid,attributeName,attributeValue,eenheid,handleGetArea);
+    JMapData.getArea(element.id, themaid, attributeName, attributeValue, eenheid, handleGetArea);
 }
 /**
  *Handle the returned area.
@@ -1135,9 +1124,9 @@ function handleGetArea(str) {
     if (str[0] == null || str[0] == "") {
         messagePopup("", "Kon oppervlakte niet berekenen.", "error");
     } else {
-        document.getElementById(str[0]).innerHTML=str[1];
+        document.getElementById(str[0]).innerHTML = str[1];
     }
-}  
+}
 
 function trim(str, chars) {
     return ltrim(rtrim(str, chars), chars);
@@ -1153,60 +1142,60 @@ function rtrim(str, chars) {
     return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
 }
 
-function getParent(){
-    if (window.opener){
+function getParent() {
+    if (window.opener) {
         return window.opener;
-    }else if (window.parent){
+    } else if (window.parent) {
         return window.parent;
-    }else{
+    } else {
         messagePopup("", "No parent found", "error");
 
         return null;
     }
 }
 
-function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
+function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
     //console.log("Thema id: "+themaid+" "+naampk+":"+waardepk);
-    if (waardeingevuldekolom=="null"){
-        waardeingevuldekolom=null;
+    if (waardeingevuldekolom == "null") {
+        waardeingevuldekolom = null;
     }
-    getParent().showMaatregel(waardeingevuldekolom,gegevensbronId,waardepk);
-    
+    getParent().showMaatregel(waardeingevuldekolom, gegevensbronId, waardepk);
+
 }
 
-function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom){
-    if (naamingevuldekolom==null || waardeingevuldekolom == null){
+function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
+    if (naamingevuldekolom == null || waardeingevuldekolom == null) {
         naamingevuldekolom = naampk;
         waardeingevuldekolom = waardepk;
     }
-    var sldstring=window.location.protocol + "//" +  window.location.host + "/gisviewer/CreateSLD";
+    var sldstring = window.location.protocol + "//" + window.location.host + "/gisviewer/CreateSLD";
     //"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
-    
+
     var ouder = getParent();
     var fmco = getParent().B3PGissuite.vars.webMapController;
-    if(fmco == undefined){
+    if (fmco == undefined) {
         ouder = getParent().getParent();
         fmco = ouder.B3PGissuite.vars.webMapController;
     }
     var mapje = fmco.getMap();
     var existingLayer = mapje.getAllWMSLayers()[0];
-    var wmsLayer=ouder.searchThemaValue(ouder.B3PGissuite.config.themaTree,themaid,"wmslayers");
-    var visValue=trim(waardepk);
-    if (waardeingevuldekolom!=null && waardeingevuldekolom.length>0){
-        visValue=trim(waardeingevuldekolom);
+    var wmsLayer = ouder.searchThemaValue(ouder.B3PGissuite.config.themaTree, themaid, "wmslayers");
+    var visValue = trim(waardepk);
+    if (waardeingevuldekolom != null && waardeingevuldekolom.length > 0) {
+        visValue = trim(waardeingevuldekolom);
     }
-    visValue=visValue.replace(" ","%20");
+    visValue = visValue.replace(" ", "%20");
     sldstring += "?visibleValue=" + visValue;
     sldstring += "&id=" + themaid;
     var beginChar = "?";
-    if(existingLayer.getURL().indexOf("?") != -1){
+    if (existingLayer.getURL().indexOf("?") != -1) {
         beginChar = "&";
     }
 
-    sldstring= escape(sldstring);
+    sldstring = escape(sldstring);
 
     var sldUrl = existingLayer.getURL() + beginChar + "SLD=" + sldstring;
-    var ogcOptions={
+    var ogcOptions = {
         transparent: true,
         format: existingLayer.getOption("format"),
         layers: wmsLayer,
@@ -1214,7 +1203,7 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
         srs: existingLayer.getOption("srs"),
         version: existingLayer.getOption("version")
     }
-    var options={
+    var options = {
         id: "sldLayer",
         timeout: "30",
         retryonerror: "10",
@@ -1222,6 +1211,6 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
         getfeatureinfourl: existingLayer.getURL(),
         showerrors: true
     };
-    var sldLayer=fmco.createWMSLayer("sldLayer", sldUrl, ogcOptions, options);
+    var sldLayer = fmco.createWMSLayer("sldLayer", sldUrl, ogcOptions, options);
     mapje.addLayer(sldLayer);//true,true
 }

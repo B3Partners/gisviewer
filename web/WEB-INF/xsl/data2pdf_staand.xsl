@@ -35,26 +35,17 @@
                 <fo:flow flow-name="body">
                     
                     <xsl:if test="count(records) &gt; 0">
-                        <xsl:for-each select="records/entry">
-                            <fo:block-container width="20.45cm" height="1.5cm" top="0cm" left="0cm" background-color="#166299" xsl:use-attribute-sets="column-block">
-                                <xsl:call-template name="title-block"/>
-                            </fo:block-container>
+                        <fo:block-container width="20.45cm" height="1.5cm" top="0cm" left="0cm" background-color="#166299" xsl:use-attribute-sets="column-block">
+                            <xsl:call-template name="title-block"/>
+                        </fo:block-container>
 
-                            <fo:block-container width="20.45cm" height="24.0cm" top="1.5cm" left="0cm" xsl:use-attribute-sets="column-block">
-                                <xsl:call-template name="info-block"/>
-                            </fo:block-container>
+                        <fo:block-container width="20.45cm" height="24.0cm" top="1.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                            <xsl:call-template name="info-block"/>
+                        </fo:block-container>
 
-                            <fo:block-container width="12.0cm" height="2.3cm" top="26.7cm" left="0cm" xsl:use-attribute-sets="column-block">
-                                <xsl:call-template name="disclaimer-block"/>
-                            </fo:block-container>
-
-                            <fo:block-container width="7.6cm" height="2.3cm" top="26.5cm" left="12.0cm" xsl:use-attribute-sets="column-block">
-                                <xsl:call-template name="logo-block"/>
-                            </fo:block-container>
-                            
-                            <fo:block page-break-after="always"/>
-                        </xsl:for-each>
-                        
+                        <fo:block-container width="7.6cm" height="2.3cm" top="26.5cm" left="12.0cm" xsl:use-attribute-sets="column-block">
+                            <xsl:call-template name="logo-block"/>
+                        </fo:block-container>                        
                     </xsl:if>                    
                 </fo:flow>
             </fo:page-sequence>
@@ -64,7 +55,7 @@
     <!-- blocks -->
     <xsl:template name="title-block">        
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="title-font">
-            <xsl:value-of select="pdfinfo/titel"/>
+            <xsl:value-of select="/pdfinfo/titel"/>
         </fo:block>
     </xsl:template>
 
@@ -72,25 +63,66 @@
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
 
             <fo:block margin-left="0.2cm" margin-top="0cm" font-size="10pt">
-                Gemaakt op: <xsl:value-of select="pdfinfo/datum"/>
+                Gemaakt op: <xsl:value-of select="/pdfinfo/datum"/>
             </fo:block>
             
-            <xsl:if test="count(pdfinfo/records) &gt; 0">
+            <!-- Loop door objectdata records -->
+            <xsl:if test="count(/pdfinfo/records/entry) &gt; 0">
                 <fo:block margin-left="0.2cm" margin-top="0.5cm">
-                    <xsl:for-each select="pdfinfo/records/entry">                
-                        <fo:block margin-left="0cm" margin-top="0cm" font-size="8pt">  
-                            Record id <xsl:value-of select="record/key"/>
+                    <xsl:for-each select="/pdfinfo/records/entry">
+                        
+                        <!-- Tonen uitsnede -->
+                        <xsl:variable name="url" select="value/imageUrl"/>                        
+                        <fo:block width="8.0cm" float="left">
+                            <fo:external-graphic border-style="solid" border-width="medium" src="url('data:image/jpeg;base64,{$url}')" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="150" height="100"/>
                         </fo:block>
+                        <!-- Toon objectdata in tabel -->
+                        <xsl:if test="count(value/items/entry) &gt; 0">
+                            <fo:block width="12.0cm" float="left">
+                                
+                                <fo:table>
+
+                                    <fo:table-column column-width="5.0cm"/>
+                                    <fo:table-column column-width="6.0cm"/>
+
+                                    <fo:table-header>
+                                        <fo:table-cell>
+                                            <fo:block></fo:block>
+                                        </fo:table-cell>
+                                        <fo:table-cell>
+                                            <fo:block></fo:block>
+                                        </fo:table-cell>
+                                    </fo:table-header>
+
+                                    <fo:table-body>
+                                        
+                                        <xsl:for-each select="value/items/entry">
+                                
+                                            <fo:table-row>
+                                                <fo:table-cell>
+                                                    <fo:block font-weight="bold">
+                                                        <xsl:value-of select="key"/>
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                                <fo:table-cell>
+                                                    <fo:block>
+                                                        : <xsl:value-of select="value"/>
+                                                    </fo:block>
+                                                </fo:table-cell>
+                                            </fo:table-row>
+                                
+                                        </xsl:for-each>
+                                        
+                                    </fo:table-body>
+                                </fo:table>   
+                            
+                            </fo:block>                         
+                        </xsl:if>                  
+                        
                     </xsl:for-each>            
                 </fo:block>  
             </xsl:if>            
 
-        </fo:block>
-    </xsl:template>    
-    
-    <xsl:template name="disclaimer-block">
-        <fo:block margin-left="0.2cm" margin-top="0.5cm" color="#000000" xsl:use-attribute-sets="default-font">
-            Aan deze export kunnen geen rechten worden ontleend.
         </fo:block>
     </xsl:template>
 

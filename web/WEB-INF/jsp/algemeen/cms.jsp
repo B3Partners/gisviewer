@@ -50,6 +50,8 @@
     </div>
 </c:forEach>
 
+<div style="clear: both;"></div>
+
 <c:if test="${showPlainAndMapButton == 'true'}">
     <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script> 
 </c:if>

@@ -23,6 +23,20 @@
         return configValue;
     }
 
+    function defaultTrue(configValue) {
+    	if(typeof configValue === 'undefined' || configValue === '') {
+            return true;
+        }
+        return configValue;
+    }
+
+    function defaultFalse(configValue) {
+    	if(typeof configValue === 'undefined' || configValue === '') {
+            return false;
+        }
+        return configValue;
+    }
+
     B3PGissuite.config = {
         'showDebugContent': false,
         'waitUntillFullyLoaded': false,
@@ -65,19 +79,19 @@
         /* ObjectInfo type */
         'objectInfoType': catchEmpty("${configMap["objectInfoType"]}", "popup"),
         /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
-        'usePanelControls': catchEmpty(${configMap["usePanelControls"]}, true),
+        'usePanelControls': defaultTrue(${configMap["usePanelControls"]}),
         /* True als de admin- of metadata in een popup wordt getoond
          * False als deze onder de kaart moet worden getoond
          * dataframepopupHandle wordt gebruikt wanneer de data in een popup wordt getoond */
-        'useDivPopup': catchEmpty(${configMap["useDivPopup"]}, false),
+        'useDivPopup': defaultFalse(${configMap["useDivPopup"]}),
         'usePopup': false,
         'usePanel': false,
         'useBalloonPopup': false,
         // Use cookies
-        'useCookies': catchEmpty(${configMap["useCookies"]}, true),
+        'useCookies': defaultTrue(${configMap["useCookies"]}),
         /* True als het mogelijk moet zijn om featureinfo op te halen van de aangevinkte (checkbox) layers
          * False als je maximaal van 1 thema data kan ophalen. (radiobuttons) */
-        'multipleActiveThemas': catchEmpty(${configMap["multipleActiveThemas"]}, true),
+        'multipleActiveThemas': defaultTrue(${configMap["multipleActiveThemas"]}),
         /* Deze waarde wordt gebruikt om de admindata automatisch door te sturen op het moment dat er maar
          * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
          * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
@@ -87,10 +101,10 @@
          * en info wordt opgevraagd. Dus een tolerantie. */
         'tolerance': catchEmpty(${configMap["tolerance"]}, 1),
         /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
-        'showLegendInTree': catchEmpty(${configMap["showLegendInTree"]}, true),
+        'showLegendInTree': defaultTrue(${configMap["showLegendInTree"]}),
         /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
          * kaartlaag zichtbaar is in viewer. Default op true */
-        'useInheritCheckbox': catchEmpty(${configMap["useInheritCheckbox"]}, true),
+        'useInheritCheckbox': defaultTrue(${configMap["useInheritCheckbox"]}),
         /*
          * True als het mogelijk moet zijn om de volgorde van de layers te slepen met de muis
          * de kaart wordt na het slepen automatisch herladen na x aantal (instellen door layerDelay) seconden
@@ -106,14 +120,14 @@
          * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
          * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
          * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
-        'zoekConfigIds': catchEmpty(${configMap["zoekConfigIds"]}, ""),
+        'zoekConfigIds': catchEmpty("${configMap["zoekConfigIds"]}", ""),
         /* Voorzieningen */
-        'voorzieningConfigIds': catchEmpty(${configMap["voorzieningConfigIds"]}, ""),
-        'voorzieningConfigStraal': catchEmpty(${configMap["voorzieningConfigStraal"]}, ""),
-        'voorzieningConfigTypes': catchEmpty(${configMap["voorzieningConfigTypes"]}, ""),
+        'voorzieningConfigIds': catchEmpty("${configMap["voorzieningConfigIds"]}", ""),
+        'voorzieningConfigStraal': catchEmpty("${configMap["voorzieningConfigStraal"]}", ""),
+        'voorzieningConfigTypes': catchEmpty("${configMap["voorzieningConfigTypes"]}", ""),
         /* Vergunningen */
-        'vergunningConfigIds': catchEmpty(${configMap["vergunningConfigIds"]}, ""),
-        'vergunningConfigStraal': catchEmpty(${configMap["vergunningConfigStraal"]}, ""),
+        'vergunningConfigIds': catchEmpty("${configMap["vergunningConfigIds"]}", ""),
+        'vergunningConfigStraal': catchEmpty("${configMap["vergunningConfigStraal"]}", ""),
         /*
          * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
          * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
@@ -122,23 +136,23 @@
         'maxResults': catchEmpty(${configMap["maxResults"]}, 25),
         /* Gebruiker wisselt tabbladen door er met de muis overheen te gaan. Indien false
          * dan zijn de tabbladen te wisselen door te klikken */
-        'useMouseOverTabs': catchEmpty(${configMap["useMouseOverTabs"]}, true),
+        'useMouseOverTabs': defaultTrue(${configMap["useMouseOverTabs"]}),
         // Tree expand all
-        'expandAll': catchEmpty(${configMap["expandAll"]}, false),
+        'expandAll': defaultFalse(${configMap["expandAll"]}),
         'enabledtabs': [${configMap["tabs"]}],
         'enabledtabsLeft': [${configMap["tabsLeft"]}],
         /* planselectie gebruikt 2 zoekingangen (id's) */
         'planSelectieIds': catchEmpty(${configMap["planSelectieIds"]}, "0,0"),
         /* Buttons boven viewer aan / uit */
-        'showRedliningTools': catchEmpty(${configMap["showRedliningTools"]}, false),
-        'showBufferTool': catchEmpty(${configMap["showBufferTool"]}, false),
-        'showSelectBulkTool': catchEmpty(${configMap["showSelectBulkTool"]}, false),
-        'showNeedleTool': catchEmpty(${configMap["showNeedleTool"]}, false),
-        'showPrintTool': catchEmpty(${configMap["showPrintTool"]}, false),
-        'showLayerSelectionTool': catchEmpty(${configMap["showLayerSelectionTool"]}, false),
-        'showGPSTool': catchEmpty(${configMap["showGPSTool"]}, false),
-        'showEditTool': catchEmpty(${configMap["showEditTool"]}, false),
-        'gpsBuffer': catchEmpty("${configMap["gpsBuffer"]}", false),
+        'showRedliningTools': defaultFalse(${configMap["showRedliningTools"]}),
+        'showBufferTool': defaultFalse(${configMap["showBufferTool"]}),
+        'showSelectBulkTool': defaultFalse(${configMap["showSelectBulkTool"]}),
+        'showNeedleTool': defaultFalse(${configMap["showNeedleTool"]}),
+        'showPrintTool': defaultFalse(${configMap["showPrintTool"]}),
+        'showLayerSelectionTool': defaultFalse(${configMap["showLayerSelectionTool"]}),
+        'showGPSTool': defaultFalse(${configMap["showGPSTool"]}),
+        'showEditTool': defaultFalse(${configMap["showEditTool"]}),
+        'gpsBuffer': defaultFalse("${configMap["gpsBuffer"]}"),
         'layerGrouping': catchEmpty("${configMap["layerGrouping"]}", "lg_forebackground"),
         'popupWidth': catchEmpty("${configMap["popupWidth"]}", "90%"),
         'popupHeight': catchEmpty("${configMap["popupHeight"]}", "20%"),
@@ -146,8 +160,8 @@
         'popupTop': catchEmpty("${configMap["popupTop"]}", "75%"),
         'bookmarkAppcode': catchEmpty("${bookmarkAppcode}", ""),
         'tekstBlokken': catchEmpty(${tekstBlokken}, []),
-        'datasetDownload': catchEmpty(${configMap["datasetDownload"]}, false),
-        'showServiceUrl': catchEmpty(${configMap["showServiceUrl"]}, false),
+        'datasetDownload': defaultFalse(${configMap["datasetDownload"]}),
+        'showServiceUrl': defaultFalse(${configMap["showServiceUrl"]}),
         'startLocationX': catchEmpty("${startLocationX}", ""),
         'startLocationY': catchEmpty("${startLocationY}", ""),
         'cfgActiveTab': catchEmpty("${configMap["activeTab"]}", "themas")

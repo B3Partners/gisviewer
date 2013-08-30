@@ -120,14 +120,14 @@
          * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
          * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
          * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
-        'zoekConfigIds': catchEmpty("${configMap["zoekConfigIds"]}", ""),
+        'zoekConfigIds': catchEmpty(${configMap["zoekConfigIds"]}, ""),
         /* Voorzieningen */
-        'voorzieningConfigIds': catchEmpty("${configMap["voorzieningConfigIds"]}", ""),
-        'voorzieningConfigStraal': catchEmpty("${configMap["voorzieningConfigStraal"]}", ""),
-        'voorzieningConfigTypes': catchEmpty("${configMap["voorzieningConfigTypes"]}", ""),
+        'voorzieningConfigIds': catchEmpty(${configMap["voorzieningConfigIds"]}, ""),
+        'voorzieningConfigStraal': catchEmpty(${configMap["voorzieningConfigStraal"]}, ""),
+        'voorzieningConfigTypes': catchEmpty("${configMap["voorzieningConfigTypes"]}, ""),
         /* Vergunningen */
-        'vergunningConfigIds': catchEmpty("${configMap["vergunningConfigIds"]}", ""),
-        'vergunningConfigStraal': catchEmpty("${configMap["vergunningConfigStraal"]}", ""),
+        'vergunningConfigIds': catchEmpty(${configMap["vergunningConfigIds"]}, ""),
+        'vergunningConfigStraal': catchEmpty(${configMap["vergunningConfigStraal"]}, ""),
         /*
          * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
          * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */

@@ -3846,7 +3846,17 @@ function getLatLonForGoogleMaps() {
   JMapData.getLatLonForRDPoint(a, b, c, openGoogleMaps)
 }
 function openGoogleMaps(a) {
-  window.open("https://maps.google.com/maps?ie=UTF8" + ("&sll=" + a[0] + "," + a[1]) + ("&sspn=" + a[2] + "," + a[3]) + "&hl=nl&om=0")
+  window.open("https://maps.google.com/maps?ie=UTF8" + ("&ll=" + a[1] + "," + a[0]) + ("&spn=" + a[3] + "," + a[3]) + "&hl=nl&om=0")
+}
+function getDestinationWkt(a, b, c) {
+  JMapData.getWkt(a, b, c, getLatLonForGoogleMapDirections)
+}
+function getLatLonForGoogleMapDirections(a) {
+  JMapData.getLatLonForGoogleDirections(a, openGoogleMapsDirections)
+}
+function openGoogleMapsDirections(a) {
+  console.log(a);
+  window.open("https://maps.google.com/maps" + ("?saddr=" + a[1] + "," + a[0]) + ("&daddr=" + a[3] + "," + a[2]))
 }
 function createPermaLink() {
   var a = window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer + "/viewer.do?", b = "";

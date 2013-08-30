@@ -155,7 +155,7 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
                 var tr = $j('<tr></tr>');
                 var th = createTableTh(gegevensbron.labels[index2]);
                 tr.append(th);
-                var td = createTableTd(waarde);
+                var td = createTableTd(waarde, gegevensbron, record);
                 tr.append(td);
                 bronTableBody.append(tr);
             });
@@ -223,7 +223,7 @@ function handleGetGegevensAllVertical(gegevensbron, tab) {
                 var th = createTableTh(gegevensbron.labels[index2]);
                 tr2.append(th);
                 var tr = $j('<tr></tr>');
-                var td = createTableTd(waarde);
+                var td = createTableTd(waarde, gegevensbron, record);
                 tr.append(td);
                 bronTableBody.append(tr2);
                 bronTableBody.append(tr);
@@ -341,7 +341,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
         $j.each(gegevensbron.records, function(index, record) {
             var tr = $j('<tr></tr>');
             $j.each(record.values, function(index2, waarde) {
-                var td = createTableTd(waarde);
+                var td = createTableTd(waarde, gegevensbron, record);
                 tr.append(td);
             });
             bronTableBody.append(tr);
@@ -452,7 +452,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
 
             tr.append(volgnr);
             $j.each(record.values, function(index2, waarde) {
-                var td = createTableTd(waarde);
+                var td = createTableTd(waarde, gegevensbron, record);
                 tr.append(td);
             });
 
@@ -671,7 +671,7 @@ function createBronCaption(gegevensbron, simple, index) {
     var iconPdf = $j('<img src="' + pdficon + '"/>').attr({
         "alt": "Exporteer records met kaartuitsnede naar PDF",
         "title": "Exporteer records met kaartuitsnede naar PDF"
-    }).click(function() {        
+    }).click(function() {
         parent.exportObjectData2PDF(htmlId, gegevensbron, index, idcounter++);
     });
 
@@ -771,13 +771,13 @@ function evalObjectDataCommando(commando) {
 
 var idcounterJsFunctions = 1;
 
-function createTableTd(waarde) {
+function createTableTd(waarde, gegevensbron, record) {
     var kolomBreedte = (waarde.kolomBreedte == 0) ? 150 : waarde.kolomBreedte;
     var td = $j('<td></td>')
             .css({
         "width": kolomBreedte + "px"
     });
-
+    
     if (waarde.type == 'TYPE_DATA') {
         if (!waarde.value) {
             td.html("-");
@@ -866,6 +866,19 @@ function createTableTd(waarde) {
             });
             td.html(icon3);
         }
+    }
+
+    if (waarde.type == 'TYPE_GOOGLENAV') {
+        var gIcon = $j('<img src="' + googleIcon + '" alt="Navigeer hierheen vanaf startlocatie" title="Navigeer hierheen vanaf startlocatie" />')
+                .click(function() {
+            
+            var id = gegevensbron.id;
+            var pk = gegevensbron.adminPk;
+            var val = record.id
+            
+            getParent().getDestinationWkt(id, pk, val);                       
+        });
+        td.html(gIcon);
     }
 
     if (waarde.type == 'TYPE_QUERY') {

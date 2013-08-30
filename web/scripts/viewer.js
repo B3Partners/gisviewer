@@ -3329,14 +3329,33 @@ function getLatLonForGoogleMaps() {
     JMapData.getLatLonForRDPoint(centerWkt, minWkt, maxWkt, openGoogleMaps);
 }
 
-/* Zie: http://mapki.com/wiki/Google_Map_Parameters */
+/* Uses classic Google Maps parameters ll and spn */
 function openGoogleMaps(values) {
-    var ll = "&sll=" + values[0] + "," + values[1];
-    var spn = "&sspn=" + values[2] + "," + values[3];
+    var ll = "&ll=" + values[1] + "," + values[0];
+    var spn = "&spn=" + values[3] + "," + values[3];
     
     var options = "&hl=nl&om=0";
 
     var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
+    
+    window.open(url);
+}
+
+function getDestinationWkt(gbId, pk, val) {    
+    JMapData.getWkt(gbId, pk, val, getLatLonForGoogleMapDirections);
+}
+
+function getLatLonForGoogleMapDirections(destWkt) {    
+    JMapData.getLatLonForGoogleDirections(destWkt, openGoogleMapsDirections);
+}
+
+function openGoogleMapsDirections(values) {
+    console.log(values);
+    
+    var saddr = "?saddr=" + values[1] + "," + values[0];    
+    var daddr = "&daddr=" + values[3] + "," + values[2];
+
+    var url = "https://maps.google.com/maps" + saddr + daddr;
     
     window.open(url);
 }

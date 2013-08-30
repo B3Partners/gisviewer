@@ -24,6 +24,8 @@
     var csvexporticon = '<html:rewrite href="./images/icons/page_white_csv.png" />';
     var infoexporticon = '<html:rewrite href="./images/icons/page_white_info.png" />';
 
+    var googleIcon = '<html:rewrite href="./images/icons/google-maps.png" />';
+    
     var noResultsHeader = '<fmt:message key="admindata.geeninfo.header"/>';
     var noResultsTekst = '<fmt:message key="admindata.geeninfo.tekst"/>';
 

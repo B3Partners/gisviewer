@@ -62,72 +62,95 @@
     <xsl:template name="info-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
 
-            <fo:block margin-left="0.2cm" margin-top="0cm" font-size="10pt">
+            <fo:block margin-left="0.2cm" margin-top="0cm" margin-bottom="0.2cm" font-size="10pt">
                 Gemaakt op: <xsl:value-of select="/pdfinfo/datum"/>
             </fo:block>
             
             <!-- Loop door objectdata records -->
             <xsl:if test="count(/pdfinfo/records/entry) &gt; 0">
-                <fo:block margin-left="0.2cm" margin-top="0.5cm">
-                    <xsl:for-each select="/pdfinfo/records/entry">
+                <xsl:for-each select="/pdfinfo/records/entry">
                         
-                        <!-- Tonen uitsnede -->
-                        <xsl:variable name="url" select="value/imageUrl"/>                        
-                        <fo:block width="8.0cm" float="left">
-                            <fo:external-graphic border-style="solid" border-width="medium" src="url('data:image/jpeg;base64,{$url}')" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="150" height="100"/>
-                        </fo:block>
-                        <!-- Toon objectdata in tabel -->
-                        <xsl:if test="count(value/items/entry) &gt; 0">
-                            <fo:block width="12.0cm" float="left">
-                                
-                                <fo:table>
+                    <!-- Toon objectdata en uitsnede in tabel -->
+                    <xsl:if test="count(value/items/entry) &gt; 0">
+                        
+                        <fo:table margin-bottom="0.7cm">
+                                                                
+                            <fo:table-column column-width="12.0cm"/>
+                            <fo:table-column column-width="8.0cm"/>
 
-                                    <fo:table-column column-width="5.0cm"/>
-                                    <fo:table-column column-width="6.0cm"/>
+                            <fo:table-header>
+                                <fo:table-cell>
+                                    <fo:block></fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block></fo:block>
+                                </fo:table-cell>
+                            </fo:table-header>
 
-                                    <fo:table-header>
-                                        <fo:table-cell>
-                                            <fo:block></fo:block>
-                                        </fo:table-cell>
-                                        <fo:table-cell>
-                                            <fo:block></fo:block>
-                                        </fo:table-cell>
-                                    </fo:table-header>
+                            <fo:table-body>
+                                <fo:table-row>
+                                    <fo:table-cell>                                                    
+                                            
+                                        <fo:block width="11.0cm">
+                                            <fo:table>
 
-                                    <fo:table-body>
-                                        
-                                        <xsl:for-each select="value/items/entry">
-                                
-                                            <fo:table-row>
-                                                <fo:table-cell>
-                                                    <fo:block font-weight="bold">
-                                                        <xsl:value-of select="key"/>
-                                                    </fo:block>
-                                                </fo:table-cell>
-                                                <fo:table-cell>
-                                                    <fo:block>
-                                                        : <xsl:value-of select="value"/>
-                                                    </fo:block>
-                                                </fo:table-cell>
-                                            </fo:table-row>
-                                
-                                        </xsl:for-each>
-                                        
-                                    </fo:table-body>
-                                </fo:table>   
+                                                <fo:table-column column-width="5.0cm"/>
+                                                <fo:table-column column-width="6.0cm"/>
+
+                                                <fo:table-header>
+                                                    <fo:table-cell>
+                                                        <fo:block></fo:block>
+                                                    </fo:table-cell>
+                                                    <fo:table-cell>
+                                                        <fo:block></fo:block>
+                                                    </fo:table-cell>
+                                                </fo:table-header>
+                                                    
+                                                <!-- table with objectdata fields -->
+                                                <fo:table-body>                                        
+                                                    <xsl:for-each select="value/items/entry">                                
+                                                        <fo:table-row>
+                                                            <fo:table-cell>
+                                                                <fo:block font-weight="bold">
+                                                                    <xsl:value-of select="key"/>
+                                                                </fo:block>
+                                                            </fo:table-cell>
+                                                            <fo:table-cell>
+                                                                <fo:block>
+                                                                    : <xsl:value-of select="value"/>
+                                                                </fo:block>
+                                                            </fo:table-cell>
+                                                        </fo:table-row>                                
+                                                    </xsl:for-each>                                        
+                                                </fo:table-body>
+                                    
+                                            </fo:table>                            
+                                        </fo:block><!-- end table objectdata fields -->
                             
-                            </fo:block>                         
-                        </xsl:if>                  
-                        
-                    </xsl:for-each>            
-                </fo:block>  
+                                    </fo:table-cell>
+                            
+                                    <!-- Tonen uitsnede -->
+                                    <fo:table-cell>                                            
+                                        <xsl:variable name="url" select="value/imageUrl"/>                        
+                                        <fo:block width="7.0cm">
+                                            <fo:external-graphic border-style="solid" border-width="medium" src="url('data:image/jpeg;base64,{$url}')" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="150" height="100"/>
+                                        </fo:block>                            
+                                    </fo:table-cell>
+                            
+                                </fo:table-row>                                             
+                            </fo:table-body>
+                                    
+                        </fo:table> <!-- end table -->
+                                                                 
+                    </xsl:if>
+                </xsl:for-each> 
             </xsl:if>            
 
         </fo:block>
     </xsl:template>
 
     <xsl:template name="logo-block">
-        <fo:block>
+        <fo:block margin-top="0.5cm">
             <fo:external-graphic src="url('b3p_logo.png')" width="231px" height="56px"/>
         </fo:block>
     </xsl:template>

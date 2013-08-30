@@ -314,15 +314,15 @@
         // Get tabobj from tabbladen defs
         var tabobj = tabbladen[tabid];
         // If a class is defined, create class
-        if(tabobj.class) {
+        if(tabobj.hasOwnProperty('class')) {
             // Extend default options by options from tabbladen defs
             var options = jQuery.extend({
                 tabid: tabid,
                 id: tabobj.contentid,
-                title: tabobj.name
-            }, tabobj.options || {});
+                title: tabobj['name']
+            }, tabobj['options'] || {});
             // Create the defined component
-            var comp = B3PGissuite.createComponent(tabobj.class, options);
+            var comp = B3PGissuite.createComponent(tabobj['class'], options);
             // Render the component to the tab
             comp.renderTab(tabComponent);
         // Else create a tab from existing content
@@ -330,7 +330,7 @@
             // Set taboptions
             var options = { 'contentid': tabobj.contentid, 'checkResize': true };
             // Create a tab
-            tabComponent.createTab(tabid, tabobj.name, options);
+            tabComponent.createTab(tabid, tabobj['name'], options);
         }
     }
     // Init tab controllers

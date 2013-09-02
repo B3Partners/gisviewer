@@ -3855,7 +3855,6 @@ function getLatLonForGoogleMapDirections(a) {
   JMapData.getLatLonForGoogleDirections(a, openGoogleMapsDirections)
 }
 function openGoogleMapsDirections(a) {
-  console.log(a);
   window.open("https://maps.google.com/maps" + ("?saddr=" + a[1] + "," + a[0]) + ("&daddr=" + a[3] + "," + a[2]))
 }
 function createPermaLink() {

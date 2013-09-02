@@ -124,7 +124,7 @@
         /* Voorzieningen */
         'voorzieningConfigIds': catchEmpty(${configMap["voorzieningConfigIds"]}, ""),
         'voorzieningConfigStraal': catchEmpty(${configMap["voorzieningConfigStraal"]}, ""),
-        'voorzieningConfigTypes': catchEmpty("${configMap["voorzieningConfigTypes"]}, ""),
+        'voorzieningConfigTypes': catchEmpty(${configMap["voorzieningConfigTypes"]}, ""),
         /* Vergunningen */
         'vergunningConfigIds': catchEmpty(${configMap["vergunningConfigIds"]}, ""),
         'vergunningConfigStraal': catchEmpty(${configMap["vergunningConfigStraal"]}, ""),

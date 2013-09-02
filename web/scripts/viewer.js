@@ -3349,9 +3349,7 @@ function getLatLonForGoogleMapDirections(destWkt) {
     JMapData.getLatLonForGoogleDirections(destWkt, openGoogleMapsDirections);
 }
 
-function openGoogleMapsDirections(values) {
-    console.log(values);
-    
+function openGoogleMapsDirections(values) {    
     var saddr = "?saddr=" + values[1] + "," + values[0];    
     var daddr = "&daddr=" + values[3] + "," + values[2];
 

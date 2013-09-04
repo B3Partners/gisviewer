@@ -1,5 +1,5 @@
 B3PGissuite.defineComponent('IframeComponent', {
-    extend: 'ViewerComponent',
+    extend: 'BaseComponent',
     defaultOptions: {
         src: '',
         taboptions: {

@@ -1,5 +1,5 @@
 B3PGissuite.defineComponent('TreeComponent', {
-    extend: 'ViewerComponent',
+    extend: 'BaseComponent',
     defaultOptions: {
         treeid: 'layermaindiv',
         tree: [],
@@ -224,10 +224,9 @@ B3PGissuite.defineComponent('TreeComponent', {
     doRefreshLayer: function() {    
         //register after loading
         B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE,B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
-        refreshLayer();
+        B3PGissuite.get('ViewerComponent').refreshLayer();
         refreshLegendBox();
     },
-
     /**
      * called when a checkbox is clicked.
      */

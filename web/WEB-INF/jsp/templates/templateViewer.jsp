@@ -71,12 +71,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <body class="viewerbodyelement">
         <div id="header"><div id="header_content"><tiles:insert attribute="menu" /></div></div>
         <div id="loadingscreen">
-            <div id="loadingfilter">
-                <div id="loadingmessage">
-                    <fmt:message key="template.viewer.loading"/><br /><br />
-                </div>
+            <div id="loadingfilter"></div>
+            <div id="loadingmessage">
+                <img src="images/gisviewerLoading.gif" alt="Bezig met laden van GIS viewer..." id="loadingimage" />
+                <br /><br />
+                <fmt:message key="template.viewer.loading"/>
             </div>
-            <img src="images/loadingmap.jpg" alt="Bezig met laden van GIS viewer..." id="loadingimage" />
         </div>
         
         <div id="content_viewer">

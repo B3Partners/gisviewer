@@ -1,5 +1,5 @@
 B3PGissuite.defineComponent('LegendComponent', {
-    extend: 'ViewerComponent',
+    extend: 'BaseComponent',
     defaultOptions: {
         formid: 'volgordeForm',
         orderboxId: 'orderLayerBox',

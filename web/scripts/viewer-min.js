@@ -2488,7 +2488,6 @@ B3PGissuite.vars.mapInitialized = false;
 B3PGissuite.vars.searchExtent = null;
 B3PGissuite.vars.multiPolygonBufferWkt = null;
 B3PGissuite.vars.editComponent = null;
-B3PGissuite.vars.uploadCsvLayerOn = false;
 B3PGissuite.vars.prevRadioButton = null;
 B3PGissuite.vars.originalLayerUrl = "" + B3PGissuite.vars.layerUrl;
 B3PGissuite.vars.refresh_timeout_handle = 0;
@@ -2510,44 +2509,11 @@ B3PGissuite.vars.popupCreated = false;
 function handler(a) {
   a != "" && messagePopup("", a, "information")
 }
-function initMapComponent() {
-  mapviewer = B3PGissuite.config.viewerType;
-  window.location.href.indexOf("flamingo") > 0 && (mapviewer = "flamingo");
-  if(mapviewer == "flamingo") {
-    B3PGissuite.vars.webMapController = new FlamingoController("mapcontent");
-    var a = B3PGissuite.vars.webMapController.createMap("map1");
-    B3PGissuite.vars.webMapController.addMap(a)
-  }else {
-    if(mapviewer == "openlayers") {
-      B3PGissuite.vars.webMapController = new OpenLayersController;
-      var a = getMaxBounds(), b = getTilingResolutions(a, true);
-      Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs";
-      a = {projection:new OpenLayers.Projection("EPSG:28992"), maxExtent:a, resolutions:b, allOverlays:true, units:"meters", theme:"styles/gisviewer_openlayers.css", controls:[new OpenLayers.Control.Navigation({zoomBoxEnabled:false}), new OpenLayers.Control.ArgParser]};
-      OpenLayers.ImgPath = "styles/openlayers_img/";
-      $j("#mapcontent").html(" ");
-      a = B3PGissuite.vars.webMapController.createMap("mapcontent", a);
-      $j("#mapcontent").css("border", "1px solid black");
-      B3PGissuite.vars.webMapController.addMap(a)
-    }
-  }
-  B3PGissuite.vars.webMapController.initEvents();
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_GET_CAPABILITIES, B3PGissuite.vars.webMapController.getMap(), onGetCapabilities);
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_CONFIG_COMPLETE, B3PGissuite.vars.webMapController, onConfigComplete)
-}
 function getNLExtent() {
   return"12000,304000,280000,620000"
 }
 function getNLMaxBounds() {
   return Utils.createBounds(new Extent(getNLExtent()))
-}
-function getMaxBounds() {
-  var a;
-  !B3PGissuite.config.bbox && B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox)) : B3PGissuite.config.bbox && B3PGissuite.config.appExtent ? a = Utils.createBounds(new Extent(B3PGissuite.config.appExtent)) : B3PGissuite.config.bbox && B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox)) : B3PGissuite.config.bbox && !B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.bbox)) : (a = getNLMaxBounds(), 
-  a = new OpenLayers.Bounds(a.left, a.bottom, a.right, a.top));
-  var b = a.right - a.left, c = a.top - a.bottom, d = $j("#mapcontent").width(), e = $j("#mapcontent").height(), f = $j("#dataframediv").height();
-  d /= e + f + 75;
-  d < b / c ? (b /= d, a.bottom -= (b - c) / 2, a.top = a.bottom + b) : (c *= d, a.left -= (c - b) / 2, a.right = a.left + c);
-  return a
 }
 function getNLTilingRes() {
   return"512,256,128,64,32,16,8,4,2,1,0.5,0.125"
@@ -2561,38 +2527,6 @@ function convertStringToArray(a) {
     }
   }
   return c
-}
-function getTilingResolutions(a, b) {
-  var c = a.right - a.left, d;
-  if(B3PGissuite.config.tilingResolutions) {
-    var e = B3PGissuite.config.tilingResolutions;
-    if((e = e.indexOf(",") !== -1 ? e.split(",") : e.split(" ")) && e.length > 0) {
-      d = [];
-      for(var f in e) {
-        e[f] = parseFloat(e[f]), d[f] = e[f]
-      }
-    }
-  }else {
-    B3PGissuite.config.tilingResolutions = getNLTilingRes(), d = convertStringToArray(B3PGissuite.config.tilingResolutions)
-  }
-  if(B3PGissuite.config.tilingResolutions && !B3PGissuite.config.fullExtent) {
-    f = $j("#mapcontent").width();
-    c = c / f * (72 / 0.0254) / 1E3;
-    f = [];
-    var e = 0, g;
-    for(g in d) {
-      d[g] <= c && (f[e] = d[g], e++)
-    }
-    d = f
-  }
-  if(!b) {
-    g = "";
-    for(var h in d) {
-      g += parseFloat(d[h]) + " "
-    }
-    return g.trim()
-  }
-  return d
 }
 function hideIdentifyIcon() {
   B3PGissuite.vars.webMapController instanceof FlamingoController && B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod("map1_identifyicon", "hide")
@@ -2930,174 +2864,9 @@ function setScaleForTree(a, b) {
     return c
   }
 }
-function refreshLayer() {
-  var a = B3PGissuite.vars.refresh_timeout_handle;
-  if(B3PGissuite.vars.layerUrl == void 0 || B3PGissuite.vars.layerUrl == null) {
-    hideLoading()
-  }else {
-    B3PGissuite.vars.layerUrl.toLowerCase().indexOf("?service=") == -1 && B3PGissuite.vars.layerUrl.toLowerCase().indexOf("&service=") == -1 && (B3PGissuite.vars.layerUrl += B3PGissuite.vars.layerUrl.indexOf("?") > 0 ? "&" : "?", B3PGissuite.vars.layerUrl += "SERVICE=WMS");
-    for(var b = [], c = [], d, e = 0;e < B3PGissuite.vars.enabledLayerItems.length;e++) {
-      d = B3PGissuite.vars.enabledLayerItems[e];
-      if(B3PGissuite.config.useInheritCheckbox) {
-        var f = document.getElementById(d.id);
-        if(f == void 0 || f == null) {
-          f = $j("#input").find("l_" + d.id)
-        }
-        if(f == void 0 || f == null) {
-          f = $j("#input").find("lOn_" + d.id)
-        }
-        if(!itemHasAllParentsEnabled(f)) {
-          continue
-        }
-      }
-      d.wmslayers && (d.background ? c.push(d) : b.push(d))
-    }
-    for(var e = [], e = e.concat(c), e = e.concat(b), b = [], g, f = c = "", h = 0;h < e.length;h++) {
-      d = e[h];
-      f = B3PGissuite.config.layerGrouping == "lg_layer" || d.tiled ? "fmc" + d.id : B3PGissuite.config.layerGrouping == "lg_cluster" ? "fmc" + d.clusterid : B3PGissuite.config.layerGrouping == "lg_forebackground" ? d.background ? "fmcback" : "fmctop" : "fmcall";
-      if(c == "" || f != c) {
-        g = [], B3PGissuite.config.layerGrouping == "lg_cluster" ? g.push(f + "_" + d.id) : g.push(f), b.push(g)
-      }
-      g.push(d);
-      c = f
-    }
-    g = B3PGissuite.vars.webMapController.getMap().getLayers();
-    f = [];
-    for(e = 0;e < g.length;e++) {
-      g[e].getType() == Layer.RASTER_TYPE && f.push(g[e])
-    }
-    h = [];
-    for(c = 0;c < f.length;c++) {
-      for(var j = f[c].getId(), l = f[c].getOption("layers"), m = false, e = 0;e < b.length && m == false;e++) {
-        if(g = b[e], j == g[0]) {
-          for(var n = "", o = 1;o < g.length;o++) {
-            d = g[o], n.length > 0 && (n += ","), n += d.wmslayers
-          }
-          if(l == n) {
-            m = true;
-            break
-          }
-        }
-      }
-      m || h.push(j)
-    }
-    for(g = 0;g < h.length;g++) {
-      B3PGissuite.vars.webMapController.getMap().removeLayerById(h[g])
-    }
-    for(e = 0;e < b.length;e++) {
-      g = b[e];
-      d = g[0];
-      if(B3PGissuite.vars.webMapController.getMap().getLayer(d) == null) {
-        g.splice(0, 1);
-        for(c = 0;c < g.length;c++) {
-          g[c].serviceid != void 0 ? (d = g[c].name, f = g[c].service_url, h = [], h[0] = g[c], addLayerToViewer(d, f, h), d = getValidLayerId(d)) : addLayerToViewer(d, B3PGissuite.vars.layerUrl, g)
-        }
-      }
-      g = B3PGissuite.vars.webMapController.getMap().getLayer(d);
-      g != null && B3PGissuite.vars.webMapController.getMap().setLayerIndex(g, e + B3PGissuite.vars.startLayerIndex)
-    }
-    hideLoading();
-    if(a == B3PGissuite.vars.refresh_timeout_handle) {
-      B3PGissuite.vars.refresh_timeout_handle = 0;
-      a = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
-      (b = B3PGissuite.vars.webMapController.getMap().getAllTilingLayers()) && a.concat(b);
-      b = B3PGissuite.vars.webMapController.getMap().getLayers().length;
-      for(g = 0;g < a.length;g++) {
-        e = a[g], B3PGissuite.vars.webMapController.getMap().setLayerIndex(e, b + B3PGissuite.vars.startLayerIndex)
-      }
-      checkTempUploadedPointsWms(B3PGissuite.vars.uploadCsvLayerOn)
-    }
-  }
-}
 function getLayerById(a) {
   a = B3PGissuite.vars.webMapController.getMap().getLayer(a);
   return a != null ? a : null
-}
-function layersOnlyHaveDefaultStyles(a) {
-  if(a == void 0 || a == "") {
-    return true
-  }
-  for(var b = 0;b < a.length;b++) {
-    var c = a[b];
-    if(c.use_style && c.use_style != "default") {
-      return false
-    }
-  }
-  return true
-}
-function addLayerToViewer(a, b, c) {
-  if(c.length == 1 && c[0].tiled) {
-    var d = {}, c = c[0];
-    d.VERSION = c.tileVersion;
-    d.LAYERS = c.tileLayers;
-    d.STYLES = c.tileStyles;
-    d.FORMAT = c.tileFormat;
-    d.SRS = c.tileSrs;
-    d.BBOX = c.tileBoundingBox;
-    d.background = c.background;
-    var e = getMaxBounds(), e = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.config.tilingResolutions : c.resolutions ? c.resolutions : getTilingResolutions(e, false);
-    B3PGissuite.config.tilingResolutions = e;
-    if(B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions) {
-      e = e.replace(/\,/g, " "), d.serverResolutions = e
-    }
-    d.RESOLUTIONS = e;
-    d.TILEHEIGHT = c.tileHeight;
-    d.TILEWIDTH = c.tileWidth;
-    if(c.resolutions && (e = c.resolutions, (c = e.split(" ")) && c.length < 1 && (c = e.split(",")), c && c.length > 0)) {
-      e = c[0], d.minscale = c[c.length - 1], d.maxscale = e
-    }
-    a = B3PGissuite.vars.webMapController.createWMScLayer(a, b, d)
-  }else {
-    var d = b, d = {id:getValidLayerId(a), timeout:30, retryonerror:10, getcapabilitiesurl:d, ratio:1, showerrors:true, initService:false}, f = {format:"image/png", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, g = "", h = "", j = "", l = -1, m = -1, n = "", o = layersOnlyHaveDefaultStyles(c);
-    b.indexOf("&sld=") != -1 && (o = true);
-    for(var p = "", e = [], q = 0;q < c.length;q++) {
-      var r = c[q], s = false;
-      r.sld_part != void 0 && r.sld_part != "" && (p += p.length < 1 ? r.id : "," + r.id, s = true);
-      r.use_style && !o && !s && (n += q == c.length - 1 ? r.use_style : r.use_style + ",");
-      if(l != 0) {
-        if(r.scalehintmin != null) {
-          if(s = Number(r.scalehintmin.replace(",", ".")), !isNaN(s) && (l == -1 || s < l)) {
-            l = s
-          }
-        }else {
-          l = 0
-        }
-      }
-      if(m != 0) {
-        if(r.scalehintmax != null) {
-          if(s = Number(r.scalehintmax.replace(",", ".")), !isNaN(s) && (m == -1 || s > m)) {
-            m = s
-          }
-        }else {
-          m = 0
-        }
-      }
-      if(r.wmslayers) {
-        g.length > 0 && (g += ","), g += r.wmslayers, d.background = r.background ? true : false
-      }
-      r.wmsquerylayers && (h.length > 0 && (h += ","), h += r.wmsquerylayers);
-      if(c[q].maptipfield) {
-        j.length != 0 && (j += ","), j += c[q].wmslayers, r = c[q].wmslayers, B3PGissuite.config.user.ingelogdeGebruiker && B3PGissuite.config.user.ingelogdeGebruiker.length > 0 && (r = r.substring(r.indexOf("_") + 1)), r = new MapTip(c[q].wmslayers, c[q].maptipfield, r), e.push(r)
-      }
-    }
-    l != null && l > 0 && (d.minscale = l);
-    m != null && m > 0 && (d.maxscale = m);
-    if(B3PGissuite.vars.webMapController instanceof FlamingoController) {
-      d.maxResolution && (d.maxscale = d.maxResolution), d.minResolution && (d.minscale = d.minResolution), delete d.maxResolution, delete d.minResolution
-    }else {
-      if(B3PGissuite.vars.webMapController instanceof OpenLayersController) {
-        d.maxResolution != void 0 && d.minResolution == void 0 && (d.minResolution = "auto"), d.minResolution != void 0 && d.maxResolution == void 0 && (d.maxResolution = "auto")
-      }
-    }
-    f.styles = n;
-    f.layers = g;
-    f.query_layers = h;
-    d.maptip_layers = j;
-    p.length > 0 && (b += "sld=" + (window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer) + "/services/createUserSld?layerids=" + p);
-    a = B3PGissuite.vars.webMapController.createWMSLayer(a, b, f, d);
-    a.setMapTips(e)
-  }
-  B3PGissuite.vars.webMapController.getMap().addLayer(a)
 }
 function loadObjectInfo(a) {
   var b = false;
@@ -3287,7 +3056,7 @@ function findBeforeDivInLegendBox(a, b) {
 }
 function refreshMapVolgorde() {
   refreshLegendBox();
-  refreshLayer(true);
+  B3PGissuite.get("ViewerComponent").refreshLayer(true);
   syncLayerCookieAndForm()
 }
 function refreshLegendBox() {
@@ -4133,10 +3902,6 @@ function createServiceLayerLink(a) {
   }
   return b
 }
-function getValidLayerId(a) {
-  a = a.replace(":", "_");
-  return a = a.replace(".", "_")
-}
 function getItemByLayer(a, b) {
   if(a.children) {
     for(var c = 0;c < a.children.length;c++) {
@@ -4163,15 +3928,6 @@ function getItemByLayer(a, b) {
 }
 function getBaseUrl() {
   return window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer
-}
-function checkTempUploadedPointsWms(a) {
-  B3PGissuite.vars.uploadCsvLayerOn = a;
-  var b = B3PGissuite.vars.webMapController.getMap().getLayer("uploadedPoints");
-  a && b == null ? addTempUploadedPointsWms() : a && b ? b.setVisible(true) : !a && b && B3PGissuite.vars.webMapController.getMap().removeLayer(b)
-}
-function addTempUploadedPointsWms() {
-  var a = getBaseUrl() + "/UploadedPointsWmsServlet", a = B3PGissuite.vars.webMapController.createWMSLayer("uploadedPoints", a, {format:"image/png", layers:"tempPointsLayer", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, {id:"uploadedPoints", timeout:30, retryonerror:10, ratio:1, showerrors:true, initService:false, minscale:0, maxscale:5E5});
-  B3PGissuite.vars.webMapController.getMap().addLayer(a)
 }
 function doIdentifyAfterSearch(a, b) {
   if(B3PGissuite.config.usePopup || B3PGissuite.config.usePanel || B3PGissuite.config.useBalloonPopup) {
@@ -22873,6 +22629,7 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
+var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22884,7 +22641,6 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
-var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -24704,7 +24460,7 @@ B3PGissuite.get = function(a, b) {
   c = a.charAt(0).toLowerCase() + a.slice(1) + (b || 0);
   return typeof B3PGissuite.instances[c] === "undefined" ? null : B3PGissuite.instances[c]
 };
-B3PGissuite.defineComponent("ViewerComponent", {defaultOptions:{id:"", tabid:"", title:""}, constructor:function(a) {
+B3PGissuite.defineComponent("BaseComponent", {defaultOptions:{id:"", tabid:"", title:""}, constructor:function(a) {
   this.options = jQuery.extend(this.defaultOptions, a);
   this.component = null
 }, init:function() {
@@ -24809,7 +24565,7 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
   return this.tabWidth
 }});
 // Input 16
-B3PGissuite.defineComponent("IframeComponent", {extend:"ViewerComponent", defaultOptions:{src:"", taboptions:{tabvakClassname:"tabvak_with_iframe"}}, constructor:function(a) {
+B3PGissuite.defineComponent("IframeComponent", {extend:"BaseComponent", defaultOptions:{src:"", taboptions:{tabvakClassname:"tabvak_with_iframe"}}, constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
@@ -24819,7 +24575,7 @@ B3PGissuite.defineComponent("IframeComponent", {extend:"ViewerComponent", defaul
   }
 }});
 // Input 17
-B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultOptions:{treeid:"layermaindiv", tree:[], servicetrees:[], icons:{collapsed:"/gisviewer/images/treeview/plus.gif", expanded:"/gisviewer/images/treeview/minus.gif", leaf:"/gisviewer/images/treeview/leaft.gif"}, expandAll:false}, layersAan:[], clustersAan:[], activeAnalyseThemaId:"", activeClusterId:"", constructor:function(a) {
+B3PGissuite.defineComponent("TreeComponent", {extend:"BaseComponent", defaultOptions:{treeid:"layermaindiv", tree:[], servicetrees:[], icons:{collapsed:"/gisviewer/images/treeview/plus.gif", expanded:"/gisviewer/images/treeview/minus.gif", leaf:"/gisviewer/images/treeview/leaft.gif"}, expandAll:false}, layersAan:[], clustersAan:[], activeAnalyseThemaId:"", activeClusterId:"", constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
@@ -24892,7 +24648,7 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
   B3PGissuite.vars.refresh_timeout_handle = setTimeout(this.doRefreshLayer, B3PGissuite.config.refreshDelay)
 }, doRefreshLayer:function() {
   B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
-  refreshLayer();
+  B3PGissuite.get("ViewerComponent").refreshLayer();
   refreshLegendBox()
 }, checkboxClick:function(a, b) {
   var c = this, d = a.theItem;
@@ -25330,7 +25086,7 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"ViewerComponent", defaultO
   return null
 }});
 // Input 18
-B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaultOptions:{formid:"volgordeForm", orderboxId:"orderLayerBox", sliderBoxId:"transSlider", sliderId:"slider", useSortableFunction:true, layerDelay:5E3, taboptions:{resizableContent:true}}, reloadTimer:null, orderContainer:null, constructor:function(a) {
+B3PGissuite.defineComponent("LegendComponent", {extend:"BaseComponent", defaultOptions:{formid:"volgordeForm", orderboxId:"orderLayerBox", sliderBoxId:"transSlider", sliderId:"slider", useSortableFunction:true, layerDelay:5E3, taboptions:{resizableContent:true}}, reloadTimer:null, orderContainer:null, constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
@@ -25369,7 +25125,7 @@ B3PGissuite.defineComponent("LegendComponent", {extend:"ViewerComponent", defaul
   clearTimeout(this.reloadTimer)
 }});
 // Input 19
-B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"ViewerComponent", defaultOptions:{containerId:"planselectcontainer", planContainerId:"kolomTekst", selectPlanId:"selectedPlan", eigenaarSelectName:"eigenaarselect", typeSelectName:"plantypeselect", statusSelectName:"statusselect", planSelectName:"planselect"}, constructor:function(a) {
+B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"BaseComponent", defaultOptions:{containerId:"planselectcontainer", planContainerId:"kolomTekst", selectPlanId:"selectedPlan", eigenaarSelectName:"eigenaarselect", typeSelectName:"plantypeselect", statusSelectName:"statusselect", planSelectName:"planselect"}, constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
@@ -25402,7 +25158,7 @@ B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"ViewerComponent",
   this.component.append(a)
 }});
 // Input 20
-B3PGissuite.defineComponent("SearchComponent", {extend:"ViewerComponent", defaultOptions:{hasSearch:false, hasA11yStartWkt:false, searchConfigContainerId:"searchConfigurationsContainer", searchInputContainerId:"searchInputFieldsContainer", searchResultsId:"searchResults", searchResultsClass:"searchResultsClass"}, constructor:function(a) {
+B3PGissuite.defineComponent("SearchComponent", {extend:"BaseComponent", defaultOptions:{hasSearch:false, hasA11yStartWkt:false, searchConfigContainerId:"searchConfigurationsContainer", searchInputContainerId:"searchInputFieldsContainer", searchResultsId:"searchResults", searchResultsClass:"searchResultsClass"}, constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
@@ -25416,7 +25172,7 @@ B3PGissuite.defineComponent("SearchComponent", {extend:"ViewerComponent", defaul
   this.component.append(jQuery("<div></div>").append(jQuery("<div></div>").attr({id:this.options.searchConfigContainerId})).append(jQuery("<div></div>").attr({id:this.options.searchInputContainerId})).append(jQuery("<br />")).append(jQuery("<div></div>").attr({id:this.options.searchResultsId, "class":this.options.searchResultsClass})))
 }});
 // Input 21
-B3PGissuite.defineComponent("CMSComponent", {extend:"ViewerComponent", defaultOptions:{tekstBlokken:[]}, constructor:function(a) {
+B3PGissuite.defineComponent("CMSComponent", {extend:"BaseComponent", defaultOptions:{tekstBlokken:[]}, constructor:function(a) {
   this.callParent(a);
   if(this.options.tekstBlokken.length === 1) {
     this.options.title = this.options.tekstBlokken[0].titel

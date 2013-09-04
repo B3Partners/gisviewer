@@ -1,5 +1,5 @@
 B3PGissuite.defineComponent('PlanSelectionComponent', {
-    extend: 'ViewerComponent',
+    extend: 'BaseComponent',
     defaultOptions: {
         containerId: 'planselectcontainer',
         planContainerId: 'kolomTekst',

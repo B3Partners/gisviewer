@@ -30,7 +30,7 @@
                 var checked = $j("#uploadCsvLayerOn").attr('checked');
                 var ouder = getParent();
                 
-                ouder.checkTempUploadedPointsWms(checked);
+                ouder.B3PGissuite.get('ViewerComponent').checkTempUploadedPointsWms(checked);
             }
         </script>
 

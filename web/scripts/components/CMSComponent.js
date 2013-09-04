@@ -1,5 +1,5 @@
 B3PGissuite.defineComponent('CMSComponent', {
-    extend: 'ViewerComponent',
+    extend: 'BaseComponent',
     defaultOptions: {
         tekstBlokken: []
     },

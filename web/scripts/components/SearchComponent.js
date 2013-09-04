@@ -1,5 +1,5 @@
 B3PGissuite.defineComponent('SearchComponent', {
-    extend: 'ViewerComponent',
+    extend: 'BaseComponent',
     defaultOptions: {
         hasSearch: false,
         hasA11yStartWkt: false,

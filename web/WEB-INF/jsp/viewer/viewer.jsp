@@ -248,6 +248,7 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
         <!-- components -->
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/BaseComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/ViewerComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/TabComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/IframeComponent.js"/>"></script>
@@ -371,7 +372,8 @@
     /**
     * Start off with initMapComponent()
     */
-    initMapComponent();
+    var viewerComponent = B3PGissuite.createComponent('ViewerComponent', { viewerType: B3PGissuite.config.viewerType });
+    viewerComponent.initMapComponent();
     var orderLayerBox= document.getElementById("orderLayerBox");
 </script>
 

@@ -37,6 +37,7 @@
           </sources>
 
           <sources dir="${viewerhtml.path}/components">
+            <file name="BaseComponent.js" />
             <file name="ViewerComponent.js" />
             <file name="TabComponent.js" />
             <file name="IframeComponent.js" />

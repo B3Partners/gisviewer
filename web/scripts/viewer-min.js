@@ -3264,30 +3264,44 @@ function searchThemaValue(a, b, c) {
   }
   return null
 }
-function getWMSLayersUrls() {
-  for(var a, b = [], c = [], d = "", e = true, f = B3PGissuite.vars.webMapController.getMap("map1").getAllWMSLayers(), g = 0;g < f.length;g++) {
-    f[g].getURL() != null && ((a = f[g].getOption("background")) ? b.push(f[g]) : c.push(f[g]))
+function getWMSRequests() {
+  for(var a = [], b, c = [], d = [], e = B3PGissuite.vars.webMapController.getMap("map1").getAllWMSLayers(), f = 0;f < e.length;f++) {
+    e[f].getURL() !== null && ((b = e[f].getOption("background")) ? c.push(e[f]) : d.push(e[f]))
   }
-  for(a = 0;a < b.length;a++) {
-    b[a].getURL() != null && (e ? e = false : d += ";", d += b[a].getURL(), b[a].getAlpha && b[a].getAlpha() != null && (d += "#" + b[a].getAlpha()))
-  }
-  for(b = 0;b < c.length;b++) {
-    if(a = getItemFromWmsLayer(c[b]), f = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint(), a = isItemInScale(a, f), f = false, c[b].getURL().indexOf("tempPointsLayer") !== -1 && (f = true), c[b].getURL() != null && a || f) {
-      e ? e = false : d += ";", d += c[b].getURL(), c[b].getAlpha && c[b].getAlpha() != null && (d += "#" + c[b].getAlpha())
+  for(e = 0;e < c.length;e++) {
+    if(c[e].getURL() !== null) {
+      b = {protocol:"WMS", url:c[e].getURL()};
+      if(c[e].getAlpha && c[e].getAlpha() !== null) {
+        b.alpha = c[e].getAlpha()
+      }
+      a.push(b)
     }
   }
-  return d
+  for(c = 0;c < d.length;c++) {
+    if(b = getItemFromWmsLayer(d[c]), e = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.vars.webMapController.getMap().getResolution() : B3PGissuite.vars.webMapController.getMap().getScaleHint(), b = isItemInScale(b, e), e = false, d[c].getURL().indexOf("tempPointsLayer") !== -1 && (e = true), d[c].getURL() !== null && b || e) {
+      b = {protocol:"WMS", url:d[c].getURL()};
+      if(d[c].getAlpha && d[c].getAlpha() !== null) {
+        b.alpha = d[c].getAlpha()
+      }
+      a.push(b)
+    }
+  }
+  return a
 }
 function getItemFromWmsLayer(a) {
   return a.options ? getItemByLayer(B3PGissuite.config.themaTree, a.options.layers) : a.getFrameworkLayer()
 }
 function getWktStringForPrint() {
-  for(var a = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers(), b = "", c = 0;c < a.length;c++) {
-    for(var d = a[c].getAllFeatures(), e = 0;e < d.length;e++) {
-      b += d[e].getWkt(), b += "#ff0000", d[e].label && (b += "|" + d[e].label), b += ";"
+  for(var a = [], b = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers(), c = 0;c < b.length;c++) {
+    for(var d = b[c].getAllFeatures(), e = 0;e < d.length;e++) {
+      var f = {wktgeom:d[e].getWkt(), color:"#ff0000"};
+      if(d[e].label) {
+        f.label = d[e].label
+      }
+      a.push(f)
     }
   }
-  return b
+  return a
 }
 function getLegendUrls() {
   var a = [], b = "", c = true;
@@ -3326,120 +3340,61 @@ function exportObjectData2PDF(a, b, c, d) {
   b.type = "hidden";
   b.value = "staand";
   a.appendChild(b);
-  b = getWMSLayersUrls();
-  c = document.createElement("input");
-  c.id = "urls";
-  c.name = "urls";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  var b = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), c = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), d = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, d = d + "," + e + "," + f + "," + g, e = document.createElement("input");
-  e.id = "mapsizes";
-  e.name = "mapsizes";
-  e.type = "hidden";
-  e.value = b + ";" + c + ";" + d;
-  a.appendChild(e);
+  b = getWMSRequests();
+  c = getTilingRequests();
+  for(d = 0;d < c.length;d++) {
+    b.push(c[d])
+  }
+  var c = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), d = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, h = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
   a.target = "pdfIframe";
   a.action = "services/Data2PDF";
+  b = {requests:b, geometries:[], bbox:e + "," + f + "," + g + "," + h, width:c, height:d};
+  c = document.createElement("input");
+  c.id = "settings";
+  c.name = "settings";
+  c.type = "hidden";
+  c.value = JSON.stringify(b);
+  a.appendChild(c);
   a.submit()
 }
 function exportMap() {
   var a = document.createElement("FORM");
   document.body.appendChild(a);
   a.method = "POST";
-  var b = getWMSLayersUrls(), c = document.createElement("input");
-  c.id = "urls";
-  c.name = "urls";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  b = getLegendUrls();
-  c = document.createElement("input");
-  c.id = "legendUrls";
-  c.name = "legendUrls";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  b = getWktStringForPrint();
-  c = document.createElement("input");
-  c.id = "wkts";
-  c.name = "wkts";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  b = getTilingLayer();
-  c = document.createElement("input");
-  c.id = "tilings";
-  c.name = "tilings";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  var b = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), c = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), d = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, d = d + "," + e + "," + f + "," + g, e = document.createElement("input");
-  e.id = "mapsizes";
-  e.name = "mapsizes";
-  e.type = "hidden";
-  e.value = b + ";" + c + ";" + d;
-  a.appendChild(e);
+  var b = getWMSRequests(), c = getLegendUrls(), d = document.createElement("input");
+  d.id = "legendUrls";
+  d.name = "legendUrls";
+  d.type = "hidden";
+  d.value = c;
+  a.appendChild(d);
+  for(var c = getWktStringForPrint(), d = getTilingRequests(), e = 0;e < d.length;e++) {
+    b.push(d[e])
+  }
+  var d = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), e = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, h = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, j = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
   a.target = "exportMapWindowNaam";
   a.action = "printmap.do";
+  c = {requests:b, geometries:c, bbox:f + "," + g + "," + h + "," + j, width:d, height:e};
+  b = document.createElement("input");
+  b.id = "jsonSettings";
+  b.name = "jsonSettings";
+  b.type = "hidden";
+  c = JSON.stringify(c);
+  b.value = c;
+  a.appendChild(b);
   a.submit();
   if(B3PGissuite.vars.exportMapWindow == void 0 || B3PGissuite.vars.exportMapWindow == null || B3PGissuite.vars.exportMapWindow.closed) {
     B3PGissuite.vars.exportMapWindow = window.open("", "exportMapWindowNaam"), B3PGissuite.vars.exportMapWindow.focus()
   }
 }
-function exportMap() {
-  var a = document.createElement("FORM");
-  document.body.appendChild(a);
-  a.method = "POST";
-  var b = getWMSLayersUrls(), c = document.createElement("input");
-  c.id = "urls";
-  c.name = "urls";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  b = getLegendUrls();
-  c = document.createElement("input");
-  c.id = "legendUrls";
-  c.name = "legendUrls";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  b = getWktStringForPrint();
-  c = document.createElement("input");
-  c.id = "wkts";
-  c.name = "wkts";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  b = getTilingLayer();
-  c = document.createElement("input");
-  c.id = "tilings";
-  c.name = "tilings";
-  c.type = "hidden";
-  c.value = b;
-  a.appendChild(c);
-  var b = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), c = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), d = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, d = d + "," + e + "," + f + "," + g, e = document.createElement("input");
-  e.id = "mapsizes";
-  e.name = "mapsizes";
-  e.type = "hidden";
-  e.value = b + ";" + c + ";" + d;
-  a.appendChild(e);
-  a.target = "exportMapWindowNaam";
-  a.action = "printmap.do";
-  a.submit();
-  if(B3PGissuite.vars.exportMapWindow == void 0 || B3PGissuite.vars.exportMapWindow == null || B3PGissuite.vars.exportMapWindow.closed) {
-    B3PGissuite.vars.exportMapWindow = window.open("", "exportMapWindowNaam"), B3PGissuite.vars.exportMapWindow.focus()
-  }
-}
-function getTilingLayer() {
-  for(var a = "", b = B3PGissuite.vars.webMapController.getMap("map1").getAllTilingLayers(), c = 0;c < b.length;c++) {
+function getTilingRequests() {
+  for(var a = [], b = B3PGissuite.vars.webMapController.getMap("map1").getAllTilingLayers(), c = 0;c < b.length;c++) {
     var d = B3PGissuite.vars.webMapController.getMap().getResolution(), e;
     e = b[c].options ? getItemByLayer(B3PGissuite.config.themaTree, b[c].options.LAYERS) : b[c].getFrameworkLayer();
     if(isItemInScale(e, d)) {
       d = b[c].getOption("BBOX");
       e = b[c].getOption("RESOLUTIONS");
-      var f = b[c].getOption("TILEWIDTH"), g = b[c].getOption("TILEHEIGHT"), h = buildTilingServiceUrl(b[c]);
-      a += d + ";" + e + ";" + f + ";" + g + ";" + h
+      var f = b[c].getOption("TILEWIDTH"), g = b[c].getOption("TILEHEIGHT"), h = buildTilingServiceUrl(b[c]), d = {protocol:"WMSC", extent:d, url:h, resolutions:e.join(","), tileWidth:f, tileHeight:g, serverExtent:d};
+      a.push(d)
     }
   }
   return a
@@ -22629,7 +22584,6 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
-var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22641,6 +22595,7 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
+var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -24473,6 +24428,246 @@ B3PGissuite.defineComponent("BaseComponent", {defaultOptions:{id:"", tabid:"", t
 }, afterRender:function() {
 }});
 // Input 15
+B3PGissuite.defineComponent("ViewerComponent", {defaultOptions:{viewerType:"flamingo"}, options:{}, mapviewer:null, uploadCsvLayerOn:false, constructor:function(a) {
+  this.options = jQuery.extend(this.defaultOptions, a);
+  this.init()
+}, init:function() {
+  this.mapviewer = this.options.viewerType;
+  if(window.location.href.indexOf("flamingo") > 0) {
+    this.mapviewer = "flamingo"
+  }
+}, initMapComponent:function() {
+  this.mapviewer === "flamingo" ? this.initFlamingo() : this.mapviewer === "openlayers" && this.initOpenlayers();
+  B3PGissuite.vars.webMapController.initEvents();
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_GET_CAPABILITIES, B3PGissuite.vars.webMapController.getMap(), onGetCapabilities);
+  B3PGissuite.vars.webMapController.registerEvent(Event.ON_CONFIG_COMPLETE, B3PGissuite.vars.webMapController, onConfigComplete)
+}, initFlamingo:function() {
+  B3PGissuite.vars.webMapController = new FlamingoController("mapcontent");
+  var a = B3PGissuite.vars.webMapController.createMap("map1");
+  B3PGissuite.vars.webMapController.addMap(a)
+}, initOpenlayers:function() {
+  B3PGissuite.vars.webMapController = new OpenLayersController;
+  var a = this.getMaxBounds(), b = this.getTilingResolutions(a, true);
+  Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs";
+  a = {projection:new OpenLayers.Projection("EPSG:28992"), maxExtent:a, resolutions:b, allOverlays:true, units:"meters", theme:"styles/gisviewer_openlayers.css", controls:[new OpenLayers.Control.Navigation({zoomBoxEnabled:false}), new OpenLayers.Control.ArgParser]};
+  OpenLayers.ImgPath = "styles/openlayers_img/";
+  $j("#mapcontent").html(" ");
+  a = B3PGissuite.vars.webMapController.createMap("mapcontent", a);
+  $j("#mapcontent").css("border", "1px solid black");
+  B3PGissuite.vars.webMapController.addMap(a)
+}, addLayerToViewer:function(a, b, c) {
+  if(c.length == 1 && c[0].tiled) {
+    var d = {}, c = c[0];
+    d.VERSION = c.tileVersion;
+    d.LAYERS = c.tileLayers;
+    d.STYLES = c.tileStyles;
+    d.FORMAT = c.tileFormat;
+    d.SRS = c.tileSrs;
+    d.BBOX = c.tileBoundingBox;
+    d.background = c.background;
+    var e = this.getMaxBounds(), e = B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "" ? B3PGissuite.config.tilingResolutions : c.resolutions ? c.resolutions : this.getTilingResolutions(e, false);
+    B3PGissuite.config.tilingResolutions = e;
+    if(B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.config.tilingResolutions) {
+      e = e.replace(/\,/g, " "), d.serverResolutions = e
+    }
+    d.RESOLUTIONS = e;
+    d.TILEHEIGHT = c.tileHeight;
+    d.TILEWIDTH = c.tileWidth;
+    if(c.resolutions && (e = c.resolutions, (c = e.split(" ")) && c.length < 1 && (c = e.split(",")), c && c.length > 0)) {
+      e = c[0], d.minscale = c[c.length - 1], d.maxscale = e
+    }
+    a = B3PGissuite.vars.webMapController.createWMScLayer(a, b, d)
+  }else {
+    var d = b, d = {id:this.getValidLayerId(a), timeout:30, retryonerror:10, getcapabilitiesurl:d, ratio:1, showerrors:true, initService:false}, f = {format:"image/png", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, g = "", h = "", j = "", l = -1, m = -1, n = "", o = this.layersOnlyHaveDefaultStyles(c);
+    b.indexOf("&sld=") != -1 && (o = true);
+    for(var p = "", e = [], q = 0;q < c.length;q++) {
+      var r = c[q], s = false;
+      r.sld_part != void 0 && r.sld_part != "" && (p += p.length < 1 ? r.id : "," + r.id, s = true);
+      r.use_style && !o && !s && (n += q == c.length - 1 ? r.use_style : r.use_style + ",");
+      if(l != 0) {
+        if(r.scalehintmin != null) {
+          if(s = Number(r.scalehintmin.replace(",", ".")), !isNaN(s) && (l == -1 || s < l)) {
+            l = s
+          }
+        }else {
+          l = 0
+        }
+      }
+      if(m != 0) {
+        if(r.scalehintmax != null) {
+          if(s = Number(r.scalehintmax.replace(",", ".")), !isNaN(s) && (m == -1 || s > m)) {
+            m = s
+          }
+        }else {
+          m = 0
+        }
+      }
+      if(r.wmslayers) {
+        g.length > 0 && (g += ","), g += r.wmslayers, d.background = r.background ? true : false
+      }
+      r.wmsquerylayers && (h.length > 0 && (h += ","), h += r.wmsquerylayers);
+      if(c[q].maptipfield) {
+        j.length != 0 && (j += ","), j += c[q].wmslayers, r = c[q].wmslayers, B3PGissuite.config.user.ingelogdeGebruiker && B3PGissuite.config.user.ingelogdeGebruiker.length > 0 && (r = r.substring(r.indexOf("_") + 1)), r = new MapTip(c[q].wmslayers, c[q].maptipfield, r), e.push(r)
+      }
+    }
+    l != null && l > 0 && (d.minscale = l);
+    m != null && m > 0 && (d.maxscale = m);
+    if(B3PGissuite.vars.webMapController instanceof FlamingoController) {
+      d.maxResolution && (d.maxscale = d.maxResolution), d.minResolution && (d.minscale = d.minResolution), delete d.maxResolution, delete d.minResolution
+    }else {
+      if(B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+        d.maxResolution != void 0 && d.minResolution == void 0 && (d.minResolution = "auto"), d.minResolution != void 0 && d.maxResolution == void 0 && (d.maxResolution = "auto")
+      }
+    }
+    f.styles = n;
+    f.layers = g;
+    f.query_layers = h;
+    d.maptip_layers = j;
+    p.length > 0 && (b += "sld=" + (window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer) + "/services/createUserSld?layerids=" + p);
+    a = B3PGissuite.vars.webMapController.createWMSLayer(a, b, f, d);
+    a.setMapTips(e)
+  }
+  B3PGissuite.vars.webMapController.getMap().addLayer(a)
+}, refreshLayer:function() {
+  var a = B3PGissuite.vars.refresh_timeout_handle;
+  if(B3PGissuite.vars.layerUrl == void 0 || B3PGissuite.vars.layerUrl == null) {
+    hideLoading()
+  }else {
+    B3PGissuite.vars.layerUrl.toLowerCase().indexOf("?service=") == -1 && B3PGissuite.vars.layerUrl.toLowerCase().indexOf("&service=") == -1 && (B3PGissuite.vars.layerUrl += B3PGissuite.vars.layerUrl.indexOf("?") > 0 ? "&" : "?", B3PGissuite.vars.layerUrl += "SERVICE=WMS");
+    for(var b = [], c = [], d, e = 0;e < B3PGissuite.vars.enabledLayerItems.length;e++) {
+      d = B3PGissuite.vars.enabledLayerItems[e];
+      if(B3PGissuite.config.useInheritCheckbox) {
+        var f = document.getElementById(d.id);
+        if(f == void 0 || f == null) {
+          f = $j("#input").find("l_" + d.id)
+        }
+        if(f == void 0 || f == null) {
+          f = $j("#input").find("lOn_" + d.id)
+        }
+        if(!itemHasAllParentsEnabled(f)) {
+          continue
+        }
+      }
+      d.wmslayers && (d.background ? c.push(d) : b.push(d))
+    }
+    for(var e = [], e = e.concat(c), e = e.concat(b), b = [], g, f = c = "", h = 0;h < e.length;h++) {
+      d = e[h];
+      f = B3PGissuite.config.layerGrouping == "lg_layer" || d.tiled ? "fmc" + d.id : B3PGissuite.config.layerGrouping == "lg_cluster" ? "fmc" + d.clusterid : B3PGissuite.config.layerGrouping == "lg_forebackground" ? d.background ? "fmcback" : "fmctop" : "fmcall";
+      if(c == "" || f != c) {
+        g = [], B3PGissuite.config.layerGrouping == "lg_cluster" ? g.push(f + "_" + d.id) : g.push(f), b.push(g)
+      }
+      g.push(d);
+      c = f
+    }
+    g = B3PGissuite.vars.webMapController.getMap().getLayers();
+    f = [];
+    for(e = 0;e < g.length;e++) {
+      g[e].getType() == Layer.RASTER_TYPE && f.push(g[e])
+    }
+    h = [];
+    for(c = 0;c < f.length;c++) {
+      for(var j = f[c].getId(), l = f[c].getOption("layers"), m = false, e = 0;e < b.length && m == false;e++) {
+        if(g = b[e], j == g[0]) {
+          for(var n = "", o = 1;o < g.length;o++) {
+            d = g[o], n.length > 0 && (n += ","), n += d.wmslayers
+          }
+          if(l == n) {
+            m = true;
+            break
+          }
+        }
+      }
+      m || h.push(j)
+    }
+    for(g = 0;g < h.length;g++) {
+      B3PGissuite.vars.webMapController.getMap().removeLayerById(h[g])
+    }
+    for(e = 0;e < b.length;e++) {
+      g = b[e];
+      d = g[0];
+      if(B3PGissuite.vars.webMapController.getMap().getLayer(d) == null) {
+        g.splice(0, 1);
+        for(c = 0;c < g.length;c++) {
+          g[c].serviceid != void 0 ? (d = g[c].name, f = g[c].service_url, h = [], h[0] = g[c], this.addLayerToViewer(d, f, h), d = this.getValidLayerId(d)) : this.addLayerToViewer(d, B3PGissuite.vars.layerUrl, g)
+        }
+      }
+      g = B3PGissuite.vars.webMapController.getMap().getLayer(d);
+      g != null && B3PGissuite.vars.webMapController.getMap().setLayerIndex(g, e + B3PGissuite.vars.startLayerIndex)
+    }
+    hideLoading();
+    if(a == B3PGissuite.vars.refresh_timeout_handle) {
+      B3PGissuite.vars.refresh_timeout_handle = 0;
+      a = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
+      (b = B3PGissuite.vars.webMapController.getMap().getAllTilingLayers()) && a.concat(b);
+      b = B3PGissuite.vars.webMapController.getMap().getLayers().length;
+      for(g = 0;g < a.length;g++) {
+        e = a[g], B3PGissuite.vars.webMapController.getMap().setLayerIndex(e, b + B3PGissuite.vars.startLayerIndex)
+      }
+      this.checkTempUploadedPointsWms(this.uploadCsvLayerOn)
+    }
+  }
+}, getMaxBounds:function() {
+  var a;
+  !B3PGissuite.config.bbox && B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox)) : B3PGissuite.config.bbox && B3PGissuite.config.appExtent ? a = Utils.createBounds(new Extent(B3PGissuite.config.appExtent)) : B3PGissuite.config.bbox && B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.fullbbox)) : B3PGissuite.config.bbox && !B3PGissuite.config.fullbbox ? a = Utils.createBounds(new Extent(B3PGissuite.config.bbox)) : (a = getNLMaxBounds(), 
+  a = new OpenLayers.Bounds(a.left, a.bottom, a.right, a.top));
+  var b = a.right - a.left, c = a.top - a.bottom, d = $j("#mapcontent").width(), e = $j("#mapcontent").height(), f = $j("#dataframediv").height();
+  d /= e + f + 75;
+  d < b / c ? (b /= d, a.bottom -= (b - c) / 2, a.top = a.bottom + b) : (c *= d, a.left -= (c - b) / 2, a.right = a.left + c);
+  return a
+}, getTilingResolutions:function(a, b) {
+  var c = a.right - a.left, d;
+  if(B3PGissuite.config.tilingResolutions) {
+    var e = B3PGissuite.config.tilingResolutions;
+    if((e = e.indexOf(",") !== -1 ? e.split(",") : e.split(" ")) && e.length > 0) {
+      d = [];
+      for(var f in e) {
+        e[f] = parseFloat(e[f]), d[f] = e[f]
+      }
+    }
+  }else {
+    B3PGissuite.config.tilingResolutions = getNLTilingRes(), d = convertStringToArray(B3PGissuite.config.tilingResolutions)
+  }
+  if(B3PGissuite.config.tilingResolutions && !B3PGissuite.config.fullExtent) {
+    f = $j("#mapcontent").width();
+    c = c / f * (72 / 0.0254) / 1E3;
+    f = [];
+    var e = 0, g;
+    for(g in d) {
+      d[g] <= c && (f[e] = d[g], e++)
+    }
+    d = f
+  }
+  if(!b) {
+    g = "";
+    for(var h in d) {
+      g += parseFloat(d[h]) + " "
+    }
+    return g.trim()
+  }
+  return d
+}, getValidLayerId:function(a) {
+  a = a.replace(":", "_");
+  return a = a.replace(".", "_")
+}, layersOnlyHaveDefaultStyles:function(a) {
+  if(a == void 0 || a == "") {
+    return true
+  }
+  for(var b = 0;b < a.length;b++) {
+    var c = a[b];
+    if(c.use_style && c.use_style != "default") {
+      return false
+    }
+  }
+  return true
+}, checkTempUploadedPointsWms:function(a) {
+  this.uploadCsvLayerOn = a;
+  var b = B3PGissuite.vars.webMapController.getMap().getLayer("uploadedPoints");
+  a && b == null ? this.addTempUploadedPointsWms() : a && b ? b.setVisible(true) : !a && b && B3PGissuite.vars.webMapController.getMap().removeLayer(b)
+}, addTempUploadedPointsWms:function() {
+  var a = getBaseUrl() + "/UploadedPointsWmsServlet", a = B3PGissuite.vars.webMapController.createWMSLayer("uploadedPoints", a, {format:"image/png", layers:"tempPointsLayer", transparent:true, exceptions:"application/vnd.ogc.se_inimage", srs:"EPSG:28992", version:"1.1.1", noCache:true}, {id:"uploadedPoints", timeout:30, retryonerror:10, ratio:1, showerrors:true, initService:false, minscale:0, maxscale:5E5});
+  B3PGissuite.vars.webMapController.getMap().addLayer(a)
+}});
+// Input 16
 B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, useHover:true, tabvakClassname:"tabvak"}, constructor:function(a) {
   var b = this;
   b.options = jQuery.extend(b.defaultOptions, a);
@@ -24564,7 +24759,7 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
 }, getTabWidth:function() {
   return this.tabWidth
 }});
-// Input 16
+// Input 17
 B3PGissuite.defineComponent("IframeComponent", {extend:"BaseComponent", defaultOptions:{src:"", taboptions:{tabvakClassname:"tabvak_with_iframe"}}, constructor:function(a) {
   this.callParent(a);
   this.init()
@@ -24574,7 +24769,7 @@ B3PGissuite.defineComponent("IframeComponent", {extend:"BaseComponent", defaultO
     this.component[0].allowTransparency = "allowtransparency"
   }
 }});
-// Input 17
+// Input 18
 B3PGissuite.defineComponent("TreeComponent", {extend:"BaseComponent", defaultOptions:{treeid:"layermaindiv", tree:[], servicetrees:[], icons:{collapsed:"/gisviewer/images/treeview/plus.gif", expanded:"/gisviewer/images/treeview/minus.gif", leaf:"/gisviewer/images/treeview/leaft.gif"}, expandAll:false}, layersAan:[], clustersAan:[], activeAnalyseThemaId:"", activeClusterId:"", constructor:function(a) {
   this.callParent(a);
   this.init()
@@ -25085,7 +25280,7 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"BaseComponent", defaultOpt
   }
   return null
 }});
-// Input 18
+// Input 19
 B3PGissuite.defineComponent("LegendComponent", {extend:"BaseComponent", defaultOptions:{formid:"volgordeForm", orderboxId:"orderLayerBox", sliderBoxId:"transSlider", sliderId:"slider", useSortableFunction:true, layerDelay:5E3, taboptions:{resizableContent:true}}, reloadTimer:null, orderContainer:null, constructor:function(a) {
   this.callParent(a);
   this.init()
@@ -25124,7 +25319,7 @@ B3PGissuite.defineComponent("LegendComponent", {extend:"BaseComponent", defaultO
 }, clearTimerForReload:function() {
   clearTimeout(this.reloadTimer)
 }});
-// Input 19
+// Input 20
 B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"BaseComponent", defaultOptions:{containerId:"planselectcontainer", planContainerId:"kolomTekst", selectPlanId:"selectedPlan", eigenaarSelectName:"eigenaarselect", typeSelectName:"plantypeselect", statusSelectName:"statusselect", planSelectName:"planselect"}, constructor:function(a) {
   this.callParent(a);
   this.init()
@@ -25157,7 +25352,7 @@ B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"BaseComponent", d
   a.append(jQuery("<div></div>").attr("id", this.options.selectPlanId).text("Nog geen plan geselecteerd."));
   this.component.append(a)
 }});
-// Input 20
+// Input 21
 B3PGissuite.defineComponent("SearchComponent", {extend:"BaseComponent", defaultOptions:{hasSearch:false, hasA11yStartWkt:false, searchConfigContainerId:"searchConfigurationsContainer", searchInputContainerId:"searchInputFieldsContainer", searchResultsId:"searchResults", searchResultsClass:"searchResultsClass"}, constructor:function(a) {
   this.callParent(a);
   this.init()
@@ -25171,7 +25366,7 @@ B3PGissuite.defineComponent("SearchComponent", {extend:"BaseComponent", defaultO
   this.options.hasA11yStartWkt && (this.component.append(jQuery("<p></p>").text("U heeft een startlocatie ingesteld. Deze locatie staat op de kaart gemarkeerd. Bij zoekers die hier gebruik van maken wordt de afstand naar de startlocatie getoond.")), this.component.append(a));
   this.component.append(jQuery("<div></div>").append(jQuery("<div></div>").attr({id:this.options.searchConfigContainerId})).append(jQuery("<div></div>").attr({id:this.options.searchInputContainerId})).append(jQuery("<br />")).append(jQuery("<div></div>").attr({id:this.options.searchResultsId, "class":this.options.searchResultsClass})))
 }});
-// Input 21
+// Input 22
 B3PGissuite.defineComponent("CMSComponent", {extend:"BaseComponent", defaultOptions:{tekstBlokken:[]}, constructor:function(a) {
   this.callParent(a);
   if(this.options.tekstBlokken.length === 1) {

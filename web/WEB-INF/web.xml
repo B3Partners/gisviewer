@@ -129,6 +129,14 @@
             <param-name>xsl_A3_Staand</param-name>
             <param-value>/WEB-INF/xsl/A3_Staand.xsl</param-value>
         </init-param>
+            <init-param>
+            <param-name>xsl_A0_Staand</param-name>
+            <param-value>/WEB-INF/xsl/A0_Staand.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A0_Liggend</param-name>
+            <param-value>/WEB-INF/xsl/A0_Liggend.xsl</param-value>
+        </init-param>
         <load-on-startup>4</load-on-startup>
     </servlet>
     

@@ -85,7 +85,7 @@ function convertStringToArray(waarde) {
     var lijst = [];
     var arr = [];
     
-    waarde = waarde.trim();
+    waarde = $j.trim(waarde);
 
     if (waarde.indexOf(",") !== -1) {
         lijst = waarde.split(",");

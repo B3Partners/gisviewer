@@ -88,7 +88,7 @@
                 <html:select property="pageSize">
                     <html:option value="A4">A4</html:option>
                     <html:option value="A3">A3</html:option>
-                    <html:option value="A3">A0</html:option>
+                    <html:option value="A0">A0</html:option>
                 </html:select>
             </td>
             </tr>
@@ -130,6 +130,10 @@
             <tr>
                 <td>Schaal</td>
                 <td><b>1 : <html:text property="scale"/></b></td>
+            </tr>
+            <tr>
+                <td>PPI</td>
+                <td><html:text property="ppi" value="300"/></td>
             </tr>
 
             <tr>

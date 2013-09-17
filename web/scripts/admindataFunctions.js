@@ -137,12 +137,32 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
         bronContainer.addClass("rootBronContainer");
         rootBronContainer = false;
     }
+    
+    // csv, info en pdf export boven alle records tonen
+    var bronCaption = createBronCaption(gegevensbron, false, null);
+    bronContainer.append(bronCaption);
+    
+    /* Only auto open pop-up when one record is found and one objectdata field 
+     * is configured in basisregel */
+    if (gegevensbron.records && gegevensbron.records.length == 1) {
+        var url;
 
-    // Create table content
+        if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
+            if (gegevensbron.records[0].values[0].value) {
+                url = gegevensbron.records[0].values[0].value;
+            }
+
+            if (gegevensbron.records[0].values[0].valueList) {
+                url = gegevensbron.records[0].values[0].valueList;
+            }
+
+            parent.popUp(url, 'externe_link', 800, 600);
+        }
+    }
+    
+    // Create table content    
     if (gegevensbron.records) {
-        $j.each(gegevensbron.records, function(index, record) {
-            // Create caption
-            var bronCaption = createBronCaption(gegevensbron, true, index + 1);
+        $j.each(gegevensbron.records, function(index, record) {            
             // Create content table
             var bronContent = $j('<div></div>').attr({
                 "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
@@ -162,8 +182,7 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
 
             // Append all to DOM tree
             bronContent.append(bronTable.append(bronTableBody));
-            bronContainer.append(bronCaption).append(bronContent);
-
+            bronContainer.append(bronContent);
         });
     }
 
@@ -311,8 +330,9 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
         rootBronContainer = false;
     }
 
-    // Create caption
-    var bronCaption = createBronCaption(gegevensbron, true, null);
+    // csv, info en pdf export boven alle records tonen
+    var bronCaption = createBronCaption(gegevensbron, false, null);
+    bronContainer.append(bronCaption);
 
     // Create content table
     var bronContent = $j('<div></div>').attr({
@@ -355,9 +375,8 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
 
     // Append all to DOM tree
     bronContent.append(bronTable.append(bronTableHead).append(bronTableBody));
-    bronContainer
-            .append(bronCaption)
-            .append(bronContent);
+    bronContainer.append(bronContent);
+    
     $j('#' + htmlId).append(bronContainer);
 }
 
@@ -789,7 +808,7 @@ function createTableTd(waarde, gegevensbron, record) {
             var type;
             var imgHtml;
             if (waarde.value.indexOf(".htm") != -1 || waarde.value.indexOf(".htm") != -1 ||
-                    waarde.value.indexOf(".pdf") != -1) {
+                    waarde.value.indexOf(".pdf") != -1 || waarde.value.indexOf(".txt") != -1) {
 
                 var links;
                 if (waarde.value.indexOf(",") != -1) {
@@ -899,8 +918,7 @@ function createTableTd(waarde, gegevensbron, record) {
         }
 
         var i = 0;
-        $j.each(waarde.valueList, function(index3, listWaarde) {
-
+        $j.each(waarde.valueList, function(index3, listWaarde) {            
             var splitWaardes = "";
             var ext = "";
 

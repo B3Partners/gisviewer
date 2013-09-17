@@ -211,8 +211,8 @@
         <servlet-name>Data2PDF</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.Data2PDF</servlet-class>
         <init-param>
-            <param-name>xsl_data2pdf_staand</param-name>
-            <param-value>/WEB-INF/xsl/data2pdf_staand.xsl</param-value>
+            <param-name>xsl_data2pdf</param-name>
+            <param-value>/WEB-INF/xsl/data2pdf_lelystad.xsl</param-value>
         </init-param>
     </servlet>
 

@@ -243,12 +243,6 @@ function initializeButtons() {
     B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_layerSelection, b_layerSelection);
     B3PGissuite.vars.webMapController.addTool(bu_layerSelection);
 
-
-    /* GPS tool */
-    if (B3PGissuite.config.gpsBuffer < 1) {
-        B3PGissuite.config.gpsBuffer = 500;
-    }
-
     var gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
 
     var bu_gps = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {
@@ -2040,8 +2034,8 @@ function exportMap() {
     var tilingRequests = getTilingRequests();
     
     /* als eerst tiling url's daarna gewone wms meegeven */
-    for (var i = 0; i < wmsRequests.length; i++) {
-        tilingRequests.push(wmsRequests[i]);
+    for (var i = 0; i < tilingRequests.length; i++) {
+        wmsRequests.push(tilingRequests[i]);
     }
 
     /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
@@ -2062,7 +2056,7 @@ function exportMap() {
     var wktString = getWktStringForPrint();
     
     var jsonSettings = {
-        requests: tilingRequests,
+        requests: wmsRequests,
         geometries: wktString,
         bbox: mapBbox,
         width: mapWidth,
@@ -2647,6 +2641,15 @@ function getLatLonForGoogleMapDirections(destWkt) {
 }
 
 function openGoogleMapsDirections(values) {
+    
+    /* Check of er een gps locatie is gezet. Dit gebeurt
+     * in GPSComponent.receiveLocation();
+     */
+    if (gpsLat != null && gpsLon != null) {
+        values[1] = gpsLat;
+        values[0] = gpsLon;
+    }
+    
     var saddr = "?saddr=" + values[1] + "," + values[0];
     var daddr = "&daddr=" + values[3] + "," + values[2];
 

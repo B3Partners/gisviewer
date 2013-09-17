@@ -14,60 +14,65 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+var timeoutId = null;
+var interval = 30000;
+var buffer = null;
 
+var gpsLat = null;
+var gpsLon = null;
 
-function GPSComponent(buffer){    
-    
-    this.timeoutId = null;
-    this.interval = 20000;
-    
-    if(buffer){
-        this.buffer = buffer;
+function GPSComponent(locationBuffer){  
+    if (locationBuffer){
+        buffer = locationBuffer;
     }
     
-    // Init projection definitions
     Proj4js.defs["EPSG:28992"] = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.237,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs";
     Proj4js.defs["EPSG:4236"] = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs ";
     
-    this.startPolling = function (){        
-        // Request repeated updates.
-        this.timeoutId = setInterval(this.once, this.interval);
-        this.once();
-    }
-    
-    this.once = function(){
-        navigator.geolocation.getCurrentPosition(this.receiveLocation, this.errorHandler);
+    this.startPolling = function () {
+        timeoutId = setInterval(once, interval);
+        once();
     }
     
     this.stopPolling = function(){
-        clearInterval(this.timeoutId);
+        clearInterval(timeoutId);
     }
     
-    this.receiveLocation = function (location){
+    once = function() {        
+        navigator.geolocation.getCurrentPosition(receiveLocation, errorHandler);
+    }
+    
+    receiveLocation = function (location) {        
         var lat = location.coords.latitude;
         var lon = location.coords.longitude;
-        var point = this.transformLatLon(Number(lon),Number(lat));
         
-        var minx = point.x - this.buffer;
-        var miny = point.y - this.buffer;
-        var maxx = point.x + this.buffer;
-        var maxy = point.y + this.buffer;
+        gpsLat = lat;
+        gpsLon = lon;
+        
+        var point = transformLatLon(Number(lon),Number(lat));
+        
+        var minx = point.x - buffer;
+        var miny = point.y - buffer;
+        var maxx = point.x + buffer;
+        var maxy = point.y + buffer;
         
         var extent = new Extent(minx,miny,maxx,maxy);
-        B3PGissuite.vars.webMapController.getMap().zoomToExtent(extent);
         
+        B3PGissuite.vars.webMapController.getMap().zoomToExtent(extent);        
         B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", point.x, point.y);
     }
     
-    this.errorHandler = function (error){
+    errorHandler = function (error){
         alert("Kan locatie niet bepalen");
     }
     
-    this.transformLatLon = function(x,y){
+    transformLatLon = function(x,y){
         var source = new Proj4js.Proj("EPSG:4236");
         var dest = new Proj4js.Proj("EPSG:28992");
         var point = new Proj4js.Point(x,y);
+        
         Proj4js.transform(source,dest,point);
+        
         return point;
     }
 }

@@ -3367,7 +3367,7 @@ function exportMap() {
   c.type = "hidden";
   c.value = b;
   a.appendChild(c);
-  for(var c = getWMSRequests(), b = getTilingRequests(), d = 0;d < c.length;d++) {
+  for(var b = getWMSRequests(), c = getTilingRequests(), d = 0;d < c.length;d++) {
     b.push(c[d])
   }
   var c = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), d = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, h = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, e = e + "," + f + "," + g + "," + h;

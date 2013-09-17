@@ -2519,7 +2519,7 @@ function getNLTilingRes() {
   return"512,256,128,64,32,16,8,4,2,1,0.5,0.125"
 }
 function convertStringToArray(a) {
-  var b = [], c = [], a = a.trim();
+  var b = [], c = [], a = $j.trim(a);
   if((b = a.indexOf(",") !== -1 ? a.split(",") : a.split(" ")) && b.length > 0) {
     var c = [], d;
     for(d in b) {
@@ -3340,8 +3340,8 @@ function exportObjectData2PDF(a, b, c, d) {
   b.type = "hidden";
   b.value = "staand";
   a.appendChild(b);
-  b = getWMSRequests();
-  c = getTilingRequests();
+  c = getWMSRequests();
+  b = getTilingRequests();
   for(d = 0;d < c.length;d++) {
     b.push(c[d])
   }
@@ -3350,8 +3350,8 @@ function exportObjectData2PDF(a, b, c, d) {
   a.action = "services/Data2PDF";
   b = {requests:b, geometries:[], bbox:e + "," + f + "," + g + "," + h, width:c, height:d};
   c = document.createElement("input");
-  c.id = "settings";
-  c.name = "settings";
+  c.id = "jsonSettings";
+  c.name = "jsonSettings";
   c.type = "hidden";
   c.value = JSON.stringify(b);
   a.appendChild(c);
@@ -3361,19 +3361,20 @@ function exportMap() {
   var a = document.createElement("FORM");
   document.body.appendChild(a);
   a.method = "POST";
-  var b = getWMSRequests(), c = getLegendUrls(), d = document.createElement("input");
-  d.id = "legendUrls";
-  d.name = "legendUrls";
-  d.type = "hidden";
-  d.value = c;
-  a.appendChild(d);
-  for(var c = getWktStringForPrint(), d = getTilingRequests(), e = 0;e < d.length;e++) {
-    b.push(d[e])
+  var b = getLegendUrls(), c = document.createElement("input");
+  c.id = "legendUrls";
+  c.name = "legendUrls";
+  c.type = "hidden";
+  c.value = b;
+  a.appendChild(c);
+  for(var c = getWMSRequests(), b = getTilingRequests(), d = 0;d < c.length;d++) {
+    b.push(c[d])
   }
-  var d = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), e = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, h = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, j = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
+  var c = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), d = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, h = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, e = e + "," + f + "," + g + "," + h;
   a.target = "exportMapWindowNaam";
   a.action = "printmap.do";
-  c = {requests:b, geometries:c, bbox:f + "," + g + "," + h + "," + j, width:d, height:e};
+  f = getWktStringForPrint();
+  c = {requests:b, geometries:f, bbox:e, width:c, height:d};
   b = document.createElement("input");
   b.id = "jsonSettings";
   b.name = "jsonSettings";
@@ -3391,10 +3392,10 @@ function getTilingRequests() {
     var d = B3PGissuite.vars.webMapController.getMap().getResolution(), e;
     e = b[c].options ? getItemByLayer(B3PGissuite.config.themaTree, b[c].options.LAYERS) : b[c].getFrameworkLayer();
     if(isItemInScale(e, d)) {
-      d = b[c].getOption("BBOX");
-      e = b[c].getOption("RESOLUTIONS");
-      var f = b[c].getOption("TILEWIDTH"), g = b[c].getOption("TILEHEIGHT"), h = buildTilingServiceUrl(b[c]), d = {protocol:"WMSC", extent:d, url:h, resolutions:e.join(","), tileWidth:f, tileHeight:g, serverExtent:d};
-      a.push(d)
+      var d = b[c].getOption("BBOX"), f = b[c].getOption("RESOLUTIONS");
+      e = b[c].getOption("TILEWIDTH");
+      var g = b[c].getOption("TILEHEIGHT"), h = buildTilingServiceUrl(b[c]), f = typeof f !== "string" ? f.join(",") : f;
+      a.push({protocol:"WMSC", extent:d, url:h, resolutions:f, tileWidth:e, tileHeight:g, serverExtent:d})
     }
   }
   return a

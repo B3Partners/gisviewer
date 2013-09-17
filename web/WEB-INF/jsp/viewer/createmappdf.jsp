@@ -133,7 +133,7 @@
             </tr>
             <tr>
                 <td>PPI</td>
-                <td><html:text property="ppi" value="300"/></td>
+                <td><html:text property="ppi" value="72"/></td>
             </tr>
 
             <tr>

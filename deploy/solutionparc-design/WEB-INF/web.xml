@@ -33,6 +33,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+	<filter>                
+        <filter-name>UrlRewriteFilter</filter-name>                
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>  
+    </filter>
+       
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>aconfig</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
@@ -181,6 +191,39 @@
         <servlet-name>UploadedPointsWmsServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.UploadedPointsWmsServlet</servlet-class>
     </servlet>
+
+	<servlet>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetThemesServlet</servlet-class>
+    </servlet>
+
+	<servlet>
+        <servlet-name>Data2PDF</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.Data2PDF</servlet-class>
+        <init-param>
+            <param-name>xsl_data2pdf_staand</param-name>
+            <param-value>/WEB-INF/xsl/data2pdf_staand.xsl</param-value>
+        </init-param>
+    </servlet>
+
+	<servlet-mapping>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <url-pattern>/GetThemes</url-pattern>
+    </servlet-mapping>
+
+	<servlet-mapping>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <url-pattern>/services/getBlobServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Data2PDF</servlet-name>
+        <url-pattern>/services/Data2PDF</url-pattern>
+    </servlet-mapping> 
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>

@@ -21,8 +21,8 @@
     logAbandoned="true"
     minEvictableIdleTimeMillis="30000" 
     jmxEnabled="true"
-    username="postgres" 
-    password="***REMOVED***" 
+    username="gisviewer" 
+    password="gisviewer" 
     driverClassName="org.postgresql.Driver"
     url="jdbc:postgresql://localhost:5432/gisviewer"
 />

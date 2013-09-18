@@ -2828,13 +2828,15 @@ function isItemInScale(a, b) {
   }
   if(a.resolutions || a.PRINTRESOLUTIONS) {
     var e, d = a.PRINTRESOLUTIONS ? a.PRINTRESOLUTIONS : a.resolutions;
-    !d instanceof Array && (e = d.split(" ")) && e.length < 1 && (e = d.split(","));
+    typeof d == "string" && (e = d.split(" ")) && e.length < 1 && (e = d.split(","));
     if(e && e.length > 0) {
       var d = e.length, f = e[0], c = e[d - 1];
       c == "" && (c = e[d - 2]);
       e = Math.sqrt(f * f * 2);
       c = Math.sqrt(c * c * 2);
-      d = b + 1.0E-14;
+      d = b + 1.0E-8;
+      e *= 1.05;
+      c *= 0.95;
       c = d <= e && d >= c ? true : false
     }
   }
@@ -3005,8 +3007,7 @@ function loadNextInLegendImageQueue() {
   if(B3PGissuite.vars.legendImageLoadingSpace > 0 && B3PGissuite.vars.legendImageQueue.length > 0) {
     B3PGissuite.vars.legendImageLoadingSpace--;
     var a = B3PGissuite.vars.legendImageQueue.shift(), b = a.theItem, a = a.nextLegend, c = createLegendDiv(b), d = null;
-    orderLayerBox.hasChildNodes() && (d = findBeforeDivInLegendBox(b, a));
-    d == null ? orderLayerBox.appendChild(c) : orderLayerBox.insertBefore(c, d)
+    orderLayerBox && (orderLayerBox.hasChildNodes() && (d = findBeforeDivInLegendBox(b, a)), d == null ? orderLayerBox.appendChild(c) : orderLayerBox.insertBefore(c, d))
   }
 }
 function resetLegendImageQueue() {
@@ -3014,10 +3015,13 @@ function resetLegendImageQueue() {
   B3PGissuite.vars.legendImageLoadingSpace = 2
 }
 function findLayerDivInLegendBox(a) {
-  for(var a = a.id + "##" + a.wmslayers, b = 0;b < orderLayerBox.childNodes.length;b++) {
-    var c = orderLayerBox.childNodes.item(b);
-    if(c.id == a) {
-      return c
+  a = a.id + "##" + a.wmslayers;
+  if(orderLayerBox) {
+    for(var b = 0;b < orderLayerBox.childNodes.length;b++) {
+      var c = orderLayerBox.childNodes.item(b);
+      if(c.id == a) {
+        return c
+      }
     }
   }
   return null
@@ -3074,7 +3078,11 @@ function refreshLegendBox() {
     f || b.push(e)
   }
   B3PGissuite.vars.enabledLayerItems = [];
-  for(e = orderLayerBox.childNodes.length - 1;e > -1;e--) {
+  e = 0;
+  if(orderLayerBox) {
+    e = orderLayerBox.childNodes.length
+  }
+  for(e -= 1;e > -1;e--) {
     a = false;
     d = splitValue(orderLayerBox.childNodes[e].id)[0];
     for(f = 0;f < b.length;f++) {
@@ -3147,7 +3155,7 @@ function onFrameworkLoaded() {
   }
   B3PGissuite.vars.frameWorkInitialized = true;
   B3PGissuite.vars.mapInitialized = true;
-  B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
+  B3PGissuite.vars.webMapController.getMap().isUpdating() ? B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading) : setTimeout(onAllLayersFinishedLoading, 0);
   B3PGissuite.vars.webMapController instanceof FlamingoController && (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions != "" && B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(B3PGissuite.config.tilingResolutions), B3PGissuite.vars.webMapController.activateTool("toolPan"));
   updateSizeOL();
   doInitSearch();
@@ -3207,7 +3215,8 @@ function ie6_hack_onInit() {
   navigator.appVersion.indexOf("MSIE") != -1 && (version = parseFloat(navigator.appVersion.split("MSIE")[1]), version == 6 && setTimeout("doOnInit=true; onFrameworkLoaded();", 5E3))
 }
 function moveToExtent(a, b, c, d) {
-  B3PGissuite.vars.webMapController.getMap().zoomToExtent({minx:a, miny:b, maxx:c, maxy:d}, 0)
+  B3PGissuite.vars.webMapController.getMap().zoomToExtent({minx:a, miny:b, maxx:c, maxy:d}, 0);
+  updateSizeOL()
 }
 function setFullExtent(a, b, c, d) {
   B3PGissuite.vars.webMapController.getMap().setMaxExtent({minx:a, miny:b, maxx:c, maxy:d})
@@ -3577,8 +3586,8 @@ function getLatLonForGoogleMapDirections(a) {
   JMapData.getLatLonForGoogleDirections(a, openGoogleMapsDirections)
 }
 function openGoogleMapsDirections(a) {
-  gpsLat != null && gpsLon != null && (a[1] = gpsLat, a[0] = gpsLon);
-  window.open("https://maps.google.com/maps" + ("?saddr=" + a[1] + "," + a[0]) + ("&daddr=" + a[3] + "," + a[2]))
+  gps_lat != null && gps_lon != null && (a[1] = gps_lat, a[0] = gps_lon);
+  a[0] == "" || a[1] == "" ? handler("Er is nog geen gps- of startlocatie bekend.") : window.open("https://maps.google.com/maps" + ("?saddr=" + a[1] + "," + a[0]) + ("&daddr=" + a[3] + "," + a[2]))
 }
 function createPermaLink() {
   var a = window.location.protocol + "//" + window.location.host + B3PGissuite.config.baseNameViewer + "/viewer.do?", b = "";
@@ -3605,7 +3614,7 @@ function addToFavorites(a) {
     chromeBookMarkPopup(a, "B3P Gisviewer bookmark")
   }else {
     if(window.sidebar) {
-      window.sidebar.addPanel("B3P Gisviewer bookmark", a, "")
+      window.external.AddFavorite(a, "B3P Gisviewer bookmark")
     }else {
       if(window.external) {
         window.external.AddFavorite(a, "B3P Gisviewer bookmark")
@@ -4342,17 +4351,17 @@ function showZoekConfiguratie(a) {
 }
 ;
 // Input 7
-var timeoutId = null, interval = 3E4, buffer = null, gpsLat = null, gpsLon = null;
+var gps_timeoutId = null, gps_interval = 3E4, gps_buffer = null, gps_lat = null, gps_lon = null;
 function GPSComponent(a) {
-  a && (buffer = a);
+  a && (gps_buffer = a);
   Proj4js.defs["EPSG:28992"] = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.237,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs";
   Proj4js.defs["EPSG:4236"] = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs ";
   this.startPolling = function() {
-    timeoutId = setInterval(once, interval);
+    gps_timeoutId = setInterval(once, gps_interval);
     once()
   };
   this.stopPolling = function() {
-    clearInterval(timeoutId)
+    clearInterval(gps_timeoutId)
   };
   once = function() {
     navigator.geolocation.getCurrentPosition(receiveLocation, errorHandler)
@@ -4362,7 +4371,7 @@ function GPSComponent(a) {
     gpsLat = c;
     gpsLon = a;
     c = transformLatLon(Number(a), Number(c));
-    a = new Extent(c.x - buffer, c.y - buffer, c.x + buffer, c.y + buffer);
+    a = new Extent(c.x - gps_buffer, c.y - gps_buffer, c.x + gps_buffer, c.y + gps_buffer);
     B3PGissuite.vars.webMapController.getMap().zoomToExtent(a);
     B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", c.x, c.y)
   };
@@ -24005,7 +24014,6 @@ OpenLayersMap.prototype.removeAllMarkers = function() {
   for(var a in this.markers) {
     this.markers[a].destroy()
   }
-  this.markers.destroy()
 };
 OpenLayersMap.prototype.register = function(a, b, c) {
   c == void 0 && (c = this);

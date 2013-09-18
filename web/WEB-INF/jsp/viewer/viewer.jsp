@@ -152,7 +152,7 @@
         'showLayerSelectionTool': defaultFalse(${configMap["showLayerSelectionTool"]}),
         'showGPSTool': defaultFalse(${configMap["showGPSTool"]}),
         'showEditTool': defaultFalse(${configMap["showEditTool"]}),
-        'gpsBuffer': catchEmpty(${configMap["gpsBuffer"]}, 1000),
+        'gpsBuffer': catchEmpty("${configMap["gpsBuffer"]}", "1000"),
         'layerGrouping': catchEmpty("${configMap["layerGrouping"]}", "lg_forebackground"),
         'popupWidth': catchEmpty("${configMap["popupWidth"]}", "90%"),
         'popupHeight': catchEmpty("${configMap["popupHeight"]}", "20%"),

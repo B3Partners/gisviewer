@@ -15,8 +15,12 @@
         <h1>HTTP 404 - Pagina niet gevonden</h1>
 
         <p>
-            Iemand heeft deze pagina nog niet aangemaakt of de pagina
-            bestaat niet. Neem contact op met de beheerder.
+            Pagina niet gevonden. Neem contact op met de beheerder.
+        </p>
+        
+        <p>
+            Bent u zelf de beheerder ? Bekijk de Tomcat logs of stuur
+            deze mee naar de ontwikkelaar.
         </p>
     </body>
 </html>

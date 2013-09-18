@@ -15,7 +15,12 @@
         <h1>HTTP 500 - Internal Server Error</h1>
 
         <p>
-            De server is met vakantie :( Neem contact op met de beheerder.
+            Interne server fout. Neem contact op met de beheerder.
+        </p>
+        
+        <p>
+            Bent u zelf de beheerder ? Bekijk de Tomcat logs of stuur
+            deze mee naar de ontwikkelaar.
         </p>
     </body>
 </html>

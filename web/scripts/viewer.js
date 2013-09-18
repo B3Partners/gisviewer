@@ -843,7 +843,6 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
 
 /*Check scale for all layers*/
 function checkScaleForLayers() {
-
     var currentscale;
     if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
         currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
@@ -902,7 +901,9 @@ function isItemInScale(item, scale) {
             res = item.resolutions;
         }
 
-        if (!res instanceof Array) {
+        var listType = (typeof res);
+
+        if (listType == "string") {
             list = res.split(" ");
 
             if (list && list.length < 1) {
@@ -923,7 +924,13 @@ function isItemInScale(item, scale) {
             var scaleMax = Math.sqrt((max * max) * 2);
             var scaleMin = Math.sqrt((min * min) * 2);
 
-            var adjustedScale = scale + 0.00000000000001;
+            var epsilon = 0.00000001;
+            var adjustedScale = scale + epsilon;
+
+            /* Scale check with % margin between scales */
+            var percent = 5;
+            scaleMax *= (100 + percent) / 100;
+            scaleMin *= (100 - percent) / 100;
 
             if (adjustedScale <= scaleMax && adjustedScale >= scaleMin) {
                 itemVisible = true;
@@ -1282,14 +1289,19 @@ function loadNextInLegendImageQueue() {
         var div = createLegendDiv(theItem);
 
         var beforeChild = null;
-        if (orderLayerBox.hasChildNodes()) {
-            beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
+
+        if (orderLayerBox) {
+            if (orderLayerBox.hasChildNodes()) {
+                beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
+            }
+            if (beforeChild == null) {
+                orderLayerBox.appendChild(div);
+            } else {
+                orderLayerBox.insertBefore(div, beforeChild);
+            }
+
         }
-        if (beforeChild == null) {
-            orderLayerBox.appendChild(div);
-        } else {
-            orderLayerBox.insertBefore(div, beforeChild);
-        }
+
     }
 }
 function resetLegendImageQueue() {
@@ -1299,12 +1311,16 @@ function resetLegendImageQueue() {
 }
 function findLayerDivInLegendBox(theItem) {
     var id = theItem.id + '##' + theItem.wmslayers;
-    for (var i = 0; i < orderLayerBox.childNodes.length; i++) {
-        var child = orderLayerBox.childNodes.item(i);
-        if (child.id == id) {
-            return child;
+
+    if (orderLayerBox) {
+        for (var i = 0; i < orderLayerBox.childNodes.length; i++) {
+            var child = orderLayerBox.childNodes.item(i);
+            if (child.id == id) {
+                return child;
+            }
         }
     }
+
     return null;
 }
 
@@ -1394,7 +1410,11 @@ function refreshLegendBox() {
     }
 
     B3PGissuite.vars.enabledLayerItems = new Array();
-    var totalLength = orderLayerBox.childNodes.length;
+    var totalLength = 0;
+    if (orderLayerBox) {
+        totalLength = orderLayerBox.childNodes.length;
+    }
+
     //Kijk of ze al bestaan en in die volgorde staan.
     for (var i = (totalLength - 1); i > -1; i--) {
         var stillVisible = false;
@@ -1579,8 +1599,10 @@ function onFrameworkLoaded() {
             treeComponent.sortLayersAan();
             treeComponent.clickLayers();
         }
+
         initFullExtent();
         setStartExtent();
+
         if (treeComponent !== null) {
             treeComponent.doRefreshLayer();
         }
@@ -1589,7 +1611,13 @@ function onFrameworkLoaded() {
     B3PGissuite.vars.frameWorkInitialized = true;
 
     B3PGissuite.vars.mapInitialized = true;
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
+
+    /* Fix zodat Openlayers viewer ook onAllLayersFinishedLoading() aanroept */
+    if (B3PGissuite.vars.webMapController.getMap().isUpdating()) {
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading);
+    } else {
+        setTimeout(onAllLayersFinishedLoading, 0);
+    }
 
     /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus
      * overneemt. Indien geen resoluties opgegeven kun je in Flamingo gewoon
@@ -1704,6 +1732,8 @@ function moveToExtent(minx, miny, maxx, maxy) {
         maxx: maxx,
         maxy: maxy
     }, 0);
+
+    updateSizeOL();
 }
 
 function setFullExtent(minx, miny, maxx, maxy) {
@@ -1976,7 +2006,7 @@ function exportObjectData2PDF(htmlId, gegevensbron, index, idcounter) {
 
     var wmsRequests = getWMSRequests();
     var tilingRequests = getTilingRequests();
-    
+
     /* als eerst tiling url's daarna gewone wms meegeven */
     for (var i = 0; i < wmsRequests.length; i++) {
         tilingRequests.push(wmsRequests[i]);
@@ -2029,10 +2059,10 @@ function exportMap() {
     legendUrlInput.type = 'hidden';
     legendUrlInput.value = legendUrlsString;
     submitForm.appendChild(legendUrlInput);
-    
-    var wmsRequests = getWMSRequests();    
+
+    var wmsRequests = getWMSRequests();
     var tilingRequests = getTilingRequests();
-    
+
     /* als eerst tiling url's daarna gewone wms meegeven */
     for (var i = 0; i < wmsRequests.length; i++) {
         tilingRequests.push(wmsRequests[i]);
@@ -2054,7 +2084,7 @@ function exportMap() {
     submitForm.action = "printmap.do";
 
     var wktString = getWktStringForPrint();
-    
+
     var jsonSettings = {
         requests: tilingRequests,
         geometries: wktString,
@@ -2062,7 +2092,7 @@ function exportMap() {
         width: mapWidth,
         height: mapHeight
     };
-    
+
     var jsonSettingsInput = document.createElement('input');
     jsonSettingsInput.id = 'jsonSettings';
     jsonSettingsInput.name = 'jsonSettings';
@@ -2641,15 +2671,20 @@ function getLatLonForGoogleMapDirections(destWkt) {
 }
 
 function openGoogleMapsDirections(values) {
-    
+
     /* Check of er een gps locatie is gezet. Dit gebeurt
      * in GPSComponent.receiveLocation();
      */
-    if (gpsLat != null && gpsLon != null) {
-        values[1] = gpsLat;
-        values[0] = gpsLon;
+    if (gps_lat != null && gps_lon != null) {
+        values[1] = gps_lat;
+        values[0] = gps_lon;
     }
-    
+
+    if (values[0] == "" || values[1] == "") {
+        handler("Er is nog geen gps- of startlocatie bekend.");
+        return;
+    }
+
     var saddr = "?saddr=" + values[1] + "," + values[0];
     var daddr = "&daddr=" + values[3] + "," + values[2];
 
@@ -2732,7 +2767,8 @@ function addToFavorites(url) {
     if (Boolean(window.chrome)) { // chrome
         chromeBookMarkPopup(url, title);
     } else if (window.sidebar) { // Firefox
-        window.sidebar.addPanel(title, url, "");
+        //window.sidebar.addPanel(title, url, "");
+        window.external.AddFavorite(url, title);
     } else if (window.external) { // IE 6,7 not 8?
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
         window.external.AddFavorite(url, title);

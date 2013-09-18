@@ -131,10 +131,15 @@
                 <td>Schaal</td>
                 <td><b>1 : <html:text property="scale"/></b></td>
             </tr>
+            
+            <html:hidden property="ppi" value="300"/>
+            
+            <%--
             <tr>
                 <td>PPI</td>
                 <td><html:text property="ppi" value="72"/></td>
             </tr>
+            --%>
 
             <tr>
                 <td></td>

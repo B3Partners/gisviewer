@@ -15,7 +15,12 @@
         <h1>HTTP 503 - Service Unavailable</h1>
 
         <p>
-            De server is weekend vieren. Neem contact op met de beheerder.
+            De server is niet beschikbaar. Neem contact op met de beheerder.
+        </p>
+        
+        <p>
+            Bent u zelf de beheerder ? Bekijk de Tomcat logs of stuur
+            deze mee naar de ontwikkelaar.
         </p>
     </body>
 </html>

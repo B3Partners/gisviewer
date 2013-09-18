@@ -2034,8 +2034,8 @@ function exportMap() {
     var tilingRequests = getTilingRequests();
     
     /* als eerst tiling url's daarna gewone wms meegeven */
-    for (var i = 0; i < tilingRequests.length; i++) {
-        wmsRequests.push(tilingRequests[i]);
+    for (var i = 0; i < wmsRequests.length; i++) {
+        tilingRequests.push(wmsRequests[i]);
     }
 
     /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
@@ -2056,7 +2056,7 @@ function exportMap() {
     var wktString = getWktStringForPrint();
     
     var jsonSettings = {
-        requests: wmsRequests,
+        requests: tilingRequests,
         geometries: wktString,
         bbox: mapBbox,
         width: mapWidth,

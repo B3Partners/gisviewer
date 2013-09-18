@@ -2584,9 +2584,6 @@ function initializeButtons() {
   b = B3PGissuite.vars.webMapController.createTool("b_layerSelection", Tool.BUTTON, {layer:a, title:"kaartselectie"});
   B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, b, b_layerSelection);
   B3PGissuite.vars.webMapController.addTool(b);
-  if(B3PGissuite.config.gpsBuffer < 1) {
-    B3PGissuite.config.gpsBuffer = 500
-  }
   var b = new GPSComponent(B3PGissuite.config.gpsBuffer), c = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {layer:a, title:"zet GPS locatie aan/uit"});
   B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, c, b.stopPolling);
   B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, c, b.startPolling);
@@ -3367,7 +3364,7 @@ function exportMap() {
   c.type = "hidden";
   c.value = b;
   a.appendChild(c);
-  for(var b = getWMSRequests(), c = getTilingRequests(), d = 0;d < c.length;d++) {
+  for(var c = getWMSRequests(), b = getTilingRequests(), d = 0;d < c.length;d++) {
     b.push(c[d])
   }
   var c = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth(), d = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight(), e = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx, f = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny, g = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx, h = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy, e = e + "," + f + "," + g + "," + h;
@@ -3580,6 +3577,7 @@ function getLatLonForGoogleMapDirections(a) {
   JMapData.getLatLonForGoogleDirections(a, openGoogleMapsDirections)
 }
 function openGoogleMapsDirections(a) {
+  gpsLat != null && gpsLon != null && (a[1] = gpsLat, a[0] = gpsLon);
   window.open("https://maps.google.com/maps" + ("?saddr=" + a[1] + "," + a[0]) + ("&daddr=" + a[3] + "," + a[2]))
 }
 function createPermaLink() {
@@ -4344,33 +4342,34 @@ function showZoekConfiguratie(a) {
 }
 ;
 // Input 7
+var timeoutId = null, interval = 3E4, buffer = null, gpsLat = null, gpsLon = null;
 function GPSComponent(a) {
-  this.timeoutId = null;
-  this.interval = 2E4;
-  if(a) {
-    this.buffer = a
-  }
+  a && (buffer = a);
   Proj4js.defs["EPSG:28992"] = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.237,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs";
   Proj4js.defs["EPSG:4236"] = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs ";
   this.startPolling = function() {
-    this.timeoutId = setInterval(this.once, this.interval);
-    this.once()
-  };
-  this.once = function() {
-    navigator.geolocation.getCurrentPosition(this.receiveLocation, this.errorHandler)
+    timeoutId = setInterval(once, interval);
+    once()
   };
   this.stopPolling = function() {
-    clearInterval(this.timeoutId)
+    clearInterval(timeoutId)
   };
-  this.receiveLocation = function(a) {
-    var a = this.transformLatLon(Number(a.coords.longitude), Number(a.coords.latitude)), c = new Extent(a.x - this.buffer, a.y - this.buffer, a.x + this.buffer, a.y + this.buffer);
-    B3PGissuite.vars.webMapController.getMap().zoomToExtent(c);
-    B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", a.x, a.y)
+  once = function() {
+    navigator.geolocation.getCurrentPosition(receiveLocation, errorHandler)
   };
-  this.errorHandler = function() {
+  receiveLocation = function(a) {
+    var c = a.coords.latitude, a = a.coords.longitude;
+    gpsLat = c;
+    gpsLon = a;
+    c = transformLatLon(Number(a), Number(c));
+    a = new Extent(c.x - buffer, c.y - buffer, c.x + buffer, c.y + buffer);
+    B3PGissuite.vars.webMapController.getMap().zoomToExtent(a);
+    B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", c.x, c.y)
+  };
+  errorHandler = function() {
     alert("Kan locatie niet bepalen")
   };
-  this.transformLatLon = function(a, c) {
+  transformLatLon = function(a, c) {
     var d = new Proj4js.Proj("EPSG:4236"), e = new Proj4js.Proj("EPSG:28992"), f = new Proj4js.Point(a, c);
     Proj4js.transform(d, e, f);
     return f

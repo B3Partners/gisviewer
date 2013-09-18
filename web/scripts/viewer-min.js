@@ -22593,6 +22593,7 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
+var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22604,7 +22605,6 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
-var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -24014,6 +24014,7 @@ OpenLayersMap.prototype.removeAllMarkers = function() {
   for(var a in this.markers) {
     this.markers[a].destroy()
   }
+  this.markers.destroy()
 };
 OpenLayersMap.prototype.register = function(a, b, c) {
   c == void 0 && (c = this);
@@ -24691,7 +24692,8 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
     c = setTimeout(function() {
       b.doResize()
     }, 100)
-  })
+  });
+  this.attachTransitionListener()
 }, createTab:function(a, b, c) {
   b = this.appendTab(this.createTabObject(a, b, c), c);
   if(c) {
@@ -24766,6 +24768,18 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
   return this.tabContainer.height()
 }, getTabWidth:function() {
   return this.tabWidth
+}, whichTransitionEvent:function() {
+  var a, b = document.createElement("fakeelement"), c = {transition:"transitionend", OTransition:"oTransitionEnd", MozTransition:"transitionend", WebkitTransition:"webkitTransitionEnd"};
+  for(a in c) {
+    if(b.style[a] !== void 0) {
+      return c[a]
+    }
+  }
+}, attachTransitionListener:function() {
+  var a = this;
+  this.tabContainer[0].addEventListener(this.whichTransitionEvent(), function() {
+    a.resizeLabels()
+  }, false)
 }});
 // Input 17
 B3PGissuite.defineComponent("IframeComponent", {extend:"BaseComponent", defaultOptions:{src:"", taboptions:{tabvakClassname:"tabvak_with_iframe"}}, constructor:function(a) {

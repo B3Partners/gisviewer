@@ -6,9 +6,14 @@
 	<!-- styles -->
 	<xsl:attribute-set name="title-font">
 		<xsl:attribute name="font-size">15pt</xsl:attribute>
+		<xsl:attribute name="font-weight">bold</xsl:attribute>
 		<xsl:attribute name="color">#ffffff</xsl:attribute>
 	</xsl:attribute-set>
-
+	<xsl:attribute-set name="header-font">
+		<xsl:attribute name="font-size">14pt</xsl:attribute>
+		<xsl:attribute name="font-weight">bold</xsl:attribute>
+		<xsl:attribute name="color">#000000</xsl:attribute>
+	</xsl:attribute-set>
 	<xsl:attribute-set name="default-font">
 		<xsl:attribute name="font-size">12pt</xsl:attribute>
 		<xsl:attribute name="color">#000000</xsl:attribute>
@@ -39,6 +44,12 @@
 		<xsl:attribute name="left">0cm</xsl:attribute>
 		<xsl:attribute name="width">100%</xsl:attribute>
 	</xsl:attribute-set>
+	<xsl:attribute-set name="color1-column-block" use-attribute-sets="column-block">
+		<xsl:attribute name="background-color">#166299</xsl:attribute>
+	</xsl:attribute-set>
+	<xsl:attribute-set name="color2-column-block" use-attribute-sets="column-block">
+		<xsl:attribute name="background-color">#FFD203</xsl:attribute>
+	</xsl:attribute-set>
 
 	<xsl:attribute-set name="column-block-border" use-attribute-sets="simple-border">
 		<xsl:attribute name="position">absolute</xsl:attribute>
@@ -46,5 +57,11 @@
 		<xsl:attribute name="left">0cm</xsl:attribute>
 		<xsl:attribute name="width">100%</xsl:attribute>
 	</xsl:attribute-set>
+
+	
+	    <!-- formatter -->
+    <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
+                        infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"
+                        zero-digit="0" digit="#" pattern-separator=";" />
 
 </xsl:stylesheet>

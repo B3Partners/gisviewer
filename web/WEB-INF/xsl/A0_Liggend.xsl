@@ -21,11 +21,14 @@
             <fo:page-sequence master-reference="a0-liggend">
                 <fo:flow flow-name="body">
 
-                    <fo:block-container width="6.6cm" height="80.2cm" top="2.4cm" left="111.7cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="1.5cm" top="0cm" left="111.7cm" xsl:use-attribute-sets="color1-column-block">
                         <xsl:call-template name="title-block"/>
+                    </fo:block-container>
+					
+                    <fo:block-container width="6.6cm" height="77.2cm" top="1.6cm" left="111.7cm" xsl:use-attribute-sets="column-block">
 						<xsl:call-template name="info-block"/>
 						<xsl:call-template name="legend-block">
-							<xsl:with-param name="block-height" select="'27.0cm'"/>
+							<xsl:with-param name="block-height" select="'60.0cm'"/>
 						</xsl:call-template>
                     </fo:block-container>
 
@@ -35,11 +38,11 @@
 						</xsl:call-template>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="2.3cm" top="81.4cm" left="111.7cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="2.3cm" top="79.0cm" left="111.7cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="2.3cm" top="0cm" left="112cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="2.3cm" top="81.4cm" left="111.7cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                 </fo:flow>

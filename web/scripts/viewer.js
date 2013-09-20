@@ -842,7 +842,7 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
 }
 
 /*Check scale for all layers*/
-function checkScaleForLayers() {
+function checkScaleForLayers() {    
     var currentscale;
     if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
         currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
@@ -1631,6 +1631,8 @@ function onFrameworkLoaded() {
 
         /* Standaard pan tool activeren */
         B3PGissuite.vars.webMapController.activateTool("toolPan");
+    } else {
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT, B3PGissuite.vars.webMapController.getMap(), ol_ZoomEnd);
     }
 
     updateSizeOL();
@@ -1638,6 +1640,11 @@ function onFrameworkLoaded() {
     doInitSearch();
 
     placeStartLocationMarker();
+}
+
+function ol_ZoomEnd() {
+    checkScaleForLayers();
+    refreshLegendBox();
 }
 
 function updateSizeOL() {

@@ -3156,10 +3156,14 @@ function onFrameworkLoaded() {
   B3PGissuite.vars.frameWorkInitialized = true;
   B3PGissuite.vars.mapInitialized = true;
   B3PGissuite.vars.webMapController.getMap().isUpdating() ? B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), onAllLayersFinishedLoading) : setTimeout(onAllLayersFinishedLoading, 0);
-  B3PGissuite.vars.webMapController instanceof FlamingoController && (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions != "" && B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(B3PGissuite.config.tilingResolutions), B3PGissuite.vars.webMapController.activateTool("toolPan"));
+  B3PGissuite.vars.webMapController instanceof FlamingoController ? (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions != "" && B3PGissuite.vars.webMapController.getMap("map1").setTilingResolutions(B3PGissuite.config.tilingResolutions), B3PGissuite.vars.webMapController.activateTool("toolPan")) : B3PGissuite.vars.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT, B3PGissuite.vars.webMapController.getMap(), ol_ZoomEnd);
   updateSizeOL();
   doInitSearch();
   placeStartLocationMarker()
+}
+function ol_ZoomEnd() {
+  checkScaleForLayers();
+  refreshLegendBox()
 }
 function updateSizeOL() {
   B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.vars.webMapController.getMap().updateSize()
@@ -22593,7 +22597,6 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
-var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22605,6 +22608,7 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
+var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -23509,15 +23513,22 @@ function rtrim(a, b) {
 }
 OpenLayersController.prototype.createWMScLayer = function(a, b, c) {
   c == void 0 && (c = {});
-  var d = rtrim(c.serverResolutions, " ").split(" "), e = [], f;
-  for(f in d) {
-    d[f] = parseFloat(d[f]), e[f] = d[f]
+  var d = rtrim(c.serverResolutions, " ").split(" "), e = [], f = parseFloat(d[0]);
+  if(this.getMap().getFrameworkMap() && this.getMap().getFrameworkMap().maxResolution) {
+    f = this.getMap().getFrameworkMap().maxResolution
+  }
+  for(var g in d) {
+    d[g] = parseFloat(d[g]), d[g] <= f && e.push(d[g])
+  }
+  if(e.length != d.length) {
+    c.maxscale = e[0]
   }
   d = {};
   f = parseInt(c.TILEWIDTH);
   d.tileSize = new OpenLayers.Size(f, f);
   f = parseFloat(c.BBOX.split(",")[0]);
-  var g = parseFloat(c.BBOX.split(",")[1]), h = parseFloat(c.BBOX.split(",")[2]), j = parseFloat(c.BBOX.split(",")[3]);
+  g = parseFloat(c.BBOX.split(",")[1]);
+  var h = parseFloat(c.BBOX.split(",")[2]), j = parseFloat(c.BBOX.split(",")[3]);
   d.tileOrigin = new OpenLayers.LonLat(f, g);
   d.url = b;
   d.BBOX = c.BBOX;
@@ -23534,8 +23545,8 @@ OpenLayersController.prototype.createWMScLayer = function(a, b, c) {
   var l = new OpenLayers.Bounds;
   l.extend(new OpenLayers.LonLat(f, g));
   l.extend(new OpenLayers.LonLat(h, j));
-  f = rtrim(c.RESOLUTIONS, " ").split(" ");
-  for(var m in f) {
+  var f = rtrim(c.RESOLUTIONS, " ").split(" "), m;
+  for(m in f) {
     f[m] = parseFloat(f[m])
   }
   d.serverResolutions = e;
@@ -23981,10 +23992,11 @@ OpenLayersMap.prototype.zoomToResolution = function(a) {
   this.getFrameworkMap().zoomTo(this.getFrameworkMap().getZoomForResolution(a))
 };
 OpenLayersMap.prototype.setMaxExtent = function(a) {
-  this.getFrameworkMap().setOptions({maxExtent:Utils.createBounds(a)})
+  var a = Utils.createBounds(a), b = this.getFrameworkMap().getZoomForExtent(a), b = this.getFrameworkMap().getResolutionForZoom(b);
+  this.getFrameworkMap().setOptions({restrictedExtent:a, maxResolution:b})
 };
 OpenLayersMap.prototype.getMaxExtent = function() {
-  return Utils.createExtent(this.getFrameworkMap().getMaxExtent())
+  return Utils.createExtent(this.getFrameworkmap().restrictedExtent)
 };
 OpenLayersMap.prototype.getScreenWidth = function() {
   return this.getFrameworkMap().getSize().w
@@ -24014,7 +24026,6 @@ OpenLayersMap.prototype.removeAllMarkers = function() {
   for(var a in this.markers) {
     this.markers[a].destroy()
   }
-  this.markers.destroy()
 };
 OpenLayersMap.prototype.register = function(a, b, c) {
   c == void 0 && (c = this);
@@ -24456,9 +24467,9 @@ B3PGissuite.defineComponent("ViewerComponent", {defaultOptions:{viewerType:"flam
   B3PGissuite.vars.webMapController.addMap(a)
 }, initOpenlayers:function() {
   B3PGissuite.vars.webMapController = new OpenLayersController;
-  var a = this.getMaxBounds(), b = this.getTilingResolutions(a, true);
+  var a = this.getTilingResolutions(this.getMaxBounds(), true);
   Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs";
-  a = {projection:new OpenLayers.Projection("EPSG:28992"), maxExtent:a, resolutions:b, allOverlays:true, units:"meters", theme:"styles/gisviewer_openlayers.css", controls:[new OpenLayers.Control.Navigation({zoomBoxEnabled:false}), new OpenLayers.Control.ArgParser]};
+  a = {projection:new OpenLayers.Projection("EPSG:28992"), maxExtent:getNLMaxBounds(), resolutions:a, allOverlays:true, units:"meters", theme:"styles/gisviewer_openlayers.css", controls:[new OpenLayers.Control.Navigation({zoomBoxEnabled:false}), new OpenLayers.Control.ArgParser]};
   OpenLayers.ImgPath = "styles/openlayers_img/";
   $j("#mapcontent").html(" ");
   a = B3PGissuite.vars.webMapController.createMap("mapcontent", a);

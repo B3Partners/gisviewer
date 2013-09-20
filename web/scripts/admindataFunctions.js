@@ -1186,7 +1186,6 @@ function getParent() {
 }
 
 function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
-    //console.log("Thema id: "+themaid+" "+naampk+":"+waardepk);
     if (waardeingevuldekolom == "null") {
         waardeingevuldekolom = null;
     }

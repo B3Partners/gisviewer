@@ -20,7 +20,7 @@
             
             <fo:page-sequence master-reference="a3-liggend">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="39.5cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="color1-column-block">
+                    <fo:block-container width="41.0cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="color1-column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 

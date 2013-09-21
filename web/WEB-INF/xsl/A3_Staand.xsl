@@ -5,6 +5,8 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
+	<!-- afmeting beschikbaar papier: breedte 28.9cm hoogte 41.2cm -->
+	<!-- afmeting kaart: breedte 21.7cm hoogte 37.2cm  -->
     <xsl:variable name="map-width-px" select="'612'"/>
     <xsl:variable name="map-height-px" select="'1053'"/>
 
@@ -27,7 +29,7 @@
                     <fo:block-container width="6.6cm" height="37.2cm" top="1.6cm" left="0cm" xsl:use-attribute-sets="column-block">
 						<xsl:call-template name="info-block"/>
 						<xsl:call-template name="legend-block">
-							<xsl:with-param name="block-height" select="'27.0cm'"/>
+							<xsl:with-param name="block-height" select="'37.2cm'"/>
 						</xsl:call-template>
                     </fo:block-container>
 
@@ -37,11 +39,11 @@
 						</xsl:call-template>
                      </fo:block-container>
 
-                    <fo:block-container width="20.8cm" height="2.3cm" top="39.0cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="20.8cm" height="2.3cm" top="38.9cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="7.6cm" height="2.3cm" top="39.0cm" left="20.8cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="7.6cm" height="2.3cm" top="38.9cm" left="20.8cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                     

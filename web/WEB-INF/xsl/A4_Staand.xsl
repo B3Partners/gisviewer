@@ -5,6 +5,8 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
+	<!-- afmeting beschikbaar papier: breedte 20.2cm hoogte 28.9cm -->
+	<!-- afmeting kaart: breedte 14.3cm hoogte 24.0cm  -->
     <xsl:variable name="map-width-px" select="'403'"/>
     <xsl:variable name="map-height-px" select="'678'"/>
 
@@ -20,7 +22,7 @@
             
             <fo:page-sequence master-reference="a4-staand">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="20.45cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="color1-column-block">
+                    <fo:block-container width="20.2cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="color1-column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 
@@ -34,11 +36,11 @@
 						</xsl:call-template>
                     </fo:block-container>
 
-                    <fo:block-container width="12.0cm" height="2.3cm" top="26.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="12.0cm" height="2.3cm" top="26.6cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="7.6cm" height="2.3cm" top="26.5cm" left="12.0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="7.6cm" height="2.3cm" top="26.6cm" left="12.0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                     

@@ -5,10 +5,10 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
-	<!-- afmeting beschikbaar papier: breedte 83.9cm hoogte 118.1cm -->
-	<!-- afmeting kaart: breedte 76.7cm hoogte 118cm  -->
-    <xsl:variable name="map-width-px" select="'2170'"/>
-    <xsl:variable name="map-height-px" select="'3313'"/>
+	<!-- afmeting beschikbaar papier: breedte 58.6cm hoogte 83.3cm -->
+	<!-- afmeting kaart: breedte 52.0cm hoogte 83.3cm  -->
+    <xsl:variable name="map-width-px" select="'1466'"/>
+    <xsl:variable name="map-height-px" select="'2349'"/>
 
     <!-- includes -->
     <xsl:include href="pdf-calc.xsl"/>
@@ -23,28 +23,28 @@
             <fo:page-sequence master-reference="a0-staand">
                 <fo:flow flow-name="body">
 
-                    <fo:block-container width="6.6cm" height="1.5cm" top="0cm" left="77.3cm" xsl:use-attribute-sets="color1-column-block">
+                    <fo:block-container width="6.6cm" height="1.5cm" top="0cm" left="52.0cm" xsl:use-attribute-sets="color1-column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 					
-                    <fo:block-container width="6.6cm" height="110.4cm" top="1.6cm" left="77.3cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="77.1cm" top="1.6cm" left="52cm" xsl:use-attribute-sets="column-block">
 						<xsl:call-template name="info-block"/>
 						<xsl:call-template name="legend-block">
-							<xsl:with-param name="block-height" select="'110.4cm'"/>
+							<xsl:with-param name="block-height" select="'77.1cm'"/>
 						</xsl:call-template>
                    </fo:block-container>
 
-                    <fo:block-container width="76.7cm" height="118cm" top="0cm" left="0cm" xsl:use-attribute-sets="column-block-border">
+                    <fo:block-container width="52.0cm" height="83.3cm" top="0cm" left="0cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block">
-							<xsl:with-param name="block-height" select="'118cm'"/>
+							<xsl:with-param name="block-height" select="'83.3cm'"/>
 						</xsl:call-template>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="2.3cm" top="113.5cm" left="77.3cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="2.3cm" top="78.7m" left="52cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="2.3cm" top="115.8cm" left="77.3cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="6.6cm" height="2.3cm" top="81.0" left="52cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                 </fo:flow>

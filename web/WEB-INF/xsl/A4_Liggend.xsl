@@ -4,6 +4,8 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
+	<!-- afmeting beschikbaar papier: breedte 28.9cm hoogte 20.2cm -->
+	<!-- afmeting kaart: breedte 21.7cm hoogte 16.2cm  -->
     <xsl:variable name="map-width-px" select="'612'"/>
     <xsl:variable name="map-height-px" select="'457'"/>
 
@@ -19,7 +21,7 @@
             
             <fo:page-sequence master-reference="a4-liggend">
                 <fo:flow flow-name="body">
-                    <fo:block-container width="28.3cm" height="1.5cm" top="0cm" left="0cm"  xsl:use-attribute-sets="color1-column-block">
+                    <fo:block-container width="28.4cm" height="1.5cm" top="0cm" left="0cm"  xsl:use-attribute-sets="color1-column-block">
                         <xsl:call-template name="title-block"/>
                     </fo:block-container>
 

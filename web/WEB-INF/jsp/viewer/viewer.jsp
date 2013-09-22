@@ -16,11 +16,15 @@
 
 <script type="text/javascript">
     
-    function catchEmpty(configValue, valueIfEmpty){
-        if(typeof configValue === 'undefined' || configValue === '') {
-            return valueIfEmpty;
-        }
+    function getValue(configValue){
         return configValue;
+    }
+
+    function checkValidity(configValue){
+        if(typeof configValue === 'undefined' || configValue === '') {
+            return false;
+        }
+        return true;
     }
 
     function defaultTrue(configValue) {
@@ -37,6 +41,18 @@
         return configValue;
     }
 
+	<%-- om dubbel ophalen te voorkomen voor check 
+	 checkValidity(zcs) ? zcs :
+	--%>
+	var zzcs = getValue(${zoekconfiguraties});
+    if(typeof zzcs === 'undefined' || !zzcs) {  
+        zzcs = [{}];
+    }
+	var ltree = getValue(${tree});
+    if(typeof ltree === 'undefined' || !ltree) {
+        ltree = null;
+    }
+	
     B3PGissuite.config = {
         'showDebugContent': false,
         'waitUntillFullyLoaded': false,
@@ -50,20 +66,20 @@
             'demogebruiker': <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>
         },
         'sldServletUrl': window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>",
-        'zoekconfiguraties': catchEmpty(${zoekconfiguraties}, [{}]),
+        'zoekconfiguraties': zzcs, 
         'kburl': "${kburl}",
         'kbcode': "${kbcode}",
-        'themaTree': catchEmpty(${tree}, null),
-        'serviceTrees': catchEmpty(${servicesTrees}, []),
+        'themaTree': ltree,
+        'serviceTrees': checkValidity(${servicesTrees}) ? ${servicesTrees} : [],
         'organizationcode': "${organizationcode}",
         'fullbbox': '${fullExtent}',
         'bbox': '${extent}',
         /* Applicatie extent */
-        'appExtent': catchEmpty("${configMap["extent"]}", "12000,304000,280000,620000"),
-        'fullExtent': catchEmpty("${configMap["fullextent"]}", ""),
+        'appExtent': checkValidity("${configMap["extent"]}") ? "${configMap["extent"]}" : "12000,304000,280000,620000",
+        'fullExtent': checkValidity("${configMap["fullextent"]}") ? "${configMap["fullextent"]}" :  "",
         // Resolution
-        'resolution': catchEmpty(${resolution}),
-        'tilingResolutions': catchEmpty("${configMap["tilingResolutions"]}", ""),
+        'resolution': checkValidity("${resolution}") ? "${resolution}" : "",
+        'tilingResolutions': checkValidity("${configMap["tilingResolutions"]}") ? "${configMap["tilingResolutions"]}" : "",
         /* init search */
         'searchConfigId': '${searchConfigId}',
         'search': '${search}',
@@ -73,11 +89,11 @@
         'searchClusterId': '${searchClusterId}',
         'searchSldVisibleValue': '${searchSldVisibleValue}',
         /* Viewer type */
-        'viewerType': catchEmpty("${configMap["viewerType"]}", "flamingo"),
+        'viewerType': checkValidity("${configMap["viewerType"]}") ? "${configMap["viewerType"]}" :  "flamingo",
         /* Viewer type */
-        'viewerTemplate': catchEmpty("${configMap["viewerTemplate"]}", "standalone"),
+        'viewerTemplate': checkValidity("${configMap["viewerTemplate"]}") ? "${configMap["viewerTemplate"]}" :  "standalone",
         /* ObjectInfo type */
-        'objectInfoType': catchEmpty("${configMap["objectInfoType"]}", "popup"),
+        'objectInfoType': checkValidity("${configMap["objectInfoType"]}") ? "${configMap["objectInfoType"]}" :  "popup",
         /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
         'usePanelControls': defaultTrue(${configMap["usePanelControls"]}),
         /* True als de admin- of metadata in een popup wordt getoond
@@ -96,10 +112,10 @@
          * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
          * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
          * als de admindata automatisch moeten worden doorgestuurd) */
-        'autoRedirect': catchEmpty(${configMap["autoRedirect"]}, 2),
+        'autoRedirect': checkValidity(${configMap["autoRedirect"]}) ? getValue(${configMap["autoRedirect"]}) :  2,
         /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
          * en info wordt opgevraagd. Dus een tolerantie. */
-        'tolerance': catchEmpty(${configMap["tolerance"]}, 1),
+        'tolerance': checkValidity(${configMap["tolerance"]}) ? getValue(${configMap["tolerance"]}) :  1,
         /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
         'showLegendInTree': defaultTrue(${configMap["showLegendInTree"]}),
         /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
@@ -111,29 +127,29 @@
          * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
          * 
          * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
-        'useSortableFunction': catchEmpty(${configMap["useSortableFunction"]}, false),
+        'useSortableFunction': defaultFalse(${configMap["useSortableFunction"]}),
         // instellen in ms, dus 5000 voor 5 seconden
-        'layerDelay': catchEmpty(${configMap["layerDelay"]}, 5000),
+        'layerDelay': checkValidity(${configMap["layerDelay"]}) ? getValue(${configMap["layerDelay"]}) :  5000,
         /* de vertraging voor het refreshen van de kaart. */
-        'refreshDelay': catchEmpty(${configMap["refreshDelay"]}, 100),
+        'refreshDelay': checkValidity(${configMap["refreshDelay"]}) ? getValue(${configMap["refreshDelay"]}) :  100,
         /*
          * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
          * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
          * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
-        'zoekConfigIds': catchEmpty(${configMap["zoekConfigIds"]}, ""),
+        'zoekConfigIds': checkValidity(${configMap["zoekConfigIds"]}) ? getValue(${configMap["zoekConfigIds"]}) :  "",
         /* Voorzieningen */
-        'voorzieningConfigIds': catchEmpty(${configMap["voorzieningConfigIds"]}, ""),
-        'voorzieningConfigStraal': catchEmpty(${configMap["voorzieningConfigStraal"]}, ""),
-        'voorzieningConfigTypes': catchEmpty(${configMap["voorzieningConfigTypes"]}, ""),
+        'voorzieningConfigIds': checkValidity(${configMap["voorzieningConfigIds"]}) ? getValue(${configMap["voorzieningConfigIds"]}) :  "",
+        'voorzieningConfigStraal': checkValidity(${configMap["voorzieningConfigStraal"]}) ? getValue(${configMap["voorzieningConfigStraal"]}) :  "",
+        'voorzieningConfigTypes': checkValidity(${configMap["voorzieningConfigTypes"]}) ? getValue(${configMap["voorzieningConfigTypes"]}) :  "",
         /* Vergunningen */
-        'vergunningConfigIds': catchEmpty(${configMap["vergunningConfigIds"]}, ""),
-        'vergunningConfigStraal': catchEmpty(${configMap["vergunningConfigStraal"]}, ""),
+        'vergunningConfigIds': checkValidity(${configMap["vergunningConfigIds"]}) ? getValue(${configMap["vergunningConfigIds"]}) :  "",
+        'vergunningConfigStraal': checkValidity(${configMap["vergunningConfigStraal"]}) ? getValue(${configMap["vergunningConfigStraal"]}) :  "",
         /*
          * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
          * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
-        'minBboxZoeken': catchEmpty(${configMap["minBboxZoeken"]}, 1000),
+        'minBboxZoeken': checkValidity(${configMap["minBboxZoeken"]}) ? getValue(${configMap["minBboxZoeken"]}) :  1000,
         /* Maximaal aantal zoekresultaten */
-        'maxResults': catchEmpty(${configMap["maxResults"]}, 25),
+        'maxResults': checkValidity(${configMap["maxResults"]}) ? getValue(${configMap["maxResults"]}) :  25,
         /* Gebruiker wisselt tabbladen door er met de muis overheen te gaan. Indien false
          * dan zijn de tabbladen te wisselen door te klikken */
         'useMouseOverTabs': defaultTrue(${configMap["useMouseOverTabs"]}),
@@ -142,7 +158,7 @@
         'enabledtabs': [${configMap["tabs"]}],
         'enabledtabsLeft': [${configMap["tabsLeft"]}],
         /* planselectie gebruikt 2 zoekingangen (id's) */
-        'planSelectieIds': catchEmpty(${configMap["planSelectieIds"]}, "0,0"),
+        'planSelectieIds': checkValidity(${configMap["planSelectieIds"]}) ? getValue(${configMap["planSelectieIds"]}) :  "0,0",
         /* Buttons boven viewer aan / uit */
         'showRedliningTools': defaultFalse(${configMap["showRedliningTools"]}),
         'showBufferTool': defaultFalse(${configMap["showBufferTool"]}),
@@ -152,19 +168,19 @@
         'showLayerSelectionTool': defaultFalse(${configMap["showLayerSelectionTool"]}),
         'showGPSTool': defaultFalse(${configMap["showGPSTool"]}),
         'showEditTool': defaultFalse(${configMap["showEditTool"]}),
-        'gpsBuffer': catchEmpty("${configMap["gpsBuffer"]}", "1000"),
-        'layerGrouping': catchEmpty("${configMap["layerGrouping"]}", "lg_forebackground"),
-        'popupWidth': catchEmpty("${configMap["popupWidth"]}", "90%"),
-        'popupHeight': catchEmpty("${configMap["popupHeight"]}", "20%"),
-        'popupLeft': catchEmpty("${configMap["popupLeft"]}", "5%"),
-        'popupTop': catchEmpty("${configMap["popupTop"]}", "75%"),
-        'bookmarkAppcode': catchEmpty("${bookmarkAppcode}", ""),
-        'tekstBlokken': catchEmpty(${tekstBlokken}, []),
+        'gpsBuffer': checkValidity(${configMap["gpsBuffer"]}) ? getValue(${configMap["gpsBuffer"]}) :  1000,
+        'layerGrouping': checkValidity("${configMap["layerGrouping"]}") ? "${configMap["layerGrouping"]}" :  "lg_forebackground",
+        'popupWidth': checkValidity("${configMap["popupWidth"]}") ? "${configMap["popupWidth"]}" :  "90%",
+        'popupHeight': checkValidity("${configMap["popupHeight"]}") ? "${configMap["popupHeight"]}" :  "20%",
+        'popupLeft': checkValidity("${configMap["popupLeft"]}") ? "${configMap["popupLeft"]}" :  "5%",
+        'popupTop': checkValidity("${configMap["popupTop"]}") ? "${configMap["popupTop"]}" :  "75%",
+        'bookmarkAppcode': checkValidity("${bookmarkAppcode}") ? "${bookmarkAppcode}" :  "",
+        'tekstBlokken': checkValidity(${tekstBlokken}) ? getValue(${tekstBlokken}) :  [],
         'datasetDownload': defaultFalse(${configMap["datasetDownload"]}),
         'showServiceUrl': defaultFalse(${configMap["showServiceUrl"]}),
-        'startLocationX': catchEmpty("${startLocationX}", ""),
-        'startLocationY': catchEmpty("${startLocationY}", ""),
-        'cfgActiveTab': catchEmpty("${configMap["activeTab"]}", "themas")
+        'startLocationX': checkValidity(${startLocationX}) ? getValue(${startLocationX}) :  "",
+        'startLocationY': checkValidity(${startLocationY}) ? getValue(${startLocationY}) :  "",
+        'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas"
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */

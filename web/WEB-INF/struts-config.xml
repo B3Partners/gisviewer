@@ -163,7 +163,6 @@
             <forward name="login" path="login"/>
         </action>
 
-        <action path="/indexlist" forward="/index.do?list=t"/>
         <action path="/login" forward="/index.do?login=t"/>
         <action path="/loginError" forward="/index.do?loginError=t"/>
         <action path="/logout" forward="/index.do?logout=t"/>

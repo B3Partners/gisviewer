@@ -3439,7 +3439,8 @@ $j(document).ready(function() {
         if (arr !== null && arr.length > 1) {
             createSearchConfigurations();
         } else if (arr !== null && arr.length === 1 && arr[0] !== '') {
-            var zc = B3PGissuite.config.zoekconfiguraties[0];
+            //var zc = B3PGissuite.config.zoekconfiguraties[0];
+            var zc=setZoekconfiguratieWithId(Number(arr[0]));
             JZoekconfiguratieThemaUtil.getThemas(zc.id, zoekconfiguratieThemasCallBack);
             var zoekVelden = zc.zoekVelden;
             fillSearchDiv(c, zoekVelden, null);

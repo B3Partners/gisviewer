@@ -825,3 +825,12 @@ function showZoekConfiguratie(zoekconfiguratie){
     }
     return false;
 }
+
+function setZoekconfiguratieWithId(id){
+    for (var i=0; i < B3PGissuite.config.zoekconfiguraties.length; i++){
+        if (B3PGissuite.config.zoekconfiguraties[i].id === id){
+            currentSearchSelectId = i;
+            return B3PGissuite.config.zoekconfiguraties[i];
+        }
+    }
+}

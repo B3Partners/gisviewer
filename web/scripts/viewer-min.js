@@ -23542,6 +23542,7 @@ OpenLayersController.prototype.createWMScLayer = function(a, b, c) {
   d.PRINTRESOLUTIONS = c.RESOLUTIONS;
   d.TILEWIDTH = c.TILEWIDTH;
   d.TILEHEIGHT = c.TILEHEIGHT;
+  d.background = c.background;
   var l = new OpenLayers.Bounds;
   l.extend(new OpenLayers.LonLat(f, g));
   l.extend(new OpenLayers.LonLat(h, j));
@@ -23992,7 +23993,9 @@ OpenLayersMap.prototype.zoomToResolution = function(a) {
   this.getFrameworkMap().zoomTo(this.getFrameworkMap().getZoomForResolution(a))
 };
 OpenLayersMap.prototype.setMaxExtent = function(a) {
-  var a = Utils.createBounds(a), b = this.getFrameworkMap().getZoomForExtent(a), b = this.getFrameworkMap().getResolutionForZoom(b);
+  var a = Utils.createBounds(a), b = this.getFrameworkMap().getZoomForExtent(a);
+  b != 0 && (b -= 1);
+  b = this.getFrameworkMap().getResolutionForZoom(b);
   this.getFrameworkMap().setOptions({restrictedExtent:a, maxResolution:b})
 };
 OpenLayersMap.prototype.getMaxExtent = function() {

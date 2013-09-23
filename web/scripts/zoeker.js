@@ -747,13 +747,15 @@ function fillSearchDiv(container, zoekVelden, zoekStrings) {
 function handleZoekVeldinputList(list){
     if (list!=null && list.length > 0){
         var controlElementName;
-        var zc = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
+        var zc = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];        
         var optionListZc = list[0].zoekConfiguratie;
-        for (var i=0; i < zc.zoekVelden.length; i++) {
-            var zoekVeld=zc.zoekVelden[i];
-            if (zoekVeld.inputZoekConfiguratie == optionListZc.id) {
-                // controlElementName="searchField_"+zoekVeld.id;
-                controlElementName = zoekVeld.attribuutnaam;
+        if (zc){
+            for (var i=0; i < zc.zoekVelden.length; i++) {
+                var zoekVeld=zc.zoekVelden[i];
+                if (zoekVeld.inputZoekConfiguratie == optionListZc.id) {
+                    // controlElementName="searchField_"+zoekVeld.id;
+                    controlElementName = zoekVeld.attribuutnaam;
+                }
             }
         }
 
@@ -781,7 +783,7 @@ function handleZoekVeldinputList(list){
         
         dwr.util.addOptions(controlElementName,list,"id","label");
         //als er maar 1 zoekveld is gelijk zoeken bij selecteren dropdown.
-        if (zc.zoekVelden.length==1){
+        if (zc && zc.zoekVelden.length==1){
             $j(controlElement).change(function(){
                 $j("#searchButton").click();
             });

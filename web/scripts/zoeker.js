@@ -33,11 +33,13 @@ if (planEigenaarId != null && planEigenaarId > 0 && planId !=null && planId > 0)
 }
 
 function handleGetEigenaar(list){
-    eigenaarSelect.disabled=false;
-    if (list!=null && list.length > 0){
-        //eigenaarselect
-        dwr.util.removeAllOptions(eigenaarSelectName);
-        dwr.util.addOptions(eigenaarSelectName,list,"id","label");
+    if(eigenaarSelect){
+        eigenaarSelect.disabled=false;
+        if (list!=null && list.length > 0){
+            //eigenaarselect
+            dwr.util.removeAllOptions(eigenaarSelectName);
+            dwr.util.addOptions(eigenaarSelectName,list,"id","label");
+        }
     }
 }
 

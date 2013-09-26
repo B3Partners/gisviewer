@@ -440,7 +440,14 @@ public class EditBoomAction extends ViewerCrudAction {
         }else if (wegtype != null && !wegtype.equals("")) {
             boom.setWegtype(wegtype);
         }
-        boom.setOpmerkingen(opmerking);
+        
+        // speciale tekens uit opmerking halen.
+        String opmerkingen = "";
+        if(opmerking != null && opmerking.length() > 0){
+            opmerkingen = opmerking.replaceAll("[#|\"*]", " ");
+        }
+        
+        boom.setOpmerkingen(opmerkingen);
         boom.setExtra1(extra1);
         boom.setExtra2(extra2);
         boom.setExtra3(extra3);

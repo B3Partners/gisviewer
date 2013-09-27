@@ -28,6 +28,24 @@ function resetImageSize() {
     }
 }
 
+function validatePrintForm() {
+        /*
+        var title = $j("#title").val();
+        
+        if (title !== undefined || title !== "") {
+            title = title.trim();
+        }        
+        
+        if (title === undefined || title === "") {
+            alert("Vul een titel in.");
+
+            return false;
+        }
+        */
+
+        return true;
+    }
+
 mapImageLoad = function() {
     //doe bij de eerste keer laden om slider te initialiseren
     setMapImageSrc(firstUrl);

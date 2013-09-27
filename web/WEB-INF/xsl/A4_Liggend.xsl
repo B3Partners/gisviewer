@@ -39,7 +39,13 @@
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="7.6cm" height="2.3cm" top="17.9cm" left="20.8cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container 
+                        width="{$logo-block-width}" 
+                        height="{$logo-block-height}" 
+                        top="{$logo-top-a4-liggend}" 
+                        left="{$logo-left-a4-liggend}" 
+                        xsl:use-attribute-sets="column-block">
+                        
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                     

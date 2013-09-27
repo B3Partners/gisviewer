@@ -3918,7 +3918,7 @@ $j(document).ready(function() {
     B3PGissuite.config.enabledtabsLeft[c] === "vergunningen" && (a = true), B3PGissuite.config.enabledtabsLeft[c] === "zoeken" && (b = true)
   }
   if(b || a) {
-    b = B3PGissuite.config.zoekConfigIds.split(","), a = $j("#searchInputFieldsContainer"), b !== null && b.length > 1 ? createSearchConfigurations() : b !== null && b.length === 1 && b[0] !== "" && (b = B3PGissuite.config.zoekconfiguraties[0], JZoekconfiguratieThemaUtil.getThemas(b.id, zoekconfiguratieThemasCallBack), fillSearchDiv(a, b.zoekVelden, null))
+    b = B3PGissuite.config.zoekConfigIds.split(","), a = $j("#searchInputFieldsContainer"), b !== null && b.length > 1 ? createSearchConfigurations() : b !== null && b.length === 1 && b[0] !== "" && (b = setZoekconfiguratieWithId(Number(b[0])), JZoekconfiguratieThemaUtil.getThemas(b.id, zoekconfiguratieThemasCallBack), fillSearchDiv(a, b.zoekVelden, null))
   }
   window.setTimeout(function() {
     var a = B3PGissuite.config.useCookies ? readCookie("activetab") : null;
@@ -3955,8 +3955,9 @@ B3PGissuite.config.planSelectieIds && (planIds = ("" + B3PGissuite.config.planSe
 var planEigenaarId = planIds === null ? null : planIds[0], planId = planIds === null ? null : planIds[1];
 planEigenaarId != null && planEigenaarId > 0 && planId != null && planId > 0 && JZoeker.zoek(Array(planEigenaarId), "*", B3PGissuite.config.maxResults, handleGetEigenaar);
 function handleGetEigenaar(a) {
-  eigenaarSelect.disabled = false;
-  a != null && a.length > 0 && (dwr.util.removeAllOptions(eigenaarSelectName), dwr.util.addOptions(eigenaarSelectName, a, "id", "label"))
+  if(eigenaarSelect) {
+    eigenaarSelect.disabled = false, a != null && a.length > 0 && (dwr.util.removeAllOptions(eigenaarSelectName), dwr.util.addOptions(eigenaarSelectName, a, "id", "label"))
+  }
 }
 function eigenaarchanged(a) {
   if(a.value != "") {
@@ -4312,10 +4313,13 @@ function fillSearchDiv(a, b, c) {
 }
 function handleZoekVeldinputList(a) {
   if(a != null && a.length > 0) {
-    for(var b, c = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId], d = a[0].zoekConfiguratie, e = 0;e < c.zoekVelden.length;e++) {
-      var f = c.zoekVelden[e];
-      if(f.inputZoekConfiguratie == d.id) {
-        b = f.attribuutnaam
+    var b, c = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId], d = a[0].zoekConfiguratie;
+    if(c) {
+      for(var e = 0;e < c.zoekVelden.length;e++) {
+        var f = c.zoekVelden[e];
+        if(f.inputZoekConfiguratie == d.id) {
+          b = f.attribuutnaam
+        }
       }
     }
     d = document.getElementById(b);
@@ -4330,7 +4334,7 @@ function handleZoekVeldinputList(a) {
       }
     }
     dwr.util.addOptions(b, a, "id", "label");
-    c.zoekVelden.length == 1 && $j(d).change(function() {
+    c && c.zoekVelden.length == 1 && $j(d).change(function() {
       $j("#searchButton").click()
     })
   }
@@ -4352,6 +4356,13 @@ function showZoekConfiguratie(a) {
     }
   }
   return false
+}
+function setZoekconfiguratieWithId(a) {
+  for(var b = 0;b < B3PGissuite.config.zoekconfiguraties.length;b++) {
+    if(B3PGissuite.config.zoekconfiguraties[b].id === a) {
+      return currentSearchSelectId = b, B3PGissuite.config.zoekconfiguraties[b]
+    }
+  }
 }
 ;
 // Input 7

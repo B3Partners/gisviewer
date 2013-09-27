@@ -54,7 +54,7 @@
 
     <xsl:template name="logo-block">
         <fo:block>
-            <fo:external-graphic src="url('b3p_logo.png')" width="185px" height="46px"/>
+            <fo:external-graphic src="url('{$logo-src}')" width="{$logo-width}" height="{$logo-height}"/>
         </fo:block>
     </xsl:template>
 

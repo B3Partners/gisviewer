@@ -14,8 +14,7 @@
                         zero-digit="0" digit="#" pattern-separator=";" />
 
     <!-- includes -->
-    <xsl:include href="calc.xsl"/>
-    <xsl:include href="styles.xsl"/>
+    <xsl:include href="pdf-styles.xsl"/>
 
     <!-- master set -->
     <xsl:template name="layout-master-set">

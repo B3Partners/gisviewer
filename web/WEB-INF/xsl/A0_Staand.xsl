@@ -5,8 +5,8 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
-	<!-- afmeting beschikbaar papier: breedte 83.9cm hoogte 118.1cm -->
-	<!-- afmeting kaart: breedte 76.7cm hoogte 118cm  -->
+    <!-- afmeting beschikbaar papier: breedte 83.9cm hoogte 118.1cm -->
+    <!-- afmeting kaart: breedte 76.7cm hoogte 118cm  -->
     <xsl:variable name="map-width-px" select="'2170'"/>
     <xsl:variable name="map-height-px" select="'3313'"/>
 
@@ -28,25 +28,32 @@
                     </fo:block-container>
 					
                     <fo:block-container width="6.6cm" height="110.4cm" top="1.6cm" left="77.3cm" xsl:use-attribute-sets="column-block">
-						<xsl:call-template name="info-block"/>
-						<xsl:call-template name="legend-block">
-							<xsl:with-param name="block-height" select="'110.4cm'"/>
-						</xsl:call-template>
-                   </fo:block-container>
+                        <xsl:call-template name="info-block"/>
+                        <xsl:call-template name="legend-block">
+                            <xsl:with-param name="block-height" select="'110.4cm'"/>
+                        </xsl:call-template>
+                    </fo:block-container>
 
                     <fo:block-container width="76.7cm" height="118cm" top="0cm" left="0cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block">
-							<xsl:with-param name="block-height" select="'118cm'"/>
-						</xsl:call-template>
+                            <xsl:with-param name="block-height" select="'118cm'"/>
+                        </xsl:call-template>
                     </fo:block-container>
 
                     <fo:block-container width="6.6cm" height="2.3cm" top="113.5cm" left="77.3cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="6.6cm" height="2.3cm" top="115.8cm" left="77.3cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container 
+                        width="{$logo-block-width}" 
+                        height="{$logo-block-height}" 
+                        top="{$logo-top-a0-staand}" 
+                        left="{$logo-left-a0-staand}" 
+                        xsl:use-attribute-sets="column-block">
+                        
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
+    
                 </fo:flow>
             </fo:page-sequence>
         </fo:root>

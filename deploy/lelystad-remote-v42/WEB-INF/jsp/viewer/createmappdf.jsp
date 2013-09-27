@@ -50,16 +50,20 @@
                 </td>
             </tr>    
 
+			<html:hidden property="ppi" value="150" />   
+			
+			<%--
             <tr>
                 <td>Resolutie</td>
                 <td>
                     <html:select property="ppi">    
-						<html:option value="300">300 ppi</html:option>  
+						<html:option value="300">300 ppi</html:option>
 						<html:option value="150">150 ppi</html:option>                  
                         <html:option value="72">72 ppi</html:option>
                     </html:select>
                 </td>
             </tr>
+            --%>
 
             <tr class="aanvullende_info_alternateTr">
                 <td><fmt:message key="createmappdf.landscape"/></td>
@@ -74,7 +78,6 @@
                     <html:select property="pageSize">
                         <html:option value="A4">A4</html:option>
                         <html:option value="A3">A3</html:option>
-                        <html:option value="A0">A0</html:option>
                     </html:select>
                 </td>
             </tr>

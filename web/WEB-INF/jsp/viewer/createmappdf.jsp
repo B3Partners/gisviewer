@@ -15,6 +15,7 @@
     <h1>Printvoorbeeld</h1>
 
     <html:form action="/printmap" focus="title">
+
         <table>
             <tr>
                 <td colspan="2" class="createmappdftd">
@@ -36,7 +37,7 @@
 
             <tr class="aanvullende_info_alternateTr">
                 <td><fmt:message key="createmappdf.title"/></td>
-                <td><html:text property="title"/></td>
+                <td><html:text styleId="title" property="title" /></td>
             </tr>
             <tr>
                 <td valign="top"><fmt:message key="createmappdf.remark"/></td>
@@ -47,14 +48,14 @@
                     Als u de resolutie aanpast kan het kaartbeeld veranderen t.o.v. het
                     orgineel.
                 </td>
-            </tr>    
+            </tr> 
 
             <tr>
                 <td>Resolutie</td>
                 <td>
-                    <html:select property="ppi">                        
+                    <html:select property="ppi">                       
                         <html:option value="72">72 ppi</html:option>
-                        <html:option value="150">150 ppi</html:option>
+                        <html:option value="150">150 ppi</html:option>                  
                         <html:option value="300">300 ppi</html:option>
                     </html:select>
                 </td>
@@ -94,7 +95,7 @@
                 <td colspan="2" class="printvoorbeeld_help">
                     Hier kunt u de kaartlagen aanvinken waarvan u de legenda wil 
                     laten afdrukken. De legenda wordt bij kleinere formaten op 
-					een losse pagina afgedrukt.
+                    een losse pagina afgedrukt.
                 </td>
             </tr>
 
@@ -119,15 +120,12 @@
                 <td>Schaal</td>
                 <td><b>1 : <html:text property="scale"/></b></td>
             </tr>
+        </table>
 
-            <html:hidden property="ppi" value="72"/>
-
-            <tr>
-                <td></td>
-                <td><html:submit property="print"><fmt:message key="button.ok"/></html:submit></td>
-                </tr>
-            </table>
+        <p>
+            <html:submit value="OK" property="print" onclick="return validatePrintForm();" />
+        </p>
     </html:form>
-    <br />
+
 </div>
 <script type="text/javascript" src="scripts/createmappdf.js"></script>

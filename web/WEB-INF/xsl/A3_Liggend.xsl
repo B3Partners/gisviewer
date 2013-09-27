@@ -5,8 +5,8 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
-	<!-- afmeting beschikbaar papier: breedte 41.2cm hoogte 28.9cm -->
-	<!-- afmeting kaart: breedte 34.4cm hoogte 24.9cm  -->
+    <!-- afmeting beschikbaar papier: breedte 41.2cm hoogte 28.9cm -->
+    <!-- afmeting kaart: breedte 34.4cm hoogte 24.9cm  -->
     <xsl:variable name="map-width-px" select="'971'"/>
     <xsl:variable name="map-height-px" select="'701'"/>
 
@@ -32,23 +32,29 @@
 
                     <fo:block-container width="34.4cm" height="24.9cm" top="1.6cm" left="6.7cm" xsl:use-attribute-sets="column-block-border">
                         <xsl:call-template name="map-block">
-							<xsl:with-param name="block-height" select="'24.9cm'"/>
-						</xsl:call-template>
+                            <xsl:with-param name="block-height" select="'24.9cm'"/>
+                        </xsl:call-template>
                     </fo:block-container>
 
                     <fo:block-container width="33.0cm" height="2.3cm" top="26.6cm" left="0cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="disclaimer-block"/>
                     </fo:block-container>
 
-                    <fo:block-container width="7.6cm" height="2.3cm" top="26.6cm" left="33.0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container 
+                        width="{$logo-block-width}" 
+                        height="{$logo-block-height}" 
+                        top="{$logo-top-a3-liggend}" 
+                        left="{$logo-left-a3-liggend}" 
+                        xsl:use-attribute-sets="column-block">
+                        
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
                     
                     <xsl:if test="count(legendUrls)  &gt; 0">
                         <fo:block break-before="page">
-							<xsl:call-template name="legend-block">
-								<xsl:with-param name="block-height" select="'27.0cm'"/>
-							</xsl:call-template>
+                            <xsl:call-template name="legend-block">
+                                <xsl:with-param name="block-height" select="'27.0cm'"/>
+                            </xsl:call-template>
                         </fo:block>
                     </xsl:if>
                 </fo:flow>

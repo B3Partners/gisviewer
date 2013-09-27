@@ -78,6 +78,9 @@
                     <html:select property="pageSize">
                         <html:option value="A4">A4</html:option>
                         <html:option value="A3">A3</html:option>
+                        <html:option value="A2">A2</html:option>
+                        <html:option value="A1">A1</html:option>
+                        <html:option value="A0">A0</html:option>
                     </html:select>
                 </td>
             </tr>

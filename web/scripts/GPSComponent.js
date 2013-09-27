@@ -15,64 +15,71 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 var gps_timeoutId = null;
-var gps_interval = 30000;
+var gps_interval = 15000;
 var gps_buffer = null;
 
-var gps_lat = null;
-var gps_lon = null;
+var gps_lat;
+var gps_lon;
 
-function GPSComponent(locationBuffer){  
-    if (locationBuffer){
+function GPSComponent(locationBuffer) {
+    if (locationBuffer) {
         gps_buffer = locationBuffer;
     }
-    
+
     Proj4js.defs["EPSG:28992"] = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.237,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs";
     Proj4js.defs["EPSG:4236"] = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs ";
-    
-    this.startPolling = function () {
+
+    this.startPolling = function() {
         gps_timeoutId = setInterval(once, gps_interval);
         once();
-    }
-    
-    this.stopPolling = function(){
+    };
+
+    this.stopPolling = function() {
         clearInterval(gps_timeoutId);
-    }
-    
+    };
+
     once = function() {
-        navigator.geolocation.getCurrentPosition(receiveLocation, errorHandler);
-    }
-    
-    receiveLocation = function (location) {        
+        if (!(navigator && navigator.geolocation)) {
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+                function() {
+                    receiveLocation(arguments);
+                }, errorHandler);
+    };
+
+    receiveLocation = function(location) {
         var lat = location.coords.latitude;
         var lon = location.coords.longitude;
-        
+
         gpsLat = lat;
         gpsLon = lon;
-        
-        var point = transformLatLon(Number(lon),Number(lat));
-        
+
+        var point = transformLatLon(Number(lon), Number(lat));
+
         var minx = point.x - gps_buffer;
         var miny = point.y - gps_buffer;
         var maxx = point.x + gps_buffer;
         var maxy = point.y + gps_buffer;
-        
-        var extent = new Extent(minx,miny,maxx,maxy);
-        
-        B3PGissuite.vars.webMapController.getMap().zoomToExtent(extent);        
+
+        var extent = new Extent(minx, miny, maxx, maxy);
+
+        B3PGissuite.vars.webMapController.getMap().zoomToExtent(extent);
         B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", point.x, point.y);
-    }
-    
-    errorHandler = function (error){
+    };
+
+    errorHandler = function(error) {
         alert("Kan locatie niet bepalen");
-    }
-    
-    transformLatLon = function(x,y){
+    };
+
+    transformLatLon = function(x, y) {
         var source = new Proj4js.Proj("EPSG:4236");
         var dest = new Proj4js.Proj("EPSG:28992");
-        var point = new Proj4js.Point(x,y);
-        
-        Proj4js.transform(source,dest,point);
-        
+        var point = new Proj4js.Point(x, y);
+
+        Proj4js.transform(source, dest, point);
+
         return point;
-    }
+    };
 }

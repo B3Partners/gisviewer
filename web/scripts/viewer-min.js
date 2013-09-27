@@ -3590,7 +3590,7 @@ function getLatLonForGoogleMapDirections(a) {
   JMapData.getLatLonForGoogleDirections(a, openGoogleMapsDirections)
 }
 function openGoogleMapsDirections(a) {
-  gps_lat != null && gps_lon != null && (a[1] = gps_lat, a[0] = gps_lon);
+  gps_lat !== void 0 && gps_lon !== void 0 && (a[1] = gps_lat, a[0] = gps_lon);
   a[0] == "" || a[1] == "" ? handler("Er is nog geen gps- of startlocatie bekend.") : window.open("https://maps.google.com/maps" + ("?saddr=" + a[1] + "," + a[0]) + ("&daddr=" + a[3] + "," + a[2]))
 }
 function createPermaLink() {
@@ -4366,7 +4366,7 @@ function setZoekconfiguratieWithId(a) {
 }
 ;
 // Input 7
-var gps_timeoutId = null, gps_interval = 3E4, gps_buffer = null, gps_lat = null, gps_lon = null;
+var gps_timeoutId = null, gps_interval = 15E3, gps_buffer = null, gps_lat, gps_lon;
 function GPSComponent(a) {
   a && (gps_buffer = a);
   Proj4js.defs["EPSG:28992"] = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.237,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812 +units=m +no_defs";
@@ -4379,7 +4379,9 @@ function GPSComponent(a) {
     clearInterval(gps_timeoutId)
   };
   once = function() {
-    navigator.geolocation.getCurrentPosition(receiveLocation, errorHandler)
+    navigator && navigator.geolocation && navigator.geolocation.getCurrentPosition(function() {
+      receiveLocation(arguments)
+    }, errorHandler)
   };
   receiveLocation = function(a) {
     var c = a.coords.latitude, a = a.coords.longitude;
@@ -24793,6 +24795,9 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
   return this.tabContainer.height()
 }, getTabWidth:function() {
   return this.tabWidth
+}, changeTabTitle:function(a, b) {
+  var c = this.getTab(a);
+  c && c.label.find("a").html(b)
 }, whichTransitionEvent:function() {
   var a, b = document.createElement("fakeelement"), c = {transition:"transitionend", OTransition:"oTransitionEnd", MozTransition:"transitionend", WebkitTransition:"webkitTransitionEnd"};
   for(a in c) {
@@ -24800,10 +24805,11 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
       return c[a]
     }
   }
+  return null
 }, attachTransitionListener:function() {
-  var a = this;
-  this.tabContainer[0].addEventListener(this.whichTransitionEvent(), function() {
-    a.resizeLabels()
+  var a = this.whichTransitionEvent(), b = this;
+  a !== null && this.tabContainer[0].addEventListener(a, function() {
+    b.resizeLabels()
   }, false)
 }});
 // Input 17

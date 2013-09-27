@@ -2681,8 +2681,8 @@ function openGoogleMapsDirections(values) {
 
     /* Check of er een gps locatie is gezet. Dit gebeurt
      * in GPSComponent.receiveLocation();
-     */
-    if (gps_lat != null && gps_lon != null) {
+     */    
+    if (gps_lat !== undefined && gps_lon !== undefined) {
         values[1] = gps_lat;
         values[0] = gps_lon;
     }

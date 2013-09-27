@@ -80,7 +80,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:forEach var="entry" items="${params}">
                 <c:set var="resultParams" value="${stat.first ? '' : resultParams}&amp;${entry.key}=${entry.value}" />
             </c:forEach>
-            <c:if test="${countPrev >= 0}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}" styleClass="searchLink"><fmt:message key="a11y.results.prev"/></html:link> | </c:if><c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status"><c:set var="startIndex" value="${(i-1) * limit}" /><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}" styleClass="searchLink">${i}</html:link> | </c:forEach><c:if test="${countNext < count}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}" styleClass="searchLink"><fmt:message key="a11y.results.next"/></html:link></c:if>
+            <c:if test="${countPrev >= 0}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink"><fmt:message key="a11y.results.prev"/></html:link> | </c:if><c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status"><c:set var="startIndex" value="${(i-1) * limit}" /><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink">${i}</html:link> | </c:forEach><c:if test="${countNext < count}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink"><fmt:message key="a11y.results.next"/></html:link></c:if>
         </c:if>
     </p>
 
@@ -185,11 +185,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:if>
 
     <p>
-        <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}" styleClass="searchLink" module="">
+        <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink" module="">
             <fmt:message key="a11y.results.searchagain"/>
         </html:link> |
         
-        <html:link page="/a11yViewer.do?appCode=${appCode}" styleClass="searchLink" module="">
+        <html:link page="/a11yViewer.do?appCode=${appCode}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink" module="">
             <fmt:message key="a11y.results.othersearch"/>
         </html:link>
     </p>

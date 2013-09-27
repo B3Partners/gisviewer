@@ -46,7 +46,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <input type="hidden" name="appCode" value="${appCode}">
             <input type="hidden" name="searchConfigId" value="${searchConfigId}">
             <input type="hidden" name="startIndex" value="0">        
-            <input type="hidden" name="limit" value="25">        
+            <input type="hidden" name="limit" value="25"> 
+            <input type="hidden" name="cmsPageId" value="${cmsPageId}">            
         </p>
 
         <c:forEach var="veld" items="${zoekVelden}" varStatus="status">
@@ -183,7 +184,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </form>
 
     <p>
-        <html:link page="/a11yViewer.do?appCode=${appCode}" styleClass="searchLink" module="">
+        <html:link page="/a11yViewer.do?appCode=${appCode}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink" module="">
             <fmt:message key="a11y.results.othersearch"/>
         </html:link>
     </p>

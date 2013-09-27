@@ -217,6 +217,13 @@ B3PGissuite.defineComponent('TabComponent', {
         return this.tabWidth;
     },
             
+    changeTabTitle: function(id, labeltxt) {
+        var tabObj = this.getTab(id);
+        if(tabObj) {
+            tabObj.label.find('a').html(labeltxt);
+        }
+    },
+            
     whichTransitionEvent: function(){
         var t;
         var el = document.createElement('fakeelement');
@@ -232,11 +239,13 @@ B3PGissuite.defineComponent('TabComponent', {
                 return transitions[t];
             }
         }
+        return null;
     },
     
     attachTransitionListener: function() {
         var transitionEnd = this.whichTransitionEvent(),
             me = this;
+        if(transitionEnd === null) return;
         this.tabContainer[0].addEventListener(transitionEnd, function() {
             me.resizeLabels();
         }, false);

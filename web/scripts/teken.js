@@ -17,110 +17,110 @@
 
 var currentResults = null;
 var isEditting = false;
-function changeTabTitle(){
-    parent.$j("#tekenenlink").html(parent.$j("#tekenenlink").html().replace("Tekenen",title))
+function changeTabTitle() {
+    parent.$j("#tekenenlink").html(parent.$j("#tekenenlink").html().replace("Tekenen", title))
 }
 
-function addNew(){
-    parent.JEditFeature.getFeatureType(gegevensbron,function(data){
+function addNew() {
+    parent.JEditFeature.getFeatureType(gegevensbron, function(data) {
         var results = JSON.parse(data);
-        if(results.success){
-            parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(results.featuretype,false, true);
-        }else{
+        if (results.success) {
+            parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(results.featuretype, false, true);
+        } else {
             alert("Ophalen van gegevens mislukt." + results.message);
         }
     })
 }
 
-function selectFeature(){    
-    var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
-    if(lagen.length >0){
+function selectFeature() {
+    var lagen = parent.B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
+    if (lagen.length > 0) {
         var laag = lagen[0]
         var me = this;
-        if(isEditting){
+        if (isEditting) {
             isEditting = false;
             laag.stopDrawDrawFeature();
-        }else{
+        } else {
             isEditting = true;
             laag.drawFeature("Point");
         }
-    }else{
+    } else {
         alert("Geen tekenlaag beschikbaar voor editten.");
     }
 }
 
-function retrievePoint(layerName,object){
-    if(isEditting){
-        var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
+function retrievePoint(layerName, object) {
+    if (isEditting) {
+        var lagen = parent.B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
         var laag = lagen[0]
         laag.stopDrawDrawFeature();
         isEditting = false;
         var feature = object.wkt;
-        var scale = B3PGissuite.vars.webMapController.getMap().getScale();
+        var scale = parent.B3PGissuite.vars.webMapController.getMap().getScale();
         var distance = scale * 4;
         var me = this;
         laag.removeAllFeatures();
-        parent.JEditFeature.getFeatureByWkt(gegevensbron,feature,distance,
-            function (data){
-                me.receiveFeatureAttributes(data,true );
-            });
+        parent.JEditFeature.getFeatureByWkt(gegevensbron, feature, distance,
+                function(data) {
+                    me.receiveFeatureAttributes(data, true);
+                });
     }
 }
 
-function receiveFeatureAttributes(data){
+function receiveFeatureAttributes(data) {
     var result = JSON.parse(data);
-    if(result.success){
+    if (result.success) {
         var resultsDiv = $j("#multipleResults");
         var features = result.features;
-        this.currentResults=null;
-        if(features.length == 1){
+        this.currentResults = null;
+        if (features.length == 1) {
             resultsDiv.empty();
-            parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(features[0],true);
-        }else if(features.length == 0){
+            parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(features[0], true);
+        } else if (features.length == 0) {
             alert("Ophalen van gegevens mislukt: Geen features gevonden");
-        }else{
-            this.currentResults=features;
+        } else {
+            this.currentResults = features;
             resultsDiv.empty();
             resultsDiv[0].innerHTML = "<h3>Resultaten</h3>";
-            for (var i = 0 ; i < features.length ;i++){
-                var resultRow = createResult(features[i],i);
+            for (var i = 0; i < features.length; i++) {
+                var resultRow = createResult(features[i], i);
                 resultsDiv.append(resultRow);
             }
         }
-    }else{
+    } else {
         alert("Ophalen van gegevens mislukt." + result.message);
     }
 }
 
-function createResult (feature, index){
+function createResult(feature, index) {
     var div = document.createElement('div');
-    div.setAttribute("id",feature.fid);
+    div.setAttribute("id", feature.fid);
     var link = document.createElement('a');
     link.setAttribute('href', '#');
-    link.setAttribute("onclick","openLink(" + index + ");");
-    link.innerHTML = (index+1) + ". "  + feature.fid;
+    link.setAttribute("onclick", "openLink(" + index + ");");
+    link.innerHTML = (index + 1) + ". " + feature.fid;
     div.appendChild(link);
     return div;
 }
 
-function openLink(index){
-    parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(this.currentResults[index],true);
+function openLink(index) {
+    parent.B3PGissuite.vars.editComponent.receiveFeatureAttributes(this.currentResults[index], true);
 }
 
-function init(){
-    var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
-    if(lagen.length > 0 ){
+function init() {
+    var lagen = parent.B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
+    if (lagen.length > 0) {
         var laag = lagen[0]
         var me = this;
-        B3PGissuite.vars.webMapController.registerEvent(parent.Event.ON_FEATURE_ADDED,laag,function(layerName,object){
-            retrievePoint(layerName,object);
-        },me);
-    }else{
-        setTimeout(init,300);
+        parent.B3PGissuite.vars.webMapController.registerEvent(parent.Event.ON_FEATURE_ADDED, laag, function(layerName, object) {
+            retrievePoint(layerName, object);
+        }, me);
+    } else {
+        setTimeout(init, 300);
     }
 }
 
-$j(document).ready(function(){
-    changeTabTitle();
-     init();
+$j(document).ready(function() {
+    parent.tabComponent.changeTabTitle('tekenen', title);
+    init();
 });

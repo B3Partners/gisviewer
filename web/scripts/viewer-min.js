@@ -3949,94 +3949,6 @@ $j(document).ready(function() {
   createWMSServiceUrlDialog()
 });
 // Input 6
-var plannen = {}, bestemmingen = {}, selectedPlan = null, plantypeAttribuutNaam = "typePlan", planStatusAttribuutNaam = "planstatus", tekstAttribuutNaam = "documenten", eigenaarSelectName = "eigenaarselect", planSelectName = "planselect", plantypeSelectName = "plantypeselect", statusSelectName = "statusselect", eigenaarSelect = document.getElementById(eigenaarSelectName), planSelect = document.getElementById(planSelectName), plantypeSelect = document.getElementById(plantypeSelectName), statusSelect = 
-document.getElementById(statusSelectName), planIds = null;
-B3PGissuite.config.planSelectieIds && (planIds = ("" + B3PGissuite.config.planSelectieIds).split(","));
-var planEigenaarId = planIds === null ? null : planIds[0], planId = planIds === null ? null : planIds[1];
-planEigenaarId != null && planEigenaarId > 0 && planId != null && planId > 0 && JZoeker.zoek(Array(planEigenaarId), "*", B3PGissuite.config.maxResults, handleGetEigenaar);
-function handleGetEigenaar(a) {
-  if(eigenaarSelect) {
-    eigenaarSelect.disabled = false, a != null && a.length > 0 && (dwr.util.removeAllOptions(eigenaarSelectName), dwr.util.addOptions(eigenaarSelectName, a, "id", "label"))
-  }
-}
-function eigenaarchanged(a) {
-  if(a.value != "") {
-    dwr.util.removeAllOptions(plantypeSelectName), dwr.util.removeAllOptions(statusSelectName), dwr.util.removeAllOptions(planSelectName), dwr.util.addOptions(plantypeSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(statusSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(planSelectName, ["Bezig met ophalen..."]), JZoeker.zoek(Array(planId), a.value, B3PGissuite.config.maxResults, handleGetPlannen), eigenaarSelect.disabled = true, setSelectedPlan(null)
-  }
-}
-function handleGetPlannen(a) {
-  eigenaarSelect.disabled = false;
-  dwr.util.removeAllOptions(planSelectName);
-  dwr.util.addOptions(planSelectName, a, "id", "label");
-  plannen = {};
-  a == void 0 || a.length == 0 ? dwr.util.addOptions(planSelectName, ["Geen plannen gevonden"]) : plannen = a;
-  updateTypeSelect();
-  updateStatusSelect()
-}
-function updateTypeSelect() {
-  dwr.util.removeAllOptions(plantypeSelectName);
-  var a = getDistinctFromPlannen(plantypeAttribuutNaam);
-  dwr.util.addOptions(plantypeSelectName, a)
-}
-function updateStatusSelect() {
-  dwr.util.removeAllOptions(statusSelectName);
-  var a = plannen;
-  plantypeSelect.value.length > 0 && (a = filterPlannen(plantypeAttribuutNaam, plantypeSelect.value, a));
-  a = getDistinctFromPlannen(planStatusAttribuutNaam, a);
-  dwr.util.addOptions(statusSelectName, a)
-}
-function updatePlanSelect() {
-  dwr.util.removeAllOptions(planSelectName);
-  var a = plannen;
-  plantypeSelect.value.length > 0 && (a = filterPlannen(plantypeAttribuutNaam, plantypeSelect.value, a));
-  statusSelect.value.length > 0 && (a = filterPlannen(planStatusAttribuutNaam, statusSelect.value, a));
-  dwr.util.addOptions(planSelectName, a, "id", "label");
-  (a == void 0 || a.length == 0) && dwr.util.addOptions(planSelectName, ["Er zijn geen plannen gevonden."])
-}
-function plantypechanged() {
-  updateStatusSelect();
-  updatePlanSelect();
-  setSelectedPlan(null)
-}
-function statuschanged(a) {
-  updatePlanSelect(a.value);
-  setSelectedPlan(null)
-}
-function planchanged(a) {
-  if(a.value != "") {
-    for(var b, c = 0;c < plannen.length;c++) {
-      if(plannen[c].id == a.value) {
-        b = plannen[c];
-        break
-      }
-    }
-    if(b) {
-      setSelectedPlan(b), a = {}, a.minx = b.minx, a.miny = b.miny, a.maxx = b.maxx, a.maxy = b.maxy, B3PGissuite.vars.webMapController.getMap("map1").zoomToExtent(a)
-    }
-  }
-}
-function getDistinctFromPlannen(a, b) {
-  b == void 0 && (b = plannen);
-  for(var c = [], d = 0;d < b.length;d++) {
-    for(var e = b[d].attributen, f = 0;f < e.length;f++) {
-      e[f].attribuutnaam == a && (arrayContains(c, e[f].waarde) || c.push(e[f].waarde))
-    }
-  }
-  return c
-}
-function filterPlannen(a, b, c) {
-  c == void 0 && (c = plannen);
-  for(var d = [], e = 0;e < c.length;e++) {
-    for(var f = c[e].attributen, g = 0;g < f.length;g++) {
-      f[g].attribuutnaam == a && b == f[g].waarde && d.push(c[e])
-    }
-  }
-  return d
-}
-function setSelectedPlan(a) {
-  selectedPlan = a;
-  a == null ? document.getElementById("selectedPlan").innerHTML = "Nog geen plan geselecteerd." : document.getElementById("selectedPlan").innerHTML = "<p>Plan identificatie</p>" + a.id
-}
 var inputSearchDropdown = null;
 function createSearchConfigurations() {
   var a = $j("#searchConfigurationsContainer");
@@ -22610,6 +22522,7 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
+var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22621,7 +22534,6 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
-var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -25373,37 +25285,130 @@ B3PGissuite.defineComponent("LegendComponent", {extend:"BaseComponent", defaultO
   clearTimeout(this.reloadTimer)
 }});
 // Input 20
-B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"BaseComponent", defaultOptions:{containerId:"planselectcontainer", planContainerId:"kolomTekst", selectPlanId:"selectedPlan", eigenaarSelectName:"eigenaarselect", typeSelectName:"plantypeselect", statusSelectName:"statusselect", planSelectName:"planselect"}, constructor:function(a) {
+B3PGissuite.defineComponent("PlanSelectionComponent", {extend:"BaseComponent", planEigenaarId:null, planId:null, plannen:{}, plantypeAttribuutNaam:"typePlan", planStatusAttribuutNaam:"planstatus", tekstAttribuutNaam:"documenten", selectedPlan:null, defaultOptions:{containerId:"planselectcontainer", planContainerId:"kolomTekst", selectPlanId:"selectedPlan", eigenaarSelectName:"eigenaarselect", typeSelectName:"plantypeselect", statusSelectName:"statusselect", planSelectName:"planselect"}, constructor:function(a) {
   this.callParent(a);
   this.init()
 }, init:function() {
+  if(B3PGissuite.config.planSelectieIds) {
+    var a = ("" + B3PGissuite.config.planSelectieIds).split(",");
+    this.planEigenaarId = a[0];
+    this.planId = a[1]
+  }
   this.component = jQuery("<div></div>").attr({id:this.options.containerId});
-  var a = jQuery("<div></div>").attr({id:this.options.planContainerId}), b = jQuery("<p></p>");
-  b.append(jQuery("<b></b>").text("Eigenaar"));
-  b.append(jQuery("<select></select>").attr({id:this.options.eigenaarSelectName, name:this.options.eigenaarSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
-    eigenaarchanged(this)
+  var a = jQuery("<div></div>").attr({id:this.options.planContainerId}), b = this, c = jQuery("<p></p>");
+  c.append(jQuery("<strong></strong>").text("Eigenaar"));
+  c.append(jQuery("<br />"));
+  c.append(jQuery("<select></select>").attr({id:this.options.eigenaarSelectName, name:this.options.eigenaarSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
+    b.eigenaarchanged(this)
+  }).append(jQuery("<option></option>").text("Selecteer een plan eigenaar...").attr({value:""})));
+  a.append(c);
+  c = jQuery("<p></p>");
+  c.append(jQuery("<strong></strong>").text("Type"));
+  c.append(jQuery("<br />"));
+  c.append(jQuery("<select></select>").attr({id:this.options.typeSelectName, name:this.options.typeSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
+    b.plantypechanged(this)
   }).append(jQuery("<option></option>").text("Selecteer een plantype...").attr({value:""})));
-  a.append(b);
-  b = jQuery("<p></p>");
-  b.append(jQuery("<b></b>").text("Type"));
-  b.append(jQuery("<select></select>").attr({id:this.options.typeSelectName, name:this.options.typeSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
-    plantypechanged(this)
-  }).append(jQuery("<option></option>").text("Selecteer een plantype...").attr({value:""})));
-  a.append(b);
-  b = jQuery("<p></p>");
-  b.append(jQuery("<b></b>").text("Status"));
-  b.append(jQuery("<select></select>").attr({id:this.options.statusSelectName, name:this.options.statusSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
-    statuschanged(this)
+  a.append(c);
+  c = jQuery("<p></p>");
+  c.append(jQuery("<strong></strong>").text("Status"));
+  c.append(jQuery("<br />"));
+  c.append(jQuery("<select></select>").attr({id:this.options.statusSelectName, name:this.options.statusSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
+    b.statuschanged(this)
   }).append(jQuery("<option></option>").text("Selecteer een planstatus...").attr({value:""})));
-  a.append(b);
-  b = jQuery("<p></p>");
-  b.append(jQuery("<b></b>").text("Plan"));
-  b.append(jQuery("<select></select>").attr({id:this.options.planSelectName, name:this.options.planSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
-    planchanged(this)
+  a.append(c);
+  c = jQuery("<p></p>");
+  c.append(jQuery("<strong></strong>").text("Plan"));
+  c.append(jQuery("<br />"));
+  c.append(jQuery("<select></select>").attr({id:this.options.planSelectName, name:this.options.planSelectName, "class":"planselectbox", size:10, disabled:true}).change(function() {
+    b.planchanged(this)
   }).append(jQuery("<option></option>").text("Selecteer een plan...").attr({value:""})));
-  a.append(b);
+  a.append(c);
   a.append(jQuery("<div></div>").attr("id", this.options.selectPlanId).text("Nog geen plan geselecteerd."));
   this.component.append(a)
+}, afterRender:function() {
+  var a = this;
+  a.planEigenaarId !== null && a.planEigenaarId > 0 && a.planId !== null && a.planId > 0 && JZoeker.zoek([a.planEigenaarId], "*", B3PGissuite.config.maxResults, function(b) {
+    a.handleGetEigenaar(b)
+  })
+}, handleGetEigenaar:function(a) {
+  var b = document.getElementById(this.options.eigenaarSelectName);
+  if(b) {
+    b.disabled = false, a !== null && a.length > 0 && (dwr.util.removeAllOptions(this.options.eigenaarSelectName), dwr.util.addOptions(this.options.eigenaarSelectName, a, "id", "label"))
+  }
+}, eigenaarchanged:function(a) {
+  var b = this;
+  if(a.value !== "") {
+    dwr.util.removeAllOptions(b.options.typeSelectName), dwr.util.removeAllOptions(b.options.statusSelectName), dwr.util.removeAllOptions(b.options.planSelectName), dwr.util.addOptions(b.options.typeSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(b.options.statusSelectName, ["Bezig met ophalen..."]), dwr.util.addOptions(b.options.planSelectName, ["Bezig met ophalen..."]), JZoeker.zoek([b.planId], a.value, B3PGissuite.config.maxResults, function(a) {
+      b.handleGetPlannen(a)
+    }), document.getElementById(b.options.eigenaarSelectName).disabled = true, b.setSelectedPlan(null)
+  }
+}, handleGetPlannen:function(a) {
+  document.getElementById(this.options.eigenaarSelectName).disabled = false;
+  dwr.util.removeAllOptions(this.options.planSelectName);
+  dwr.util.addOptions(this.options.planSelectName, a, "id", "label");
+  this.plannen = {};
+  typeof a === "undefined" || a.length === 0 ? dwr.util.addOptions(this.options.planSelectName, ["Geen plannen gevonden"]) : this.plannen = a;
+  this.updateTypeSelect();
+  this.updateStatusSelect()
+}, updateTypeSelect:function() {
+  dwr.util.removeAllOptions(this.options.typeSelectName);
+  var a = this.getDistinctFromPlannen(this.plantypeAttribuutNaam);
+  dwr.util.addOptions(this.options.typeSelectName, a)
+}, updateStatusSelect:function() {
+  dwr.util.removeAllOptions(this.options.statusSelectName);
+  var a = this.plannen;
+  document.getElementById(this.options.typeSelectName).value.length > 0 && (a = this.filterPlannen(this.plantypeAttribuutNaam, document.getElementById(this.options.typeSelectName).value, a));
+  a = this.getDistinctFromPlannen(this.planStatusAttribuutNaam, a);
+  dwr.util.addOptions(this.options.statusSelectName, a)
+}, updatePlanSelect:function() {
+  dwr.util.removeAllOptions(this.options.planSelectName);
+  var a = this.plannen;
+  document.getElementById(this.options.typeSelectName).value.length > 0 && (a = this.filterPlannen(this.plantypeAttribuutNaam, document.getElementById(this.options.typeSelectName).value, a));
+  document.getElementById(this.options.statusSelectName).value.length > 0 && (a = this.filterPlannen(this.planStatusAttribuutNaam, document.getElementById(this.options.statusSelectName).value, a));
+  dwr.util.addOptions(this.options.planSelectName, a, "id", "label");
+  (typeof a === "undefined" || a.length === 0) && dwr.util.addOptions(this.options.planSelectName, ["Er zijn geen plannen gevonden."])
+}, plantypechanged:function() {
+  this.updateStatusSelect();
+  this.updatePlanSelect();
+  this.setSelectedPlan(null)
+}, statuschanged:function(a) {
+  this.updatePlanSelect(a.value);
+  this.setSelectedPlan(null)
+}, planchanged:function(a) {
+  if(a.value != "") {
+    for(var b, c = 0;c < this.plannen.length;c++) {
+      if(this.plannen[c].id == a.value) {
+        b = this.plannen[c];
+        break
+      }
+    }
+    if(b) {
+      this.setSelectedPlan(b), a = {}, a.minx = b.minx, a.miny = b.miny, a.maxx = b.maxx, a.maxy = b.maxy, B3PGissuite.vars.webMapController.getMap("map1").zoomToExtent(a)
+    }
+  }
+}, getDistinctFromPlannen:function(a, b) {
+  if(typeof b === "undefined") {
+    b = this.plannen
+  }
+  for(var c = [], d = 0;d < b.length;d++) {
+    for(var e = b[d].attributen, f = 0;f < e.length;f++) {
+      e[f].attribuutnaam == a && (arrayContains(c, e[f].waarde) || c.push(e[f].waarde))
+    }
+  }
+  return c
+}, filterPlannen:function(a, b, c) {
+  if(typeof c === "undefined") {
+    c = this.plannen
+  }
+  for(var d = [], e = 0;e < c.length;e++) {
+    for(var f = c[e].attributen, g = 0;g < f.length;g++) {
+      f[g].attribuutnaam == a && b == f[g].waarde && d.push(c[e])
+    }
+  }
+  return d
+}, setSelectedPlan:function(a) {
+  this.selectedPlan = a;
+  a === null ? document.getElementById(this.options.selectPlanId).innerHTML = "Nog geen plan geselecteerd." : document.getElementById(this.options.selectPlanId).innerHTML = "<p>Plan identificatie</p>" + a.id
 }});
 // Input 21
 B3PGissuite.defineComponent("SearchComponent", {extend:"BaseComponent", defaultOptions:{hasSearch:false, hasA11yStartWkt:false, searchConfigContainerId:"searchConfigurationsContainer", searchInputContainerId:"searchInputFieldsContainer", searchResultsId:"searchResults", searchResultsClass:"searchResultsClass"}, constructor:function(a) {

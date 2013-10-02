@@ -224,21 +224,21 @@
     var tabbladen = {
         "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeComponent", 'options': { 'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll } },
         "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchComponent", "options": { "hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt} } },
-        "gebieden": { "id": "gebieden", "contentid": "objectvakViewer", "name": "Gebieden", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
-        "analyse": { "id": "analyse", "contentid": "analysevakViewer", "name": "Analyse", "class": "IframeComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
+        "gebieden": { "id": "gebieden", "contentid": "objectframeViewer", "name": "Gebieden", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
+        "analyse": { "id": "analyse", "contentid": "analyseframeViewer", "name": "Analyse", "class": "IframeComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
         "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendComponent", 'options': { 'useSortableFunction': B3PGissuite.config.useSortableFunction, 'layerDelay': B3PGissuite.config.layerDelay } },
-        "informatie": { "id": "informatie", "contentid": "beschrijvingvak", "name": "Informatie", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
+        "informatie": { "id": "informatie", "contentid": "beschrijvingVakViewer", "name": "Informatie", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
         "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionComponent" },
-        "meldingen": { "id": "meldingen", "contentid": "meldingenvakViewer", "name": "Melding", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
-        "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningzoeker", "name": "Voorziening", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
-        "vergunningen": { "id": "vergunningen", "contentid": "vergunningzoeker", "name": "Vergunning", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
-        "redlining": { "id": "redlining", "contentid": "redliningvakViewer", "name": "Redlining", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
-        "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSComponent", 'options': { 'tekstBlokken': B3PGissuite.config.tekstBlokken } },
-        "bag": {id: "bag", contentid: "bagvakViewer", name: "BAG", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
-        "wkt": {id: "wkt", contentid: "wktvakViewer", name: "WKT", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
-        "transparantie": {id: "transparantie", contentid: "transparantievakViewer", name: "Transparantie", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
-        "tekenen" : {id: "tekenen", contentid: "tekenenvakViewer", name: "Tekenen", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
-        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsvakViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } }
+        "meldingen": { "id": "meldingen", "contentid": "meldingenframeViewer", "name": "Melding", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
+        // "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningframeZoeker", "name": "Voorziening", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
+        // "vergunningen": { "id": "vergunningen", "contentid": "vergunningframeZoeker", "name": "Vergunning", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
+        "redlining": { "id": "redlining", "contentid": "redliningframeViewer", "name": "Redlining", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
+        // "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSComponent", 'options': { 'tekstBlokken': B3PGissuite.config.tekstBlokken } },
+        "bag": {id: "bag", contentid: "bagframeViewer", name: "BAG", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
+        "wkt": {id: "wkt", contentid: "wktframeViewer", name: "WKT", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
+        "transparantie": {id: "transparantie", contentid: "transparantieframeViewer", name: "Transparantie", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
+        "tekenen" : {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
+        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } }
     };
     
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
@@ -328,6 +328,10 @@
     
     // Function to create a tab
     function createTabcomponent(tabid, tabComponent) {
+        // Check of tabblad code bestaat
+        if(!tabbladen.hasOwnProperty(tabid)) {
+            return;
+        }
         // Get tabobj from tabbladen defs
         var tabobj = tabbladen[tabid];
         // If a class is defined, create class

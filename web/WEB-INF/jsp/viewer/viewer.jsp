@@ -258,7 +258,7 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/EditComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/MaatregelComponent.js"/>"></script>
         <!-- openlayers -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/OpenLayers.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js"/>"></script>
         <!-- webmapcontrollers -->
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
@@ -380,8 +380,8 @@
     }
     
     // Hide tabs when there is no content
-    if(noLeftTabs === 0) $j('#content_viewer').addClass('tablinks_dicht').removeClass('tablinks_open');
-    if(noOfTabs === 0) $j('#content_viewer').addClass('tablinks_dicht').removeClass('tablinks_open');
+    if(noLeftTabs === 0) $j('#content_viewer').addClass('tablinks_verborgen').removeClass('tablinks_open');
+    if(noOfTabs === 0) $j('#content_viewer').addClass('tabrechts_verborgen').removeClass('tabrechts_open');
     // Show infopanel below when set
     if(!B3PGissuite.config.usePopup && B3PGissuite.config.usePanel) $j('#content_viewer').addClass('dataframe_open');
     

@@ -3,27 +3,30 @@ body {
     color: #000;
 }
 
-.div-table-row, .div-table-header {
-    background-color: #ccc;
-    border-bottom: 1px solid #ccc;
-    padding-left: 5px;
-    padding-right: 5px;
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.div-table-row {  
+.result-table .small {
+    width: 50px;
+}
+
+.result-table th, .result-table td {
+    padding: 4px 5px;
+    font-size: 1.2em;
+}
+
+.result-table thead th {
+    background-color: #ccc;
+}
+
+.result-table tbody td {  
     background-color: #eee;
 }
 
-.div-table-row div, .div-table-header div {
-    width: 200px;
-    float: left;
-    font-size: 1.2em;
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-.div-table-row .small, .div-table-header .small {     
-    width: 50px;
+.result-table tbody tr:nth-child(2n) td {  
+    background-color: #ddd;
 }
 
 hr {

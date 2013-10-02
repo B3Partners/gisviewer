@@ -1,12 +1,12 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <c:if test="${!empty cmsPage}">
-    <h2>${cmsPage.titel}</h2>
+    <h1>${cmsPage.titel}</h1>
     <p>${cmsPage.tekst}</p>
 </c:if>
 
 <c:if test="${empty cmsPage}">
-    <h2>CMS Pagina</h2>
+    <h1>CMS Pagina</h1>
 </c:if>
 
 <script type="text/javascript">

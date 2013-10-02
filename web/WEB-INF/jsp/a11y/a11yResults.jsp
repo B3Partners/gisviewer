@@ -83,83 +83,52 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:if test="${countPrev >= 0}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink"><fmt:message key="a11y.results.prev"/></html:link> | </c:if><c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status"><c:set var="startIndex" value="${(i-1) * limit}" /><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink">${i}</html:link> | </c:forEach><c:if test="${countNext < count}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink"><fmt:message key="a11y.results.next"/></html:link></c:if>
         </c:if>
     </p>
-
-    <div class="div-table-header cf">
-        <c:forEach var="result" items="${results}" begin="0" end="0">
-            <div class="small">Nr.</div>
-            <c:forEach var="attr" items="${result.attributen}">
-                <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
-                    <div>
-                        ${attr.label}
-                    </div>
-                </c:if>
-            </c:forEach>
-        </c:forEach>
-        <c:if test="${nextStep == true && count > 0}">
-            <div><fmt:message key="a11y.results.action"/></div>
-        </c:if>
-    </div>
-
-    <c:forEach var="result" items="${results}" varStatus="status">  
-        <div class="div-table-row cf">
-            <form action="a11yViewer.do" method="POST">
-                <c:choose>
-                    <c:when test="${startLocation == true}">
-                        <input type="hidden" name="startLocation" value="t">
-                    </c:when>
-                    <c:otherwise>
-                        <input type="hidden" name="search" value="t">
-                    </c:otherwise>
-                </c:choose>
-
-                <input type="hidden" name="appCode" value="${appCode}">
-
-                <c:choose>
-                    <c:when test="${nextStep == true}">
-                    <input type="hidden" name="searchConfigId" value="${nextSearchConfigId}">
-                    </c:when>
-                    <c:otherwise>
-                     <input type="hidden" name="searchConfigId" value="${searchConfigId}">
-                   </c:otherwise>
-                </c:choose>
-
-                <div class="small">${status.count + resultNr}</div>
-
-                <c:forEach var="attr" items="${result.attributen}">
-                    <c:choose>
-                        <c:when test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
-                            <div>                                
-                                ${attr.waarde}
-                                
-                                <c:if test="${attr.label != 'afstand'}" >
-                                    <input type="hidden" name="${attr.label}" value="${attr.waarde}">
-                                </c:if>                                
-                            </div>
-                        </c:when>
-                        <c:when test="${attr.type == 33}">
-                            <input type="hidden" name="startGeom" value="${attr.waarde}">
-                        </c:when>
-                        <c:otherwise>
-                            <input type="hidden" name="${attr.label}" value="${attr.waarde}">
-                        </c:otherwise>
-                     </c:choose>
+    
+    <table class="result-table">
+        <thead>
+            <tr>
+                <c:forEach var="result" items="${results}" begin="0" end="0">
+                    <th class="small">Nr.</th>
+                    <c:forEach var="attr" items="${result.attributen}">
+                        <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
+                            <th>
+                                ${attr.label}
+                            </th>
+                        </c:if>
+                    </c:forEach>
                 </c:forEach>
-
-                <c:if test="${nextStep == true and startLocation == false}">
-                    <div>
-                        <input type="hidden" name="nextStep" value="t">
-                        <input type="submit" value="<fmt:message key="a11y.results.continue"/>">
-                    </div>
-                </c:if>  
-
-                <c:if test="${nextStep == false and startLocation == true}">
-                    <div>
-                        <input type="submit" value="<fmt:message key="a11y.results.startlocation"/>">
-                    </div>
+                <c:if test="${nextStep == true && count > 0}">
+                    <th><fmt:message key="a11y.results.action"/></th>
                 </c:if>
-            </form>
-        </div>
-    </c:forEach>
+            </tr>
+        </thead>
+        <tbody>
+            <c:forEach var="result" items="${results}" varStatus="status">  
+                <tr>
+                    <td class="small">${status.count + resultNr}</td>
+                    <c:forEach var="attr" items="${result.attributen}">
+                        <td>                                
+                            ${attr.waarde}
+                        </td>
+                    </c:forEach>
+
+                    <c:if test="${nextStep == true and startLocation == false}">
+                        <td>
+                            <%-- TODO: create link to continue search, ie: a11ysearch.do?searchResult=2&searchConfig=4 --%>
+                            <a href="/a11ysearch.do?searchResult=${attr.id}&searchConfig=${nextSearchConfigId}"><fmt:message key="a11y.results.continue"/></a>
+                        </td>
+                    </c:if>  
+
+                    <c:if test="${nextStep == false and startLocation == true}">
+                        <td>
+                            <%-- TODO: create link to startlocation, ie: a11ystartlocation.do?searchResult=2&searchConfig=4 --%>
+                            <a href="#"><fmt:message key="a11y.results.startlocation"/></a>
+                        </td>
+                    </c:if>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
 
     <!-- Alleen uitleg tonen als er een omschrijving in een van de velden is -->
     <c:set var="resultaatUitleg" value="false" />

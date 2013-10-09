@@ -91,14 +91,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <th class="small">Nr.</th>
                     <c:forEach var="attr" items="${result.attributen}">
                         <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
-                            <th>
+                            <th scope="col">
                                 ${attr.label}
                             </th>
                         </c:if>
                     </c:forEach>
                 </c:forEach>
                 <c:if test="${nextStep == true && count > 0}">
-                    <th><fmt:message key="a11y.results.action"/></th>
+                    <th scope="col"><fmt:message key="a11y.results.action"/></th>
                 </c:if>
             </tr>
         </thead>

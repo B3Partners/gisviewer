@@ -24,9 +24,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="windows-1252"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="NL">
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%-- Themes selection --%>
         <c:choose>
             <c:when test="${empty theme}">
@@ -39,8 +40,6 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:otherwise>
         </c:choose>
         <link href="styles/gisviewer_a11y.css" rel="stylesheet" type="text/css">
-
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
         <title>GIS Viewer | <tiles:insert attribute="title" /></title>
     </head>
     <body class="homebody">

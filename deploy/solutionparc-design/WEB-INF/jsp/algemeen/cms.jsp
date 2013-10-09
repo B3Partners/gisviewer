@@ -1,12 +1,12 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <c:if test="${!empty cmsPage}">
-    <h2>${cmsPage.titel}</h2>
-    <p>${cmsPage.tekst}</p>
+    <h1>${cmsPage.titel}</h1>
+    ${cmsPage.tekst}
 </c:if>
 
 <c:if test="${empty cmsPage}">
-    <h2>CMS Pagina</h2>
+    <h1>CMS Pagina</h1>
 </c:if>
 
 <script type="text/javascript">
@@ -17,19 +17,7 @@
 <div class="tegels">
     <c:forEach var="tb" varStatus="status" items="${tekstBlokken}">
         <div class="blockwrapper" title="${tb.titel}">
-            <c:set var="style" value="" />
-            <c:if test="${!empty tb.kleur}">
-                <c:set var="style" value="${style}background-color:${tb.kleur};" />
-            </c:if>
-
-            <c:if test="${!empty tb.hoogte && tb.hoogte != 0}">
-                <c:set var="style" value="${style}height:${tb.hoogte}px;" />
-            </c:if>
-
-            <c:if test="${!empty style}">
-                <c:set var="style" value=" style=\"${style}\"" />
-            </c:if>
-            <div class="tegel"${style}>
+            <div class="tegel tekstblok${tb.id}">
                 <c:choose>
                     <c:when test="${tb.toonUrl}">
                         <iframe class="iframe_tekstblok" id="iframe_${tb.titel}" name="iframe_${tb.titel}" frameborder="0" src="${tb.url}"></iframe>
@@ -37,7 +25,7 @@
                     <c:otherwise>
                         ${tb.tekst}
                         <c:if test="${!empty tb.url}">
-                            <a href="${tb.url}" target="_new">${tb.url}</a>
+                            <a href="${tb.url}">${tb.url}</a>
                         </c:if>
                     </c:otherwise>
                 </c:choose>

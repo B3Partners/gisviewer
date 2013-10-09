@@ -59,10 +59,11 @@
         }
         var cookievalue = readViewerPreference();
         if(cookievalue === null) cookievalue = 'kaartlayout';
+        var viewerswitchContainer = $('<div></div>').addClass('viewerswitch_container');
         var viewerswitch = $('<ul></ul>').addClass('viewerlist_switch');
-        viewerswitch.prepend('<span>Kies weergave:</span>');
-        viewerswitch.append('<li><a href="" id="kaartlayout" class="switcher switch_right' + (cookievalue === 'kaartlayout' ? ' active' : '') + '"><img src="' + gisviewerurls.mapicon + '" alt="Kaartweergave" /> Kaart</a></li>');
-        viewerswitch.append('<li><a href="" id="tekstlayout" class="switcher switch_left' + (cookievalue === 'tekstlayout' ? ' active' : '') + '"><img src="' + gisviewerurls.listicon + '" alt="Tekstweergave" /> Tekst</a></li>');
+        viewerswitchContainer.prepend('<span>Kies weergave:</span>');
+        viewerswitch.append('<li><a href="#kaartweergave" id="kaartlayout" class="switcher switch_right' + (cookievalue === 'kaartlayout' ? ' active' : '') + '"><img src="' + gisviewerurls.mapicon + '" alt="Kaartweergave" /> Kaart</a></li>');
+        viewerswitch.append('<li><a href="#tekstweergave" id="tekstlayout" class="switcher switch_left' + (cookievalue === 'tekstlayout' ? ' active' : '') + '"><img src="' + gisviewerurls.listicon + '" alt="Tekstweergave" /> Tekst</a></li>');
         viewerswitch.find('.switcher').click(function(e) {
             e.preventDefault();
             $('.switcher').removeClass('active');
@@ -70,7 +71,8 @@
             changeViewertype($(this).attr('id'));
             return false;
         });
-        viewerswitch.insertBefore('.tegels, .viewerswitch');
+        viewerswitchContainer.append(viewerswitch);
+        viewerswitchContainer.insertBefore('.tegels, .viewerswitch');
         changeViewertype(cookievalue);
     });
 }(jQuery));

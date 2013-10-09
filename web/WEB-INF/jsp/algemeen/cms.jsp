@@ -2,7 +2,7 @@
 
 <c:if test="${!empty cmsPage}">
     <h1>${cmsPage.titel}</h1>
-    <p>${cmsPage.tekst}</p>
+    ${cmsPage.tekst}
 </c:if>
 
 <c:if test="${empty cmsPage}">
@@ -35,7 +35,7 @@
 
         <!-- Anders gewoon de tekst tonen van tekstblok -->
         <c:if test="${!tb.toonUrl}">
-            <div class="inleiding_body">
+            <div class="inleiding_body tekstblok${tb.id}">
                 ${tb.tekst}
 
                 <c:if test="${!empty tb.url}">

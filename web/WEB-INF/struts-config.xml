@@ -271,6 +271,11 @@
             <forward name="failure" path="cms"/>
         </action>
         
+        <action path="/cmsstyle" type="nl.b3p.gis.viewer.services.CMSAction">
+            <forward name="success" path="cmsstyle"/>
+            <forward name="failure" path="cmsstyle"/>
+        </action>
+        
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

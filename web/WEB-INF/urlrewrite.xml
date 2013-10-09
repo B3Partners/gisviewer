@@ -8,4 +8,9 @@
         <from>^/cms/([0-9]+)/(.*)</from>
         <to>/cms.do?id=$1</to>
     </rule>
+    <rule>
+        <note>For cms stylesheet with params</note>
+        <from>^/cmsstyle/([0-9]+)</from>
+        <to>/cmsstyle.do?id=$1</to>
+    </rule>
 </urlrewrite>

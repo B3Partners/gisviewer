@@ -46,6 +46,8 @@
         <put name="content" value="/WEB-INF/jsp/algemeen/cms.jsp"/>
     </definition>
     
+    <definition name="cmsstyle" path="/WEB-INF/jsp/algemeen/cmsstyle.jsp" />
+    
     <!-- A11y defs -->
     <definition name="finderslist" extends="templateA11y">
         <put name="title" value="Lijst met zoekers" type="string"/>

@@ -46,6 +46,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <link href="<html:rewrite page='/themes/${theme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
             </c:otherwise>
         </c:choose>
+        <c:if test="${!empty cmsPage}">
+            <link href="<html:rewrite page='/cmsstyle/${cmsPage.id}' module=''/>" rel="stylesheet" type="text/css">
+        </c:if>
 
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/jquery-1.3.2.min.js' module=''/>"></script>

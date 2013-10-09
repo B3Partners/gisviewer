@@ -39,7 +39,7 @@
                 ${tb.tekst}
 
                 <c:if test="${!empty tb.url}">
-                Meer informatie: <a href="${tb.url}" target="_new">${tb.url}</a>
+                Meer informatie: <a href="${tb.url}">${tb.url}</a>
                 </c:if>
 
                 <c:if test="${tb.toonUrl}">

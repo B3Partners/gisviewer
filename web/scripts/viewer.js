@@ -128,7 +128,7 @@ function showIdentifyIcon() {
  */
 function initializeButtons() {
     /*ie bug fix*/
-    if (ieVersion != undefined && ieVersion <= 7) {
+    if(document.getElementsByTagName("html")[0].className.match(/lt-ie8/)) {
         var mapId = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
         var viewport = document.getElementById(mapId + '_OpenLayers_ViewPort');
         if (viewport) {

@@ -571,6 +571,15 @@ B3PGissuite.defineComponent('TreeComponent', {
     */
     createCheckboxThema: function(item, checked) {
         var me = this;
+        if (B3PGissuite.vars.ltIE8) {
+            var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
+            if (checked) {
+                checkboxControleString += ' checked="checked"';
+            }
+            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)">';
+            checkbox = document.createElement(checkboxControleString);
+            return checkbox;
+        }
         return jQuery('<input />')
             .attr({
                 'id': item.id,
@@ -641,6 +650,16 @@ B3PGissuite.defineComponent('TreeComponent', {
     */
     createRadioThema: function(item, checked, groupName){
         var me = this;
+        if (B3PGissuite.vars.ltIE8) {
+            var checkboxControleString = '<input type="radio" id="' + item.id + '"';
+            if (checked) {
+                checkboxControleString += ' checked="checked"';
+            }
+            checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)"';
+            checkboxControleString += ' name="' + groupName + '">';
+            checkbox = document.createElement(checkboxControleString);
+            return checkbox;
+        }
         return jQuery('<input />')
             .attr({
                 'id': item.id,
@@ -697,6 +716,16 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createRadioCluster: function(item,checked,groupName){
         var me = this;
+        if (B3PGissuite.vars.ltIE8) {
+            var checkboxControleString = '<input type="radio" id="' + item.id + '"';
+            if (checked) {
+                checkboxControleString += ' checked="checked"';
+            }
+            checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this, false)"';
+            checkboxControleString += ' name="' + groupName + '">';
+            checkbox = document.createElement(checkboxControleString);
+            return checkbox;
+        }
         return jQuery('<input />')
             .attr({
                 'id': item.id,
@@ -718,6 +747,15 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createCheckboxCluster: function(item, checked){
         var me = this;
+        if (B3PGissuite.vars.ltIE8) {
+            var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
+            if (checked) {
+                checkboxControleString += ' checked="checked"';
+            }
+            checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this, false)">';
+            checkbox = document.createElement(checkboxControleString);
+            return checkbox;
+        }
         return jQuery('<input />')
             .attr({
                 'id': item.id,
@@ -737,6 +775,16 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createRadioSingleActiveThema: function(item){
         var me = this;
+        if (B3PGissuite.vars.ltIE8) {
+            var checkboxControleString = '<input type="radio" id="radio' + item.id + '"';
+            if (this.isActiveItem(item)) {
+                checkboxControleString += ' checked="checked"';
+            }
+            checkboxControleString += ' value="' + item.id + '" onclick="radioClick(this)"';
+            checkboxControleString += ' name="selkaartlaag">';
+            checkbox = document.createElement(checkboxControleString);
+            return checkbox;
+        }
         var radio = jQuery('<input />')
             .attr({
                 'id': 'radio' + item.id,

@@ -1,4 +1,6 @@
 dwr.engine.setErrorHandler(handler);
+
+B3PGissuite.vars.ltIE8 = document.getElementsByTagName("html")[0].className.match(/lt-ie8/);
 /**
  * Array with the current visible layers in correct order.
  * The last is rendered on top.
@@ -128,7 +130,7 @@ function showIdentifyIcon() {
  */
 function initializeButtons() {
     /*ie bug fix*/
-    if(document.getElementsByTagName("html")[0].className.match(/lt-ie8/)) {
+    if(B3PGissuite.vars.ltIE8) {
         var mapId = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
         var viewport = document.getElementById(mapId + '_OpenLayers_ViewPort');
         if (viewport) {

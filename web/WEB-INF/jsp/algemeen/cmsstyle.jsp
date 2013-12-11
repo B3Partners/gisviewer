@@ -9,4 +9,9 @@
             height: ${tb.hoogte}px !important;
         </c:if>
     }
+    .tekstblok${tb.id} .tegellink {
+        <c:if test="${!empty tb.hoogte && tb.hoogte != 0}">
+            line-height: ${tb.hoogte}px !important;
+        </c:if>
+    }
 </c:forEach>

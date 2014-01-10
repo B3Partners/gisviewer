@@ -2476,6 +2476,7 @@ Proj4js.Proj.moll = {init:function() {
 }};
 // Input 5
 dwr.engine.setErrorHandler(handler);
+B3PGissuite.vars.ltIE8 = document.getElementsByTagName("html")[0].className.match(/lt-ie8/);
 B3PGissuite.vars.enabledLayerItems = [];
 B3PGissuite.vars.dataframepopupHandle = null;
 B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl;
@@ -2535,7 +2536,7 @@ function showIdentifyIcon() {
   B3PGissuite.vars.webMapController instanceof FlamingoController && B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod("map1_identifyicon", "show")
 }
 function initializeButtons() {
-  if(ieVersion != void 0 && ieVersion <= 7) {
+  if(B3PGissuite.vars.ltIE8) {
     var a = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
     if(a = document.getElementById(a + "_OpenLayers_ViewPort")) {
       a.style.position = "absolute"
@@ -22522,7 +22523,6 @@ OpenLayers.Format.WMTSCapabilities.v1_0_0 = OpenLayers.Class(OpenLayers.Format.O
   b.values.push(this.getChildValue(a))
 }}, ows:OpenLayers.Format.OWSCommon.v1_1_0.prototype.readers.ows}, CLASS_NAME:"OpenLayers.Format.WMTSCapabilities.v1_0_0"});
 // Input 11
-var webMapController = null;
 function Controller() {
   this.maps = [];
   this.tools = [];
@@ -22534,6 +22534,7 @@ function Controller() {
     webMapController.getMap().updateSize()
   })
 }
+var webMapController = null;
 Controller.prototype.getId = function() {
   return"flamingo"
 };
@@ -23677,11 +23678,10 @@ OpenLayersController.prototype.addTool = function(a) {
   }
   if(a instanceof Array) {
     for(var b = 0;b < a.length;b++) {
-      this.getMap().getFrameworkMap().addControl(a[b].getFrameworkTool()), this.addTool(a[b]), Controller.prototype.addTool.call(this, a[b])
+      this.addTool(a[b])
     }
   }else {
-    a.getType() == Tool.NAVIGATION_HISTORY ? (this.maps[0].getFrameworkMap().addControl(a.getFrameworkTool()), this.getPanel().addControls([a.getFrameworkTool().next, a.getFrameworkTool().previous])) : a.getType() == Tool.CLICK ? (this.maps[0].getFrameworkMap().addControl(a.getFrameworkTool()), this.getPanel().addControls([a.getFrameworkTool().button])) : a.getType() == Tool.LOADING_BAR ? this.maps[0].getFrameworkMap().addControl(a.getFrameworkTool()) : a.getType() == Tool.GET_FEATURE_INFO ? (this.getPanel().addControls([a.getFrameworkTool()]), 
-    this.maps[0].getFrameworkMap().addControl(a.getFrameworkTool())) : a.getType() == Tool.SCALEBAR ? this.maps[0].getFrameworkMap().addControl(a.getFrameworkTool()) : a.getType() == Tool.ZOOM_BAR ? this.maps[0].getFrameworkMap().addControl(a.getFrameworkTool()) : this.getPanel().addControls([a.getFrameworkTool()])
+    a.getType() == Tool.SCALEBAR || a.getType() == Tool.ZOOM_BAR || a.getType() == Tool.LOADING_BAR ? this.maps[0].getFrameworkMap().addControl(a.getFrameworkTool()) : this.getPanel().addControls([a.getFrameworkTool()])
   }
   a instanceof Array || Controller.prototype.addTool.call(this, a)
 };
@@ -24953,6 +24953,12 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"BaseComponent", defaultOpt
   return a.active ? -1 : 0
 }, createCheckboxThema:function(a, b) {
   var c = this;
+  if(B3PGissuite.vars.ltIE8) {
+    var d = '<input type="checkbox" id="' + a.id + '"';
+    b && (d += ' checked="checked"');
+    d += ' value="' + a.id + '" onclick="checkboxClick(this, false)">';
+    return checkbox = document.createElement(d)
+  }
   return jQuery("<input />").attr({id:a.id, type:"checkbox", checked:b, value:a.id}).click(function() {
     c.checkboxClick(this, false)
   })[0]
@@ -24985,6 +24991,13 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"BaseComponent", defaultOpt
   return null
 }, createRadioThema:function(a, b, c) {
   var d = this;
+  if(B3PGissuite.vars.ltIE8) {
+    var e = '<input type="radio" id="' + a.id + '"';
+    b && (e += ' checked="checked"');
+    e += ' value="' + a.id + '" onclick="checkboxClick(this, false)"';
+    e += ' name="' + c + '">';
+    return checkbox = document.createElement(e)
+  }
   return jQuery("<input />").attr({id:a.id, type:"radio", checked:b, value:a.id, name:c}).click(function() {
     d.checkboxClick(this, false)
   })[0]
@@ -25009,16 +25022,37 @@ B3PGissuite.defineComponent("TreeComponent", {extend:"BaseComponent", defaultOpt
   return true
 }, createRadioCluster:function(a, b, c) {
   var d = this;
+  if(B3PGissuite.vars.ltIE8) {
+    var e = '<input type="radio" id="' + a.id + '"';
+    b && (e += ' checked="checked"');
+    e += ' value="' + a.id + '" onclick="clusterCheckboxClick(this, false)"';
+    e += ' name="' + c + '">';
+    return checkbox = document.createElement(e)
+  }
   return jQuery("<input />").attr({id:a.id, type:"radio", checked:b, value:a.id, name:c}).click(function() {
     d.clusterCheckboxClick(this, false)
   })[0]
 }, createCheckboxCluster:function(a, b) {
   var c = this;
+  if(B3PGissuite.vars.ltIE8) {
+    var d = '<input type="checkbox" id="' + a.id + '"';
+    b && (d += ' checked="checked"');
+    d += ' value="' + a.id + '" onclick="clusterCheckboxClick(this, false)">';
+    return checkbox = document.createElement(d)
+  }
   return jQuery("<input />").attr({id:a.id, type:"checkbox", checked:b, value:a.id}).click(function() {
     c.clusterCheckboxClick(this, false)
   })[0]
 }, createRadioSingleActiveThema:function(a) {
-  var b = this, c = jQuery("<input />").attr({id:"radio" + a.id, type:"radio", checked:this.isActiveItem(a), value:a.id, name:"selkaartlaag"}).click(function() {
+  var b = this;
+  if(B3PGissuite.vars.ltIE8) {
+    var c = '<input type="radio" id="radio' + a.id + '"';
+    this.isActiveItem(a) && (c += ' checked="checked"');
+    c += ' value="' + a.id + '" onclick="radioClick(this)"';
+    c += ' name="selkaartlaag">';
+    return checkbox = document.createElement(c)
+  }
+  c = jQuery("<input />").attr({id:"radio" + a.id, type:"radio", checked:this.isActiveItem(a), value:a.id, name:"selkaartlaag"}).click(function() {
     b.radioClick(this)
   })[0];
   c.theItem = a;

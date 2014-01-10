@@ -180,7 +180,8 @@
         'showServiceUrl': defaultFalse(${configMap["showServiceUrl"]}),
         'startLocationX': checkValidity(${startLocationX}) ? getValue(${startLocationX}) :  "",
         'startLocationY': checkValidity(${startLocationY}) ? getValue(${startLocationY}) :  "",
-        'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas"
+        'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas",
+        'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "300"
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
@@ -332,6 +333,7 @@
         if(!tabbladen.hasOwnProperty(tabid)) {
             return;
         }
+        
         // Get tabobj from tabbladen defs
         var tabobj = tabbladen[tabid];
         // If a class is defined, create class
@@ -348,14 +350,25 @@
             comp.renderTab(tabComponent);
         // Else create a tab from existing content
         } else {
-            // Set taboptions
-            var options = { 'contentid': tabobj.contentid, 'checkResize': true };
+            // Set taboptions            
+            var options = 
+                {
+                    'contentid': tabobj.contentid,
+                    'checkResize': true
+                };
             // Create a tab
             tabComponent.createTab(tabid, tabobj['name'], options);
         }
     }
     // Init tab controllers
-    var tabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'tabjes', 'tabContainer': 'tab_container', useClick: !B3PGissuite.config.useMouseOverTabs, useHover: B3PGissuite.config.useMouseOverTabs });
+    var tabComponent = B3PGissuite.createComponent('TabComponent', 
+    { 
+        'labelContainer': 'tabjes',
+        'tabContainer': 'tab_container',
+        useClick: !B3PGissuite.config.useMouseOverTabs, 
+        useHover: B3PGissuite.config.useMouseOverTabs 
+    });
+    
     var leftTabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'leftcontenttabjes', 'tabContainer': 'leftcontent', useClick: !B3PGissuite.config.useMouseOverTabs, useHover: B3PGissuite.config.useMouseOverTabs });
     // Loop over enabled tabs
     for(i in B3PGissuite.config.enabledtabs) {

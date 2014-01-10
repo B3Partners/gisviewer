@@ -58,12 +58,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 idregistry: {},
                 vars: {},
                 config: {}
-            };
-            attachOnload(checkLocation);
+            };           
+            //attachOnload(checkLocation); // gaat mis in IE iframes...
         </script>
     </head>
     <body class="viewerbodyelement">
-        <div id="content_viewer"><tiles:insert attribute="content" /></div>
-        <tiles:insert definition="googleAnalytics"/>
+        <div id="content_viewer">
+            <tiles:insert attribute="content" />
+        </div>
+        <tiles:insert definition="googleAnalytics"/> 
     </body>
 </html>

@@ -24,5 +24,5 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@ page isELIgnored="false"%>
 <div id="footer_content">
     <div id="footer_tekst_links" class="footer_tekst">This program is distributed under the terms of the GNU General Public License</a></div>
-    <div id="footer_tekst_rechts" class="footer_tekst">B3P GIS Suite 4.0 by <address>B3Partners, Zonnebaan 12C, 3542 EC, Utrecht</address></div>
+    <div id="footer_tekst_rechts" class="footer_tekst">B3P GIS Suite 4.2 by <address>B3Partners, Zonnebaan 12C, 3542 EC, Utrecht</address></div>
 </div>

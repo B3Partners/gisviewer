@@ -413,8 +413,7 @@
 
 <script type="text/javascript">
 
-        function panelResize(dir)
-        {
+        function panelResize(dir){
             if(dir === 'left') {
                 if($j('#content_viewer').hasClass('tablinks_open')) $j('#content_viewer').removeClass('tablinks_open').addClass('tablinks_dicht');
                 else $j('#content_viewer').addClass('tablinks_open').removeClass('tablinks_dicht');
@@ -427,6 +426,7 @@
                 if($j('#content_viewer').hasClass('dataframe_open')) $j('#content_viewer').removeClass('dataframe_open').addClass('dataframe_dicht');
                 else $j('#content_viewer').addClass('dataframe_open').removeClass('dataframe_dicht');
             }
+            updateSizeOL();
         }
         var expandNodes=null;
         <c:if test="${not empty expandNodes}">

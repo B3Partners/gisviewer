@@ -44,6 +44,32 @@ B3PGissuite.get = function(className, id) {
     return B3PGissuite.instances[instanceId];
 };
 
+B3PGissuite.whichTransitionEvent = function() {
+    var t;
+    var el = document.createElement('fakeelement');
+    var transitions = {
+        'transition': 'transitionend',
+        'OTransition': 'oTransitionEnd',
+        'MozTransition': 'transitionend',
+        'WebkitTransition': 'webkitTransitionEnd'
+    }
+
+    for (t in transitions) {
+        if (el.style[t] !== undefined) {
+            return transitions[t];
+        }
+    }
+    return null;
+};
+
+B3PGissuite.attachTransitionListener = function(obj, handler) {
+    var transitionEnd = B3PGissuite.whichTransitionEvent(),
+            me = this;
+    if (transitionEnd === null)
+        return;
+    obj.addEventListener(transitionEnd,handler, false);
+};      
+
 /* BaseComponent */
 B3PGissuite.defineComponent('BaseComponent', {
     defaultOptions: {

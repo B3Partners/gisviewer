@@ -2475,6 +2475,9 @@ Proj4js.Proj.moll = {init:function() {
   return a
 }};
 // Input 5
+$j(document).ready(function() {
+  console.log("read")
+});
 dwr.engine.setErrorHandler(handler);
 B3PGissuite.vars.ltIE8 = document.getElementsByTagName("html")[0].className.match(/lt-ie8/);
 B3PGissuite.vars.enabledLayerItems = [];
@@ -5571,7 +5574,7 @@ OpenLayers.INCHES_PER_UNIT.nmi = 1852 * OpenLayers.INCHES_PER_UNIT.m;
 OpenLayers.METERS_PER_INCH = 0.0254000508001016;
 OpenLayers.Util.extend(OpenLayers.INCHES_PER_UNIT, {Inch:OpenLayers.INCHES_PER_UNIT.inches, Meter:1 / OpenLayers.METERS_PER_INCH, Foot:0.3048006096012192 / OpenLayers.METERS_PER_INCH, IFoot:0.3048 / OpenLayers.METERS_PER_INCH, ClarkeFoot:0.3047972651151 / OpenLayers.METERS_PER_INCH, SearsFoot:0.30479947153867626 / OpenLayers.METERS_PER_INCH, GoldCoastFoot:0.3047997101815088 / OpenLayers.METERS_PER_INCH, IInch:0.0254 / OpenLayers.METERS_PER_INCH, MicroInch:2.54E-5 / OpenLayers.METERS_PER_INCH, Mil:2.54E-8 / 
 OpenLayers.METERS_PER_INCH, Centimeter:0.01 / OpenLayers.METERS_PER_INCH, Kilometer:1E3 / OpenLayers.METERS_PER_INCH, Yard:0.9144018288036576 / OpenLayers.METERS_PER_INCH, SearsYard:0.914398414616029 / OpenLayers.METERS_PER_INCH, IndianYard:0.9143985307444408 / OpenLayers.METERS_PER_INCH, IndianYd37:0.91439523 / OpenLayers.METERS_PER_INCH, IndianYd62:0.9143988 / OpenLayers.METERS_PER_INCH, IndianYd75:0.9143985 / OpenLayers.METERS_PER_INCH, IndianFoot:0.30479951 / OpenLayers.METERS_PER_INCH, IndianFt37:0.30479841 / 
-OpenLayers.METERS_PER_INCH, IndianFt62:0.3047996 / OpenLayers.METERS_PER_INCH, IndianFt75:0.3047995 / OpenLayers.METERS_PER_INCH, Mile:1609.3472186944373 / OpenLayers.METERS_PER_INCH, IYard:0.9144 / OpenLayers.METERS_PER_INCH, IMile:1609.344 / OpenLayers.METERS_PER_INCH, NautM:1852 / OpenLayers.METERS_PER_INCH, "Lat-66":110943.31648893273 / OpenLayers.METERS_PER_INCH, "Lat-83":110946.25736872235 / OpenLayers.METERS_PER_INCH, Decimeter:0.1 / OpenLayers.METERS_PER_INCH, Millimeter:0.0010 / OpenLayers.METERS_PER_INCH, 
+OpenLayers.METERS_PER_INCH, IndianFt62:0.3047996 / OpenLayers.METERS_PER_INCH, IndianFt75:0.3047995 / OpenLayers.METERS_PER_INCH, Mile:1609.3472186944373 / OpenLayers.METERS_PER_INCH, IYard:0.9144 / OpenLayers.METERS_PER_INCH, IMile:1609.344 / OpenLayers.METERS_PER_INCH, NautM:1852 / OpenLayers.METERS_PER_INCH, "Lat-66":110943.31648893273 / OpenLayers.METERS_PER_INCH, "Lat-83":110946.25736872235 / OpenLayers.METERS_PER_INCH, Decimeter:0.1 / OpenLayers.METERS_PER_INCH, Millimeter:0.001 / OpenLayers.METERS_PER_INCH, 
 Dekameter:10 / OpenLayers.METERS_PER_INCH, Decameter:10 / OpenLayers.METERS_PER_INCH, Hectometer:100 / OpenLayers.METERS_PER_INCH, GermanMeter:1.0000135965 / OpenLayers.METERS_PER_INCH, CaGrid:0.999738 / OpenLayers.METERS_PER_INCH, ClarkeChain:20.1166194976 / OpenLayers.METERS_PER_INCH, GunterChain:20.11684023368047 / OpenLayers.METERS_PER_INCH, BenoitChain:20.116782494375872 / OpenLayers.METERS_PER_INCH, SearsChain:20.11676512155 / OpenLayers.METERS_PER_INCH, ClarkeLink:0.201166194976 / OpenLayers.METERS_PER_INCH, 
 GunterLink:0.2011684023368047 / OpenLayers.METERS_PER_INCH, BenoitLink:0.20116782494375873 / OpenLayers.METERS_PER_INCH, SearsLink:0.2011676512155 / OpenLayers.METERS_PER_INCH, Rod:5.02921005842012 / OpenLayers.METERS_PER_INCH, IntnlChain:20.1168 / OpenLayers.METERS_PER_INCH, IntnlLink:0.201168 / OpenLayers.METERS_PER_INCH, Perch:5.02921005842012 / OpenLayers.METERS_PER_INCH, Pole:5.02921005842012 / OpenLayers.METERS_PER_INCH, Furlong:201.1684023368046 / OpenLayers.METERS_PER_INCH, Rood:3.778266898 / 
 OpenLayers.METERS_PER_INCH, CapeFoot:0.3047972615 / OpenLayers.METERS_PER_INCH, Brealey:375 / OpenLayers.METERS_PER_INCH, ModAmFt:0.304812252984506 / OpenLayers.METERS_PER_INCH, Fathom:1.8288 / OpenLayers.METERS_PER_INCH, "NautM-UK":1853.184 / OpenLayers.METERS_PER_INCH, "50kilometers":5E4 / OpenLayers.METERS_PER_INCH, "150kilometers":15E4 / OpenLayers.METERS_PER_INCH});
@@ -21152,7 +21155,7 @@ OpenLayers.Format.WMSCapabilities.v1_1 = OpenLayers.Class(OpenLayers.Format.WMSC
     c.values = d.split(",")
   }
 }}, OpenLayers.Format.WMSCapabilities.v1.prototype.readers.wms)}, CLASS_NAME:"OpenLayers.Format.WMSCapabilities.v1_1"});
-OpenLayers.Control.Graticule = OpenLayers.Class(OpenLayers.Control, {autoActivate:true, intervals:[45, 30, 20, 10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.01, 0.0050, 0.0020, 0.0010], displayInLayerSwitcher:true, visible:true, numPoints:50, targetSize:200, layerName:null, labelled:true, labelFormat:"dm", lineSymbolizer:{strokeColor:"#333", strokeWidth:1, strokeOpacity:0.5}, labelSymbolizer:{}, gratLayer:null, initialize:function(a) {
+OpenLayers.Control.Graticule = OpenLayers.Class(OpenLayers.Control, {autoActivate:true, intervals:[45, 30, 20, 10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.01, 0.005, 0.002, 0.001], displayInLayerSwitcher:true, visible:true, numPoints:50, targetSize:200, layerName:null, labelled:true, labelFormat:"dm", lineSymbolizer:{strokeColor:"#333", strokeWidth:1, strokeOpacity:0.5}, labelSymbolizer:{}, gratLayer:null, initialize:function(a) {
   a = a || {};
   a.layerName = a.layerName || OpenLayers.i18n("Graticule");
   OpenLayers.Control.prototype.initialize.apply(this, [a]);
@@ -23819,6 +23822,7 @@ OpenLayersController.prototype.onIdentifyHandler = function(a) {
 };
 $j(document).ready(function() {
   if(webMapController instanceof OpenLayersController) {
+    console.log("stom stukje:");
     var a = webMapController.getSpecificEventName(Event.ON_CONFIG_COMPLETE);
     webMapController.handleEvent(a);
     webMapController.maps[0].updateSize()
@@ -24015,6 +24019,7 @@ OpenLayersMap.prototype.layerBeginLoading = function() {
 OpenLayersMap.prototype.setTilingResolutions = function() {
 };
 OpenLayersMap.prototype.updateSize = function() {
+  console.log("updatesize");
   this.getFrameworkMap().updateSize()
 };
 OpenLayersMap.prototype.isUpdating = function() {

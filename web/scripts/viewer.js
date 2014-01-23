@@ -1649,9 +1649,20 @@ function ol_ZoomEnd() {
     refreshLegendBox();
 }
 
+B3PGissuite.vars.prevUpdateTime = new Date();
+B3PGissuite.vars.thresholdTime = 500;
+B3PGissuite.vars.timeoutId = null;
 function updateSizeOL() {
-    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+    var currentUpdateTime = new Date();
+    if( (currentUpdateTime.getTime() -  B3PGissuite.vars.prevUpdateTime.getTime()) >  B3PGissuite.vars.thresholdTime){
+        B3PGissuite.vars.timeoutId =null;
+        B3PGissuite.vars.prevUpdateTime = new Date();
         B3PGissuite.vars.webMapController.getMap().updateSize();
+    }else{
+        if(B3PGissuite.vars.timeoutId !== null){       
+            clearTimeout(B3PGissuite.vars.timeoutId );
+        }
+        B3PGissuite.vars.timeoutId = setTimeout(updateSizeOL, 100 );
     }
 }
 

@@ -50,7 +50,9 @@ B3PGissuite.defineComponent('TabComponent', {
                 me.doResize();
             }, 100);
         });
-        this.attachTransitionListener();
+        B3PGissuite.attachTransitionListener(this.tabContainer[0], function() {
+            me.resizeLabels();
+        });
     },
     
     createTab: function(tabid, label, options) {
@@ -222,33 +224,6 @@ B3PGissuite.defineComponent('TabComponent', {
         if(tabObj) {
             tabObj.label.find('a').html(labeltxt);
         }
-    },
-            
-    whichTransitionEvent: function(){
-        var t;
-        var el = document.createElement('fakeelement');
-        var transitions = {
-          'transition':'transitionend',
-          'OTransition':'oTransitionEnd',
-          'MozTransition':'transitionend',
-          'WebkitTransition':'webkitTransitionEnd'
-        }
-
-        for(t in transitions){
-            if( el.style[t] !== undefined ){
-                return transitions[t];
-            }
-        }
-        return null;
-    },
-    
-    attachTransitionListener: function() {
-        var transitionEnd = this.whichTransitionEvent(),
-            me = this;
-        if(transitionEnd === null) return;
-        this.tabContainer[0].addEventListener(transitionEnd, function() {
-            me.resizeLabels();
-        }, false);
-    }        
+    }  
 
 });

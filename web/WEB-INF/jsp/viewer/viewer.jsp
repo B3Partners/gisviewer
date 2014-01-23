@@ -323,6 +323,7 @@
         
 <script type="text/javascript">
 
+    B3PGissuite.attachTransitionListener($j("#mapcontent")[0], function(){updateSizeOL();});
     // Show tabs for correct widht calculations
     $j('#content_viewer').addClass('tablinks_open');
     $j('#content_viewer').addClass('tabrechts_open');
@@ -426,7 +427,6 @@
                 if($j('#content_viewer').hasClass('dataframe_open')) $j('#content_viewer').removeClass('dataframe_open').addClass('dataframe_dicht');
                 else $j('#content_viewer').addClass('dataframe_open').removeClass('dataframe_dicht');
             }
-            updateSizeOL();
         }
         var expandNodes=null;
         <c:if test="${not empty expandNodes}">

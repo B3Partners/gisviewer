@@ -100,6 +100,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:if test="${nextStep == true && count > 0}">
                     <th scope="col"><fmt:message key="a11y.results.action"/></th>
                 </c:if>
+                <c:if test="${nextStep == false and startLocation == true}">
+                    <th scope="col"><fmt:message key="a11y.results.action"/></th>
+                </c:if>
             </tr>
         </thead>
         <tbody>
@@ -107,9 +110,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td class="small">${status.count + resultNr}</td>
                     <c:forEach var="attr" items="${result.attributen}">
-                        <td>                                
-                            ${attr.waarde}
-                        </td>
+                        <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
+                            <td>                                
+                                ${attr.waarde}
+                            </td>
+                        </c:if>
                     </c:forEach>
 
                     <c:if test="${nextStep == true and startLocation == false}">

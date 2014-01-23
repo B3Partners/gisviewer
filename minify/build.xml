@@ -63,8 +63,8 @@
     </target>
     
     <target name="compile-css" depends="checkforchanges" unless="nochanges">
-        <java classname="org.jruby.Main" fork="true" failonerror="true" classpath="../libs/jRuby/jruby-complete-1.7.4.jar" >  
-            <arg line="${compile.location}/compile.rb ${dir} compile ${dir}"/>  
+        <java classname="org.jruby.Main" fork="false" failonerror="true" classpath="../libs/jRuby/jruby-complete-1.7.4.jar" jvmargs="-Xss1m -XX:-UseParallelOldGC -XX:NewRatio=4 -Xmn512m -Xms2048m -Xmx2048m -XX:+TieredCompilation -XX:TieredStopAtLevel=1">  
+            <arg line="${compile.location}/compile.rb ${dir} compile ${dir} --server"/>  
         </java>
         <echo file="${dir}/.flagfile" append="false">Compiled</echo>
     </target>

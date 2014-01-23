@@ -181,7 +181,7 @@
         'startLocationX': checkValidity(${startLocationX}) ? getValue(${startLocationX}) :  "",
         'startLocationY': checkValidity(${startLocationY}) ? getValue(${startLocationY}) :  "",
         'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas",
-        'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "300"
+        'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288"
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
@@ -307,9 +307,7 @@
 <div id="leftcontenttabjes"><ul id="leftcontentnav" class="tabsul"></ul></div>
 <div id="leftcontent"></div>
 
-<div id="mapcontent">
-    <div id="flashmelding"></div>
-</div>
+<div id="mapcontent"><div id="flashmelding"></div></div>
 <script type="text/javascript">
     if(B3PGissuite.config.viewerType === 'flamingo') {
         setTimeout(function() {
@@ -320,9 +318,12 @@
 
 <div id="tabjes"><ul id="nav" class="tabsul"></ul></div>
 <div id="tab_container"></div>
+<div id="css_props"></div>
         
 <script type="text/javascript">
 
+    // Init CSS properties for configured tab width
+    configureTabWidth();
     B3PGissuite.attachTransitionListener($j("#mapcontent")[0], function(){updateSizeOL();});
     // Show tabs for correct widht calculations
     $j('#content_viewer').addClass('tablinks_open');

@@ -1649,9 +1649,41 @@ function ol_ZoomEnd() {
     refreshLegendBox();
 }
 
+/*
+ * Bit of a hack to use configured tab width in combination with SCSS created stylesheets
+ * We need some of the SCSS configured values in addition to the Gisviewerconfig value for tab width
+ * We solved this by creating a css-properties container (#css_props) and assigned some CSS values
+ * to that DIV so we can read those with JS. We combine these values with the tabWidth configured in
+ * the Gisviewerconfig using the same calculation used in SCSS. We append this styling to the head.
+ */
+function configureTabWidth() {
+    if(B3PGissuite.config.tabWidth) {
+        // get margins configured in CSS
+        var extramargin = parseInt($j('#css_props').css('margin-left'), 10),
+            defaultmargin = parseInt($j('#css_props').css('margin-right'), 10),
+            tabwidth = parseInt(B3PGissuite.config.tabWidth, 10),
+            tabwidth_margin = tabwidth + extramargin + (2 * defaultmargin);
+        // CSS creation, same logic as in SCC stylesheet
+        var csscontent = '#content_viewer.tablinks_open #leftcontent, #content_viewer.tablinks_open #leftcontenttabjes, #content_viewer.tablinks_open #leftcontentnav {' +
+            'width: ' + tabwidth + 'px !important;' +
+        '}' +
+        '#content_viewer.tablinks_open #mapcontent {' +
+            'left: ' + tabwidth_margin + 'px !important;' +
+        '}' +
+        '#content_viewer.tabrechts_open #tab_container, #content_viewer.tabrechts_open #tabjes, #content_viewer.tabrechts_open #nav {' +
+            'width: ' + tabwidth + 'px !important;' +
+        '}' +
+        '#content_viewer.tabrechts_open #mapcontent {' +
+            'right: ' + tabwidth_margin + 'px !important;' +
+        '}';
+        $j("head").append("<style>" + csscontent + "</style>");
+    }
+}
+
 B3PGissuite.vars.prevUpdateTime = new Date();
 B3PGissuite.vars.thresholdTime = 500;
 B3PGissuite.vars.timeoutId = null;
+
 function updateSizeOL() {
     var currentUpdateTime = new Date();
     if( (currentUpdateTime.getTime() -  B3PGissuite.vars.prevUpdateTime.getTime()) >  B3PGissuite.vars.thresholdTime){

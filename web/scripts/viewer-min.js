@@ -2475,9 +2475,6 @@ Proj4js.Proj.moll = {init:function() {
   return a
 }};
 // Input 5
-$j(document).ready(function() {
-  console.log("read")
-});
 dwr.engine.setErrorHandler(handler);
 B3PGissuite.vars.ltIE8 = document.getElementsByTagName("html")[0].className.match(/lt-ie8/);
 B3PGissuite.vars.enabledLayerItems = [];
@@ -3169,8 +3166,11 @@ function ol_ZoomEnd() {
   checkScaleForLayers();
   refreshLegendBox()
 }
+B3PGissuite.vars.prevUpdateTime = new Date;
+B3PGissuite.vars.thresholdTime = 500;
+B3PGissuite.vars.timeoutId = null;
 function updateSizeOL() {
-  B3PGissuite.vars.webMapController instanceof OpenLayersController && B3PGissuite.vars.webMapController.getMap().updateSize()
+  (new Date).getTime() - B3PGissuite.vars.prevUpdateTime.getTime() > B3PGissuite.vars.thresholdTime ? (B3PGissuite.vars.timeoutId = null, B3PGissuite.vars.prevUpdateTime = new Date, B3PGissuite.vars.webMapController.getMap().updateSize()) : (B3PGissuite.vars.timeoutId !== null && clearTimeout(B3PGissuite.vars.timeoutId), B3PGissuite.vars.timeoutId = setTimeout(updateSizeOL, 100))
 }
 function placeStartLocationMarker() {
   B3PGissuite.config.startLocationX != "" && B3PGissuite.config.startLocationY != "" && placeSearchResultMarker(B3PGissuite.config.startLocationX, B3PGissuite.config.startLocationY)
@@ -23822,7 +23822,6 @@ OpenLayersController.prototype.onIdentifyHandler = function(a) {
 };
 $j(document).ready(function() {
   if(webMapController instanceof OpenLayersController) {
-    console.log("stom stukje:");
     var a = webMapController.getSpecificEventName(Event.ON_CONFIG_COMPLETE);
     webMapController.handleEvent(a);
     webMapController.maps[0].updateSize()
@@ -24019,7 +24018,6 @@ OpenLayersMap.prototype.layerBeginLoading = function() {
 OpenLayersMap.prototype.setTilingResolutions = function() {
 };
 OpenLayersMap.prototype.updateSize = function() {
-  console.log("updatesize");
   this.getFrameworkMap().updateSize()
 };
 OpenLayersMap.prototype.isUpdating = function() {
@@ -24368,6 +24366,19 @@ B3PGissuite.get = function(a, b) {
   c = a.charAt(0).toLowerCase() + a.slice(1) + (b || 0);
   return typeof B3PGissuite.instances[c] === "undefined" ? null : B3PGissuite.instances[c]
 };
+B3PGissuite.whichTransitionEvent = function() {
+  var a, b = document.createElement("fakeelement"), c = {transition:"transitionend", OTransition:"oTransitionEnd", MozTransition:"transitionend", WebkitTransition:"webkitTransitionEnd"};
+  for(a in c) {
+    if(b.style[a] !== void 0) {
+      return c[a]
+    }
+  }
+  return null
+};
+B3PGissuite.attachTransitionListener = function(a, b) {
+  var c = B3PGissuite.whichTransitionEvent();
+  c !== null && a.addEventListener(c, b, false)
+};
 B3PGissuite.defineComponent("BaseComponent", {defaultOptions:{id:"", tabid:"", title:""}, constructor:function(a) {
   this.options = jQuery.extend(this.defaultOptions, a);
   this.component = null
@@ -24637,7 +24648,9 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
       b.doResize()
     }, 100)
   });
-  this.attachTransitionListener()
+  B3PGissuite.attachTransitionListener(this.tabContainer[0], function() {
+    b.resizeLabels()
+  })
 }, createTab:function(a, b, c) {
   b = this.appendTab(this.createTabObject(a, b, c), c);
   if(c) {
@@ -24715,19 +24728,6 @@ B3PGissuite.defineComponent("TabComponent", {defaultOptions:{useClick:false, use
 }, changeTabTitle:function(a, b) {
   var c = this.getTab(a);
   c && c.label.find("a").html(b)
-}, whichTransitionEvent:function() {
-  var a, b = document.createElement("fakeelement"), c = {transition:"transitionend", OTransition:"oTransitionEnd", MozTransition:"transitionend", WebkitTransition:"webkitTransitionEnd"};
-  for(a in c) {
-    if(b.style[a] !== void 0) {
-      return c[a]
-    }
-  }
-  return null
-}, attachTransitionListener:function() {
-  var a = this.whichTransitionEvent(), b = this;
-  a !== null && this.tabContainer[0].addEventListener(a, function() {
-    b.resizeLabels()
-  }, false)
 }});
 // Input 17
 B3PGissuite.defineComponent("IframeComponent", {extend:"BaseComponent", defaultOptions:{src:"", taboptions:{tabvakClassname:"tabvak_with_iframe"}}, constructor:function(a) {

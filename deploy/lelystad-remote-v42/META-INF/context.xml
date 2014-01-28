@@ -13,7 +13,7 @@
 	removeAbandoned="true"
 	removeAbandonedTimeout="60"
 	type="javax.sql.DataSource"
-	url="jdbc:oracle:thin:@S-daor03:1521:dwht"
+	url="jdbc:oracle:thin:@S-daor24:1521:Dwhgeop"
 	minEvictableIdleTimeMillis="10000"
 	timeBetweenEvictionRunsMillis="60000"
 />

@@ -37,7 +37,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:if>
         </c:forEach>
     </p>
-    
+
     <p>
         <c:forEach var="entry" items="${searchparams}" varStatus="status">
             <c:if test="${status.count <= 1}">
@@ -83,14 +83,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <c:if test="${countPrev >= 0}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countPrev}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink"><fmt:message key="a11y.results.prev"/></html:link> | </c:if><c:forEach var="i" begin="1" end="${pageNr}" step="1" varStatus="status"><c:set var="startIndex" value="${(i-1) * limit}" /><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${startIndex}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink">${i}</html:link> | </c:forEach><c:if test="${countNext < count}"><html:link page="/a11yViewer.do?results=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}${resultParams}&amp;startIndex=${countNext}&amp;limit=${limit}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink"><fmt:message key="a11y.results.next"/></html:link></c:if>
         </c:if>
     </p>
-    
+
     <table class="result-table">
         <thead>
             <tr>
                 <c:forEach var="result" items="${results}" begin="0" end="0">
                     <th class="small">Nr.</th>
-                    <c:forEach var="attr" items="${result.attributen}">
-                        <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
+                        <c:forEach var="attr" items="${result.attributen}">
+                            <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
                             <th scope="col">
                                 ${attr.label}
                             </th>
@@ -99,39 +99,80 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:forEach>
                 <c:if test="${nextStep == true && count > 0}">
                     <th scope="col"><fmt:message key="a11y.results.action"/></th>
-                </c:if>
-                <c:if test="${nextStep == false and startLocation == true}">
+                    </c:if>
+                    <c:if test="${nextStep == false and startLocation == true}">
                     <th scope="col"><fmt:message key="a11y.results.action"/></th>
-                </c:if>
+                    </c:if>
             </tr>
         </thead>
         <tbody>
-            <c:forEach var="result" items="${results}" varStatus="status">  
+            <c:forEach var="result" items="${results}" varStatus="status"> 
+
+                <%-- Opbouwen url ipv POST --%>
+                <c:set var="continueUrl" value="/a11yViewer.do?" />
+                
+                <c:choose>
+                    <c:when test="${startLocation == true}">
+                        <c:set var="continueUrl" value="${continueUrl}&amp;startLocation=t" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="continueUrl" value="${continueUrl}&amp;search=t" />
+                    </c:otherwise>
+                </c:choose>
+                
+                <c:set var="continueUrl" value="${continueUrl}&amp;appCode=${appCode}" />
+                <c:set var="continueUrl" value="${continueUrl}&amp;cmsPageId=${cmsPageId}" />
+                
+                <c:choose>
+                    <c:when test="${nextStep == true}">
+                        <c:set var="continueUrl" value="${continueUrl}&amp;searchConfigId=${nextSearchConfigId}" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="continueUrl" value="${continueUrl}&amp;searchConfigId=${searchConfigId}" />
+                    </c:otherwise>
+                </c:choose>                
+
                 <tr>
                     <td class="small">${status.count + resultNr}</td>
                     <c:forEach var="attr" items="${result.attributen}">
-                        <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
-                            <td>                                
-                                ${attr.waarde}
-                            </td>
-                        </c:if>
-                    </c:forEach>
 
-                    <c:if test="${nextStep == true and startLocation == false}">
-                        <td>
-                            <%-- TODO: create link to continue search, ie: a11ysearch.do?searchResult=2&searchConfig=4 --%>
-                            <a href="/a11ysearch.do?searchResult=${attr.id}&searchConfig=${nextSearchConfigId}"><fmt:message key="a11y.results.continue"/></a>
-                        </td>
-                    </c:if>  
+                        <%-- klaarzetten params voor verder link --%>
+                        <c:choose>
+                            <c:when test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
+                                <div>
+                                    <c:if test="${attr.label != 'afstand'}" >
+                                        <c:set var="continueUrl" value="${continueUrl}&amp;${attr.label}=${attr.waarde}" />                                   
+                                    </c:if>                                
+                                </div>
+                            </c:when>
+                            <c:when test="${attr.type == 33}">
+                                <c:set var="continueUrl" value="${continueUrl}&amp;startGeom=${attr.waarde}" />
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="continueUrl" value="${continueUrl}&amp;${attr.label}=${attr.waarde}" />
+                            </c:otherwise>
+                        </c:choose>
 
-                    <c:if test="${nextStep == false and startLocation == true}">
-                        <td>
-                            <%-- TODO: create link to startlocation, ie: a11ystartlocation.do?searchResult=2&searchConfig=4 --%>
-                            <a href="#"><fmt:message key="a11y.results.startlocation"/></a>
-                        </td>
-                    </c:if>
-                </tr>
+                <c:if test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
+                    <td>                                
+                        ${attr.waarde}
+                    </td>
+                </c:if>
             </c:forEach>
+
+            <c:if test="${nextStep == true and startLocation == false}">
+                <td>
+                    <html:link page="${continueUrl}" styleClass="searchLink"><fmt:message key="a11y.results.continue"/></html:link>
+                </td>
+            </c:if>  
+
+            <c:if test="${nextStep == false and startLocation == true}">
+                <td>
+                    <html:link page="${continueUrl}" styleClass="searchLink"><fmt:message key="a11y.results.startlocation"/></html:link>
+                </td>
+            </c:if>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
 
@@ -162,7 +203,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <html:link page="/a11yViewer.do?search=t&amp;appCode=${appCode}&amp;searchConfigId=${searchConfigId}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink" module="">
             <fmt:message key="a11y.results.searchagain"/>
         </html:link> |
-        
+
         <html:link page="/a11yViewer.do?appCode=${appCode}&amp;cmsPageId=${cmsPageId}" styleClass="searchLink" module="">
             <fmt:message key="a11y.results.othersearch"/>
         </html:link>

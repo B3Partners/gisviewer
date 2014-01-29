@@ -14,7 +14,7 @@
     <definition name="templateSimpleViewer" path="/WEB-INF/jsp/templates/templateSimpleViewer.jsp" />
     <definition name="templatePrint" path="/WEB-INF/jsp/templates/templatePrint.jsp"/>
     <definition name="templateA11y" path="/WEB-INF/jsp/templates/templateA11y.jsp">
-        <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
+        <put name="menu" value="/WEB-INF/jsp/commons/a11yMenu.jsp"/>
         <put name="footer" value="/WEB-INF/jsp/commons/footer.jsp"/>
      </definition>
     <!-- algemeen -->

@@ -181,6 +181,7 @@
         'startLocationX': checkValidity(${startLocationX}) ? getValue(${startLocationX}) :  "",
         'startLocationY': checkValidity(${startLocationY}) ? getValue(${startLocationY}) :  "",
         'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas",
+        'cfgActiveTabLeft': checkValidity('${configMap["activeTabLeft"]}') ? '${configMap["activeTabLeft"]}' :  null,
         'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288"
     };
 
@@ -365,13 +366,20 @@
     // Init tab controllers
     var tabComponent = B3PGissuite.createComponent('TabComponent', 
     { 
-        'labelContainer': 'tabjes',
-        'tabContainer': 'tab_container',
+        labelContainer: 'tabjes',
+        tabContainer: 'tab_container',
         useClick: !B3PGissuite.config.useMouseOverTabs, 
-        useHover: B3PGissuite.config.useMouseOverTabs 
+        useHover: B3PGissuite.config.useMouseOverTabs,
+        defaultTab: B3PGissuite.config.cfgActiveTab
     });
-    
-    var leftTabComponent = B3PGissuite.createComponent('TabComponent', { 'labelContainer': 'leftcontenttabjes', 'tabContainer': 'leftcontent', useClick: !B3PGissuite.config.useMouseOverTabs, useHover: B3PGissuite.config.useMouseOverTabs });
+    var leftTabComponent = B3PGissuite.createComponent('TabComponent', {
+        'labelContainer': 'leftcontenttabjes',
+        'tabContainer': 'leftcontent',
+        useClick: !B3PGissuite.config.useMouseOverTabs,
+        useHover: B3PGissuite.config.useMouseOverTabs,
+        defaultTab: B3PGissuite.config.cfgActiveTabLeft
+    });
+
     // Loop over enabled tabs
     for(i in B3PGissuite.config.enabledtabs) {
         createTabcomponent(B3PGissuite.config.enabledtabs[i], tabComponent);

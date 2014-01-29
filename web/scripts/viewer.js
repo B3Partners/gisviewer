@@ -728,7 +728,12 @@ function enableLayer(itemid) {
 }
 
 function switchTab(id) {
-    tabComponent.setActive(id);
+    if(tabComponent.hasTab(id)) {
+        tabComponent.setActive(id);
+    }
+    if(leftTabComponent.hasTab(id)) {
+        leftTabComponent.setActive(id);
+    }
 }
 
 function syncLayerCookieAndForm() {
@@ -3491,19 +3496,6 @@ $j(document).ready(function() {
             fillSearchDiv(c, zoekVelden, null);
         }
     }
-
-    // Timeout so we are sure that all CSS transitions are complete
-    window.setTimeout(function() {
-        // Set active tabs
-        var activeTab = (B3PGissuite.config.useCookies ? readCookie('activetab') : null);
-        if (activeTab !== null) {
-            switchTab(activeTab);
-        } else if (B3PGissuite.config.user.demogebruiker) {
-            switchTab('themas'); // read default tab from config ?
-        } else {
-            switchTab(B3PGissuite.config.cfgActiveTab);
-        }
-    }, 250);
 
     var pwCreated = false;
     if (document.getElementById('popupWindow')) {

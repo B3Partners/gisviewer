@@ -29,7 +29,8 @@ B3PGissuite.defineComponent('TabComponent', {
     'defaultOptions': {
         useClick: false,
         useHover: true,
-        tabvakClassname: 'tabvak'
+        tabvakClassname: 'tabvak',
+        defaultTab: null
     },
 
     constructor: function(options) {
@@ -40,8 +41,10 @@ B3PGissuite.defineComponent('TabComponent', {
         me.tabLabelContainer = me.labelContainer.find('ul');
         me.tabContainer = jQuery('#' + me.options.tabContainer);
         me.tabCollection = {};
+        me.tabIds = [];
         me.activeTab = null;
         me.lteie8 = jQuery('html').hasClass('lt-ie9');
+        me.cookiename = me.options.tabContainer + '_activetab';
         
         var resizeTimer = null;
         jQuery(window).bind('resize', function() {
@@ -52,6 +55,7 @@ B3PGissuite.defineComponent('TabComponent', {
         });
         B3PGissuite.attachTransitionListener(this.tabContainer[0], function() {
             me.resizeLabels();
+            me.showInitialTab();
         });
     },
     
@@ -116,6 +120,7 @@ B3PGissuite.defineComponent('TabComponent', {
             $j("#" + options.containerid).append(tabObj.container.show());
             return tabObj;
         } else {
+            this.tabIds.push(tabObj.id);
             this.tabCollection[tabObj.id] = tabObj;
             this.tabLabelContainer.append(tabObj.label);
             this.tabContainer.append(tabObj.container);
@@ -127,7 +132,7 @@ B3PGissuite.defineComponent('TabComponent', {
     resizeLabels: function() {
         var noOfTabs = this.getTabCount();
         var totalWidth = this.tabContainer.width();
-        var tabWidth = Math.floor((totalWidth - (noOfTabs-1)) / noOfTabs);
+        var tabWidth = Math.floor((totalWidth - (noOfTabs-1)) / noOfTabs) - 1;
         this.tabLabelContainer.find('a').width(tabWidth);
     },
     
@@ -159,17 +164,40 @@ B3PGissuite.defineComponent('TabComponent', {
         }
     },
     
+    showInitialTab: function() {
+        if(this.tabCollection.length === 0) {
+            return;
+        }
+        var activeTab = (B3PGissuite.config.useCookies ? readCookie(this.cookiename) : null);
+        if (activeTab !== null) {
+            this.setActive(activeTab);
+        } else if (B3PGissuite.config.user.demogebruiker) {
+            this.setActive('themas'); // read default tab from config ?
+        } else {
+            if(this.options.defaultTab === null || !this.hasTab(this.options.defaultTab)) {
+                console.log(this, this.tabIds[0]);
+                this.options.defaultTab = this.tabIds[0];
+            }
+            this.setActive(this.options.defaultTab);
+        }
+    },
+    
     setActive: function(tabid) {
+        if(!this.hasTab(tabid)) return;
         this.setVisible(tabid);
         this.activeTab = tabid;
         if(B3PGissuite.config.useCookies) {
-            eraseCookie('activetab');
-            createCookie('activetab', tabid, '7');
+            eraseCookie(this.cookiename);
+            createCookie(this.cookiename, tabid, '7');
         }
     },
     
     getActiveTab: function() {
         return this.getTab(this.activeTab);
+    },
+            
+    hasTab: function(tabid) {
+        return this.tabCollection.hasOwnProperty(tabid);
     },
     
     getTab: function(tabid) {

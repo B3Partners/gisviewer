@@ -11,7 +11,7 @@
 
 	<target name="minify" description="Minify source JavaScript files with Closure Compiler">
         <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="../libs/GoogleClosureCompiler/compiler.jar" />
-        <jscomp output="${minify.outputdir}/viewer-min.js" compilationLevel="simple" prettyPrint="true" printInputDelimiter="true" debug="false">
+        <jscomp output="${minify.outputdir}/viewer-min.js" compilationLevel="simple" prettyPrint="false" printInputDelimiter="false" debug="false">
           
           <sources dir="${viewerhtml.path}">
             <file name="swfobject.js" />

@@ -106,7 +106,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </tr>
         </thead>
         <tbody>
-            <c:forEach var="result" items="${results}" varStatus="status"> 
+            <c:forEach var="result" items="${results}" varStatus="status" end="24"> 
 
                 <%-- Opbouwen url ipv POST --%>
                 <c:set var="continueUrl" value="/a11yViewer.do?" />

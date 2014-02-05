@@ -141,7 +141,7 @@ B3PGissuite.defineComponent('TabComponent', {
     resizeLabels: function() {
         var noOfTabs = this.getTabCount();
         var totalWidth = this.tabContainer.width();
-        var tabWidth = Math.floor((totalWidth - (noOfTabs-1)) / noOfTabs) - 1;
+        var tabWidth = Math.floor((totalWidth - (noOfTabs-1)) / noOfTabs) - (noOfTabs === 1 ? 0 : 1);
         this.tabLabelContainer.find('a').width(tabWidth);
     },
     

@@ -41,12 +41,14 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </p>
 
     <form action="a11yViewer.do" method="GET">
-        <input type="hidden" name="results" value="t">         
-        <input type="hidden" name="appCode" value="${appCode}">
-        <input type="hidden" name="searchConfigId" value="${searchConfigId}">
-        <input type="hidden" name="startIndex" value="0">        
-        <input type="hidden" name="limit" value="25"> 
-        <input type="hidden" name="cmsPageId" value="${cmsPageId}">
+        <p>
+            <input type="hidden" name="results" value="t">
+            <input type="hidden" name="appCode" value="${appCode}">
+            <input type="hidden" name="searchConfigId" value="${searchConfigId}">
+            <input type="hidden" name="startIndex" value="0">
+            <input type="hidden" name="limit" value="25">
+            <input type="hidden" name="cmsPageId" value="${cmsPageId}">
+        </p>
 
         <c:forEach var="veld" items="${zoekVelden}" varStatus="status">
             <c:if test="${veld.inputtype == 2}">

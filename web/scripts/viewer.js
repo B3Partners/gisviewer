@@ -1662,25 +1662,34 @@ function ol_ZoomEnd() {
  * the Gisviewerconfig using the same calculation used in SCSS. We append this styling to the head.
  */
 function configureTabWidth() {
+    var extramargin = parseInt($j('#css_props').css('margin-left'), 10),
+        defaultmargin = parseInt($j('#css_props').css('margin-right'), 10),
+        csscontent = '';
     if(B3PGissuite.config.tabWidth) {
         // get margins configured in CSS
-        var extramargin = parseInt($j('#css_props').css('margin-left'), 10),
-            defaultmargin = parseInt($j('#css_props').css('margin-right'), 10),
-            tabwidth = parseInt(B3PGissuite.config.tabWidth, 10),
+        var tabwidth = parseInt(B3PGissuite.config.tabWidth, 10),
             tabwidth_margin = tabwidth + extramargin + (2 * defaultmargin);
         // CSS creation, same logic as in SCC stylesheet
-        var csscontent = '#content_viewer.tablinks_open #leftcontent, #content_viewer.tablinks_open #leftcontenttabjes, #content_viewer.tablinks_open #leftcontentnav {' +
-            'width: ' + tabwidth + 'px !important;' +
-        '}' +
-        '#content_viewer.tablinks_open #mapcontent {' +
-            'left: ' + tabwidth_margin + 'px !important;' +
-        '}' +
-        '#content_viewer.tabrechts_open #tab_container, #content_viewer.tabrechts_open #tabjes, #content_viewer.tabrechts_open #nav {' +
+        var csscontent = '#content_viewer.tabrechts_open #tab_container, #content_viewer.tabrechts_open #tabjes, #content_viewer.tabrechts_open #nav {' +
             'width: ' + tabwidth + 'px !important;' +
         '}' +
         '#content_viewer.tabrechts_open #mapcontent {' +
             'right: ' + tabwidth_margin + 'px !important;' +
         '}';
+    }
+    if(B3PGissuite.config.tabWidthLeft) {
+        // get margins configured in CSS
+        var tabwidthLeft = parseInt(B3PGissuite.config.tabWidthLeft, 10),
+            tabwidthleft_margin = tabwidthLeft + extramargin + (2 * defaultmargin);
+        // CSS creation, same logic as in SCC stylesheet
+        csscontent += '#content_viewer.tablinks_open #leftcontent, #content_viewer.tablinks_open #leftcontenttabjes, #content_viewer.tablinks_open #leftcontentnav {' +
+            'width: ' + tabwidthLeft + 'px !important;' +
+        '}' +
+        '#content_viewer.tablinks_open #mapcontent {' +
+            'left: ' + tabwidthleft_margin + 'px !important;' +
+        '}';
+    }
+    if(csscontent !== '') {
         $j("head").append("<style>" + csscontent + "</style>");
     }
 }

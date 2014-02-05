@@ -182,7 +182,8 @@
         'startLocationY': checkValidity(${startLocationY}) ? getValue(${startLocationY}) :  "",
         'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas",
         'cfgActiveTabLeft': checkValidity('${configMap["activeTabLeft"]}') ? '${configMap["activeTabLeft"]}' :  null,
-        'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288"
+        'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288",
+        'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' :  "288"
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
@@ -383,10 +384,14 @@
     // Loop over enabled tabs
     for(i in B3PGissuite.config.enabledtabs) {
         createTabcomponent(B3PGissuite.config.enabledtabs[i], tabComponent);
+        // Init tab component (resize labels, show initial tab etc.)
+        tabComponent.initTabComponent();
     }
     // Loop over tabs on the left
     for(i in B3PGissuite.config.enabledtabsLeft) {
         createTabcomponent(B3PGissuite.config.enabledtabsLeft[i], leftTabComponent);
+        // Init tab component (resize labels, show initial tab etc.)
+        leftTabComponent.initTabComponent();
     }
 
     var noOfTabs = tabComponent.getTabCount(), noLeftTabs = leftTabComponent.getTabCount();

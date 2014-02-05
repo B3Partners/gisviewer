@@ -53,10 +53,19 @@ B3PGissuite.defineComponent('TabComponent', {
                 me.doResize();
             }, 100);
         });
-        B3PGissuite.attachTransitionListener(this.tabContainer[0], function() {
+        var listenerAttached = B3PGissuite.attachTransitionListener(this.tabContainer[0], function() {
+            me.initTabComponent();
+        });
+    },
+            
+    initTabComponent: function() {
+        var me = this;
+        // Using a setTimeout with 0 seconds ensures this is executed at the end
+        // of the JS execution stack so rendering will be complete (http://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful)
+        setTimeout(function() {
             me.resizeLabels();
             me.showInitialTab();
-        });
+        }, 0);
     },
     
     createTab: function(tabid, label, options) {
@@ -175,7 +184,6 @@ B3PGissuite.defineComponent('TabComponent', {
             this.setActive('themas'); // read default tab from config ?
         } else {
             if(this.options.defaultTab === null || !this.hasTab(this.options.defaultTab)) {
-                console.log(this, this.tabIds[0]);
                 this.options.defaultTab = this.tabIds[0];
             }
             this.setActive(this.options.defaultTab);
@@ -193,7 +201,7 @@ B3PGissuite.defineComponent('TabComponent', {
     },
     
     getActiveTab: function() {
-        return this.getTab(this.activeTab);
+        return this.activeTab === null ? null : this.getTab(this.activeTab);
     },
             
     hasTab: function(tabid) {

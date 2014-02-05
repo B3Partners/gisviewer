@@ -41,14 +41,12 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </p>
 
     <form action="a11yViewer.do" method="GET">
-        <p>
-            <input type="hidden" name="results" value="t">         
-            <input type="hidden" name="appCode" value="${appCode}">
-            <input type="hidden" name="searchConfigId" value="${searchConfigId}">
-            <input type="hidden" name="startIndex" value="0">        
-            <input type="hidden" name="limit" value="25"> 
-            <input type="hidden" name="cmsPageId" value="${cmsPageId}">            
-        </p>
+        <input type="hidden" name="results" value="t">         
+        <input type="hidden" name="appCode" value="${appCode}">
+        <input type="hidden" name="searchConfigId" value="${searchConfigId}">
+        <input type="hidden" name="startIndex" value="0">        
+        <input type="hidden" name="limit" value="25"> 
+        <input type="hidden" name="cmsPageId" value="${cmsPageId}">
 
         <c:forEach var="veld" items="${zoekVelden}" varStatus="status">
             <c:if test="${veld.inputtype == 2}">
@@ -59,10 +57,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <c:set var="added" value="1" />
                         <c:if test="${veld.type == 110 || veld.type == 3}">                                
                             <p><input type="hidden" name="${veld.label}" value="${entry.value}"></p>
-                            </c:if>
-                            <c:if test="${veld.type == 0}">
+                        </c:if>
+                        <c:if test="${veld.type == 0}">
                             <p class="cf">
-                                <label for="${veld.label}"><c:out value="${veld.label}" /></label><input type="text" name="${veld.label}" value="${entry.value}">
+                                <label for="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}"><c:out value="${veld.label}" /></label><input id="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}" type="text" name="${veld.label}" value="${entry.value}">
                             </p>
                         </c:if>
                     </c:if>
@@ -71,10 +69,10 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:if test="${added == 0}">
                     <c:if test="${veld.type == 110 || veld.type == 3}">
                         <p><input type="hidden" name="${veld.label}"></p>
-                        </c:if>
-                        <c:if test="${veld.type == 0 || veld.type == 6}">
+                    </c:if>
+                    <c:if test="${veld.type == 0 || veld.type == 6}">
                         <p class="cf">
-                            <label for="${veld.label}"><c:out value="${veld.label}" /></label><input tabindex="${status.count}" id="${veld.label}" type="text" name="${veld.label}">
+                            <label for="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}"><c:out value="${veld.label}" /></label><input tabindex="${status.count}" id="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}" type="text" name="${veld.label}">
                         </p>
                     </c:if>
                 </c:if>
@@ -83,13 +81,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             <%-- dropdown met vooringevulde waardes of gebruikt opzoeklijst --%>
             <c:if test="${veld.inputtype == 1}">
                 <c:if test="${!empty veld.dropDownValues}">
-                    <label for="${veld.label}">
+                    <label for="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}">
                         <c:out value="${veld.label}" />
                     </label>
 
                     <%-- vooringevuld waardes --%>
                     <c:set var="dropdownParts" value="${fn:split(veld.dropDownValues, ',')}" />
-                    <select id="${veld.label}" name="${veld.label}">
+                    <select id="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}" name="${veld.label}">
                         <c:forEach var="part" items="${dropdownParts}">                            
                             <option value="${part}">${part}</option>
                         </c:forEach>  
@@ -117,13 +115,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     <c:forEach var="entry" items="${dropdownResults}">
                         <c:if test="${entry.key == veld.label}">
                             <p class="cf">
-                                <label for="${veld.label}">
+                                <label for="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}">
                                     <c:out value="${veld.label}" />
                                 </label>
 
                                 <%-- opzoeklijst met ook alleen tonen resultaatvelden--%>
                                 <c:if test="${hasIdAttr == '1'}">
-                                    <select id="${veld.label}" name="${veld.label}">
+                                    <select id="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}" name="${veld.label}">
                                         <c:forEach var="results" items="${entry.value}">
                                             <c:forEach var="attr" items="${results.attributen}">
                                                 <c:if test="${attr.type == 1}">
@@ -144,7 +142,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
                                 <%-- opzoeklijst met alleen tonen en doorgeven resultaatvelden --%>
                                 <c:if test="${hasIdAttr == '0'}">                                    
-                                    <select id="${veld.label}" name="${veld.label}">
+                                    <select id="${fn:replace(fn:toLowerCase(veld.label), ' ', '_')}" name="${veld.label}">
                                         <c:forEach var="results" items="${entry.value}">                        
                                             <c:forEach var="attr" items="${results.attributen}">
                                                 <option value="${attr.waarde}">${attr.waarde}</option>

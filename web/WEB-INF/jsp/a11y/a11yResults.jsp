@@ -139,11 +139,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                         <%-- klaarzetten params voor verder link --%>
                         <c:choose>
                             <c:when test="${attr.type == -1 || attr.type == 2 || attr.type == 120}" >
-                                <div>
-                                    <c:if test="${attr.label != 'afstand'}" >
-                                        <c:set var="continueUrl" value="${continueUrl}&amp;${attr.label}=${attr.waarde}" />                                   
-                                    </c:if>                                
-                                </div>
+                                <c:if test="${attr.label != 'afstand'}" >
+                                    <c:set var="continueUrl" value="${continueUrl}&amp;${attr.label}=${attr.waarde}" />                                   
+                                </c:if>
                             </c:when>
                             <c:when test="${attr.type == 33}">
                                 <c:set var="continueUrl" value="${continueUrl}&amp;startGeom=${attr.waarde}" />

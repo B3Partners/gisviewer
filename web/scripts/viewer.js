@@ -2833,8 +2833,9 @@ function addToFavorites(url) {
     if (Boolean(window.chrome)) { // chrome
         chromeBookMarkPopup(url, title);
     } else if (window.sidebar) { // Firefox
-        //window.sidebar.addPanel(title, url, "");
-        window.external.AddFavorite(url, title);
+        chromeBookMarkPopup(url, title);
+        /*window.sidebar.addPanel(title, url, "");
+         window.external.AddFavorite(url, title); */
     } else if (window.external) { // IE 6,7 not 8?
         /* Moet gekoppeld zijn aan userevent of iets met runat server ? */
         window.external.AddFavorite(url, title);
@@ -2848,7 +2849,7 @@ function addToFavorites(url) {
 function chromeBookMarkPopup(url, title) {
     var chromePopup = window.open(url, title, "height=300, width=850,toolbar=no,scrollbars=no,menubar=no");
 
-    var html = "<p>Voeg deze link toe aan uw Google Chrome favorieten:</p>" + url;
+    var html = "<p>Voeg deze link toe aan uw favorieten:</p>" + url;
 
     chromePopup.document.write(html);
 }

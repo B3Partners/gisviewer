@@ -262,6 +262,10 @@ B3PGissuite.defineComponent('TreeComponent', {
                 me.doRefreshLayer();
             }
         }
+        
+        if(B3PGissuite.config.showInfoTab === 'auto') {
+            me.fireLayerInfoEvent(obj, obj.checked);
+        }
     },
 
     /**
@@ -370,8 +374,17 @@ B3PGissuite.defineComponent('TreeComponent', {
                 child=cluster.children[m];
                 if (element.checked) {
                     enableLayer(child.id);
+                    
+                    /* Indien samengestelde laag (cluster dan ook bovenliggende
+                    * ouder aanzetten */
+                   var childObj = document.getElementById(child.id);
+                   this.enableParentClusters(childObj);
                 }else{
                     disableLayer(child.id);
+                }
+                
+                if(B3PGissuite.config.showInfoTab === 'auto' || B3PGissuite.config.showInfoTab === 'click') {
+                    this.fireLayerInfoEvent(child, element.checked);
                 }
             }
         }
@@ -453,6 +466,12 @@ B3PGissuite.defineComponent('TreeComponent', {
             if (item.legendurl != undefined && B3PGissuite.config.showLegendInTree) {
                 container.appendChild(document.createTextNode('  '));
                 container.appendChild(this.createTreeLegendIcon());
+            }
+            
+            // TODO: check if there is text available on the item
+            if (item && B3PGissuite.config.showInfoTab === 'click') {
+                container.appendChild(document.createTextNode('  '));
+                container.appendChild(this.createInfotabIcon(item));
             }
 
             container.appendChild(document.createTextNode('  '));
@@ -817,6 +836,24 @@ B3PGissuite.defineComponent('TreeComponent', {
             if(!jQuery(this).hasClass("disabledLegendIcon")) {
                 me.loadTreeLegendImage(jQuery(this).siblings("div").attr("id"));
             }
+        });
+        return legendicon;
+    },
+       
+    /**
+     * Creates a new info tab icon element for use in tree.
+     * @return The icon element.
+    */
+    createInfotabIcon: function(obj) {
+        var legendicon = document.createElement("img"), me = this;
+        legendicon.src = imageBaseUrl + "icons/infotab.png";
+        legendicon.alt = "Laag informatie tonen";
+        legendicon.title = "Laag informatie tonen";
+        legendicon.width="13";
+        legendicon.height="13";
+        legendicon.className = 'treeInfotabIcon imagenoborder';
+        $j(legendicon).click(function(){
+            me.fireLayerInfoEvent(obj, true);
         });
         return legendicon;
     },
@@ -1270,6 +1307,28 @@ B3PGissuite.defineComponent('TreeComponent', {
             }
         }
         return null;
+    },
+
+    // Info tab handling
+    fireLayerInfoEvent: function(obj, checked) {
+        if((B3PGissuite.config.showInfoTab !== 'auto' && B3PGissuite.config.showInfoTab !== 'click') || !B3PGissuite.vars.frameWorkInitialized) {
+            return;
+        }
+
+        var item;
+
+        if (obj.theItem) {
+            item = obj.theItem;
+        } else {
+            item = obj;
+        }
+
+        /* Show Kaartlaag Info in tab alleen als viewer al is opgestart */
+        if (checked) {
+            this.fireEvent('showLayerInfo', item);
+        } else {
+            this.fireEvent('hideLayerInfo', item);
+        }
     }
 
 });

@@ -46,6 +46,7 @@
             <file name="PlanSelectionComponent.js" />
             <file name="SearchComponent.js" />
             <file name="CMSComponent.js" />
+            <file name="LayerInfoComponent.js" />
           </sources>          
 
         </jscomp>

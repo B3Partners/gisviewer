@@ -32,6 +32,33 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
             B3PGissuite.component[classDefinition.extend].call(this, options);
         };
     }
+    // Add event handling
+    // Fire events
+    B3PGissuite.component[className].prototype.fireEvent = function(evtName, evtData) {
+        // Check if there are listeners registered
+        if(B3PGissuite.events.hasOwnProperty(className) && B3PGissuite.events[className].hasOwnProperty(evtName)) {
+            // Loop over all registered listeners
+            for(var k in B3PGissuite.events[className][evtName]) {
+                // Listener to temp var
+                var registeredListener = B3PGissuite.events[className][evtName][k];
+                // Call the registered listener handler with scope and eventData
+                registeredListener.handler.call(registeredListener.scope, evtData);
+            }
+        }
+    };
+    // Register event listeners
+    B3PGissuite.component[className].prototype.addListener = function(clsName, evtName, handler, scope) {
+        // Check if there are listeners registered for targetClass
+        if(!B3PGissuite.events.hasOwnProperty(clsName)) {
+            B3PGissuite.events[clsName] = {};
+        }
+        // Check if there are listeners registered for event
+        if(!B3PGissuite.events[clsName].hasOwnProperty(evtName)) {
+            B3PGissuite.events[clsName][evtName] = [];
+        }
+        // Add listener for classname + eventname
+        B3PGissuite.events[clsName][evtName].push({handler: handler, scope: scope || this});
+    };
 };
 /* Helper function to get access to a component (for example var tree = B3PGissuite.get('TreeComponent'); ) */
 B3PGissuite.get = function(className, id) {
@@ -85,12 +112,21 @@ B3PGissuite.defineComponent('BaseComponent', {
         throw('Init must be implemented in a sub-class');
     },
     render: function(domId) {
-        jQuery('#' + domId).append(this.component);
+        this.tabPanel = jQuery('#' + domId);
+        this.tabPanel.append(this.component);
         this.afterRender();
     },
     renderTab: function(tabComponent) {
-        var domId = tabComponent.createTab(this.options.tabid, this.options.title, this.options.taboptions || {});
+        this.tabComponent = tabComponent;
+        var domId = this.tabComponent.createTab(this.options.tabid, this.options.title, this.options.taboptions || {});
         this.render(domId);
     },
-    afterRender: function() {}
+    afterRender: function() {},
+    getTabComponent: function() {
+        if(this.tabComponent) return this.tabComponent;
+        return null;
+    },
+    getTabPanel: function() {
+        return this.tabPanel;
+    }
 });

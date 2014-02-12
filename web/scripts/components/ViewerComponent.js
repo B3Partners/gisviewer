@@ -31,6 +31,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
        B3PGissuite.vars.webMapController.initEvents();
        B3PGissuite.vars.webMapController.registerEvent(Event.ON_GET_CAPABILITIES,B3PGissuite.vars.webMapController.getMap(),onGetCapabilities);
        B3PGissuite.vars.webMapController.registerEvent(Event.ON_CONFIG_COMPLETE,B3PGissuite.vars.webMapController,onConfigComplete);
+       this.fireEvent('initMapComplete');
     },
     /**
      * Init the Flamingo controller

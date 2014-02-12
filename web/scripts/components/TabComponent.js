@@ -30,7 +30,9 @@ B3PGissuite.defineComponent('TabComponent', {
         useClick: false,
         useHover: true,
         tabvakClassname: 'tabvak',
-        defaultTab: null
+        defaultTab: null,
+        direction: 'right',
+        enabledTabs: []
     },
 
     constructor: function(options) {
@@ -45,7 +47,8 @@ B3PGissuite.defineComponent('TabComponent', {
         me.activeTab = null;
         me.lteie8 = jQuery('html').hasClass('lt-ie9');
         me.cookiename = me.options.tabContainer + '_activetab';
-        
+        me.setupEnabledTabs();
+        me.initTabComponent();
         var resizeTimer = null;
         jQuery(window).bind('resize', function() {
             if (resizeTimer) clearTimeout(resizeTimer);
@@ -56,6 +59,43 @@ B3PGissuite.defineComponent('TabComponent', {
         var listenerAttached = B3PGissuite.attachTransitionListener(this.tabContainer[0], function() {
             me.initTabComponent();
         });
+    },
+            
+    setupEnabledTabs: function() {
+        var tabComponent = this;
+        // Loop over enabled tabs
+        for(var i in this.options.enabledTabs) {
+            var tabid = this.options.enabledTabs[i];
+            if(!B3PGissuite.config.tabbladen.hasOwnProperty(tabid)) {
+                return;
+            }
+
+            // Get tabobj from tabbladen defs
+            var tabobj = B3PGissuite.config.tabbladen[tabid];
+            // If a class is defined, create class
+            if(tabobj.hasOwnProperty('class')) {
+                // Extend default options by options from tabbladen defs
+                var options = jQuery.extend({
+                    tabid: tabid,
+                    id: tabobj.contentid,
+                    title: tabobj['name']
+                }, tabobj['options'] || {});
+                // Create the defined component
+                var comp = B3PGissuite.createComponent(tabobj['class'], options);
+                // Render the component to the tab
+                comp.renderTab(tabComponent);
+            // Else create a tab from existing content
+            } else {
+                // Set taboptions            
+                var options = 
+                    {
+                        'contentid': tabobj.contentid,
+                        'checkResize': true
+                    };
+                // Create a tab
+                tabComponent.createTab(tabid, tabobj['name'], options);
+            }
+        }
     },
             
     initTabComponent: function() {
@@ -240,11 +280,7 @@ B3PGissuite.defineComponent('TabComponent', {
     },
     
     getTabCount: function() {
-        var size = 0, key;
-        for (key in this.tabCollection) {
-            if (this.tabCollection.hasOwnProperty(key)) size++;
-        }
-        return size;
+        return this.tabIds.length;
     },
     
     getTabHeight: function() {
@@ -255,11 +291,30 @@ B3PGissuite.defineComponent('TabComponent', {
         return this.tabWidth;
     },
             
+    isHidden: function() {
+        return (
+            (this.options.direction === 'left' && $j('#content_viewer').hasClass('tablinks_dicht')) ||
+            (this.options.direction === 'right' && $j('#content_viewer').hasClass('tabrechts_dicht'))
+        );
+    },
+            
+    isOnlyTab: function(tabid) {
+        return (this.options.enabledTabs.length === 1 && this.hasTab(tabid));
+    },
+            
     changeTabTitle: function(id, labeltxt) {
         var tabObj = this.getTab(id);
         if(tabObj) {
             tabObj.label.find('a').html(labeltxt);
         }
-    }  
+    },
+            
+    toggleTab: function() {
+        panelResize(this.options.direction);
+    },
+    
+    getDirection: function() {
+        return this.options.direction;
+    }
 
 });

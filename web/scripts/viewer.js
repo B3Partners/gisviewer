@@ -1699,6 +1699,7 @@ B3PGissuite.vars.thresholdTime = 500;
 B3PGissuite.vars.timeoutId = null;
 
 function updateSizeOL() {
+    if(!B3PGissuite.vars.webMapController instanceof OpenLayersController) return;
     var currentUpdateTime = new Date();
     if( (currentUpdateTime.getTime() -  B3PGissuite.vars.prevUpdateTime.getTime()) >  B3PGissuite.vars.thresholdTime){
         B3PGissuite.vars.timeoutId =null;

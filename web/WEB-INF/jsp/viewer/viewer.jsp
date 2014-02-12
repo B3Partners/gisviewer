@@ -183,7 +183,8 @@
         'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas",
         'cfgActiveTabLeft': checkValidity('${configMap["activeTabLeft"]}') ? '${configMap["activeTabLeft"]}' :  null,
         'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288",
-        'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' :  "288"
+        'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' :  "288",
+        'showInfoTab': checkValidity('${configMap["showInfoTab"]}') ? '${configMap["showInfoTab"]}' :  null
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
@@ -224,7 +225,7 @@
     /* 
      * Definitie beschikbare tabbladen.
      */
-    var tabbladen = {
+    B3PGissuite.config.tabbladen = {
         "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeComponent", 'options': { 'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll } },
         "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchComponent", "options": { "hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt} } },
         "gebieden": { "id": "gebieden", "contentid": "objectframeViewer", "name": "Gebieden", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
@@ -241,7 +242,8 @@
         "wkt": {id: "wkt", contentid: "wktframeViewer", name: "WKT", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
         "transparantie": {id: "transparantie", contentid: "transparantieframeViewer", name: "Transparantie", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
         "tekenen" : {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
-        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } }
+        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } },
+        "layerinfo": { "id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoComponent", 'options': { } }
     };
     
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
@@ -276,6 +278,7 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/PlanSelectionComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/SearchComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/CMSComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/LayerInfoComponent.js"/>"></script>
     </c:when>
     <c:otherwise>
         <!-- Total (minified) viewer JS -->
@@ -330,69 +333,27 @@
     // Show tabs for correct widht calculations
     $j('#content_viewer').addClass('tablinks_open');
     $j('#content_viewer').addClass('tabrechts_open');
-    
-    // Function to create a tab
-    function createTabcomponent(tabid, tabComponent) {
-        // Check of tabblad code bestaat
-        if(!tabbladen.hasOwnProperty(tabid)) {
-            return;
-        }
-        
-        // Get tabobj from tabbladen defs
-        var tabobj = tabbladen[tabid];
-        // If a class is defined, create class
-        if(tabobj.hasOwnProperty('class')) {
-            // Extend default options by options from tabbladen defs
-            var options = jQuery.extend({
-                tabid: tabid,
-                id: tabobj.contentid,
-                title: tabobj['name']
-            }, tabobj['options'] || {});
-            // Create the defined component
-            var comp = B3PGissuite.createComponent(tabobj['class'], options);
-            // Render the component to the tab
-            comp.renderTab(tabComponent);
-        // Else create a tab from existing content
-        } else {
-            // Set taboptions            
-            var options = 
-                {
-                    'contentid': tabobj.contentid,
-                    'checkResize': true
-                };
-            // Create a tab
-            tabComponent.createTab(tabid, tabobj['name'], options);
-        }
-    }
+
     // Init tab controllers
     var tabComponent = B3PGissuite.createComponent('TabComponent', 
     { 
+        direction: 'right',
         labelContainer: 'tabjes',
         tabContainer: 'tab_container',
         useClick: !B3PGissuite.config.useMouseOverTabs, 
         useHover: B3PGissuite.config.useMouseOverTabs,
-        defaultTab: B3PGissuite.config.cfgActiveTab
+        defaultTab: B3PGissuite.config.cfgActiveTab,
+        enabledTabs: B3PGissuite.config.enabledtabs
     });
     var leftTabComponent = B3PGissuite.createComponent('TabComponent', {
-        'labelContainer': 'leftcontenttabjes',
-        'tabContainer': 'leftcontent',
+        direction: 'left',
+        labelContainer: 'leftcontenttabjes',
+        tabContainer: 'leftcontent',
         useClick: !B3PGissuite.config.useMouseOverTabs,
         useHover: B3PGissuite.config.useMouseOverTabs,
-        defaultTab: B3PGissuite.config.cfgActiveTabLeft
+        defaultTab: B3PGissuite.config.cfgActiveTabLeft,
+        enabledTabs: B3PGissuite.config.enabledtabsLeft
     });
-
-    // Loop over enabled tabs
-    for(i in B3PGissuite.config.enabledtabs) {
-        createTabcomponent(B3PGissuite.config.enabledtabs[i], tabComponent);
-        // Init tab component (resize labels, show initial tab etc.)
-        tabComponent.initTabComponent();
-    }
-    // Loop over tabs on the left
-    for(i in B3PGissuite.config.enabledtabsLeft) {
-        createTabcomponent(B3PGissuite.config.enabledtabsLeft[i], leftTabComponent);
-        // Init tab component (resize labels, show initial tab etc.)
-        leftTabComponent.initTabComponent();
-    }
 
     var noOfTabs = tabComponent.getTabCount(), noLeftTabs = leftTabComponent.getTabCount();
     if(B3PGissuite.config.usePanel) {
@@ -417,6 +378,22 @@
     // Show infopanel below when set
     if(!B3PGissuite.config.usePopup && B3PGissuite.config.usePanel) $j('#content_viewer').addClass('dataframe_open');
     
+    function panelResize(dir){
+        if(dir === 'left') {
+            if($j('#content_viewer').hasClass('tablinks_open')) $j('#content_viewer').removeClass('tablinks_open').addClass('tablinks_dicht');
+            else $j('#content_viewer').addClass('tablinks_open').removeClass('tablinks_dicht');
+        }
+        if(dir === 'right') {
+            if($j('#content_viewer').hasClass('tabrechts_open')) $j('#content_viewer').removeClass('tabrechts_open').addClass('tabrechts_dicht');
+            else $j('#content_viewer').addClass('tabrechts_open').removeClass('tabrechts_dicht');
+        }
+        if(dir === 'below') {
+            if($j('#content_viewer').hasClass('dataframe_open')) $j('#content_viewer').removeClass('dataframe_open').addClass('dataframe_dicht');
+            else $j('#content_viewer').addClass('dataframe_open').removeClass('dataframe_dicht');
+        }
+        updateSizeOL();
+    }
+    
     /**
     * Start off with initMapComponent()
     */
@@ -427,21 +404,6 @@
 
 <script type="text/javascript">
 
-        function panelResize(dir){
-            if(dir === 'left') {
-                if($j('#content_viewer').hasClass('tablinks_open')) $j('#content_viewer').removeClass('tablinks_open').addClass('tablinks_dicht');
-                else $j('#content_viewer').addClass('tablinks_open').removeClass('tablinks_dicht');
-            }
-            if(dir === 'right') {
-                if($j('#content_viewer').hasClass('tabrechts_open')) $j('#content_viewer').removeClass('tabrechts_open').addClass('tabrechts_dicht');
-                else $j('#content_viewer').addClass('tabrechts_open').removeClass('tabrechts_dicht');
-            }
-            if(dir === 'below') {
-                if($j('#content_viewer').hasClass('dataframe_open')) $j('#content_viewer').removeClass('dataframe_open').addClass('dataframe_dicht');
-                else $j('#content_viewer').addClass('dataframe_open').removeClass('dataframe_dicht');
-            }
-            updateSizeOL();
-        }
         var expandNodes=null;
         <c:if test="${not empty expandNodes}">
             expandNodes=${expandNodes};

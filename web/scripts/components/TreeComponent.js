@@ -3,7 +3,7 @@ B3PGissuite.defineComponent('TreeComponent', {
     defaultOptions: {
         treeid: 'layermaindiv',
         tree: [],
-        servicetrees: [],
+        servicestrees: [],
         icons: {
             collapsed: '/gisviewer/images/treeview/plus.gif',
             expanded: '/gisviewer/images/treeview/minus.gif',
@@ -36,15 +36,15 @@ B3PGissuite.defineComponent('TreeComponent', {
         var debugContainer = jQuery('<div></div>').attr('id', 'debug-content');
         this.component.append(debugContainer);
         
-        for(var i in this.options.servicetrees) {
+        for(var i in this.options.servicestrees) {
             this.component.append(jQuery('<div></div>').attr('id', 'layerTreeDiv_' + i));
         }
     },
     afterRender: function() {
-        for(var i in this.options.servicetrees) {
+        for(var i in this.options.servicestrees) {
             treeview_create({
                 "id": 'layerTreeDiv_' + i,
-                "root": this.options.servicetrees[i],
+                "root": this.options.servicestrees[i],
                 "rootChildrenAsRoots": false,
                 "itemLabelCreatorFunction": createServiceLeaf,
                 "toggleImages": {

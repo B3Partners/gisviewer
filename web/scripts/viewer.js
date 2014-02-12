@@ -530,7 +530,9 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
     }
-
+    
+    removeSearchResultMarker();
+    
     var treeComponent = B3PGissuite.get('TreeComponent');
     if (themaIds === undefined) {
         if (!B3PGissuite.config.multipleActiveThemas && treeComponent !== null) {
@@ -550,6 +552,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     if (extraCriteria) {
         document.forms[0].extraCriteria.value = extraCriteria;
     }
+    
     //set the correct action
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
@@ -613,6 +616,10 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             document.forms[0].target = 'dataframepopup';
             loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'window');
         }
+        
+        /* display marker in middle of click point */
+        var point = getPointFromGeom(geom);        
+        placeSearchResultMarker(point.x, point.y);
 
     } else if (B3PGissuite.config.useBalloonPopup) {
         if (!B3PGissuite.vars.balloon) {
@@ -627,44 +634,12 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             B3PGissuite.vars.balloon = new Balloon($j("#mapcontent"), B3PGissuite.vars.webMapController, 'infoBalloon', 300, 300, offsetX, offsetY);
         }
         document.forms[0].target = 'dataframeballoonpopup';
+        
         /*Bepaal midden van vraag geometry*/
-        //maak coord string
-        var coordString = geom.replace(/POLYGON/g, '').replace(/POINT/, '').replace(/\(/g, '').replace(/\)/g, '');
-        var xyPairs = coordString.split(",");
-        var minx;
-        var maxx;
-        var miny;
-        var maxy;
-        for (var i = 0; i < xyPairs.length; i++) {
-            var xy = xyPairs[i].split(" ");
-            var x = Number(xy[0]);
-            var y = Number(xy[1])
-            if (minx == undefined) {
-                minx = x;
-                maxx = x;
-            }
-            if (miny == undefined) {
-                miny = y;
-                maxy = y;
-            }
-            if (x > maxx) {
-                maxx = x;
-            }
-            if (x < minx) {
-                minx = x;
-            }
-            if (y > maxy) {
-                maxy = y;
-            }
-            if (y < miny) {
-                miny = y;
-            }
-        }
-        var centerX = (minx + maxx) / 2;
-        var centerY = (miny + maxy) / 2;
+        var point = getPointFromGeom(geom);
 
         //B3PGissuite.vars.balloon.resetPositionOfBalloon(centerX,centerY);
-        B3PGissuite.vars.balloon.setPosition(centerX, centerY, true);
+        B3PGissuite.vars.balloon.setPosition(point.x, point.y, true);
 
         var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
         B3PGissuite.vars.balloon.getContentElement().html(iframeElement);
@@ -674,6 +649,53 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     }
 
     document.forms[0].submit();
+}
+
+function Point(x, y){
+    this.x = x;
+    this.y = y;
+}
+
+function getPointFromGeom(geom) {    
+    var coordString = geom.replace(/POLYGON/g, '').replace(/POINT/, '').replace(/\(/g, '').replace(/\)/g, '');
+    var xyPairs = coordString.split(",");
+    
+    var minx;
+    var maxx;
+    var miny;
+    var maxy;
+    
+    for (var i = 0; i < xyPairs.length; i++) {
+        var xy = xyPairs[i].split(" ");
+        var x = Number(xy[0]);
+        var y = Number(xy[1]);
+        
+        if (minx === undefined) {
+            minx = x;
+            maxx = x;
+        }        
+        if (miny === undefined) {
+            miny = y;
+            maxy = y;
+        }        
+        if (x > maxx) {
+            maxx = x;
+        }
+        if (x < minx) {
+            minx = x;
+        }
+        if (y > maxy) {
+            maxy = y;
+        }
+        if (y < miny) {
+            miny = y;
+        }
+    }
+
+    var centerX = (minx + maxx) / 2;
+    var centerY = (miny + maxy) / 2;
+    
+    return new Point(centerX, centerY);
 }
 
 /**
@@ -1493,7 +1515,7 @@ function onChangeTool(id, event) {
     if (id == 'identify') {
         B3PGissuite.vars.btn_highLightSelected = false;
         hideIdentifyIcon();
-    }
+    }    
 }
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.

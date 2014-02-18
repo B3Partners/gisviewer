@@ -117,6 +117,48 @@ function handleGetGegevensBron(gegevensbron) {
     }
 }
 
+var gebiedenCounter = 1;
+function handleGebiedenBron(gegevensbron) {
+    var htmlId = gegevensbron.parentHtmlId;
+
+    // Create container
+    var bronContainer = $j('<div></div>').attr({
+        "id": "bronContainer" + htmlId + gegevensbron.id + gebiedenCounter++,
+        "class": "bronContainer"
+    });
+
+    // Create table content    
+    if (gegevensbron.records) {        
+        var title = $j('<div></div>').html(gegevensbron.title);        
+        bronContainer.append(title);
+
+        $j.each(gegevensbron.records, function(index, record) {
+            // Create content table
+            var bronContent = $j('<div></div>').attr({
+                "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + gebiedenCounter++,
+                "class": "bronContent"
+            });
+            var bronTable = $j('<table></table>');
+            var bronTableBody = $j('<tbody></tbody>');
+
+            $j.each(record.values, function(index2, waarde) {
+                var tr = $j('<tr></tr>');
+                var th = createTableTh(gegevensbron.labels[index2]);
+                tr.append(th);
+                var td = createTableTd(waarde, gegevensbron, record);
+                tr.append(td);
+                bronTableBody.append(tr);
+            });
+
+            // Append all to DOM tree
+            bronContent.append(bronTable.append(bronTableBody));
+            bronContainer.append(bronContent);
+        });
+    }
+
+    $j('#' + htmlId).append(bronContainer);
+}
+
 function resizeWidthIE() {
     var totalwidth = $j("#adminDataWrapper").outerWidth(true);
     $j("#adminDataWrapper > .rootBronContainer").each(function() {
@@ -137,11 +179,11 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
         bronContainer.addClass("rootBronContainer");
         rootBronContainer = false;
     }
-    
+
     // csv, info en pdf export boven alle records tonen
     var bronCaption = createBronCaption(gegevensbron, false, null);
     bronContainer.append(bronCaption);
-    
+
     /* Only auto open pop-up when one record is found and one objectdata field 
      * is configured in basisregel */
     if (gegevensbron.records && gegevensbron.records.length == 1) {
@@ -159,10 +201,10 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
             parent.popUp(url, 'externe_link', 800, 600);
         }
     }
-    
+
     // Create table content    
     if (gegevensbron.records) {
-        $j.each(gegevensbron.records, function(index, record) {            
+        $j.each(gegevensbron.records, function(index, record) {
             // Create content table
             var bronContent = $j('<div></div>').attr({
                 "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
@@ -376,7 +418,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     // Append all to DOM tree
     bronContent.append(bronTable.append(bronTableHead).append(bronTableBody));
     bronContainer.append(bronContent);
-    
+
     $j('#' + htmlId).append(bronContainer);
 }
 
@@ -796,7 +838,7 @@ function createTableTd(waarde, gegevensbron, record) {
             .css({
         "width": kolomBreedte + "px"
     });
-    
+
     if (waarde.type == 'TYPE_DATA') {
         if (!waarde.value) {
             td.html("-");
@@ -890,12 +932,12 @@ function createTableTd(waarde, gegevensbron, record) {
     if (waarde.type == 'TYPE_GOOGLENAV') {
         var gIcon = $j('<img src="' + googleIcon + '" alt="Navigeer hierheen vanaf startlocatie" title="Navigeer hierheen vanaf startlocatie" />')
                 .click(function() {
-            
+
             var id = gegevensbron.id;
             var pk = gegevensbron.adminPk;
             var val = record.id
-            
-            getParent().getDestinationWkt(id, pk, val);                       
+
+            getParent().getDestinationWkt(id, pk, val);
         });
         td.html(gIcon);
     }
@@ -918,7 +960,7 @@ function createTableTd(waarde, gegevensbron, record) {
         }
 
         var i = 0;
-        $j.each(waarde.valueList, function(index3, listWaarde) {            
+        $j.each(waarde.valueList, function(index3, listWaarde) {
             var splitWaardes = "";
             var ext = "";
 

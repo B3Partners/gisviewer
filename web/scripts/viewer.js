@@ -1035,40 +1035,55 @@ function getLayerById(id) {
 
 function loadObjectInfo(geom) {
     var gebiedenTabActive = false;
+    
     for (i in B3PGissuite.config.enabledtabs) {
-        if (B3PGissuite.config.enabledtabs[i] === "gebieden")
+        if (B3PGissuite.config.enabledtabs[i] === "gebieden") {
             gebiedenTabActive = true;
+        }            
     }
+    
     for (i in B3PGissuite.config.enabledtabsLeft) {
-        if (B3PGissuite.config.enabledtabsLeft[i] === "gebieden")
+        if (B3PGissuite.config.enabledtabsLeft[i] === "gebieden") {
             gebiedenTabActive = true;
+        }            
     }
-    if (!gebiedenTabActive)
+    
+    if (!gebiedenTabActive) {
         return;
+    }        
 
-    var activeAnalyseThemaId = '';
+    var activeAnalyseThemaId = '';    
     var treeComponent = B3PGissuite.get('TreeComponent');
+    
     if (treeComponent !== null) {
         activeAnalyseThemaId = treeComponent.getActiveAnalyseThemaId();
     }
-
-    // vul object frame
+    
     document.forms[0].admindata.value = '';
     document.forms[0].metadata.value = '';
+    
     if (!B3PGissuite.config.multipleActiveThemas) {
         document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
         document.forms[0].themaid.value = getLayerIdsAsString();
     }
 
-    document.forms[0].analysethemaid.value = activeAnalyseThemaId;
-
-    document.forms[0].geom.value = geom;
-    document.forms[0].scale.value = '';
-
-    // vul adressen/locatie
+    document.forms[0].analysethemaid.value = activeAnalyseThemaId;    
     document.forms[0].objectdata.value = 't';
     document.forms[0].target = 'objectframeViewer';
+    
+    // Use current scale and tolerance for click point
+    var schaal;
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        schaal = B3PGissuite.vars.webMapController.getMap().getResolution();
+    } else {
+        schaal = B3PGissuite.vars.webMapController.getMap().getScaleHint();
+    }
+    
+    document.forms[0].scale.value = schaal;
+    document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
+    
+    document.forms[0].geom.value = geom;
 
     document.forms[0].submit();
 }
@@ -2341,6 +2356,9 @@ function b_getfeatures(id, event) {
 
     if (wkt) {
         handleGetAdminData(wkt, null, true);
+        
+        // Also load objectinfo into gebieden tab
+        loadObjectInfo(wkt);
     }
 }
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */

@@ -23,21 +23,48 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
+<script type="text/javascript" src='dwr/engine.js'></script>
+<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+<script type="text/javascript" src='dwr/interface/JCollectAdmindata.js'></script>
+
+<script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
+
+<script type="text/javascript">
+    var appCode = "${appCode}";
+    
+    var urlicon = '<html:rewrite href="./images/icons/world_link.png" />';    
+    var pencil = '<html:rewrite href="./images/icons/pencil.png" />';
+    var pdficon = '<html:rewrite href="./images/icons/pdf.png" />';
+    var docicon = '<html:rewrite href="./images/icons/document.png" />';
+    var googleIcon = '<html:rewrite href="./images/icons/google-maps.png" />';
+</script>
+
 <div style="margin: 5px;">
     <tiles:insert definition="actionMessages"/>
+
     <c:choose>
         <c:when test="${not empty ggbBeans}">
-            <p>
+            <p style="color: #000;">
                 In dit gebied zijn de volgende locaties van belang:
             </p>
+
+            <div id="gebiedenDataContainer">
+                <div id="gebiedenWrapper"></div>
+                <div style="clear: both;"></div>
+            </div>
+
+            <div id="gebiedenInfo"></div>
             
-            <ul>
-            <c:forEach var="bean" items="${ggbBeans}" varStatus="status">
-                <li>${bean.title}</li>
-            </c:forEach>
-            </ul>
+            <script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
+
+            <script type="text/javascript">
+                <c:forEach var="bean" items="${ggbBeans}" varStatus="status">                    
+                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', JSON.stringify(${bean.cql}), false, 'gebiedenWrapper', appCode, handleGebiedenBron);
+                </c:forEach>
+            </script>
 
         </c:when>
+
         <c:otherwise>
             <p>Er zijn geen gebieden beschikbaar.</p>
         </c:otherwise>

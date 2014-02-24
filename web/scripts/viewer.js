@@ -130,7 +130,7 @@ function showIdentifyIcon() {
  */
 function initializeButtons() {
     /*ie bug fix*/
-    if(B3PGissuite.vars.ltIE8) {
+    if (B3PGissuite.vars.ltIE8) {
         var mapId = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
         var viewport = document.getElementById(mapId + '_OpenLayers_ViewPort');
         if (viewport) {
@@ -530,9 +530,9 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
     }
-    
+
     removeSearchResultMarker();
-    
+
     var treeComponent = B3PGissuite.get('TreeComponent');
     if (themaIds === undefined) {
         if (!B3PGissuite.config.multipleActiveThemas && treeComponent !== null) {
@@ -552,7 +552,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     if (extraCriteria) {
         document.forms[0].extraCriteria.value = extraCriteria;
     }
-    
+
     //set the correct action
     document.forms[0].admindata.value = 't';
     document.forms[0].metadata.value = '';
@@ -616,9 +616,9 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             document.forms[0].target = 'dataframepopup';
             loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'window');
         }
-        
+
         /* display marker in middle of click point */
-        var point = getPointFromGeom(geom);        
+        var point = getPointFromGeom(geom);
         placeSearchResultMarker(point.x, point.y);
 
     } else if (B3PGissuite.config.useBalloonPopup) {
@@ -634,14 +634,14 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
             B3PGissuite.vars.balloon = new Balloon($j("#mapcontent"), B3PGissuite.vars.webMapController, 'infoBalloon', 300, 300, offsetX, offsetY);
         }
         document.forms[0].target = 'dataframeballoonpopup';
-        
+
         /*Bepaal midden van vraag geometry*/
         var point = getPointFromGeom(geom);
 
         //B3PGissuite.vars.balloon.resetPositionOfBalloon(centerX,centerY);
         B3PGissuite.vars.balloon.setPosition(point.x, point.y, true);
 
-        var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">')
+        var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">');
         B3PGissuite.vars.balloon.getContentElement().html(iframeElement);
     } else {
         document.forms[0].target = 'dataframe';
@@ -651,33 +651,33 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
     document.forms[0].submit();
 }
 
-function Point(x, y){
+function Point(x, y) {
     this.x = x;
     this.y = y;
 }
 
-function getPointFromGeom(geom) {    
+function getPointFromGeom(geom) {
     var coordString = geom.replace(/POLYGON/g, '').replace(/POINT/, '').replace(/\(/g, '').replace(/\)/g, '');
     var xyPairs = coordString.split(",");
-    
+
     var minx;
     var maxx;
     var miny;
     var maxy;
-    
+
     for (var i = 0; i < xyPairs.length; i++) {
         var xy = xyPairs[i].split(" ");
         var x = Number(xy[0]);
         var y = Number(xy[1]);
-        
+
         if (minx === undefined) {
             minx = x;
             maxx = x;
-        }        
+        }
         if (miny === undefined) {
             miny = y;
             maxy = y;
-        }        
+        }
         if (x > maxx) {
             maxx = x;
         }
@@ -694,7 +694,7 @@ function getPointFromGeom(geom) {
 
     var centerX = (minx + maxx) / 2;
     var centerY = (miny + maxy) / 2;
-    
+
     return new Point(centerX, centerY);
 }
 
@@ -750,10 +750,10 @@ function enableLayer(itemid) {
 }
 
 function switchTab(id) {
-    if(tabComponent.hasTab(id)) {
+    if (tabComponent.hasTab(id)) {
         tabComponent.setActive(id);
     }
-    if(leftTabComponent.hasTab(id)) {
+    if (leftTabComponent.hasTab(id)) {
         leftTabComponent.setActive(id);
     }
 }
@@ -871,7 +871,7 @@ function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
 }
 
 /*Check scale for all layers*/
-function checkScaleForLayers() {    
+function checkScaleForLayers() {
     var currentscale;
     if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
         currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
@@ -988,6 +988,8 @@ function calcScaleForCurrentExtent() {
 }
 /**
  *Sets een tree item enabled or disabled (visually)
+ *@param item
+ *@param scale
  */
 function setScaleForTree(item, scale) {
     var disabledRadio = false;
@@ -1035,43 +1037,43 @@ function getLayerById(id) {
 
 function loadObjectInfo(geom) {
     var gebiedenTabActive = false;
-    
+
     for (i in B3PGissuite.config.enabledtabs) {
         if (B3PGissuite.config.enabledtabs[i] === "gebieden") {
             gebiedenTabActive = true;
-        }            
+        }
     }
-    
+
     for (i in B3PGissuite.config.enabledtabsLeft) {
         if (B3PGissuite.config.enabledtabsLeft[i] === "gebieden") {
             gebiedenTabActive = true;
-        }            
+        }
     }
-    
+
     if (!gebiedenTabActive) {
         return;
-    }        
+    }
 
-    var activeAnalyseThemaId = '';    
+    var activeAnalyseThemaId = '';
     var treeComponent = B3PGissuite.get('TreeComponent');
-    
+
     if (treeComponent !== null) {
         activeAnalyseThemaId = treeComponent.getActiveAnalyseThemaId();
     }
-    
+
     document.forms[0].admindata.value = '';
     document.forms[0].metadata.value = '';
-    
+
     if (!B3PGissuite.config.multipleActiveThemas) {
         document.forms[0].themaid.value = activeAnalyseThemaId;
     } else {
         document.forms[0].themaid.value = getLayerIdsAsString();
     }
 
-    document.forms[0].analysethemaid.value = activeAnalyseThemaId;    
+    document.forms[0].analysethemaid.value = activeAnalyseThemaId;
     document.forms[0].objectdata.value = 't';
     document.forms[0].target = 'objectframeViewer';
-    
+
     // Use current scale and tolerance for click point
     var schaal;
     if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
@@ -1079,10 +1081,10 @@ function loadObjectInfo(geom) {
     } else {
         schaal = B3PGissuite.vars.webMapController.getMap().getScaleHint();
     }
-    
+
     document.forms[0].scale.value = schaal;
     document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
-    
+
     document.forms[0].geom.value = geom;
 
     document.forms[0].submit();
@@ -1336,7 +1338,7 @@ function loadNextInLegendImageQueue() {
 
         if (orderLayerBox) {
             if (orderLayerBox.hasChildNodes()) {
-                beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType)
+                beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType);
             }
             if (beforeChild == null) {
                 orderLayerBox.appendChild(div);
@@ -1530,7 +1532,7 @@ function onChangeTool(id, event) {
     if (id == 'identify') {
         B3PGissuite.vars.btn_highLightSelected = false;
         hideIdentifyIcon();
-    }    
+    }
 }
 
 //function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
@@ -1621,7 +1623,7 @@ function updateGetFeatureInfo(data) {
     } else {
         //if the admindata window is not loaded yet then retry after 1sec
         setTimeout(function() {
-            updateGetFeatureInfo(data)
+            updateGetFeatureInfo(data);
         }, 1000);
     }
 }
@@ -1700,33 +1702,33 @@ function ol_ZoomEnd() {
  */
 function configureTabWidth() {
     var extramargin = parseInt($j('#css_props').css('margin-left'), 10),
-        defaultmargin = parseInt($j('#css_props').css('margin-right'), 10),
-        csscontent = '';
-    if(B3PGissuite.config.tabWidth) {
+            defaultmargin = parseInt($j('#css_props').css('margin-right'), 10),
+            csscontent = '';
+    if (B3PGissuite.config.tabWidth) {
         // get margins configured in CSS
         var tabwidth = parseInt(B3PGissuite.config.tabWidth, 10),
-            tabwidth_margin = tabwidth + extramargin + (2 * defaultmargin);
+                tabwidth_margin = tabwidth + extramargin + (2 * defaultmargin);
         // CSS creation, same logic as in SCC stylesheet
         var csscontent = '#content_viewer.tabrechts_open #tab_container, #content_viewer.tabrechts_open #tabjes, #content_viewer.tabrechts_open #nav {' +
-            'width: ' + tabwidth + 'px !important;' +
-        '}' +
-        '#content_viewer.tabrechts_open #mapcontent {' +
-            'right: ' + tabwidth_margin + 'px !important;' +
-        '}';
+                'width: ' + tabwidth + 'px !important;' +
+                '}' +
+                '#content_viewer.tabrechts_open #mapcontent {' +
+                'right: ' + tabwidth_margin + 'px !important;' +
+                '}';
     }
-    if(B3PGissuite.config.tabWidthLeft) {
+    if (B3PGissuite.config.tabWidthLeft) {
         // get margins configured in CSS
         var tabwidthLeft = parseInt(B3PGissuite.config.tabWidthLeft, 10),
-            tabwidthleft_margin = tabwidthLeft + extramargin + (2 * defaultmargin);
+                tabwidthleft_margin = tabwidthLeft + extramargin + (2 * defaultmargin);
         // CSS creation, same logic as in SCC stylesheet
         csscontent += '#content_viewer.tablinks_open #leftcontent, #content_viewer.tablinks_open #leftcontenttabjes, #content_viewer.tablinks_open #leftcontentnav {' +
-            'width: ' + tabwidthLeft + 'px !important;' +
-        '}' +
-        '#content_viewer.tablinks_open #mapcontent {' +
-            'left: ' + tabwidthleft_margin + 'px !important;' +
-        '}';
+                'width: ' + tabwidthLeft + 'px !important;' +
+                '}' +
+                '#content_viewer.tablinks_open #mapcontent {' +
+                'left: ' + tabwidthleft_margin + 'px !important;' +
+                '}';
     }
-    if(csscontent !== '') {
+    if (csscontent !== '') {
         $j("head").append("<style>" + csscontent + "</style>");
     }
 }
@@ -1736,17 +1738,18 @@ B3PGissuite.vars.thresholdTime = 500;
 B3PGissuite.vars.timeoutId = null;
 
 function updateSizeOL() {
-    if(!B3PGissuite.vars.webMapController instanceof OpenLayersController) return;
+    if (!B3PGissuite.vars.webMapController instanceof OpenLayersController)
+        return;
     var currentUpdateTime = new Date();
-    if( (currentUpdateTime.getTime() -  B3PGissuite.vars.prevUpdateTime.getTime()) >  B3PGissuite.vars.thresholdTime){
-        B3PGissuite.vars.timeoutId =null;
+    if ((currentUpdateTime.getTime() - B3PGissuite.vars.prevUpdateTime.getTime()) > B3PGissuite.vars.thresholdTime) {
+        B3PGissuite.vars.timeoutId = null;
         B3PGissuite.vars.prevUpdateTime = new Date();
         B3PGissuite.vars.webMapController.getMap().updateSize();
-    }else{
-        if(B3PGissuite.vars.timeoutId !== null){       
-            clearTimeout(B3PGissuite.vars.timeoutId );
+    } else {
+        if (B3PGissuite.vars.timeoutId !== null) {
+            clearTimeout(B3PGissuite.vars.timeoutId);
         }
-        B3PGissuite.vars.timeoutId = setTimeout(updateSizeOL, 100 );
+        B3PGissuite.vars.timeoutId = setTimeout(updateSizeOL, 100);
     }
 }
 
@@ -1912,7 +1915,11 @@ function getMovie(movieName) {
 }
 
 /**
- *Functie zoekt een waarde op (val) van een thema met id themaId uit de thematree list die meegegeven is.
+ *Functie zoekt een waarde op (val) van een thema met id
+ * themaId uit de thematree list die meegegeven is.
+ * @param themaList
+ * @param themaId
+ * @param val
  **/
 function searchThemaValue(themaList, themaId, val) {
     for (var i in themaList) {
@@ -2356,7 +2363,7 @@ function b_getfeatures(id, event) {
 
     if (wkt) {
         handleGetAdminData(wkt, null, true);
-        
+
         // Also load objectinfo into gebieden tab
         loadObjectInfo(wkt);
     }
@@ -2449,7 +2456,9 @@ function drawObject(feature) {
 }
 
 /**
- * Alle ge�mplementeerde eventhandling functies
+ * Alle geimplementeerde eventhandling functies
+ * @param id
+ * @param params
  */
 function b_removePolygons(id, params) {
     B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
@@ -2781,7 +2790,7 @@ function openGoogleMapsDirections(values) {
 
     /* Check of er een gps locatie is gezet. Dit gebeurt
      * in GPSComponent.receiveLocation();
-     */    
+     */
     if (gps_lat !== undefined && gps_lon !== undefined) {
         values[1] = gps_lat;
         values[0] = gps_lon;
@@ -2869,7 +2878,7 @@ function createPermaLink() {
 }
 
 function addToFavorites(url) {
-    var title = "B3P Gisviewer bookmark"
+    var title = "B3P Gisviewer bookmark";
 
     if (Boolean(window.chrome)) { // chrome
         chromeBookMarkPopup(url, title);
@@ -2922,7 +2931,7 @@ function popUp(URL, naam, width, height, useDiv) {
     var popuptop = (screen.height) ? (screen.height - screenheight) / 2 : 100;
 
     if (B3PGissuite.vars.currentpopuptop != null) {
-        B3PGissuite.vars.currentpopuptop = popuptop
+        B3PGissuite.vars.currentpopuptop = popuptop;
     }
 
     if (useDivPopup) {
@@ -2985,7 +2994,7 @@ function popUpData(naam, width, height, useDiv) {
     var popuptop = (screen.height) ? (screen.height - screenheight) / 2 : 100;
 
     if (B3PGissuite.vars.currentpopuptop != null) {
-        B3PGissuite.vars.currentpopuptop = popuptop
+        B3PGissuite.vars.currentpopuptop = popuptop;
     }
 
     if (useDivPopup) {
@@ -3118,6 +3127,8 @@ function Balloon(mapDiv, webMapController, balloonId, balloonWidth, balloonHeigh
     }
     /**
      *Private function. Don't use.
+     *@param x
+     *@param y
      */
     this._createBalloon = function(x, y) {
         //create balloon and styling.
@@ -3186,7 +3197,7 @@ function Balloon(mapDiv, webMapController, balloonId, balloonWidth, balloonHeigh
         $j(this.mapDiv).append(this.balloon);
 
         this.webMapController.registerEvent(Event.ON_FINISHED_CHANGE_EXTENT, this.webMapController.getMap(), this.setPosition, this);
-    }
+    };
 
     /**
      *Private function. Use setPosition(x,y,true) to reset the position
@@ -3228,7 +3239,7 @@ function Balloon(mapDiv, webMapController, balloonId, balloonWidth, balloonHeigh
             //pop up is top right of the point
             this.balloon.find(".balloonArrowBottomLeft").css("display", "block");
         }
-    }
+    };
 
     /**
      *Set the position of this balloon. Create it if not exists
@@ -3281,23 +3292,27 @@ function Balloon(mapDiv, webMapController, balloonId, balloonWidth, balloonHeigh
         //set position of balloon
         this.balloon.css('left', "" + left + "px");
         this.balloon.css('top', "" + top + "px");
-    }
+    };
+
     /*Remove the balloon*/
     this.remove = function() {
         this.balloon.remove();
         this.webMapController.unRegisterEvent(Event.ON_FINISHED_CHANGE_EXTENT, this.webMapController.getMap(), this.setPosition, this);
         delete this.balloon;
-    }
+    };
+
     /*Get the DOM element where the content can be placed.*/
     this.getContentElement = function() {
         return this.balloon.find('.balloonContent');
-    }
+    };
+
     this.hide = function() {
         this.balloon.css("display", 'none');
-    }
+    };
+
     this.show = function() {
         this.balloon.css("display", 'block');
-    }
+    };
 }
 
 // Aanroepen voor een loading screen in de tabs.
@@ -3360,12 +3375,12 @@ function createCheckboxUserLayer(item, checked) {
         checkbox = document.createElement('input');
         checkbox.id = 'ul_' + item.id;
         checkbox.type = 'checkbox';
-        checkbox.name = 'userLayers'
+        checkbox.name = 'userLayers';
         checkbox.value = item.id;
 
         checkbox.onclick = function() {
             checkboxUserLayerClick(this);
-        }
+        };
 
         if (checked) {
             checkbox.checked = true;
@@ -3446,7 +3461,7 @@ function createServiceLayerLink(item) {
 
             blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
-        }
+        };
     }
 
     return lnk;
@@ -3541,7 +3556,7 @@ $j(document).ready(function() {
             createSearchConfigurations();
         } else if (arr !== null && arr.length === 1 && arr[0] !== '') {
             //var zc = B3PGissuite.config.zoekconfiguraties[0];
-            var zc=setZoekconfiguratieWithId(Number(arr[0]));
+            var zc = setZoekconfiguratieWithId(Number(arr[0]));
             JZoekconfiguratieThemaUtil.getThemas(zc.id, zoekconfiguratieThemasCallBack);
             var zoekVelden = zc.zoekVelden;
             fillSearchDiv(c, zoekVelden, null);

@@ -76,10 +76,14 @@
                     </html:select>
                 </td>
             </tr>
+            <tr>
+                <td></td>
+                <td><html:submit property="save" styleClass="rightButton submitbutton">Start download</html:submit></td>
+            </tr>
         </table>
 
         <p>
-            <html:submit property="save" styleClass="rightButton submitbutton">Start download</html:submit>
+            
         </p>
     </html:form>
 </div>

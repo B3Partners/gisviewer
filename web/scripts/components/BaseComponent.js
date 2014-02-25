@@ -12,6 +12,7 @@ B3PGissuite.createComponent = function(className, options) {
     B3PGissuite.instances[instanceId] = new B3PGissuite.component[className](options);
     return B3PGissuite.instances[instanceId];
 };
+
 /* Helper function to define a Component */
 B3PGissuite.defineComponent = function(className, classDefinition) {
     // Constructor function of the classDefinition is the constructor for the new component
@@ -32,6 +33,7 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
             B3PGissuite.component[classDefinition.extend].call(this, options);
         };
     }
+    
     // Add event handling
     // Fire events
     B3PGissuite.component[className].prototype.fireEvent = function(evtName, evtData) {
@@ -46,6 +48,7 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
             }
         }
     };
+    
     // Register event listeners
     B3PGissuite.component[className].prototype.addListener = function(clsName, evtName, handler, scope) {
         // Check if there are listeners registered for targetClass
@@ -60,6 +63,7 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
         B3PGissuite.events[clsName][evtName].push({handler: handler, scope: scope || this});
     };
 };
+
 /* Helper function to get access to a component (for example var tree = B3PGissuite.get('TreeComponent'); ) */
 B3PGissuite.get = function(className, id) {
     // Default instanceid is zero (the first instance)
@@ -79,7 +83,7 @@ B3PGissuite.whichTransitionEvent = function() {
         'OTransition': 'oTransitionEnd',
         'MozTransition': 'transitionend',
         'WebkitTransition': 'webkitTransitionEnd'
-    }
+    };
 
     for (t in transitions) {
         if (el.style[t] !== undefined) {

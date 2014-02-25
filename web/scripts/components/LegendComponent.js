@@ -51,7 +51,12 @@ B3PGissuite.defineComponent('LegendComponent', {
         }));
         slider.append(jQuery('<div></div>').css({ 'clear': 'both' }));
         this.component.append(slider);
-
+        
+        /* TODO: useSortableFunction kunnen instellen via GVC 
+         * Komt nu niet correct in this.options
+        */
+        this.options.useSortableFunction = true;
+        
         if(this.options.useSortableFunction) {
             this.component.append(jQuery('<p></p>').text('Bepaal de volgorde waarin de kaartlagen getoond worden'));
             var knoppenContainer = jQuery('<div></div>');
@@ -71,7 +76,7 @@ B3PGissuite.defineComponent('LegendComponent', {
             }));
             knoppenContainer.append(jQuery('<input />').attr({
                 type: 'button',
-                value: 'Herladen',
+                value: 'Aanpassen',
                 'class': 'knop'
             }).click(function() {
                 refreshMapVolgorde();

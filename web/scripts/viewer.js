@@ -315,7 +315,7 @@ function getBaseUrl() {
  * Uses a search configuration and search params in the url. Is done when searching via url
  * params and is called when the viewer (framework) is loaded.
  */
-function doInitSearch() {
+function doInitSearch() {    
     if (B3PGissuite.config.searchConfigId.length > 0 && B3PGissuite.config.search.length > 0) {
         showLoading();
 
@@ -331,7 +331,11 @@ function doInitSearch() {
  */
 function handleInitSearch(list) {
     hideLoading();
-    if (list.length > 0) {
+    
+    /*TODO: Zorgen bij zoeken via url met lege of param zonder results
+     * dat de viewer wel door start */
+    
+    if (list && list.length > 0) {
         handleInitSearchResult(list[0], B3PGissuite.config.searchAction, B3PGissuite.config.searchId, B3PGissuite.config.searchClusterId, B3PGissuite.config.searchSldVisibleValue);
     } else {
         /* Lagen aanzetten na zoeken */
@@ -355,6 +359,7 @@ function handleInitSearchResult(result, action, themaId, clusterId, visibleValue
     var doZoom = true;
     var doHighlight = false;
     var doFilter = false;
+    
     if (B3PGissuite.config.searchAction) {
         if (B3PGissuite.config.searchAction.toLowerCase().indexOf("zoom") == -1)
             doZoom = false;
@@ -1529,17 +1534,24 @@ function getActiveLayerLabel(cookiestring) {
 }
 
 function onChangeTool(id, event) {
-    if (id == 'identify') {
-        B3PGissuite.vars.btn_highLightSelected = false;
+    if (id == 'identify') {        
         hideIdentifyIcon();
+
+        if (webMapController instanceof FlamingoController) {
+            B3PGissuite.vars.btn_highLightSelected = false;
+        }
     }
 }
 
-//function wordt aangeroepen als er een identify wordt gedaan met de tool op deze map.
+var currentHighlightWkt;
 function onIdentify(movie, extend) {
     if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
     }
+
+    /* Wordt gebruikt om bij het highlighten van analyse lagen de wkt te union'nen
+     * met al eerder (aangrenzende) highlight objecten */
+    currentHighlightWkt = getWkt();
 
     //todo: nog weghalen... Dit moet uniform werken.
     if (extend == undefined) {
@@ -1784,7 +1796,8 @@ function initFullExtent() {
 }
 
 function setStartExtent() {
-
+    initFullExtent();
+    
     /* Bij zoeken via url de handleInitSearch callback laten zoomen */
     if (B3PGissuite.config.searchConfigId != null && B3PGissuite.config.searchConfigId > 0) {
         return;
@@ -2350,10 +2363,15 @@ function getWktForDownload() {
 }
 
 function getWkt() {
-    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
+    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(0);
 
-    if (object == null)
+    if (object == null) {
         return null;
+    }
+    
+    if (!object.wktgeom) {
+        return object.getWkt();
+    }
 
     return object.wktgeom;
 }
@@ -2461,6 +2479,9 @@ function drawObject(feature) {
  * @param params
  */
 function b_removePolygons(id, params) {
+    currentHighlightWkt = "";
+    highLightedLayerid = 0;
+
     B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
 
     if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
@@ -2473,7 +2494,18 @@ function b_removePolygons(id, params) {
 
 /* er is net op de highlight knop gedrukt */
 function b_highlight(id, params) {
-    B3PGissuite.vars.btn_highLightSelected = true;
+    
+    /* For OpenLayers turn on or off because otherwise you cannot turn off
+     * highlighting in OpenLayers */
+    if (webMapController instanceof FlamingoController) {
+        B3PGissuite.vars.btn_highLightSelected = true;
+    } else if (webMapController instanceof OpenLayersController) {
+        if (B3PGissuite.vars.btn_highLightSelected == true) {
+            B3PGissuite.vars.btn_highLightSelected = false;
+        } else {
+            B3PGissuite.vars.btn_highLightSelected = true;
+        }
+    }
 
     /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
      * de flamingo config een breinaald
@@ -2487,11 +2519,21 @@ function b_highlight(id, params) {
     }
 }
 
+var highLightedLayerid = 0;
 function highLightThemaObject(geom) {
     highlightLayers = new Array();
 
     /* geom bewaren voor callbaack van popup */
     B3PGissuite.vars.highLightGeom = geom;
+    
+    var scale;
+    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+        scale = B3PGissuite.vars.webMapController.getMap().getResolution();
+    } else {
+        scale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
+    }
+
+    var tol = B3PGissuite.config.tolerance;
 
     /* indien meerdere analyse themas dan popup voor keuze */
     for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
@@ -2507,27 +2549,25 @@ function highLightThemaObject(geom) {
             if (!itemHasAllParentsEnabled(object))
                 continue;
         }
-
-        if (item.highlight == 'on') {
+        
+        if (item.highlight == 'on' && isItemInScale(item, scale) ) {
             highlightLayers.push(item);
         }
     }
 
-    if (highlightLayers.length > 1) {
+    /* Indien meerdere actieve highlightlayers en er is nog geen highLightedLayerid
+     * geselecteerd via pop-up, de pop-up tonen. Zie ook handlePopupValue(); */
+    if (highlightLayers.length > 1 && highLightedLayerid < 1) {
         iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300, true, false);
     }
 
-    var scale;
-    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
-        scale = B3PGissuite.vars.webMapController.getMap().getResolution();
-    } else {
-        scale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
-    }
-
-    var tol = B3PGissuite.config.tolerance;
-
+    /* Indien er maar 1 analyse laag actief is dan dit id gebruiken */
     if (highlightLayers.length == 1) {
-        EditUtil.getHighlightWktForThema(highlightLayers[0].id, geom, scale, tol, returnHighlight);
+        highLightedLayerid = highlightLayers[0].id;
+    }
+    
+    if (highLightedLayerid > 0) {
+        EditUtil.getHighlightWktForThema(highLightedLayerid, geom, scale, tol, currentHighlightWkt, returnHighlight);
     }
 }
 
@@ -2588,7 +2628,8 @@ function returnRedlineObject(jsonString) {
 }
 
 function handlePopupValue(value) {
-    //    $j("#popupWindow").hide();
+    highLightedLayerid = value;
+    
     var object = document.getElementById(value);
     var treeComponent = B3PGissuite.get('TreeComponent');
     if (treeComponent !== null) {
@@ -2609,7 +2650,7 @@ function handlePopupValue(value) {
     }
 
     var tol = B3PGissuite.config.tolerance;
-    EditUtil.getHighlightWktForThema(value, B3PGissuite.vars.highLightGeom, scale, tol, returnHighlight);
+    EditUtil.getHighlightWktForThema(value, B3PGissuite.vars.highLightGeom, scale, tol, null, returnHighlight);
 }
 
 /* backend heeft wkt teruggegeven */
@@ -2618,7 +2659,7 @@ function returnHighlight(wkt) {
     if (wkt.length > 0 && wkt == "-1") {
         messagePopup("", "Geen object gevonden.", "information");
     }
-
+    
     if (wkt.length > 0 && wkt != "-1")
     {
         var polyObject = new Feature(61502, wkt);

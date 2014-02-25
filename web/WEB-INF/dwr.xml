@@ -31,12 +31,10 @@
         
         
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>     
-        
-        <!--               
+                              
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>   
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekAttribuut"/>
-        -->
-        
+                
         <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron">
             <param name="exclude" value="gebruikersnaam, wachtwoord"/>
         </convert>

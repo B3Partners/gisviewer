@@ -64,10 +64,23 @@ function performSearch() {
 
     var arr = B3PGissuite.config.zoekConfigIds.split(",");
     if (arr !== null && arr.length === 1) {
-        currentSearchSelectId = 0;
+        currentSearchSelectId = arr[0];
+    }
+    
+    var idx = 0;
+    for (var key in B3PGissuite.config.zoekconfiguraties) {
+        var obj = B3PGissuite.config.zoekconfiguraties[key];
+        
+        if (obj.id == currentSearchSelectId) {
+            currentSearchSelectId = idx;
+            continue;
+        }
+        
+        idx++;
     }
 
     zoekConfig = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
+    
     var zoekVelden=zoekConfig.zoekVelden;
     var bron = zoekConfig.bron.url;
     var searchOp = "%";
@@ -75,7 +88,8 @@ function performSearch() {
     var waarde=new Array();
     for(var i=0; i<zoekVelden.length; i++){
         var veld = $j("#"+zoekVelden[i].attribuutnaam).val();
-        if(veld == '') {
+        
+        if(veld == undefined || veld == '') {
             waarde[i] = "";
         } else {
             if (zoekVelden[i].type==0) {
@@ -120,7 +134,9 @@ function performSearch() {
 
     showTabvakLoading('Bezig met zoeken');
     $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
+    
     B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
+    
     JZoeker.zoek(B3PGissuite.config.zoekconfiguraties[currentSearchSelectId].id,waarde,B3PGissuite.config.maxResults,searchCallBack);
 }
 
@@ -300,19 +316,17 @@ function getBboxMinSize2(feature){
 
 var currentSearchSelectId = "";
 function searchConfigurationsSelectChanged(element){
-    var container=$j("#searchInputFieldsContainer");
-
-    //    if (currentSearchSelectId == element.val()){
-    //        return;
-    //    } else
-    if(!element ||element.val()==""){
+    var container = $j("#searchInputFieldsContainer");
+    
+    if(!element ||element.val() == "") {
         clearConfigurationsSelect(container);
         var resultsContainer=$j("#searchResults");
         clearConfigurationsSelect(resultsContainer);
         return;
     }
-    currentSearchSelectId=element.val();
-
+    
+    currentSearchSelectId = element.val();
+    
     var zc = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
     JZoekconfiguratieThemaUtil.getThemas(zc.id,zoekconfiguratieThemasCallBack);
     var zoekVelden=zc.zoekVelden;

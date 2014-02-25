@@ -31,6 +31,7 @@
     	if(typeof configValue === 'undefined' || configValue === '') {
             return true;
         }
+        
         return configValue;
     }
 
@@ -127,7 +128,7 @@
          * de buttons Omhoog, Omlaag, Herladen zijn niet zichtbaar
          * 
          * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
-        'useSortableFunction': defaultFalse(${configMap["useSortableFunction"]}),
+        'useSortableFunction': defaultTrue(${configMap["useSortableFunction"]}),
         // instellen in ms, dus 5000 voor 5 seconden
         'layerDelay': checkValidity(${configMap["layerDelay"]}) ? getValue(${configMap["layerDelay"]}) :  5000,
         /* de vertraging voor het refreshen van de kaart. */

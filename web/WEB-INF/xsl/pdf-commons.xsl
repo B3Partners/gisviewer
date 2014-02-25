@@ -60,8 +60,8 @@
 
     <!-- create map -->    
     <xsl:template name="map-block">
-      <xsl:param name="block-height"/>
-      <xsl:variable name="bbox-corrected">
+        <xsl:param name="block-height"/>
+        <xsl:variable name="bbox-corrected">
             <xsl:call-template name="correct-bbox">
                 <xsl:with-param name="bbox" select="bbox"/>
             </xsl:call-template>
@@ -85,70 +85,46 @@
             </fo:block>
         </fo:block-container>
     </xsl:template>
-	
-	<!-- create legend -->
-    <xsl:template name="legend-header-block">        
-		<fo:block margin-left="0.2cm" margin-top="0.1cm" xsl:use-attribute-sets="header-font">
-			Legenda                 
-		</fo:block>
-    </xsl:template>
-    <xsl:template name="legend-block">
-		<xsl:param name="block-height"/>
-			<xsl:if test="(count(legendUrls) > 0)">
-				<fo:block width="100%" height="0.75cm" xsl:use-attribute-sets="color2-column-block">
-					<xsl:call-template name="legend-header-block"/>
-				</fo:block>
-			</xsl:if>
-		<fo:block margin-left="0.2cm" margin-top="0.2cm" margin-bottom="0.5cm">       
-			<xsl:for-each select="legendUrls">
-				<xsl:variable name="legendUrl" select="." />
-				
-				<fo:block margin-left="0.0cm" margin-top="0.05cm">
-					<fo:external-graphic src="{$legendUrl}" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform"/>
-					<!-- height="${block-height}"  -->
-				</fo:block>
-			</xsl:for-each>
-		</fo:block>
-    </xsl:template>    
 
-	<!-- create info block-->
+    <!-- create info block-->
     <xsl:template name="info-header-block">        
-		<fo:block margin-left="0.2cm" margin-top="0.1cm" xsl:use-attribute-sets="header-font">
-			Info
-		</fo:block>
+        <fo:block margin-left="0.2cm" margin-top="0.1cm" xsl:use-attribute-sets="header-font">
+            Info
+        </fo:block>
     </xsl:template>
-	<xsl:template name="info-block">
-		<fo:block width="100%" height="0.75cm" xsl:use-attribute-sets="color2-column-block">
-			<xsl:call-template name="info-header-block"/>
-		</fo:block>
+    
+    <xsl:template name="info-block">
+        <fo:block width="100%" height="0.75cm" xsl:use-attribute-sets="color2-column-block">
+            <xsl:call-template name="info-header-block"/>
+        </fo:block>
 		
-		<fo:block>
-			<fo:external-graphic src="url('b3p_noordpijl.png')" width="84px" height="77px"/>
-		</fo:block>
+        <fo:block>
+            <fo:external-graphic src="url('b3p_noordpijl.png')" width="84px" height="77px"/>
+        </fo:block>
 
-		<fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">
-			schaalbalk
-		</fo:block>
+        <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="9pt">
+            schaalbalk
+        </fo:block>
 
-		<!-- create scalebar -->
-		<fo:block margin-left="0.2cm" margin-top="0.2cm">
-			<xsl:call-template name="calc-scale">
-				<xsl:with-param name="m-width">
-					<xsl:call-template name="calc-bbox-width-m-corrected">
-						<xsl:with-param name="bbox" select="bbox"/>
-					</xsl:call-template>
-				</xsl:with-param>
-				<xsl:with-param name="px-width" select="$map-width-px"/>
-			</xsl:call-template>
-		</fo:block>
+        <!-- create scalebar -->
+        <fo:block margin-left="0.2cm" margin-top="0.2cm">
+            <xsl:call-template name="calc-scale">
+                <xsl:with-param name="m-width">
+                    <xsl:call-template name="calc-bbox-width-m-corrected">
+                        <xsl:with-param name="bbox" select="bbox"/>
+                    </xsl:call-template>
+                </xsl:with-param>
+                <xsl:with-param name="px-width" select="$map-width-px"/>
+            </xsl:call-template>
+        </fo:block>
 
-		<fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="10pt">
-			<xsl:value-of select="datum"/>
-		</fo:block>
+        <fo:block margin-left="0.2cm" margin-top="0.5cm" font-size="10pt">
+            <xsl:value-of select="datum"/>
+        </fo:block>
 
-		<fo:block margin-left="0.2cm" margin-top="0.3cm"  margin-bottom="0.5cm" font-size="8pt" font-style="italic">
-			<xsl:value-of select="opmerking"/>
-		</fo:block>
+        <fo:block margin-left="0.2cm" margin-top="0.3cm"  margin-bottom="0.5cm" font-size="8pt" font-style="italic">
+            <xsl:value-of select="opmerking"/>
+        </fo:block>
 
     </xsl:template>
 

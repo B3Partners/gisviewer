@@ -99,14 +99,65 @@
                 </td>
             </tr>
 
-            <tr>
-                <td>Legenda</td>
-                <td>
-                    <c:forEach var="entry" items="${legendItems}">
-                        <html:checkbox property="legendItems" value="${entry.key}" />${entry.key}<BR>
-                    </c:forEach>
-                </td>
-            </tr>
+            <c:if test="${legendItems != '' and fn:length(legendItems) > 0}">
+                <tr>
+                    <td colspan="2" class="printvoorbeeld_help">
+                        Hier kunt u de kaartlagen aanvinken waarvan u de legenda wil 
+                        laten afdrukken. De legenda wordt op een losse pagina afgedrukt.
+                    </td>
+                </tr>            
+
+                <tr>
+                    <td>Legenda</td>
+                    <td>
+                        <!-- Per kolom, optie schalen en titels tonen -->
+                        <table>                         
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>Kolom 1</td>
+                                <td>Kolom 2</td>
+                                <td>Kolom 3</td>                            
+                            </tr>
+
+                            <tr>
+                                <td>Legenda's schalen</td>
+                                <td><input type="checkbox" name="scaleColumnOne" /></td>
+                                <td><input type="checkbox" name="scaleColumnTwo" /></td>
+                                <td><input type="checkbox" name="scaleColumnThree" /></td>                            
+                            </tr>
+
+                            <tr>
+                                <td>Titels tonen</td>
+                                <td><input type="checkbox" name="titleColumnOne" /></td>
+                                <td><input type="checkbox" name="titleColumnTwo" /></td>
+                                <td><input type="checkbox" name="titleColumnThree" /></td>                            
+                            </tr>
+                        </table>
+
+                        <!-- Per laag vier kolommen, niet tonen, kolom 1, 2 en 3 -->
+                        <table>                            
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>Niet tonen</td>
+                                <td>Kolom 1</td>
+                                <td>Kolom 2</td>
+                                <td>Kolom 3</td>                            
+                            </tr>
+
+                            <c:forEach var="entry" items="${legendItems}">
+                                <tr>
+                                    <td>${entry.key}</td>
+
+                                    <td align="center"><input type="radio" name="${entry.key}" value="0" checked="checked"/></td>
+                                    <td align="center"><input type="radio" name="${entry.key}" value="1"/></td>
+                                    <td align="center"><input type="radio" name="${entry.key}" value="2"/></td>
+                                    <td align="center"><input type="radio" name="${entry.key}" value="3"/></td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </td>
+                </tr>
+            </c:if>
 
             <tr>
                 <td colspan="2" class="printvoorbeeld_help">

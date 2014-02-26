@@ -22,7 +22,7 @@
  */
 
 function showCsvError() {
-    getParent().messagePopup('Foutmelding', 'Het is niet gelukt om de CSV data op te halen', 'error');
+    getParent().messagePopup('Fout', 'Het is niet gelukt om de CSV data op te halen', 'error');
 }
 
 function editFeature(ggbId, attrName, attrVal) {
@@ -1157,7 +1157,7 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
  */
 function handleSetAttribute(str) {
     if (str[0] == null || str[0] == "") {
-        messagePopup("", "Kon attribuut niet instellen.", "error");
+        messagePopup("Fout", "Kon attribuut niet instellen.", "error");
     } else {
         document.getElementById(str[0]).innerHTML = str[1];
     }
@@ -1177,7 +1177,7 @@ function handleSetText(str) {
 function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
     var msg = "elem=" + element + " themaid=" + themaid + " keyname=" + keyName + " keyval=" + keyValue + " attrname=" + attributeName + " attrval=" + attributeValue + " eenh=" + eenheid;
 
-    messagePopup("doDummy", msg, "information");
+    messagePopup("Dummy js functie", msg, "information");
 }
 
 /**
@@ -1195,7 +1195,7 @@ function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, 
  */
 function handleGetArea(str) {
     if (str[0] == null || str[0] == "") {
-        messagePopup("", "Kon oppervlakte niet berekenen.", "error");
+        messagePopup("Fout", "Kon oppervlakte niet berekenen.", "error");
     } else {
         document.getElementById(str[0]).innerHTML = str[1];
     }
@@ -1221,7 +1221,7 @@ function getParent() {
     } else if (window.parent) {
         return window.parent;
     } else {
-        messagePopup("", "No parent found", "error");
+        messagePopup("Fout", "No parent found", "error");
 
         return null;
     }

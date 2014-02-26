@@ -67,7 +67,7 @@ function handler(msg) {
     var message = msg;
 
     if (message != '') {
-        messagePopup("", message, "information");
+        messagePopup("Info", message, "information");
     }
 }
 
@@ -315,12 +315,17 @@ function getBaseUrl() {
  * Uses a search configuration and search params in the url. Is done when searching via url
  * params and is called when the viewer (framework) is loaded.
  */
-function doInitSearch() {    
-    if (B3PGissuite.config.searchConfigId.length > 0 && B3PGissuite.config.search.length > 0) {
+function doInitSearch() {
+    if (B3PGissuite.config.searchConfigId.length > 0 && B3PGissuite.config.search.length >= 0) {
         showLoading();
 
         var termen = B3PGissuite.config.search.split(",");
-        JZoeker.zoek(new Array(B3PGissuite.config.searchConfigId), termen, 0, handleInitSearch);
+        
+        if (termen && termen.length > 0 && termen[0] != "") {
+            JZoeker.zoek(new Array(B3PGissuite.config.searchConfigId), termen, 0, handleInitSearch);
+        } else {             
+            hideLoading();
+        }
     }
 }
 
@@ -332,17 +337,8 @@ function doInitSearch() {
 function handleInitSearch(list) {
     hideLoading();
     
-    /*TODO: Zorgen bij zoeken via url met lege of param zonder results
-     * dat de viewer wel door start */
-    
     if (list && list.length > 0) {
         handleInitSearchResult(list[0], B3PGissuite.config.searchAction, B3PGissuite.config.searchId, B3PGissuite.config.searchClusterId, B3PGissuite.config.searchSldVisibleValue);
-    } else {
-        /* Lagen aanzetten na zoeken */
-        JZoekconfiguratieThemaUtil.getThemas(B3PGissuite.config.searchConfigId, function(data) {
-            zoekconfiguratieThemasCallBack(data);
-            switchLayersOn();
-        });
     }
 }
 
@@ -1326,6 +1322,7 @@ function addLayerToLegendBox(theItem, atBottomOfType) {
     });
     loadNextInLegendImageQueue();
 }
+
 /**
  Load the next image object.
  */
@@ -1796,13 +1793,6 @@ function initFullExtent() {
 }
 
 function setStartExtent() {
-    initFullExtent();
-    
-    /* Bij zoeken via url de handleInitSearch callback laten zoomen */
-    if (B3PGissuite.config.searchConfigId != null && B3PGissuite.config.searchConfigId > 0) {
-        return;
-    }
-
     /* Eerst kijken of er een zoekextent is */
     if (B3PGissuite.vars.searchExtent != null) {
         B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(B3PGissuite.vars.searchExtent);
@@ -2345,7 +2335,7 @@ function getWktActiveFeature(index) {
 
     if (object == null)
     {
-        messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "error");
+        messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "pencil");
         return null;
     }
 
@@ -2363,7 +2353,7 @@ function getWktForDownload() {
 }
 
 function getWkt() {
-    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(0);
+    var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(-1);
 
     if (object == null) {
         return null;
@@ -2479,8 +2469,10 @@ function drawObject(feature) {
  * @param params
  */
 function b_removePolygons(id, params) {
-    currentHighlightWkt = "";
+    currentHighlightWkt = "";    
     highLightedLayerid = 0;
+    
+    B3PGissuite.vars.btn_highLightSelected = false;
 
     B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
 
@@ -2566,7 +2558,7 @@ function highLightThemaObject(geom) {
         highLightedLayerid = highlightLayers[0].id;
     }
     
-    if (highLightedLayerid > 0) {
+    if (highLightedLayerid > 0) {        
         EditUtil.getHighlightWktForThema(highLightedLayerid, geom, scale, tol, currentHighlightWkt, returnHighlight);
     }
 }
@@ -2590,7 +2582,7 @@ function selectRedlineObject(geom) {
 
 function returnRedlineObject(jsonString) {
     if (jsonString == "-1") {
-        messagePopup("Redlining bewerken", "Geen object gevonden.", "error");
+        messagePopup("Redlining bewerken", "Geen object gevonden.", "information");
 
         return;
     }
@@ -2657,7 +2649,7 @@ function handlePopupValue(value) {
 function returnHighlight(wkt) {
     /* Fout in back-end of wkt is een POINT */
     if (wkt.length > 0 && wkt == "-1") {
-        messagePopup("", "Geen object gevonden.", "information");
+        messagePopup("Selecteer object", "Geen object gevonden.", "information");
     }
     
     if (wkt.length > 0 && wkt != "-1")
@@ -2838,7 +2830,8 @@ function openGoogleMapsDirections(values) {
     }
 
     if (values[0] == "" || values[1] == "") {
-        handler("Er is nog geen gps- of startlocatie bekend.");
+        messagePopup("Info", "Er is nog geen gps- of startlocatie bekend.", "information");
+        
         return;
     }
 

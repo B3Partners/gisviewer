@@ -4,7 +4,7 @@ function getParent() {
     }else if (window.parent){
         return window.parent;
     }else{
-        messagePopup("", "No parent found", "error");
+        messagePopup("Fout", "No parent found", "error");
         return null;
     }
 }
@@ -32,7 +32,7 @@ function submitForm() {
     var ontwerp = document.forms[0].ontwerp.value;
     
     if (ouder && projectnaam == "Maak uw keuze..." && new_projectnaam == "") {
-        ouder.messagePopup("", "Vul een projectnaam in.", "information");
+        ouder.messagePopup("Redlining", "Vul een projectnaam in.", "information");
         return false;
     }
 
@@ -55,7 +55,7 @@ function submitRemoveForm() {
 
     if (id == null || id == "" || id == "undefined") {
         if (ouder) {
-            ouder.messagePopup("", "Selecteer eerst een redlining object.", "information");
+            ouder.messagePopup("Redlining", "Selecteer eerst een object.", "information");
             return false;
         }
     }

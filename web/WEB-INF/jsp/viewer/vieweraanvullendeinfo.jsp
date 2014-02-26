@@ -211,7 +211,7 @@
     } else if (parent) {
         parent.hideLoading();
     } else {
-        messagePopup("", "Er is een fout opgetreden bij het sluiten van de laadbalk.", "error");
+        messagePopup("Fout", "Er is een fout opgetreden bij het sluiten van de laadbalk.", "error");
     }
 
 </script>

@@ -42,7 +42,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
         
-    <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
+    <html:link page="/cms/2/help.htm" target="_blank" styleClass="${stijlklasse}" module="">
         <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
     </html:link>
 
@@ -50,13 +50,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:if test="${requestJSP eq 'viewer.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/viewer.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
+    <html:link page="/viewer.do?appCode=${appCode}&forceViewer=true&cmsPageId=1" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.viewer"/></html:link>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
-    <html:link page="/indexlist.do?appCode=${appCode}" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
+    <html:link page="/cms/1/home.htm" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
 </div>
 
 

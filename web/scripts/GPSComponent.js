@@ -44,8 +44,8 @@ function GPSComponent(locationBuffer) {
         }
 
         navigator.geolocation.getCurrentPosition(
-                function() {
-                    receiveLocation(arguments);
+                function(location) {
+                    receiveLocation(location);
                 }, errorHandler);
     };
 

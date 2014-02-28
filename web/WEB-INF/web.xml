@@ -177,7 +177,7 @@
 		<servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
 		<init-param>
 			<param-name>downloadPath</param-name>
-			<param-value>C:\downloads</param-value>
+			<param-value>/mnt/data/downloads</param-value>
 		</init-param>
 		<init-param>
 			<param-name>smtpHost</param-name>
@@ -230,8 +230,8 @@
 		<servlet-name>Data2PDF</servlet-name>
 		<servlet-class>nl.b3p.gis.viewer.services.Data2PDF</servlet-class>
 		<init-param>
-			<param-name>xsl_data2pdf_staand</param-name>
-			<param-value>/WEB-INF/xsl/data2pdf_staand.xsl</param-value>
+			<param-name>xsl_data2pdf</param-name>
+			<param-value>/WEB-INF/xsl/data2pdf.xsl</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

@@ -140,7 +140,7 @@ B3PGissuite.defineComponent('PlanSelectionComponent', {
         }
     },
     handleGetPlannen: function(list) {
-        var me = this;
+        var me = this, planSelect = document.getElementById(this.options.planSelectName);
         //klaar met zoeken dus eigenaar veld weer aan.
         document.getElementById(me.options.eigenaarSelectName).disabled = false;
         dwr.util.removeAllOptions(me.options.planSelectName);
@@ -149,8 +149,10 @@ B3PGissuite.defineComponent('PlanSelectionComponent', {
         me.plannen = {};
         if (typeof list === 'undefined' || list.length === 0) {
             dwr.util.addOptions(me.options.planSelectName, ["Geen plannen gevonden"]);
+            planSelect.disabled = true;
         } else {
             me.plannen = list;
+            planSelect.disabled = false;
         }
         //update de typeselect filter en statusselect filter
         me.updateTypeSelect();
@@ -158,11 +160,17 @@ B3PGissuite.defineComponent('PlanSelectionComponent', {
     },
     /*Update select boxen*/
     updateTypeSelect: function() {
+        var typeSelect = document.getElementById(this.options.typeSelectName);
         dwr.util.removeAllOptions(this.options.typeSelectName);
         var typen = this.getDistinctFromPlannen(this.plantypeAttribuutNaam);
         dwr.util.addOptions(this.options.typeSelectName, typen);
+        typeSelect.disabled = true;
+        if(typeSelect.options.length > 0) {
+            typeSelect.disabled = false;
+        }
     },
     updateStatusSelect: function() {
+        var statusSelect = document.getElementById(this.options.statusSelectName);
         dwr.util.removeAllOptions(this.options.statusSelectName);
         //als er al een type is geselecteerd, dan filteren.
         var filteredPlannen = this.plannen;
@@ -172,6 +180,10 @@ B3PGissuite.defineComponent('PlanSelectionComponent', {
         //alleen de statusen van de gefilterde plannen
         var statussen = this.getDistinctFromPlannen(this.planStatusAttribuutNaam, filteredPlannen);
         dwr.util.addOptions(this.options.statusSelectName, statussen);
+        statusSelect.disabled = true;
+        if(statusSelect.options.length > 0) {
+            statusSelect.disabled = false;
+        }
     },
     updatePlanSelect: function() {
         dwr.util.removeAllOptions(this.options.planSelectName);

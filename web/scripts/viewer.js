@@ -2904,9 +2904,10 @@ function createPermaLink() {
         reso = "&resolution=" + controllerRes;
     }
 
-    var extraParams = "&forceViewer=true";
-    var url = urlBase + appCode + id + clusterIds + extent + extraParams;
-    ; // + reso;
+    var force = "&forceViewer=true";
+    var pageId = "&cmsPageId=" + B3PGissuite.config.cmsPageId;
+    
+    var url = urlBase + appCode + id + clusterIds + extent + force + pageId;
 
     return url;
 }

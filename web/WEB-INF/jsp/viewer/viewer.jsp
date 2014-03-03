@@ -185,7 +185,8 @@
         'cfgActiveTabLeft': checkValidity('${configMap["activeTabLeft"]}') ? '${configMap["activeTabLeft"]}' :  null,
         'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288",
         'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' :  "288",
-        'showInfoTab': checkValidity('${configMap["showInfoTab"]}') ? '${configMap["showInfoTab"]}' :  null
+        'showInfoTab': checkValidity('${configMap["showInfoTab"]}') ? '${configMap["showInfoTab"]}' : null,
+        'cmsPageId' : checkValidity('${cmsPageId}') ? '${cmsPageId}' : null
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */

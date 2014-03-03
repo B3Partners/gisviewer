@@ -107,6 +107,8 @@ function handleGetGegevensBron(gegevensbron) {
         handleGetGegevensBronSimpleVertical(gegevensbron)
     } else if (layout.search("all_vertical") != -1) {
         handleGetGegevensAllVertical(gegevensbron, layout.replace("all_vertical_", ""));
+    } else if (layout == "admindata1a") {
+        handleGetGegevensBronMultiVertical(gegevensbron);
     } else {
         handleGetGegevensBronMulti(gegevensbron);
     }
@@ -168,6 +170,75 @@ function resizeWidthIE() {
 }
 
 function handleGetGegevensBronSimpleVertical(gegevensbron) {
+    var htmlId = gegevensbron.parentHtmlId;
+
+    // Create container
+    var bronContainer = $j('<div></div>').attr({
+        "id": "bronContainer" + htmlId + gegevensbron.id + idcounter++,
+        "class": "bronContainer"
+    });
+    if (rootBronContainer) {
+        bronContainer.addClass("rootBronContainer");
+        rootBronContainer = false;
+    }
+
+    // csv, info en pdf export boven alle records tonen
+    var bronCaption = createBronCaption(gegevensbron, true, null);
+    bronContainer.append(bronCaption);
+
+    /* Only auto open pop-up when one record is found and one objectdata field 
+     * is configured in basisregel */
+    if (gegevensbron.records && gegevensbron.records.length == 1) {
+        var url;
+
+        if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
+            if (gegevensbron.records[0].values[0].value) {
+                url = gegevensbron.records[0].values[0].value;
+            }
+
+            if (gegevensbron.records[0].values[0].valueList) {
+                url = gegevensbron.records[0].values[0].valueList;
+            }
+
+            parent.popUp(url, 'externe_link', 800, 600);
+        }
+    }
+
+    // Create table content    
+    if (gegevensbron.records) {
+        $j.each(gegevensbron.records, function(index, record) {
+            // Create content table
+            var bronContent = $j('<div></div>').attr({
+                "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
+                "class": "bronContent"
+            });
+            var bronTable = $j('<table></table>');
+            var bronTableBody = $j('<tbody></tbody>');
+
+            $j.each(record.values, function(index2, waarde) {
+                var tr = $j('<tr></tr>');
+                var th = createTableTh(gegevensbron.labels[index2]);
+                tr.append(th);
+                var td = createTableTd(waarde, gegevensbron, record);
+                tr.append(td);
+                bronTableBody.append(tr);
+            });
+
+            // Append all to DOM tree
+            bronContent.append(bronTable.append(bronTableBody));
+            bronContainer.append(bronContent);
+        });
+    }
+
+    // wachtmelding weghalen
+    if (document.getElementById("content_style") != undefined) {
+        document.getElementById("content_style").style.display = "none";
+    }
+
+    $j('#' + htmlId).append(bronContainer);
+}
+
+function handleGetGegevensBronMultiVertical(gegevensbron) {
     var htmlId = gegevensbron.parentHtmlId;
 
     // Create container
@@ -373,7 +444,7 @@ function handleGetGegevensBronSimpleHorizontal(gegevensbron) {
     }
 
     // csv, info en pdf export boven alle records tonen
-    var bronCaption = createBronCaption(gegevensbron, false, null);
+    var bronCaption = createBronCaption(gegevensbron, true, null);
     bronContainer.append(bronCaption);
 
     // Create content table

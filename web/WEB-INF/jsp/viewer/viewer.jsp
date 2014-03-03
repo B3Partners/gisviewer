@@ -1,5 +1,5 @@
 <noscript>
-<meta http-equiv="refresh" content="0; url=viewer.do?appCode=${bookmarkAppcode}&amp;accessibility=1" />
+<meta http-equiv="refresh" content="0; url=viewer.do?appCode=${bookmarkAppcode}&amp;cmsPageId=${cmsPageId}" />
 </noscript>
 
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
@@ -186,7 +186,12 @@
         'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288",
         'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' :  "288",
         'showInfoTab': checkValidity('${configMap["showInfoTab"]}') ? '${configMap["showInfoTab"]}' : null,
-        'cmsPageId' : checkValidity('${cmsPageId}') ? '${cmsPageId}' : null
+        'cmsPageId' : checkValidity('${cmsPageId}') ? '${cmsPageId}' : null,
+        
+        'helpUrl': checkValidity('${configMap["helpUrl"]}') ? '${configMap["helpUrl"]}' : null,
+        'showGoogleMapsIcon': defaultFalse(${configMap["showGoogleMapsIcon"]}),
+        'showBookmarkIcon': defaultFalse(${configMap["showBookmarkIcon"]}),
+        'contactUrl': checkValidity('${configMap["contactUrl"]}') ? '${configMap["contactUrl"]}' : null
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */

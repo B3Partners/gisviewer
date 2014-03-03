@@ -30,55 +30,62 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:set var="appCode" value="${param['appCode']}"/>
     <c:set var="cmsPageId" value="${param['cmsPageId']}"/>
 
+    <c:set var="helpUrl" value="${configMap['helpUrl']}"/>
+    <c:set var="showGoogleMapsIcon" value="${configMap['showGoogleMapsIcon']}"/>
+    <c:set var="showBookmarkIcon" value="${configMap['showBookmarkIcon']}"/>
+    <c:set var="contactUrl" value="${configMap['contactUrl']}"/>
+
     <c:if test="${pageContext.request.remoteUser != null}">
-        <script type="text/javascript">
+        <script type="text/javascript">            
             function logout() {
                 var kburl = '${kburl}';
                 var logoutLocation = '/kaartenbalie/logout.do'
-                if (kburl!='') {
+                if (kburl != '') {
                     var pos = kburl.lastIndexOf("services");
-                    if (pos>=0) {
-                        logoutLocation = kburl.substring(0,pos) + "logout.do";
+                    if (pos >= 0) {
+                        logoutLocation = kburl.substring(0, pos) + "logout.do";
                     }
                 }
                 lof = document.getElementById('logoutframe');
-                lof.src=logoutLocation;
+                lof.src = logoutLocation;
                 location.href = '<html:rewrite page="/logout.do" module=""/>';
-            };
+            }
+            ;
         </script>
         <div id="logoutvak" style="display: none;">
             <iframe src="" id="logoutframe" name="logoutframe"></iframe>
         </div>
         <a href="#" class="menulink" onclick="javascript:logout();"><fmt:message key="commons.userandlogout.uitloggen"/></a>
     </c:if>
-    
-    <c:set var="stijlklasse" value="menulink" />
-    <%--
-    <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" target="_new" styleClass="${stijlklasse}" module="">
-        <img src="<html:rewrite page="/images/search_list.png"/>" alt="Zoeken met lijsten" title="Zoeken met lijsten" border="0" />
-    </html:link>
-    --%>
 
-    <a href="mailto:<fmt:message key="commons.topmenu.email"/>" class="menulink">
-        <img src="<html:rewrite page="/images/email.png"/>" alt="<fmt:message key="commons.topmenu.emailmessage"/>" title="<fmt:message key="commons.topmenu.emailmessage"/>" />
-    </a>
+    <c:if test="${!empty contactUrl}">        
+        <a href="mailto:${contactUrl}" class="menulink">
+            <img src="<html:rewrite page="/images/email.png"/>" alt="${contactUrl}" title="${contactUrl}" />
+        </a>
+    </c:if>
 
-    <a href="#" onclick="getBookMark();" class="menulink">
-        <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
-    </a>
-    
-    <a href="#" onclick="getLatLonForGoogleMaps();" class="menulink">
-        <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
-    </a>
-    
+    <c:if test="${showBookmarkIcon}">
+        <a href="#" onclick="getBookMark();" class="menulink">
+            <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
+        </a>
+    </c:if>
+
+    <c:if test="${showGoogleMapsIcon}">
+        <a href="#" onclick="getLatLonForGoogleMaps();" class="menulink">
+            <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
+        </a>
+    </c:if>
+
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'help.do'}">
         <c:set var="stijlklasse" value="activemenulink" />
     </c:if>
 
-    <html:link page="/help.do?id=${kaartid}" target="_blank" styleClass="${stijlklasse}" module="">
-        <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
-    </html:link>
+    <c:if test="${! empty helpUrl}">        
+        <html:link page="${helpUrl}" target="_blank" styleClass="${stijlklasse}" module="">
+            <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
+        </html:link>
+    </c:if>
 
     <c:set var="stijlklasse" value="menulink" />
     <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">

@@ -32,17 +32,23 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <!--[if gt IE 8]><!--> <html lang="nl"> <!--<![endif]-->
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
-        
+        <c:set var="localTheme" value="" />
+        <c:if test="${not empty param['theme']}">
+            <c:set var="localTheme" value="${param['theme']}" />
+        </c:if>
+        <c:if test="${not empty theme}">
+            <c:set var="localTheme" value="${theme}" />
+        </c:if>
         <title><tiles:insert name='title'/> - GIS Viewer</title>
         <%-- Themes selection --%>
         <c:choose>
-            <c:when test="${empty theme}">
+            <c:when test="${empty localTheme}">
                 <%-- Fallback to B3P style --%>
                 <link href="<html:rewrite page='/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
             </c:when>
             <c:otherwise>
                 <%-- Select theme style --%>
-                <link href="<html:rewrite page='/themes/${theme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+                <link href="<html:rewrite page='/themes/${localTheme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
             </c:otherwise>
         </c:choose>
         <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>

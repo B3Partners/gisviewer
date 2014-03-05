@@ -187,7 +187,7 @@
         'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' :  "288",
         'showInfoTab': checkValidity('${configMap["showInfoTab"]}') ? '${configMap["showInfoTab"]}' : null,
         'cmsPageId' : checkValidity('${cmsPageId}') ? '${cmsPageId}' : null,
-        
+        'theme': checkValidity('${theme}') ? '${theme}' : null,
         'helpUrl': checkValidity('${configMap["helpUrl"]}') ? '${configMap["helpUrl"]}' : null,
         'showGoogleMapsIcon': defaultFalse(${configMap["showGoogleMapsIcon"]}),
         'showBookmarkIcon': defaultFalse(${configMap["showBookmarkIcon"]}),
@@ -294,7 +294,7 @@
 </c:choose>
 
 <div style="display: none;">
-    <html:form action="/viewerdata?code=${kbcode}">
+    <html:form action="/viewerdata?code=${kbcode}&cmsPageId=${cmsPageId}">
         <input type="hidden" name="admindata" />
         <input type="hidden" name="metadata" />
         <input type="hidden" name="objectdata"/>
@@ -369,7 +369,7 @@
             +'     <div class="infobalk_actions">&nbsp;</div>'
             +' </div>'
             +' <div id="dataframediv" class="dataframediv">'
-            +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do"></iframe>'
+            +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do?cmsPageId=${cmsPageId}"></iframe>'
             +' </div>');
     }
     if(B3PGissuite.config.usePanelControls) {

@@ -642,7 +642,7 @@ function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, thema
         //B3PGissuite.vars.balloon.resetPositionOfBalloon(centerX,centerY);
         B3PGissuite.vars.balloon.setPosition(point.x, point.y, true);
 
-        var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do" frameborder="0">');
+        var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do?theme=' + B3PGissuite.config.theme + '" frameborder="0">');
         B3PGissuite.vars.balloon.getContentElement().html(iframeElement);
     } else {
         document.forms[0].target = 'dataframe';
@@ -3057,7 +3057,7 @@ function popUpData(naam, width, height, useDiv) {
                 "top = " + popuptop + ", " +
                 "left = " + popupleft;
 
-        return window.open('admindatabusy.do', naam, properties);
+        return window.open('admindatabusy.do?theme=' + B3PGissuite.config.theme, naam, properties);
     }
 }
 
@@ -3091,7 +3091,7 @@ function buildPopup() {
     }
     popupIframe.styleClass = 'popup_Iframe';
     popupIframe.id = 'dataframedivpopup';
-    popupIframe.src = 'admindatabusy.do';
+    popupIframe.src = 'admindatabusy.do?theme=' + B3PGissuite.config.theme;
     var popupResizediv = document.createElement('div');
     popupResizediv.id = 'popupWindow_Resizediv';
     popupContent.appendChild(popupIframe);

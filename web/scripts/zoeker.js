@@ -66,18 +66,6 @@ function performSearch() {
     if (arr !== null && arr.length === 1) {
         currentSearchSelectId = arr[0];
     }
-    
-    var idx = 0;
-    for (var key in B3PGissuite.config.zoekconfiguraties) {
-        var obj = B3PGissuite.config.zoekconfiguraties[key];
-        
-        if (obj.id == currentSearchSelectId) {
-            currentSearchSelectId = idx;
-            continue;
-        }
-        
-        idx++;
-    }
 
     zoekConfig = B3PGissuite.config.zoekconfiguraties[currentSearchSelectId];
     

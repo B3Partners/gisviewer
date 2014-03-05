@@ -126,12 +126,12 @@ function handleGebiedenBron(gegevensbron) {
     // Create container
     var bronContainer = $j('<div></div>').attr({
         "id": "bronContainer" + htmlId + gegevensbron.id + gebiedenCounter++,
-        "class": "bronContainer"
+        "class": "gebiedenContainer"
     });
 
     // Create table content    
     if (gegevensbron.records) {        
-        var title = $j('<div></div>').html(gegevensbron.title);        
+        var title = $j('<div></div>').addClass('gebiedenTitle').html(gegevensbron.title);        
         bronContainer.append(title);
 
         $j.each(gegevensbron.records, function(index, record) {

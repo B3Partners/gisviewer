@@ -16,7 +16,7 @@
                 }else if (window.parent){
                     return window.parent;
                 }else{
-                    messagePopup("Fout", "No parent found", "error");
+                    alert("No parent found");
                     
                     return null;
                 }
@@ -48,7 +48,7 @@
             for (var i=0; i < getParent().highlightLayers.length; i++) {
                 var item = getParent().highlightLayers[i];
 
-                var link = "<a href='#' onclick='getParent().handlePopupValue("+item.id+"); getParent().closeiFramepopup();'>" + item.title +"</A>";
+                var link = "<a href='#' onclick='getParent().handlePopupValue("+item.id+"); getParent().B3PGissuite.commons.closeiFramePopup();'>" + item.title +"</A>";
                 document.write("<p>"+link +"</p>");
             }
         </script>

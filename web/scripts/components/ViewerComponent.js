@@ -52,7 +52,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         var opt = {
             projection: new OpenLayers.Projection("EPSG:28992"),
             // set nl as max extent. Always show layers.            
-            maxExtent: getNLMaxBounds(),
+            maxExtent: B3PGissuite.viewercommons.getNLMaxBounds(),
             resolutions: olRes,
             // numZoomLevels: olRes.length-1,
             allOverlays: true,
@@ -346,7 +346,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         if (B3PGissuite.vars.layerUrl == undefined || B3PGissuite.vars.layerUrl == null) {
-            hideLoading();
+            B3PGissuite.commons.hideLoading();
             return;
         }
 
@@ -362,6 +362,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         var topLayerItems = [];
         var backgroundLayerItems = [];
         var item;
+        var treeComponent = B3PGissuite.get('TreeComponent');
 
         for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
             item = B3PGissuite.vars.enabledLayerItems[i];
@@ -382,7 +383,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
                 // Item alleen toevoegen aan de layers indien
                 // parent cluster(s) allemaal aangevinkt staan of
                 // geen cluster heeft
-                if (!itemHasAllParentsEnabled(object)) {
+                if (treeComponent !== null && !treeComponent.itemHasAllParentsEnabled(object)) {
                     continue;
                 }
             }
@@ -511,7 +512,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
             }
         }
 
-        hideLoading();
+        B3PGissuite.commons.hideLoading();
 
         if (local_refresh_handle != B3PGissuite.vars.refresh_timeout_handle) {
             // check of dit een goed idee is
@@ -557,7 +558,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         } else if (B3PGissuite.config.bbox && !B3PGissuite.config.fullbbox) {
             maxBounds = Utils.createBounds(new Extent(B3PGissuite.config.bbox));
         } else {
-            var bounds = getNLMaxBounds();
+            var bounds = B3PGissuite.viewercommons.getNLMaxBounds();
             maxBounds = new OpenLayers.Bounds(bounds.left, bounds.bottom, bounds.right, bounds.top);
         }
 
@@ -614,8 +615,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
                 }
             }
         } else { // wordt nu gezet in ViewerComponent.addLayerToViewer
-            B3PGissuite.config.tilingResolutions = getNLTilingRes();
-            olRes = convertStringToArray(B3PGissuite.config.tilingResolutions);
+            B3PGissuite.config.tilingResolutions = B3PGissuite.viewercommons.getNLTilingRes();
+            olRes = B3PGissuite.viewercommons.convertStringToArray(B3PGissuite.config.tilingResolutions);
         }
 
         /* Tiling resoluties die buiten aangepaste extent vallen weglaten */
@@ -699,7 +700,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
     },
     addTempUploadedPointsWms: function() {
         var lname = "uploadedPoints";
-        var layerUrl = getBaseUrl() + "/UploadedPointsWmsServlet";
+        var layerUrl = B3PGissuite.viewercommons.getBaseUrl() + "/UploadedPointsWmsServlet";
 
         var options = {
             id: lname,
@@ -724,5 +725,388 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         var newLayer = B3PGissuite.vars.webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
         B3PGissuite.vars.webMapController.getMap().addLayer(newLayer);
+    },
+
+    initFullExtent: function() {
+        /* Extent uit url */
+        if (B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
+            if (B3PGissuite.config.fullExtent != null && B3PGissuite.config.fullExtent.length > 0 && B3PGissuite.config.fullExtent.split(",").length == 4) {
+                setFullExtent(B3PGissuite.config.fullExtent.split(",")[0], B3PGissuite.config.fullExtent.split(",")[1], B3PGissuite.config.fullExtent.split(",")[2], B3PGissuite.config.fullExtent.split(",")[3]);
+            } else {
+                setFullExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3]);
+            }
+
+            /* Extent uit Flamingo */
+        } else if (B3PGissuite.config.fullbbox != null && B3PGissuite.config.fullbbox.length > 0 && B3PGissuite.config.fullbbox.split(",").length == 4) {
+            setFullExtent(B3PGissuite.config.fullbbox.split(",")[0], B3PGissuite.config.fullbbox.split(",")[1], B3PGissuite.config.fullbbox.split(",")[2], B3PGissuite.config.fullbbox.split(",")[3]);
+
+            /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
+        } else {
+            B3PGissuite.config.bbox = B3PGissuite.viewercommons.getNLExtent();
+            B3PGissuite.config.fullbbox = B3PGissuite.viewercommons.getNLExtent();
+
+            var bounds = B3PGissuite.viewercommons.getNLMaxBounds();
+
+            setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
+        }
+    },
+
+    setStartExtent: function() {
+        /* Eerst kijken of er een zoekextent is */
+        if (B3PGissuite.vars.searchExtent != null) {
+            B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(B3PGissuite.vars.searchExtent);
+
+            /* Extent uit url */
+        } else if (B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
+            setTimeout(function() {
+                moveToExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3]);
+            }, 1);
+
+            /* Extent uit Flamingo */
+        } else if (B3PGissuite.config.fullbbox != null && B3PGissuite.config.fullbbox.length > 0 && B3PGissuite.config.fullbbox.split(",").length == 4) {
+            setTimeout(function() {
+                moveToExtent(B3PGissuite.config.fullbbox.split(",")[0], B3PGissuite.config.fullbbox.split(",")[1], B3PGissuite.config.fullbbox.split(",")[2], B3PGissuite.config.fullbbox.split(",")[3]);
+            }, 1);
+
+        } else if (B3PGissuite.config.resolution) {
+            B3PGissuite.vars.webMapController.getMap().zoomToResolution(B3PGissuite.config.resolution);
+
+            /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
+        } else {
+            B3PGissuite.config.bbox = B3PGissuite.viewercommons.getNLExtent();
+            B3PGissuite.config.fullbbox = B3PGissuite.viewercommons.getNLExtent();
+
+            var bounds = B3PGissuite.viewercommons.getNLMaxBounds();
+
+            setTimeout(function() {
+                moveToExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
+            }, 1);
+        }
+    },
+
+    /**
+     * Initialize the tools used in the viewer. It registers the event and handler
+     * for the tool.
+     */
+    initializeButtons: function() {
+        /*ie bug fix*/
+        if (B3PGissuite.vars.ltIE8) {
+            var mapId = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
+            var viewport = document.getElementById(mapId + '_OpenLayers_ViewPort');
+            if (viewport) {
+                viewport.style.position = "absolute";
+            }
+        }
+
+        B3PGissuite.vars.webMapController.createPanel("toolGroup");
+
+        B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading", Tool.LOADING_BAR));
+
+        /* Zoom tool */
+        var zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {
+            title: 'inzoomen via selectie'
+        });
+        B3PGissuite.vars.webMapController.addTool(zoomBox);
+
+        /* Pan tool */
+        var pan = B3PGissuite.vars.webMapController.createTool("b_pan", Tool.PAN, {
+            title: 'kaartbeeld slepem'
+        });
+        B3PGissuite.vars.webMapController.addTool(pan);
+        //set default tool pan so the cursor is ok.
+        if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+            B3PGissuite.vars.webMapController.activateTool("b_pan");
+        }
+
+        /* Previous extent tool */
+        var prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {
+            title: 'stap terug'
+        });
+        B3PGissuite.vars.webMapController.addTool(prevExtent);
+
+        /* Afstand meten tool */
+        var bu_measure = B3PGissuite.vars.webMapController.createTool("b_measure", Tool.MEASURE, {
+            title: 'afstand meten'
+        });
+        //B3PGissuite.vars.webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
+        B3PGissuite.vars.webMapController.addTool(bu_measure);
+
+        /* I-tool */
+        var options = new Object();
+        options["handlerGetFeatureHandler"] = onIdentifyData;
+        options["handlerBeforeGetFeatureHandler"] = onIdentify;
+        options["title"] = "informatie opvragen";
+        var identify = B3PGissuite.vars.webMapController.createTool("identify", Tool.GET_FEATURE_INFO, options);
+        B3PGissuite.vars.webMapController.addTool(identify);
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_SET_TOOL, identify, onChangeTool);
+
+        var editLayer = B3PGissuite.vars.webMapController.createVectorLayer("editMap");
+        B3PGissuite.vars.webMapController.getMap().addLayer(editLayer);
+        B3PGissuite.vars.webMapController.getMap().setLayerIndex(editLayer, B3PGissuite.vars.webMapController.getMap().getLayers().length + B3PGissuite.vars.startLayerIndex);
+
+        /* Redlining tools */
+        var edittingtb = B3PGissuite.vars.webMapController.createTool("redLiningContainer", Tool.DRAW_FEATURE, {
+            layer: editLayer
+        });
+        B3PGissuite.vars.webMapController.addTool(edittingtb);
+
+        /* Draw Polygon with measured surface area  */
+        var bu_polyMeasure = B3PGissuite.vars.webMapController.createTool("b_polyMeasure", Tool.MEASURED_POLYGON, {
+            title: 'oppervlakte meten',
+            displayClass: 'olControlb_polyMeasure'
+        });
+        B3PGissuite.vars.webMapController.addTool(bu_polyMeasure);
+
+        /* Buffer tool */
+        var bu_buffer = B3PGissuite.vars.webMapController.createTool("b_buffer", Tool.BUTTON, {
+            layer: editLayer,
+            title: 'buffer het tekenobject'
+        });
+        B3PGissuite.vars.webMapController.addTool(bu_buffer);
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_buffer, b_buffer);
+
+        /* Selecteer kaartobject tool */
+        var bu_highlight = B3PGissuite.vars.webMapController.createTool("b_highlight", Tool.BUTTON, {
+            layer: editLayer,
+            title: 'selecteer een object in de kaart'
+        });
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_highlight, b_highlight);
+        B3PGissuite.vars.webMapController.addTool(bu_highlight);
+
+        /* Selecteer binnen kaartobject tool */
+        var bu_getfeatures = B3PGissuite.vars.webMapController.createTool("b_getfeatures", Tool.BUTTON, {
+            layer: editLayer,
+            title: 'selecteer binnen geselecteerd kaartobject'
+        });
+        B3PGissuite.vars.webMapController.addTool(bu_getfeatures);
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_getfeatures, b_getfeatures);
+
+        /* Verwijder polygon tool */
+        var bu_removePolygons = B3PGissuite.vars.webMapController.createTool("b_removePolygons", Tool.BUTTON, {
+            layer: editLayer,
+            title: 'verwijder het tekenobject'
+        });
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_removePolygons, b_removePolygons);
+        B3PGissuite.vars.webMapController.addTool(bu_removePolygons);
+
+        /* Print tool */
+        var bu_print = B3PGissuite.vars.webMapController.createTool("b_printMap", Tool.BUTTON, {
+            layer: editLayer,
+            title: 'printvoorbeeld'
+        });
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_print, b_print);
+        B3PGissuite.vars.webMapController.addTool(bu_print);
+
+        /* Kaartselectie tool */
+        var bu_layerSelection = B3PGissuite.vars.webMapController.createTool("b_layerSelection", Tool.BUTTON, {
+            layer: editLayer,
+            title: 'kaartselectie'
+        });
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_layerSelection, b_layerSelection);
+        B3PGissuite.vars.webMapController.addTool(bu_layerSelection);
+
+        var gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
+
+        var bu_gps = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {
+            layer: editLayer,
+            title: 'zet GPS locatie aan/uit'
+        });
+
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, gpsComponent.stopPolling);
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
+
+        /* off event voor weghalen marker */
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
+
+        B3PGissuite.vars.webMapController.addTool(bu_gps);
+
+        /* Overzichtskaart tool */
+        var bu_overview = B3PGissuite.vars.webMapController.createTool("b_showOverzicht", Tool.BUTTON, {
+            layer: editLayer,
+            title: 'overzichtskaart'
+        });
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_overview, b_overview);
+        B3PGissuite.vars.webMapController.addTool(bu_overview);
+
+        var scalebar = B3PGissuite.vars.webMapController.createTool("scalebar", Tool.SCALEBAR);
+        B3PGissuite.vars.webMapController.addTool(scalebar);
+
+
+        var zoombar = B3PGissuite.vars.webMapController.createTool("zoombar", Tool.ZOOM_BAR);
+        B3PGissuite.vars.webMapController.addTool(zoombar);
+
+        B3PGissuite.vars.editComponent = new EditComponent();
+
+        if (B3PGissuite.config.viewerTemplate == "embedded") {
+            this.displayEmbeddedMenuIcons();
+        }
+    },
+
+    displayEmbeddedMenuIcons: function() {
+        $j("#embedded_icons").css('position', 'absolute');
+        $j("#embedded_icons").css('width', '170px');
+        $j("#embedded_icons").css('height', '36px');
+
+        $j("#embedded_icons .embedded_icon").css('float', 'left');
+        $j("#embedded_icons .embedded_icon").css('padding-top', '7px');
+        $j("#embedded_icons .embedded_icon").css('padding-left', '15px');
+
+        if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+            $j("#embedded_icons").css('left', '670px');
+            $j("#embedded_icons").css('top', '6px');
+            $j("#embedded_icons").css('border', 'solid 1px #808080');
+            $j("#embedded_icons").css('background-color', '#eeeeee');
+        } else {
+            $j("#embedded_icons").css('left', '630px');
+            $j("#embedded_icons").css('top', '2px');
+        }
+
+        $j("#embedded_icons").show();
+    },
+
+    checkDisplayButtons: function() {
+        if (B3PGissuite.config.showRedliningTools) {
+            if (B3PGissuite.vars.webMapController.getTool("redLiningContainer")) {
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(true);
+            } else {
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(true);
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(true);
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(true);
+            }
+        } else {
+            if (B3PGissuite.vars.webMapController.getTool("redLiningContainer")) {
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(false);
+            } else {
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(false);
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(false);
+                B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(false);
+            }
+        }
+
+        if (B3PGissuite.config.showBufferTool) {
+            B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(true);
+        } else {
+            B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(false);
+        }
+
+        if (B3PGissuite.config.showSelectBulkTool) {
+            B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(true);
+        } else {
+            B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(false);
+        }
+
+        if (B3PGissuite.config.showNeedleTool) {
+            B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(true);
+        } else {
+            B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(false);
+        }
+
+        if (B3PGissuite.config.showRedliningTools || B3PGissuite.config.showNeedleTool) {
+            B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(true);
+        } else {
+            B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(false);
+        }
+
+        if (B3PGissuite.config.showPrintTool) {
+            B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(true);
+        } else {
+            B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(false);
+        }
+
+        if (B3PGissuite.config.showLayerSelectionTool) {
+            B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(true);
+        } else {
+            B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(false);
+        }
+
+        if (B3PGissuite.config.showGPSTool) {
+            B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(true);
+        } else {
+            B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(false);
+        }
+    },
+
+    /**
+     * Hides the I-tool icon. (Flamingo only)
+     */
+    hideIdentifyIcon: function() {
+        if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+            B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'hide');
+        }
+    },
+
+    /**
+     * Shows the I-tool icon. (Flamingo only)
+     */
+    showIdentifyIcon: function() {
+        if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+            B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'show');
+        }
+    },
+
+    /**
+     * Because a simple reload won't change the url in flamingo. Remove the layer
+     * and add it again. Maybe a getCap is done but with a little luck the browser
+     * cached the last request.
+     * @param sldUrl The SLD url for the layer.
+     * @param reAddLayer If true the layer will be removed and added again.
+     */
+    setSldOnDefaultMap: function(sldUrl, reAddLayer) {
+        var kbLayer = B3PGissuite.vars.webMapController.getMap("map1").getLayer("fmcLayer");
+        kbLayer.setSld(escape(sldUrl));
+
+        if (reAddLayer) {
+            B3PGissuite.vars.webMapController.getMap("map1").removeLayerById(kbLayer.getId(), false);
+            B3PGissuite.vars.webMapController.getMap("map1").addLayer(kbLayer);
+        }
+    },
+
+    reloadRedliningLayer: function(themaId, projectnaam, removeFeatures) {
+        var groepParam = "GROEPNAAM";
+        var projectParam = "PROJECTNAAM";
+
+        if (!B3PGissuite.viewercommons.isStringEmpty(B3PGissuite.config.organizationcode)) {
+            B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode;
+        }
+
+        if (!B3PGissuite.viewercommons.isStringEmpty(projectnaam)) {
+            B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + projectParam + "=" + projectnaam;
+        }
+
+        if (!B3PGissuite.viewercommons.isStringEmpty(B3PGissuite.config.organizationcode) && !B3PGissuite.viewercommons.isStringEmpty(projectnaam)) {
+            B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode + "&" + projectParam + "=" + projectnaam;
+        }
+
+        /* tekenobject van kaart afhalen */
+        if (removeFeatures) {
+            this.removeAllFeatures();
+        }
+
+        /* TODO: Beetje lelijk gewoon vinkje aan uitzetten om redlining laag te refreshen
+         * wellicht een keer methode schrijven voor de webmapcontroller die
+         * iets dergelijks kan doen */
+        var treeComponent = B3PGissuite.get('TreeComponent');
+        if (treeComponent !== null) {
+            treeComponent.deActivateCheckbox(themaId);
+            treeComponent.activateCheckbox(themaId);
+        }
+    },
+
+    removeAllFeatures: function() {
+        B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+    },
+
+    removeAllMarkers: function() {
+        B3PGissuite.vars.webMapController.getMap().removeAllMarkers();
+    },
+
+    stopDrawPolygon: function() {
+        B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+        B3PGissuite.vars.webMapController.getMap().getLayer("editMap").stopDrawDrawFeature();
+    },
+
+    startDrawPolygon: function(geomType) {
+        B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+        B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(geomType);
     }
 });

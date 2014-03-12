@@ -27,20 +27,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <c:set var="kenmerk" value="${form.map.kenmerk}"/>
 
 <script type="text/javascript">
-    function getParent() {
-        if (window.opener){
-            return window.opener;
-        }else if (window.parent){
-            return window.parent;
-        }else{
-            messagePopup("Fout", "No parent found", "error");
-            
-            return null;
-        }
-    }
-
     function submitForm() {        
-        var ouder = getParent();
+        var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
         if(ouder) {
             var wkt = ouder.getWktActiveFeature(-1);
             if (wkt) {
@@ -61,8 +49,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     function tekenMelding(geomType) {
-        getParent().B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
-        getParent().B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(geomType);
+        B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
+        B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(geomType);
     }
 </script>
 
@@ -88,7 +76,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <c:when test="${fn:length(kenmerk)==0}">
                     <c:if test="${!empty form.map.wkt}">
                         <script type="text/javascript">
-                            var ouder = getParent();
+                            var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
                             if(ouder) {
                                 //ouder.B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
                             }
@@ -155,7 +143,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 </c:when>
                 <c:otherwise>
                     <script type="text/javascript">
-                        var ouder = getParent();
+                        var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
                         if(ouder) {
                             var point = "${form.map.wkt}".toLowerCase();
                             if (point.indexOf("point", 0)>=0) {

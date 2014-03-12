@@ -1,5 +1,3 @@
-dwr.engine.setErrorHandler(handler);
-
 B3PGissuite.vars.ltIE8 = document.getElementsByTagName("html")[0].className.match(/lt-ie8/);
 /**
  * Array with the current visible layers in correct order.
@@ -16,8 +14,8 @@ B3PGissuite.vars.layerUrl = "" + B3PGissuite.config.kburl;
 /**
  * Cookie arrays with checked layers and clusters (csv string)
  */
-B3PGissuite.vars.cookieArray = (B3PGissuite.config.useCookies ? readCookie('checkedLayers') : null);
-B3PGissuite.vars.cookieClusterArray = (B3PGissuite.config.useCookies ? readCookie('checkedClusters') : null);
+B3PGissuite.vars.cookieArray = (B3PGissuite.config.useCookies ? B3PGissuite.commons.readCookie('checkedLayers') : null);
+B3PGissuite.vars.cookieClusterArray = (B3PGissuite.config.useCookies ? B3PGissuite.commons.readCookie('checkedClusters') : null);
 /**
  * The web map controller
  */
@@ -38,12 +36,6 @@ B3PGissuite.vars.editComponent = null;
 B3PGissuite.vars.prevRadioButton = null;
 B3PGissuite.vars.originalLayerUrl = "" + B3PGissuite.vars.layerUrl;
 B3PGissuite.vars.refresh_timeout_handle = 0;
-//the loading legend images (needed to abort loading)
-B3PGissuite.vars.loadingLegendImages = {};
-//queue of the legend objects that needs to be loaded
-B3PGissuite.vars.legendImageQueue = [];
-//slots that can be used to load the legend objects
-B3PGissuite.vars.legendImageLoadingSpace = 1;
 B3PGissuite.vars.teller = 0;
 B3PGissuite.vars.frameWorkInitialized = false;
 B3PGissuite.vars.nextIdentifyExtent = null;
@@ -59,257 +51,508 @@ B3PGissuite.vars.editingRedlining = false;
 B3PGissuite.vars.redLineGegevensbronId = -1;
 B3PGissuite.vars.popupCreated = false;
 
-/**
- * Shows a message in a popup window.
- * @param msg The message to display.
- */
-function handler(msg) {
-    var message = msg;
-
-    if (message != '') {
-        messagePopup("Info", message, "information");
-    }
-}
-
-function getNLExtent() {
-    return "12000,304000,280000,620000";
-}
-
-function getNLMaxBounds() {
-    return Utils.createBounds(new Extent(getNLExtent()));
-}
-
-function getNLTilingRes() {
-    return "512,256,128,64,32,16,8,4,2,1,0.5,0.125";
-}
-
-function convertStringToArray(waarde) {
-    var lijst = [];
-    var arr = [];
-
-    waarde = $j.trim(waarde);
-
-    if (waarde.indexOf(",") !== -1) {
-        lijst = waarde.split(",");
-    } else {
-        lijst = waarde.split(" ");
-    }
-
-    if (lijst && lijst.length > 0) {
-        arr = [];
-        for (var i in lijst) {
-            lijst[i] = parseFloat(lijst[i]);
-            arr[i] = lijst[i];
+B3PGissuite.viewercommons = {
+    /**
+     * Controleert of een item in de huidige schaal past.
+     * Voor een enkele layer wordt gekeken of die er in past
+     * Voor een cluster wordt gekeken of er 1 van de layers in de schaal past.
+     * @param item json thema of cluster
+     * @param scale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
+     * @return boolean wel of niet zichtbaar in scale.
+     */
+    isItemInScale: function(item, scale) {
+        if (scale == 'NaN' || scale < 0 || !item) {
+            return false;
         }
-    }
 
-    return arr;
-}
+        var itemVisible = true;
 
-/**
- * Hides the I-tool icon. (Flamingo only)
- */
-function hideIdentifyIcon() {
-    if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
-        B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'hide');
-    }
-}
-
-/**
- * Shows the I-tool icon. (Flamingo only)
- */
-function showIdentifyIcon() {
-    if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
-        B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'show');
-    }
-}
-
-/**
- * Initialize the tools used in the viewer. It registers the event and handler
- * for the tool.
- */
-function initializeButtons() {
-    /*ie bug fix*/
-    if (B3PGissuite.vars.ltIE8) {
-        var mapId = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
-        var viewport = document.getElementById(mapId + '_OpenLayers_ViewPort');
-        if (viewport) {
-            viewport.style.position = "absolute";
+        if (item.children) {
+            itemVisible = false;
+            for (var i = 0; i < item.children.length; i++) {
+                if(this.isItemInScale(item.children[i], scale)) {
+                    itemVisible = true;
+                }
+            }
+        } else {
+            if (item.scalehintmin) {
+                var minscale = Number(item.scalehintmin.replace(",", "."));
+                if (scale < minscale) {
+                    itemVisible = false;
+                }
+            }
+            if (item.scalehintmax) {
+                var maxscale = Number(item.scalehintmax.replace(",", "."));
+                if (scale > maxscale) {
+                    itemVisible = false;
+                }
+            }
         }
+
+        /* Schaal check voor Tiling lagen */
+        if (item.resolutions || item.PRINTRESOLUTIONS) {
+            var list;
+            var res;
+
+            if (item.PRINTRESOLUTIONS) {
+                res = item.PRINTRESOLUTIONS;
+            } else {
+                res = item.resolutions;
+            }
+
+            var listType = (typeof res);
+
+            if (listType == "string") {
+                list = res.split(" ");
+
+                if (list && list.length < 1) {
+                    list = res.split(",");
+                }
+            }
+
+            if (list && list.length > 0) {
+                var size = list.length;
+                var max = list[0];
+                var min = list[size - 1];
+
+                if (min === "") {
+                    min = list[size - 2];
+                }
+
+                // doe W(res(kw) * 2) scalehint
+                var scaleMax = Math.sqrt((max * max) * 2);
+                var scaleMin = Math.sqrt((min * min) * 2);
+
+                var epsilon = 0.00000001;
+                var adjustedScale = scale + epsilon;
+
+                /* Scale check with % margin between scales */
+                var percent = 5;
+                scaleMax *= (100 + percent) / 100;
+                scaleMin *= (100 - percent) / 100;
+
+                if (adjustedScale <= scaleMax && adjustedScale >= scaleMin) {
+                    itemVisible = true;
+                } else {
+                    itemVisible = false;
+                }
+            }
+        }
+
+        return itemVisible;
+    },
+
+    convertStringToArray: function(waarde) {
+        var lijst = [];
+        var arr = [];
+
+        waarde = $j.trim(waarde);
+
+        if (waarde.indexOf(",") !== -1) {
+            lijst = waarde.split(",");
+        } else {
+            lijst = waarde.split(" ");
+        }
+
+        if (lijst && lijst.length > 0) {
+            arr = [];
+            for (var i in lijst) {
+                lijst[i] = parseFloat(lijst[i]);
+                arr[i] = lijst[i];
+            }
+        }
+
+        return arr;
+    },
+
+    getNLExtent: function() {
+        return "12000,304000,280000,620000";
+    },
+    getNLMaxBounds: function() {
+        return Utils.createBounds(new Extent(this.getNLExtent()));
+    },
+    getNLTilingRes: function() {
+        return "512,256,128,64,32,16,8,4,2,1,0.5,0.125";
+    },
+
+    getBaseUrl: function() {
+        var protocol = window.location.protocol + "//";
+        var host = window.location.host;
+
+        return protocol + host + B3PGissuite.config.baseNameViewer;
+    },
+
+    /**
+     * Changes the bounding box of the feature to a minimal size when this is smaller
+     * than the minimal vlue.
+     * @param feature The feature.
+     * @return Returns the feature with adjusted bbox.
+     */
+    getBboxMinSize2: function(feature) {
+        if ((Number(feature.maxx - feature.minx) < B3PGissuite.config.minBboxZoeken)) {
+            var addX = Number((B3PGissuite.config.minBboxZoeken - (feature.maxx - feature.minx)) / 2);
+            var addY = Number((B3PGissuite.config.minBboxZoeken - (feature.maxy - feature.miny)) / 2);
+            feature.minx = Number(feature.minx - addX);
+            feature.maxx = Number(Number(feature.maxx) + Number(addX));
+            feature.miny = Number(feature.miny - addY);
+            feature.maxy = Number(Number(feature.maxy) + Number(addY));
+        }
+        return feature;
+    },
+
+    /**
+     * Shows a busy with loading page.
+     * cached the last request.
+     * @param handle Handle to the window to display page content in.
+     * @param type Type of display used (div, panel or window).
+     */
+    loadBusyJSP: function(handle, type) {
+        var $iframebody = null;
+        if (type == 'div')
+            $iframebody = $j(handle).contents().find("body");
+        if (type == 'panel')
+            $iframebody = $j('#' + handle).contents().find("body");
+        if (type == 'window')
+            $iframebody = $j(handle.document.body);
+
+        // "Gewoon" popup window (dus geen DIV) geeft nog niet helemaal het gewenste resultaat
+        if ($iframebody !== null) {
+            $iframebody.html('<div id="content_style">' +
+                    '<table class="kolomtabel">' +
+                    '<tr>' +
+                    '<td valign="top">' +
+                    '<div class="loadingMessage">' +
+                    '<table>' +
+                    '<tr>' +
+                    '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>' +
+                    '<td>' +
+                    '<h2>Bezig met laden ...</h2>' +
+                    '<p>Bezig met zoeken naar administratieve gegevens.</p>' +
+                    '</td>' +
+                    '</tr>' +
+                    '</table>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>' +
+                    '</table>' +
+                    '</div>');
+        }
+    },
+
+    /**
+     * Handles onIdentify by the user to retrieve object information. This function
+     * submits the data via form to the back-end.
+     * @param geom The (buffered) geometry of the click location.
+     * @param highlightThemaId Is used to also highlight the clicked object.
+     * @param selectionWithinObject Boolean indicates if it should retrieve objectdata
+     * for all objects within the current selection (polygon). When false it retrives only
+     * data directly under the (buffered) click location.
+     * @param themaIds the thema ids where this request must be done. If ommited the 
+     * selected thema's are used. It doesn't change the checkboxes.
+     * @param extraCriteria JavaScript object with CQL criteria that is used as filter for getting the features.
+     */
+    handleGetAdminData: function(geom, highlightThemaId, selectionWithinObject, themaIds, extraCriteria) {
+
+        if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
+            return;
+        }
+
+        removeSearchResultMarker();
+
+        var treeComponent = B3PGissuite.get('TreeComponent');
+        if (themaIds === undefined) {
+            if (!B3PGissuite.config.multipleActiveThemas && treeComponent !== null) {
+                themaIds = treeComponent.getActiveAnalyseThemaId();
+            } else {
+                themaIds = this.getLayerIdsAsString(true);
+            }
+
+            if (themaIds == null || themaIds == '') {
+                B3PGissuite.commons.hideLoading();
+                return;
+            }
+        }
+
+        //set the extra criteria.
+        document.forms[0].extraCriteria.value = "";
+        if (extraCriteria) {
+            document.forms[0].extraCriteria.value = extraCriteria;
+        }
+
+        //set the correct action
+        document.forms[0].admindata.value = 't';
+        document.forms[0].metadata.value = '';
+        document.forms[0].objectdata.value = '';
+
+        document.forms[0].themaid.value = themaIds;
+
+        document.forms[0].lagen.value = '';
+
+        //als er een init search is meegegeven (dus ook een sld is gemaakt)
+        if (B3PGissuite.config.searchAction.toLowerCase().indexOf("filter") >= 0) {
+
+            document.forms[0].search.value = B3PGissuite.config.search;
+            document.forms[0].B3PGissuite.config.searchId.value = B3PGissuite.config.searchId;
+            document.forms[0].B3PGissuite.config.searchClusterId.value = B3PGissuite.config.searchClusterId;
+        }
+
+        document.forms[0].geom.value = geom;
+
+        var schaal;
+        if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+            schaal = B3PGissuite.vars.webMapController.getMap().getResolution();
+        } else {
+            schaal = B3PGissuite.vars.webMapController.getMap().getScaleHint();
+        }
+
+        document.forms[0].scale.value = schaal;
+        document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
+
+        if (selectionWithinObject) {
+            document.forms[0].withinObject.value = "1";
+            document.forms[0].onlyFeaturesInGeom.value = "true";
+        } else {
+            document.forms[0].withinObject.value = "-1";
+            document.forms[0].onlyFeaturesInGeom.value = "false";
+        }
+
+        if (B3PGissuite.config.bookmarkAppcode != null) {
+            document.forms[0].bookmarkAppcode.value = B3PGissuite.config.bookmarkAppcode;
+        }
+
+        if (highlightThemaId != null) {
+            document.forms[0].themaid.value = highlightThemaId;
+        }
+
+        if (B3PGissuite.config.usePopup) {
+            // open popup when not opened en submit form to popup
+            if (B3PGissuite.vars.dataframepopupHandle == null || B3PGissuite.vars.dataframepopupHandle.closed) {
+                if (B3PGissuite.config.useDivPopup) {
+                    B3PGissuite.vars.dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
+                } else {
+                    B3PGissuite.vars.dataframepopupHandle = popUpData('dataframepopup', 680, 225, false);
+                }
+            }
+
+            if (B3PGissuite.config.useDivPopup) {
+                //$j("#popupWindow").show();
+                document.forms[0].target = 'dataframedivpopup';
+                B3PGissuite.viewercommons.loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'div');
+            } else {
+                document.forms[0].target = 'dataframepopup';
+                B3PGissuite.viewercommons.loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'window');
+            }
+
+            /* display marker in middle of click point */
+            var point = this.getPointFromGeom(geom);
+            placeSearchResultMarker(point.x, point.y);
+
+        } else if (B3PGissuite.config.useBalloonPopup) {
+            if (!B3PGissuite.vars.balloon) {
+                var offsetX = 0;
+                var offsetY = 0;
+
+                /* offsetY nodig voor de flamingo toolbalk boven de kaart */
+                if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+                    offsetY = 36;
+                }
+
+                B3PGissuite.vars.balloon = new Balloon($j("#mapcontent"), B3PGissuite.vars.webMapController, 'infoBalloon', 300, 300, offsetX, offsetY);
+            }
+            document.forms[0].target = 'dataframeballoonpopup';
+
+            /*Bepaal midden van vraag geometry*/
+            var point = this.getPointFromGeom(geom);
+
+            //B3PGissuite.vars.balloon.resetPositionOfBalloon(centerX,centerY);
+            B3PGissuite.vars.balloon.setPosition(point.x, point.y, true);
+
+            var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do?theme=' + B3PGissuite.config.theme + '" frameborder="0">');
+            B3PGissuite.vars.balloon.getContentElement().html(iframeElement);
+        } else {
+            document.forms[0].target = 'dataframe';
+            B3PGissuite.viewercommons.loadBusyJSP('dataframe', 'panel');
+        }
+
+        document.forms[0].submit();
+    },
+
+    getPointFromGeom: function(geom) {
+        var coordString = geom.replace(/POLYGON/g, '').replace(/POINT/, '').replace(/\(/g, '').replace(/\)/g, '');
+        var xyPairs = coordString.split(",");
+
+        var minx;
+        var maxx;
+        var miny;
+        var maxy;
+
+        for (var i = 0; i < xyPairs.length; i++) {
+            var xy = xyPairs[i].split(" ");
+            var x = Number(xy[0]);
+            var y = Number(xy[1]);
+
+            if (minx === undefined) {
+                minx = x;
+                maxx = x;
+            }
+            if (miny === undefined) {
+                miny = y;
+                maxy = y;
+            }
+            if (x > maxx) {
+                maxx = x;
+            }
+            if (x < minx) {
+                minx = x;
+            }
+            if (y > maxy) {
+                maxy = y;
+            }
+            if (y < miny) {
+                miny = y;
+            }
+        }
+
+        var centerX = (minx + maxx) / 2;
+        var centerY = (miny + maxy) / 2;
+
+        return { x: centerX, y: centerY };
+    },
+
+    switchTab: function(id) {
+        if (tabComponent.hasTab(id)) {
+            tabComponent.setActive(id);
+        }
+        if (leftTabComponent.hasTab(id)) {
+            leftTabComponent.setActive(id);
+        }
+    },
+
+    isStringEmpty: function(str) {
+        return (!str || 0 === str.length);
+    },
+
+    /*
+     * Calculates and returns the ??? from 1:??? for the current extent and 
+     * current mapwidth in pixels. Average ppi value assumed. The 0.00028
+     * could be made into a config setting in gisviewerconfig.
+     */
+    calcScaleForCurrentExtent: function() {
+        var extent = B3PGissuite.vars.webMapController.getMap().getExtent();
+        var newMapWidth = extent.maxx - extent.minx;
+
+        var screenWidth = $j("#mapcontent").width();
+        var scale = newMapWidth / (screenWidth * 0.00028);
+
+        return Math.round(Number(scale));
+    },
+
+    /* Kan gebruikt worden om wat debug info onderin de kaartboom weer te geven zoals
+     * specifieke timings of huidig omgerekende schaal */
+    setDebugContent: function() {
+        var scale = calcScaleForCurrentExtent();
+        var html = "<p><b>Schaal 1 : " + scale + "</b></p>";
+
+        $j("#debug-content").html(html);
+    },
+
+    loadObjectInfo: function(geom) {
+        var gebiedenTabActive = false;
+
+        for (i in B3PGissuite.config.enabledtabs) {
+            if (B3PGissuite.config.enabledtabs[i] === "gebieden") {
+                gebiedenTabActive = true;
+            }
+        }
+
+        for (i in B3PGissuite.config.enabledtabsLeft) {
+            if (B3PGissuite.config.enabledtabsLeft[i] === "gebieden") {
+                gebiedenTabActive = true;
+            }
+        }
+
+        if (!gebiedenTabActive) {
+            return;
+        }
+
+        var activeAnalyseThemaId = '';
+        var treeComponent = B3PGissuite.get('TreeComponent');
+
+        if (treeComponent !== null) {
+            activeAnalyseThemaId = treeComponent.getActiveAnalyseThemaId();
+        }
+
+        document.forms[0].admindata.value = '';
+        document.forms[0].metadata.value = '';
+
+        if (!B3PGissuite.config.multipleActiveThemas) {
+            document.forms[0].themaid.value = activeAnalyseThemaId;
+        } else {
+            document.forms[0].themaid.value = this.getLayerIdsAsString();
+        }
+
+        document.forms[0].analysethemaid.value = activeAnalyseThemaId;
+        document.forms[0].objectdata.value = 't';
+        document.forms[0].target = 'objectframeViewer';
+
+        // Use current scale and tolerance for click point
+        var schaal;
+        if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+            schaal = B3PGissuite.vars.webMapController.getMap().getResolution();
+        } else {
+            schaal = B3PGissuite.vars.webMapController.getMap().getScaleHint();
+        }
+
+        document.forms[0].scale.value = schaal;
+        document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
+
+        document.forms[0].geom.value = geom;
+
+        document.forms[0].submit();
+    },
+
+    /**
+     * Get alle enabled layer items
+     * @param onlyWithinScale Only get the visible, within currentScale items.
+     */
+    getLayerIdsAsString: function(onlyWithinScale) {
+        var ret = "";
+        var firstTime = true;
+        var treeComponent = B3PGissuite.get('TreeComponent');
+
+        for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
+
+            if (B3PGissuite.config.useInheritCheckbox) {
+                var object = document.getElementById(B3PGissuite.vars.enabledLayerItems[i].id);
+                /* Item alleen toevoegen aan de layers indien
+                 * parent cluster(s) allemaal aangevinkt staan of
+                 * geen cluster heeft */
+                if (treeComponent !== null && !treeComponent.itemHasAllParentsEnabled(object))
+                    continue;
+            }
+            if (onlyWithinScale) {
+                var currentscale;
+                if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+                    currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
+                } else {
+                    currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
+                }
+
+                if (!B3PGissuite.viewercommons.isItemInScale(B3PGissuite.vars.enabledLayerItems[i], currentscale)) {
+                    continue;
+                }
+            }
+            if (firstTime) {
+                ret += B3PGissuite.vars.enabledLayerItems[i].id;
+                firstTime = false;
+            } else {
+                ret += "," + B3PGissuite.vars.enabledLayerItems[i].id;
+            }
+        }
+
+        return ret;
     }
-
-    B3PGissuite.vars.webMapController.createPanel("toolGroup");
-
-    B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading", Tool.LOADING_BAR));
-
-    /* Zoom tool */
-    var zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {
-        title: 'inzoomen via selectie'
-    });
-    B3PGissuite.vars.webMapController.addTool(zoomBox);
-
-    /* Pan tool */
-    var pan = B3PGissuite.vars.webMapController.createTool("b_pan", Tool.PAN, {
-        title: 'kaartbeeld slepem'
-    });
-    B3PGissuite.vars.webMapController.addTool(pan);
-    //set default tool pan so the cursor is ok.
-    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
-        B3PGissuite.vars.webMapController.activateTool("b_pan");
-    }
-
-    /* Previous extent tool */
-    var prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {
-        title: 'stap terug'
-    });
-    B3PGissuite.vars.webMapController.addTool(prevExtent);
-
-    /* Afstand meten tool */
-    var bu_measure = B3PGissuite.vars.webMapController.createTool("b_measure", Tool.MEASURE, {
-        title: 'afstand meten'
-    });
-    //B3PGissuite.vars.webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
-    B3PGissuite.vars.webMapController.addTool(bu_measure);
-
-    /* I-tool */
-    var options = new Object();
-    options["handlerGetFeatureHandler"] = onIdentifyData;
-    options["handlerBeforeGetFeatureHandler"] = onIdentify;
-    options["title"] = "informatie opvragen";
-    var identify = B3PGissuite.vars.webMapController.createTool("identify", Tool.GET_FEATURE_INFO, options);
-    B3PGissuite.vars.webMapController.addTool(identify);
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_SET_TOOL, identify, onChangeTool);
-
-    var editLayer = B3PGissuite.vars.webMapController.createVectorLayer("editMap");
-    B3PGissuite.vars.webMapController.getMap().addLayer(editLayer);
-    B3PGissuite.vars.webMapController.getMap().setLayerIndex(editLayer, B3PGissuite.vars.webMapController.getMap().getLayers().length + B3PGissuite.vars.startLayerIndex);
-
-    /* Redlining tools */
-    var edittingtb = B3PGissuite.vars.webMapController.createTool("redLiningContainer", Tool.DRAW_FEATURE, {
-        layer: editLayer
-    });
-    B3PGissuite.vars.webMapController.addTool(edittingtb);
-
-    /* Draw Polygon with measured surface area  */
-    var bu_polyMeasure = B3PGissuite.vars.webMapController.createTool("b_polyMeasure", Tool.MEASURED_POLYGON, {
-        title: 'oppervlakte meten',
-        displayClass: 'olControlb_polyMeasure'
-    });
-    B3PGissuite.vars.webMapController.addTool(bu_polyMeasure);
-
-    /* Buffer tool */
-    var bu_buffer = B3PGissuite.vars.webMapController.createTool("b_buffer", Tool.BUTTON, {
-        layer: editLayer,
-        title: 'buffer het tekenobject'
-    });
-    B3PGissuite.vars.webMapController.addTool(bu_buffer);
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_buffer, b_buffer);
-
-    /* Selecteer kaartobject tool */
-    var bu_highlight = B3PGissuite.vars.webMapController.createTool("b_highlight", Tool.BUTTON, {
-        layer: editLayer,
-        title: 'selecteer een object in de kaart'
-    });
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_highlight, b_highlight);
-    B3PGissuite.vars.webMapController.addTool(bu_highlight);
-
-    /* Selecteer binnen kaartobject tool */
-    var bu_getfeatures = B3PGissuite.vars.webMapController.createTool("b_getfeatures", Tool.BUTTON, {
-        layer: editLayer,
-        title: 'selecteer binnen geselecteerd kaartobject'
-    });
-    B3PGissuite.vars.webMapController.addTool(bu_getfeatures);
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_getfeatures, b_getfeatures);
-
-    /* Verwijder polygon tool */
-    var bu_removePolygons = B3PGissuite.vars.webMapController.createTool("b_removePolygons", Tool.BUTTON, {
-        layer: editLayer,
-        title: 'verwijder het tekenobject'
-    });
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_removePolygons, b_removePolygons);
-    B3PGissuite.vars.webMapController.addTool(bu_removePolygons);
-
-    /* Print tool */
-    var bu_print = B3PGissuite.vars.webMapController.createTool("b_printMap", Tool.BUTTON, {
-        layer: editLayer,
-        title: 'printvoorbeeld'
-    });
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_print, b_print);
-    B3PGissuite.vars.webMapController.addTool(bu_print);
-
-    /* Kaartselectie tool */
-    var bu_layerSelection = B3PGissuite.vars.webMapController.createTool("b_layerSelection", Tool.BUTTON, {
-        layer: editLayer,
-        title: 'kaartselectie'
-    });
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_layerSelection, b_layerSelection);
-    B3PGissuite.vars.webMapController.addTool(bu_layerSelection);
-
-    var gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
-
-    var bu_gps = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {
-        layer: editLayer,
-        title: 'zet GPS locatie aan/uit'
-    });
-
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, gpsComponent.stopPolling);
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
-
-    /* off event voor weghalen marker */
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, b_gps_stop);
-
-    B3PGissuite.vars.webMapController.addTool(bu_gps);
-
-    /* Overzichtskaart tool */
-    var bu_overview = B3PGissuite.vars.webMapController.createTool("b_showOverzicht", Tool.BUTTON, {
-        layer: editLayer,
-        title: 'overzichtskaart'
-    });
-    B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_overview, b_overview);
-    B3PGissuite.vars.webMapController.addTool(bu_overview);
-
-    var scalebar = B3PGissuite.vars.webMapController.createTool("scalebar", Tool.SCALEBAR);
-    B3PGissuite.vars.webMapController.addTool(scalebar);
-
-
-    var zoombar = B3PGissuite.vars.webMapController.createTool("zoombar", Tool.ZOOM_BAR);
-    B3PGissuite.vars.webMapController.addTool(zoombar);
-
-    B3PGissuite.vars.editComponent = new EditComponent();
-
-    if (B3PGissuite.config.viewerTemplate == "embedded") {
-        displayEmbeddedMenuIcons();
-    }
-}
-
-function displayEmbeddedMenuIcons() {
-    $j("#embedded_icons").css('position', 'absolute');
-    $j("#embedded_icons").css('width', '170px');
-    $j("#embedded_icons").css('height', '36px');
-
-    $j("#embedded_icons .embedded_icon").css('float', 'left');
-    $j("#embedded_icons .embedded_icon").css('padding-top', '7px');
-    $j("#embedded_icons .embedded_icon").css('padding-left', '15px');
-
-    if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
-        $j("#embedded_icons").css('left', '670px');
-        $j("#embedded_icons").css('top', '6px');
-        $j("#embedded_icons").css('border', 'solid 1px #808080');
-        $j("#embedded_icons").css('background-color', '#eeeeee');
-    } else {
-        $j("#embedded_icons").css('left', '630px');
-        $j("#embedded_icons").css('top', '2px');
-    }
-
-    $j("#embedded_icons").show();
-}
-
-function getBaseUrl() {
-    var protocol = window.location.protocol + "//";
-    var host = window.location.host;
-
-    return protocol + host + B3PGissuite.config.baseNameViewer;
-}
+};
 
 /**
  * Uses a search configuration and search params in the url. Is done when searching via url
@@ -317,14 +560,14 @@ function getBaseUrl() {
  */
 function doInitSearch() {
     if (B3PGissuite.config.searchConfigId.length > 0 && B3PGissuite.config.search.length >= 0) {
-        showLoading();
+        B3PGissuite.commons.showLoading();
 
         var termen = B3PGissuite.config.search.split(",");
         
         if (termen && termen.length > 0 && termen[0] != "") {
             JZoeker.zoek(new Array(B3PGissuite.config.searchConfigId), termen, 0, handleInitSearch);
         } else {             
-            hideLoading();
+            B3PGissuite.commons.hideLoading();
         }
     }
 }
@@ -335,7 +578,7 @@ function doInitSearch() {
  * @param list List with search results from back-end.
  */
 function handleInitSearch(list) {
-    hideLoading();
+    B3PGissuite.commons.hideLoading();
     
     if (list && list.length > 0) {
         handleInitSearchResult(list[0], B3PGissuite.config.searchAction, B3PGissuite.config.searchId, B3PGissuite.config.searchClusterId, B3PGissuite.config.searchSldVisibleValue);
@@ -395,17 +638,17 @@ function handleInitSearchResult(result, action, themaId, clusterId, visibleValue
         }
         var sldUrl = B3PGissuite.config.sldServletUrl + sldOptions;
         if (B3PGissuite.vars.mapInitialized) {
-            setSldOnDefaultMap(sldUrl, true);
+            B3PGissuite.viewerComponent.setSldOnDefaultMap(sldUrl, true);
         }
     }
 
     /* Place marker */
-    result = getBboxMinSize2(result);
+    result = B3PGissuite.viewercommons.getBboxMinSize2(result);
     var x = (result.maxx - result.minx) / 2 + result.minx;
     var y = (result.maxy - result.miny) / 2 + result.miny;
 
     placeSearchResultMarker(x, y);
-    switchTab("zoeken");
+    B3PGissuite.viewercommons.switchTab("zoeken");
 
     /* Lagen aanzetten na zoeken */
     JZoekconfiguratieThemaUtil.getThemas(B3PGissuite.config.searchConfigId, function(data) {
@@ -413,7 +656,7 @@ function handleInitSearchResult(result, action, themaId, clusterId, visibleValue
         switchLayersOn();
 
         if (doZoom) {
-            result = getBboxMinSize2(result);
+            result = B3PGissuite.viewercommons.getBboxMinSize2(result);
             var ext = new Object();
             ext.minx = result.minx;
             ext.miny = result.miny;
@@ -436,1087 +679,6 @@ function removeSearchResultMarker() {
     B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
 }
 
-function removeAllMarkers() {
-    B3PGissuite.vars.webMapController.getMap().removeAllMarkers();
-}
-
-/**
- * Changes the bounding box of the feature to a minimal size when this is smaller
- * than the minimal vlue.
- * @param feature The feature.
- * @return Returns the feature with adjusted bbox.
- */
-function getBboxMinSize2(feature) {
-    if ((Number(feature.maxx - feature.minx) < B3PGissuite.config.minBboxZoeken)) {
-        var addX = Number((B3PGissuite.config.minBboxZoeken - (feature.maxx - feature.minx)) / 2);
-        var addY = Number((B3PGissuite.config.minBboxZoeken - (feature.maxy - feature.miny)) / 2);
-        feature.minx = Number(feature.minx - addX);
-        feature.maxx = Number(Number(feature.maxx) + Number(addX));
-        feature.miny = Number(feature.miny - addY);
-        feature.maxy = Number(Number(feature.maxy) + Number(addY));
-    }
-    return feature;
-}
-
-/**
- * Because a simple reload won't change the url in flamingo. Remove the layer
- * and add it again. Maybe a getCap is done but with a little luck the browser
- * cached the last request.
- * @param sldUrl The SLD url for the layer.
- * @param reAddLayer If true the layer will be removed and added again.
- */
-function setSldOnDefaultMap(sldUrl, reAddLayer) {
-    var kbLayer = B3PGissuite.vars.webMapController.getMap("map1").getLayer("fmcLayer");
-    kbLayer.setSld(escape(sldUrl));
-
-    if (reAddLayer) {
-        B3PGissuite.vars.webMapController.getMap("map1").removeLayerById(kbLayer.getId(), false);
-        B3PGissuite.vars.webMapController.getMap("map1").addLayer(kbLayer);
-    }
-}
-
-/**
- * Shows a busy with loading page.
- * cached the last request.
- * @param handle Handle to the window to display page content in.
- * @param type Type of display used (div, panel or window).
- */
-function loadBusyJSP(handle, type) {
-    var $iframebody = null;
-    if (type == 'div')
-        $iframebody = $j(handle).contents().find("body");
-    if (type == 'panel')
-        $iframebody = $j('#' + handle).contents().find("body");
-    if (type == 'window')
-        $iframebody = $j(handle.document.body);
-
-    // "Gewoon" popup window (dus geen DIV) geeft nog niet helemaal het gewenste resultaat
-    if ($iframebody != null) {
-        $iframebody.html('<div id="content_style">' +
-                '<table class="kolomtabel">' +
-                '<tr>' +
-                '<td valign="top">' +
-                '<div class="loadingMessage">' +
-                '<table>' +
-                '<tr>' +
-                '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>' +
-                '<td>' +
-                '<h2>Bezig met laden ...</h2>' +
-                '<p>Bezig met zoeken naar administratieve gegevens.</p>' +
-                '</td>' +
-                '</tr>' +
-                '</table>' +
-                '</div>' +
-                '</td>' +
-                '</tr>' +
-                '</table>' +
-                '</div>');
-    }
-}
-
-/**
- * Handles onIdentify by the user to retrieve object information. This function
- * submits the data via form to the back-end.
- * @param geom The (buffered) geometry of the click location.
- * @param highlightThemaId Is used to also highlight the clicked object.
- * @param selectionWithinObject Boolean indicates if it should retrieve objectdata
- * for all objects within the current selection (polygon). When false it retrives only
- * data directly under the (buffered) click location.
- * @param themaIds the thema ids where this request must be done. If ommited the 
- * selected thema's are used. It doesn't change the checkboxes.
- * @param extraCriteria JavaScript object with CQL criteria that is used as filter for getting the features.
- */
-function handleGetAdminData(geom, highlightThemaId, selectionWithinObject, themaIds, extraCriteria) {
-
-    if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
-        return;
-    }
-
-    removeSearchResultMarker();
-
-    var treeComponent = B3PGissuite.get('TreeComponent');
-    if (themaIds === undefined) {
-        if (!B3PGissuite.config.multipleActiveThemas && treeComponent !== null) {
-            themaIds = treeComponent.getActiveAnalyseThemaId();
-        } else {
-            themaIds = getLayerIdsAsString(true);
-        }
-
-        if (themaIds == null || themaIds == '') {
-            hideLoading();
-            return;
-        }
-    }
-
-    //set the extra criteria.
-    document.forms[0].extraCriteria.value = "";
-    if (extraCriteria) {
-        document.forms[0].extraCriteria.value = extraCriteria;
-    }
-
-    //set the correct action
-    document.forms[0].admindata.value = 't';
-    document.forms[0].metadata.value = '';
-    document.forms[0].objectdata.value = '';
-
-    document.forms[0].themaid.value = themaIds;
-
-    document.forms[0].lagen.value = '';
-
-    //als er een init search is meegegeven (dus ook een sld is gemaakt)
-    if (B3PGissuite.config.searchAction.toLowerCase().indexOf("filter") >= 0) {
-
-        document.forms[0].search.value = B3PGissuite.config.search;
-        document.forms[0].B3PGissuite.config.searchId.value = B3PGissuite.config.searchId;
-        document.forms[0].B3PGissuite.config.searchClusterId.value = B3PGissuite.config.searchClusterId;
-    }
-
-    document.forms[0].geom.value = geom;
-
-    var schaal;
-    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
-        schaal = B3PGissuite.vars.webMapController.getMap().getResolution();
-    } else {
-        schaal = B3PGissuite.vars.webMapController.getMap().getScaleHint();
-    }
-
-    document.forms[0].scale.value = schaal;
-    document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
-
-    if (selectionWithinObject) {
-        document.forms[0].withinObject.value = "1";
-        document.forms[0].onlyFeaturesInGeom.value = "true";
-    } else {
-        document.forms[0].withinObject.value = "-1";
-        document.forms[0].onlyFeaturesInGeom.value = "false";
-    }
-
-    if (B3PGissuite.config.bookmarkAppcode != null) {
-        document.forms[0].bookmarkAppcode.value = B3PGissuite.config.bookmarkAppcode;
-    }
-
-    if (highlightThemaId != null) {
-        document.forms[0].themaid.value = highlightThemaId;
-    }
-
-    if (B3PGissuite.config.usePopup) {
-        // open popup when not opened en submit form to popup
-        if (B3PGissuite.vars.dataframepopupHandle == null || B3PGissuite.vars.dataframepopupHandle.closed) {
-            if (B3PGissuite.config.useDivPopup) {
-                B3PGissuite.vars.dataframepopupHandle = popUpData('dataframedivpopup', 680, 225, true);
-            } else {
-                B3PGissuite.vars.dataframepopupHandle = popUpData('dataframepopup', 680, 225, false);
-            }
-        }
-
-        if (B3PGissuite.config.useDivPopup) {
-            //$j("#popupWindow").show();
-            document.forms[0].target = 'dataframedivpopup';
-            loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'div');
-        } else {
-            document.forms[0].target = 'dataframepopup';
-            loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'window');
-        }
-
-        /* display marker in middle of click point */
-        var point = getPointFromGeom(geom);
-        placeSearchResultMarker(point.x, point.y);
-
-    } else if (B3PGissuite.config.useBalloonPopup) {
-        if (!B3PGissuite.vars.balloon) {
-            var offsetX = 0;
-            var offsetY = 0;
-
-            /* offsetY nodig voor de flamingo toolbalk boven de kaart */
-            if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
-                offsetY = 36;
-            }
-
-            B3PGissuite.vars.balloon = new Balloon($j("#mapcontent"), B3PGissuite.vars.webMapController, 'infoBalloon', 300, 300, offsetX, offsetY);
-        }
-        document.forms[0].target = 'dataframeballoonpopup';
-
-        /*Bepaal midden van vraag geometry*/
-        var point = getPointFromGeom(geom);
-
-        //B3PGissuite.vars.balloon.resetPositionOfBalloon(centerX,centerY);
-        B3PGissuite.vars.balloon.setPosition(point.x, point.y, true);
-
-        var iframeElement = $j('<iframe id="dataframeballoonpopup" name="dataframeballoonpopup" class="popup_Iframe" src="admindatabusy.do?theme=' + B3PGissuite.config.theme + '" frameborder="0">');
-        B3PGissuite.vars.balloon.getContentElement().html(iframeElement);
-    } else {
-        document.forms[0].target = 'dataframe';
-        loadBusyJSP('dataframe', 'panel');
-    }
-
-    document.forms[0].submit();
-}
-
-function Point(x, y) {
-    this.x = x;
-    this.y = y;
-}
-
-function getPointFromGeom(geom) {
-    var coordString = geom.replace(/POLYGON/g, '').replace(/POINT/, '').replace(/\(/g, '').replace(/\)/g, '');
-    var xyPairs = coordString.split(",");
-
-    var minx;
-    var maxx;
-    var miny;
-    var maxy;
-
-    for (var i = 0; i < xyPairs.length; i++) {
-        var xy = xyPairs[i].split(" ");
-        var x = Number(xy[0]);
-        var y = Number(xy[1]);
-
-        if (minx === undefined) {
-            minx = x;
-            maxx = x;
-        }
-        if (miny === undefined) {
-            miny = y;
-            maxy = y;
-        }
-        if (x > maxx) {
-            maxx = x;
-        }
-        if (x < minx) {
-            minx = x;
-        }
-        if (y > maxy) {
-            maxy = y;
-        }
-        if (y < miny) {
-            miny = y;
-        }
-    }
-
-    var centerX = (minx + maxx) / 2;
-    var centerY = (miny + maxy) / 2;
-
-    return new Point(centerX, centerY);
-}
-
-/**
- * Opens an url in an iFrame.
- * @param url url to open.
- */
-function openUrlInIframe(url) {
-    var iframe = document.getElementById("dataframe");
-    iframe.src = url;
-}
-
-function createWMSServiceUrlDialog() {
-    $j("#dialog-wmsservice-url").dialog({
-        resizable: false,
-        disabled: true,
-        autoOpen: false,
-        modal: false,
-        width: 750,
-        height: 150
-    });
-}
-
-function createDownloadMetadataDialog() {
-    $j("#dialog-download-metadata").dialog({
-        resizable: false,
-        disabled: true,
-        autoOpen: false,
-        modal: false
-    });
-}
-
-/**
- * Disable (gray out) a layer in the tree. Function uses jQuery to edit element.
- * @param itemid Item id to disable.
- */
-function disableLayer(itemid) {
-    var $item = $j("#layermaindiv_item_" + itemid + "_label");
-    $item.addClass("layerdisabled");
-    //$item.find("input").attr("disabled", "disabled");
-    $item.find(".treeLegendIcon").addClass("disabledLegendIcon");
-}
-
-/**
- * Enable a layer in the tree. Function uses jQuery to edit element.
- * @param itemid Item id to enable.
- */
-function enableLayer(itemid) {
-    var $item = $j("#layermaindiv_item_" + itemid + "_label");
-    $item.removeClass("layerdisabled");
-    //$item.find("input").removeAttr("disabled");
-    $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");
-}
-
-function switchTab(id) {
-    if (tabComponent.hasTab(id)) {
-        tabComponent.setActive(id);
-    }
-    if (leftTabComponent.hasTab(id)) {
-        leftTabComponent.setActive(id);
-    }
-}
-
-function syncLayerCookieAndForm() {
-    var layerString = getLayerIdsAsString();
-    if (layerString == "") {
-        layerString = 'ALL';
-    }
-    if (B3PGissuite.config.useCookies) {
-        eraseCookie('checkedLayers');
-        if (layerString != null) {
-            createCookie('checkedLayers', layerString, '7');
-        }
-    }
-    document.forms[0].lagen.value = layerString;
-}
-
-function addClusterIdToCookie(id) {
-    var str = readCookie('checkedClusters');
-    var arr = new Array();
-    if (str != null)
-        arr = str.split(',');
-
-    var newValues = "";
-    var found = false;
-    for (var x = arr.length - 1; x >= 0; x--) {
-        if (arr[x] == id) {
-            found = true;
-        }
-        if (newValues.length == 0) {
-            newValues += arr[x];
-        } else {
-            newValues += "," + arr[x];
-        }
-    }
-    if (!found) {
-        if (newValues.length == 0) {
-            newValues += id;
-        } else {
-            newValues += "," + id;
-        }
-    }
-    createCookie('checkedClusters', newValues, '7');
-}
-
-function removeAllFeatures() {
-    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
-}
-
-function stopDrawPolygon() {
-    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").stopDrawDrawFeature();
-}
-
-function startDrawPolygon(geomType) {
-    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
-    B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(geomType);
-}
-
-function removeClusterIdFromCookie(id) {
-    var str = readCookie('checkedClusters');
-    var arr = new Array();
-    if (str != null)
-        arr = str.split(',');
-
-    var newValues = "";
-    for (var x = arr.length - 1; x >= 0; x--) {
-        /* als id niet diegene is die verwijderd moet worden
-         * dan toevoegen aan nieuwe cookie value */
-        if (arr[x] != id) {
-            if (x == arr.length - 1)
-                newValues += arr[x];
-            else
-                newValues += "," + arr[x];
-        }
-    }
-
-    createCookie('checkedClusters', newValues, '7');
-}
-
-function isStringEmpty(str) {
-    return (!str || 0 === str.length);
-}
-
-function reloadRedliningLayer(themaId, projectnaam, removeFeatures) {
-    var groepParam = "GROEPNAAM";
-    var projectParam = "PROJECTNAAM";
-
-    if (!isStringEmpty(B3PGissuite.config.organizationcode)) {
-        B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode;
-    }
-
-    if (!isStringEmpty(projectnaam)) {
-        B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + projectParam + "=" + projectnaam;
-    }
-
-    if (!isStringEmpty(B3PGissuite.config.organizationcode) && !isStringEmpty(projectnaam)) {
-        B3PGissuite.vars.layerUrl = B3PGissuite.vars.originalLayerUrl + groepParam + "=" + B3PGissuite.config.organizationcode + "&" + projectParam + "=" + projectnaam;
-    }
-
-    /* tekenobject van kaart afhalen */
-    if (removeFeatures) {
-        removeAllFeatures();
-    }
-
-    /* TODO: Beetje lelijk gewoon vinkje aan uitzetten om redlining laag te refreshen
-     * wellicht een keer methode schrijven voor de webmapcontroller die
-     * iets dergelijks kan doen */
-    var treeComponent = B3PGissuite.get('TreeComponent');
-    if (treeComponent !== null) {
-        treeComponent.deActivateCheckbox(themaId);
-        treeComponent.activateCheckbox(themaId);
-    }
-}
-
-/*Check scale for all layers*/
-function checkScaleForLayers() {
-    var currentscale;
-    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
-        currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
-    } else {
-        currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
-    }
-
-    setScaleForTree(B3PGissuite.config.themaTree, currentscale);
-}
-
-/**
- * Controleert of een item in de huidige schaal past.
- * Voor een enkele layer wordt gekeken of die er in past
- * Voor een cluster wordt gekeken of er 1 van de layers in de schaal past.
- * @param item json thema of cluster
- * @param scale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
- * @return boolean wel of niet zichtbaar in scale.
- */
-function isItemInScale(item, scale) {
-    if (scale == 'NaN' || scale < 0 || !item) {
-        return false;
-    }
-
-    var itemVisible = true;
-
-    if (item.children) {
-        itemVisible = false;
-        for (var i = 0; i < item.children.length; i++) {
-            if (isItemInScale(item.children[i], scale)) {
-                itemVisible = true;
-            }
-        }
-    } else {
-        if (item.scalehintmin != null) {
-            var minscale = Number(item.scalehintmin.replace(",", "."));
-            if (scale < minscale) {
-                itemVisible = false;
-            }
-        }
-        if (item.scalehintmax != null) {
-            var maxscale = Number(item.scalehintmax.replace(",", "."));
-            if (scale > maxscale) {
-                itemVisible = false;
-            }
-        }
-    }
-
-    /* Schaal check voor Tiling lagen */
-    if (item.resolutions || item.PRINTRESOLUTIONS) {
-        var list;
-        var res;
-
-        if (item.PRINTRESOLUTIONS) {
-            res = item.PRINTRESOLUTIONS;
-        } else {
-            res = item.resolutions;
-        }
-
-        var listType = (typeof res);
-
-        if (listType == "string") {
-            list = res.split(" ");
-
-            if (list && list.length < 1) {
-                list = res.split(",");
-            }
-        }
-
-        if (list && list.length > 0) {
-            var size = list.length;
-            var max = list[0];
-            var min = list[size - 1];
-
-            if (min == "") {
-                min = list[size - 2];
-            }
-
-            // doe W(res(kw) * 2) scalehint
-            var scaleMax = Math.sqrt((max * max) * 2);
-            var scaleMin = Math.sqrt((min * min) * 2);
-
-            var epsilon = 0.00000001;
-            var adjustedScale = scale + epsilon;
-
-            /* Scale check with % margin between scales */
-            var percent = 5;
-            scaleMax *= (100 + percent) / 100;
-            scaleMin *= (100 - percent) / 100;
-
-            if (adjustedScale <= scaleMax && adjustedScale >= scaleMin) {
-                itemVisible = true;
-            } else {
-                itemVisible = false;
-            }
-        }
-    }
-
-    return itemVisible;
-}
-
-/*
- * Calculates and returns the ??? from 1:??? for the current extent and 
- * current mapwidth in pixels. Average ppi value assumed. The 0.00028
- * could be made into a config setting in gisviewerconfig.
- */
-function calcScaleForCurrentExtent() {
-    var extent = B3PGissuite.vars.webMapController.getMap().getExtent();
-    var newMapWidth = extent.maxx - extent.minx;
-
-    var screenWidth = $j("#mapcontent").width();
-    var scale = newMapWidth / (screenWidth * 0.00028);
-
-    return Math.round(Number(scale));
-}
-/**
- *Sets een tree item enabled or disabled (visually)
- *@param item
- *@param scale
- */
-function setScaleForTree(item, scale) {
-    var disabledRadio = false;
-
-    //if disabled radioinput dan zijn de layers al gedisabled.
-    var inputElement = document.getElementById(item.id);
-
-    disabledRadio = inputElement && inputElement.type == 'radio' && !inputElement.checked;
-
-    if (!disabledRadio) {
-        if (item.children) {
-            for (var i = 0; i < item.children.length; i++) {
-                setScaleForTree(item.children[i], scale);
-            }
-        }
-        var itemVisible = isItemInScale(item, scale);
-
-        /* Als item een cluster is en aangevinkt kan worden of het item is
-         * geen cluster, dus een kaartlaag dan mag dit wel of
-         * niet uitgegrijst worden */
-        if ((item.cluster && item.callable) || !item.cluster) {
-            if (itemVisible) {
-                enableLayer(item.id);
-            } else {
-                disableLayer(item.id);
-            }
-        }
-
-        return itemVisible;
-
-    } else {
-        return false;
-    }
-}
-
-function getLayerById(id) {
-    var layer = B3PGissuite.vars.webMapController.getMap().getLayer(id);
-
-    if (layer != null) {
-        return layer;
-    }
-
-    return null;
-}
-
-function loadObjectInfo(geom) {
-    var gebiedenTabActive = false;
-
-    for (i in B3PGissuite.config.enabledtabs) {
-        if (B3PGissuite.config.enabledtabs[i] === "gebieden") {
-            gebiedenTabActive = true;
-        }
-    }
-
-    for (i in B3PGissuite.config.enabledtabsLeft) {
-        if (B3PGissuite.config.enabledtabsLeft[i] === "gebieden") {
-            gebiedenTabActive = true;
-        }
-    }
-
-    if (!gebiedenTabActive) {
-        return;
-    }
-
-    var activeAnalyseThemaId = '';
-    var treeComponent = B3PGissuite.get('TreeComponent');
-
-    if (treeComponent !== null) {
-        activeAnalyseThemaId = treeComponent.getActiveAnalyseThemaId();
-    }
-
-    document.forms[0].admindata.value = '';
-    document.forms[0].metadata.value = '';
-
-    if (!B3PGissuite.config.multipleActiveThemas) {
-        document.forms[0].themaid.value = activeAnalyseThemaId;
-    } else {
-        document.forms[0].themaid.value = getLayerIdsAsString();
-    }
-
-    document.forms[0].analysethemaid.value = activeAnalyseThemaId;
-    document.forms[0].objectdata.value = 't';
-    document.forms[0].target = 'objectframeViewer';
-
-    // Use current scale and tolerance for click point
-    var schaal;
-    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
-        schaal = B3PGissuite.vars.webMapController.getMap().getResolution();
-    } else {
-        schaal = B3PGissuite.vars.webMapController.getMap().getScaleHint();
-    }
-
-    document.forms[0].scale.value = schaal;
-    document.forms[0].tolerance.value = B3PGissuite.config.tolerance;
-
-    document.forms[0].geom.value = geom;
-
-    document.forms[0].submit();
-}
-/**
- * Get alle enabled layer items
- * @param onlyWithinScale Only get the visible, within currentScale items.
- */
-function getLayerIdsAsString(onlyWithinScale) {
-    var ret = "";
-    var firstTime = true;
-
-    for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
-
-        if (B3PGissuite.config.useInheritCheckbox) {
-            var object = document.getElementById(B3PGissuite.vars.enabledLayerItems[i].id);
-            /* Item alleen toevoegen aan de layers indien
-             * parent cluster(s) allemaal aangevinkt staan of
-             * geen cluster heeft */
-            if (!itemHasAllParentsEnabled(object))
-                continue;
-        }
-        if (onlyWithinScale) {
-            var currentscale;
-            if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
-                currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
-            } else {
-                currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
-            }
-
-            if (!isItemInScale(B3PGissuite.vars.enabledLayerItems[i], currentscale)) {
-                continue;
-            }
-        }
-        if (firstTime) {
-            ret += B3PGissuite.vars.enabledLayerItems[i].id;
-            firstTime = false;
-        } else {
-            ret += "," + B3PGissuite.vars.enabledLayerItems[i].id;
-        }
-    }
-
-    return ret;
-}
-
-function itemHasAllParentsEnabled(object) {
-
-    if (object == null) {
-        return false;
-    }
-
-    /* zoek eerste div element met _children erin */
-    var parentChildrenDiv = getParentDivContainingChilds(object, 'div');
-
-    /* als er geen parent div is met eventuele children (cluster)
-     * dan top bereikt dus alles aangevinkt */
-    if (!parentChildrenDiv) {
-        return true;
-    }
-
-    /* neem hiervan eerste div erboven, dit is dan de div
-     * met input vinkje voor het cluster */
-    var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
-
-    /* opzoeken of checkbox element checked is */
-    var name = getItemName(parentDiv);
-    var checkbox = document.getElementById(name);
-    if (!checkbox.checked) {
-        /* niet aangevinkt dus false */
-        return false;
-    }
-    return itemHasAllParentsEnabled(parentDiv);
-
-}
-
-/* zoekt omhoog naar het eerste element met _children erin
- * tagname van element meegeven */
-function getParentDivContainingChilds(obj, tag)
-{
-    var obj_parent = obj.parentNode;
-
-    if (!obj_parent || (obj_parent.id == null))
-        return false;
-
-    /* alleen parent teruggeven als het ook aangevinkt kan worden */
-    if ((obj_parent.id.indexOf("_children") != -1) && (parentHasCheckBox(obj_parent)))
-        return obj_parent;
-    else
-        return getParentDivContainingChilds(obj_parent, tag);
-}
-
-function getParentByTagName(obj, tag)
-{
-    var obj_parent = obj.parentNode;
-    if (!obj_parent)
-        return false;
-
-    if (obj_parent.tagName.toLowerCase() == tag)
-        return obj_parent;
-    else
-        return getParentByTagName(obj_parent, tag);
-}
-
-/* geeft het laatste stukje van de naam terug */
-function getItemName(item) {
-    var str = item.id.split("_");
-    var l = str.length;
-
-    var name = str[l - 1];
-
-    return name;
-}
-
-/* gebruik om te bepalen of ouder cluster aangevinkt kan worden of niet.
- * Indien dit niet kan dan moet deze niet meegeteld worden in de
- * berekening of alle clusters wel aangevinkt staan bij de methode
- * itemHasAllParentsEnabled()
- */
-function parentHasCheckBox(parent) {
-    /* neem hiervan eerste div erboven, dit is dan de div
-     * met eventueel input vinkje voor het cluster */
-    var parentDiv = getParentByTagName(parent, 'div');
-    var name = getItemName(parentDiv);
-    var checkbox = document.getElementById(name);
-    if (checkbox) {
-        return true;
-    }
-    return false;
-}
-
-function createLegendDiv(item) {
-    var id = item.id + '##' + item.wmslayers;
-    var myImage = new Image();
-    myImage.name = item.title;
-    myImage.id = id;
-    myImage.onerror = imageOnerror;
-    myImage.onload = imageOnload;
-
-    var spanEl = document.createElement("span");
-    spanEl.innerHTML = ' ' + item.title + '<br />';
-    spanEl.className = 'orderLayerSpanClass';
-
-    var div = document.createElement("div");
-    div.name = id;
-    div.id = id;
-    div.title = item.title;
-    div.className = "orderLayerClass";
-    div.appendChild(spanEl);
-    div.theItem = item;
-
-    /* nieuw */
-    div.onclick = function() {
-        selectLayer(this);
-    };
-    if (item.hide_legend) {
-        div.style.display = "none";
-    } // end
-
-    if (item.legendurl != undefined) {
-        myImage.src = item.legendurl;
-        B3PGissuite.vars.loadingLegendImages[id] = myImage;
-    } else {
-        myImage.onerror();
-    }
-
-    div.onclick = function() {
-        selectLayer(this);
-    };
-
-    if (item.hide_legend) {
-        div.style.display = "none";
-    }
-    return div;
-}
-function imageOnerror() {
-    this.style.height = '0';
-    this.style.width = '0';
-    this.height = 0;
-    this.width = 0;
-    //release 1 loading space
-    B3PGissuite.vars.legendImageLoadingSpace++;
-    loadNextInLegendImageQueue();
-}
-function imageOnload() {
-    //if not is a loading image then don't add to the DOM
-    if (B3PGissuite.vars.loadingLegendImages[this.id] != undefined) {
-        if (parseInt(this.height) > 5) {
-            var legendimg = document.createElement("img");
-            legendimg.src = this.src;
-            legendimg.onerror = this.onerror;
-            legendimg.className = "imagenoborder";
-            legendimg.alt = this.name;
-            legendimg.title = this.name;
-            var legendImage = document.getElementById(this.id);
-            if (legendImage) {
-                legendImage.appendChild(legendimg);
-            }
-        }
-        //done loading remove
-        delete B3PGissuite.vars.loadingLegendImages[this.id];
-        //release 1 loading space
-        B3PGissuite.vars.legendImageLoadingSpace++;
-        loadNextInLegendImageQueue();
-    }
-}
-
-//adds a layer to the legenda
-//if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
-function addLayerToLegendBox(theItem, atBottomOfType) {
-    //check if already exists in legend
-    var layerDiv = findLayerDivInLegendBox(theItem);
-    if (layerDiv != null) {
-        if ($j(layerDiv).css("display") == "none") {
-            var beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType);
-            if (beforeChild == null) {
-                $j(orderLayerBox).append($j(layerDiv));
-            } else {
-                /* TODO: Nagaan of bovenin toevoegen kan. */
-                if (beforeChild.id == layerDiv.id) {
-                    $j(orderLayerBox).prepend($j(layerDiv));
-                } else {
-                    $j(beforeChild).before($j(layerDiv));
-                }
-                //$j(orderLayerBox).insertBefore($j(layerDiv),beforeChild);
-            }
-        }
-        $j(layerDiv).css("display", "block");
-        return;
-    }
-
-    B3PGissuite.vars.legendImageQueue.push({
-        theItem: theItem,
-        atBottomOfType: atBottomOfType
-    });
-    loadNextInLegendImageQueue();
-}
-
-/**
- Load the next image object.
- */
-function loadNextInLegendImageQueue() {
-    if (B3PGissuite.vars.legendImageLoadingSpace > 0 && B3PGissuite.vars.legendImageQueue.length > 0) {
-        //consume 1 loading place
-        B3PGissuite.vars.legendImageLoadingSpace--;
-        var nextLegend = B3PGissuite.vars.legendImageQueue.shift();
-        var theItem = nextLegend.theItem;
-        var atBottomOfType = nextLegend.nextLegend;
-
-        var div = createLegendDiv(theItem);
-
-        var beforeChild = null;
-
-        if (orderLayerBox) {
-            if (orderLayerBox.hasChildNodes()) {
-                beforeChild = findBeforeDivInLegendBox(theItem, atBottomOfType);
-            }
-            if (beforeChild == null) {
-                orderLayerBox.appendChild(div);
-            } else {
-                orderLayerBox.insertBefore(div, beforeChild);
-            }
-
-        }
-
-    }
-}
-function resetLegendImageQueue() {
-    //B3PGissuite.vars.loadingLegendImages= new Object();
-    B3PGissuite.vars.legendImageQueue = new Array();
-    B3PGissuite.vars.legendImageLoadingSpace = 2;
-}
-function findLayerDivInLegendBox(theItem) {
-    var id = theItem.id + '##' + theItem.wmslayers;
-
-    if (orderLayerBox) {
-        for (var i = 0; i < orderLayerBox.childNodes.length; i++) {
-            var child = orderLayerBox.childNodes.item(i);
-            if (child.id == id) {
-                return child;
-            }
-        }
-    }
-
-    return null;
-}
-
-function findBeforeDivInLegendBox(theItem, atBottomOfType) {
-    var beforeChild = null;
-    //place layer before the background layers.
-    if (theItem.background) {
-        if (atBottomOfType) {
-            beforeChild = null;
-        } else {
-            for (var i = 0; i < orderLayerBox.childNodes.length; i++) {
-                var orderLayerItem = orderLayerBox.childNodes.item(i).theItem;
-                if (orderLayerItem) {
-                    if (orderLayerItem.background) {
-                        beforeChild = orderLayerBox.childNodes.item(i);
-                        break;
-                    }
-                }
-            }
-        }
-    } else {
-        if (atBottomOfType) {
-            var previousChild = null;
-            for (var j = 0; j < orderLayerBox.childNodes.length; j++) {
-                orderLayerItem = orderLayerBox.childNodes.item(j).theItem;
-                if (orderLayerItem) {
-                    if (orderLayerItem.background) {
-                        beforeChild = previousChild;
-                        break;
-                    }
-                }
-                previousChild = orderLayerBox.childNodes.item(j);
-            }
-        } else {
-            beforeChild = orderLayerBox.firstChild;
-        }
-    }
-    return beforeChild;
-}
-
-function refreshMapVolgorde() {
-    refreshLegendBox();
-    B3PGissuite.get('ViewerComponent').refreshLayer(true);
-    syncLayerCookieAndForm();
-}
-
-function refreshLegendBox() {
-    resetLegendImageQueue();
-
-    var res;
-    if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
-        res = B3PGissuite.vars.webMapController.getMap().getResolution();
-    } else {
-        res = B3PGissuite.vars.webMapController.getMap().getScaleHint();
-    }
-
-    B3PGissuite.vars.webMapController.unRegisterEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), refreshLegendBox, this);
-
-    var visibleLayerItems = new Array();
-    var invisibleLayerItems = new Array();
-
-    for (var k = 0; k < B3PGissuite.vars.enabledLayerItems.length; k++) {
-        var item = B3PGissuite.vars.enabledLayerItems[k];
-        var found = false;
-
-        // ouder moet aan staan en binnen schaal
-        if (B3PGissuite.config.useInheritCheckbox) {
-            var object = document.getElementById(item.id);
-            //Item alleen toevoegen aan de layers indien
-            //parent cluster(s) allemaal aangevinkt staan of
-            //geen cluster heeft            
-            if (!itemHasAllParentsEnabled(object) || (!isItemInScale(item, res))) {
-                found = true;
-                invisibleLayerItems.push(item);
-            }
-            // alleen binnen schaal tonen in legenda
-        } else {
-            if (!isItemInScale(item, res)) {
-                found = true;
-                invisibleLayerItems.push(item);
-            }
-        }
-
-        if (!found) {
-            visibleLayerItems.push(item);
-        }
-    }
-
-    B3PGissuite.vars.enabledLayerItems = new Array();
-    var totalLength = 0;
-    if (orderLayerBox) {
-        totalLength = orderLayerBox.childNodes.length;
-    }
-
-    //Kijk of ze al bestaan en in die volgorde staan.
-    for (var i = (totalLength - 1); i > -1; i--) {
-        var stillVisible = false;
-        var itemId = splitValue(orderLayerBox.childNodes[i].id)[0];
-        for (var m = 0; m < visibleLayerItems.length; m++) {
-            if (visibleLayerItems[m].id == itemId) {
-                var foundLayerItem = visibleLayerItems[m];
-                B3PGissuite.vars.enabledLayerItems.push(foundLayerItem);
-                visibleLayerItems.splice(m, 1);
-                stillVisible = true;
-            }
-        }
-        if (!stillVisible) {
-            //orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
-            //$j(orderLayerBox.childNodes[i]).remove();
-            $j(orderLayerBox.childNodes[i]).css("display", "none");
-        }
-    }
-
-    if (visibleLayerItems.length > 0) {
-        B3PGissuite.vars.enabledLayerItems = B3PGissuite.vars.enabledLayerItems.concat(visibleLayerItems);
-    }
-
-    resetLegendImageQueue();
-
-    for (var j = 0; j < B3PGissuite.vars.enabledLayerItems.length; j++) {
-        item = B3PGissuite.vars.enabledLayerItems[j];
-
-        addLayerToLegendBox(item, false);
-    }
-
-    if (invisibleLayerItems.length > 0) {
-        B3PGissuite.vars.enabledLayerItems = B3PGissuite.vars.enabledLayerItems.concat(invisibleLayerItems);
-    }
-}
-
-function deleteAllLayers() {
-    var totalLength = orderLayerBox.childNodes.length;
-    for (var i = (totalLength - 1); i > -1; i--) {
-        document.getElementById(splitValue(orderLayerBox.childNodes[i].id)[0]).checked = false;
-        orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
-    }
-    B3PGissuite.vars.enabledLayerItems = new Array();
-    syncLayerCookieAndForm();
-    var treeComponent = B3PGissuite.get('TreeComponent');
-    if (treeComponent !== null) {
-        treeComponent.doRefreshLayer();
-    }
-}
-
-function splitValue(val) {
-    return val.split('##');
-}
-
 function getActiveLayerId(cookiestring) {
     if (!cookiestring)
         return null;
@@ -1532,8 +694,7 @@ function getActiveLayerLabel(cookiestring) {
 
 function onChangeTool(id, event) {
     if (id == 'identify') {        
-        hideIdentifyIcon();
-
+        B3PGissuite.viewerComponent.hideIdentifyIcon();
         if (webMapController instanceof FlamingoController) {
             B3PGissuite.vars.btn_highLightSelected = false;
         }
@@ -1576,7 +737,7 @@ function onIdentify(movie, extend) {
 
     /* kijken of bezig met editen redline objecten */
     if (B3PGissuite.vars.editingRedlining) {
-        hideIdentifyIcon();
+        B3PGissuite.viewerComponent.hideIdentifyIcon();
         selectRedlineObject(geom);
         return;
     }
@@ -1593,18 +754,18 @@ function onIdentify(movie, extend) {
             B3PGissuite.vars.webMapController.activateTool("identify");
         }
 
-        hideIdentifyIcon();
+        B3PGissuite.viewerComponent.hideIdentifyIcon();
         highLightThemaObject(geom);
     } else {
         B3PGissuite.vars.btn_highLightSelected = false;
 
         B3PGissuite.vars.webMapController.activateTool("identify");
 
-        showIdentifyIcon();
-        handleGetAdminData(geom, null, false);
+        B3PGissuite.viewerComponent.showIdentifyIcon();
+        B3PGissuite.viewercommons.handleGetAdminData(geom, null, false);
     }
 
-    loadObjectInfo(geom);
+    B3PGissuite.viewercommons.loadObjectInfo(geom);
 }
 
 //update the getFeatureInfo in the feature window.
@@ -1643,7 +804,7 @@ function onIdentifyData(id, data) {
 }
 
 function onFrameworkLoaded() {
-    if (document.getElementById("treeForm") && (ieVersion <= 8 && ieVersion != -1)) {
+    if (document.getElementById("treeForm") && (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1)) {
         document.getElementById("treeForm").reset();
     }
 
@@ -1655,8 +816,8 @@ function onFrameworkLoaded() {
             treeComponent.clickLayers();
         }
 
-        initFullExtent();
-        setStartExtent();
+        B3PGissuite.viewerComponent.initFullExtent();
+        B3PGissuite.viewerComponent.setStartExtent();
 
         if (treeComponent !== null) {
             treeComponent.doRefreshLayer();
@@ -1698,8 +859,14 @@ function onFrameworkLoaded() {
 }
 
 function ol_ZoomEnd() {
-    checkScaleForLayers();
-    refreshLegendBox();
+    var treeComponent = B3PGissuite.get('TreeComponent'),
+        legendComponent = B3PGissuite.get('LegendComponent');
+    if(treeComponent !== null) {
+        treeComponent.checkScaleForLayers();
+    }
+    if(legendComponent !== null) {
+        legendComponent.refreshLegendBox();
+    }
 }
 
 /*
@@ -1768,63 +935,6 @@ function placeStartLocationMarker() {
     }
 }
 
-function initFullExtent() {
-    /* Extent uit url */
-    if (B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
-        if (B3PGissuite.config.fullExtent != null && B3PGissuite.config.fullExtent.length > 0 && B3PGissuite.config.fullExtent.split(",").length == 4) {
-            setFullExtent(B3PGissuite.config.fullExtent.split(",")[0], B3PGissuite.config.fullExtent.split(",")[1], B3PGissuite.config.fullExtent.split(",")[2], B3PGissuite.config.fullExtent.split(",")[3]);
-        } else {
-            setFullExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3]);
-        }
-
-        /* Extent uit Flamingo */
-    } else if (B3PGissuite.config.fullbbox != null && B3PGissuite.config.fullbbox.length > 0 && B3PGissuite.config.fullbbox.split(",").length == 4) {
-        setFullExtent(B3PGissuite.config.fullbbox.split(",")[0], B3PGissuite.config.fullbbox.split(",")[1], B3PGissuite.config.fullbbox.split(",")[2], B3PGissuite.config.fullbbox.split(",")[3]);
-
-        /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
-    } else {
-        B3PGissuite.config.bbox = getNLExtent();
-        B3PGissuite.config.fullbbox = getNLExtent();
-
-        var bounds = getNLMaxBounds();
-
-        setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
-    }
-}
-
-function setStartExtent() {
-    /* Eerst kijken of er een zoekextent is */
-    if (B3PGissuite.vars.searchExtent != null) {
-        B3PGissuite.vars.webMapController.getMap("map1").moveToExtent(B3PGissuite.vars.searchExtent);
-
-        /* Extent uit url */
-    } else if (B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
-        setTimeout(function() {
-            moveToExtent(B3PGissuite.config.bbox.split(",")[0], B3PGissuite.config.bbox.split(",")[1], B3PGissuite.config.bbox.split(",")[2], B3PGissuite.config.bbox.split(",")[3]);
-        }, 1);
-
-        /* Extent uit Flamingo */
-    } else if (B3PGissuite.config.fullbbox != null && B3PGissuite.config.fullbbox.length > 0 && B3PGissuite.config.fullbbox.split(",").length == 4) {
-        setTimeout(function() {
-            moveToExtent(B3PGissuite.config.fullbbox.split(",")[0], B3PGissuite.config.fullbbox.split(",")[1], B3PGissuite.config.fullbbox.split(",")[2], B3PGissuite.config.fullbbox.split(",")[3]);
-        }, 1);
-
-    } else if (B3PGissuite.config.resolution) {
-        B3PGissuite.vars.webMapController.getMap().zoomToResolution(B3PGissuite.config.resolution);
-
-        /* Als er geen van bovenstaande is ingesteld dan heel Nederland */
-    } else {
-        B3PGissuite.config.bbox = getNLExtent();
-        B3PGissuite.config.fullbbox = getNLExtent();
-
-        var bounds = getNLMaxBounds();
-
-        setTimeout(function() {
-            moveToExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
-        }, 1);
-    }
-}
-
 function ie6_hack_onInit() {
     if (navigator.appVersion.indexOf("MSIE") != -1) {
         version = parseFloat(navigator.appVersion.split("MSIE")[1]);
@@ -1879,7 +989,12 @@ function moveAndIdentify(minx, miny, maxx, maxy) {
 }
 
 function onAllLayersFinishedLoading(mapId) {
-    checkScaleForLayers();
+    var treeComponent = B3PGissuite.get('TreeComponent'),
+        legendComponent = B3PGissuite.get('LegendComponent');
+
+    if(treeComponent) {
+        treeComponent.checkScaleForLayers();
+    }
 
     if (B3PGissuite.vars.nextIdentifyExtent !== null) {
         doIdentify(B3PGissuite.vars.nextIdentifyExtent.minx, B3PGissuite.vars.nextIdentifyExtent.miny, B3PGissuite.vars.nextIdentifyExtent.maxx, B3PGissuite.vars.nextIdentifyExtent.maxy);
@@ -1891,21 +1006,14 @@ function onAllLayersFinishedLoading(mapId) {
     }
 
     /* Do again so that layers outside of scale dont show up in legend tab at startup */
-    refreshLegendBox();
+    if(legendComponent !== null) {
+        legendComponent.refreshLegendBox();
+    }
 
     /* Config optie maken ? */
     if (B3PGissuite.config.showDebugContent) {
-        setDebugContent();
+        B3PGissuite.viewercommons.setDebugContent();
     }
-}
-
-/* Kan gebruikt worden om wat debug info onderin de kaartboom weer te geven zoals
- * specifieke timings of huidig omgerekende schaal */
-function setDebugContent() {
-    var scale = calcScaleForCurrentExtent();
-    var html = "<p><b>Schaal 1 : " + scale + "</b></p>";
-
-    $j("#debug-content").html(html);
 }
 
 /*Get de flash movie*/
@@ -1995,7 +1103,7 @@ function getWMSRequests() {
             currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
         }
 
-        var inScale = isItemInScale(item, currentscale);
+        var inScale = B3PGissuite.viewercommons.isItemInScale(item, currentscale);
 
         /* Also add tem points url in print */
         var testUrl = fgLayers[k].getURL();
@@ -2239,7 +1347,7 @@ function getTilingRequests() {
             item = layers[j].getFrameworkLayer();
         }
 
-        var inScale = isItemInScale(item, currentscale);
+        var inScale = B3PGissuite.viewercommons.isItemInScale(item, currentscale);
 
         if (!inScale) {
             continue;
@@ -2335,7 +1443,7 @@ function getWktActiveFeature(index) {
 
     if (object == null)
     {
-        messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "pencil");
+        B3PGissuite.commons.messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "pencil");
         return null;
     }
 
@@ -2370,10 +1478,10 @@ function b_getfeatures(id, event) {
     var wkt = getWktActiveFeature(-1);
 
     if (wkt) {
-        handleGetAdminData(wkt, null, true);
+        B3PGissuite.viewercommons.handleGetAdminData(wkt, null, true);
 
         // Also load objectinfo into gebieden tab
-        loadObjectInfo(wkt);
+        B3PGissuite.viewercommons.loadObjectInfo(wkt);
     }
 }
 /* Buffer functies voor aanroep back-end en tekenen buffer op het scherm */
@@ -2409,13 +1517,13 @@ function b_buffer(id, event) {
         str = str.replace(",", ".");
         afstand = str;
     } else {
-        messagePopup("Melding", "Geen getal.", "error");
+        B3PGissuite.commons.messagePopup("Melding", "Geen getal.", "error");
         return;
     }
 
     if (afstand == 0)
     {
-        messagePopup("Melding", "Buffer mag niet 0 zijn.", "error");
+        B3PGissuite.commons.messagePopup("Melding", "Buffer mag niet 0 zijn.", "error");
         return;
     }
 
@@ -2427,7 +1535,7 @@ function b_print(id, event) {
 }
 
 function b_layerSelection(id, event) {
-    iFramePopup('kaartselectie.do', false, 'Kaartselectie', 800, 600, true, true);
+    B3PGissuite.commons.iFramePopup('kaartselectie.do', false, 'Kaartselectie', 800, 600, true, true);
 }
 
 function b_overview(id, event) {
@@ -2437,7 +1545,7 @@ function b_overview(id, event) {
 }
 
 function b_gps_stop(id, event) {
-    removeAllMarkers();
+    B3PGissuite.viewerComponent.removeAllMarkers();
 }
 
 function drawFeature(ggbId, attrName, attrVal) {
@@ -2514,6 +1622,7 @@ function b_highlight(id, params) {
 var highLightedLayerid = 0;
 function highLightThemaObject(geom) {
     highlightLayers = new Array();
+    var treeComponent = B3PGissuite.get('TreeComponent');
 
     /* geom bewaren voor callbaack van popup */
     B3PGissuite.vars.highLightGeom = geom;
@@ -2538,11 +1647,11 @@ function highLightThemaObject(geom) {
             /* Item alleen toevoegen aan de layers indien
              * parent cluster(s) allemaal aangevinkt staan of
              * geen cluster heeft */
-            if (!itemHasAllParentsEnabled(object))
+            if (treeComponent !== null && !treeComponent.itemHasAllParentsEnabled(object))
                 continue;
         }
         
-        if (item.highlight == 'on' && isItemInScale(item, scale) ) {
+        if (item.highlight == 'on' && B3PGissuite.viewercommons.isItemInScale(item, scale) ) {
             highlightLayers.push(item);
         }
     }
@@ -2550,7 +1659,7 @@ function highLightThemaObject(geom) {
     /* Indien meerdere actieve highlightlayers en er is nog geen highLightedLayerid
      * geselecteerd via pop-up, de pop-up tonen. Zie ook handlePopupValue(); */
     if (highlightLayers.length > 1 && highLightedLayerid < 1) {
-        iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300, true, false);
+        B3PGissuite.commons.iFramePopup('viewerhighlight.do', false, 'Kaartlaag selectie', 400, 300, true, false);
     }
 
     /* Indien er maar 1 analyse laag actief is dan dit id gebruiken */
@@ -2582,7 +1691,7 @@ function selectRedlineObject(geom) {
 
 function returnRedlineObject(jsonString) {
     if (jsonString == "-1") {
-        messagePopup("Redlining bewerken", "Geen object gevonden.", "information");
+        B3PGissuite.commons.messagePopup("Redlining bewerken", "Geen object gevonden.", "information");
 
         return;
     }
@@ -2649,7 +1758,7 @@ function handlePopupValue(value) {
 function returnHighlight(wkt) {
     /* Fout in back-end of wkt is een POINT */
     if (wkt.length > 0 && wkt == "-1") {
-        messagePopup("Selecteer object", "Geen object gevonden.", "information");
+        B3PGissuite.commons.messagePopup("Selecteer object", "Geen object gevonden.", "information");
     }
     
     if (wkt.length > 0 && wkt != "-1")
@@ -2666,79 +1775,15 @@ function returnHighlight(wkt) {
     }
 }
 
-function checkDisplayButtons() {
-    if (B3PGissuite.config.showRedliningTools) {
-        if (B3PGissuite.vars.webMapController.getTool("redLiningContainer")) {
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(true);
-        } else {
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(true);
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(true);
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(true);
-        }
-    } else {
-        if (B3PGissuite.vars.webMapController.getTool("redLiningContainer")) {
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer").setVisible(false);
-        } else {
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer_point").setVisible(false);
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer_line").setVisible(false);
-            B3PGissuite.vars.webMapController.getTool("redLiningContainer_polygon").setVisible(false);
-        }
-    }
-
-    if (B3PGissuite.config.showBufferTool) {
-        B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(true);
-    } else {
-        B3PGissuite.vars.webMapController.getTool("b_buffer").setVisible(false);
-    }
-
-    if (B3PGissuite.config.showSelectBulkTool) {
-        B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(true);
-    } else {
-        B3PGissuite.vars.webMapController.getTool("b_getfeatures").setVisible(false);
-    }
-
-    if (B3PGissuite.config.showNeedleTool) {
-        B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(true);
-    } else {
-        B3PGissuite.vars.webMapController.getTool("b_highlight").setVisible(false);
-    }
-
-    if (B3PGissuite.config.showRedliningTools || B3PGissuite.config.showNeedleTool) {
-        B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(true);
-    } else {
-        B3PGissuite.vars.webMapController.getTool("b_removePolygons").setVisible(false);
-    }
-
-    if (B3PGissuite.config.showPrintTool) {
-        B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(true);
-    } else {
-        B3PGissuite.vars.webMapController.getTool("b_printMap").setVisible(false);
-    }
-
-    if (B3PGissuite.config.showLayerSelectionTool) {
-        B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(true);
-    } else {
-        B3PGissuite.vars.webMapController.getTool("b_layerSelection").setVisible(false);
-    }
-
-    if (B3PGissuite.config.showGPSTool) {
-        B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(true);
-    } else {
-        B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(false);
-    }
-}
-
 function onGetCapabilities(id, params) {
-    hideLoading();
+    B3PGissuite.commons.hideLoading();
 }
 
 function onConfigComplete(id, params) {
     if (!B3PGissuite.vars.initialized) {
         B3PGissuite.vars.initialized = true;
-
-        initializeButtons();
-        checkDisplayButtons();
-
+        B3PGissuite.viewerComponent.initializeButtons();
+        B3PGissuite.viewerComponent.checkDisplayButtons();
         // TODO: gaat dit goed? Dit word nu aangeroepen met document.ready(),
         // nu niet meer met flamingoevent
         onFrameworkLoaded();
@@ -2830,7 +1875,7 @@ function openGoogleMapsDirections(values) {
     }
 
     if (values[0] == "" || values[1] == "") {
-        messagePopup("Info", "Er is nog geen gps- of startlocatie bekend.", "information");
+        B3PGissuite.commons.messagePopup("Info", "Er is nog geen gps- of startlocatie bekend.", "information");
         
         return;
     }
@@ -2857,7 +1902,7 @@ function createPermaLink() {
 
     /* kaartlagen ophalen */
     var id = "";
-    var layerIds = getLayerIdsAsString();
+    var layerIds = B3PGissuite.viewercommons.getLayerIdsAsString();
     if (layerIds != undefined && layerIds != "") {
         id = "&id=" + layerIds;
     }
@@ -2981,7 +2026,7 @@ function popUp(URL, naam, width, height, useDiv) {
 
         $j("#popupWindow").show();
 
-        if (ieVersion <= 6 && ieVersion != -1) {
+        if (B3PGissuite.commons.getIEVersion() <= 6 && B3PGissuite.commons.getIEVersion() != -1) {
             fixPopup();
         }
 
@@ -3039,7 +2084,7 @@ function popUpData(naam, width, height, useDiv) {
         document.getElementById("popupWindow_Title").innerHTML = 'Gisviewer Informatie';
         $j("#popupWindow").show();
 
-        if (ieVersion <= 6 && ieVersion != -1)
+        if (B3PGissuite.commons.getIEVersion() <= 6 && B3PGissuite.commons.getIEVersion() != -1)
             fixPopup();
 
         return document.getElementById("dataframedivpopup");
@@ -3083,7 +2128,7 @@ function buildPopup() {
     popupContent.styleClass = 'popup_Content';
     popupContent.id = 'popupWindow_Content';
     var popupIframe = null;
-    if (ieVersion <= 7 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 7 && B3PGissuite.commons.getIEVersion() != -1) {
         popupIframe = document.createElement('<iframe name="dataframedivpopup">');
     } else {
         popupIframe = document.createElement('iframe');
@@ -3397,7 +2442,7 @@ function createServiceLeaf(container, item) {
 function createCheckboxUserLayer(item, checked) {
     var checkbox;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
         var checkboxControleString = '<input name="userLayers" type="checkbox" id="ul_' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
@@ -3478,14 +2523,14 @@ function createServiceLayerLink(item) {
                         var url = item.service_url + "service=WMS&request=GetCapabilities&version=1.0.0";
                         $j("#input_wmsserviceurl").val(url);
 
-                        unblockViewerUI();
+                        B3PGissuite.commons.unblockViewerUI();
                         $j("#dialog-wmsservice-url").dialog('open');
                     }
                 },
                 "Annuleren": function() {
                     if ($j("#dialog-download-metadata").dialog("isOpen")) {
                         $j(this).dialog("close");
-                        unblockViewerUI();
+                        B3PGissuite.commons.unblockViewerUI();
                     }
                 }
             });
@@ -3494,7 +2539,7 @@ function createServiceLayerLink(item) {
                 $j(this).html($j(this).parent().attr('text'));
             });
 
-            blockViewerUI();
+            B3PGissuite.commons.blockViewerUI();
             $j("#dialog-download-metadata").dialog('open');
         };
     }
@@ -3535,15 +2580,6 @@ function getItemByLayer(item, layers) {
     return null;
 }
 
-function getBaseUrl() {
-    var protocol = window.location.protocol + "//";
-    var host = window.location.host;
-
-    var urlBase = protocol + host + B3PGissuite.config.baseNameViewer;
-
-    return urlBase;
-}
-
 function doIdentifyAfterSearch(x, y) {
     if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
         return;
@@ -3559,9 +2595,9 @@ function doIdentifyAfterSearch(x, y) {
     B3PGissuite.vars.btn_highLightSelected = false;
     B3PGissuite.vars.webMapController.activateTool("identify");
 
-    showIdentifyIcon();
-    handleGetAdminData(geom, null, true);
-    loadObjectInfo(geom);
+    B3PGissuite.viewerComponent.showIdentifyIcon();
+    B3PGissuite.viewercommons.handleGetAdminData(geom, null, true);
+    B3PGissuite.viewercommons.loadObjectInfo(geom);
 }
 
 $j(document).ready(function() {
@@ -3604,7 +2640,7 @@ $j(document).ready(function() {
     }
 
     try {
-        if (getParent().document.getElementById('popupWindow')) {
+        if (B3PGissuite.commons.getParent({ parentOnly: true }).document.getElementById('popupWindow')) {
             pwCreated = true;
         }
     } catch (err) {
@@ -3619,18 +2655,18 @@ $j(document).ready(function() {
             zIndex: 200,
             containment: 'document',
             start: function(event, ui) {
-                startDrag();
+                B3PGissuite.commons.startDrag();
             },
             stop: function(event, ui) {
-                stopDrag();
+                B3PGissuite.commons.stopDrag();
             }
         }).resizable({
             handles: 'se',
             start: function(event, ui) {
-                startResize();
+                B3PGissuite.commons.startResize();
             },
             stop: function(event, ui) {
-                stopResize();
+                B3PGissuite.commons.stopResize();
             }
         });
 
@@ -3640,17 +2676,24 @@ $j(document).ready(function() {
 
             $j("#popupWindow").hide();
         });
-
-        /* $j("#popupWindow").mouseover(function(){
-         startDrag();
-         });
-         $j("#popupWindow").mouseout(function(){
-         stopDrag();
-         }); */
-
     }
 
     B3PGissuite.vars.popupCreated = true;
-    createDownloadMetadataDialog();
-    createWMSServiceUrlDialog();
+
+    $j("#dialog-wmsservice-url").dialog({
+        resizable: false,
+        disabled: true,
+        autoOpen: false,
+        modal: false,
+        width: 750,
+        height: 150
+    });
+
+    $j("#dialog-download-metadata").dialog({
+        resizable: false,
+        disabled: true,
+        autoOpen: false,
+        modal: false
+    });
+
 });

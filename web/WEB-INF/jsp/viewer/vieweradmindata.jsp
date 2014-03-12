@@ -32,8 +32,8 @@
     var timeout = 3000;
     var loop = 0;
 
-    getParent().hideLoading();
-    if(getParent().panelBelowCollapsed) {
+    B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.commons.hideLoading();
+    if(B3PGissuite.commons.getParent({ parentOnly: true }).panelBelowCollapsed) {
         parent.panelResize('below');
     }
 
@@ -68,7 +68,7 @@ reguliere admindata of GetFeatureInfo --%>
 </div>
 <%-- div id="childLoadingadminDataContainer" class="childLoading"><img src="images/icons/loading.gif" alt="Loading" title="Loading" /></div --%>
 <div id="getFeatureInfo"></div>
-<script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/lib/json2.js'/>"></script>
 <script type="text/javascript">
     /*True als er alleen features mogen worden getoond die binnen de originele vraag geometry liggen (klik punt(met kleine buffer)
      of getekend object(polygon))

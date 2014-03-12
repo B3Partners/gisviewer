@@ -1,18 +1,7 @@
-function getParent() {
-    if (window.opener){
-        return window.opener;
-    }else if (window.parent){
-        return window.parent;
-    }else{
-        messagePopup("Fout", "No parent found", "error");
-        return null;
-    }
-}
-
 /* sendRedlining methode in action aanroepen. Een nieuw redline object
  * wordt door de back-end opgeslagen */
 function submitForm() {    
-    var ouder = getParent();
+    var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
     if(ouder) {
         var wkt = ouder.getWktActiveFeature(0);
@@ -32,7 +21,7 @@ function submitForm() {
     var ontwerp = document.forms[0].ontwerp.value;
     
     if (ouder && projectnaam == "Maak uw keuze..." && new_projectnaam == "") {
-        ouder.messagePopup("Redlining", "Vul een projectnaam in.", "information");
+        ouder.B3PGissuite.commons.messagePopup("Redlining", "Vul een projectnaam in.", "information");
         return false;
     }
 
@@ -40,14 +29,14 @@ function submitForm() {
     document.forms[0].submit();
 
     if (ouder) {        
-        ouder.reloadRedliningLayer(kaartlaagId, null, true);
+        ouder.B3PGissuite.viewerComponent.reloadRedliningLayer(kaartlaagId, null, true);
     }
 
     return false;
 }
 
 function submitRemoveForm() {
-    var ouder = getParent();
+    var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
     var id = document.forms[0].redliningID.value;
     var projectnaam = document.forms[0].projectnaam.value;
@@ -55,14 +44,14 @@ function submitRemoveForm() {
 
     if (id == null || id == "" || id == "undefined") {
         if (ouder) {
-            ouder.messagePopup("Redlining", "Selecteer eerst een object.", "information");
+            ouder.B3PGissuite.commons.messagePopup("Redlining", "Selecteer eerst een object.", "information");
             return false;
         }
     }
 
     /* polygoon van kaart afhalen */    
     if (ouder) {
-        ouder.removeAllFeatures();
+        ouder.B3PGissuite.viewerComponent.removeAllFeatures();
     }
 
     /* removeRedlining methode in action aanroepen */
@@ -70,7 +59,7 @@ function submitRemoveForm() {
     document.forms[0].submit();
 
     if (ouder) {        
-        ouder.reloadRedliningLayer(kaartlaagId, null, true);
+        ouder.B3PGissuite.viewerComponent.reloadRedliningLayer(kaartlaagId, null, true);
     }
 
     return false;
@@ -80,10 +69,10 @@ function submitRemoveForm() {
  * geactiveerd. Als de gebruiker op de kaart klikt wordt door de onIdentify
  * de selectRedlining aangeroepen waaran het klikpunt wordt meegegeven */
 function startEditRedlining() {    
-    var ouder = getParent(); 
+    var ouder = B3PGissuite.commons.getParent({ parentOnly: true }); 
     
     if (ouder) {        
-        ouder.removeAllFeatures();
+        ouder.B3PGissuite.viewerComponent.removeAllFeatures();
         
         var gegevensbronId = document.forms[0].gegevensbron.value;
         ouder.enableEditRedlining(gegevensbronId);
@@ -93,14 +82,14 @@ function startEditRedlining() {
 var startedDraw = false;
 
 function startDrawRedlineObject() {    
-    var ouder = getParent();
+    var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
     if (ouder) {
         if (startedDraw) {
-            ouder.stopDrawPolygon();
+            ouder.B3PGissuite.viewerComponent.stopDrawPolygon();
         } else {
             emptyForm();
-            ouder.startDrawPolygon("Polygon");
+            ouder.B3PGissuite.viewerComponent.startDrawPolygon("Polygon");
         }
 
         if (startedDraw)
@@ -111,10 +100,10 @@ function startDrawRedlineObject() {
 }
 
 function emptyForm() {
-    var ouder = getParent();
+    var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
     if (ouder) {
-        ouder.removeAllFeatures();
+        ouder.B3PGissuite.viewerComponent.removeAllFeatures();
     }
 
     document.forms[0].wkt.value = "";
@@ -136,12 +125,12 @@ function projectChanged(project) {
         return false;
     }
 
-    var ouder = getParent();
+    var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
     /* gebruik id van redlining kaartlaag om deze aan te zetten in de boom */
     if (ouder) {
         var kaartlaagId = document.forms[0].kaartlaagId.value;
-        ouder.reloadRedliningLayer(kaartlaagId, projectnaam, true);
+        ouder.B3PGissuite.viewerComponent.reloadRedliningLayer(kaartlaagId, projectnaam, true);
     }
 
     return true;

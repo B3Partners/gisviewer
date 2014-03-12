@@ -48,20 +48,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </p>
     </div>
 
-    <script type="text/javascript">
-        function getParent() {
-            if (window.opener){
-                return window.opener;
-            }else if (window.parent){
-                return window.parent;
-            }else{
-                messagePopup("Fout", "No parent found", "error");
-                return null;
-            }
-        }
-        
+    <script type="text/javascript">        
         function getActiveWkt(){
-            var ouder = getParent();
+            var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
             if(ouder) {
                 var wkt = ouder.getWktActiveFeature(0);

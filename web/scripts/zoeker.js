@@ -88,7 +88,7 @@ function performSearch() {
                 var y = $j("#"+zoekVelden[i].id + '_y').val();
 
                 if (x == undefined || y == undefined || x == "" || y == "") {
-                    messagePopup("Zoeken", "Ongeldige coordinaten opgegeven.", "error");
+                    B3PGissuite.commons.messagePopup("Zoeken", "Ongeldige coordinaten opgegeven.", "error");
 
                     return;
                 }
@@ -102,7 +102,7 @@ function performSearch() {
                 var invoer = $j("#"+zoekVelden[i].id + '_schaal').val();
                 
                 if (invoer == undefined || invoer == "" || invoer <= 0) {
-                    messagePopup("Zoeken", "Ongeldige schaal opgegeven.", "error");
+                    B3PGissuite.commons.messagePopup("Zoeken", "Ongeldige schaal opgegeven.", "error");
 
                     return;
                 }
@@ -162,7 +162,7 @@ function handleZoekResultaat(searchResultId){
     if (parentZc.zoekVelden==undefined || parentZc.zoekVelden.length==0){
 
         var msg = "Geen zoekvelden geconfigureerd voor zoekconfiguratie parent met id: "+parentZc.id;
-        messagePopup("Zoeken", msg, "error");
+        B3PGissuite.commons.messagePopup("Zoeken", msg, "error");
 
         return false;
     }
@@ -249,7 +249,7 @@ function searchCallBack(values){
     // Controleer of de bbox groter is dan de minimale bbox van de zoeker
     for (var i=0; i < values.length; i++){
         if (values[i].minx != 0 && values[i].miny != 0 && values[i].maxx != 0 && values[i].maxy) {
-            values[i]=getBboxMinSize2(values[i]);
+            values[i]=B3PGissuite.viewercommons.getBboxMinSize2(values[i]);
         }
     }
 
@@ -288,18 +288,6 @@ function switchLayersOn(){
             treeComponent.enableCheckBoxById(themaId);
         }
     }
-}
-
-function getBboxMinSize2(feature){
-    if ((Number(feature.maxx-feature.minx) < B3PGissuite.config.minBboxZoeken)){
-        var addX=Number((B3PGissuite.config.minBboxZoeken-(feature.maxx-feature.minx))/2);
-        var addY=Number((B3PGissuite.config.minBboxZoeken-(feature.maxy-feature.miny))/2);
-        feature.minx=Number(feature.minx-addX);
-        feature.maxx=Number(Number(feature.maxx)+Number(addX));
-        feature.miny=Number(feature.miny-addY);
-        feature.maxy=Number(Number(feature.maxy)+Number(addY));
-    }
-    return feature;
 }
 
 var currentSearchSelectId = "";

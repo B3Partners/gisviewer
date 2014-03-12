@@ -1,18 +1,6 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
 <script type="text/javascript">
-    function getParent() {
-        if (window.opener){
-            return window.opener;
-        }else if (window.parent){
-            return window.parent;
-        }else{
-            messagePopup("Fout", "No parent found", "error");
-            
-            return null;
-        }
-    }
-    
     function validateEmail()
     {
         var emailAdres = document.forms["downloadForm"]["email"].value;
@@ -24,7 +12,7 @@
             return false;
         }
         
-        var ouder = getParent();
+        var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
         if (ouder) {
             var wkt = ouder.getWktForDownload();
             if (wkt) {

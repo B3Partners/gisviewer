@@ -207,11 +207,11 @@
         
 <script type="text/javascript">
      if (opener) {
-        opener.hideLoading();
+        opener.B3PGissuite.commons.hideLoading();
     } else if (parent) {
-        parent.hideLoading();
+        parent.B3PGissuite.commons.hideLoading();
     } else {
-        messagePopup("Fout", "Er is een fout opgetreden bij het sluiten van de laadbalk.", "error");
+        B3PGissuite.commons.messagePopup("Fout", "Er is een fout opgetreden bij het sluiten van de laadbalk.", "error");
     }
 
 </script>

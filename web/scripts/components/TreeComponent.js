@@ -184,7 +184,7 @@ B3PGissuite.defineComponent('TreeComponent', {
     },
     addItemAsLayer: function(theItem) {
         this.addLayerToEnabledLayerItems(theItem);
-        syncLayerCookieAndForm();
+        this.syncLayerCookieAndForm();
 
         //If there is a orgainization code key then add this to the service url.
         if (theItem.wmslayers) {
@@ -203,23 +203,30 @@ B3PGissuite.defineComponent('TreeComponent', {
     },
     removeItemAsLayer: function(theItem) {
         if (this.removeLayerFromEnabledLayerItems(theItem.id) !== null) {
-            syncLayerCookieAndForm();
+            this.syncLayerCookieAndForm();
             return;
         }
     },
     refreshLayerWithDelay: function() {
-        showLoading();
+        B3PGissuite.commons.showLoading();
         if (B3PGissuite.vars.refresh_timeout_handle) {
             clearTimeout(B3PGissuite.vars.refresh_timeout_handle);
-            hideLoading();
+            B3PGissuite.commons.hideLoading();
         }
         B3PGissuite.vars.refresh_timeout_handle = setTimeout(this.doRefreshLayer, B3PGissuite.config.refreshDelay);
     },
     doRefreshLayer: function() {
+        var legendComponent = B3PGissuite.get('LegendComponent');
         //register after loading
-        B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), refreshLegendBox);
+        if(legendComponent !== null) {
+            B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), function() {
+                legendComponent.refreshLegendBox();
+            });
+        }
         B3PGissuite.get('ViewerComponent').refreshLayer();
-        refreshLegendBox();
+        if(legendComponent !== null) {
+            legendComponent.refreshLegendBox();
+        }
     },
     /**
      * called when a checkbox is clicked.
@@ -316,9 +323,9 @@ B3PGissuite.defineComponent('TreeComponent', {
         var cluster = element.theItem;
         if (B3PGissuite.config.useCookies) {
             if (element.checked) {
-                addClusterIdToCookie(cluster.id);
+                this.addClusterIdToCookie(cluster.id);
             } else {
-                removeClusterIdFromCookie(cluster.id);
+                this.removeClusterIdFromCookie(cluster.id);
             }
         }
         // Als er niet naar de B3PGissuite.config.useInheritCheckbox wordt gekeken (dus het vinkje bij 'Kaartgroep overerving' is uit)
@@ -370,14 +377,14 @@ B3PGissuite.defineComponent('TreeComponent', {
             for (var m = 0; m < cluster.children.length; m++) {
                 child = cluster.children[m];
                 if (element.checked) {
-                    enableLayer(child.id);
+                    this.enableLayer(child.id);
 
                     /* Indien samengestelde laag (cluster dan ook bovenliggende
                      * ouder aanzetten */
                     var childObj = document.getElementById(child.id);
                     this.enableParentClusters(childObj);
                 } else {
-                    disableLayer(child.id);
+                    this.disableLayer(child.id);
                 }
 
                 if (B3PGissuite.config.showInfoTab === 'auto' || B3PGissuite.config.showInfoTab === 'click') {
@@ -966,7 +973,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                 jQuery("#dialog-download-metadata").dialog("option", "buttons", {
                     "Metadata": function() {
                         if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
-                            iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                            B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
                             jQuery(this).dialog("close");
                         }
                     },
@@ -977,14 +984,14 @@ B3PGissuite.defineComponent('TreeComponent', {
                             var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             jQuery("#input_wmsserviceurl").val(url);
 
-                            unblockViewerUI();
+                            B3PGissuite.commons.unblockViewerUI();
                             jQuery("#dialog-wmsservice-url").dialog('open');
                         }
                     },
                     "Annuleren": function() {
                         if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                             jQuery(this).dialog("close");
-                            unblockViewerUI();
+                            B3PGissuite.commons.unblockViewerUI();
                         }
                     }
                 });
@@ -1015,7 +1022,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                                     alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.");
                                 }
 
-                                iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+                                B3PGissuite.commons.iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
                                 jQuery(this).dialog("close");
                             }
                         },
@@ -1026,14 +1033,14 @@ B3PGissuite.defineComponent('TreeComponent', {
                                 var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                                 jQuery("#input_wmsserviceurl").val(url);
 
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                                 jQuery("#dialog-wmsservice-url").dialog('open');
                             }
                         },
                         "Annuleren": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 jQuery(this).dialog("close");
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                             }
                         }
                     });
@@ -1046,14 +1053,14 @@ B3PGissuite.defineComponent('TreeComponent', {
                                 var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                                 jQuery("#input_wmsserviceurl").val(url);
 
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                                 jQuery("#dialog-wmsservice-url").dialog('open');
                             }
                         },
                         "Annuleren": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 jQuery(this).dialog("close");
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                             }
                         }
                     });
@@ -1062,7 +1069,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                         "Annuleren": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 jQuery(this).dialog("close");
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                             }
                         }
                     });
@@ -1093,13 +1100,13 @@ B3PGissuite.defineComponent('TreeComponent', {
                                     alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.");
                                 }
 
-                                iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+                                B3PGissuite.commons.iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
                                 jQuery(this).dialog("close");
                             }
                         },
                         "Metadata": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
-                                iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                                B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
                                 jQuery(this).dialog("close");
                             }
                         },
@@ -1110,14 +1117,14 @@ B3PGissuite.defineComponent('TreeComponent', {
                                 var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                                 jQuery("#input_wmsserviceurl").val(url);
 
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                                 jQuery("#dialog-wmsservice-url").dialog('open');
                             }
                         },
                         "Annuleren": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 jQuery(this).dialog("close");
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                             }
                         }
                     });
@@ -1125,7 +1132,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                     jQuery("#dialog-download-metadata").dialog("option", "buttons", {
                         "Metadata": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
-                                iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                                B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
                                 jQuery(this).dialog("close");
                             }
                         },
@@ -1136,14 +1143,14 @@ B3PGissuite.defineComponent('TreeComponent', {
                                 var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                                 jQuery("#input_wmsserviceurl").val(url);
 
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                                 jQuery("#dialog-wmsservice-url").dialog('open');
                             }
                         },
                         "Annuleren": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 jQuery(this).dialog("close");
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                             }
                         }
                     });
@@ -1151,14 +1158,14 @@ B3PGissuite.defineComponent('TreeComponent', {
                     jQuery("#dialog-download-metadata").dialog("option", "buttons", {
                         "Metadata": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
-                                iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                                B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
                                 jQuery(this).dialog("close");
                             }
                         },
                         "Annuleren": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 jQuery(this).dialog("close");
-                                unblockViewerUI();
+                                B3PGissuite.commons.unblockViewerUI();
                             }
                         }
                     });
@@ -1186,14 +1193,14 @@ B3PGissuite.defineComponent('TreeComponent', {
                             var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
                             jQuery("#input_wmsserviceurl").val(url);
 
-                            unblockViewerUI();
+                            B3PGissuite.commons.unblockViewerUI();
                             jQuery("#dialog-wmsservice-url").dialog('open');
                         }
                     },
                     "Annuleren": function() {
                         if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                             jQuery(this).dialog("close");
-                            unblockViewerUI();
+                            B3PGissuite.commons.unblockViewerUI();
                         }
                     }
                 });
@@ -1256,12 +1263,12 @@ B3PGissuite.defineComponent('TreeComponent', {
         if (object == null) {
             return;
         }
-        var parentChildrenDiv = getParentDivContainingChilds(object, 'div');
+        var parentChildrenDiv = this.getParentDivContainingChilds(object, 'div');
         if (!parentChildrenDiv) {
             return;
         }
-        var parentDiv = getParentByTagName(parentChildrenDiv, 'div');
-        var name = getItemName(parentDiv);
+        var parentDiv = this.getParentByTagName(parentChildrenDiv, 'div');
+        var name = this.getItemName(parentDiv);
         var checkbox = document.getElementById(name);
         checkbox.checked = true;
 
@@ -1310,6 +1317,225 @@ B3PGissuite.defineComponent('TreeComponent', {
         } else {
             this.fireEvent('hideLayerInfo', item);
         }
+    },
+
+    /*Check scale for all layers*/
+    checkScaleForLayers: function() {
+        var currentscale;
+        if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
+            currentscale = B3PGissuite.vars.webMapController.getMap().getResolution();
+        } else {
+            currentscale = B3PGissuite.vars.webMapController.getMap().getScaleHint();
+        }
+
+        this.setScaleForTree(B3PGissuite.config.themaTree, currentscale);
+    },
+
+    /**
+     *Sets een tree item enabled or disabled (visually)
+     *@param item
+     *@param scale
+     */
+    setScaleForTree: function(item, scale) {
+        var disabledRadio = false;
+
+        //if disabled radioinput dan zijn de layers al gedisabled.
+        var inputElement = document.getElementById(item.id);
+
+        disabledRadio = inputElement && inputElement.type == 'radio' && !inputElement.checked;
+
+        if (!disabledRadio) {
+            if (item.children) {
+                for (var i = 0; i < item.children.length; i++) {
+                    this.setScaleForTree(item.children[i], scale);
+                }
+            }
+            var itemVisible = B3PGissuite.viewercommons.isItemInScale(item, scale);
+
+            /* Als item een cluster is en aangevinkt kan worden of het item is
+             * geen cluster, dus een kaartlaag dan mag dit wel of
+             * niet uitgegrijst worden */
+            if ((item.cluster && item.callable) || !item.cluster) {
+                if (itemVisible) {
+                    this.enableLayer(item.id);
+                } else {
+                    this.disableLayer(item.id);
+                }
+            }
+
+            return itemVisible;
+
+        } else {
+            return false;
+        }
+    },
+
+    /**
+     * Disable (gray out) a layer in the tree. Function uses jQuery to edit element.
+     * @param itemid Item id to disable.
+     */
+    disableLayer: function(itemid) {
+        var $item = $j("#layermaindiv_item_" + itemid + "_label");
+        $item.addClass("layerdisabled");
+        //$item.find("input").attr("disabled", "disabled");
+        $item.find(".treeLegendIcon").addClass("disabledLegendIcon");
+    },
+
+    /**
+     * Enable a layer in the tree. Function uses jQuery to edit element.
+     * @param itemid Item id to enable.
+     */
+    enableLayer: function(itemid) {
+        var $item = $j("#layermaindiv_item_" + itemid + "_label");
+        $item.removeClass("layerdisabled");
+        //$item.find("input").removeAttr("disabled");
+        $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");
+    },
+
+    syncLayerCookieAndForm: function() {
+        var layerString = B3PGissuite.viewercommons.getLayerIdsAsString();
+        if (layerString == "") {
+            layerString = 'ALL';
+        }
+        if (B3PGissuite.config.useCookies) {
+            B3PGissuite.commons.eraseCookie('checkedLayers');
+            if (layerString != null) {
+                B3PGissuite.commons.createCookie('checkedLayers', layerString, '7');
+            }
+        }
+        document.forms[0].lagen.value = layerString;
+    },
+
+    addClusterIdToCookie: function(id) {
+        var str = B3PGissuite.commons.readCookie('checkedClusters');
+        var arr = new Array();
+        if (str != null)
+            arr = str.split(',');
+
+        var newValues = "";
+        var found = false;
+        for (var x = arr.length - 1; x >= 0; x--) {
+            if (arr[x] == id) {
+                found = true;
+            }
+            if (newValues.length == 0) {
+                newValues += arr[x];
+            } else {
+                newValues += "," + arr[x];
+            }
+        }
+        if (!found) {
+            if (newValues.length == 0) {
+                newValues += id;
+            } else {
+                newValues += "," + id;
+            }
+        }
+        B3PGissuite.commons.createCookie('checkedClusters', newValues, '7');
+    },
+
+    removeClusterIdFromCookie: function(id) {
+        var str = B3PGissuite.commons.readCookie('checkedClusters');
+        var arr = new Array();
+        if (str != null)
+            arr = str.split(',');
+
+        var newValues = "";
+        for (var x = arr.length - 1; x >= 0; x--) {
+            /* als id niet diegene is die verwijderd moet worden
+             * dan toevoegen aan nieuwe cookie value */
+            if (arr[x] != id) {
+                if (x == arr.length - 1)
+                    newValues += arr[x];
+                else
+                    newValues += "," + arr[x];
+            }
+        }
+
+        B3PGissuite.commons.createCookie('checkedClusters', newValues, '7');
+    },
+
+    itemHasAllParentsEnabled: function(object) {
+
+        if (object == null) {
+            return false;
+        }
+
+        /* zoek eerste div element met _children erin */
+        var parentChildrenDiv = this.getParentDivContainingChilds(object, 'div');
+
+        /* als er geen parent div is met eventuele children (cluster)
+         * dan top bereikt dus alles aangevinkt */
+        if (!parentChildrenDiv) {
+            return true;
+        }
+
+        /* neem hiervan eerste div erboven, dit is dan de div
+         * met input vinkje voor het cluster */
+        var parentDiv = this.getParentByTagName(parentChildrenDiv, 'div');
+
+        /* opzoeken of checkbox element checked is */
+        var name = this.getItemName(parentDiv);
+        var checkbox = document.getElementById(name);
+        if (!checkbox.checked) {
+            /* niet aangevinkt dus false */
+            return false;
+        }
+        return this.itemHasAllParentsEnabled(parentDiv);
+
+    },
+
+    /* zoekt omhoog naar het eerste element met _children erin
+     * tagname van element meegeven */
+    getParentDivContainingChilds: function(obj, tag) {
+        var obj_parent = obj.parentNode;
+
+        if (!obj_parent || (obj_parent.id == null))
+            return false;
+
+        /* alleen parent teruggeven als het ook aangevinkt kan worden */
+        if ((obj_parent.id.indexOf("_children") != -1) && (this.parentHasCheckBox(obj_parent)))
+            return obj_parent;
+        else
+            return this.getParentDivContainingChilds(obj_parent, tag);
+    },
+
+    getParentByTagName: function(obj, tag) {
+        var obj_parent = obj.parentNode;
+        if (!obj_parent)
+            return false;
+
+        if (obj_parent.tagName.toLowerCase() == tag)
+            return obj_parent;
+        else
+            return this.getParentByTagName(obj_parent, tag);
+    },
+
+    /* geeft het laatste stukje van de naam terug */
+    getItemName: function(item) {
+        var str = item.id.split("_");
+        var l = str.length;
+
+        var name = str[l - 1];
+
+        return name;
+    },
+
+    /* gebruik om te bepalen of ouder cluster aangevinkt kan worden of niet.
+     * Indien dit niet kan dan moet deze niet meegeteld worden in de
+     * berekening of alle clusters wel aangevinkt staan bij de methode
+     * itemHasAllParentsEnabled()
+     */
+    parentHasCheckBox: function(parent) {
+        /* neem hiervan eerste div erboven, dit is dan de div
+         * met eventueel input vinkje voor het cluster */
+        var parentDiv = this.getParentByTagName(parent, 'div');
+        var name = this.getItemName(parentDiv);
+        var checkbox = document.getElementById(name);
+        if (checkbox) {
+            return true;
+        }
+        return false;
     }
 
 });

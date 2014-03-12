@@ -1,8 +1,9 @@
 ieFixes = function() {
     fixMenu();
-    if(ieVersion <= 6 && ieVersion != -1) {
-        fixAbsolutePositions();
-        attachOnresize(fixAbsolutePositions);
+    if(B3PGissuite.commons.getIEVersion() <= 6 && B3PGissuite.commons.getIEVersion() != -1) {
+        $j(window).on('resize', function() {
+            fixAbsolutePositions();
+        });
     }
 }
 $j(document).ready(function() { ieFixes(); });
@@ -46,7 +47,7 @@ fixAbsolutePositions = function() {
 }
 
 fixPopup = function() {
-    if(ieVersion <= 6 && ieVersion != -1) {
+    if(B3PGissuite.commons.getIEVersion() <= 6 && B3PGissuite.commons.getIEVersion() != -1) {
         var popupWindow = document.getElementById('popupWindow');
 
         if (popupWindow)

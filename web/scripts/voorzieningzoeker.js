@@ -233,7 +233,7 @@ function zoek(){
         }
     }
 
-    //showLoading();
+    //B3PGissuite.commons.showLoading();
     $j("#voorzieningResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
 
     JZoeker.zoek(zoekconfiguraties[currentVoorzieningSelectId].id,waarde,maxResults,handleLocatieSearch);

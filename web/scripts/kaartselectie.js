@@ -91,7 +91,7 @@ function createServiceLeaf(container, item) {
 function createCheckboxThema(item, checked) {
     var checkbox;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
 
         var checkboxControleString = '<input style="display: none;" class="checkboxThema" name="kaartlagenAan" type="checkbox" id="' + item.id + '"';
         if (checked) {
@@ -131,7 +131,7 @@ function createCheckboxThema(item, checked) {
 function createCheckboxDefaultOnThema(item, checked) {
     var checkbox;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
 
         var checkboxControleString = '<input style="display: none;" class="checkboxThemaOn" name="kaartlagenDefaultAan" type="checkbox" id="on_' + item.id + '"';
         if (checked) {
@@ -171,7 +171,7 @@ function createCheckboxDefaultOnThema(item, checked) {
 function createCheckboxLayer(item, checked) {
     var checkbox;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
         var checkboxControleString = '<input style="display: none;" name="layersAan" type="checkbox" id="l_' + item.id + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';
@@ -209,7 +209,7 @@ function createCheckboxLayer(item, checked) {
 function createCheckboxDefaultOnLayer(item, checked) {
     var checkbox;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
 
         var checkboxControleString = '<input style="display: none" name="layersDefaultAan" type="checkbox" id="lOn_' + item.id + '"';
         if (checked) {
@@ -458,7 +458,7 @@ function createImageReplacement(id, imagetype, dependant, child, children) {
 function openSldContainer(containerid) {
     $j('.kaartlaagselectieSldContainer').hide();
     $j('#'+containerid).show();
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
         $j('.kaartlaagselectieContainer').css("z-index", "4000");
         $j('#'+containerid).parent().css("z-index", "5000");
     }
@@ -471,7 +471,7 @@ function closeSldContainers() {
 function createCheckboxCluster(item, checked) {
     var checkbox;
 
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
 
         var checkboxControleString = '<input style="display: none;" class="checkboxThema" name="kaartgroepenAan" type="checkbox" id="' + item.id + '"';
         if (checked) {
@@ -513,7 +513,7 @@ function createCheckboxDefaultOnCluster(item, checked, children) {
 	
 	var imageId = 'on_' + item.id + '_cluster';
 
-    if (ieVersion <= 8 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
         var checkboxControleString = '<input style="display: none;" class="checkboxThemaOn" name="kaartgroepenDefaultAan" type="checkbox" id="' + imageId + '"';
         if (checked) {
             checkboxControleString += ' checked="checked"';

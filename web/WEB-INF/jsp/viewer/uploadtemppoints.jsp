@@ -21,7 +21,7 @@
                 }else if (window.parent){
                     return window.parent;
                 }else{
-                    messagePopup("Fout", "No parent found", "error");
+                    alert("No parent found");
                     return null;
                 }
             }

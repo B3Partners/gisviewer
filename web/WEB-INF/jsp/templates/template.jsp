@@ -51,13 +51,9 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         </c:if>
 
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery-1.3.2.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery-ui-1.8.10.custom.min.js' module=''/>"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-1.3.2.min.js' module=''/>"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-ui-1.8.10.custom.min.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
-        <link href="<html:rewrite page='/styles/jcarousel/skin.css' module=''/>" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.jcarousel.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.mousewheel.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.qtip-1.0.0-rc3.min.js' module=''/>"></script>
         
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="width=device-width; height=device-height; user-scalable=no; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0">
@@ -69,7 +65,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 'mapicon': '<html:rewrite page='/images/icons/map.png' module='' />',
                 'listicon': '<html:rewrite page='/images/icons/search_list.png' module='' />'
             };
-            attachOnload(checkLocation);
+            B3PGissuite.commons.attachOnload(B3PGissuite.commons.checkLocation);
         </script>
     </head>
     <body class="homebody">

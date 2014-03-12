@@ -33,7 +33,7 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
             B3PGissuite.component[classDefinition.extend].call(this, options);
         };
     }
-    
+
     // Add event handling
     // Fire events
     B3PGissuite.component[className].prototype.fireEvent = function(evtName, evtData) {
@@ -48,7 +48,7 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
             }
         }
     };
-    
+
     // Register event listeners
     B3PGissuite.component[className].prototype.addListener = function(clsName, evtName, handler, scope) {
         // Check if there are listeners registered for targetClass
@@ -75,37 +75,11 @@ B3PGissuite.get = function(className, id) {
     return B3PGissuite.instances[instanceId];
 };
 
-B3PGissuite.whichTransitionEvent = function() {
-    var t;
-    var el = document.createElement('fakeelement');
-    var transitions = {
-        'transition': 'transitionend',
-        'OTransition': 'oTransitionEnd',
-        'MozTransition': 'transitionend',
-        'WebkitTransition': 'webkitTransitionEnd'
-    };
-
-    for (t in transitions) {
-        if (el.style[t] !== undefined) {
-            return transitions[t];
-        }
-    }
-    return null;
-};
-
-B3PGissuite.attachTransitionListener = function(obj, handler) {
-    var transitionEnd = B3PGissuite.whichTransitionEvent(),
-            me = this;
-    if (transitionEnd === null)
-        return;
-    obj.addEventListener(transitionEnd,handler, false);
-};      
-
 /* BaseComponent */
 B3PGissuite.defineComponent('BaseComponent', {
     defaultOptions: {
         id: '',
-        tabid: '', 
+        tabid: '',
         title: ''
     },
     constructor: function BaseComponent(options) {

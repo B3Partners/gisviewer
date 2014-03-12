@@ -47,26 +47,17 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:otherwise>
         </c:choose>       
         
-                <script type="text/javascript" src="<html:rewrite page='/scripts/jquery-1.3.2.min.js' />"></script>
-                <script type="text/javascript" src="<html:rewrite page='/scripts/jquery-ui-1.8.10.custom.min.js' />"></script>
-                <script type="text/javascript" src="<html:rewrite page='/scripts/jquery.blockUI.js' />"></script>        
+                <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-1.3.2.min.js' />"></script>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-ui-1.8.10.custom.min.js' />"></script>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery.blockUI.js' />"></script>        
                 <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' />"></script>
 
         <!--[if lte IE 7]>
-            <script type="text/javascript" src="scripts/jquery.bgiframe.min.js"></script>
+            <script type="text/javascript" src="scripts/lib/jquery.bgiframe.min.js"></script>
         <![endif]-->
         
         <script type="text/javascript">
-            /* B3PGissuite namespace */
-            var B3PGissuite = {
-                component: {},
-                instances: {},
-                idregistry: {},
-                vars: {},
-                config: {},
-                events: {}
-            };
-            attachOnload(checkLocation);
+            B3PGissuite.commons.attachOnload(B3PGissuite.commons.checkLocation);
         </script>
     </head>
     <body class="viewerbodyelement">

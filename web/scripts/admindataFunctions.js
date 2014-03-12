@@ -22,15 +22,15 @@
  */
 
 function showCsvError() {
-    getParent().messagePopup('Fout', 'Het is niet gelukt om de CSV data op te halen', 'error');
+    B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.commons.messagePopup('Fout', 'Het is niet gelukt om de CSV data op te halen', 'error');
 }
 
 function editFeature(ggbId, attrName, attrVal) {
-    getParent().drawFeature(ggbId, attrName, attrVal);
+    B3PGissuite.commons.getParent({ parentOnly: true }).drawFeature(ggbId, attrName, attrVal);
 }
 
 function popUp(link, title, width, heigth) {
-    var pu = getParent().popUp(link, title, width, heigth);
+    var pu = B3PGissuite.commons.getParent({ parentOnly: true }).popUp(link, title, width, heigth);
     if (window.focus)
         pu.focus();
 }
@@ -114,7 +114,7 @@ function handleGetGegevensBron(gegevensbron) {
     }
 
     $j("#adminDataWrapper > .bronContainer").addClass("rootBronContainer");
-    if (ieVersion <= 7 && ieVersion != -1) {
+    if (B3PGissuite.commons.getIEVersion() <= 7 && B3PGissuite.commons.getIEVersion() != -1) {
         resizeWidthIE();
     }
 }
@@ -520,7 +520,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
     var bronTableBody = $j('<tbody></tbody>');
 
     // Create table heading
-    if (gegevensbron.editable && getParent().B3PGissuite.config.showEditTool) {
+    if (gegevensbron.editable && B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.config.showEditTool) {
         var bewerk = {
             commando: null,
             eenheid: null,
@@ -592,10 +592,10 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 "width": "50px"
             });
 
-            if (gegevensbron.editable && getParent().B3PGissuite.config.showEditTool) {
+            if (gegevensbron.editable && B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.config.showEditTool) {
                 var icon = $j('<img src="' + pencil + '" alt="Edit object" title="Edit object" />')
                         .click(function() {
-                    var ec = getParent().B3PGissuite.vars.editComponent;
+                    var ec = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.vars.editComponent;
                     ec.edit(record, gegevensbron.id);
                 });
                 editTd.append(icon);
@@ -1008,7 +1008,7 @@ function createTableTd(waarde, gegevensbron, record) {
             var pk = gegevensbron.adminPk;
             var val = record.id
 
-            getParent().getDestinationWkt(id, pk, val);
+            B3PGissuite.commons.getParent({ parentOnly: true }).getDestinationWkt(id, pk, val);
         });
         td.html(gIcon);
     }
@@ -1186,7 +1186,7 @@ function setStatusValueDigitree(element, themaid, keyName, keyValue, attributeNa
      * in view na eerste wijziging. Bijvoorbeeld een view die alleen statussen Nieuw
      * toont zal het record na deze setValue niet meer teruggeven */
     if (oldValue == 'Ja') {
-        messagePopup("Informatie", "Waarde is al gewijzigd.", "information");
+        B3PGissuite.commons.messagePopup("Informatie", "Waarde is al gewijzigd.", "information");
     }
 }
 
@@ -1205,7 +1205,7 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
     currentAttributeName = attributeName;
     currentEenheid = eenheid;
     var opmerkingenedit = document.getElementById('opmerkingenedit');
-    var pos = findPos(element);
+    var pos = B3PGissuite.commons.findPos(element);
     opmerkingenedit.style.left = pos[0] - 1 + 'px';
     opmerkingenedit.style.top = pos[1] - 1 + 'px';
     opmerkingenedit.style.display = 'block';
@@ -1228,7 +1228,7 @@ function setAttributeText(element, themaid, keyName, keyValue, attributeName, at
  */
 function handleSetAttribute(str) {
     if (str[0] == null || str[0] == "") {
-        messagePopup("Fout", "Kon attribuut niet instellen.", "error");
+        B3PGissuite.commons.messagePopup("Fout", "Kon attribuut niet instellen.", "error");
     } else {
         document.getElementById(str[0]).innerHTML = str[1];
     }
@@ -1248,7 +1248,7 @@ function handleSetText(str) {
 function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
     var msg = "elem=" + element + " themaid=" + themaid + " keyname=" + keyName + " keyval=" + keyValue + " attrname=" + attributeName + " attrval=" + attributeValue + " eenh=" + eenheid;
 
-    messagePopup("Dummy js functie", msg, "information");
+    B3PGissuite.commons.messagePopup("Dummy js functie", msg, "information");
 }
 
 /**
@@ -1266,7 +1266,7 @@ function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, 
  */
 function handleGetArea(str) {
     if (str[0] == null || str[0] == "") {
-        messagePopup("Fout", "Kon oppervlakte niet berekenen.", "error");
+        B3PGissuite.commons.messagePopup("Fout", "Kon oppervlakte niet berekenen.", "error");
     } else {
         document.getElementById(str[0]).innerHTML = str[1];
     }
@@ -1286,23 +1286,11 @@ function rtrim(str, chars) {
     return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
 }
 
-function getParent() {
-    if (window.opener) {
-        return window.opener;
-    } else if (window.parent) {
-        return window.parent;
-    } else {
-        messagePopup("Fout", "No parent found", "error");
-
-        return null;
-    }
-}
-
 function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
     if (waardeingevuldekolom == "null") {
         waardeingevuldekolom = null;
     }
-    getParent().showMaatregel(waardeingevuldekolom, gegevensbronId, waardepk);
+    B3PGissuite.commons.getParent({ parentOnly: true }).showMaatregel(waardeingevuldekolom, gegevensbronId, waardepk);
 
 }
 
@@ -1314,10 +1302,10 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     var sldstring = window.location.protocol + "//" + window.location.host + "/gisviewer/CreateSLD";
     //"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
 
-    var ouder = getParent();
-    var fmco = getParent().B3PGissuite.vars.webMapController;
+    var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
+    var fmco = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.vars.webMapController;
     if (fmco == undefined) {
-        ouder = getParent().getParent();
+        ouder = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.commons.getParent();
         fmco = ouder.B3PGissuite.vars.webMapController;
     }
     var mapje = fmco.getMap();

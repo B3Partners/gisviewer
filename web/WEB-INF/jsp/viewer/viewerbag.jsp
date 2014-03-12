@@ -84,7 +84,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     }
 </script>
 
-<script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/lib/json2.js'/>"></script>
 <script type="text/javascript" src="<html:rewrite page='/scripts/viewerbag.js'/>"></script>
 
 <div style="padding: 5px;">

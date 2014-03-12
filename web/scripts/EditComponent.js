@@ -154,7 +154,7 @@ function EditComponent(){
         form.appendChild(table);
 
         div.appendChild(form);
-        dialogPopUp($j(div), "Bewerk feature", 400, 400,null);
+        B3PGissuite.commons.dialogPopUp($j(div), "Bewerk feature", 400, 400,null);
             
         return table;
     },

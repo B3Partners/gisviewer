@@ -28,20 +28,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <script type='text/javascript' src='dwr/util.js'></script>
 
 <script type="text/javascript">
-    function getParent(){
-        if (window.opener){
-            return window.opener;
-        }else if (window.parent){
-            return window.parent;
-        }else{
-            messagePopup("Fout", "No parent found", "error");
-
-            return null;
-        }
-    }
-
     function doAjaxRequest() {
-        var ouder = getParent();
+        var ouder = getParent({ parentOnly: true });
         if(ouder) {
             var wkt = ouder.getWktActiveFeature(-1);
             var themaIdArray =  ouder.B3PGissuite.vars.enabledLayerItems;

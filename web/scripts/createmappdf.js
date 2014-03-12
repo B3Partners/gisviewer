@@ -50,4 +50,4 @@ mapImageLoad = function() {
     //doe bij de eerste keer laden om slider te initialiseren
     setMapImageSrc(firstUrl);
 }
-attachOnload(mapImageLoad);
+B3PGissuite.commons.attachOnload(mapImageLoad);

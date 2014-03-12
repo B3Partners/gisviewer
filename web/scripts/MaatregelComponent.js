@@ -52,7 +52,7 @@ function MaatregelComponent(){
         this.container.append(this.listContainer);
         this.container.append(this.maatregelContainer);
         
-        this.popup=dialogPopUp(this.container, "Maatregelen", 600, 600,null);
+        this.popup = B3PGissuite.commons.dialogPopUp(this.container, "Maatregelen", 600, 600,null);
         var me = this;        
     },
     /**

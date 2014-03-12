@@ -8,10 +8,6 @@
 <html:html>
     <head>
         <%@include file="/WEB-INF/jsp/metatags.jsp" %>
-        <!--
-        <script type="text/javascript" src="<html:rewrite page="/scripts/AC_OETags.js"/>"></script>
-        -->
-
         <title>B3P GIS Viewer</title>
     </head>
 

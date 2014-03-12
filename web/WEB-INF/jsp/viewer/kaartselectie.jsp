@@ -332,7 +332,7 @@
         
         $j('#saveSelection').click(function() {
             $j('#submitPopup').show();
-            /* if (ieVersion <= 8 && ieVersion != -1) {
+            /* if (B3PGissuite.commons.getIEVersion() <= 8 && B3PGissuite.commons.getIEVersion() != -1) {
                 $j('#submitPopup').parent().css("z-index", "5000");
             } */
             $j('#saveSelection').hide();            

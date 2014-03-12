@@ -40,18 +40,6 @@ $j(document).ready(function (){
     });
 });
 
-function getParent() {
-    if (window.opener){
-        return window.opener;
-    }else if (window.parent){
-        return window.parent;
-    }else{
-        messagePopup("", "No parent found", "error");
-
-        return null;
-    }
-}
-
 function getBagObjects(){
     var extraCriteria=new Object();
     extraCriteria[pandenGegevensBronId]="";

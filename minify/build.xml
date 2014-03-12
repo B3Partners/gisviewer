@@ -13,12 +13,13 @@
         <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="../libs/GoogleClosureCompiler/compiler.jar" />
         <jscomp output="${minify.outputdir}/viewer-min.js" compilationLevel="simple" prettyPrint="false" printInputDelimiter="false" debug="false">
           
-          <sources dir="${viewerhtml.path}">
-            <file name="swfobject.js" />
-            <file name="simple_treeview.js" />
-            <file name="selectbox.js" />
-            <file name="moveLayers.js" />
+          <sources dir="${viewerhtml.path}/lib">
             <file name="proj4js-compressed.js" />
+            <file name="swfobject.js" />
+          </sources>
+
+          <sources dir="${viewerhtml.path}">
+            <file name="simple_treeview.js" />
             <file name="viewer.js" />
             <file name="zoeker.js" />
             <file name="GPSComponent.js" />

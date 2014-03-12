@@ -51,8 +51,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                 <link href="<html:rewrite page='/themes/${localTheme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
             </c:otherwise>
         </c:choose>
-        <script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
-        <script type="text/javascript" src="scripts/jquery-ui-1.8.10.custom.min.js"></script>
+        <script type="text/javascript" src="scripts/lib/jquery-1.3.2.min.js"></script>
+        <script type="text/javascript" src="scripts/lib/jquery-ui-1.8.10.custom.min.js"></script>
         
         <script type="text/javascript" src="scripts/commonfunctions.js"></script>
 

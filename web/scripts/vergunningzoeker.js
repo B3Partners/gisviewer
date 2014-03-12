@@ -83,7 +83,7 @@ function performSearch() {
         }
     }
 
-    showLoading();
+    B3PGissuite.commons.showLoading();
     $j("#vergunningResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
 
     JZoeker.zoek(parent.B3PGissuite.config.zoekconfiguraties[currentSearchSelectId].id,waarde,parent.B3PGissuite.config.maxResults,searchCallBack);
@@ -179,7 +179,7 @@ function createZoekStringsFromZoekVelden(zc, zoekVelden, zoekStrings) {
 // @param values = de gevonden lijst met waarden.
 var foundValues=null;
 function searchCallBack(values){
-    hideLoading();
+    B3PGissuite.commons.hideLoading();
 
     foundValues=values;
     var searchResults=$j("#vergunningResults");
@@ -192,7 +192,7 @@ function searchCallBack(values){
     // Controleer of de bbox groter is dan de minimale bbox van de zoeker
     for (var i=0; i < values.length; i++){
         if (values[i].minx != 0 && values[i].miny != 0 && values[i].maxx != 0 && values[i].maxy) {
-            values[i]=getBboxMinSize2(values[i]);
+            values[i]=B3PGissuite.viewercommons.getBboxMinSize2(values[i]);
         }
     }
 
@@ -213,19 +213,6 @@ function searchCallBack(values){
 	return;
     }
 
-}
-
-
-function getBboxMinSize2(feature){
-    if ((Number(feature.maxx-feature.minx) < parent.B3PGissuite.config.minBboxZoeken)){
-        var addX=Number((parent.B3PGissuite.config.minBboxZoeken-(feature.maxx-feature.minx))/2);
-        var addY=Number((parent.B3PGissuite.config.minBboxZoeken-(feature.maxy-feature.miny))/2);
-        feature.minx=Number(feature.minx-addX);
-        feature.maxx=Number(Number(feature.maxx)+Number(addX));
-        feature.miny=Number(feature.miny-addY);
-        feature.maxy=Number(Number(feature.maxy)+Number(addY));
-    }
-    return feature;
 }
 
 var currentSearchSelectId = "";

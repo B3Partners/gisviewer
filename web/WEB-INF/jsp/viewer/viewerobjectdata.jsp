@@ -55,7 +55,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 
             <div id="gebiedenInfo"></div>
             
-            <script type="text/javascript" src="<html:rewrite page='/scripts/json2.js'/>"></script>
+            <script type="text/javascript" src="<html:rewrite page='/scripts/lib/json2.js'/>"></script>
 
             <script type="text/javascript">
                 <c:forEach var="bean" items="${ggbBeans}" varStatus="status">                    

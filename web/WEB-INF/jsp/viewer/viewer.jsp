@@ -196,7 +196,7 @@
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
     if(B3PGissuite.config.viewerType === 'flamingo') {
-        var flashVersion = flashCheck().pv;
+        var flashVersion = B3PGissuite.commons.flashCheck().pv;
         if(flashVersion[0] === 0) {
             B3PGissuite.config.viewerType = 'openlayers';
         }
@@ -259,11 +259,9 @@
 <c:choose>
     <c:when test="${not empty param.debug}">
         <!-- common -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/swfobject.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/lib/swfobject.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/selectbox.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/moveLayers.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/proj4js-compressed.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/lib/proj4js-compressed.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/zoeker.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/GPSComponent.js"/>"></script>
@@ -336,7 +334,7 @@
 
     // Init CSS properties for configured tab width
     configureTabWidth();
-    B3PGissuite.attachTransitionListener($j("#mapcontent")[0], function(){updateSizeOL();});
+    B3PGissuite.commons.attachTransitionListener($j("#mapcontent")[0], function(){updateSizeOL();});
     // Show tabs for correct widht calculations
     $j('#content_viewer').addClass('tablinks_open');
     $j('#content_viewer').addClass('tabrechts_open');
@@ -404,8 +402,8 @@
     /**
     * Start off with initMapComponent()
     */
-    var viewerComponent = B3PGissuite.createComponent('ViewerComponent', { viewerType: B3PGissuite.config.viewerType });
-    viewerComponent.initMapComponent();
+    B3PGissuite.viewerComponent = B3PGissuite.createComponent('ViewerComponent', { viewerType: B3PGissuite.config.viewerType });
+    B3PGissuite.viewerComponent.initMapComponent();
     var orderLayerBox= document.getElementById("orderLayerBox");
 </script>
 
@@ -416,7 +414,7 @@
             expandNodes=${expandNodes};
             if(expandNodes !== null){
                 for (var i=0; i < expandNodes.length; i++){
-                    messagePopup("", expandNodes[i], "information");
+                    B3PGissuite.commons.messagePopup("", expandNodes[i], "information");
                     treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
                 }
             }

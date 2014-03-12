@@ -248,7 +248,7 @@ B3PGissuite.defineComponent('PlanSelectionComponent', {
 
             for (var e = 0; e < attributen.length; e++) {
                 if (attributen[e].attribuutnaam == attribuutnaam) {
-                    if (!arrayContains(typen, attributen[e].waarde)) {
+                    if (!B3PGissuite.commons.arrayContains(typen, attributen[e].waarde)) {
                         typen.push(attributen[e].waarde);
                     }
                 }

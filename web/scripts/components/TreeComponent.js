@@ -472,7 +472,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             }
 
             // TODO: check if there is text available on the item
-            if (item && B3PGissuite.config.showInfoTab === 'click') {
+            if (item.info_tekst && B3PGissuite.config.showInfoTab === 'click') {
                 container.appendChild(document.createTextNode('  '));
                 container.appendChild(this.createInfotabIcon(item));
             }

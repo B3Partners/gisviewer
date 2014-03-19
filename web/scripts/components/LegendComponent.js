@@ -141,7 +141,6 @@ B3PGissuite.defineComponent('LegendComponent', {
     },
 
     refreshLegendBox: function() {
-        console.log(this);
         this.resetLegendImageQueue();
 
         var res, me = this;

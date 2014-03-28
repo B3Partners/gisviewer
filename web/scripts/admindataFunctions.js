@@ -231,7 +231,7 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
     } else {
         // Create empty row
         var bronContent = $j('<div></div>').attr({
-            "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
+            "id": "bronContent" + htmlId + gegevensbron.id + "_11",
             "class": "bronContent"
         });
         // Append all to DOM tree
@@ -309,7 +309,7 @@ function handleGetGegevensBronMultiVertical(gegevensbron) {
     } else {
         // Create empty row
         var bronContent = $j('<div></div>').attr({
-            "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
+            "id": "bronContent" + htmlId + gegevensbron.id + "_11",
             "class": "bronContent"
         });
         // Append all to DOM tree

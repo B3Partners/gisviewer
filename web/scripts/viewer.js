@@ -2037,7 +2037,7 @@ function popUp(URL, naam, width, height, useDiv) {
                 "location = 0, " +
                 "statusbar = 1, " +
                 "menubar = 0, " +
-                "resizable = 0, " +
+                "resizable = 1, " +
                 "width = " + screenwidth + ", " +
                 "height = " + screenheight + ", " +
                 "top = " + popuptop + ", " +

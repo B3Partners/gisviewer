@@ -203,11 +203,11 @@
       <servlet-class>nl.b3p.gis.viewer.services.ConfigServlet</servlet-class>
       <init-param>
           <param-name>jdbcUrlGisdata</param-name>
-          <param-value>jdbc:postgresql://b3p-demoserver:5432/acc_gis</param-value>
+          <param-value>jdbc:postgresql://localhost:5432/digitree_gis</param-value>
       </init-param>
       <init-param>
           <param-name>jdbcUrlKaartenbalie</param-name>
-          <param-value>jdbc:postgresql://b3p-demoserver:5432/acc_kaartenbalie</param-value>
+          <param-value>jdbc:postgresql://localhost:5432/digitree_kaartenbalie</param-value>
       </init-param>
       <init-param>
           <param-name>databaseUserName</param-name>

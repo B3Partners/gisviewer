@@ -165,10 +165,10 @@ public class EditBoomUtil extends EditUtil{
 
         if (f != null || f.getDefaultGeometryProperty() != null) {
             wkt = DataStoreUtil.selecteerKaartObjectWkt(f);
-            if(wkt.startsWith("MULTI")){
+            if(wkt.startsWith("ST_MULTI")){
                 int begin = wkt.lastIndexOf("(");
                 int end = wkt.indexOf(")");
-                wkt = "POINT("+wkt.substring(begin+1, end) +")";
+                wkt = "ST_POINT("+wkt.substring(begin+1, end) +")";
             }
         }
 

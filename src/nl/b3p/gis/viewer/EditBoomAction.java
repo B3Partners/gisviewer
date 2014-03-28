@@ -382,7 +382,7 @@ public class EditBoomAction extends ViewerCrudAction {
             projectid = user.getSp().getOrganizationCode();
         }
         if (project == null || project.equals("")){
-            project = getWijk(wkt, projectid);
+            project = getWijk(boom.getThe_geom(), projectid);
             dynaForm.set("project", project);
         }
         boom.setProjectid(projectid);
@@ -595,9 +595,10 @@ public class EditBoomAction extends ViewerCrudAction {
         return true;
     }
 
-    private String getWijk(String wkt, String projectid){
+    private String getWijk(Geometry geom, String projectid){
         String wijk = "";
-        String query = "select project from projectindeling where contains(the_geom, geometryFromText('"+wkt+"',28992))";
+        //String query = "select project from projectindeling where contains(the_geom, st_geometryfromtext('"+wkt+"',28992))";
+        String query = "select project from projectindeling where contains(the_geom, "+geom+")";
 
         Connection conn = null;
 

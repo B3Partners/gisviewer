@@ -726,7 +726,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
         var newLayer = B3PGissuite.vars.webMapController.createWMSLayer(lname, layerUrl, ogcOptions, options);
         B3PGissuite.vars.webMapController.getMap().addLayer(newLayer);
     },
-
     initFullExtent: function() {
         /* Extent uit url */
         if (B3PGissuite.config.bbox != null && B3PGissuite.config.bbox.length > 0 && B3PGissuite.config.bbox.split(",").length == 4) {
@@ -750,7 +749,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
             setFullExtent(bounds.left, bounds.bottom, bounds.right, bounds.top);
         }
     },
-
     setStartExtent: function() {
         /* Eerst kijken of er een zoekextent is */
         if (B3PGissuite.vars.searchExtent != null) {
@@ -783,7 +781,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
             }, 1);
         }
     },
-
     /**
      * Initialize the tools used in the viewer. It registers the event and handler
      * for the tool.
@@ -813,21 +810,25 @@ B3PGissuite.defineComponent('ViewerComponent', {
             title: 'kaartbeeld slepem'
         });
         B3PGissuite.vars.webMapController.addTool(pan);
+
         //set default tool pan so the cursor is ok.
         if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
             B3PGissuite.vars.webMapController.activateTool("b_pan");
         }
 
         /* Previous extent tool */
-        var prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {
-            title: 'stap terug'
-        });
-        B3PGissuite.vars.webMapController.addTool(prevExtent);
+        if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+            var prevExtent = B3PGissuite.vars.webMapController.createTool("toolPrevExtent", Tool.NAVIGATION_HISTORY, {
+                title: 'stap terug'
+            });
+            B3PGissuite.vars.webMapController.addTool(prevExtent);
+        }
 
         /* Afstand meten tool */
         var bu_measure = B3PGissuite.vars.webMapController.createTool("b_measure", Tool.MEASURE, {
             title: 'afstand meten'
         });
+
         //B3PGissuite.vars.webMapController.registerEvent(Event.ON_MEASURE,bu_measure,measured);
         B3PGissuite.vars.webMapController.addTool(bu_measure);
 
@@ -941,7 +942,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
             this.displayEmbeddedMenuIcons();
         }
     },
-
     displayEmbeddedMenuIcons: function() {
         $j("#embedded_icons").css('position', 'absolute');
         $j("#embedded_icons").css('width', '170px');
@@ -963,7 +963,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         $j("#embedded_icons").show();
     },
-
     checkDisplayButtons: function() {
         if (B3PGissuite.config.showRedliningTools) {
             if (B3PGissuite.vars.webMapController.getTool("redLiningContainer")) {
@@ -1025,7 +1024,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
             B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(false);
         }
     },
-
     /**
      * Hides the I-tool icon. (Flamingo only)
      */
@@ -1034,7 +1032,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
             B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'hide');
         }
     },
-
     /**
      * Shows the I-tool icon. (Flamingo only)
      */
@@ -1043,7 +1040,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
             B3PGissuite.vars.webMapController.getMap().getFrameworkMap().callMethod('map1_identifyicon', 'show');
         }
     },
-
     /**
      * Because a simple reload won't change the url in flamingo. Remove the layer
      * and add it again. Maybe a getCap is done but with a little luck the browser
@@ -1060,7 +1056,6 @@ B3PGissuite.defineComponent('ViewerComponent', {
             B3PGissuite.vars.webMapController.getMap("map1").addLayer(kbLayer);
         }
     },
-
     reloadRedliningLayer: function(themaId, projectnaam, removeFeatures) {
         var groepParam = "GROEPNAAM";
         var projectParam = "PROJECTNAAM";
@@ -1091,20 +1086,16 @@ B3PGissuite.defineComponent('ViewerComponent', {
             treeComponent.activateCheckbox(themaId);
         }
     },
-
     removeAllFeatures: function() {
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
     },
-
     removeAllMarkers: function() {
         B3PGissuite.vars.webMapController.getMap().removeAllMarkers();
     },
-
     stopDrawPolygon: function() {
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").stopDrawDrawFeature();
     },
-
     startDrawPolygon: function(geomType) {
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").drawFeature(geomType);

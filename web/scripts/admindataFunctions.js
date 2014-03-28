@@ -228,6 +228,15 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
             bronContent.append(bronTable.append(bronTableBody));
             bronContainer.append(bronContent);
         });
+    } else {
+        // Create empty row
+        var bronContent = $j('<div></div>').attr({
+            "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
+            "class": "bronContent"
+        });
+        // Append all to DOM tree
+        bronContent.append($j('<table></table>').append($j('<tbody></tbody>').append('<tr><td colspan="2">Geen data gevonden</td></tr>')));
+        bronContainer.append(bronContent);
     }
 
     // wachtmelding weghalen
@@ -297,6 +306,15 @@ function handleGetGegevensBronMultiVertical(gegevensbron) {
             bronContent.append(bronTable.append(bronTableBody));
             bronContainer.append(bronContent);
         });
+    } else {
+        // Create empty row
+        var bronContent = $j('<div></div>').attr({
+            "id": "bronContent" + htmlId + gegevensbron.id + "_" + record.id + idcounter++,
+            "class": "bronContent"
+        });
+        // Append all to DOM tree
+        bronContent.append($j('<table></table>').append($j('<tbody></tbody>').append('<tr><td colspan="2">Geen data gevonden</td></tr>')));
+        bronContainer.append(bronContent);
     }
 
     // wachtmelding weghalen

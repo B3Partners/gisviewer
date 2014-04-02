@@ -1,9 +1,9 @@
-B3PGissuite.defineComponent('CMSComponent', {
+B3PGissuite.defineComponent('CMSTabComponent', {
     extend: 'BaseComponent',
     defaultOptions: {
         tekstBlokken: []
     },
-    constructor: function CMSComponent(options) {
+    constructor: function CMSTabComponent(options) {
         this.callParent(options);
         // If there is only 1 tekstblok, set tab title to title of tekstblok
         if(this.options.tekstBlokken.length === 1) {

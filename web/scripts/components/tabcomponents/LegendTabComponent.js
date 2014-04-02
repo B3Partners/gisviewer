@@ -1,4 +1,4 @@
-B3PGissuite.defineComponent('LegendComponent', {
+B3PGissuite.defineComponent('LegendTabComponent', {
     extend: 'BaseComponent',
     defaultOptions: {
         formid: 'volgordeForm',
@@ -21,7 +21,7 @@ B3PGissuite.defineComponent('LegendComponent', {
     legendImageLoadingSpace: 1,
     selectedLayer: null,
 
-    constructor: function LegendComponent(options) {
+    constructor: function LegendTabComponent(options) {
         this.callParent(options);
         this.init();
     },
@@ -134,7 +134,7 @@ B3PGissuite.defineComponent('LegendComponent', {
     refreshMapVolgorde: function() {
         this.refreshLegendBox();
         B3PGissuite.viewerComponent.refreshLayer(true);
-        var treeComponent = B3PGissuite.get('TreeComponent');
+        var treeComponent = B3PGissuite.get('TreeTabComponent');
         if(treeComponent) {
             treeComponent.syncLayerCookieAndForm();
         }
@@ -429,7 +429,7 @@ B3PGissuite.defineComponent('LegendComponent', {
             orderLayerBox.removeChild(orderLayerBox.childNodes[i]);
         }
         this.enabledLayerItems = [];
-        var treeComponent = B3PGissuite.get('TreeComponent');
+        var treeComponent = B3PGissuite.get('TreeTabComponent');
         if (treeComponent !== null) {
             treeComponent.syncLayerCookieAndForm();
             treeComponent.doRefreshLayer();

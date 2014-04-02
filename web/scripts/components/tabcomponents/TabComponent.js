@@ -25,7 +25,7 @@
  * @returns {TabComponent}
  */
 B3PGissuite.defineComponent('TabComponent', {
-    
+
     'defaultOptions': {
         useClick: false,
         useHover: true,
@@ -36,7 +36,6 @@ B3PGissuite.defineComponent('TabComponent', {
     },
 
     constructor: function(options) {
-        
         var me = this;
         me.options = jQuery.extend(me.defaultOptions, options);
         me.labelContainer = jQuery('#' + me.options.labelContainer);
@@ -60,9 +59,10 @@ B3PGissuite.defineComponent('TabComponent', {
             me.initTabComponent();
         });
     },
-            
+
     setupEnabledTabs: function() {
-        var tabComponent = this;
+        var tabComponent = this,
+            options;
         // Loop over enabled tabs
         for(var i in this.options.enabledTabs) {
             var tabid = this.options.enabledTabs[i];
@@ -75,7 +75,7 @@ B3PGissuite.defineComponent('TabComponent', {
             // If a class is defined, create class
             if(tabobj.hasOwnProperty('class')) {
                 // Extend default options by options from tabbladen defs
-                var options = jQuery.extend({
+                options = jQuery.extend({
                     tabid: tabid,
                     id: tabobj.contentid,
                     title: tabobj['name']
@@ -87,17 +87,16 @@ B3PGissuite.defineComponent('TabComponent', {
             // Else create a tab from existing content
             } else {
                 // Set taboptions            
-                var options = 
-                    {
-                        'contentid': tabobj.contentid,
-                        'checkResize': true
-                    };
+                options = {
+                    'contentid': tabobj.contentid,
+                    'checkResize': true
+                };
                 // Create a tab
                 tabComponent.createTab(tabid, tabobj['name'], options);
             }
         }
     },
-            
+
     initTabComponent: function() {
         var me = this;
         // Using a setTimeout with 0 seconds ensures this is executed at the end
@@ -107,7 +106,7 @@ B3PGissuite.defineComponent('TabComponent', {
             me.showInitialTab();
         }, 0);
     },
-    
+
     createTab: function(tabid, label, options) {
         var tabObj = this.appendTab(this.createTabObject(tabid, label, options), options);
         if(options) {
@@ -133,7 +132,7 @@ B3PGissuite.defineComponent('TabComponent', {
         }
         return tabObj.container.attr('id');
     },
-    
+
     createTabObject: function(tabid, label, options) {
         return {
             'id': tabid,
@@ -142,16 +141,16 @@ B3PGissuite.defineComponent('TabComponent', {
             'resizableContent': options.resizableContent || false
         };
     },
-    
+
     createTabContainer: function(tabid, options) {
         var tab = jQuery('<div></div>').css({'display': 'none'}).addClass(options.tabvakClassname || this.options.tabvakClassname).attr('id', tabid);
         return tab;
     },
-    
+
     createLabel: function(tabid, labeltxt) {
         var me = this;
         var label = jQuery('<li></li>');
-        
+
         label
             .bind('click', function(e) {
                 me.handleTabClick(tabid, e);
@@ -163,7 +162,7 @@ B3PGissuite.defineComponent('TabComponent', {
 
         return label;
     },
-    
+
     appendTab: function(tabObj, options) {
         if(options && options.hasOwnProperty('containerid')) {
             $j("#" + options.containerid).append(tabObj.container.show());
@@ -177,20 +176,20 @@ B3PGissuite.defineComponent('TabComponent', {
             return this.tabCollection[tabObj.id];
         }
     },
-    
+
     resizeLabels: function() {
         var noOfTabs = this.getTabCount();
         var totalWidth = this.tabContainer.width();
         var tabWidth = Math.floor((totalWidth - (noOfTabs-1)) / noOfTabs) - (noOfTabs === 1 ? 0 : 1);
         this.tabLabelContainer.find('a').width(tabWidth);
     },
-    
+
     handleTabClick: function(tabid, e) {
         e.preventDefault();
         if(!this.options.useClick) return;
         this.setActive(tabid);
     },
-    
+
     handleTabHover: function(tabid, e) {
         e.preventDefault();
         if(!this.options.useHover) return;
@@ -212,7 +211,7 @@ B3PGissuite.defineComponent('TabComponent', {
             }
         }
     },
-    
+
     showInitialTab: function() {
         if(this.tabCollection.length === 0) {
             return;
@@ -229,7 +228,7 @@ B3PGissuite.defineComponent('TabComponent', {
             this.setActive(this.options.defaultTab);
         }
     },
-    
+
     setActive: function(tabid) {
         if(!this.hasTab(tabid)) return;
         this.setVisible(tabid);
@@ -239,20 +238,20 @@ B3PGissuite.defineComponent('TabComponent', {
             B3PGissuite.commons.createCookie(this.cookiename, tabid, '7');
         }
     },
-    
+
     getActiveTab: function() {
         return this.activeTab === null ? null : this.getTab(this.activeTab);
     },
-            
+
     hasTab: function(tabid) {
         return this.tabCollection.hasOwnProperty(tabid);
     },
-    
+
     getTab: function(tabid) {
         if(!this.tabCollection.hasOwnProperty(tabid)) return null;
         return this.tabCollection[tabid];
     },
-    
+
     doResize: function() {
         var tabid;
         for (tabid in this.tabCollection) {
@@ -261,7 +260,7 @@ B3PGissuite.defineComponent('TabComponent', {
             }
         }
     },
-    
+
     resizeTabContents: function(tabid) {
         var tabObj = this.tabCollection[tabid];
         var tabContainer = tabObj.container;
@@ -274,45 +273,45 @@ B3PGissuite.defineComponent('TabComponent', {
             contentHeight += jQuery(this).outerHeight(true);
         });
         var elementHeight = (this.getTabHeight() - 30) - contentHeight;
-        if(elementHeight > 0) { 
+        if(elementHeight > 0) {
             tabContainer.find('.tabvak_groot').height(elementHeight);
         }
     },
-    
+
     getTabCount: function() {
         return this.tabIds.length;
     },
-    
+
     getTabHeight: function() {
         return this.tabContainer.height();
     },
-    
+
     getTabWidth: function() {
         return this.tabWidth;
     },
-            
+
     isHidden: function() {
         return (
             (this.options.direction === 'left' && $j('#content_viewer').hasClass('tablinks_dicht')) ||
             (this.options.direction === 'right' && $j('#content_viewer').hasClass('tabrechts_dicht'))
         );
     },
-            
+
     isOnlyTab: function(tabid) {
         return (this.options.enabledTabs.length === 1 && this.hasTab(tabid));
     },
-            
+
     changeTabTitle: function(id, labeltxt) {
         var tabObj = this.getTab(id);
         if(tabObj) {
             tabObj.label.find('a').html(labeltxt);
         }
     },
-            
+
     toggleTab: function() {
-        panelResize(this.options.direction);
+        B3PGissuite.get('Layout').panelResize(this.options.direction);
     },
-    
+
     getDirection: function() {
         return this.options.direction;
     }

@@ -98,7 +98,7 @@ function handleZoekResultaat(searchResultId){
     if (parentZc == null){
         //zoom naar het gevonden object.(als er een bbox is)
         if (searchResult.minx != 0 && searchResult.miny != 0 && searchResult.maxx != 0 && searchResult.maxy) {
-            parent.moveAndIdentify(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
+            parent.B3PGissuite.viewerComponent.moveAndIdentify(searchResult.minx, searchResult.miny, searchResult.maxx, searchResult.maxy);
         }
         return false;
      }

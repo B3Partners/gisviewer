@@ -1,4 +1,4 @@
-B3PGissuite.defineComponent('TreeComponent', {
+B3PGissuite.defineComponent('TreeTabComponent', {
     extend: 'BaseComponent',
     defaultOptions: {
         treeid: 'layermaindiv',
@@ -22,7 +22,7 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     activeAnalyseThemaId: '',
     activeClusterId: '',
-    constructor: function TreeComponent(options) {
+    constructor: function TreeTabComponent(options) {
         this.callParent(options);
         this.init();
     },
@@ -47,7 +47,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                 "id": 'layerTreeDiv_' + i,
                 "root": this.options.servicestrees[i],
                 "rootChildrenAsRoots": false,
-                "itemLabelCreatorFunction": createServiceLeaf,
+                "itemLabelCreatorFunction": this.createServiceLeaf,
                 "toggleImages": {
                     "collapsed": this.options.icons.collapsed,
                     "expanded": this.options.icons.expanded,
@@ -216,7 +216,7 @@ B3PGissuite.defineComponent('TreeComponent', {
         B3PGissuite.vars.refresh_timeout_handle = setTimeout(this.doRefreshLayer, B3PGissuite.config.refreshDelay);
     },
     doRefreshLayer: function() {
-        var legendComponent = B3PGissuite.get('LegendComponent');
+        var legendComponent = B3PGissuite.get('LegendTabComponent');
         //register after loading
         if(legendComponent !== null) {
             B3PGissuite.vars.webMapController.registerEvent(Event.ON_ALL_LAYERS_LOADING_COMPLETE, B3PGissuite.vars.webMapController.getMap(), function() {
@@ -582,6 +582,131 @@ B3PGissuite.defineComponent('TreeComponent', {
 
         return 0;
     },
+    createServiceLeaf: function(container, item) {
+        /* root item. alleen groepname tonen en geen vinkjes */
+        if (item.id == 0) {
+            container.appendChild(this.createServiceLayerLink(item));
+            return;
+        }
+
+        var checkBox;
+        if (item.default_on) {
+            checkBox = this.createCheckboxUserLayer(item, true);
+            container.appendChild(checkBox);
+        } else {
+            container.appendChild(this.createCheckboxUserLayer(item, false));
+        }
+
+        container.appendChild(document.createTextNode(' '));
+        container.appendChild(this.createServiceLayerLink(item));
+
+        if (item.default_on) {
+            this.checkboxUserLayerClick(checkBox);
+        }
+    },
+    createServiceLayerLink: function(item) {
+        var lnk = document.createElement('a');
+        lnk.innerHTML = item.title ? item.title : item.id;
+        lnk.href = '#';
+
+        if (item.service_url != undefined) {
+            lnk.onclick = function() {
+                $j("#dialog-download-metadata").dialog("option", "buttons", {
+                    "Url": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+
+                            var url = item.service_url + "service=WMS&request=GetCapabilities&version=1.0.0";
+                            $j("#input_wmsserviceurl").val(url);
+
+                            B3PGissuite.commons.unblockViewerUI();
+                            $j("#dialog-wmsservice-url").dialog('open');
+                        }
+                    },
+                    "Annuleren": function() {
+                        if ($j("#dialog-download-metadata").dialog("isOpen")) {
+                            $j(this).dialog("close");
+                            B3PGissuite.commons.unblockViewerUI();
+                        }
+                    }
+                });
+
+                $j('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
+                    $j(this).html($j(this).parent().attr('text'));
+                });
+
+                B3PGissuite.commons.blockViewerUI();
+                $j("#dialog-download-metadata").dialog('open');
+            };
+        }
+
+        return lnk;
+    },
+    createCheckboxUserLayer: function(item, checked) {
+        var me = this;
+
+        /* if (B3PGissuite.vars.ltIE8) {
+            var checkboxControleString = '<input name="userLayers" type="checkbox" id="ul_' + item.id + '"';
+            if (checked) {
+                checkboxControleString += ' checked="checked"';
+            }
+            checkboxControleString += ' value="' + item.id + '" onclick="checkboxUserLayerClick(this)"';
+            checkboxControleString += '>';
+            checkbox = document.createElement(checkboxControleString);
+            if(checked) {
+                checkbox.checked = true;
+            }
+            checkbox.theItem = item;
+            return checkbox;
+        } */
+
+        var checkbox = jQuery('<input />')
+        .attr({
+            'id': 'ul_' + item.id,
+            'type': 'checkbox',
+            'checked': checked,
+            'value': item.id,
+            'name': 'userLayers'
+        })
+        .click(function() {
+            me.checkboxUserLayerClick(this);
+        })[0];
+        checkbox.theItem = item;
+        return checkbox;
+    },
+    checkboxUserLayerClick: function(checkbox) {
+        var item = checkbox.theItem;
+        var checked = checkbox.checked;
+
+        /* laagnaam aan wmslayers toevoegen */
+        var wmslayers = [];
+        wmslayers[0] = item.name;
+        item.wmslayers = wmslayers;
+
+        /* laagnaam aan wmsquerylayers toevoegen */
+        if (item.queryable) {
+            var wmsquerylayers = [];
+            wmsquerylayers[0] = item.name;
+
+            item.wmsquerylayers = wmsquerylayers;
+        }
+
+        /* item als laag klaarzetten */
+        var layers = [];
+        layers[0] = item;
+
+        /* laag toevoegen aan viewer */
+        var treeComponent = B3PGissuite.get('TreeTabComponent');
+        if (treeComponent !== null) {
+            if (checked) {
+                treeComponent.addItemAsLayer(item);
+                treeComponent.refreshLayerWithDelay();
+            } else {
+                treeComponent.removeItemAsLayer(item);
+                treeComponent.doRefreshLayer();
+            }
+        }
+    },
     /**
      * Create a checkbox thema
      * @param item the thema item (json)
@@ -590,7 +715,7 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createCheckboxThema: function(item, checked) {
         var me = this;
-        if (B3PGissuite.vars.ltIE8) {
+        /* if (B3PGissuite.vars.ltIE8) {
             var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
             if (checked) {
                 checkboxControleString += ' checked="checked"';
@@ -598,7 +723,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             checkboxControleString += ' value="' + item.id + '" onclick="checkboxClick(this, false)">';
             checkbox = document.createElement(checkboxControleString);
             return checkbox;
-        }
+        } */
         return jQuery('<input />')
                 .attr({
             'id': item.id,
@@ -666,7 +791,7 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createRadioThema: function(item, checked, groupName) {
         var me = this;
-        if (B3PGissuite.vars.ltIE8) {
+        /* if (B3PGissuite.vars.ltIE8) {
             var checkboxControleString = '<input type="radio" id="' + item.id + '"';
             if (checked) {
                 checkboxControleString += ' checked="checked"';
@@ -675,7 +800,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             checkboxControleString += ' name="' + groupName + '">';
             checkbox = document.createElement(checkboxControleString);
             return checkbox;
-        }
+        } */
         return jQuery('<input />')
                 .attr({
             'id': item.id,
@@ -731,7 +856,7 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createRadioCluster: function(item, checked, groupName) {
         var me = this;
-        if (B3PGissuite.vars.ltIE8) {
+        /* if (B3PGissuite.vars.ltIE8) {
             var checkboxControleString = '<input type="radio" id="' + item.id + '"';
             if (checked) {
                 checkboxControleString += ' checked="checked"';
@@ -740,7 +865,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             checkboxControleString += ' name="' + groupName + '">';
             checkbox = document.createElement(checkboxControleString);
             return checkbox;
-        }
+        } */
         return jQuery('<input />')
                 .attr({
             'id': item.id,
@@ -761,7 +886,7 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createCheckboxCluster: function(item, checked) {
         var me = this;
-        if (B3PGissuite.vars.ltIE8) {
+        /* if (B3PGissuite.vars.ltIE8) {
             var checkboxControleString = '<input type="checkbox" id="' + item.id + '"';
             if (checked) {
                 checkboxControleString += ' checked="checked"';
@@ -769,7 +894,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             checkboxControleString += ' value="' + item.id + '" onclick="clusterCheckboxClick(this, false)">';
             checkbox = document.createElement(checkboxControleString);
             return checkbox;
-        }
+        } */
         return jQuery('<input />')
                 .attr({
             'id': item.id,
@@ -788,7 +913,7 @@ B3PGissuite.defineComponent('TreeComponent', {
      */
     createRadioSingleActiveThema: function(item) {
         var me = this;
-        if (B3PGissuite.vars.ltIE8) {
+        /* if (B3PGissuite.vars.ltIE8) {
             var checkboxControleString = '<input type="radio" id="radio' + item.id + '"';
             if (this.isActiveItem(item)) {
                 checkboxControleString += ' checked="checked"';
@@ -797,7 +922,7 @@ B3PGissuite.defineComponent('TreeComponent', {
             checkboxControleString += ' name="selkaartlaag">';
             checkbox = document.createElement(checkboxControleString);
             return checkbox;
-        }
+        } */
         var radio = jQuery('<input />')
                 .attr({
             'id': 'radio' + item.id,
@@ -1017,7 +1142,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                         "Download": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 /* Kijken of er een polygoon is getekend voor subselectie in download */
-                                var wkt = getWktForDownload();
+                                var wkt = B3PGissuite.viewercommons.getWktForDownload();
                                 if (wkt == "") {
                                     alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.");
                                 }
@@ -1095,7 +1220,7 @@ B3PGissuite.defineComponent('TreeComponent', {
                         "Download": function() {
                             if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
                                 /* Kijken of er een polygoon is getekend voor subselectie in download */
-                                var wkt = getWktForDownload();
+                                var wkt = B3PGissuite.viewercommons.getWktForDownload();
                                 if (wkt == "") {
                                     alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.");
                                 }
@@ -1536,6 +1661,13 @@ B3PGissuite.defineComponent('TreeComponent', {
             return true;
         }
         return false;
+    },
+
+    expandNodes: function(expandNodes) {
+        for (var i=0; i < expandNodes.length; i++){
+            B3PGissuite.commons.messagePopup("", expandNodes[i], "information");
+            treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
+        }
     }
 
 });

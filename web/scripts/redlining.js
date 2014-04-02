@@ -4,7 +4,7 @@ function submitForm() {
     var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
     if(ouder) {
-        var wkt = ouder.getWktActiveFeature(0);
+        var wkt = ouder.B3PGissuite.viewercommons.getWktActiveFeature(0);
         if (wkt) {
             document.forms[0].wkt.value = wkt;
         } else {
@@ -75,7 +75,7 @@ function startEditRedlining() {
         ouder.B3PGissuite.viewerComponent.removeAllFeatures();
         
         var gegevensbronId = document.forms[0].gegevensbron.value;
-        ouder.enableEditRedlining(gegevensbronId);
+        ouder.B3PGissuite.viewerComponent.enableEditRedlining(gegevensbronId);
     }
 }
 

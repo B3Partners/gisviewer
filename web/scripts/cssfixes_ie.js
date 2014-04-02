@@ -46,20 +46,6 @@ fixAbsolutePositions = function() {
     if(footer) footer.style.bottom = '0px';
 }
 
-fixPopup = function() {
-    if(B3PGissuite.commons.getIEVersion() <= 6 && B3PGissuite.commons.getIEVersion() != -1) {
-        var popupWindow = document.getElementById('popupWindow');
-
-        if (popupWindow)
-            B3PGissuite.config.popupHeight = popupWindow.offsetHeight;
-
-        var popupContent = document.getElementById('popupWindow_Content');
-
-        if (popupContent)
-            popupContent.style.height = (B3PGissuite.config.popupHeight - 36) + 'px';
-    }
-}
-
 fixViewer = function() {
     var headerheight = 0;
     if(document.getElementById('header')) headerheight = document.getElementById('header').offsetHeight;

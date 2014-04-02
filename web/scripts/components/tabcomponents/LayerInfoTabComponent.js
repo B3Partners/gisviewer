@@ -1,4 +1,4 @@
-B3PGissuite.defineComponent('LayerInfoComponent', {
+B3PGissuite.defineComponent('LayerInfoTabComponent', {
     extend: 'BaseComponent',
     defaultOptions: {
         hasSearch: false,
@@ -9,13 +9,13 @@ B3PGissuite.defineComponent('LayerInfoComponent', {
         searchResultsClass: 'searchResultsClass'
     },
     // Constructor
-    constructor: function LayerInfoComponent(options) {
+    constructor: function LayerInfoTabComponent(options) {
         this.callParent(options);
         this.layerInfo = {};
         this.visibleItems = {};
         this.numberVisibleItems = 0;
-        this.addListener('TreeComponent', 'showLayerInfo', this.showLayerInfo);
-        this.addListener('TreeComponent', 'hideLayerInfo', this.hideLayerInfo);
+        this.addListener('TreeTabComponent', 'showLayerInfo', this.showLayerInfo);
+        this.addListener('TreeTabComponent', 'hideLayerInfo', this.hideLayerInfo);
     },
     // Show the layer info text
     showLayerInfo: function(item) {
@@ -35,7 +35,7 @@ B3PGissuite.defineComponent('LayerInfoComponent', {
         // Text is not present yet in cache, so get text with Ajax
         JMapData.getKaartlaagInfoTekst(item.id, function(tekst) {
             // Text is not empty
-            if (tekst && tekst !== "") {        
+            if (tekst && tekst !== "") {
                 // Cache text
                 me.layerInfo[item.id] = tekst;
                 // Show left panel

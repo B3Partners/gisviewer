@@ -26,11 +26,11 @@ function showCsvError() {
 }
 
 function editFeature(ggbId, attrName, attrVal) {
-    B3PGissuite.commons.getParent({ parentOnly: true }).drawFeature(ggbId, attrName, attrVal);
+    B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.viewercommons.drawFeature(ggbId, attrName, attrVal);
 }
 
 function popUp(link, title, width, heigth) {
-    var pu = B3PGissuite.commons.getParent({ parentOnly: true }).popUp(link, title, width, heigth);
+    var pu = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.viewercommons.popUp(link, title, width, heigth);
     if (window.focus)
         pu.focus();
 }
@@ -200,7 +200,7 @@ function handleGetGegevensBronSimpleVertical(gegevensbron) {
                 url = gegevensbron.records[0].values[0].valueList;
             }
 
-            parent.popUp(url, 'externe_link', 800, 600);
+            popUp(url, 'externe_link', 800, 600);
         }
     }
 
@@ -278,7 +278,7 @@ function handleGetGegevensBronMultiVertical(gegevensbron) {
                 url = gegevensbron.records[0].values[0].valueList;
             }
 
-            parent.popUp(url, 'externe_link', 800, 600);
+            popUp(url, 'externe_link', 800, 600);
         }
     }
 
@@ -547,7 +547,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
             kolomNaam: "bewerk",
             label: "Bewerk feature",
             type: "TYPE_DATA"
-        }
+        };
         gegevensbron.labels.push(bewerk);
     }
 
@@ -570,7 +570,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 url = gegevensbron.records[0].values[0].valueList;
             }
 
-            parent.popUp(url, 'externe_link', 800, 600);
+            popUp(url, 'externe_link', 800, 600);
         }
     }
 
@@ -822,7 +822,7 @@ function createBronCaption(gegevensbron, simple, index) {
         "alt": "Exporteer records met kaartuitsnede naar PDF",
         "title": "Exporteer records met kaartuitsnede naar PDF"
     }).click(function() {
-        parent.exportObjectData2PDF(htmlId, gegevensbron, index, idcounter++);
+        parent.B3PGissuite.viewercommons.exportObjectData2PDF(htmlId, gegevensbron, index, idcounter++);
     });
 
     var infoFrmId = "bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm" + idcounter++;
@@ -1026,7 +1026,7 @@ function createTableTd(waarde, gegevensbron, record) {
             var pk = gegevensbron.adminPk;
             var val = record.id
 
-            B3PGissuite.commons.getParent({ parentOnly: true }).getDestinationWkt(id, pk, val);
+            B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.viewercommons.getDestinationWkt(id, pk, val);
         });
         td.html(gIcon);
     }
@@ -1089,7 +1089,7 @@ function createTableTd(waarde, gegevensbron, record) {
                     clickable = $j('<img src="' + urlicon + '" alt="Externe informatie" border="0"/>')
                             .attr({
                         "title": listWaarde
-                    })
+                    });
                 }
                 clickable.click(function() {
                     popUp(listWaarde, 'externe_link', 730, 350);
@@ -1328,7 +1328,7 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     }
     var mapje = fmco.getMap();
     var existingLayer = mapje.getAllWMSLayers()[0];
-    var wmsLayer = ouder.searchThemaValue(ouder.B3PGissuite.config.themaTree, themaid, "wmslayers");
+    var wmsLayer = searchThemaValue(ouder.B3PGissuite.config.themaTree, themaid, "wmslayers");
     var visValue = trim(waardepk);
     if (waardeingevuldekolom != null && waardeingevuldekolom.length > 0) {
         visValue = trim(waardeingevuldekolom);
@@ -1351,7 +1351,7 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
         exceptions: existingLayer.getOption("exceptions"),
         srs: existingLayer.getOption("srs"),
         version: existingLayer.getOption("version")
-    }
+    };
     var options = {
         id: "sldLayer",
         timeout: "30",
@@ -1362,4 +1362,31 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     };
     var sldLayer = fmco.createWMSLayer("sldLayer", sldUrl, ogcOptions, options);
     mapje.addLayer(sldLayer);//true,true
+}
+
+/**
+ *Functie zoekt een waarde op (val) van een thema met id
+ * themaId uit de thematree list die meegegeven is.
+ * @param themaList
+ * @param themaId
+ * @param val
+ **/
+function searchThemaValue(themaList, themaId, val) {
+    for (var i in themaList) {
+        if (i == "id" && themaList[i] == themaId) {
+            return themaList[val];
+        }
+
+        if (i == "children") {
+            for (var ichild in themaList[i]) {
+                var returnValue = searchThemaValue(themaList[i][ichild], themaId, val);
+                if (returnValue !== undefined && returnValue !== null) {
+                    return returnValue;
+                }
+
+            }
+        }
+    }
+
+    return null;
 }

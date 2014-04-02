@@ -135,7 +135,7 @@ function performSearch() {
         }
     }
 
-    showTabvakLoading('Bezig met zoeken');
+    B3PGissuite.get('Layout').showTabvakLoading('Bezig met zoeken');
     $j("#searchResults").html("Een ogenblik geduld, de zoek opdracht wordt uitgevoerd...");
 
     B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
@@ -156,7 +156,7 @@ function handleZoekResultaat(searchResultId) {
 
     //zoom naar het gevonden object.(als er een bbox is)
     if (minX != 0 && minY != 0 && maxX != 0 && maxY) {
-        moveToExtent(minX, minY, maxX, maxY);
+        B3PGissuite.viewerComponent.moveToExtent(minX, minY, maxX, maxY);
 
         var x = (maxX + minX) / 2;
         var y = (maxY + minY) / 2;
@@ -164,7 +164,7 @@ function handleZoekResultaat(searchResultId) {
         B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
         B3PGissuite.vars.webMapController.getMap().setMarker("searchResultMarker", x, y);
 
-        doIdentifyAfterSearch(x, y);
+        B3PGissuite.viewerComponent.doIdentifyAfterSearch(x, y);
     }
 
     //kijk of de zoekconfiguratie waarmee de zoekopdracht is gedaan een ouder heeft.
@@ -253,7 +253,7 @@ function createZoekStringsFromZoekVelden(zc, zoekVelden, zoekStrings) {
 // @param values = de gevonden lijst met waarden.
 var foundValues = null;
 function searchCallBack(values) {
-    hideTabvakLoading();
+    B3PGissuite.get('Layout').hideTabvakLoading();
 
     foundValues = values;
     var searchResults = $j("#searchResults");
@@ -298,7 +298,7 @@ function zoekconfiguratieThemasCallBack(themaIds) {
 }
 
 function switchLayersOn() {
-    var treeComponent = B3PGissuite.get('TreeComponent');
+    var treeComponent = B3PGissuite.get('TreeTabComponent');
     if (zoekconfiguratieThemas && treeComponent !== null) {
         for (var i = 0; i < zoekconfiguratieThemas.length; i++) {
             var themaId = zoekconfiguratieThemas[i];

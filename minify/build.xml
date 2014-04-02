@@ -38,17 +38,24 @@
           </sources>
 
           <sources dir="${viewerhtml.path}/components">
+            <file name="Component.js" />
             <file name="BaseComponent.js" />
             <file name="ViewerComponent.js" />
+            <file name="Search.js" />
+            <file name="Layout.js" />
+            <file name="Balloon.js" />
+          </sources>
+
+          <sources dir="${viewerhtml.path}/components/tabcomponents">
             <file name="TabComponent.js" />
-            <file name="IframeComponent.js" />
-            <file name="TreeComponent.js" />
-            <file name="LegendComponent.js" />
-            <file name="PlanSelectionComponent.js" />
-            <file name="SearchComponent.js" />
-            <file name="CMSComponent.js" />
-            <file name="LayerInfoComponent.js" />
-          </sources>          
+            <file name="IframeTabComponent.js" />
+            <file name="TreeTabComponent.js" />
+            <file name="LegendTabComponent.js" />
+            <file name="PlanSelectionTabComponent.js" />
+            <file name="SearchTabComponent.js" />
+            <file name="CMSTabComponent.js" />
+            <file name="LayerInfoTabComponent.js" />
+          </sources>        
 
         </jscomp>
 	</target>

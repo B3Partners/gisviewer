@@ -1,4 +1,4 @@
-B3PGissuite.defineComponent('PlanSelectionComponent', {
+B3PGissuite.defineComponent('PlanSelectionTabComponent', {
     extend: 'BaseComponent',
     planEigenaarId: null,
     planId: null,
@@ -16,7 +16,7 @@ B3PGissuite.defineComponent('PlanSelectionComponent', {
         statusSelectName: 'statusselect',
         planSelectName: 'planselect'
     },
-    constructor: function PlanSelectionComponent(options) {
+    constructor: function PlanSelectionTabComponent(options) {
         this.callParent(options);
         this.init();
     },

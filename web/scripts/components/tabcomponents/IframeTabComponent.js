@@ -1,4 +1,4 @@
-B3PGissuite.defineComponent('IframeComponent', {
+B3PGissuite.defineComponent('IframeTabComponent', {
     extend: 'BaseComponent',
     defaultOptions: {
         src: '',
@@ -6,7 +6,7 @@ B3PGissuite.defineComponent('IframeComponent', {
             tabvakClassname: 'tabvak_with_iframe'
         }
     },
-    constructor: function IframeComponent(options) {
+    constructor: function IframeTabComponent(options) {
         this.callParent(options);
         this.init();
     },

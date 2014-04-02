@@ -17,7 +17,6 @@
                     return window.parent;
                 }else{
                     alert("No parent found");
-                    
                     return null;
                 }
             }
@@ -45,10 +44,11 @@
         <h2>Meerdere kaartlagen actief</h2>
         <p>Kies de kaartlaag met het object die u wilt selecteren.</p>
         <script type="text/javascript">
-            for (var i=0; i < getParent().highlightLayers.length; i++) {
-                var item = getParent().highlightLayers[i];
-
-                var link = "<a href='#' onclick='getParent().handlePopupValue("+item.id+"); getParent().B3PGissuite.commons.closeiFramePopup();'>" + item.title +"</A>";
+            var parentViewerComponent = getParent().viewerComponent,
+                highlightLayers = parentViewerComponent.getHighlightLayers();
+            for (var i=0; i < highlightLayers.length; i++) {
+                var item = highlightLayers[i];
+                var link = "<a href='#' onclick='parentViewerComponent.handlePopupValue("+item.id+"); getParent().B3PGissuite.commons.closeiFramePopup();'>" + item.title +"</a>";
                 document.write("<p>"+link +"</p>");
             }
         </script>

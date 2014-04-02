@@ -267,7 +267,7 @@ function handleGeometryResult(adresIndex){
     if (adresIndex!=null && gevondenLocaties.length > 0){
         var straal=document.getElementById("straalSelect").value;
         var searchResult=gevondenLocaties[adresIndex];
-        viewerDocument.moveToExtent(Number(searchResult.minx)-straal, Number(searchResult.miny)-straal, Number(searchResult.maxx)+straal, Number(searchResult.maxy)+straal,true);
+        viewerDocument.B3PGissuite.viewerComponent.moveToExtent(Number(searchResult.minx)-straal, Number(searchResult.miny)-straal, Number(searchResult.maxx)+straal, Number(searchResult.maxy)+straal,true);
         for (var b=0; b  < searchResult.attributen.length;  b++){
             var searchedAttribuut=searchResult.attributen[b];
             if (searchedAttribuut.type==3){
@@ -312,7 +312,7 @@ function handleSearchResults(results){
 
 function moveAndIdentify(x, y){
     var straal=100;
-    viewerDocument.moveToExtent(Number(x)-straal, Number(y)-straal, Number(x)+straal, Number(y)+straal,true);
+    viewerDocument.B3PGissuite.viewerComponent.moveToExtent(Number(x)-straal, Number(y)-straal, Number(x)+straal, Number(y)+straal,true);
     //viewerDocument.doIdentify(x,y,x,y);
 }
 

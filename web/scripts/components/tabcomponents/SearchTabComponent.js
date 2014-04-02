@@ -1,4 +1,4 @@
-B3PGissuite.defineComponent('SearchComponent', {
+B3PGissuite.defineComponent('SearchTabComponent', {
     extend: 'BaseComponent',
     defaultOptions: {
         hasSearch: false,
@@ -8,22 +8,22 @@ B3PGissuite.defineComponent('SearchComponent', {
         searchResultsId: 'searchResults',
         searchResultsClass: 'searchResultsClass'
     },
-    constructor: function SearchComponent(options) {
+    constructor: function SearchTabComponent(options) {
         this.callParent(options);
         this.init();
     },
     init: function() {
         this.component = jQuery('<div></div>');
-        
+
         var verwijderMarker = jQuery('<p></p>').append(jQuery('<input />').attr({
             'type': 'button',
             'class': 'knop',
             'value': 'Verwijder marker'
         }).click(function() {
-            removeSearchResultMarker();
+            B3PGissuite.get('Search').removeSearchResultMarker();
         }));
 
-        if(this.options.hasSearch) {            
+        if(this.options.hasSearch) {
             this.component.append(verwijderMarker);
         }
         this.component.append(jQuery('<p></p>').text('Kies uit de lijst de objecten waar u op wilt zoeken en vul daarna de zoekvulden in.'));
@@ -31,7 +31,7 @@ B3PGissuite.defineComponent('SearchComponent', {
             this.component.append(jQuery('<p></p>').text('U heeft een startlocatie ingesteld. Deze locatie staat op de kaart gemarkeerd. Bij zoekers die hier gebruik van maken wordt de afstand naar de startlocatie getoond.'));
             this.component.append(verwijderMarker);
         }
-        
+
         var searchContainer = jQuery('<div></div>')
         .append(jQuery('<div></div>').attr({ 'id': this.options.searchConfigContainerId }))
         .append(jQuery('<div></div>').attr({ 'id': this.options.searchInputContainerId }))

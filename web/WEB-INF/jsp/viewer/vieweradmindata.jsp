@@ -32,9 +32,12 @@
     var timeout = 3000;
     var loop = 0;
 
-    B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.commons.hideLoading();
-    if(B3PGissuite.commons.getParent({ parentOnly: true }).panelBelowCollapsed) {
-        parent.panelResize('below');
+    var myparent = B3PGissuite.commons.getParent({ parentOnly: true });
+    if(myparent) {
+        myparent.B3PGissuite.commons.hideLoading();
+        if(myparent.panelBelowCollapsed) {
+            myparent.B3PGissuite.get('Layout').panelResize('below');
+        }
     }
 
 </script>

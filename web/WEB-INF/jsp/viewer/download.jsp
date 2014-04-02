@@ -14,7 +14,7 @@
         
         var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
         if (ouder) {
-            var wkt = ouder.getWktForDownload();
+            var wkt = ouder.B3PGissuite.viewercommons.getWktForDownload();
             if (wkt) {
                 document.forms[0].wkt.value = wkt;
             }

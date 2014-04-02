@@ -92,5 +92,5 @@ function getBagObjects(){
         extraCriteria[verblijfsObjectenGegevensBronId]+=gebruiksFunctiesCriteria;
         extraCriteria[verblijfsObjectenGegevensBronId]+=")";
     }
-    parent.handleGetAdminData(null, null, false, bagThemaId, JSON.stringify(extraCriteria));
+    parent.B3PGissuite.viewerComponent.handleGetAdminData(null, null, false, bagThemaId, JSON.stringify(extraCriteria));
 }

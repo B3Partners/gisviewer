@@ -233,24 +233,24 @@
      * Definitie beschikbare tabbladen.
      */
     B3PGissuite.config.tabbladen = {
-        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeComponent", 'options': { 'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll } },
-        "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchComponent", "options": { "hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt} } },
-        "gebieden": { "id": "gebieden", "contentid": "objectframeViewer", "name": "Gebieden", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
-        "analyse": { "id": "analyse", "contentid": "analyseframeViewer", "name": "Analyse", "class": "IframeComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
-        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendComponent", 'options': { 'useSortableFunction': B3PGissuite.config.useSortableFunction, 'layerDelay': B3PGissuite.config.layerDelay } },
-        //"informatie": { "id": "informatie", "contentid": "beschrijvingVakViewer", "name": "Informatie", "class": "IframeComponent", 'options': { 'src': 'empty_iframe.jsp' } },
-        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionComponent" },
-        "meldingen": { "id": "meldingen", "contentid": "meldingenframeViewer", "name": "Melding", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
-        // "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningframeZoeker", "name": "Voorziening", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
-        // "vergunningen": { "id": "vergunningen", "contentid": "vergunningframeZoeker", "name": "Vergunning", "class": "IframeComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
-        "redlining": { "id": "redlining", "contentid": "redliningframeViewer", "name": "Redlining", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
-        // "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSComponent", 'options': { 'tekstBlokken': B3PGissuite.config.tekstBlokken } },
-        "bag": {id: "bag", contentid: "bagframeViewer", name: "BAG", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
-        "wkt": {id: "wkt", contentid: "wktframeViewer", name: "WKT", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
-        "transparantie": {id: "transparantie", contentid: "transparantieframeViewer", name: "Transparantie", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
-        "tekenen" : {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
-        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } },
-        "layerinfo": { "id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoComponent", 'options': { } }
+        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeTabComponent", 'options': { 'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll } },
+        "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchTabComponent", "options": { "hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt} } },
+        "gebieden": { "id": "gebieden", "contentid": "objectframeViewer", "name": "Gebieden", "class": "IframeTabComponent", 'options': { 'src': 'empty_iframe.jsp' } },
+        "analyse": { "id": "analyse", "contentid": "analyseframeViewer", "name": "Analyse", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
+        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendTabComponent", 'options': { 'useSortableFunction': B3PGissuite.config.useSortableFunction, 'layerDelay': B3PGissuite.config.layerDelay } },
+        //"informatie": { "id": "informatie", "contentid": "beschrijvingVakViewer", "name": "Informatie", "class": "IframeTabComponent", 'options': { 'src': 'empty_iframe.jsp' } },
+        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionTabComponent" },
+        "meldingen": { "id": "meldingen", "contentid": "meldingenframeViewer", "name": "Melding", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
+        // "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningframeZoeker", "name": "Voorziening", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
+        // "vergunningen": { "id": "vergunningen", "contentid": "vergunningframeZoeker", "name": "Vergunning", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
+        "redlining": { "id": "redlining", "contentid": "redliningframeViewer", "name": "Redlining", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
+        // "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSTabComponent", 'options': { 'tekstBlokken': B3PGissuite.config.tekstBlokken } },
+        "bag": {id: "bag", contentid: "bagframeViewer", name: "BAG", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
+        "wkt": {id: "wkt", contentid: "wktframeViewer", name: "WKT", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
+        "transparantie": {id: "transparantie", contentid: "transparantieframeViewer", name: "Transparantie", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
+        "tekenen" : {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
+        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } },
+        "layerinfo": { "id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': { } }
     };
     
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
@@ -274,16 +274,20 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
         <!-- components -->
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Component.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/BaseComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/ViewerComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/TabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/IframeComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/TreeComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/LegendComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/PlanSelectionComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/SearchComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/CMSComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/LayerInfoComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Search.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Layout.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Balloon.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/IframeTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TreeTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LegendTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/PlanSelectionTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/SearchTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/CMSTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LayerInfoTabComponent.js"/>"></script>
     </c:when>
     <c:otherwise>
         <!-- Total (minified) viewer JS -->
@@ -331,111 +335,55 @@
 <div id="css_props"></div>
         
 <script type="text/javascript">
+    (function() {
+        // Init CSS properties for configured tab width
+        B3PGissuite.get('Layout').configureTabWidth();
+        B3PGissuite.get('Layout').prepareTabs();
+        // Init tab controllers
+        var rightTabComponent = B3PGissuite.createComponent('TabComponent', { 
+            direction: 'right',
+            labelContainer: 'tabjes',
+            tabContainer: 'tab_container',
+            useClick: !B3PGissuite.config.useMouseOverTabs, 
+            useHover: B3PGissuite.config.useMouseOverTabs,
+            defaultTab: B3PGissuite.config.cfgActiveTab,
+            enabledTabs: B3PGissuite.config.enabledtabs
+        });
+        var leftTabComponent = B3PGissuite.createComponent('TabComponent', {
+            direction: 'left',
+            labelContainer: 'leftcontenttabjes',
+            tabContainer: 'leftcontent',
+            useClick: !B3PGissuite.config.useMouseOverTabs,
+            useHover: B3PGissuite.config.useMouseOverTabs,
+            defaultTab: B3PGissuite.config.cfgActiveTabLeft,
+            enabledTabs: B3PGissuite.config.enabledtabsLeft
+        });
+        // Set tabcomponents to layoutmanager
+        B3PGissuite.get('Layout').setTabComponents(rightTabComponent, leftTabComponent);
+        // Build the layout (admindatadiv, panelcontrols etc)
+        // Argument is the html-element which is used to add after
+        B3PGissuite.get('Layout').createLayout($j('#css_props'));
+        /**
+        * Start off with initMapComponent()
+        */
+        B3PGissuite.viewerComponent = B3PGissuite.createComponent('ViewerComponent', { viewerType: B3PGissuite.config.viewerType });
+        B3PGissuite.viewerComponent.initMapComponent();
+        B3PGissuite.commons.attachTransitionListener($j("#mapcontent")[0], function(){
+            B3PGissuite.viewerComponent.updateSizeOL();
+        });
+        // Hide loading screen
+        B3PGissuite.get('Layout').initHideLoadingScreen();
 
-    // Init CSS properties for configured tab width
-    configureTabWidth();
-    B3PGissuite.commons.attachTransitionListener($j("#mapcontent")[0], function(){updateSizeOL();});
-    // Show tabs for correct widht calculations
-    $j('#content_viewer').addClass('tablinks_open');
-    $j('#content_viewer').addClass('tabrechts_open');
-
-    // Init tab controllers
-    var tabComponent = B3PGissuite.createComponent('TabComponent', 
-    { 
-        direction: 'right',
-        labelContainer: 'tabjes',
-        tabContainer: 'tab_container',
-        useClick: !B3PGissuite.config.useMouseOverTabs, 
-        useHover: B3PGissuite.config.useMouseOverTabs,
-        defaultTab: B3PGissuite.config.cfgActiveTab,
-        enabledTabs: B3PGissuite.config.enabledtabs
-    });
-    var leftTabComponent = B3PGissuite.createComponent('TabComponent', {
-        direction: 'left',
-        labelContainer: 'leftcontenttabjes',
-        tabContainer: 'leftcontent',
-        useClick: !B3PGissuite.config.useMouseOverTabs,
-        useHover: B3PGissuite.config.useMouseOverTabs,
-        defaultTab: B3PGissuite.config.cfgActiveTabLeft,
-        enabledTabs: B3PGissuite.config.enabledtabsLeft
-    });
-
-    var noOfTabs = tabComponent.getTabCount(), noLeftTabs = leftTabComponent.getTabCount();
-    if(B3PGissuite.config.usePanel) {
-        document.write('<div class="infobalk" id="informatiebalk">'
-            +'     <div class="infobalk_description">INFORMATIE</div>'
-            +'     <div class="infobalk_actions">&nbsp;</div>'
-            +' </div>'
-            +' <div id="dataframediv" class="dataframediv">'
-            +'     <iframe id="dataframe" name="dataframe" frameborder="0" src="viewerwelkom.do?cmsPageId=${cmsPageId}"></iframe>'
-            +' </div>');
-    }
-    if(B3PGissuite.config.usePanelControls) {
-        document.write('<div id="panelControls">');
-        if(noOfTabs > 0) document.write('<div id="rightControl" class="right_open" onclick="panelResize(\'right\');"><a href="#"></a></div>');
-        if(noLeftTabs > 0) document.write('<div id="leftControl" class="left_closed" onclick="panelResize(\'left\');"><a href="#"></a></div>');
-        document.write('<div id="onderbalkControl" class="bottom_open" onclick="panelResize(\'below\');"></div></div>');
-    }
-    
-    // Hide tabs when there is no content
-    if(noLeftTabs === 0) $j('#content_viewer').addClass('tablinks_verborgen').removeClass('tablinks_open');
-    if(noOfTabs === 0) $j('#content_viewer').addClass('tabrechts_verborgen').removeClass('tabrechts_open');
-    // Show infopanel below when set
-    if(!B3PGissuite.config.usePopup && B3PGissuite.config.usePanel) $j('#content_viewer').addClass('dataframe_open');
-    
-    function panelResize(dir){
-        if(dir === 'left') {
-            if($j('#content_viewer').hasClass('tablinks_open')) $j('#content_viewer').removeClass('tablinks_open').addClass('tablinks_dicht');
-            else $j('#content_viewer').addClass('tablinks_open').removeClass('tablinks_dicht');
-        }
-        if(dir === 'right') {
-            if($j('#content_viewer').hasClass('tabrechts_open')) $j('#content_viewer').removeClass('tabrechts_open').addClass('tabrechts_dicht');
-            else $j('#content_viewer').addClass('tabrechts_open').removeClass('tabrechts_dicht');
-        }
-        if(dir === 'below') {
-            if($j('#content_viewer').hasClass('dataframe_open')) $j('#content_viewer').removeClass('dataframe_open').addClass('dataframe_dicht');
-            else $j('#content_viewer').addClass('dataframe_open').removeClass('dataframe_dicht');
-        }
-        updateSizeOL();
-    }
-    
-    /**
-    * Start off with initMapComponent()
-    */
-    B3PGissuite.viewerComponent = B3PGissuite.createComponent('ViewerComponent', { viewerType: B3PGissuite.config.viewerType });
-    B3PGissuite.viewerComponent.initMapComponent();
-    var orderLayerBox= document.getElementById("orderLayerBox");
-</script>
-
-<script type="text/javascript">
-
-        var expandNodes=null;
         <c:if test="${not empty expandNodes}">
-            expandNodes=${expandNodes};
-            if(expandNodes !== null){
-                for (var i=0; i < expandNodes.length; i++){
-                    B3PGissuite.commons.messagePopup("", expandNodes[i], "information");
-                    treeview_expandItemChildren("layermaindiv","c"+expandNodes[i]);
+            (function() {
+                var treeComponent = B3PGissuite.get('TreeTabComponent'),
+                    expandNodes=${expandNodes};
+                if(treeComponent !== null && expandNodes !== null){
+                    treeComponent.expandNodes(expandNodes);
                 }
-            }
+            }());
         </c:if>
-
-        function hideLoadingScreen() {
-            $j("#loadingscreen").hide();
-        }
-
-        /* Laadscherm na 60 seconden zelf weghalen
-         * Hij zou weg moeten gaan in onAllLayersFinishedLoading in viewer.js
-         */
-        if (B3PGissuite.config.waitUntillFullyLoaded) {
-            var hideScreen = setTimeout("hideLoadingScreen();", 60000);
-        }
-        /* Weghalen als viewer.jsp klaar is */
-        if (!B3PGissuite.config.waitUntillFullyLoaded) {
-            $j(document).ready(function(){
-                $j("#loadingscreen").hide();
-            });
-        }
+    }());
 </script>
 <div id="dialog-download-metadata" title="Kaartlaag opties" style="display: none;">
     <p>
@@ -463,13 +411,13 @@
     </div>
 
     <div class="embedded_icon">
-        <a href="#" onclick="getLatLonForGoogleMaps();">
+        <a href="#" class="getLatLonForGoogleMaps">
             <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
         </a>
     </div>
 
     <div class="embedded_icon">
-        <a href="#" onclick="getBookMark();">
+        <a href="#" class="getBookmark">
             <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
         </a>
     </div>

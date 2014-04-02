@@ -53,7 +53,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
 
             if(ouder) {
-                var wkt = ouder.getWktActiveFeature(0);
+                var wkt = ouder.B3PGissuite.viewercommons.getWktActiveFeature(0);
                 
                 $j("#activeWkt").val(wkt);            
                 $j('#activeWkt').focus();

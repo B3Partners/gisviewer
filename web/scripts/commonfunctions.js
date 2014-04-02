@@ -25,17 +25,21 @@ $j = jQuery.noConflict();
             Initialize function
              */
             initialize: function() {
-                /* trim for IE8 */
-                if (typeof String.prototype.trim !== 'function') {
-                    String.prototype.trim = function() {
-                        return this.replace(/^\s+|\s+$/g, '');
-                    };
-                }
+                this.initPolyfills();
                 $j(document).ready(function() {
                     if(window.dwr && window.dwr.engine) {
                         window.dwr.engine.setErrorHandler(B3PGissuite.commons.dwrErrorHandler);
                     }
                 });
+            },
+
+            initPolyfills: function() {
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+                if (!String.prototype.trim) {
+                    String.prototype.trim = function () {
+                        return this.replace(/^\s+|\s+$/g, '');
+                    };
+                }
             },
 
             dwrErrorHandler: function(msg) {
@@ -60,7 +64,9 @@ $j = jQuery.noConflict();
                     return window.parent;
                 }else{
                     if(options && options.hasOwnProperty('parentOnly') && options.parentOnly) {
-                        this.messagePopup("Fout", "No parent found", "error");
+                        if(!(options && options.hasOwnProperty('supressError') && options.supressError)) {
+                            this.messagePopup("Fout", "No parent found", "error");
+                        }
                         return null;
                     }
                     return window;
@@ -154,12 +160,10 @@ $j = jQuery.noConflict();
             startResize: function() {
                 this.blockViewerUI();
                 $j("#popupWindow_Resizediv").show();
-                if(this.getIEVersion() <= 7 && this.getIEVersion() != -1) fixPopup();
             },
             stopResize: function() {
                 this.unblockViewerUI();
                 $j("#popupWindow_Resizediv").hide();
-                if(this.getIEVersion() <= 7 && this.getIEVersion() != -1) fixPopup();
             },
             showLoading: function(parentdiv) {
                 var me = this;

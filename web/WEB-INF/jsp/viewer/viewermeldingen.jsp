@@ -30,7 +30,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     function submitForm() {        
         var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
         if(ouder) {
-            var wkt = ouder.getWktActiveFeature(-1);
+            var wkt = ouder.B3PGissuite.viewercommons.getWktActiveFeature(-1);
             if (wkt) {
                 document.forms[0].wkt.value = wkt;
             } else {

@@ -1,5 +1,6 @@
 B3PGissuite.vars = {
-    ltIE8: document.getElementsByTagName("html")[0].className.match(/lt-ie8/),
+    // ltIE8 not used any more, since we support IE8+
+    // ltIE8: document.getElementsByTagName("html")[0].className.match(/lt-ie8/),
     /**
      * Array with the current visible layers in correct order.
      * The last is rendered on top.

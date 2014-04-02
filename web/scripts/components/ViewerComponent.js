@@ -803,13 +803,13 @@ B3PGissuite.defineComponent('ViewerComponent', {
         var me = this;
 
         /*ie bug fix*/
-        if (B3PGissuite.vars.ltIE8) {
+        /* if (B3PGissuite.vars.ltIE8) {
             var mapId = B3PGissuite.vars.webMapController.getMap().getFrameworkMap().id;
             var viewport = document.getElementById(mapId + '_OpenLayers_ViewPort');
             if (viewport) {
                 viewport.style.position = "absolute";
             }
-        }
+        } */
 
         B3PGissuite.vars.webMapController.createPanel("toolGroup");
 

@@ -5,16 +5,13 @@
 
     <xsl:param name="versionParam" select="'1.0'"/>
 
-    <xsl:variable name="map-width-px" select="'612'"/>
-    <xsl:variable name="map-height-px" select="'457'"/>
-
     <!-- formatter -->
     <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
                         infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"
                         zero-digit="0" digit="#" pattern-separator=";" />
 
     <!-- includes -->
-    <xsl:include href="pdf-styles.xsl"/>
+    <xsl:include href="report-styles.xsl"/>
 
     <!-- master set -->
     <xsl:template name="layout-master-set">
@@ -37,19 +34,16 @@
                         
                         <xsl:for-each select="/pdfinfo/records/entry">                            
                             <fo:block-container width="28.8cm" height="1.5cm" top="0cm" left="0cm" background-color="#166299" xsl:use-attribute-sets="column-block">
-                                <xsl:call-template name="title-block">
-                                    <xsl:with-param name="currentRecord" select="position()" />
-                                    <xsl:with-param name="totalRecords" select="count(/pdfinfo/records/entry)" />              
-                                </xsl:call-template>
+                                <xsl:call-template name="title-block"/>
                             </fo:block-container>
 
-                            <fo:block-container width="28.8cm" height="18.7cm" top="1.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                            <fo:block-container width="28.8cm" height="15.0cm" top="1.5cm" left="0cm" xsl:use-attribute-sets="column-block">
                                 <xsl:call-template name="info-block">
                                     <xsl:with-param name="myRecord" select="." />
                                 </xsl:call-template>
                             </fo:block-container>
 
-                            <fo:block-container width="7.6cm" height="2.3cm" top="17.9cm" left="20.5cm" xsl:use-attribute-sets="column-block">
+                            <fo:block-container width="7.6cm" height="2.3cm" top="16.5cm" left="20.5cm" xsl:use-attribute-sets="column-block">
                                 <xsl:call-template name="logo-block"/>
                             </fo:block-container>
                             
@@ -70,7 +64,7 @@
         <xsl:param name="totalRecords" />     
                 
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="title-font">
-            <xsl:value-of select="/pdfinfo/titel"/> (<xsl:value-of select="$currentRecord"/> van <xsl:value-of select="$totalRecords"/>)
+            <xsl:value-of select="/pdfinfo/titel"/>
         </fo:block>
     </xsl:template>
 
@@ -87,13 +81,9 @@
             <xsl:if test="count($myRecord/value/items/entry) &gt; 0">
                         
                 <fo:table>                                                                
-                    <fo:table-column column-width="10.0cm"/>
-                    <fo:table-column column-width="19.0cm"/>
+                    <fo:table-column column-width="27.0cm"/>
 
                     <fo:table-header>
-                        <fo:table-cell>
-                            <fo:block></fo:block>
-                        </fo:table-cell>
                         <fo:table-cell>
                             <fo:block></fo:block>
                         </fo:table-cell>
@@ -103,11 +93,11 @@
                         <fo:table-row>
                             <fo:table-cell>                                                    
                                             
-                                <fo:block width="10.0cm">
+                                <fo:block width="26.0cm">
                                     <fo:table>
 
-                                        <fo:table-column column-width="5.0cm"/>
-                                        <fo:table-column column-width="5.0cm"/>
+                                        <fo:table-column column-width="6.0cm"/>
+                                        <fo:table-column column-width="20.0cm"/>
 
                                         <fo:table-header>
                                             <fo:table-cell>
@@ -139,14 +129,6 @@
                                     </fo:table>                            
                                 </fo:block><!-- end table objectdata fields -->
                             
-                            </fo:table-cell>
-                            
-                            <!-- Tonen uitsnede -->
-                            <fo:table-cell>                                            
-                                <xsl:variable name="url" select="$myRecord/value/imageUrl"/>                        
-                                <fo:block width="18.5cm">
-                                    <fo:external-graphic border-style="solid" border-width="medium" src="url('data:image/jpeg;base64,{$url}')" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="500" height="375"/>
-                                </fo:block>                            
                             </fo:table-cell>
                             
                         </fo:table-row>                                             

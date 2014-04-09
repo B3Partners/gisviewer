@@ -26,7 +26,6 @@ B3PGissuite.vars = {
      * Index used when adding layers. So its possible to leave indexes not used.
      */
     startLayerIndex: 0,
-
     /**
      * Ballon reference.
      */
@@ -54,7 +53,6 @@ B3PGissuite.vars = {
     popupCreated: false
 };
 B3PGissuite.viewercommons = {
-
     init: function() {
         var me = this;
         jQuery('.getBookmark').bind('click', function() {
@@ -87,7 +85,7 @@ B3PGissuite.viewercommons = {
         if (document.getElementById('popupWindow')) {
             pwCreated = true;
         }
-        if (!pwCreated && B3PGissuite.commons.getParent({ parentOnly: true, supressError: true }) && B3PGissuite.commons.getParent({ parentOnly: true, supressError: true }).document.getElementById('popupWindow')) {
+        if (!pwCreated && B3PGissuite.commons.getParent({parentOnly: true, supressError: true}) && B3PGissuite.commons.getParent({parentOnly: true, supressError: true}).document.getElementById('popupWindow')) {
             pwCreated = true;
         }
         if (!pwCreated) {
@@ -110,7 +108,6 @@ B3PGissuite.viewercommons = {
             modal: false
         });
     },
-
     /**
      * Controleert of een item in de huidige schaal past.
      * Voor een enkele layer wordt gekeken of die er in past
@@ -129,7 +126,7 @@ B3PGissuite.viewercommons = {
         if (item.children) {
             itemVisible = false;
             for (var i = 0; i < item.children.length; i++) {
-                if(this.isItemInScale(item.children[i], scale)) {
+                if (this.isItemInScale(item.children[i], scale)) {
                     itemVisible = true;
                 }
             }
@@ -200,7 +197,6 @@ B3PGissuite.viewercommons = {
 
         return itemVisible;
     },
-
     convertStringToArray: function(waarde) {
         var lijst = [];
         var arr = [];
@@ -223,7 +219,6 @@ B3PGissuite.viewercommons = {
 
         return arr;
     },
-
     getNLExtent: function() {
         return "12000,304000,280000,620000";
     },
@@ -233,14 +228,12 @@ B3PGissuite.viewercommons = {
     getNLTilingRes: function() {
         return "512,256,128,64,32,16,8,4,2,1,0.5,0.125";
     },
-
     getBaseUrl: function() {
         var protocol = window.location.protocol + "//";
         var host = window.location.host;
 
         return protocol + host + B3PGissuite.config.baseNameViewer;
     },
-
     /**
      * Changes the bounding box of the feature to a minimal size when this is smaller
      * than the minimal vlue.
@@ -258,7 +251,6 @@ B3PGissuite.viewercommons = {
         }
         return feature;
     },
-
     /**
      * Shows a busy with loading page.
      * cached the last request.
@@ -297,11 +289,9 @@ B3PGissuite.viewercommons = {
                     '</div>');
         }
     },
-
     isStringEmpty: function(str) {
         return (!str || 0 === str.length);
     },
-
     /*
      * Calculates and returns the ??? from 1:??? for the current extent and 
      * current mapwidth in pixels. Average ppi value assumed. The 0.00028
@@ -316,7 +306,6 @@ B3PGissuite.viewercommons = {
 
         return Math.round(Number(scale));
     },
-
     /* Kan gebruikt worden om wat debug info onderin de kaartboom weer te geven zoals
      * specifieke timings of huidig omgerekende schaal */
     setDebugContent: function() {
@@ -325,7 +314,6 @@ B3PGissuite.viewercommons = {
 
         $j("#debug-content").html(html);
     },
-
     /**
      * Get alle enabled layer items
      * @param onlyWithinScale Only get the visible, within currentScale items.
@@ -367,8 +355,7 @@ B3PGissuite.viewercommons = {
 
         return ret;
     },
-
-    getWMSRequests: function () {
+    getWMSRequests: function() {
         var requests = [];
         var background;
 
@@ -444,8 +431,7 @@ B3PGissuite.viewercommons = {
 
         return requests;
     },
-
-    getItemFromWmsLayer: function (layer) {
+    getItemFromWmsLayer: function(layer) {
         var item;
         if (layer.options) {
             item = this.getItemByLayer(B3PGissuite.config.themaTree, layer.options.layers);
@@ -455,8 +441,7 @@ B3PGissuite.viewercommons = {
 
         return item;
     },
-
-    getWktStringForPrint: function () {
+    getWktStringForPrint: function() {
         var geoms = [];
         var vectorLayers = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
 
@@ -477,8 +462,7 @@ B3PGissuite.viewercommons = {
 
         return geoms;
     },
-
-    getLegendUrls: function () {
+    getLegendUrls: function() {
         var layerItems = [];
         var urlString = "";
         var firstURL = true;
@@ -505,18 +489,17 @@ B3PGissuite.viewercommons = {
 
         return urlString;
     },
-
-    exportObjectData2PDF: function (htmlId, gegevensbron, index, idcounter) {
+    exportObjectData2PDF: function(htmlId, gegevensbron, index, idcounter) {
         var pdf_export_url = "services/Data2PDF";
 
         /* var pdfFormId = "bronCaption" + htmlId + gegevensbron.id + index + "PDFfrm" + idcounter;
-        var submitForm = $j('<form></form>').attr({
-            method: 'post',
-            action: pdf_export_url,
-            target: 'pdfIframe',
-            id: pdfFormId,
-            style: 'float: left;'
-        }); */
+         var submitForm = $j('<form></form>').attr({
+         method: 'post',
+         action: pdf_export_url,
+         target: 'pdfIframe',
+         id: pdfFormId,
+         style: 'float: left;'
+         }); */
 
         var submitForm = document.createElement("FORM");
         document.body.appendChild(submitForm);
@@ -583,8 +566,66 @@ B3PGissuite.viewercommons = {
 
         return;
     },
+    exportObjectdata2Report: function(recordId, commando, gegevensbron) {
+        var submitForm = document.createElement("FORM");
+        document.body.appendChild(submitForm);
 
-    exportMap: function () {
+        submitForm.method = "POST";
+        submitForm.target = "pdfIframe";
+        submitForm.action = commando;
+
+        var gbInput = document.createElement('input');
+        gbInput.id = 'gbId';
+        gbInput.name = 'gbId';
+        gbInput.type = 'hidden';
+        gbInput.value = gegevensbron.id;
+        submitForm.appendChild(gbInput);
+
+        var settingsInput = document.createElement('input');
+        settingsInput.id = 'recordId';
+        settingsInput.name = 'recordId';
+        settingsInput.type = 'hidden';
+        settingsInput.value = recordId;
+        submitForm.appendChild(settingsInput);
+
+        var wmsRequests = this.getWMSRequests();
+        var tilingRequests = this.getTilingRequests();
+
+        /* als eerst tiling url's daarna gewone wms meegeven */
+        for (var i = 0; i < wmsRequests.length; i++) {
+            tilingRequests.push(wmsRequests[i]);
+        }
+
+        var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
+        var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
+
+        var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
+        var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
+        var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
+        var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
+
+        var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
+
+        var jsonSettings = {
+            requests: tilingRequests,
+            geometries: [],
+            bbox: mapBbox,
+            width: mapWidth,
+            height: mapHeight
+        };
+
+        var settingsInput = document.createElement('input');
+        settingsInput.id = 'jsonSettings';
+        settingsInput.name = 'jsonSettings';
+        settingsInput.type = 'hidden';
+        settingsInput.value = JSON.stringify(jsonSettings);
+
+        submitForm.appendChild(settingsInput);
+        submitForm.submit();
+
+        return;
+    },
+    exportMap: function() {
         var submitForm = document.createElement("FORM");
         document.body.appendChild(submitForm);
         submitForm.method = "POST";
@@ -648,7 +689,6 @@ B3PGissuite.viewercommons = {
             B3PGissuite.vars.exportMapWindow.focus();
         }
     },
-
     getTilingRequests: function() {
         var tilingRequests = [];
         var layers = B3PGissuite.vars.webMapController.getMap("map1").getAllTilingLayers();
@@ -698,7 +738,6 @@ B3PGissuite.viewercommons = {
 
         return tilingRequests;
     },
-
     checkParam: function(url, name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 
@@ -712,7 +751,6 @@ B3PGissuite.viewercommons = {
 
         return true;
     },
-
     buildTilingServiceUrl: function(tilingLayer) {
         var serviceUrl = tilingLayer.getOption("url");
 
@@ -740,13 +778,12 @@ B3PGissuite.viewercommons = {
 
         return serviceUrl;
     },
-
     /* Voor openlayers wil je soms de hele polygon op het scherm hebben niet alleen
      * de laatst actieve. Als je bijvoorbeeld in OL een polygon edit krijg je anders 
      * van getActiveFeature alleen de laatste feature (een Point) terug. In
      * this.getFrameworkLayer().features[0] zit het hele polygon.
      */
-    getWktActiveFeature: function (index) {
+    getWktActiveFeature: function(index) {
         var object;
         object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(index);
 
@@ -766,8 +803,7 @@ B3PGissuite.viewercommons = {
 
         return object.getWkt();
     },
-
-    getWktForDownload: function () {
+    getWktForDownload: function() {
         var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
 
         if (object === null || object === undefined) {
@@ -776,8 +812,7 @@ B3PGissuite.viewercommons = {
 
         return object.getWkt();
     },
-
-    getWkt: function () {
+    getWkt: function() {
         var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(-1);
 
         if (object === null || object === undefined) {
@@ -790,40 +825,33 @@ B3PGissuite.viewercommons = {
 
         return object.wktgeom;
     },
-
     drawFeature: function(ggbId, attrName, attrVal) {
         var me = this;
         JMapData.getWkt(ggbId, attrName, attrVal, function(wkt) {
             me.drawWkt(wkt);
         });
     },
-
     returnBuffer: function(wkt) {
         this.drawWkt(wkt);
     },
-
     drawWkt: function(wkt) {
         if (wkt.length > 0) {
             var polyObject = new Feature(61502, wkt);
             this.drawObject(polyObject);
         }
     },
-
     drawObject: function(feature) {
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").addFeature(feature);
     },
-
     getBookMark: function() {
         this.addToFavorites(this.createPermaLink());
     },
-
     getFullExtent: function() {
         var fullExtent = B3PGissuite.vars.webMapController.getMap().getExtent();
 
         return fullExtent;
     },
-
     getCenterWkt: function() {
         var fullExtent = this.getFullExtent();
 
@@ -837,7 +865,6 @@ B3PGissuite.viewercommons = {
 
         return "POINT(" + x + " " + y + ");";
     },
-
     getMinWkt: function() {
         var fullExtent = this.getFullExtent();
 
@@ -846,7 +873,6 @@ B3PGissuite.viewercommons = {
 
         return "POINT(" + minx + " " + miny + ");";
     },
-
     getMaxWkt: function() {
         var fullExtent = this.getFullExtent();
 
@@ -855,7 +881,6 @@ B3PGissuite.viewercommons = {
 
         return "POINT(" + maxx + " " + maxy + ");";
     },
-
     /* Berekenen lattitude en longitude waardes voor gebruik in Google
      * maps aanroep */
     getLatLonForGoogleMaps: function() {
@@ -868,7 +893,6 @@ B3PGissuite.viewercommons = {
             me.openGoogleMaps(values);
         });
     },
-
     /* Uses classic Google Maps parameters ll and spn */
     openGoogleMaps: function(values) {
         var ll = "&ll=" + values[1] + "," + values[0];
@@ -877,21 +901,18 @@ B3PGissuite.viewercommons = {
         var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
         window.open(url);
     },
-
     getDestinationWkt: function(gbId, pk, val) {
         var me = this;
         JMapData.getWkt(gbId, pk, val, function(destWkt) {
             me.getLatLonForGoogleMapDirections(destWkt);
         });
     },
-
     getLatLonForGoogleMapDirections: function(destWkt) {
         var me = this;
         JMapData.getLatLonForGoogleDirections(destWkt, function(values) {
             me.openGoogleMapsDirections(values);
         });
     },
-
     openGoogleMapsDirections: function(values) {
 
         /* Check of er een gps locatie is gezet. Dit gebeurt
@@ -914,7 +935,6 @@ B3PGissuite.viewercommons = {
 
         window.open(url);
     },
-
     createPermaLink: function() {
         var protocol = window.location.protocol + "//";
         var host = window.location.host;
@@ -982,7 +1002,6 @@ B3PGissuite.viewercommons = {
 
         return url;
     },
-
     addToFavorites: function(url) {
         var title = "B3P Gisviewer bookmark";
 
@@ -1001,13 +1020,11 @@ B3PGissuite.viewercommons = {
 
         return null;
     },
-
     chromeBookMarkPopup: function(url, title) {
         var chromePopup = window.open(url, title, "height=300, width=850,toolbar=no,scrollbars=no,menubar=no");
         var html = "<p>Voeg deze link toe aan uw favorieten:</p>" + url;
         chromePopup.document.write(html);
     },
-
     popUp: function(URL, naam, width, height, useDiv) {
 
         var screenwidth = 600;
@@ -1064,7 +1081,6 @@ B3PGissuite.viewercommons = {
 
         return null;
     },
-
     popUpData: function(naam, width, height, useDiv) {
         var screenwidth = 600;
         var screenheight = 500;
@@ -1114,7 +1130,6 @@ B3PGissuite.viewercommons = {
             return window.open('admindatabusy.do?theme=' + B3PGissuite.config.theme, naam, properties);
         }
     },
-
     buildPopup: function() {
         var popupDiv = document.createElement('div');
         popupDiv.styleClass = 'popup_Window';
@@ -1203,18 +1218,18 @@ B3PGissuite.viewercommons = {
         // Resizing popup
         (function() {
             var resized = false,
-                defaultCss = {
-                    "height": B3PGissuite.config.popupHeight,
-                    "width": B3PGissuite.config.popupWidth,
-                    "left": B3PGissuite.config.popupLeft,
-                    "top": B3PGissuite.config.popupTop
-                },
-                resizeCss = {
-                    "height": '70%',
-                    "width": '70%',
-                    "left": "15%",
-                    "top": "15%"
-                };
+                    defaultCss = {
+                "height": B3PGissuite.config.popupHeight,
+                "width": B3PGissuite.config.popupWidth,
+                "left": B3PGissuite.config.popupLeft,
+                "top": B3PGissuite.config.popupTop
+            },
+            resizeCss = {
+                "height": '70%',
+                "width": '70%',
+                "left": "15%",
+                "top": "15%"
+            };
             $j('#popupWindow_Resize').click(function() {
                 $j("#popupWindow").css(resized ? defaultCss : resizeCss);
                 $j('#popupWindow_Resize').text(resized ? '[ + ]' : ' [ - ]');
@@ -1224,14 +1239,13 @@ B3PGissuite.viewercommons = {
 
         B3PGissuite.vars.popupCreated = true;
     },
-
     /**
      * get the item that has the configuration of this wmslayer string
      * @param item the item to begin the search
      * @param layers the layers string of a layer object
      * @return the item
      */
-    getItemByLayer: function (item, layers) {
+    getItemByLayer: function(item, layers) {
         if (item.children) {
             for (var i = 0; i < item.children.length; i++) {
                 var child = item.children[i];

@@ -22,15 +22,23 @@
  */
 
 function showCsvError() {
-    B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.commons.messagePopup('Fout', 'Het is niet gelukt om de CSV data op te halen', 'error');
+    B3PGissuite.commons.getParent({parentOnly: true}).B3PGissuite.commons.messagePopup('Fout', 'Het is niet gelukt om de CSV data op te halen', 'error');
 }
 
 function editFeature(ggbId, attrName, attrVal) {
+<<<<<<< .mine
+    B3PGissuite.commons.getParent({parentOnly: true}).drawFeature(ggbId, attrName, attrVal);
+=======
     B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.viewercommons.drawFeature(ggbId, attrName, attrVal);
+>>>>>>> .r27583
 }
 
 function popUp(link, title, width, heigth) {
+<<<<<<< .mine
+    var pu = B3PGissuite.commons.getParent({parentOnly: true}).popUp(link, title, width, heigth);
+=======
     var pu = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.viewercommons.popUp(link, title, width, heigth);
+>>>>>>> .r27583
     if (window.focus)
         pu.focus();
 }
@@ -130,8 +138,8 @@ function handleGebiedenBron(gegevensbron) {
     });
 
     // Create table content    
-    if (gegevensbron.records) {        
-        var title = $j('<div></div>').addClass('gebiedenTitle').html(gegevensbron.title);        
+    if (gegevensbron.records) {
+        var title = $j('<div></div>').addClass('gebiedenTitle').html(gegevensbron.title);
         bronContainer.append(title);
 
         $j.each(gegevensbron.records, function(index, record) {
@@ -538,7 +546,7 @@ function handleGetGegevensBronMulti(gegevensbron) {
     var bronTableBody = $j('<tbody></tbody>');
 
     // Create table heading
-    if (gegevensbron.editable && B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.config.showEditTool) {
+    if (gegevensbron.editable && B3PGissuite.commons.getParent({parentOnly: true}).B3PGissuite.config.showEditTool) {
         var bewerk = {
             commando: null,
             eenheid: null,
@@ -610,10 +618,10 @@ function handleGetGegevensBronMulti(gegevensbron) {
                 "width": "50px"
             });
 
-            if (gegevensbron.editable && B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.config.showEditTool) {
+            if (gegevensbron.editable && B3PGissuite.commons.getParent({parentOnly: true}).B3PGissuite.config.showEditTool) {
                 var icon = $j('<img src="' + pencil + '" alt="Edit object" title="Edit object" />')
                         .click(function() {
-                    var ec = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.vars.editComponent;
+                    var ec = B3PGissuite.commons.getParent({parentOnly: true}).B3PGissuite.vars.editComponent;
                     ec.edit(record, gegevensbron.id);
                 });
                 editTd.append(icon);
@@ -921,7 +929,7 @@ function evalObjectDataCommando(commando) {
 
 var idcounterJsFunctions = 1;
 
-function createTableTd(waarde, gegevensbron, record) {
+function createTableTd(waarde, gegevensbron, record) {    
     var kolomBreedte = (waarde.kolomBreedte == 0) ? 150 : waarde.kolomBreedte;
     var td = $j('<td></td>')
             .css({
@@ -1026,7 +1034,11 @@ function createTableTd(waarde, gegevensbron, record) {
             var pk = gegevensbron.adminPk;
             var val = record.id
 
+<<<<<<< .mine
+            B3PGissuite.commons.getParent({parentOnly: true}).getDestinationWkt(id, pk, val);
+=======
             B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.viewercommons.getDestinationWkt(id, pk, val);
+>>>>>>> .r27583
         });
         td.html(gIcon);
     }
@@ -1046,6 +1058,21 @@ function createTableTd(waarde, gegevensbron, record) {
 
                 return td;
             }
+        }
+
+        if (commando && commando.contains("ReportServlet")) {            
+            var recordId = record.values[0].value;
+            
+            var iconReport = $j('<a href="#"><img src="' + pdficon + '" /></a>')
+                    .attr({
+                        "title": "Maak Rapport",
+                        "alt": "Maak Rapport"
+            }).click(function() {
+                parent.exportObjectdata2Report(recordId, commando, gegevensbron);
+            });
+
+            td.append(iconReport);
+            return td;
         }
 
         var i = 0;
@@ -1084,6 +1111,7 @@ function createTableTd(waarde, gegevensbron, record) {
                             .attr({
                         "title": listWaarde
                     });
+
                 } else {
                     // TODO: icon kiezen afh van extentie listWaarde
                     clickable = $j('<img src="' + urlicon + '" alt="Externe informatie" border="0"/>')
@@ -1308,7 +1336,7 @@ function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolo
     if (waardeingevuldekolom == "null") {
         waardeingevuldekolom = null;
     }
-    B3PGissuite.commons.getParent({ parentOnly: true }).showMaatregel(waardeingevuldekolom, gegevensbronId, waardepk);
+    B3PGissuite.commons.getParent({parentOnly: true}).showMaatregel(waardeingevuldekolom, gegevensbronId, waardepk);
 
 }
 
@@ -1320,10 +1348,10 @@ function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, w
     var sldstring = window.location.protocol + "//" + window.location.host + "/gisviewer/CreateSLD";
     //"<%=request.getAttribute('absoluteURLPrefix') %>" +  "<html:rewrite page="/SldServlet" module=""/>";
 
-    var ouder = B3PGissuite.commons.getParent({ parentOnly: true });
-    var fmco = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.vars.webMapController;
+    var ouder = B3PGissuite.commons.getParent({parentOnly: true});
+    var fmco = B3PGissuite.commons.getParent({parentOnly: true}).B3PGissuite.vars.webMapController;
     if (fmco == undefined) {
-        ouder = B3PGissuite.commons.getParent({ parentOnly: true }).B3PGissuite.commons.getParent();
+        ouder = B3PGissuite.commons.getParent({parentOnly: true}).B3PGissuite.commons.getParent();
         fmco = ouder.B3PGissuite.vars.webMapController;
     }
     var mapje = fmco.getMap();

@@ -19,13 +19,18 @@
  * Can edit features.
  * 
  */
-function EditComponent(){
-    this.geom = null;
-    this.currentFID = null;
-    this.vectorLayer = null;
-    this.mode = null;
-    
-    this.init = function(){
+B3PGissuite.defineComponent('Edit', {
+
+    geom: null,
+    currentFID: null,
+    vectorLayer: null,
+    mode: null,
+
+    constructor: function Edit() {
+        this.init();
+    },
+
+    init: function(){
         var lagen = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
         if(lagen.length >0 ){
             this.vectorLayer = lagen[0];
@@ -33,8 +38,8 @@ function EditComponent(){
             alert("Geen vectorlayer aanwezig");
         }
     },
-    
-    this.edit = function (feature,gegevensBronId){
+
+    edit: function (feature,gegevensBronId){
         this.vectorLayer.removeAllFeatures();
         var me =this;
         JEditFeature.getFeature(feature.id,gegevensBronId,function (data){
@@ -45,13 +50,13 @@ function EditComponent(){
                 alert("Ophalen van gegevens mislukt." + data.message);
             }
         });
-        
+
     },
 
-    this.receiveFeatureAttributes = function (result,showDeleteButton, keepFeatures){
+    receiveFeatureAttributes: function (result,showDeleteButton, keepFeatures){
         this.removeCurrentEditWindow();
-        
-        if(keepFeatures == undefined || keepFeatures == null){
+
+        if(keepFeatures === undefined || keepFeatures === null){
             keepFeatures = false;
         }
         if(!keepFeatures){
@@ -132,7 +137,7 @@ function EditComponent(){
         saveBtn.setAttribute("type","button");
         saveBtn.setAttribute("value","Opslaan");
         saveBtn.setAttribute("onclick",'B3PGissuite.vars.editComponent.saveFeature(this);');
-        
+
         cel.appendChild(saveBtn);
         buttonRow.appendChild(cel);
 
@@ -148,28 +153,27 @@ function EditComponent(){
             buttonRow.appendChild(removeCel);
         }
         table.appendChild(buttonRow);
-        
+
         var form = document.createElement("form");
         form.setAttribute("id","editForm"+fid);
         form.appendChild(table);
 
         div.appendChild(form);
         B3PGissuite.commons.dialogPopUp($j(div), "Bewerk feature", 400, 400,null);
-            
+
         return table;
     },
-    
-    this.saveFeature = function (button){
+
+    saveFeature: function (button){
         var id = button.id;
         var elements = $j("#editForm" + id + " :input:not(:button):not(input[type=hidden])");
         var feature = {};
-        feature.columns = new Object();
+        feature.columns = {};
         $j.each(elements,function(index,val){
             var value = val.value;
-            if(value != null && value != ""){
+            if(value !== null && value !== ""){
                 feature.columns[val.id] = value;
             }
-            
         });
         var hiddens = $j("#editForm" + id + " :input[type=hidden]");
         $j.each(hiddens,function(index,val){
@@ -188,10 +192,10 @@ function EditComponent(){
         var me = this;
         JEditFeature.editFeature(JSON.stringify(feature), function (data){
             me.saveCallback(data);
-        })
+        });
     },
-    
-    this.removeFeature = function (button){
+
+    removeFeature: function (button){
         var ans = confirm("Wilt u dit feature verwijderen?");
         if(ans){
             var id = button.id;
@@ -207,9 +211,9 @@ function EditComponent(){
             });
         }
     },
-    
-    this.editGeom = function (type){
-        if(this.geom){        
+
+    editGeom: function (type){
+        if(this.geom){
             var feature = new Feature("editComponent"+this.currentFID, this.geom);
             this.vectorLayer.addFeature(feature);
         }else{
@@ -220,28 +224,26 @@ function EditComponent(){
             });
             this.vectorLayer.drawFeature(type);
         }
-        
-        
     },
-    
-    this.geomFinished = function(layerName, object){
+
+    geomFinished: function(layerName, object){
         this.geom = object.wkt.wktgeom;
     },
-    
-    this.createRow = function (attribute,readonly){
+
+    createRow: function (attribute,readonly){
         var row = document.createElement("tr");
-        
+
         var cel = document.createElement("td");
         var label = document.createTextNode(attribute.label);
         cel.appendChild(label);
-        
+
         var inputCel = document.createElement("td");
-        
+
         var input = null;
         if(attribute.defaultValues && !readonly){
             input = document.createElement("select");
             input.setAttribute("name", attribute.columnname);
-            
+
             this.addOption("", input,"-- Maak een keuze --" );
             var values = attribute.defaultValues;
             var selected = false;
@@ -253,7 +255,7 @@ function EditComponent(){
                     selected = true;
                 }
             }
-            
+
             if(!selected && attribute.value){
                 var extraOption = this.addOption(attribute.value, input);
                 extraOption.setAttribute("selected","selected");
@@ -262,13 +264,13 @@ function EditComponent(){
         }else if(attribute.type == "Boolean"){
             input = document.createElement("input");
             input.setAttribute("type","checkbox");
-            
+
             if(attribute.value){
                 input.setAttribute("checked",attribute.value);
             }
         }else{
             input = document.createElement("input");
-      
+
             input.setAttribute("type","text");
             if(attribute.value){
                 input.setAttribute("value",attribute.value);
@@ -280,13 +282,13 @@ function EditComponent(){
         }
         input.setAttribute("id", attribute.columnname);
         inputCel.appendChild(input);
-        
+
         row.appendChild(cel);
         row.appendChild(inputCel);
         return row;
     },
-    
-    this.addOption = function(val, input, innerHMTL){
+
+    addOption: function(val, input, innerHMTL){
         if(!innerHMTL){
             innerHMTL = val;
         }
@@ -297,16 +299,16 @@ function EditComponent(){
         input.appendChild(option);
         return option;
     },
-    
-    this.createHiddenField = function (id, value){
+
+    createHiddenField: function (id, value){
         var hidden = document.createElement("input");
         hidden.setAttribute("id",id );
         hidden.setAttribute("type","hidden");
         hidden.setAttribute("value",value);
         return hidden;
     },
-    
-    this.saveCallback = function (success){
+
+    saveCallback: function (success){
         if(!success){
             alert("Bewerken mislukt");
         }else{
@@ -316,8 +318,8 @@ function EditComponent(){
         lightBoxPopUp.dialog("close");
         this.removeCurrentEditWindow();
     },
-    
-    this.removeCallback = function (success){
+
+    removeCallback: function (success){
         if(!success){
             alert("Verwijderen mislukt");
         }else{
@@ -327,10 +329,9 @@ function EditComponent(){
         lightBoxPopUp.dialog("close");
         this.removeCurrentEditWindow();
     },
-    
-    this.removeCurrentEditWindow = function (){
+
+    removeCurrentEditWindow: function (){
         var div = $j('#editComponent' + this.currentFID);
         div.remove();
     }
-    this.init();
-}
+});

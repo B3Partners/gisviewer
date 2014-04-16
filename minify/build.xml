@@ -9,7 +9,7 @@
     <property name="themes.folder" value="${basedir}/themes"/>
     <property name="themes.output.folder" value="${basedir}/web/themes"/>
 
-	<target name="minify" description="Minify source JavaScript files with Closure Compiler">
+	<target name="minify" description="Minify source JavaScript files with Closure Compiler" depends="minify-commons">
         <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="../libs/GoogleClosureCompiler/compiler.jar" />
         <jscomp output="${minify.outputdir}/viewer-min.js" compilationLevel="simple" prettyPrint="false" printInputDelimiter="false" debug="false">
           
@@ -21,9 +21,6 @@
           <sources dir="${viewerhtml.path}">
             <file name="simple_treeview.js" />
             <file name="viewer.js" />
-            <file name="zoeker.js" />
-            <file name="GPSComponent.js" />
-            <file name="EditComponent.js" />
             <file name="MaatregelComponent.js" />
           </sources>
           
@@ -38,12 +35,13 @@
           </sources>
 
           <sources dir="${viewerhtml.path}/components">
-            <file name="Component.js" />
             <file name="BaseComponent.js" />
             <file name="ViewerComponent.js" />
             <file name="Search.js" />
             <file name="Layout.js" />
             <file name="Balloon.js" />
+            <file name="Edit.js" />
+            <file name="GPS.js" />
           </sources>
 
           <sources dir="${viewerhtml.path}/components/tabcomponents">
@@ -59,6 +57,18 @@
 
         </jscomp>
 	</target>
+
+    <target name="minify-commons" description="Minify source JavaScript files with Closure Compiler">
+        <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="../libs/GoogleClosureCompiler/compiler.jar" />
+        <jscomp output="${minify.outputdir}/commonfunctions-min.js" compilationLevel="simple" prettyPrint="false" printInputDelimiter="false" debug="false">
+          <sources dir="${viewerhtml.path}">
+            <file name="commonfunctions.js" />
+          </sources>
+          <sources dir="${viewerhtml.path}/components">
+            <file name="Component.js" />
+          </sources>
+        </jscomp>
+    </target>
 
 	<target name="minify-clean">
 		<delete file="${minify.outputdir}/viewer-min.js"/>

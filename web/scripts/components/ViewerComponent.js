@@ -941,15 +941,21 @@ B3PGissuite.defineComponent('ViewerComponent', {
         });
         B3PGissuite.vars.webMapController.addTool(bu_layerSelection);
 
-        var gpsComponent = new GPSComponent(B3PGissuite.config.gpsBuffer);
+        var gpsComponent = B3PGissuite.createComponent('GPS', {
+            'buffer': B3PGissuite.config.gpsBuffer
+        });
 
         var bu_gps = B3PGissuite.vars.webMapController.createTool("b_gps", Tool.GPS, {
             layer: editLayer,
             title: 'zet GPS locatie aan/uit'
         });
 
-        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, gpsComponent.stopPolling);
-        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, gpsComponent.startPolling);
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, function() {
+            gpsComponent.stopPolling();
+        });
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, bu_gps, function() {
+            gpsComponent.startPolling();
+        });
 
         /* off event voor weghalen marker */
         B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, bu_gps, function(id, event) {
@@ -975,7 +981,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         var zoombar = B3PGissuite.vars.webMapController.createTool("zoombar", Tool.ZOOM_BAR);
         B3PGissuite.vars.webMapController.addTool(zoombar);
 
-        B3PGissuite.vars.editComponent = new EditComponent();
+        B3PGissuite.vars.editComponent = B3PGissuite.createComponent('Edit');
 
         if (B3PGissuite.config.viewerTemplate == "embedded") {
             this.displayEmbeddedMenuIcons();
@@ -1837,11 +1843,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         //if the admindata window is loaded then update the page (add the featureinfo thats given by the getFeatureInfo request.
-        if (B3PGissuite.config.usePopup && B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData) {
-            B3PGissuite.vars.dataframepopupHandle.contentWindow.writeFeatureInfoData(data);
+        if (B3PGissuite.config.usePopup && B3PGissuite.vars.dataframepopupHandle.contentWindow.B3PGissuite.get('Admindata') !== null) {
+            B3PGissuite.vars.dataframepopupHandle.contentWindow.B3PGissuite.get('Admindata').writeFeatureInfoData(data);
             data = null;
-        } else if (window.frames.dataframe.writeFeatureInfoData) {
-            window.frames.dataframe.writeFeatureInfoData(data);
+        } else if (window.frames.dataframe.B3PGissuite.get('Admindata') !== null) {
+            window.frames.dataframe.B3PGissuite.get('Admindata').writeFeatureInfoData(data);
             data = null;
         } else {
             //if the admindata window is not loaded yet then retry after 1sec

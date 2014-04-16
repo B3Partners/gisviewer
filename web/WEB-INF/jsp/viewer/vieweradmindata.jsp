@@ -5,32 +5,8 @@
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 <script type="text/javascript" src='dwr/interface/JCollectAdmindata.js'></script>
 
-<script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/components/Admindata.js'/>"></script>
 <script type="text/javascript">
-
-    var plusicon = '<html:rewrite href="./images/icons/plus_icon.gif" />';
-    var minusicon = '<html:rewrite href="./images/icons/minus_icon.gif" />';
-    var infoicon = '<html:rewrite href="./images/icons/information.png" />';
-    var urlicon = '<html:rewrite href="./images/icons/world_link.png" />';
-    var flagicon = '<html:rewrite href="./images/icons/flag_blue.png" />';
-    var wandicon = '<html:rewrite href="./images/icons/wand.png" />';
-    var loadingicon = '<html:rewrite href="./images/icons/loading.gif" />';
-    
-    var pencil = '<html:rewrite href="./images/icons/pencil.png" />';
-
-    var pdficon = '<html:rewrite href="./images/icons/pdf.png" />';
-    var docicon = '<html:rewrite href="./images/icons/document.png" />';
-
-    var csvexporticon = '<html:rewrite href="./images/icons/page_white_csv.png" />';
-    var infoexporticon = '<html:rewrite href="./images/icons/page_white_info.png" />';
-
-    var googleIcon = '<html:rewrite href="./images/icons/google-maps.png" />';
-    
-    var noResultsHeader = '<fmt:message key="admindata.geeninfo.header"/>';
-    var noResultsTekst = '<fmt:message key="admindata.geeninfo.tekst"/>';
-
-    var timeout = 3000;
-    var loop = 0;
 
     var myparent = B3PGissuite.commons.getParent({ parentOnly: true });
     if(myparent) {
@@ -77,29 +53,51 @@ reguliere admindata of GetFeatureInfo --%>
      of getekend object(polygon))
     false als childs altijd moeten worden getoond als het een child is. 
      */    
-    var onlyFeaturesInGeom=${onlyFeaturesInGeom};
-    var bookmarkAppcode="${bookmarkAppcode}";
-    
-    <c:choose>
-        <c:when test="${not empty beans}">
-            <%-- er komt reguliere admindata binnen. de wachtmelding wordt in de
-            handleGetGegevensBron op onzichtbaar gezet. --%>
-                $j(document).ready(function() {
-            <c:forEach items="${beans}" var="bean">
-                    // optellen aantal gegevensbronnen
-                    loop++;
-                    // haal gegevens op van gegevensbron                    
-                    JCollectAdmindata.fillGegevensBronBean(${bean.id}, ${bean.themaId}, '${bean.wkt}', JSON.stringify(${bean.cql}), false, 'adminDataWrapper', bookmarkAppcode, handleGetGegevensBron);
-            </c:forEach>
-                });
-        </c:when>
-        <c:otherwise>
-            <%-- er komt geen reguliere admindata binnen, we schrijven vertraagd
-            dat er geen data beschikbaar is. Als via getFeatureInfo data binnenkomt
-            dan wordt deze melding op onzichtbaar gezet. --%>
-            window.setTimeout("writeNoResults();", timeout);
-        </c:otherwise>
-    </c:choose>
+    (function() {
+        var adminData = B3PGissuite.createComponent('Admindata', {
+            onlyFeaturesInGeom: ${onlyFeaturesInGeom},
+            bookmarkAppcode: "${bookmarkAppcode}",
+            plusicon: '<html:rewrite href="./images/icons/plus_icon.gif" />',
+            minusicon: '<html:rewrite href="./images/icons/minus_icon.gif" />',
+            infoicon: '<html:rewrite href="./images/icons/information.png" />',
+            urlicon: '<html:rewrite href="./images/icons/world_link.png" />',
+            flagicon: '<html:rewrite href="./images/icons/flag_blue.png" />',
+            wandicon: '<html:rewrite href="./images/icons/wand.png" />',
+            loadingicon: '<html:rewrite href="./images/icons/loading.gif" />',
+            pencil: '<html:rewrite href="./images/icons/pencil.png" />',
+            pdficon: '<html:rewrite href="./images/icons/pdf.png" />',
+            docicon: '<html:rewrite href="./images/icons/document.png" />',
+            csvexporticon: '<html:rewrite href="./images/icons/page_white_csv.png" />',
+            infoexporticon: '<html:rewrite href="./images/icons/page_white_info.png" />',
+            googleIcon: '<html:rewrite href="./images/icons/google-maps.png" />',
+            noResultsHeader: '<fmt:message key="admindata.geeninfo.header"/>',
+            noResultsTekst: '<fmt:message key="admindata.geeninfo.tekst"/>'
+        });
+        <c:choose>
+            <c:when test="${not empty beans}">
+                <%-- er komt reguliere admindata binnen. de wachtmelding wordt in de handleGetGegevensBron op onzichtbaar gezet. --%>
+                    $j(document).ready(function() {
+                        <c:forEach items="${beans}" var="bean">
+                            adminData.addGegevensbron({
+                                'bean': {
+                                    'id': ${bean.id},
+                                    'themaId': ${bean.themaId},
+                                    'wkt': '${bean.wkt}',
+                                    'cql': JSON.stringify(${bean.cql})
+                                },
+                                'htmlId': 'adminDataWrapper'
+                            });
+                        </c:forEach>
+                    });
+            </c:when>
+            <c:otherwise>
+                <%-- er komt geen reguliere admindata binnen, we schrijven vertraagd
+                dat er geen data beschikbaar is. Als via getFeatureInfo data binnenkomt
+                dan wordt deze melding op onzichtbaar gezet. --%>
+                adminData.writeNoResults();
+            </c:otherwise>
+        </c:choose>
+    }());
 </script>
 
 <div style="display: none;">

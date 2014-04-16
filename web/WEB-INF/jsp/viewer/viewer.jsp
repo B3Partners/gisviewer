@@ -263,9 +263,6 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/lib/proj4js-compressed.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/zoeker.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/GPSComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/EditComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/MaatregelComponent.js"/>"></script>
         <!-- openlayers -->
         <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js"/>"></script>
@@ -274,12 +271,13 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
         <!-- components -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Component.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/BaseComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/ViewerComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/Search.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/Layout.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/Balloon.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Edit.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/GPS.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TabComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/IframeTabComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TreeTabComponent.js"/>"></script>

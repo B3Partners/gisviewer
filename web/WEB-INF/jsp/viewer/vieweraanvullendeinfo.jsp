@@ -4,7 +4,7 @@
 <script type="text/javascript" src='dwr/engine.js'></script>
 <script type="text/javascript" src='dwr/interface/JMapData.js'></script>
 
-<script type="text/javascript" src="<html:rewrite page='/scripts/admindataFunctions.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/components/Admindata.js'/>"></script>
 <script type="text/javascript">
 
     function catchEmpty(defval){
@@ -63,6 +63,37 @@
         newUrl=url.substring(0,paramBeginIndex);
         newUrl+=url.substring(paramEndIndex);
         return newUrl;
+    }
+
+    // Create the admindata component
+    B3PGissuite.createComponent('Admindata');
+    // Added some proxy functions to support JS functions from JSTL below
+    function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+        B3PGissuite.get('Admindata').setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
+    }
+    function setAttributeStringValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+        B3PGissuite.get('Admindata').setAttributeStringValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
+    }
+    function setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+        B3PGissuite.get('Admindata').setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
+    }
+    function setStatusValueDigitree(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+        B3PGissuite.get('Admindata').setStatusValueDigitree(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
+    }
+    function setAttributeText(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+        B3PGissuite.get('Admindata').setAttributeText(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
+    }
+    function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+        B3PGissuite.get('Admindata').doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
+    }
+    function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
+        B3PGissuite.get('Admindata').berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
+    }
+    function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
+        B3PGissuite.get('Admindata').showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom);
+    }
+    function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
+        B3PGissuite.get('Admindata').highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom);
     }
 </script>
 

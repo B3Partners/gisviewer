@@ -9,7 +9,7 @@ B3PGissuite.createComponent = function(className, options) {
     var nextid = B3PGissuite.idregistry[className]++;
     // Component id is lowercased className + incremental number
     var instanceId = (className.charAt(0).toLowerCase() + className.slice(1)) + nextid;
-    B3PGissuite.instances[instanceId] = new B3PGissuite.component[className](options);
+    B3PGissuite.instances[instanceId] = new B3PGissuite.component[className](options || {});
     return B3PGissuite.instances[instanceId];
 };
 

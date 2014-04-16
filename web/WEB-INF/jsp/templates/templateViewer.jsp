@@ -47,10 +47,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </c:otherwise>
         </c:choose>       
         
-                <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-1.3.2.min.js' />"></script>
-                <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-ui-1.8.10.custom.min.js' />"></script>
-                <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery.blockUI.js' />"></script>        
-                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' />"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-1.3.2.min.js' />"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-ui-1.8.10.custom.min.js' />"></script>
+        <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery.blockUI.js' />"></script>        
+        <c:choose>
+            <c:when test="${not empty param.debug}">
+                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/components/Component.js'/>"></script>
+            </c:when>
+            <c:otherwise>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions-min.js' module=''/>"></script>
+            </c:otherwise>
+        </c:choose>
 
         <!--[if lte IE 7]>
             <script type="text/javascript" src="scripts/lib/jquery.bgiframe.min.js"></script>

@@ -69,15 +69,17 @@ B3PGissuite.viewercommons = {
             /* Indien 1 zoeker dan deze gelijk tonen */
             var arr = B3PGissuite.config.zoekConfigIds.split(",");
             var c = $j("#searchInputFieldsContainer");
-
+            var searchComponent = B3PGissuite.get('Search');
             if (arr !== null && arr.length > 1) {
-                createSearchConfigurations();
+                searchComponent.createSearchConfigurations();
             } else if (arr !== null && arr.length === 1 && arr[0] !== '') {
                 //var zc = B3PGissuite.config.zoekconfiguraties[0];
-                var zc = setZoekconfiguratieWithId(Number(arr[0]));
-                JZoekconfiguratieThemaUtil.getThemas(zc.id, zoekconfiguratieThemasCallBack);
+                var zc = searchComponent.setZoekconfiguratieWithId(Number(arr[0]));
+                JZoekconfiguratieThemaUtil.getThemas(zc.id, function(themaIds) {
+                    searchComponent.zoekconfiguratieThemasCallBack(themaIds);
+                });
                 var zoekVelden = zc.zoekVelden;
-                fillSearchDiv(c, zoekVelden, null);
+                searchComponent.fillSearchDiv(c, zoekVelden, null);
             }
         }
 
@@ -915,12 +917,11 @@ B3PGissuite.viewercommons = {
     },
     openGoogleMapsDirections: function(values) {
 
-        /* Check of er een gps locatie is gezet. Dit gebeurt
-         * in GPSComponent.receiveLocation();
-         */
-        if (gps_lat !== undefined && gps_lon !== undefined) {
-            values[1] = gps_lat;
-            values[0] = gps_lon;
+        /* Check of er een gps locatie is gezet. */
+        var gps = B3PGissuite.get('GPS');
+        if (gps !== null && gps.getGpsLat() !== null && gps.getGpsLon() !== null) {
+            values[1] = gps.getGpsLat();
+            values[0] = gps.getGpsLon();
         }
 
         if (values[0] === "" || values[1] === "") {

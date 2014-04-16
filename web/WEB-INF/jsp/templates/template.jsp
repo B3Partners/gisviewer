@@ -53,7 +53,15 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="<html:rewrite page='/scripts/validation.jsp' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-1.3.2.min.js' module=''/>"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-ui-1.8.10.custom.min.js' module=''/>"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
+        <c:choose>
+            <c:when test="${not empty param.debug}">
+                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/components/Component.js'/>"></script>
+            </c:when>
+            <c:otherwise>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions-min.js' module=''/>"></script>
+            </c:otherwise>
+        </c:choose>
         
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="width=device-width; height=device-height; user-scalable=no; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0">

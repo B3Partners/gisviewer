@@ -58,7 +58,10 @@
         <xsl:attribute name="width">100%</xsl:attribute>
     </xsl:attribute-set>
 
-	
+	<xsl:attribute-set name="thinBorder">
+        <xsl:attribute name="border">solid 0.4mm black</xsl:attribute>
+    </xsl:attribute-set>
+    
     <!-- formatter -->
     <xsl:decimal-format name="MyFormat" decimal-separator="." grouping-separator=","
                         infinity="INFINITY" minus-sign="-" NaN="Not a Number" percent="%" per-mille="m"

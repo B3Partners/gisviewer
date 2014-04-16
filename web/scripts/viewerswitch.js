@@ -30,6 +30,7 @@
                 }
                 $(this).attr('href', href);
             });
+            $('.viewerswitch_text').text(useviewer ? '' : 'U heeft de tekst weergave ingeschakeld');
             saveViewerPreference(layouttype);
         }
         function addToQueryString(url, key, value) {
@@ -60,6 +61,7 @@
         var cookievalue = readViewerPreference();
         if(cookievalue === null) cookievalue = 'kaartlayout';
         var viewerswitchContainer = $('<div></div>').addClass('viewerswitch_container');
+        viewerswitchContainer.append($('<span></span>').addClass('viewerswitch_text'));
         var viewerswitch = $('<ul></ul>').addClass('viewerlist_switch');
         viewerswitchContainer.prepend('<span>Kies weergave:</span>');
         viewerswitch.append('<li><a href="#kaartweergave" id="kaartlayout" class="switcher switch_right' + (cookievalue === 'kaartlayout' ? ' active' : '') + '"><img src="' + gisviewerurls.mapicon + '" alt="Kaartweergave" /> Kaart</a></li>');

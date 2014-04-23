@@ -24,7 +24,7 @@
         <div class="content_title">
             <c:out value="${tb.titel}"/>
             <c:if test="${tb.inlogIcon}">
-                <img src="images/icons/inlog_needed.png" alt="Inlog is vereist voor deze applicatie" title="Inlog is vereist voor deze applicatie" align="top" />
+                <img src="<html:rewrite page='/images/icons/inlog_needed.png' module=''/>" alt="Inlog is vereist voor deze applicatie" title="Inlog is vereist voor deze applicatie" align="top" />
             </c:if>
         </div>
 

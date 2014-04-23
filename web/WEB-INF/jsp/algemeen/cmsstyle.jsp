@@ -4,6 +4,7 @@
     .tekstblok${tb.id} {
         <c:if test="${!empty tb.kleur}">
             background-color: ${tb.kleur} !important;
+            background-image: none;
         </c:if>
         <c:if test="${!empty tb.hoogte && tb.hoogte != 0}">
             height: ${tb.hoogte}px !important;

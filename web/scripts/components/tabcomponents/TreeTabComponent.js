@@ -1189,6 +1189,27 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                             }
                         }
                     });
+                } else if (B3PGissuite.config.datasetDownload && !B3PGissuite.config.showServiceUrl) {
+                    jQuery("#dialog-download-metadata").dialog("option", "buttons", {
+                        "Download": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                /* Kijken of er een polygoon is getekend voor subselectie in download */
+                                var wkt = B3PGissuite.viewercommons.getWktForDownload();
+                                if (wkt == "") {
+                                    alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.");
+                                }
+
+                                B3PGissuite.commons.iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+                                jQuery(this).dialog("close");
+                            }
+                        },
+                        "Annuleren": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                jQuery(this).dialog("close");
+                                B3PGissuite.commons.unblockViewerUI();
+                            }
+                        }
+                    });
                 } else {
                     jQuery("#dialog-download-metadata").dialog("option", "buttons", {
                         "Annuleren": function() {
@@ -1270,6 +1291,33 @@ B3PGissuite.defineComponent('TreeTabComponent', {
 
                                 B3PGissuite.commons.unblockViewerUI();
                                 jQuery("#dialog-wmsservice-url").dialog('open');
+                            }
+                        },
+                        "Annuleren": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                jQuery(this).dialog("close");
+                                B3PGissuite.commons.unblockViewerUI();
+                            }
+                        }
+                    });
+                } else if (B3PGissuite.config.datasetDownload && !B3PGissuite.config.showServiceUrl) {
+                    jQuery("#dialog-download-metadata").dialog("option", "buttons", {
+                        "Download": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                /* Kijken of er een polygoon is getekend voor subselectie in download */
+                                var wkt = B3PGissuite.viewercommons.getWktForDownload();
+                                if (wkt == "") {
+                                    alert("Let op: Er is nog geen selectie ingetekend. U gaat de gehele dataset downloaden.");
+                                }
+
+                                B3PGissuite.commons.iFramePopup('download.do?id=' + item.gegevensbronid, false, downloadTitle, widthDownloadPopup, heightDownloadPopup, downloadPopupBlocksViewer, false);
+                                jQuery(this).dialog("close");
+                            }
+                        },
+                        "Metadata": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                                jQuery(this).dialog("close");
                             }
                         },
                         "Annuleren": function() {

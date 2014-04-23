@@ -1089,7 +1089,7 @@ B3PGissuite.defineComponent('Admindata', {
                 }
             }
 
-            if (commando && commando.contains("ReportServlet")) {
+            if (commando && commando.indexOf("ReportServlet") !== -1) {
                 var recordId = record.values[0].value;
 
                 var iconReport = $j('<img src="' + this.options.pdficon + '"/>').attr({

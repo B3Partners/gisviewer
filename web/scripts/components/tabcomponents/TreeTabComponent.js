@@ -1091,7 +1091,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
 
         var downloadTitle = 'Download dataset van ' + item.title;
         var infoTitle = 'Informatie over ' + item.title;
-
+        
         /* Metadata tonen, WMS Service url en Annuleren */
         if (item.metadatalink && item.metadatalink.length > 1 && (item.gegevensbronid == undefined || item.gegevensbronid < 1)) {
             lnk.onclick = function() {
@@ -1135,7 +1135,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         /* Download tonen, WMS Service url en Annuleren */
         if ((item.metadatalink == undefined || item.metadatalink == '#') && item.gegevensbronid && item.gegevensbronid > 0) {
             lnk.onclick = function() {
-
+                
                 /* Wel download en url button tonen */
                 if (B3PGissuite.config.datasetDownload && B3PGissuite.config.showServiceUrl) {
                     jQuery("#dialog-download-metadata").dialog("option", "buttons", {

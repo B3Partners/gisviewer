@@ -1,0 +1,15 @@
+Geachte heer, mevrouw,
+
+U heeft via de gisviewer een kaart opgeslagen met de naam {0}. U kunt deze kaart via
+de volgende link bekijken:
+
+{1}
+
+Mocht u deze e-mail onterecht hebben ontvangen of heeft u een andere opmerking neem
+dan contact op via {2}.
+
+Met vriendelijke groet,
+
+Gemeente Venray
+Raadhuisstraat 1
+5801 MB  Venray

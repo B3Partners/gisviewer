@@ -2,7 +2,6 @@
 <%@ page isELIgnored="false"%>
 
 <div id="topmenu">
-    <div id="topmenu_header"><h2>Geo Dataportaal</h2></div>
     <%-- Set requestURI --%>
     <c:set var="requestURI" value="${requestScope['javax.servlet.forward.request_uri']}" />
     <%-- Split requestURI on / to create String[] with request parts (to strip of first part '/gisviewer') --%>
@@ -25,8 +24,4 @@
             </c:if>
         </a>
     </c:forEach>
-</div>
-<div id="venraylogo"></div>
-<div id="venrayhead">
-    <h1>Welkom op het Geo Dataportaal van de gemeente Venray</h1>
 </div>

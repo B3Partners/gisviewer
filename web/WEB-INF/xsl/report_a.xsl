@@ -119,6 +119,10 @@
     <xsl:template name="simple-table-block">
         <xsl:param name="myRecord" />
         
+        <fo:block margin-left="0.2cm" margin-top="0.5cm">
+            <xsl:value-of select="$myRecord/titel"/>
+        </fo:block>
+        
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
                         
             <xsl:variable name="countLabels" select="count($myRecord/labels)" />

@@ -48,6 +48,7 @@
     <xsl:template name="disclaimer-block">
         <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
             Aan deze kaart kunnen geen rechten worden ontleend.
+            De eventuele legenda komt op tweede pagina.
         </fo:block>
     </xsl:template>
 

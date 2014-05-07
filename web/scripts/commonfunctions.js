@@ -58,19 +58,23 @@ $j = jQuery.noConflict();
                 return false;
             },
             getParent: function(options) {
-                if (window.opener){
-                    return window.opener;
-                }else if (window.parent){
-                    return window.parent;
-                }else{
-                    if(options && options.hasOwnProperty('parentOnly') && options.parentOnly) {
-                        if(!(options && options.hasOwnProperty('supressError') && options.supressError)) {
-                            this.messagePopup("Fout", "No parent found", "error");
-                        }
-                        return null;
+                // When the application is started from a link with a target (_blank) then window.opener
+                // will be set to that original page. In this case it is not possible to access the document.
+                // In this case we do not return the opener
+                try {
+                    if (window.opener && window.opener.document && window.opener.document.getElementById){
+                        return window.opener;
+                    }else if (window.parent){
+                        return window.parent;
                     }
-                    return window;
+                } catch(e) {}
+                if(options && options.hasOwnProperty('parentOnly') && options.parentOnly) {
+                    if(!(options && options.hasOwnProperty('supressError') && options.supressError)) {
+                        this.messagePopup("Fout", "No parent found", "error");
+                    }
+                    return null;
                 }
+                return window;
             },
             attachOnload: function(onloadfunction) {
                 $j(document).ready(onloadfunction);

@@ -237,17 +237,17 @@ $j = jQuery.noConflict();
                     }
                 }
 
-                if (lightBoxPopUp !== null) {
-                    lightBoxPopUp.dialog('close');
+                if (this.lightBoxPopUp !== null) {
+                    this.lightBoxPopUp.dialog('close');
                 }
-                lightBoxPopUp = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
-                lightBoxPopUp.append(innerJqueryElement);
-                lightBoxPopUp.dialog(options);
-                lightBoxPopUp.dialog("option", "title", title);
-                lightBoxPopUp.dialog("option", "height", height);
-                lightBoxPopUp.dialog("option", "width", width);
-                lightBoxPopUp.dialog('open');
-                return lightBoxPopUp;
+                this.lightBoxPopUp = $j('<div></div>').width(width).height(height).css("background-color", "#ffffff");
+                this.lightBoxPopUp.append(innerJqueryElement);
+                this.lightBoxPopUp.dialog(options);
+                this.lightBoxPopUp.dialog("option", "title", title);
+                this.lightBoxPopUp.dialog("option", "height", height);
+                this.lightBoxPopUp.dialog("option", "width", width);
+                this.lightBoxPopUp.dialog('open');
+                return this.lightBoxPopUp;
             },
             iFramePopup: function(url, newpopup, title, width, height, blockviewer, showScrollbars) {
                 if(!newpopup) newpopup = false;

@@ -315,7 +315,7 @@ B3PGissuite.defineComponent('Edit', {
             B3PGissuite.vars.webMapController.getMap().update();
         }
         this.mode = null;
-        lightBoxPopUp.dialog("close");
+        B3PGissuite.commons.closeDialogPopup();
         this.removeCurrentEditWindow();
     },
 
@@ -326,7 +326,7 @@ B3PGissuite.defineComponent('Edit', {
             B3PGissuite.vars.webMapController.getMap().update();
         }
         this.mode = null;
-        lightBoxPopUp.dialog("close");
+        B3PGissuite.commons.closeDialogPopup();
         this.removeCurrentEditWindow();
     },
 

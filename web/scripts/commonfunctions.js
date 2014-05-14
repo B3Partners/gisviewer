@@ -249,6 +249,11 @@ $j = jQuery.noConflict();
                 this.lightBoxPopUp.dialog('open');
                 return this.lightBoxPopUp;
             },
+            closeLightboxPopup: function() {
+                if(this.lightBoxPopUp) {
+                    this.lightBoxPopUp.dialog('close');
+                }
+            },
             iFramePopup: function(url, newpopup, title, width, height, blockviewer, showScrollbars) {
                 if(!newpopup) newpopup = false;
                 if(!title) title = "";

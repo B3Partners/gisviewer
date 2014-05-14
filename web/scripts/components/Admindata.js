@@ -274,7 +274,7 @@ B3PGissuite.defineComponent('Admindata', {
                     url = gegevensbron.records[0].values[0].valueList;
                 }
 
-                popUp(url, 'externe_link', 800, 600);
+                me.popUp(url, 'externe_link', 800, 600);
             }
         }
 
@@ -343,7 +343,7 @@ B3PGissuite.defineComponent('Admindata', {
                     url = gegevensbron.records[0].values[0].valueList;
                 }
 
-                popUp(url, 'externe_link', 800, 600);
+                me.popUp(url, 'externe_link', 800, 600);
             }
         }
 
@@ -611,7 +611,7 @@ B3PGissuite.defineComponent('Admindata', {
                     url = gegevensbron.records[0].values[0].valueList;
                 }
 
-                popUp(url, 'externe_link', 800, 600);
+                me.popUp(url, 'externe_link', 800, 600);
             }
         }
 

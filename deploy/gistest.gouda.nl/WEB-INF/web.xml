@@ -217,7 +217,6 @@
             <param-name>fetchMethod</param-name>
             <param-value>FILE</param-value>
         </init-param>
-		<load-on-startup>7</load-on-startup>
     </servlet>
 
 	<servlet>
@@ -235,7 +234,6 @@
             <param-name>fetchMethod</param-name>
             <param-value>FILE</param-value>
         </init-param>
-		<load-on-startup>9</load-on-startup>
     </servlet>
 
 	<servlet>

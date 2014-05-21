@@ -25,53 +25,60 @@
 </script>
 
 <div class="downloadBody">
-    <div class="messages">
-        <html:messages id="message" message="true" >
-            <div id="error">
-                <c:out value="${message}" escapeXml="false"/>
+    <c:choose>
+        <c:when test="${emailScheduled}">
+            <fmt:message key="download.confirm" escapeXml="false"/>
+        </c:when>
+        <c:otherwise>
+            <div class="messages">
+                <html:messages id="message" message="true" >
+                    <div id="error">
+                        <c:out value="${message}" escapeXml="false"/>
+                    </div>
+                </html:messages>
+                <html:messages id="message" name="acknowledgeMessages">
+                    <div id="acknowledge">
+                        <c:out value="${message}"/>
+                    </div>
+                </html:messages>
             </div>
-        </html:messages>
-        <html:messages id="message" name="acknowledgeMessages">
-            <div id="acknowledge">
-                <c:out value="${message}"/>
-            </div>
-        </html:messages>
-    </div>
 
-    <p>
-        U kunt de gehele dataset downloaden of alleen een selectie als u een polygoon op
-        de kaart hebt getekend. Vul een geldig e-mailadres in en kies een download
-        formaat. Het ophalen van de dataset kan enige tijd duren. Als de download
-        klaar is gezet ontvangt u hierover een e-mail met daarin een download link.
-        Na het klikken op 'Start download' kunt u dit scherm afsluiten.
-    </p>    
+            <p>
+                U kunt de gehele dataset downloaden of alleen een selectie als u een polygoon op
+                de kaart hebt getekend. Vul een geldig e-mailadres in en kies een download
+                formaat. Het ophalen van de dataset kan enige tijd duren. Als de download
+                klaar is gezet ontvangt u hierover een e-mail met daarin een download link.
+                Na het klikken op 'Start download' kunt u dit scherm afsluiten.
+            </p>    
 
-    <html:form styleId="downloadForm" action="/download" onsubmit="return validateEmail();">
-        <html:hidden property="uuids" />
-        <html:hidden property="wkt" />
+            <html:form styleId="downloadForm" action="/download" onsubmit="return validateEmail();">
+                <html:hidden property="uuids" />
+                <html:hidden property="wkt" />
 
-        <table>
-            <tr>
-                <td>E-mail</td>
-                <td><html:text property="email" maxlength="60" size="40" /></td>
-            </tr>
-            <tr>
-                <td>Formaat</td>
-                <td>
-                    <html:select property="formaat">
-                        <html:option value="SHP" />
-                        <html:option value="GML" />
-                    </html:select>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><html:submit property="save" styleClass="rightButton submitbutton">Start download</html:submit></td>
-            </tr>
-        </table>
+                <table>
+                    <tr>
+                        <td>E-mail</td>
+                        <td><html:text property="email" maxlength="60" size="40" /></td>
+                    </tr>
+                    <tr>
+                        <td>Formaat</td>
+                        <td>
+                            <html:select property="formaat">
+                                <html:option value="SHP" />
+                                <html:option value="GML" />
+                            </html:select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><html:submit property="save" styleClass="rightButton submitbutton">Start download</html:submit></td>
+                    </tr>
+                </table>
 
-        <p>
-            
-        </p>
-    </html:form>
+                <p>
+
+                </p>
+            </html:form>
+        </c:otherwise>
+    </c:choose>
 </div>

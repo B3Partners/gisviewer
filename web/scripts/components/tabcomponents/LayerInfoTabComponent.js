@@ -1,13 +1,5 @@
 B3PGissuite.defineComponent('LayerInfoTabComponent', {
     extend: 'BaseComponent',
-    defaultOptions: {
-        hasSearch: false,
-        hasA11yStartWkt: false,
-        searchConfigContainerId: 'searchConfigurationsContainer',
-        searchInputContainerId: 'searchInputFieldsContainer',
-        searchResultsId: 'searchResults',
-        searchResultsClass: 'searchResultsClass'
-    },
     // Constructor
     constructor: function LayerInfoTabComponent(options) {
         this.callParent(options);
@@ -20,7 +12,7 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
     // Show the layer info text
     showLayerInfo: function(item) {
         // Check if component is inside tab
-        if(this.tabComponent === null || this.tabPanel === null) {
+        if(this.tabComponent === null || this.tabPanel === null || this.tabContainer === null) {
             return;
         }
         // Get current scale
@@ -44,8 +36,16 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
         });
     },
     afterRender: function() {
+        var me = this;
         this.tabComponent = this.getTabComponent();
         this.tabPanel = this.getTabPanel();
+        this.tabContainer = jQuery('<div></div>');
+        this.tabPanel.append(jQuery('<div></div>').html('<a class="closeInfo" href="#">[x]</a>').css({ 'padding': '0 2px 5px 0' }).click(function() {
+            if(!me.tabComponent.isHidden() && me.tabComponent.isOnlyTab(me.options.tabid)) {
+                me.tabComponent.toggleTab();
+            }
+        }));
+        this.tabPanel.append(this.tabContainer);
         var me = this;
         if(!this.tabComponent.isHidden() && this.tabComponent.isOnlyTab(this.options.tabid)) {
             this.addListener('ViewerComponent', 'initMapComplete', function() {
@@ -71,7 +71,7 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
                 e.preventDefault();
                 me.hideLayerInfo(item);
             });
-            this.tabPanel.prepend(domItem);
+            this.tabContainer.prepend(domItem);
         }
         // viewer.jsp variable and function
         if(this.tabComponent.isHidden() && this.tabComponent.isOnlyTab(this.options.tabid)) {
@@ -82,7 +82,7 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
     // Hide the layer text for a layer
     hideLayerInfo: function(item) {
         // Check if component is inside tab
-        if(this.tabComponent === null || this.tabPanel === null) {
+        if(this.tabComponent === null || this.tabPanel === null || this.tabContainer === null) {
             return;
         }
         // Check if the item is visible

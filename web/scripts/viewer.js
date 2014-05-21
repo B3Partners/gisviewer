@@ -53,6 +53,7 @@ B3PGissuite.vars = {
     popupCreated: false
 };
 B3PGissuite.viewercommons = {
+    configuredTabString: null,
     init: function() {
         var me = this;
         jQuery('.getBookmark').bind('click', function() {
@@ -109,6 +110,17 @@ B3PGissuite.viewercommons = {
             autoOpen: false,
             modal: false
         });
+    },
+    /**
+     * Controleert of een tab is geconfigureerd (en dus beschikbaar is)
+     * @param string tab
+     * @returns boolean
+     */
+    isTabConfigured: function(tab) {
+        if(this.configuredTabString === null) {
+            this.configuredTabString = B3PGissuite.config.enabledtabs.toString() + ',' + B3PGissuite.config.enabledtabsLeft.toString();
+        }
+        return this.configuredTabString.indexOf(tab) !== -1;
     },
     /**
      * Controleert of een item in de huidige schaal past.

@@ -471,8 +471,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                 container.appendChild(this.createTreeLegendIcon());
             }
 
-            // TODO: check if there is text available on the item
-            if (item.info_tekst && B3PGissuite.config.showInfoTab === 'click') {
+            if (item.info_tekst && B3PGissuite.config.showInfoTab === 'click' && B3PGissuite.viewercommons.isTabConfigured('layerinfo')) {
                 container.appendChild(document.createTextNode('  '));
                 container.appendChild(this.createInfotabIcon(item));
             }

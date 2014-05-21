@@ -29,7 +29,7 @@ $j = jQuery.noConflict();
                 this.initPolyfills();
                 $j(document).ready(function() {
                     if(window.dwr && window.dwr.engine && window.dwr.engine.setErrorHandler) {
-                        window.dwr.engine.setErrorHandler(B3PGissuite.commons.dwrErrorHandler);
+                        //window.dwr.engine.setErrorHandler(B3PGissuite.commons.dwrErrorHandler);
                     }
                 });
             },

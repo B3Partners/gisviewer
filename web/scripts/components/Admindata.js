@@ -46,7 +46,7 @@ B3PGissuite.defineComponent('Admindata', {
 
     popUp: function(link, title, width, heigth) {
         var pu = this.getParent().B3PGissuite.viewercommons.popUp(link, title, width, heigth);
-        if (window.focus) {
+        if (window.focus && pu) {
             pu.focus();
         }
     },

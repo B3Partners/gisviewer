@@ -21,13 +21,14 @@ $j = jQuery.noConflict();
             prevpopup: null,
             messageDialog: null,
             messageDialogCreated: false,
+            debug: false,
             /*
             Initialize function
              */
             initialize: function() {
                 this.initPolyfills();
                 $j(document).ready(function() {
-                    if(window.dwr && window.dwr.engine) {
+                    if(window.dwr && window.dwr.engine && window.dwr.engine.setErrorHandler) {
                         window.dwr.engine.setErrorHandler(B3PGissuite.commons.dwrErrorHandler);
                     }
                 });
@@ -46,6 +47,14 @@ $j = jQuery.noConflict();
                 if (msg !== '') {
                     B3PGissuite.commons.messagePopup("Fout", msg, "information");
                 }
+            },
+                    
+            setDebug: function(debug) {
+                this.debug = debug;
+            },
+                    
+            getDebug: function() {
+                return this.debug;
             },
 
             /* functions */

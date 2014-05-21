@@ -334,6 +334,7 @@
         
 <script type="text/javascript">
     (function() {
+        <c:if test="${not empty param.debug}">B3PGissuite.commons.setDebug(true);</c:if>
         // Init CSS properties for configured tab width
         B3PGissuite.get('Layout').configureTabWidth();
         B3PGissuite.get('Layout').prepareTabs();

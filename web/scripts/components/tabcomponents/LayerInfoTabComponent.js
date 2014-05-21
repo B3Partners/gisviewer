@@ -40,11 +40,13 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
         this.tabComponent = this.getTabComponent();
         this.tabPanel = this.getTabPanel();
         this.tabContainer = jQuery('<div></div>');
-        this.tabPanel.append(jQuery('<div></div>').html('<a class="closeInfo" href="#">[x]</a>').css({ 'padding': '0 2px 5px 0' }).click(function() {
-            if(!me.tabComponent.isHidden() && me.tabComponent.isOnlyTab(me.options.tabid)) {
-                me.tabComponent.toggleTab();
-            }
-        }));
+        if(me.tabComponent.isOnlyTab(me.options.tabid)) {
+            this.tabPanel.append(jQuery('<div></div>').html('<a class="closeInfo" href="#">[x]</a>').css({ 'padding': '0 2px 5px 0' }).click(function() {
+                if(!me.tabComponent.isHidden() && me.tabComponent.isOnlyTab(me.options.tabid)) {
+                    me.tabComponent.toggleTab();
+                }
+            }));
+        }
         this.tabPanel.append(this.tabContainer);
         var me = this;
         if(!this.tabComponent.isHidden() && this.tabComponent.isOnlyTab(this.options.tabid)) {

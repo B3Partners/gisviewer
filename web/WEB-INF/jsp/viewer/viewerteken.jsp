@@ -44,20 +44,18 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <p>${tekenTekstOnder}</p>
 
     <p>
-        <input type="button" value="Nieuw" onclick="addNew()" />
-        <input type="button" value="Selecteer" onclick="selectFeature()" />
+        <input type="button" value="Nieuw" id="teken_add_new" />
+        <input type="button" value="Selecteer" id="teken_select_feature" />
     </p>
 
     <div id="multipleResults" style="width: 100%;"/>
 
-
 </div>
-<script>
-    var title = "${tekenTitel}";
-    var gegevensbron ="${tekenGegevensbron}";
-
-    var webMapController = parent.B3PGissuite.vars.webMapController;
-
-</script>
 <script type='text/javascript' src='dwr/interface/JEditFeature.js'></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/teken.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/components/Teken.js"/>"></script>
+<script>
+    B3PGissuite.createComponent('Teken', {
+        title: "${tekenTitel}",
+        gegevensbron: "${tekenGegevensbron}"
+    });
+</script>

@@ -118,6 +118,15 @@ B3PGissuite.defineComponent('Layout', {
             this.tabComponents.leftTab.setActive(id);
         }
     },
+            
+    changeTabTitle: function(tabid, title) {
+        if (this.tabComponents.rightTab.hasTab(tabid)) {
+            this.tabComponents.rightTab.changeTabTitle(tabid, title);
+        }
+        if (this.tabComponents.leftTab.hasTab(tabid)) {
+            this.tabComponents.leftTab.changeTabTitle(tabid, title);
+        }
+    },
 
     panelResize: function(dir){
         if(dir === 'left') {

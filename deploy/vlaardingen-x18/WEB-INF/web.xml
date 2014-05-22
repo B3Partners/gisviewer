@@ -42,14 +42,6 @@
 	<servlet>
 		<servlet-name>aconfig</servlet-name>
 		<servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
-		<!--<init-param>
-			<param-name>kburl</param-name>
-			<param-value>http://agnl-acc.kaartenbalie.nl/kaartenbalie/services/</param-value>
-		</init-param>
-		<init-param>
-			<param-name>internalKbUrl</param-name>
-			<param-value>http://agnl-acc.kaartenbalie.nl/kaartenbalie/services/</param-value>
-		</init-param>-->
         
         <init-param>
 			<param-name>kburl</param-name>
@@ -57,7 +49,7 @@
 		</init-param>
 		<init-param>
 			<param-name>internalKbUrl</param-name>
-			<param-value>http://localhost:8084/kaartenbalie/services/</param-value>
+			<param-value>http://vlaardingen42.kaartenbalie.nl/kaartenbalie/services/</param-value>
 		</init-param>
 		<init-param>
 			<param-name>anonymous_user</param-name>
@@ -186,7 +178,7 @@
 		<servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
 		<init-param>
 			<param-name>downloadPath</param-name>
-			<param-value>C:\downloads</param-value>
+			<param-value>/srv/downloads/vlaardingen</param-value>
 		</init-param>
 		<init-param>
 			<param-name>smtpHost</param-name>
@@ -194,7 +186,7 @@
 		</init-param>
 		<init-param>
 			<param-name>contactEmail</param-name>
-			<param-value>info@b3partners.nl</param-value>
+			<param-value>ed.vander.linden@vlaardingen.nl</param-value>
 		</init-param>
 		<init-param>
 			<param-name>emailSuffix</param-name>
@@ -224,7 +216,7 @@
 		<servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
 		<init-param>
 			<param-name>locationPrefix</param-name>
-			<param-value>c:\\tmp</param-value>
+			<param-value>/tmp</param-value>
 		</init-param>
 		<init-param>
 			<param-name>directoryKeepDepth</param-name>
@@ -239,8 +231,8 @@
 		<servlet-name>Data2PDF</servlet-name>
 		<servlet-class>nl.b3p.gis.viewer.services.Data2PDF</servlet-class>
 		<init-param>
-			<param-name>xsl_data2pdf_staand</param-name>
-			<param-value>/WEB-INF/xsl/data2pdf_staand.xsl</param-value>
+			<param-name>xsl_data2pdf</param-name>
+			<param-value>/WEB-INF/xsl/data2pdf.xsl</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

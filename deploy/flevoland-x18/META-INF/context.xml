@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/gisviewer">
-
-<Resource
-    name="jdbc/gisviewer"
-    auth="Container" 
-    type="javax.sql.DataSource" 
-    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-    testWhileIdle="true"
-    testOnBorrow="true"
-    testOnReturn="false"
-    validationQuery="SELECT 1"
-    validationInterval="30000"
-    timeBetweenEvictionRunsMillis="30000"
-    maxActive="50" 
-    minIdle="10" 
-    maxWait="10000"
-    initialSize="10"
-    removeAbandonedTimeout="60"
-    removeAbandoned="true"
-    logAbandoned="true"
-    minEvictableIdleTimeMillis="30000" 
-    jmxEnabled="true"
-    username="flevoland-gisviewer" 
-    password="4SrC2M9wDcE8tA2" 
-    driverClassName="org.postgresql.Driver"
-    url="jdbc:postgresql://localhost:5432/flevoland-gisviewer"
-/>
-
+  <Resource
+  	auth="Container"
+  	driverClassName="org.postgresql.Driver"
+  	logAbandoned="true"
+  	maxActive="100"
+  	maxIdle="30"
+  	maxWait="10000"
+  	name="jdbc/gisviewer"
+  	username="flevoland-gisviewer"
+  	password="4SrC2M9wDcE8tA2"
+  	removeAbandoned="true"
+  	removeAbandonedTimeout="60"
+  	type="javax.sql.DataSource"
+  	url="jdbc:postgresql://localhost:5432/flevoland-gisviewer"
+  	validationQuery="select 1"
+	minEvictableIdleTimeMillis="10000"
+	timeBetweenEvictionRunsMillis="60000"
+  />
 </Context>

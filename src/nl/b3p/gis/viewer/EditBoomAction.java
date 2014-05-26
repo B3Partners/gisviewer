@@ -158,7 +158,9 @@ public class EditBoomAction extends ViewerCrudAction {
          * In vorige versie gaf boom.getId een NPE. Kan uniek niet een boolean worden?
          * Als uniek false wordt hieronder toch het form id gebruikt om te updaten of
          * te inserten. */
-        if(uniek.equals("") || (!uniek.equals("") && boom.getId() != null && boom.getId() != -1)){
+        if(!valideBoom){
+            massage = "error.boom.niet.valide";
+        } else if(uniek.equals("") || (!uniek.equals("") && boom.getId() != null && boom.getId() != -1)){
 
             ggb.getBron().getUrl();
 
@@ -591,7 +593,10 @@ public class EditBoomAction extends ViewerCrudAction {
         }else{
             boom.setBereikbaarheid("0");
         }
-
+        
+        if(boom.getBoomsrt() == null || boom.getBoomsrt().equals("")){
+            return false;
+        }
         return true;
     }
 

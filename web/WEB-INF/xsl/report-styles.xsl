@@ -28,7 +28,7 @@
     
     <!-- colors -->  
     <xsl:attribute-set name="title-bg-color" use-attribute-sets="column-block">
-        <xsl:attribute name="background-color">#eeeeee</xsl:attribute>
+        <xsl:attribute name="background-color">#ffba00</xsl:attribute>
     </xsl:attribute-set>    
     
     <xsl:attribute-set name="date-info-style">
@@ -37,12 +37,12 @@
     </xsl:attribute-set>
     
     <xsl:attribute-set name="cell-header" use-attribute-sets="thinBorder">
-        <xsl:attribute name="background-color">#ffe779</xsl:attribute>
+        <xsl:attribute name="background-color">#ffdd83</xsl:attribute>
         <xsl:attribute name="font-weight">bold</xsl:attribute>
     </xsl:attribute-set>
     
     <xsl:variable name="row-color-1" select="'#ffffff'"/>
-    <xsl:variable name="row-color-2" select="'#eeeeee'"/>
+    <xsl:variable name="row-color-2" select="'#efefef'"/>
     
     <!-- other --> 
     <xsl:attribute-set name="thinBorder">

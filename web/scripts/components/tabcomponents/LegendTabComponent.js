@@ -166,8 +166,10 @@ B3PGissuite.defineComponent('LegendTabComponent', {
                 var object = document.getElementById(item.id);
                 //Item alleen toevoegen aan de layers indien
                 //parent cluster(s) allemaal aangevinkt staan of
-                //geen cluster heeft            
-                if (!itemHasAllParentsEnabled(object) || (!B3PGissuite.viewercommons.isItemInScale(item, res))) {
+                //geen cluster heeft   
+                var treeComponent = B3PGissuite.get('TreeTabComponent');
+                
+                if (treeComponent && !treeComponent.itemHasAllParentsEnabled(object) || (!B3PGissuite.viewercommons.isItemInScale(item, res))) {
                     found = true;
                     invisibleLayerItems.push(item);
                 }

@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" exclude-result-prefixes="fo">
     <xsl:output method="xml" version="1.0" omit-xml-declaration="no" indent="yes"/>
-    
+
     <!-- berekent de breedte van de kaart in meters na correctie vanwege verschil
 	in verhouding hoogte/breedte kaart op scherm en van kaart in template -->
     <xsl:template name="calc-bbox-width-m-corrected">

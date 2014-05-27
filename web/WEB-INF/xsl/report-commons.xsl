@@ -14,7 +14,7 @@
     <xsl:template name="flat-table-block">
         <xsl:param name="myRecord" />
   
-        <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
+        <fo:block margin-left="{$user-margin-left}" margin-top="{$user-margin-top}" xsl:use-attribute-sets="default-font">
                         
             <xsl:if test="count($myRecord/labels) &gt; 0">                                            
                 <fo:block width="26.0cm">
@@ -62,11 +62,11 @@
     <xsl:template name="simple-table-block">
         <xsl:param name="myRecord" />
         
-        <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
+        <fo:block margin-left="{$user-margin-left}" margin-top="{$user-margin-top}" xsl:use-attribute-sets="default-font">
             <xsl:value-of select="$myRecord/titel"/>
         </fo:block>
         
-        <fo:block margin-left="0.2cm" margin-top="0.5cm" xsl:use-attribute-sets="default-font">
+        <fo:block margin-left="{$user-margin-left}" margin-top="{$user-margin-top}" xsl:use-attribute-sets="default-font">
                         
             <xsl:variable name="countLabels" select="count($myRecord/labels)" />
             <xsl:variable name="column-w" select="concat(26.0 div $countLabels,'cm')" />
@@ -140,7 +140,7 @@
     </xsl:template>
 
     <xsl:template name="logo-block">
-        <fo:block margin-top="0.5cm">
+        <fo:block margin-top="{$user-margin-top}">
             <fo:external-graphic src="url('{$logo-src}')" width="{$logo-width}" height="{$logo-height}"/>
         </fo:block>
     </xsl:template>

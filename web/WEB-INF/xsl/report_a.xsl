@@ -25,13 +25,13 @@
                 <fo:flow flow-name="body">
                     
                     <xsl:if test="count(bron) &gt; 0">
-                        <fo:block-container width="28.8cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="title-bg-color">
+                        <fo:block-container width="28.9cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="title-bg-color">
                             <xsl:call-template name="title-block"/>
                         </fo:block-container>
                         
                         <fo:block-container width="28.8cm" height="15.0cm" top="1.5cm" left="0cm" xsl:use-attribute-sets="column-block">
                             
-                            <fo:block margin-left="0.2cm" margin-top="0.5cm" margin-bottom="0.5cm" xsl:use-attribute-sets="date-info-style">
+                            <fo:block margin-left="{$user-margin-left}" margin-top="{$user-margin-top}" margin-bottom="{$user-margin-bottom}" xsl:use-attribute-sets="date-info-style">
                                 Gemaakt op: <xsl:value-of select="/reportinfo/datum"/>                
                             </fo:block>
                             

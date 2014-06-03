@@ -76,7 +76,7 @@
                                     
                     <fo:table>                                        
                         <xsl:for-each select="$myRecord/labels"> 
-                            <fo:table-column column-width="$column-w"/>
+                            <fo:table-column column-width="{$column-w}"/>
                         </xsl:for-each>                                        
                                         
                         <fo:table-header>   

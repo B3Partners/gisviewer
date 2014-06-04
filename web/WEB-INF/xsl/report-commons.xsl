@@ -17,10 +17,10 @@
         <fo:block margin-left="{$user-margin-left}" margin-top="{$user-margin-top}" xsl:use-attribute-sets="default-font">
                         
             <xsl:if test="count($myRecord/labels) &gt; 0">                                            
-                <fo:block width="26.0cm">
+                <fo:block width="27.0">
                     <fo:table>
                         <fo:table-column column-width="6.0cm"/>
-                        <fo:table-column column-width="20.0cm"/>
+                        <fo:table-column column-width="21.0cm"/>
 
                         <fo:table-header>
                             <fo:table-cell>
@@ -69,20 +69,17 @@
         <fo:block margin-left="{$user-margin-left}" margin-top="{$user-margin-top}" xsl:use-attribute-sets="default-font">
                         
             <xsl:variable name="countLabels" select="count($myRecord/labels)" />
-            <xsl:variable name="column-w" select="concat(26.0 div $countLabels,'cm')" />
             
             <xsl:if test="$countLabels &gt; 0">
-                <fo:block>
-                                    
-                    <fo:table>                                        
-                        <xsl:for-each select="$myRecord/labels"> 
-                            <fo:table-column column-width="{$column-w}"/>
+                <fo:block>                                    
+                    <fo:table table-layout="fixed" width="{$user-table-width}">                               
+                        <xsl:for-each select="$myRecord/labels">
+                            <fo:table-column column-width="proportional-column-width(1)"/>
                         </xsl:for-each>                                        
                                         
                         <fo:table-header>   
-                            <fo:table-row>                                            
-                                <xsl:for-each select="$myRecord/labels">   
-                                                                             
+                            <fo:table-row keep-with-previous="always">                                            
+                                <xsl:for-each select="$myRecord/labels">     
                                     <fo:table-cell xsl:use-attribute-sets="cell-header">
                                         <fo:block>
                                             <xsl:value-of select="."/>
@@ -98,7 +95,7 @@
                                 <!-- Using choose to alternate row colors -->
                                 <xsl:choose>                                    
                                     <xsl:when test="position() mod 2 = 0">
-                                        <fo:table-row>
+                                        <fo:table-row keep-with-previous="always">
                                             <xsl:for-each select="values">                                     
                                                 <fo:table-cell background-color="{$row-color-1}" xsl:use-attribute-sets="thinBorder">
                                                     <fo:block>
@@ -110,7 +107,7 @@
                                     </xsl:when>
                                     
                                     <xsl:otherwise>
-                                        <fo:table-row>
+                                        <fo:table-row keep-with-previous="always">
                                             <xsl:for-each select="values">                                     
                                                 <fo:table-cell background-color="{$row-color-2}" xsl:use-attribute-sets="thinBorder">
                                                     <fo:block>
@@ -125,8 +122,9 @@
                             </xsl:for-each>                                     
                         </fo:table-body>
                                     
-                    </fo:table>                            
-                </fo:block>                                                                 
+                    </fo:table> 
+                     
+                </fo:block>                                                                                                                      
             </xsl:if>
             
             <!-- voor subbronnen nog een keer aanroepen -->
@@ -143,6 +141,5 @@
         <fo:block margin-top="{$user-margin-top}">
             <fo:external-graphic src="url('{$logo-src}')" width="{$logo-width}" height="{$logo-height}"/>
         </fo:block>
-    </xsl:template>
-    
+    </xsl:template>    
 </xsl:stylesheet>

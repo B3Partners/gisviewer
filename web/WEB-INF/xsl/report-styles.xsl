@@ -14,6 +14,9 @@
     <xsl:variable name="logo-top-a4-liggend" select="'18.3cm'"/>
     <xsl:variable name="logo-left-a4-liggend" select="'22.5cm'"/>  
     
+    <!-- widths -->
+    <xsl:variable name="user-table-width" select="'100%'"/>
+    
     <!-- margins -->
     <xsl:variable name="user-margin-left" select="'0.2cm'"/>
     <xsl:variable name="user-margin-top" select="'0.4cm'"/>

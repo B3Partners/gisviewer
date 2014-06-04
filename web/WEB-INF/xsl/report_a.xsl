@@ -10,7 +10,7 @@
     <!-- master set -->
     <xsl:template name="layout-master-set">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="a4-liggend" page-height="210mm" page-width="297mm" margin-top="0.4cm" margin-bottom="0.4cm" margin-left="0.4cm" margin-right="0.4cm">
+            <fo:simple-page-master master-name="a4-liggend" page-width="29.7cm" page-height="21.0cm" margin-top="0.1cm" margin-bottom="0.1cm" margin-left="0.1cm" margin-right="0.1cm">              
                 <fo:region-body region-name="body"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
@@ -21,46 +21,48 @@
         <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:xlink="http://www.w3.org/1999/xlink">
             <xsl:call-template name="layout-master-set"/>
             
-            <fo:page-sequence master-reference="a4-liggend">
-                <fo:flow flow-name="body">
+            <fo:page-sequence master-reference="a4-liggend"> 
+                <fo:flow flow-name="body">  
                     
-                    <xsl:if test="count(bron) &gt; 0">
-                        <fo:block-container width="28.9cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="title-bg-color">
-                            <xsl:call-template name="title-block"/>
-                        </fo:block-container>
-                        
-                        <fo:block-container width="28.8cm" height="15.0cm" top="1.5cm" left="0cm" xsl:use-attribute-sets="column-block">
+                    <fo:block-container width="29.5cm" height="1.5cm" top="0cm" left="0cm" xsl:use-attribute-sets="title-bg-color">
+                        <xsl:call-template name="title-block"/>
+                    </fo:block-container>      
                             
+                    <xsl:if test="count(bron) &gt; 0">
+                        <fo:block-container width="25.0cm" height="1.5cm" top="1.5cm" left="0cm" xsl:use-attribute-sets="column-block">                          
                             <fo:block margin-left="{$user-margin-left}" margin-top="{$user-margin-top}" margin-bottom="{$user-margin-bottom}" xsl:use-attribute-sets="date-info-style">
                                 Gemaakt op: <xsl:value-of select="/reportinfo/datum"/>                
                             </fo:block>
-                            
-                            <xsl:if test="/reportinfo/bron/layout = 'FLAT_TABLE'">
+                        </fo:block-container>
+                        
+                        <xsl:if test="/reportinfo/bron/layout = 'FLAT_TABLE'">
+                            <fo:block-container top="2.2cm" left="0cm" xsl:use-attribute-sets="column-block">              
                                 <xsl:call-template name="flat-table-block">
                                     <xsl:with-param name="myRecord" select="/reportinfo/bron" />
-                                </xsl:call-template>    
-                            </xsl:if>
-                            
+                                </xsl:call-template>                                
+                            </fo:block-container>
+                        </xsl:if>
+                          
+                        <fo:block-container margin-top="4.0cm" left="0cm">      
                             <xsl:for-each select="/reportinfo/bron/records/bronnen">
                                 <xsl:call-template name="simple-table-block">
                                     <xsl:with-param name="myRecord" select="." />
-                                </xsl:call-template>  
+                                </xsl:call-template>                                                        
                             </xsl:for-each>
-                            
                         </fo:block-container>
+                                                                                         
+                    </xsl:if>  
+                    
+                    <fo:block-container 
+                        width="{$logo-block-width}" 
+                        height="{$logo-block-height}" 
+                        top="{$logo-top-a4-liggend}" 
+                        left="{$logo-left-a4-liggend}" 
+                        xsl:use-attribute-sets="column-block">
                         
-                        <fo:block-container 
-                            width="{$logo-block-width}" 
-                            height="{$logo-block-height}" 
-                            top="{$logo-top-a4-liggend}" 
-                            left="{$logo-left-a4-liggend}" 
-                            xsl:use-attribute-sets="column-block">
-                        
-                            <xsl:call-template name="logo-block"/>
-                        </fo:block-container>  
-                                                                    
-                    </xsl:if>   
-                                     
+                        <xsl:call-template name="logo-block"/>
+                    </fo:block-container>
+                                                                          
                 </fo:flow>
             </fo:page-sequence>
         </fo:root>

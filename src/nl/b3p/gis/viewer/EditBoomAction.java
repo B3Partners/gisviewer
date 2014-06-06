@@ -602,8 +602,7 @@ public class EditBoomAction extends ViewerCrudAction {
 
     private String getWijk(Geometry geom, String projectid){
         String wijk = "";
-        //String query = "select project from projectindeling where contains(the_geom, st_geometryfromtext('"+wkt+"',28992))";
-        String query = "select project from projectindeling where contains(the_geom, "+geom+")";
+        String query = "select project from projectindeling where st_contains(the_geom, st_geometryfromtext('"+geom+"',28992))";
 
         Connection conn = null;
 

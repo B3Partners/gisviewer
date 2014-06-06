@@ -5327,55 +5327,55 @@ $j(document).ready(function() {
 
     if (analyseTabOn) {
         if (document.getElementById('analyseframeViewer')) {
-            document.getElementById('analyseframeViewer').src='/gisviewer/vieweranalysedata.do';
+            document.getElementById('analyseframeViewer').src='/digitree/vieweranalysedata.do';
         }
     }
 
     if (meldingenTabOn) {
         if(document.getElementById('meldingenframeViewer')) {
-            document.getElementById('meldingenframeViewer').src='/gisviewer/viewermeldingen.do?prepareMelding=t';
+            document.getElementById('meldingenframeViewer').src='/digitree/viewermeldingen.do?prepareMelding=t';
         }
     }
 
     if (redliningTabOn) {
         if(document.getElementById('redliningframeViewer')) {
-            document.getElementById('redliningframeViewer').src='/gisviewer/viewerredlining.do?prepareRedlining=t';
+            document.getElementById('redliningframeViewer').src='/digitree/viewerredlining.do?prepareRedlining=t';
         }
     }
 
     if (bagTabOn) {
         if(document.getElementById('bagframeViewer')) {
-            document.getElementById('bagframeViewer').src='/gisviewer/viewerbag.do';
+            document.getElementById('bagframeViewer').src='/digitree/viewerbag.do';
         }
     }
     
     if (wktTabOn) {
         if(document.getElementById('wktframeViewer')) {
-            document.getElementById('wktframeViewer').src='/gisviewer/viewerwkt.do';
+            document.getElementById('wktframeViewer').src='/digitree/viewerwkt.do';
         }
     }
     
     if (transparantieTabOn) {
         if(document.getElementById('transparantieframeViewer')) {
-            document.getElementById('transparantieframeViewer').src='/gisviewer/viewertransparantie.do';
+            document.getElementById('transparantieframeViewer').src='/digitree/viewertransparantie.do';
         }
     }
     
     if (tekenTabOn) {
         if(document.getElementById('tekenenframeViewer')) {
-            document.getElementById('tekenenframeViewer').src='/gisviewer/viewerteken.do';
+            document.getElementById('tekenenframeViewer').src='/digitree/viewerteken.do';
         }
     }
     
     if (editTabOn) {
         if(document.getElementById('editboomframeViewer')) {
-            document.getElementById('editboomframeViewer').src='/gisviewer/viewereditboom.do';
+            document.getElementById('editboomframeViewer').src='/digitree/viewereditboom.do';
         }
     }
     
     if (ziekteTabOn) {
         if(document.getElementById('editziekteframeViewer')) {
-            document.getElementById('editziekteframeViewer').src='/gisviewer/viewereditziekte.do';
+            document.getElementById('editziekteframeViewer').src='/digitree/viewereditziekte.do';
         }
     }
 

@@ -403,35 +403,48 @@
 </div>
 
 <div id="embedded_icons" style="display: none;">
-    <div class="embedded_icon">
-        <html:link page="/help.do?id=${kaartid}" target="_blank" module="">
-            <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
-        </html:link>
-    </div>
 
-    <div class="embedded_icon">
-        <a href="#" class="getLatLonForGoogleMaps">
-            <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
-        </a>
-    </div>
+    <c:set var="helpUrl" value="${configMap['helpUrl']}"/>
+    <c:set var="showGoogleMapsIcon" value="${configMap['showGoogleMapsIcon']}"/>
+    <c:set var="showBookmarkIcon" value="${configMap['showBookmarkIcon']}"/>
+    <c:set var="contactUrl" value="${configMap['contactUrl']}"/>
 
-    <div class="embedded_icon">
-        <a href="#" class="getBookmark">
-            <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
-        </a>
-    </div>
+    <c:if test="${! empty helpUrl}">
+        <div class="embedded_icon">
+            <html:link page="${helpUrl}" target="_blank" module="">
+                <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
+            </html:link>
+        </div>
+    </c:if>
 
-    <div class="embedded_icon">
-        <a href="mailto:support@b3partners.nl">
-            <img src="<html:rewrite page="/images/email.png"/>" alt="Stuur een e-mail naar de beheerder" title="Stuur een e-mail naar de beheerder" border="0" />
-        </a>
-    </div>
+    <c:if test="${showGoogleMapsIcon}">
+        <div class="embedded_icon">
+            <a href="#" class="getLatLonForGoogleMaps">
+                <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
+            </a>
+        </div>
+    </c:if>
 
-    <div class="embedded_icon">
-        <%--
+    <c:if test="${showBookmarkIcon}">
+        <div class="embedded_icon">
+            <a href="#" class="getBookmark">
+                <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
+            </a>
+        </div>
+    </c:if>
+
+    <c:if test="${!empty contactUrl}">
+        <div class="embedded_icon">
+            <a href="mailto:${contactUrl}">
+                <img src="<html:rewrite page="/images/email.png"/>" alt="${contactUrl}" title="${contactUrl}" />
+            </a>
+        </div>
+    </c:if>
+    <%-- 
+    <div class="embedded_icon">    
         <html:link page="/viewer.do?appCode=${appCode}&amp;accessibility=1" target="_new" styleClass="${stijlklasse}" module="">
             <img src="<html:rewrite page="/images/search_list.png"/>" alt="Zoeken met lijsten" title="Zoeken met lijsten" border="0" />
-        </html:link>
-        --%>
+        </html:link>    
     </div>
+    --%>
 </div>

@@ -983,30 +983,34 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         B3PGissuite.vars.editComponent = B3PGissuite.createComponent('Edit');
 
-        if (B3PGissuite.config.viewerTemplate == "embedded") {
+        if (B3PGissuite.config.viewerTemplate === "embedded") {
             this.displayEmbeddedMenuIcons();
         }
     },
     displayEmbeddedMenuIcons: function() {
-        $j("#embedded_icons").css('position', 'absolute');
-        $j("#embedded_icons").css('width', '170px');
-        $j("#embedded_icons").css('height', '36px');
-
-        $j("#embedded_icons .embedded_icon").css('float', 'left');
-        $j("#embedded_icons .embedded_icon").css('padding-top', '7px');
-        $j("#embedded_icons .embedded_icon").css('padding-left', '15px');
-
-        if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
-            $j("#embedded_icons").css('left', '670px');
-            $j("#embedded_icons").css('top', '6px');
-            $j("#embedded_icons").css('border', 'solid 1px #808080');
-            $j("#embedded_icons").css('background-color', '#eeeeee');
-        } else {
-            $j("#embedded_icons").css('left', '630px');
-            $j("#embedded_icons").css('top', '2px');
+        var embeddedIcons = $j("#embedded_icons");
+        if(embeddedIcons.children().length === 0) {
+            return;
         }
-
-        $j("#embedded_icons").show();
+        var embeddedIconsCss = {
+            'position': 'absolute',
+            'display': 'block',
+            'right': '0px',
+            'top': '0px',
+            'padding': '0 16px 0 0',
+            'z-index': '2000',
+            'background-color': '#eeeeee'
+        };
+        if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+            embeddedIconsCss['border-left'] = 'solid 1px #808080';
+            embeddedIconsCss['border-bottom'] = 'solid 1px #808080';
+        }
+        embeddedIcons.css(embeddedIconsCss);
+        embeddedIcons.find(".embedded_icon").css({
+            'float': 'left',
+            'padding': '8px 0 7px 16px'
+        });
+        embeddedIcons.appendTo('#mapcontent');
     },
     checkDisplayButtons: function() {
         if (B3PGissuite.config.showRedliningTools) {

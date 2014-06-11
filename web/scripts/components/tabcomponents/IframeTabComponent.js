@@ -11,8 +11,15 @@ B3PGissuite.defineComponent('IframeTabComponent', {
         this.init();
     },
     init: function() {
+        var src = this.options.src;
+        if(B3PGissuite.config.cmsPageId) {
+            src = this.addToQueryString(src, 'cmsPageId', B3PGissuite.config.cmsPageId);
+        }
+        if(B3PGissuite.commons.getDebug()) {
+            src = this.addToQueryString(src, 'debug', 'true');
+        }
         this.component = jQuery('<iframe></iframe>').attr({
-            'src': B3PGissuite.commons.getDebug() ? this.addToQueryString(this.options.src, 'debug', 'true') : this.options.src,
+            'src': src,
             'id': this.options.id,
             'name': this.options.id,
             'frameborder': 0

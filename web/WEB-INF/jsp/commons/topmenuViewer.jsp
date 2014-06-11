@@ -65,13 +65,13 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:if>
 
     <c:if test="${showBookmarkIcon}">
-        <a href="#" class="getBookmark" class="menulink">
+        <a href="#" class="getBookmark menulink">
             <img src="<html:rewrite page="/images/bookmark.png"/>" alt="Bookmark de kaart" title="Bookmark de kaart" border="0" />
         </a>
     </c:if>
 
     <c:if test="${showGoogleMapsIcon}">
-        <a href="#" class="getLatLonForGoogleMaps" class="menulink">
+        <a href="#" class="getLatLonForGoogleMaps menulink">
             <img src="<html:rewrite page="/images/google_maps.png"/>" alt="Toon Google Map van de kaart" title="Toon Google Map van de kaart" border="0" />
         </a>
     </c:if>

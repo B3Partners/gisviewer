@@ -12,5 +12,10 @@
         <note>For cms stylesheet with params</note>
         <from>^/cmsstyle/([0-9]+)</from>
         <to>/cmsstyle.do?id=$1</to>
+    </rule>    
+    <rule>
+        <note>For SLD Servlet with REST params</note>
+        <from>^/services/CreateSLD/propname/([a-z]+)/propvalue/([a-z]+)/id/([0-9]+)$</from>
+        <to>/services/CreateSLD?propname=$1&amp;propvalue=$2&amp;id=$3</to>
     </rule>
 </urlrewrite>

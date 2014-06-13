@@ -337,6 +337,12 @@ B3PGissuite.defineComponent('ViewerComponent', {
                 var baseUrl = protocol + host + B3PGissuite.config.baseNameViewer;
                 var sldUrl = "sld=" + baseUrl + "/services/createUserSld?layerids=" + sldIds;
 
+                /* add ampersand at end otherwise adding 'sld=' does not work */
+                var hasAmpersand = layerUrl.indexOf("&", layerUrl.length - "&".length) !== -1;              
+                if (!hasAmpersand) {
+                    layerUrl += "&";
+                }
+                
                 layerUrl += sldUrl;
             }
 

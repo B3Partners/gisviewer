@@ -35,6 +35,13 @@
                             </fo:block>
                         </fo:block-container>
                         
+                        <fo:block-container margin-top="1.7cm" margin-left="12.0cm"> 
+                            <xsl:variable name="url" select="/reportinfo/image_url"/>                        
+                            <fo:block>
+                                <fo:external-graphic border-style="solid" border-width="medium" src="url('data:image/jpeg;base64,{$url}')" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$uitsnede-w}" height="{$uitsnede-h}"/>
+                            </fo:block>   
+                        </fo:block-container>
+                        
                         <xsl:if test="/reportinfo/bron/layout = 'FLAT_TABLE'">
                             <fo:block-container top="2.2cm" left="0cm" xsl:use-attribute-sets="column-block">              
                                 <xsl:call-template name="flat-table-block">
@@ -43,13 +50,18 @@
                             </fo:block-container>
                         </xsl:if>
                           
-                        <fo:block-container margin-top="4.0cm" left="0cm">      
-                            <xsl:for-each select="/reportinfo/bron/records/bronnen">
-                                <xsl:call-template name="simple-table-block">
-                                    <xsl:with-param name="myRecord" select="." />
-                                </xsl:call-template>                                                        
-                            </xsl:for-each>
-                        </fo:block-container>
+                        <xsl:if test="count(/reportinfo/bron/records/bronnen) &gt; 0">
+                            <fo:block-container margin-top="0.0cm" left="0cm">      
+                                <xsl:for-each select="/reportinfo/bron/records/bronnen">                                
+                                    <xsl:variable name="nummer" select="position()"/>
+                                
+                                    <xsl:call-template name="simple-table-block">
+                                        <xsl:with-param name="myRecord" select="." />
+                                        <xsl:with-param name="volgNummer" select="$nummer"/>
+                                    </xsl:call-template>                                                        
+                                </xsl:for-each>
+                            </fo:block-container>
+                        </xsl:if>                        
                                                                                          
                     </xsl:if>  
                     

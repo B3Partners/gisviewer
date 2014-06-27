@@ -1,0 +1,18 @@
+Geachte heer, mevrouw,
+
+U heeft via Atlas Limburg een gisviewer opgeslagen met de naam {0}. U kunt deze viewer via
+de volgende link bekijken:
+
+{1}
+
+Mocht u deze e-mail onterecht hebben ontvangen of heeft u een andere opmerking neem
+dan contact op via {2}.
+
+Met vriendelijke groet,
+
+Provincie Limburg Geoloket
+E-mail: geoloket@prvlimburg.nl
+
+Gouvernement
+Limburglaan 10
+6229 GA Randwyck-Maastricht

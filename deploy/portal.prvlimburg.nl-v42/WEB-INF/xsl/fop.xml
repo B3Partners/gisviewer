@@ -1,0 +1,14 @@
+<fop version="0.95"> 
+    <use-cache>true</use-cache>   
+    <cache-file>/var/www/fop/fop.cache</cache-file>
+    
+    <renderers>
+        <renderer mime="application/pdf">
+            <fonts>
+                <font metrics-url="tahoma.xml" kerning="yes" embed-url="tahoma.ttf">
+                    <font-triplet name="Tahoma" style="normal" weight="normal"/>
+                </font>
+            </fonts>
+        </renderer>
+    </renderers>
+</fop>

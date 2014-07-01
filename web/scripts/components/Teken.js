@@ -49,9 +49,50 @@ B3PGissuite.defineComponent('Teken', {
         jQuery('#teken_add_new').click(function() {
             me.addNew();
         });
+        
         jQuery('#teken_select_feature').click(function() {
             me.selectFeature();
         });
+        
+        jQuery('#teken_filter_features').click(function() {
+            me.filterFeatures(false);
+        }); 
+        
+        jQuery('#teken_filter_all_features').click(function() {
+            me.filterFeatures(true);
+        });
+        
+    },
+    
+    filterFeatures: function (showAll) {
+        var me = this;
+        
+        var themaId = 5; // nog uit gvc halen     
+        var filterColumn = "type"; // nog uit gvc halen   
+        
+        if (showAll) {
+            $j("#teken_filter_value").val("");  
+        }
+        
+        var filterValue = $j("#teken_filter_value").val();        
+        
+        var baseUrl = this.parent.B3PGissuite.viewercommons.getBaseUrl();
+        var sldUrl = baseUrl + "/services/CreateSLD/propname/" + filterColumn + "/propvalue/" + filterValue + "/id/" + themaId;
+                            
+        me.reloadTekenlayer(themaId, sldUrl);
+    },
+    
+    reloadTekenlayer: function(themaId, sldUrl) {
+        if (!this.parent.B3PGissuite.viewercommons.isStringEmpty(sldUrl)) {
+            this.parent.B3PGissuite.vars.layerUrl = this.parent.B3PGissuite.vars.originalLayerUrl + "&sld=" + sldUrl;
+        }
+        
+        // teken kaartlaag uit/aan vinken
+        var treeComponent = this.parent.B3PGissuite.get('TreeTabComponent');
+        if (treeComponent !== null) {
+            treeComponent.deActivateCheckbox(themaId);
+            treeComponent.activateCheckbox(themaId);
+        }
     },
 
     addNew: function () {

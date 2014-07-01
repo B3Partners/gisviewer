@@ -47,6 +47,16 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <input type="button" value="Nieuw" id="teken_add_new" />
         <input type="button" value="Selecteer" id="teken_select_feature" />
     </p>
+    
+    <h3>Filter</h3>
+    
+    <p>Filter de objecten in de kaart.</p>
+        
+    <p>
+        <input type="text" id="teken_filter_value" size="20" /> 
+        <input type="button" value="Filter" id="teken_filter_features" />
+        <input type="button" value="Reset" id="teken_filter_all_features" />
+    </p>
 
     <div id="multipleResults" style="width: 100%;"/>
 

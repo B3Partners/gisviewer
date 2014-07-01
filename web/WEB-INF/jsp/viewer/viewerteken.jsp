@@ -51,9 +51,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <h3>Filter</h3>
     
     <p>Filter de objecten in de kaart.</p>
-        
+    
+    <table>
+        <tr>
+            <td>Kolom</td>
+            <td><input type="text" id="teken_filter_column" size="30" /> </td>
+        </tr>
+        <tr>
+            <td>Waarde</td>
+            <td><input type="text" id="teken_filter_value" size="30" /> </td>
+        </tr>
+    </table>
+    
     <p>
-        <input type="text" id="teken_filter_value" size="20" /> 
         <input type="button" value="Filter" id="teken_filter_features" />
         <input type="button" value="Reset" id="teken_filter_all_features" />
     </p>

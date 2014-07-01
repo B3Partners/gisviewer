@@ -68,17 +68,25 @@ B3PGissuite.defineComponent('Teken', {
         var me = this;
         
         var themaId = 5; // nog uit gvc halen     
-        var filterColumn = "type"; // nog uit gvc halen   
+        var filterColumn = "type"; // nog uit gvc halen  
         
-        if (showAll) {
-            $j("#teken_filter_value").val("");  
+        var userColumn = $j("#teken_filter_column").val();
+        if (!this.parent.B3PGissuite.viewercommons.isStringEmpty(userColumn)) {
+            filterColumn = userColumn;
+        } else {
+            $j("#teken_filter_column").val(filterColumn);
         }
         
-        var filterValue = $j("#teken_filter_value").val();        
+        if (showAll) {
+            $j("#teken_filter_column").val("");
+            $j("#teken_filter_value").val("");  
+        }  
+        
+        var filterValue = $j("#teken_filter_value").val();
         
         var baseUrl = this.parent.B3PGissuite.viewercommons.getBaseUrl();
         var sldUrl = baseUrl + "/services/CreateSLD/propname/" + filterColumn + "/propvalue/" + filterValue + "/id/" + themaId;
-                            
+        
         me.reloadTekenlayer(themaId, sldUrl);
     },
     

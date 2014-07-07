@@ -36,6 +36,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         </html:messages>
     </div>
+    
+    <h3>Teken</h3>
 
     <p>${tekenTekstBoven}</p>
 
@@ -48,18 +50,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <input type="button" value="Selecteer" id="teken_select_feature" />
     </p>
     
-    <h3>Filter</h3>
-    
-    <p>Filter de objecten in de kaart.</p>
+    <h3>Filter objecten op '${tekenFilterColumn}'</h3>
     
     <table>
         <tr>
-            <td>Kolom</td>
-            <td><input type="text" id="teken_filter_column" size="30" /> </td>
-        </tr>
-        <tr>
-            <td>Waarde</td>
-            <td><input type="text" id="teken_filter_value" size="30" /> </td>
+            <td><input type="text" id="teken_filter_value" size="35" /> </td>
         </tr>
     </table>
     

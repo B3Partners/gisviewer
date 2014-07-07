@@ -200,7 +200,7 @@ B3PGissuite.defineComponent('Edit', {
         if(ans){
             var id = button.id;
             var gbId = $j("#editForm" + id + " #gegevensbronId");
-
+            
             var feature = {
                 fid : this.currentFID,
                 gegevensbronId: gbId.val()

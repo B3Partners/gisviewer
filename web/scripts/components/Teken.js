@@ -67,8 +67,8 @@ B3PGissuite.defineComponent('Teken', {
     filterFeatures: function (showAll) {
         var me = this;
         
-        var themaId = 5; // nog uit gvc halen     
-        var filterColumn = "type"; // nog uit gvc halen  
+        var themaId = this.parent.B3PGissuite.config.tekenKaartlaagId;        
+        var filterColumn = this.parent.B3PGissuite.config.tekenFilterColumn;    
         
         var userColumn = $j("#teken_filter_column").val();
         if (!this.parent.B3PGissuite.viewercommons.isStringEmpty(userColumn)) {
@@ -84,8 +84,10 @@ B3PGissuite.defineComponent('Teken', {
         
         var filterValue = $j("#teken_filter_value").val();
         
+        var appCode = this.parent.B3PGissuite.config.bookmarkAppcode;
+        
         var baseUrl = this.parent.B3PGissuite.viewercommons.getBaseUrl();
-        var sldUrl = baseUrl + "/services/CreateSLD/propname/" + filterColumn + "/propvalue/" + filterValue + "/id/" + themaId;
+        var sldUrl = baseUrl + "/services/CreateSLD/appcode/" + appCode +"/propname/" + filterColumn + "/propvalue/" + filterValue + "/id/" + themaId;
         
         me.reloadTekenlayer(themaId, sldUrl);
     },

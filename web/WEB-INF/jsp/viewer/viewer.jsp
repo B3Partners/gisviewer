@@ -15,45 +15,45 @@
 <script type='text/javascript' src='dwr/util.js'></script>
 
 <script type="text/javascript">
-    
-    function getValue(configValue){
+
+    function getValue(configValue) {
         return configValue;
     }
 
-    function checkValidity(configValue){
-        if(typeof configValue === 'undefined' || configValue === '') {
+    function checkValidity(configValue) {
+        if (typeof configValue === 'undefined' || configValue === '') {
             return false;
         }
         return true;
     }
 
     function defaultTrue(configValue) {
-    	if(typeof configValue === 'undefined' || configValue === '') {
+        if (typeof configValue === 'undefined' || configValue === '') {
             return true;
         }
-        
+
         return configValue;
     }
 
     function defaultFalse(configValue) {
-    	if(typeof configValue === 'undefined' || configValue === '') {
+        if (typeof configValue === 'undefined' || configValue === '') {
             return false;
         }
         return configValue;
     }
 
-	<%-- om dubbel ophalen te voorkomen voor check 
-	 checkValidity(zcs) ? zcs :
-	--%>
-	var zzcs = getValue(${zoekconfiguraties});
-    if(typeof zzcs === 'undefined' || !zzcs) {  
+    <%-- om dubbel ophalen te voorkomen voor check 
+     checkValidity(zcs) ? zcs :
+    --%>
+    var zzcs = getValue(${zoekconfiguraties});
+    if (typeof zzcs === 'undefined' || !zzcs) {
         zzcs = [{}];
     }
-	var ltree = getValue(${tree});
-    if(typeof ltree === 'undefined' || !ltree) {
+    var ltree = getValue(${tree});
+    if (typeof ltree === 'undefined' || !ltree) {
         ltree = null;
     }
-	
+
     B3PGissuite.config = {
         'showDebugContent': false,
         'waitUntillFullyLoaded': false,
@@ -66,8 +66,8 @@
             'gebruiker': <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>,
             'demogebruiker': <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>
         },
-        'sldServletUrl': window.location.protocol + "//" +  window.location.host +"<html:rewrite page='/CreateSLD'/>",
-        'zoekconfiguraties': zzcs, 
+        'sldServletUrl': window.location.protocol + "//" + window.location.host + "<html:rewrite page='/CreateSLD'/>",
+        'zoekconfiguraties': zzcs,
         'kburl': "${kburl}",
         'kbcode': "${kbcode}",
         'themaTree': ltree,
@@ -77,7 +77,7 @@
         'bbox': '${extent}',
         /* Applicatie extent */
         'appExtent': checkValidity("${configMap["extent"]}") ? "${configMap["extent"]}" : "12000,304000,280000,620000",
-        'fullExtent': checkValidity("${configMap["fullextent"]}") ? "${configMap["fullextent"]}" :  "",
+        'fullExtent': checkValidity("${configMap["fullextent"]}") ? "${configMap["fullextent"]}" : "",
         // Resolution
         'resolution': checkValidity("${resolution}") ? "${resolution}" : "",
         'tilingResolutions': checkValidity("${configMap["tilingResolutions"]}") ? "${configMap["tilingResolutions"]}" : "",
@@ -90,11 +90,11 @@
         'searchClusterId': '${searchClusterId}',
         'searchSldVisibleValue': '${searchSldVisibleValue}',
         /* Viewer type */
-        'viewerType': checkValidity("${configMap["viewerType"]}") ? "${configMap["viewerType"]}" :  "flamingo",
+        'viewerType': checkValidity("${configMap["viewerType"]}") ? "${configMap["viewerType"]}" : "flamingo",
         /* Viewer type */
-        'viewerTemplate': checkValidity("${configMap["viewerTemplate"]}") ? "${configMap["viewerTemplate"]}" :  "standalone",
+        'viewerTemplate': checkValidity("${configMap["viewerTemplate"]}") ? "${configMap["viewerTemplate"]}" : "standalone",
         /* ObjectInfo type */
-        'objectInfoType': checkValidity("${configMap["objectInfoType"]}") ? "${configMap["objectInfoType"]}" :  "popup",
+        'objectInfoType': checkValidity("${configMap["objectInfoType"]}") ? "${configMap["objectInfoType"]}" : "popup",
         /* Variable op true zetten als er gebruik wordt gemaakt van uitschuifbare panelen */
         'usePanelControls': defaultTrue(${configMap["usePanelControls"]}),
         /* True als de admin- of metadata in een popup wordt getoond
@@ -113,10 +113,10 @@
          * 1 regel en 1 thema aan admindata is. De waarde is voor het aantal kollomen dat weergegeven moet
          * worden om automatisch door te sturen. (bijv: Als de kollomen id, naam, link zijn moet er 3 staan
          * als de admindata automatisch moeten worden doorgestuurd) */
-        'autoRedirect': checkValidity(${configMap["autoRedirect"]}) ? getValue(${configMap["autoRedirect"]}) :  2,
+        'autoRedirect': checkValidity(${configMap["autoRedirect"]}) ? getValue(${configMap["autoRedirect"]}) : 2,
         /* Het aantal pixels dat moet worden gebruikt als er ergens in de kaart is geklikt
          * en info wordt opgevraagd. Dus een tolerantie. */
-        'tolerance': checkValidity(${configMap["tolerance"]}) ? getValue(${configMap["tolerance"]}) :  1,
+        'tolerance': checkValidity(${configMap["tolerance"]}) ? getValue(${configMap["tolerance"]}) : 1,
         /* Bepaalt of legend afbeeldingen ook in de kaartlagen tree zichtbaar kunnen worden gemaakt. */
         'showLegendInTree': defaultTrue(${configMap["showLegendInTree"]}),
         /* Bepaalt of ouder clusters allemaal aangevinkt moeten staan voordat
@@ -130,27 +130,27 @@
          * False als de volgorde alleen bepaald moet kunnen worden door de buttons Omhoog en Omlaag */
         'useSortableFunction': defaultTrue(${configMap["useSortableFunction"]}),
         // instellen in ms, dus 5000 voor 5 seconden
-        'layerDelay': checkValidity(${configMap["layerDelay"]}) ? getValue(${configMap["layerDelay"]}) :  5000,
+        'layerDelay': checkValidity(${configMap["layerDelay"]}) ? getValue(${configMap["layerDelay"]}) : 5000,
         /* de vertraging voor het refreshen van de kaart. */
-        'refreshDelay': checkValidity(${configMap["refreshDelay"]}) ? getValue(${configMap["refreshDelay"]}) :  100,
+        'refreshDelay': checkValidity(${configMap["refreshDelay"]}) ? getValue(${configMap["refreshDelay"]}) : 100,
         /*
          * Geef hier de zoekconfigs op die zichtbaar moeten zijn (moet later in een tabel en dan in de action alleen
          * die configuraties ophalen die in de settings tabel staan. Dus deze param weg (+ bijhorende functie).
          * Voor alles wat weg moet staat: ZOEKCONFIGURATIEWEG (even zoeken op dus) */
-        'zoekConfigIds': checkValidity(${configMap["zoekConfigIds"]}) ? getValue(${configMap["zoekConfigIds"]}) :  "",
+        'zoekConfigIds': checkValidity(${configMap["zoekConfigIds"]}) ? getValue(${configMap["zoekConfigIds"]}) : "",
         /* Voorzieningen */
-        'voorzieningConfigIds': checkValidity(${configMap["voorzieningConfigIds"]}) ? getValue(${configMap["voorzieningConfigIds"]}) :  "",
-        'voorzieningConfigStraal': checkValidity(${configMap["voorzieningConfigStraal"]}) ? getValue(${configMap["voorzieningConfigStraal"]}) :  "",
-        'voorzieningConfigTypes': checkValidity(${configMap["voorzieningConfigTypes"]}) ? getValue(${configMap["voorzieningConfigTypes"]}) :  "",
+        'voorzieningConfigIds': checkValidity(${configMap["voorzieningConfigIds"]}) ? getValue(${configMap["voorzieningConfigIds"]}) : "",
+        'voorzieningConfigStraal': checkValidity(${configMap["voorzieningConfigStraal"]}) ? getValue(${configMap["voorzieningConfigStraal"]}) : "",
+        'voorzieningConfigTypes': checkValidity(${configMap["voorzieningConfigTypes"]}) ? getValue(${configMap["voorzieningConfigTypes"]}) : "",
         /* Vergunningen */
-        'vergunningConfigIds': checkValidity(${configMap["vergunningConfigIds"]}) ? getValue(${configMap["vergunningConfigIds"]}) :  "",
-        'vergunningConfigStraal': checkValidity(${configMap["vergunningConfigStraal"]}) ? getValue(${configMap["vergunningConfigStraal"]}) :  "",
+        'vergunningConfigIds': checkValidity(${configMap["vergunningConfigIds"]}) ? getValue(${configMap["vergunningConfigIds"]}) : "",
+        'vergunningConfigStraal': checkValidity(${configMap["vergunningConfigStraal"]}) ? getValue(${configMap["vergunningConfigStraal"]}) : "",
         /*
          * De minimale groote van een bbox van een gezocht object. Als de bbox kleiner is wordt deze vergroot tot de
          * hier gegeven waarde. Dit om zoeken op punten mogelijk te maken. */
-        'minBboxZoeken': checkValidity(${configMap["minBboxZoeken"]}) ? getValue(${configMap["minBboxZoeken"]}) :  1000,
+        'minBboxZoeken': checkValidity(${configMap["minBboxZoeken"]}) ? getValue(${configMap["minBboxZoeken"]}) : 1000,
         /* Maximaal aantal zoekresultaten */
-        'maxResults': checkValidity(${configMap["maxResults"]}) ? getValue(${configMap["maxResults"]}) :  25,
+        'maxResults': checkValidity(${configMap["maxResults"]}) ? getValue(${configMap["maxResults"]}) : 25,
         /* Gebruiker wisselt tabbladen door er met de muis overheen te gaan. Indien false
          * dan zijn de tabbladen te wisselen door te klikken */
         'useMouseOverTabs': defaultTrue(${configMap["useMouseOverTabs"]}),
@@ -159,7 +159,7 @@
         'enabledtabs': [${configMap["tabs"]}],
         'enabledtabsLeft': [${configMap["tabsLeft"]}],
         /* planselectie gebruikt 2 zoekingangen (id's) */
-        'planSelectieIds': checkValidity(${configMap["planSelectieIds"]}) ? getValue(${configMap["planSelectieIds"]}) :  "0,0",
+        'planSelectieIds': checkValidity(${configMap["planSelectieIds"]}) ? getValue(${configMap["planSelectieIds"]}) : "0,0",
         /* Buttons boven viewer aan / uit */
         'showRedliningTools': defaultFalse(${configMap["showRedliningTools"]}),
         'showBufferTool': defaultFalse(${configMap["showBufferTool"]}),
@@ -169,62 +169,64 @@
         'showLayerSelectionTool': defaultFalse(${configMap["showLayerSelectionTool"]}),
         'showGPSTool': defaultFalse(${configMap["showGPSTool"]}),
         'showEditTool': defaultFalse(${configMap["showEditTool"]}),
-        'gpsBuffer': checkValidity(${configMap["gpsBuffer"]}) ? getValue(${configMap["gpsBuffer"]}) :  1000,
-        'layerGrouping': checkValidity("${configMap["layerGrouping"]}") ? "${configMap["layerGrouping"]}" :  "lg_forebackground",
-        'popupWidth': checkValidity("${configMap["popupWidth"]}") ? "${configMap["popupWidth"]}" :  "90%",
-        'popupHeight': checkValidity("${configMap["popupHeight"]}") ? "${configMap["popupHeight"]}" :  "20%",
-        'popupLeft': checkValidity("${configMap["popupLeft"]}") ? "${configMap["popupLeft"]}" :  "5%",
-        'popupTop': checkValidity("${configMap["popupTop"]}") ? "${configMap["popupTop"]}" :  "75%",
-        'bookmarkAppcode': checkValidity("${bookmarkAppcode}") ? "${bookmarkAppcode}" :  "",
-        'tekstBlokken': checkValidity(${tekstBlokken}) ? getValue(${tekstBlokken}) :  [],
+        'gpsBuffer': checkValidity(${configMap["gpsBuffer"]}) ? getValue(${configMap["gpsBuffer"]}) : 1000,
+        'layerGrouping': checkValidity("${configMap["layerGrouping"]}") ? "${configMap["layerGrouping"]}" : "lg_forebackground",
+        'popupWidth': checkValidity("${configMap["popupWidth"]}") ? "${configMap["popupWidth"]}" : "90%",
+        'popupHeight': checkValidity("${configMap["popupHeight"]}") ? "${configMap["popupHeight"]}" : "20%",
+        'popupLeft': checkValidity("${configMap["popupLeft"]}") ? "${configMap["popupLeft"]}" : "5%",
+        'popupTop': checkValidity("${configMap["popupTop"]}") ? "${configMap["popupTop"]}" : "75%",
+        'bookmarkAppcode': checkValidity("${bookmarkAppcode}") ? "${bookmarkAppcode}" : "",
+        'tekstBlokken': checkValidity(${tekstBlokken}) ? getValue(${tekstBlokken}) : [],
         'datasetDownload': defaultFalse(${configMap["datasetDownload"]}),
         'showServiceUrl': defaultFalse(${configMap["showServiceUrl"]}),
-        'startLocationX': checkValidity(${startLocationX}) ? getValue(${startLocationX}) :  "",
-        'startLocationY': checkValidity(${startLocationY}) ? getValue(${startLocationY}) :  "",
-        'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' :  "themas",
-        'cfgActiveTabLeft': checkValidity('${configMap["activeTabLeft"]}') ? '${configMap["activeTabLeft"]}' :  null,
-        'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' :  "288",
-        'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' :  "288",
+        'startLocationX': checkValidity(${startLocationX}) ? getValue(${startLocationX}) : "",
+        'startLocationY': checkValidity(${startLocationY}) ? getValue(${startLocationY}) : "",
+        'cfgActiveTab': checkValidity('${configMap["activeTab"]}') ? '${configMap["activeTab"]}' : "themas",
+        'cfgActiveTabLeft': checkValidity('${configMap["activeTabLeft"]}') ? '${configMap["activeTabLeft"]}' : null,
+        'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' : "288",
+        'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' : "288",
         'showInfoTab': checkValidity('${configMap["showInfoTab"]}') ? '${configMap["showInfoTab"]}' : null,
-        'cmsPageId' : checkValidity('${cmsPageId}') ? '${cmsPageId}' : '',
+        'cmsPageId': checkValidity('${cmsPageId}') ? '${cmsPageId}' : '',
         'theme': checkValidity('${theme}') ? '${theme}' : '',
         'helpUrl': checkValidity('${configMap["helpUrl"]}') ? '${configMap["helpUrl"]}' : null,
         'showGoogleMapsIcon': defaultFalse(${configMap["showGoogleMapsIcon"]}),
         'showBookmarkIcon': defaultFalse(${configMap["showBookmarkIcon"]}),
-        'contactUrl': checkValidity('${configMap["contactUrl"]}') ? '${configMap["contactUrl"]}' : null
+        'contactUrl': checkValidity('${configMap["contactUrl"]}') ? '${configMap["contactUrl"]}' : null,
+        'tekenKaartlaagId': checkValidity('${configMap["tekenKaartlaagId"]}') ? '${configMap["tekenKaartlaagId"]}' : null,
+        'tekenFilterColumn': checkValidity('${configMap["tekenFilterColumn"]}') ? '${configMap["tekenFilterColumn"]}' : null
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
-    if(B3PGissuite.config.viewerType === 'flamingo') {
+    if (B3PGissuite.config.viewerType === 'flamingo') {
         var flashVersion = B3PGissuite.commons.flashCheck().pv;
-        if(flashVersion[0] === 0) {
+        if (flashVersion[0] === 0) {
             B3PGissuite.config.viewerType = 'openlayers';
         }
     }
-    if(B3PGissuite.config.objectInfoType === "geen") {
+    if (B3PGissuite.config.objectInfoType === "geen") {
         B3PGissuite.config.usePopup = false;
         B3PGissuite.config.usePanel = false;
-        B3PGissuite.config.usePanelControls =  false;
+        B3PGissuite.config.usePanelControls = false;
         B3PGissuite.config.useDivPopup = false;
         B3PGissuite.config.useBalloonPopup = false;
     }
-    if(B3PGissuite.config.objectInfoType === "popup") {
+    if (B3PGissuite.config.objectInfoType === "popup") {
         B3PGissuite.config.usePopup = true;
         B3PGissuite.config.usePanel = false;
-        B3PGissuite.config.usePanelControls =  false;
+        B3PGissuite.config.usePanelControls = false;
         B3PGissuite.config.useDivPopup = true;
         B3PGissuite.config.useBalloonPopup = false;
     }
-    if(B3PGissuite.config.objectInfoType === "paneel") {
+    if (B3PGissuite.config.objectInfoType === "paneel") {
         B3PGissuite.config.usePopup = false;
         B3PGissuite.config.usePanel = true;
         B3PGissuite.config.useDivPopup = false;
         B3PGissuite.config.useBalloonPopup = false;
     }
-    if (B3PGissuite.config.objectInfoType === "balloon"){
+    if (B3PGissuite.config.objectInfoType === "balloon") {
         B3PGissuite.config.usePopup = false;
         B3PGissuite.config.usePanel = false;
-        B3PGissuite.config.usePanelControls =  false;
+        B3PGissuite.config.usePanelControls = false;
         B3PGissuite.config.useDivPopup = false;
         B3PGissuite.config.useBalloonPopup = true;
     }
@@ -233,26 +235,26 @@
      * Definitie beschikbare tabbladen.
      */
     B3PGissuite.config.tabbladen = {
-        "themas": { "id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeTabComponent", 'options': { 'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll } },
-        "zoeken": { "id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchTabComponent", "options": { "hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt} } },
-        "gebieden": { "id": "gebieden", "contentid": "objectframeViewer", "name": "Gebieden", "class": "IframeTabComponent", 'options': { 'src': 'empty_iframe.jsp' } },
-        "analyse": { "id": "analyse", "contentid": "analyseframeViewer", "name": "Analyse", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/vieweranalysedata.do' } },
-        "legenda": { "id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendTabComponent", 'options': { 'useSortableFunction': B3PGissuite.config.useSortableFunction, 'layerDelay': B3PGissuite.config.layerDelay } },
+        "themas": {"id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeTabComponent", 'options': {'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll}},
+        "zoeken": {"id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchTabComponent", "options": {"hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt}}},
+        "gebieden": {"id": "gebieden", "contentid": "objectframeViewer", "name": "Gebieden", "class": "IframeTabComponent", 'options': {'src': 'empty_iframe.jsp'}},
+        "analyse": {"id": "analyse", "contentid": "analyseframeViewer", "name": "Analyse", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/vieweranalysedata.do'}},
+        "legenda": {"id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendTabComponent", 'options': {'useSortableFunction': B3PGissuite.config.useSortableFunction, 'layerDelay': B3PGissuite.config.layerDelay}},
         //"informatie": { "id": "informatie", "contentid": "beschrijvingVakViewer", "name": "Informatie", "class": "IframeTabComponent", 'options': { 'src': 'empty_iframe.jsp' } },
-        "planselectie": { "id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionTabComponent" },
-        "meldingen": { "id": "meldingen", "contentid": "meldingenframeViewer", "name": "Melding", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewermeldingen.do?prepareMelding=t' } },
+        "planselectie": {"id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionTabComponent"},
+        "meldingen": {"id": "meldingen", "contentid": "meldingenframeViewer", "name": "Melding", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewermeldingen.do?prepareMelding=t'}},
         // "voorzieningen": { "id": "voorzieningen", "contentid": "voorzieningframeZoeker", "name": "Voorziening", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/zoekVoorziening.do' } },
         // "vergunningen": { "id": "vergunningen", "contentid": "vergunningframeZoeker", "name": "Vergunning", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/zoekVergunning.do' } },
-        "redlining": { "id": "redlining", "contentid": "redliningframeViewer", "name": "Redlining", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerredlining.do?prepareRedlining=t' } },
+        "redlining": {"id": "redlining", "contentid": "redliningframeViewer", "name": "Redlining", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewerredlining.do?prepareRedlining=t'}},
         // "cms": {id: "cms", contentid: "cmsvak", name: "Extra", "class": "CMSTabComponent", 'options': { 'tekstBlokken': B3PGissuite.config.tekstBlokken } },
-        "bag": {id: "bag", contentid: "bagframeViewer", name: "BAG", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerbag.do' } },
-        "wkt": {id: "wkt", contentid: "wktframeViewer", name: "WKT", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerwkt.do' } },
-        "transparantie": {id: "transparantie", contentid: "transparantieframeViewer", name: "Transparantie", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewertransparantie.do' } },
-        "tekenen" : {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/viewerteken.do' } },
-        "uploadpoints": { "id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': { 'src': '/gisviewer/uploadtemppoints.do' } },
-        "layerinfo": { "id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': { } }
+        "bag": {id: "bag", contentid: "bagframeViewer", name: "BAG", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewerbag.do'}},
+        "wkt": {id: "wkt", contentid: "wktframeViewer", name: "WKT", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewerwkt.do'}},
+        "transparantie": {id: "transparantie", contentid: "transparantieframeViewer", name: "Transparantie", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewertransparantie.do'}},
+        "tekenen": {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewerteken.do'}},
+        "uploadpoints": {"id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/uploadtemppoints.do'}},
+        "layerinfo": {"id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': {}}
     };
-    
+
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
 </script>
 
@@ -321,7 +323,7 @@
 
 <div id="mapcontent"><div id="flashmelding"></div></div>
 <script type="text/javascript">
-    if(B3PGissuite.config.viewerType === 'flamingo') {
+    if (B3PGissuite.config.viewerType === 'flamingo') {
         setTimeout(function() {
             $j("#flashmelding").html('<strong class="noflamingoerror"><br/><br/><br/><br/><br/>U heeft de Flash plugin nodig om de kaart te kunnen zien.<br/>Deze kunt u <a href="http://get.adobe.com/flashplayer/" target="_blank">hier</a> gratis downloaden.</strong>');
         }, 2000);
@@ -331,58 +333,58 @@
 <div id="tabjes"><ul id="nav" class="tabsul"></ul></div>
 <div id="tab_container"></div>
 <div id="css_props"></div>
-        
+
 <script type="text/javascript">
     (function() {
-        <c:if test="${not empty param.debug}">B3PGissuite.commons.setDebug(true);</c:if>
-        // Init CSS properties for configured tab width
-        B3PGissuite.get('Layout').configureTabWidth();
-        B3PGissuite.get('Layout').prepareTabs();
-        // Init tab controllers
-        var rightTabComponent = B3PGissuite.createComponent('TabComponent', { 
-            direction: 'right',
-            labelContainer: 'tabjes',
-            tabContainer: 'tab_container',
-            useClick: !B3PGissuite.config.useMouseOverTabs, 
-            useHover: B3PGissuite.config.useMouseOverTabs,
-            defaultTab: B3PGissuite.config.cfgActiveTab,
-            enabledTabs: B3PGissuite.config.enabledtabs
-        });
-        var leftTabComponent = B3PGissuite.createComponent('TabComponent', {
-            direction: 'left',
-            labelContainer: 'leftcontenttabjes',
-            tabContainer: 'leftcontent',
-            useClick: !B3PGissuite.config.useMouseOverTabs,
-            useHover: B3PGissuite.config.useMouseOverTabs,
-            defaultTab: B3PGissuite.config.cfgActiveTabLeft,
-            enabledTabs: B3PGissuite.config.enabledtabsLeft
-        });
-        // Set tabcomponents to layoutmanager
-        B3PGissuite.get('Layout').setTabComponents(rightTabComponent, leftTabComponent);
-        // Build the layout (admindatadiv, panelcontrols etc)
-        // Argument is the html-element which is used to add after
-        B3PGissuite.get('Layout').createLayout($j('#css_props'));
-        /**
-        * Start off with initMapComponent()
-        */
-        B3PGissuite.viewerComponent = B3PGissuite.createComponent('ViewerComponent', { viewerType: B3PGissuite.config.viewerType });
-        B3PGissuite.viewerComponent.initMapComponent();
-        B3PGissuite.commons.attachTransitionListener($j("#mapcontent")[0], function(){
-            B3PGissuite.viewerComponent.updateSizeOL();
-        });
-        // Hide loading screen
-        B3PGissuite.get('Layout').initHideLoadingScreen();
+    <c:if test="${not empty param.debug}">B3PGissuite.commons.setDebug(true);</c:if>
+            // Init CSS properties for configured tab width
+            B3PGissuite.get('Layout').configureTabWidth();
+            B3PGissuite.get('Layout').prepareTabs();
+            // Init tab controllers
+            var rightTabComponent = B3PGissuite.createComponent('TabComponent', {
+                direction: 'right',
+                labelContainer: 'tabjes',
+                tabContainer: 'tab_container',
+                useClick: !B3PGissuite.config.useMouseOverTabs,
+                useHover: B3PGissuite.config.useMouseOverTabs,
+                defaultTab: B3PGissuite.config.cfgActiveTab,
+                enabledTabs: B3PGissuite.config.enabledtabs
+            });
+            var leftTabComponent = B3PGissuite.createComponent('TabComponent', {
+                direction: 'left',
+                labelContainer: 'leftcontenttabjes',
+                tabContainer: 'leftcontent',
+                useClick: !B3PGissuite.config.useMouseOverTabs,
+                useHover: B3PGissuite.config.useMouseOverTabs,
+                defaultTab: B3PGissuite.config.cfgActiveTabLeft,
+                enabledTabs: B3PGissuite.config.enabledtabsLeft
+            });
+            // Set tabcomponents to layoutmanager
+            B3PGissuite.get('Layout').setTabComponents(rightTabComponent, leftTabComponent);
+            // Build the layout (admindatadiv, panelcontrols etc)
+            // Argument is the html-element which is used to add after
+            B3PGissuite.get('Layout').createLayout($j('#css_props'));
+            /**
+             * Start off with initMapComponent()
+             */
+            B3PGissuite.viewerComponent = B3PGissuite.createComponent('ViewerComponent', {viewerType: B3PGissuite.config.viewerType});
+            B3PGissuite.viewerComponent.initMapComponent();
+            B3PGissuite.commons.attachTransitionListener($j("#mapcontent")[0], function() {
+                B3PGissuite.viewerComponent.updateSizeOL();
+            });
+            // Hide loading screen
+            B3PGissuite.get('Layout').initHideLoadingScreen();
 
-        <c:if test="${not empty expandNodes}">
+    <c:if test="${not empty expandNodes}">
             (function() {
                 var treeComponent = B3PGissuite.get('TreeTabComponent'),
-                    expandNodes=${expandNodes};
-                if(treeComponent !== null && expandNodes !== null){
+                        expandNodes =${expandNodes};
+                if (treeComponent !== null && expandNodes !== null) {
                     treeComponent.expandNodes(expandNodes);
                 }
             }());
-        </c:if>
-    }());
+    </c:if>
+        }());
 </script>
 <div id="dialog-download-metadata" title="Kaartlaag opties" style="display: none;">
     <p>

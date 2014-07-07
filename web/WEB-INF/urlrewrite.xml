@@ -15,7 +15,7 @@
     </rule>    
     <rule>
         <note>For SLD Servlet with REST params</note>
-        <from>^/services/CreateSLD/propname/([a-zA-Z_]+)/propvalue/([a-zA-Z0-9_]+)/id/([0-9]+)$</from>
-        <to>/services/CreateSLD?propname=$1&amp;propvalue=$2&amp;id=$3</to>
+        <from>^/services/CreateSLD/appcode/([a-zA-Z0-9_]+)/propname/([a-zA-Z_]+)/propvalue/([a-zA-Z0-9_]+)/id/([0-9]+)$</from>
+        <to>/services/CreateSLD?appcode=$1&amp;propname=$2&amp;propvalue=$3&amp;id=$4</to>
     </rule>
 </urlrewrite>

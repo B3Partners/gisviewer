@@ -1047,13 +1047,13 @@ B3PGissuite.defineComponent('Admindata', {
                     fLink = $j('<a href="#" id="' + this.uniqueId('jsFunction_') + '">' + funcarray[0] + '</a>');
                 }
                 fLink.click(function() {
-                    eval(funcarray[1]);
+                    me.admindataEval(funcarray[1]);
                 });
                 td.html(fLink);
             } else {
                 var icon3 = $j('<img src="' + this.options.flagicon + '" alt="Voer functie uit" title="Voer functie uit" />')
                         .click(function() {
-                    eval(waarde.value);
+                    me.admindataEval(waarde.value);
                 });
                 td.html(icon3);
             }
@@ -1067,7 +1067,7 @@ B3PGissuite.defineComponent('Admindata', {
                 var pk = gegevensbron.adminPk;
                 var val = record.id;
 
-                me.gerParent().B3PGissuite.viewercommons.getDestinationWkt(id, pk, val);
+                me.getParent().B3PGissuite.viewercommons.getDestinationWkt(id, pk, val);
             });
             td.html(gIcon);
         }
@@ -1172,6 +1172,17 @@ B3PGissuite.defineComponent('Admindata', {
         tr.append(td);
 
         return tr;
+    },
+      
+    /**
+     * In the Gisviewerconfig is het mogelijk om javascript commando's te gebruiken die worden
+     * uitgevoerd. Omdat deze als string binnenkomen moeten we voor nu eval() gebruiken. Omdat
+     * de functies die worden uitgevoerd via eval() staan gedefinieerd in de Admindata klasse,
+     * moeten ze ook in die context worden uitgevoerd. Vandaar de B3PGissuite.get('Admindata').
+     * prefix voor de eval commando's
+     */
+    admindataEval: function(evalFn) {
+        eval("B3PGissuite.get('Admindata')." + evalFn);
     },
 
     /*

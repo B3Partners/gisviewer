@@ -1094,31 +1094,48 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         /* Metadata tonen, WMS Service url en Annuleren */
         if (item.metadatalink && item.metadatalink.length > 1 && (item.gegevensbronid == undefined || item.gegevensbronid < 1)) {
             lnk.onclick = function() {
-                jQuery("#dialog-download-metadata").dialog("option", "buttons", {
-                    "Metadata": function() {
-                        if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
-                            B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
-                            jQuery(this).dialog("close");
-                        }
-                    },
-                    "Url": function() {
-                        if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
-                            jQuery(this).dialog("close");
+                if (B3PGissuite.config.showServiceUrl) {
+                    jQuery("#dialog-download-metadata").dialog("option", "buttons", {
+                        "Metadata": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                                jQuery(this).dialog("close");
+                            }
+                        },
+                        "Url": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                jQuery(this).dialog("close");
 
-                            var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
-                            jQuery("#input_wmsserviceurl").val(url);
+                                var url = B3PGissuite.config.kburl + "service=WMS&request=GetCapabilities&version=1.0.0";
+                                jQuery("#input_wmsserviceurl").val(url);
 
-                            B3PGissuite.commons.unblockViewerUI();
-                            jQuery("#dialog-wmsservice-url").dialog('open');
+                                B3PGissuite.commons.unblockViewerUI();
+                                jQuery("#dialog-wmsservice-url").dialog('open');
+                            }
+                        },
+                        "Annuleren": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                jQuery(this).dialog("close");
+                                B3PGissuite.commons.unblockViewerUI();
+                            }
                         }
-                    },
-                    "Annuleren": function() {
-                        if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
-                            jQuery(this).dialog("close");
-                            B3PGissuite.commons.unblockViewerUI();
+                    });
+                }else{
+                    jQuery("#dialog-download-metadata").dialog("option", "buttons", {
+                        "Metadata": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                B3PGissuite.commons.iFramePopup(item.metadatalink, false, infoTitle, widthMetadataPopup, heightMetadataPopup, metadataPopupBlocksViewer, true);
+                                jQuery(this).dialog("close");
+                            }
+                        },
+                        "Annuleren": function() {
+                            if (jQuery("#dialog-download-metadata").dialog("isOpen")) {
+                                jQuery(this).dialog("close");
+                                B3PGissuite.commons.unblockViewerUI();
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 jQuery('div.ui-dialog-buttonset .ui-button .ui-button-text').each(function() {
                     jQuery(this).html(jQuery(this).parent().attr('text'));

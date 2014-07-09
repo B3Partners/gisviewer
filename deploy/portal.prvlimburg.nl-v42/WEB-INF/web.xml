@@ -63,7 +63,7 @@
         </init-param>
         <init-param>
             <param-name>cacheOnDiskPath</param-name>
-            <param-value>/opt/data/kaartenbalie-prd/downloads/</param-value>
+            <param-value>/opt/data/kaartenbalie-prd/cache/</param-value>
         </init-param>
 
 		<load-on-startup>1</load-on-startup>

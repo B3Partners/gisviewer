@@ -21,7 +21,7 @@
                     
                     <!-- labels met uitsnede -->
                     <fo:table>                                                                
-                        <fo:table-column column-width="10.0cm"/>
+                        <fo:table-column column-width="14.0cm"/>
 
                         <fo:table-header>
                             <fo:table-cell>
@@ -36,8 +36,8 @@
                                     <fo:block width="10.0cm">
                                         <fo:table>
 
-                                            <fo:table-column column-width="5.0cm" />
-                                            <fo:table-column column-width="5.0cm" />
+                                            <fo:table-column column-width="6.0cm" />
+                                            <fo:table-column column-width="8.0cm" />
 
                                             <fo:table-header>
                                                 <fo:table-cell>

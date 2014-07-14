@@ -18,8 +18,11 @@
     <xsl:variable name="user-table-width" select="'99%'"/>
     
     <!-- uitsnede -->
-    <xsl:variable name="uitsnede-w" select="'150'"/>
-    <xsl:variable name="uitsnede-h" select="'100'"/>
+    <xsl:variable name="uitsnede-w" select="'267'"/>
+    <xsl:variable name="uitsnede-h" select="'200'"/>
+    
+    <!-- higher value more space for flat record -->
+    <xsl:variable name="child-top-start" select="'0.5cm'"/>
     
     <!-- margins -->
     <xsl:variable name="user-margin-left" select="'0.0cm'"/>

@@ -35,7 +35,7 @@
                             </fo:block>
                         </fo:block-container>
                         
-                        <fo:block-container margin-top="1.7cm" margin-left="12.0cm"> 
+                        <fo:block-container margin-top="1.7cm" margin-left="9.85cm"> 
                             <xsl:variable name="url" select="/reportinfo/image_url"/>                        
                             <fo:block>
                                 <fo:external-graphic border-style="solid" border-width="medium" src="url('data:image/jpeg;base64,{$url}')" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="{$uitsnede-w}" height="{$uitsnede-h}"/>
@@ -51,7 +51,7 @@
                         </xsl:if>
                           
                         <xsl:if test="count(/reportinfo/bron/records/bronnen) &gt; 0">
-                            <fo:block-container margin-top="0.0cm" left="0cm">      
+                            <fo:block-container margin-top="{$child-top-start}" left="0cm">      
                                 <xsl:for-each select="/reportinfo/bron/records/bronnen">                                
                                     <xsl:variable name="nummer" select="position()"/>
                                 

@@ -312,7 +312,7 @@
 	</servlet-mapping>
 	<session-config>
 		<session-timeout>
-            480
+            30
         </session-timeout>
 	</session-config>
 	<welcome-file-list>

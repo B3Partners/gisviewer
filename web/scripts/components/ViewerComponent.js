@@ -1195,7 +1195,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
             });
         }
     },
-
+    
+    getHighlightLayers: function() {
+        return this.highlightLayers;
+    },
+    
     /* backend heeft wkt teruggegeven */
     returnHighlight: function(wkt) {
         /* Fout in back-end of wkt is een POINT */

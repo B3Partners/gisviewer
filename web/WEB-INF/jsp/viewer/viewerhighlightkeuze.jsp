@@ -44,7 +44,7 @@
         <h2>Meerdere kaartlagen actief</h2>
         <p>Kies de kaartlaag met het object die u wilt selecteren.</p>
         <script type="text/javascript">
-            var parentViewerComponent = getParent().viewerComponent,
+            var parentViewerComponent = getParent().B3PGissuite.get('ViewerComponent'),
                 highlightLayers = parentViewerComponent.getHighlightLayers();
             for (var i=0; i < highlightLayers.length; i++) {
                 var item = highlightLayers[i];

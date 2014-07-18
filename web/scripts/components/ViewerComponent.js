@@ -1158,23 +1158,26 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         var tol = B3PGissuite.config.tolerance;
 
-        /* indien meerdere analyse themas dan popup voor keuze */
-        for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
-            var item = B3PGissuite.vars.enabledLayerItems[i];
+        /* indien meerdere analyse themas dan popup voor keuze. 
+         * Niet elke keer lijst aanvullen bij popup, want dan krijg je dubbele */
+        if(this.highlightLayers.length < 1){
+            for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
+                var item = B3PGissuite.vars.enabledLayerItems[i];
 
-            var object = document.getElementById(item.id);
+                var object = document.getElementById(item.id);
 
-            /* alleen uitvoern als configuratie optie hiervan op true staat */
-            if (B3PGissuite.config.useInheritCheckbox) {
-                /* Item alleen toevoegen aan de layers indien
-                 * parent cluster(s) allemaal aangevinkt staan of
-                 * geen cluster heeft */
-                if (treeComponent !== null && !treeComponent.itemHasAllParentsEnabled(object))
-                    continue;
-            }
+                /* alleen uitvoern als configuratie optie hiervan op true staat */
+                if (B3PGissuite.config.useInheritCheckbox) {
+                    /* Item alleen toevoegen aan de layers indien
+                     * parent cluster(s) allemaal aangevinkt staan of
+                     * geen cluster heeft */
+                    if (treeComponent !== null && !treeComponent.itemHasAllParentsEnabled(object))
+                        continue;
+                }
 
-            if (item.highlight == 'on' && B3PGissuite.viewercommons.isItemInScale(item, scale) ) {
-                this.highlightLayers.push(item);
+                if (item.highlight == 'on' && B3PGissuite.viewercommons.isItemInScale(item, scale) ) {
+                    this.highlightLayers.push(item);
+                }
             }
         }
 

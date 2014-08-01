@@ -188,6 +188,10 @@
 			<param-value>gemeente@venray.nl</param-value>
 		</init-param>
 		<init-param>
+		    	<param-name>bccEmail</param-name>
+		    	<param-value>geo@venray.nl</param-value>
+        	</init-param>
+		<init-param>
 			<param-name>emailSuffix</param-name>
 			<param-value/>
 		</init-param>

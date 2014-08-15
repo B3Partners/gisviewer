@@ -12,6 +12,12 @@
         <param-value>nl</param-value>
     </context-param>
 
+	<!-- Waar naartoe na uitloggen? Standaard /index.do, override in context.xml -->
+    <context-param>
+        <param-name>logout.destination</param-name>
+        <param-value>/index.do</param-value>
+    </context-param>
+
     <filter>
         <filter-name>Security Filter</filter-name>
         <filter-class>org.securityfilter.filter.SecurityFilter</filter-class>
@@ -288,6 +294,15 @@
 		</init-param>
 	</servlet>
 
+	<servlet>
+        <servlet-name>CreateSLD</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
+        <init-param>
+            <param-name>defaultSld</param-name>
+            <param-value>/WEB-INF/defaultSld.xml</param-value>
+        </init-param>
+    </servlet>    
+
 	<servlet-mapping>
 		<servlet-name>GetThemesServlet</servlet-name>
 		<url-pattern>/GetThemes</url-pattern>
@@ -348,6 +363,10 @@
 		<servlet-name>ReportServlet</servlet-name>
 		<url-pattern>/services/ReportServlet</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>CreateSLD</servlet-name>
+        <url-pattern>/services/CreateSLD/*</url-pattern>
+    </servlet-mapping>
 
     <session-config>
         <session-timeout>

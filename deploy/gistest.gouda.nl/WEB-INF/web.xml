@@ -345,7 +345,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>GetBlobServlet</servlet-name>
-		<url-pattern>/services/getBlobServlet</url-pattern>
+		<url-pattern>/services/GetBlobServlet</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
         <servlet-name>DocFetcher</servlet-name>

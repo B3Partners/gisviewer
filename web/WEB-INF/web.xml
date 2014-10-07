@@ -44,7 +44,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://b3p-boy:8084/kaartenbalie/services/</param-value>
+            <param-value>http://localhost:8080/kaartenbalie/services/</param-value>
         </init-param>
         <!--
         <init-param>

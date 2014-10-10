@@ -15,7 +15,11 @@
         <param-name>javax.servlet.jsp.jstl.fmt.locale</param-name>
         <param-value>nl</param-value>
     </context-param>
-
+    <!-- Waar naartoe na uitloggen? Standaard /index.do, override in context.xml -->
+    <context-param>
+        <param-name>logout.destination</param-name>
+        <param-value>/index.do</param-value>
+    </context-param>
     <filter>
         <filter-name>Security Filter</filter-name>
         <filter-class>org.securityfilter.filter.SecurityFilter</filter-class>
@@ -32,7 +36,14 @@
         <filter-name>Security Filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>aconfig</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
@@ -40,9 +51,23 @@
             <param-name>kburl</param-name>
             <param-value>https://test.kaartenbalie.nl/kaartenbalie/services/</param-value>
         </init-param>
+        <!--
+        <init-param>
+            <param-name>internalKbUrl</param-name>
+            <param-value>https://test.kaartenbalie.nl/kaartenbalie/services/</param-value>
+        </init-param>
+        -->
         <init-param>
             <param-name>anonymous_user</param-name>
             <param-value>anoniem</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cacheOnDisk</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cacheOnDiskPath</param-name>
+            <param-value>/opt/configs/test.kaartenbalie.nl/gisviewer/cache</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -100,6 +125,7 @@
             <param-name>xsl_A4_Liggend</param-name>
             <param-value>/WEB-INF/xsl/A4_Liggend.xsl</param-value>
         </init-param>
+        <!--
         <init-param>
             <param-name>xsl_A3_Liggend</param-name>
             <param-value>/WEB-INF/xsl/A3_Liggend.xsl</param-value>
@@ -108,6 +134,31 @@
             <param-name>xsl_A3_Staand</param-name>
             <param-value>/WEB-INF/xsl/A3_Staand.xsl</param-value>
         </init-param>
+        <init-param>
+            <param-name>xsl_A2_Staand</param-name>
+            <param-value>/WEB-INF/xsl/A2_Staand.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A2_Liggend</param-name>
+            <param-value>/WEB-INF/xsl/A2_Liggend.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A1_Staand</param-name>
+            <param-value>/WEB-INF/xsl/A1_Staand.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A1_Liggend</param-name>
+            <param-value>/WEB-INF/xsl/A1_Liggend.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A0_Staand</param-name>
+            <param-value>/WEB-INF/xsl/A0_Staand.xsl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xsl_A0_Liggend</param-name>
+            <param-value>/WEB-INF/xsl/A0_Liggend.xsl</param-value>
+        </init-param>
+        -->
         <load-on-startup>4</load-on-startup>
     </servlet>
     
@@ -173,6 +224,69 @@
         <servlet-name>UserLayerSld</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.UserLayerSldServlet</servlet-class>
     </servlet>    
+    <servlet>
+        <servlet-name>UploadedPointsWmsServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.UploadedPointsWmsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetThemesServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <description>fetches document in background to hide actual location of document</description>
+        <servlet-name>DocFetcher</servlet-name>
+        <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
+        <init-param>
+            <param-name>locationPrefix</param-name>
+            <param-value>/opt/configs/test.kaartenbalie.nl/kaartenbalie/downloads</param-value>
+        </init-param>
+        <init-param>
+            <param-name>directoryKeepDepth</param-name>
+            <param-value>1</param-value>
+        </init-param>
+        <init-param>
+            <param-name>fetchMethod</param-name>
+            <param-value>FILE</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>Data2PDF</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.Data2PDF</servlet-class>
+        <init-param>
+            <param-name>xsl_data2pdf</param-name>
+            <param-value>/WEB-INF/xsl/data2pdf.xsl</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>ReportServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.ReportServlet</servlet-class>
+        <init-param>
+            <param-name>xsl_report</param-name>
+            <param-value>/WEB-INF/xsl/report_a.xsl</param-value>
+        </init-param>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>CreateSLD</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
+        <init-param>
+            <param-name>defaultSld</param-name>
+            <param-value>/WEB-INF/defaultSld.xml</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateSLD</servlet-name>
+        <url-pattern>/services/CreateSLD/*</url-pattern>
+    </servlet-mapping> 
+    
+    <servlet-mapping>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <url-pattern>/GetThemes</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>action</servlet-name>
@@ -208,6 +322,26 @@
         <servlet-name>UserLayerSld</servlet-name>
         <url-pattern>/services/createUserSld</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadedPointsWmsServlet</servlet-name>
+        <url-pattern>/UploadedPointsWmsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <url-pattern>/services/getBlobServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DocFetcher</servlet-name>
+        <url-pattern>/services/DocFetcher/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Data2PDF</servlet-name>
+        <url-pattern>/services/Data2PDF</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReportServlet</servlet-name>
+        <url-pattern>/services/ReportServlet</url-pattern>
+    </servlet-mapping>
     
     <session-config>
         <session-timeout>
@@ -220,5 +354,17 @@
     <error-page>
         <error-code>403</error-code>
         <location>/loginError.do</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/http_404.do</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/http_500.do</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/http_503.do</location>
     </error-page>
 </web-app>

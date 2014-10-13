@@ -26,7 +26,7 @@ B3PGissuite.defineComponent('SearchTabComponent', {
         if(this.options.hasSearch) {
             this.component.append(verwijderMarker);
         }
-        this.component.append(jQuery('<p></p>').text('Kies uit de lijst de objecten waar u op wilt zoeken en vul daarna de zoekvulden in.'));
+        this.component.append(jQuery('<p></p>').text('Kies uit de lijst de objecten waar u op wilt zoeken en vul daarna de zoekvelden in.'));
         if(this.options.hasA11yStartWkt) {
             this.component.append(jQuery('<p></p>').text('U heeft een startlocatie ingesteld. Deze locatie staat op de kaart gemarkeerd. Bij zoekers die hier gebruik van maken wordt de afstand naar de startlocatie getoond.'));
             this.component.append(verwijderMarker);

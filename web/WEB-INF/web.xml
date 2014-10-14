@@ -62,7 +62,7 @@
         </init-param>
         <init-param>
             <param-name>cacheOnDiskPath</param-name>
-            <param-value>/home/boy/dev/xml/</param-value>
+            <param-value>/mnt/data/cache/</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -188,7 +188,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
         <init-param>
             <param-name>downloadPath</param-name>
-            <param-value>/media/boy/data/downloads</param-value>
+            <param-value>/mnt/data/downloads</param-value>
         </init-param>
         <init-param>
             <param-name>smtpHost</param-name>
@@ -226,7 +226,7 @@
         <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
         <init-param>
             <param-name>locationPrefix</param-name>
-            <param-value>/media/boy/data/downloads</param-value>
+            <param-value>/mnt/data/downloads</param-value>
         </init-param>
         <init-param>
             <param-name>directoryKeepDepth</param-name>

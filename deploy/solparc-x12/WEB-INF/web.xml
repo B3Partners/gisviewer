@@ -67,7 +67,7 @@
         </init-param>
         <init-param>
             <param-name>cacheOnDiskPath</param-name>
-            <param-value>/opt/configs/solparc.kaartenbalie.nl/cache</param-value>
+            <param-value>/opt/configs/solparc.kaartenbalie.nl/cache/</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -203,7 +203,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
         <init-param>
             <param-name>downloadPath</param-name>
-            <param-value>/opt/configs/solparc.kaartenbalie.nl/kaartenbalie/downloads</param-value>
+            <param-value>/opt/configs/solparc.kaartenbalie.nl/kaartenbalie/downloads/</param-value>
         </init-param>
         <init-param>
             <param-name>smtpHost</param-name>
@@ -242,7 +242,7 @@
         <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
         <init-param>
             <param-name>locationPrefix</param-name>
-            <param-value>/opt/configs/solparc.kaartenbalie.nl/kaartenbalie/downloads</param-value>
+            <param-value>/opt/configs/solparc.kaartenbalie.nl/kaartenbalie/downloads/</param-value>
         </init-param>
         <init-param>
             <param-name>directoryKeepDepth</param-name>

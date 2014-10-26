@@ -1147,7 +1147,7 @@ B3PGissuite.defineComponent('Admindata', {
                         });
                     }
                     clickable.click(function() {
-                        me.popUp(listWaarde, 'externe_link', 1000, 900);
+                        me.popUp(listWaarde, 'externe_link', 1050, 550);
                     });
                     linkspan.html(clickable);
                     td.append(linkspan);

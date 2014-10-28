@@ -264,8 +264,9 @@ B3PGissuite.defineComponent('Admindata', {
          * is configured in basisregel */
         if (gegevensbron.records && gegevensbron.records.length == 1) {
             var url;
-
-            if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
+            var popupNumber = this.getParent().B3PGissuite.config.autoRedirect;
+            if (gegevensbron.records[0].values 
+                    && gegevensbron.records[0].values.length == popupNumber) {
                 if (gegevensbron.records[0].values[0].value) {
                     url = gegevensbron.records[0].values[0].value;
                 }
@@ -333,8 +334,9 @@ B3PGissuite.defineComponent('Admindata', {
          * is configured in basisregel */
         if (gegevensbron.records && gegevensbron.records.length == 1) {
             var url;
-
-            if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
+            var popupNumber = this.getParent().B3PGissuite.config.autoRedirect;
+            if (gegevensbron.records[0].values 
+                    && gegevensbron.records[0].values.length == popupNumber) {
                 if (gegevensbron.records[0].values[0].value) {
                     url = gegevensbron.records[0].values[0].value;
                 }
@@ -597,12 +599,13 @@ B3PGissuite.defineComponent('Admindata', {
             bronTableHead.append(trHead);
         }
 
-        /* Only auto open pop-up when one record is found and one objectdata field 
-         * is configured in basisregel */
+        /* Only auto open pop-up when one record is found and the number of 
+         * objectdata fields equals configured number  */
         if (gegevensbron.records && gegevensbron.records.length == 1) {
             var url;
-
-            if (gegevensbron.records[0].values && gegevensbron.records[0].values.length == 1) {
+            var popupNumber = this.getParent().B3PGissuite.config.autoRedirect;
+            if (gegevensbron.records[0].values 
+                    && gegevensbron.records[0].values.length == popupNumber) {
                 if (gegevensbron.records[0].values[0].value) {
                     url = gegevensbron.records[0].values[0].value;
                 }
@@ -1147,7 +1150,7 @@ B3PGissuite.defineComponent('Admindata', {
                         });
                     }
                     clickable.click(function() {
-                        me.popUp(listWaarde, 'externe_link', 730, 350);
+                        me.popUp(listWaarde, 'externe_link', 1050, 550);
                     });
                     linkspan.html(clickable);
                     td.append(linkspan);

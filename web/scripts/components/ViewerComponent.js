@@ -829,7 +829,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         /* Pan tool */
         var pan = B3PGissuite.vars.webMapController.createTool("b_pan", Tool.PAN, {
-            title: 'kaartbeeld slepem'
+            title: 'kaartbeeld slepen'
         });
         B3PGissuite.vars.webMapController.addTool(pan);
 

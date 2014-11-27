@@ -1457,7 +1457,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
             return;
         }
         
-        if(!B3PGissuite.config.searchAutoIdentify) {
+        if(!B3PGissuite.config.zoekenAutoIdentify) {
             return;
         }
 

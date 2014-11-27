@@ -193,7 +193,8 @@
         'showBookmarkIcon': defaultFalse(${configMap["showBookmarkIcon"]}),
         'contactUrl': checkValidity('${configMap["contactUrl"]}') ? '${configMap["contactUrl"]}' : null,
         'tekenKaartlaagId': checkValidity('${configMap["tekenKaartlaagId"]}') ? '${configMap["tekenKaartlaagId"]}' : null,
-        'tekenFilterColumn': checkValidity('${configMap["tekenFilterColumn"]}') ? '${configMap["tekenFilterColumn"]}' : null
+        'tekenFilterColumn': checkValidity('${configMap["tekenFilterColumn"]}') ? '${configMap["tekenFilterColumn"]}' : null,
+        'zoekenAutoIdentify': defaultTrue(${configMap["zoekenAutoIdentify"]})
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */

@@ -1456,6 +1456,10 @@ B3PGissuite.defineComponent('ViewerComponent', {
         if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
             return;
         }
+        
+        if(!B3PGissuite.config.searchAutoIdentify) {
+            return;
+        }
 
         var geom = "";
 

@@ -12,12 +12,6 @@
         <param-value>nl</param-value>
     </context-param>
 
-	<!-- Waar naartoe na uitloggen? Standaard /index.do, override in context.xml -->
-    <context-param>
-        <param-name>logout.destination</param-name>
-        <param-value>/index.do</param-value>
-    </context-param>
-
     <filter>
         <filter-name>Security Filter</filter-name>
         <filter-class>org.securityfilter.filter.SecurityFilter</filter-class>

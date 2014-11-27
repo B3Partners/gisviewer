@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/gisviewer">
+<Resource
+	auth="Container"
+	driverClassName="oracle.jdbc.driver.OracleDriver"
+	logAbandoned="true"
+	maxActive="100"
+	maxIdle="30"
+	maxWait="10000"
+	name="jdbc/gisviewer"
+	username="GISVIEWER"
+	password="F9qLTS6zRJ"
+	removeAbandoned="true"
+	removeAbandonedTimeout="60"
+	type="javax.sql.DataSource"
+	url="jdbc:oracle:thin:@s-daor23:1521:Dwhgeot"
+	minEvictableIdleTimeMillis="10000"
+	timeBetweenEvictionRunsMillis="60000"
+/>
+</Context>

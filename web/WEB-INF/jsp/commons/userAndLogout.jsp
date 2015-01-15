@@ -50,7 +50,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:if test="${userName != 'anoniem'}">
             <fmt:message key="commons.userandlogout.ingelogdals"/> 
             <c:if test="${not empty appName}">
-            ${appName}
+                <c:out value="${appName}"/>
             </c:if>
             
             (<c:out value="${pageContext.request.remoteUser}"/>)

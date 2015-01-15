@@ -17,7 +17,7 @@
 
         <a href="<c:url value="${menuItem.url}"/>" class="${stijlklasse}">
             <c:if test="${empty menuItem.icon}">
-                ${menuItem.titel}
+                <c:out value="${menuItem.titel}"/>
             </c:if>
             <c:if test="${!empty menuItem.icon}">
                 <img src="<c:url value='${menuItem.icon}' />" border="0" />

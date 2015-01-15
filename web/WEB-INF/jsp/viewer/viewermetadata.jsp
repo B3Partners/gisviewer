@@ -27,7 +27,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:when test="${not empty themas}">
             <c:set var="klasse" value="meta_data_alternate" />
             <div class="${klasse}">
-                <h1>A. Algemene informatie over ${themas.naam}</h1>
+                <h1>A. Algemene informatie over <c:out value="${themas.naam}"/></h1>
                 <table>
                     <tr>
                         <th>
@@ -79,7 +79,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </c:if>
                 </c:forEach>
                 <div class="${klasse}">
-                    <h1>B. Bronapplicaties voor ${themas.naam}</h1>
+                    <h1>B. Bronapplicaties voor <c:out value="${themas.naam}"/></h1>
                     <table>
                         <tr>
                             <th>
@@ -206,7 +206,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </c:otherwise>
                 </c:choose>
                 <div class="${klasse}">
-                    <h1>C. Administratieve gegevens van ${themas.naam}</h1>
+                    <h1>C. Administratieve gegevens van <c:out value="${themas.naam}"/></h1>
                     <table>
                         <tr>
                             <th>
@@ -310,7 +310,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </c:otherwise>
                 </c:choose>
                 <div class="${klasse}">
-                    <h1>D. Verantwoordelijken voor ${themas.naam}</h1>
+                    <h1>D. Verantwoordelijken voor <c:out value="${themas.naam}"/></h1>
                     <table>
                         <tr>
                             <th>
@@ -402,7 +402,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
                     </c:otherwise>
                 </c:choose>
                 <div class="${klasse}">
-                    <h1>E. Update frequentie voor ${themas.naam}</h1>
+                    <h1>E. Update frequentie voor <c:out value="${themas.naam}"/></h1>
                     <table>
                         <tr>
                             <th>

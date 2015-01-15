@@ -146,7 +146,7 @@
 
                             <c:forEach var="entry" items="${legendItems}">
                                 <tr>
-                                    <td>${entry.key}</td>
+                                    <td><c:out value="${entry.key}"/></td>
 
                                     <td align="center"><input type="radio" name="${entry.key}" value="0" checked="checked"/></td>
                                     <td align="center"><input type="radio" name="${entry.key}" value="1"/></td>

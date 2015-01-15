@@ -6,7 +6,7 @@
     </head>
 
     <body>
-        <h1>It works</h1>
+        <h1>B3P GIS Suite</h1>
 
         <p>
             Voor deze gisviewer is nog geen landingspagina geconfigureerd.

@@ -85,12 +85,16 @@ B3PGissuite.viewercommons = {
         }
 
         var pwCreated = false;
+        var parent = B3PGissuite.commons.getParent({parentOnly: true, supressError: true});
         if (document.getElementById('popupWindow')) {
             pwCreated = true;
         }
-        if (!pwCreated && B3PGissuite.commons.getParent({parentOnly: true, supressError: true}) && B3PGissuite.commons.getParent({parentOnly: true, supressError: true}).document.getElementById('popupWindow')) {
-            pwCreated = true;
-        }
+        // Try-catch because embedded in an iframe accessing document gives cross-domain error
+        try {
+            if (!pwCreated && parent && parent.document && parent.document.getElementById('popupWindow')) {
+                pwCreated = true;
+            }
+        } catch(e) {}
         if (!pwCreated) {
             this.buildPopup();
         }

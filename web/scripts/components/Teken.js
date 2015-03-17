@@ -21,6 +21,7 @@ B3PGissuite.defineComponent('Teken', {
     isEditting: false,
     gegevensbron: null,
     parent: null,
+    listenerAdded: false,
 
     constructor: function Teken(options) {
         var me = this;
@@ -33,19 +34,7 @@ B3PGissuite.defineComponent('Teken', {
     },
     
     init: function() {
-        var lagen = this.parent.B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
         var me = this;
-        if (lagen.length > 0) {
-            var laag = lagen[0];
-            me.parent.B3PGissuite.vars.webMapController.registerEvent(me.parent.Event.ON_FEATURE_ADDED, laag, function(layerName, object) {
-                me.retrievePoint(layerName, object);
-            });
-        } else {
-            setTimeout(function() {
-                me.init();
-            }, 300);
-        }
-        
         jQuery('#teken_add_new').click(function() {
             me.addNew();
         });
@@ -61,7 +50,6 @@ B3PGissuite.defineComponent('Teken', {
         jQuery('#teken_filter_all_features').click(function() {
             me.filterFeatures(true);
         });
-        
     },
     
     filterFeatures: function (showAll) {
@@ -116,11 +104,42 @@ B3PGissuite.defineComponent('Teken', {
             }
         });
     },
+    
+    registerFeatureAddedEvent: function(laag) {
+        var me = this;
+        try {
+            /**
+             * This is a very hacky part. The problem is that the event handler is overriden by the Edit module.
+             * This is probably a bug/problem in the OpenLayersController where the featureadded event is hanled by single function.
+             * There can only be one listener. Below we check if the function attached to the listener is 'our' function.
+             * If not we add the listener again. 
+             */
+            if(
+                me.parent.B3PGissuite.vars.webMapController.events[me.parent.Event.ON_FEATURE_ADDED] &&
+                me.parent.B3PGissuite.vars.webMapController.events[me.parent.Event.ON_FEATURE_ADDED][laag.frameworkLayer.id] &&
+                me.parent.B3PGissuite.vars.webMapController.events[me.parent.Event.ON_FEATURE_ADDED][laag.frameworkLayer.id].name !== 'featureAdded'
+            )
+            {
+                me.listenerAdded = false;
+            }
+            /**
+             * Add the listener if we have not added before
+             */
+            if(!me.listenerAdded) {
+                // We are using a 'named' function here to be able to compare the name in the check above
+                me.parent.B3PGissuite.vars.webMapController.registerEvent(me.parent.Event.ON_FEATURE_ADDED, laag, function featureAdded(layerName, object) {
+                    me.retrievePoint(layerName, object);
+                });
+                me.listenerAdded = true;
+            }
+        } catch(e) {}
+    },
 
     selectFeature: function() {
         var lagen = this.parent.B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
         if (lagen.length > 0) {
             var laag = lagen[0];
+            this.registerFeatureAddedEvent(laag);
             if (this.isEditting) {
                 this.isEditting = false;
                 laag.stopDrawDrawFeature();

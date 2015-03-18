@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-app 
+    xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+        
     <!-- Localization context voor o.a. de <fmt:message> JSTL tag -->
     <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
         <param-value>ViewerResources</param-value>
     </context-param>
-
     <!-- NL locale voor formatten van getallen: 1.234.567,89 -->
     <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.locale</param-name>
@@ -23,42 +27,39 @@
             <param-name>validate</param-name>
             <param-value>false</param-value>
         </init-param>
-    </filter>
-
+    </filter>    
+    
     <filter-mapping>
         <filter-name>Security Filter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-	
-	<!-- url rewriter for CMS pages like /cms/1/home.htm -->
-	<filter>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+    
+    <filter>                
+        <filter-name>UrlRewriteFilter</filter-name>                
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>  
+    </filter>
+       
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>aconfig</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>https://gistest.lelystad.nl/kaartenbalie/services/</param-value>
+            <param-value>https://gis.lelystad.nl/kaartenbalie/services/</param-value>
         </init-param>
-
-		<init-param>
+        <init-param>
             <param-name>internalKbUrl</param-name>
-            <param-value>https://localhost/kaartenbalie/services/</param-value>
+            <param-value>http://localhost:8082/kaartenbalie/services/</param-value>
         </init-param>
-
         <init-param>
             <param-name>anonymous_user</param-name>
             <param-value>anoniem</param-value>
         </init-param>
-
-		<init-param>
+        <init-param>
             <param-name>cacheOnDisk</param-name>
             <param-value>true</param-value>
         </init-param>
@@ -66,10 +67,9 @@
             <param-name>cacheOnDiskPath</param-name>
             <param-value>D:\maps\cache\</param-value>
         </init-param>
-
         <load-on-startup>1</load-on-startup>
     </servlet>
-
+    
     <servlet>
         <servlet-name>xmlsecuritydatabase</servlet-name>
         <servlet-class>nl.b3p.commons.security.XmlSecurityDatabase</servlet-class>
@@ -79,7 +79,7 @@
         </init-param>
         <load-on-startup>3</load-on-startup>
     </servlet>
-
+    
     <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
@@ -97,24 +97,24 @@
         </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
-
+    
     <servlet>
         <servlet-name>Data2CSV</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.Data2CSV</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>CreateImageServlet</servlet-name>
+        <servlet-class>nl.b3p.combineimages.CreateImageServlet</servlet-class>
+        <init-param>
+            <param-name>maxResponseTime</param-name>
+            <param-value>30000</param-value>
+        </init-param>
+    </servlet>
 
-	<servlet>
-		<servlet-name>CreateImageServlet</servlet-name>
-		<servlet-class>nl.b3p.combineimages.CreateImageServlet</servlet-class>
-		<init-param>
-			<param-name>maxResponseTime</param-name>
-			<param-value>30000</param-value>
-		</init-param>
-	</servlet>
-
-	<servlet>
+    <servlet>
         <servlet-name>PrintServlet</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>        
+        <servlet-class>nl.b3p.gis.viewer.print.PrintServlet</servlet-class>
         <init-param>
             <param-name>xsl_A4_Staand</param-name>
             <param-value>/WEB-INF/xsl/A4_Staand.xsl</param-value>
@@ -147,29 +147,27 @@
 			<param-name>xsl_A1_Liggend</param-name>
 			<param-value>/WEB-INF/xsl/A1_Liggend.xsl</param-value>
 		</init-param>
-		<init-param>
-			<param-name>xsl_A0_Staand</param-name>
-			<param-value>/WEB-INF/xsl/A0_Staand.xsl</param-value>
-		</init-param>
-		<init-param>
-			<param-name>xsl_A0_Liggend</param-name>
-			<param-value>/WEB-INF/xsl/A0_Liggend.xsl</param-value>
-		</init-param>
-		<!--
-		<init-param>
-            <param-name>baseImageUrl</param-name>
-            <param-value>https://gistest.lelystad.nl/gisviewer/services/PrintServlet?</param-value>
+        <init-param>
+            <param-name>xsl_A0_Staand</param-name>
+            <param-value>/WEB-INF/xsl/A0_Staand.xsl</param-value>
         </init-param>
-    -->
+        <init-param>
+            <param-name>xsl_A0_Liggend</param-name>
+            <param-value>/WEB-INF/xsl/A0_Liggend.xsl</param-value>
+        </init-param>
+        <!--init-param>
+            <param-name>baseImageUrl</param-name>
+            <param-value>http://localhost:8082/gisviewer/services/PrintServlet?</param-value>
+        </init-param-->
         <load-on-startup>4</load-on-startup>
-    </servlet>  
-
-	<servlet>
+    </servlet>
+    
+    <servlet>
         <servlet-name>SearchAutocomplete</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.SearchAutocomplete</servlet-class>
-    </servlet> 
+    </servlet>
 
-	<servlet>
+    <servlet>
         <servlet-name>dwr-invoker</servlet-name>
         <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
         <init-param>
@@ -180,9 +178,9 @@
             <param-name>crossDomainSessionSecurity</param-name>
             <param-value>false</param-value>
         </init-param>
-    </servlet>  
-
-	<servlet>
+    </servlet>
+    
+    <servlet>
         <servlet-name>DispatcherServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.DispatcherServlet</servlet-class>
         <init-param>
@@ -199,7 +197,7 @@
         </init-param>
         <load-on-startup>5</load-on-startup>
     </servlet>
-
+    
     <servlet>
         <servlet-name>DownloadServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
@@ -221,28 +219,29 @@
         </init-param>
         <load-on-startup>6</load-on-startup>
     </servlet>
+    
+    <servlet>
+        <servlet-name>UserLayerSld</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.UserLayerSldServlet</servlet-class>
+    </servlet>    
+    
+    <servlet>
+        <servlet-name>UploadedPointsWmsServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.UploadedPointsWmsServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
+    </servlet>
 
-	<servlet>
-		<servlet-name>UserLayerSld</servlet-name>
-		<servlet-class>nl.b3p.gis.viewer.services.UserLayerSldServlet</servlet-class>
-	</servlet>
+    <servlet>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.GetThemesServlet</servlet-class>
+    </servlet>
 
-	<servlet>
-		<servlet-name>UploadedPointsWmsServlet</servlet-name>
-		<servlet-class>nl.b3p.gis.viewer.UploadedPointsWmsServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>GetBlobServlet</servlet-name>
-		<servlet-class>nl.b3p.gis.viewer.services.GetBlobServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>GetThemesServlet</servlet-name>
-		<servlet-class>nl.b3p.gis.viewer.services.GetThemesServlet</servlet-class>
-	</servlet>
-	
-	<servlet>
+    <servlet>
+        <description>fetches document in background to hide actual location of document</description>
         <servlet-name>DocFetcher</servlet-name>
         <servlet-class>nl.b3p.gis.utils.DocFetcherServlet</servlet-class>
         <init-param>
@@ -257,9 +256,8 @@
             <param-name>fetchMethod</param-name>
             <param-value>FILE</param-value>
         </init-param>
-    </servlet>
-
-	<servlet>
+    </servlet>    
+    <servlet>
         <servlet-name>Data2PDF</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.Data2PDF</servlet-class>
         <init-param>
@@ -268,29 +266,12 @@
         </init-param>
     </servlet>
 
-    <servlet>
-		<servlet-name>ReportServlet</servlet-name>
-		<servlet-class>nl.b3p.gis.viewer.services.ReportServlet</servlet-class>
-		<init-param>
-			<param-name>xsl_report</param-name>
-			<param-value>/WEB-INF/xsl/report_a.xsl</param-value>
-		</init-param>
-	</servlet>
+    <servlet-mapping>
+        <servlet-name>GetThemesServlet</servlet-name>
+        <url-pattern>/GetThemes</url-pattern>
+    </servlet-mapping> 
 
-	<servlet>
-        <servlet-name>CreateSLD</servlet-name>
-        <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
-        <init-param>
-            <param-name>defaultSld</param-name>
-            <param-value>/WEB-INF/defaultSld.xml</param-value>
-        </init-param>
-    </servlet>
-
-	<servlet-mapping>
-		<servlet-name>GetThemesServlet</servlet-name>
-		<url-pattern>/GetThemes</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
+    <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
@@ -301,20 +282,20 @@
     <servlet-mapping>
         <servlet-name>Data2CSV</servlet-name>
         <url-pattern>/services/Data2CSV</url-pattern>
+    </servlet-mapping>    
+    <servlet-mapping>
+        <servlet-name>CreateImageServlet</servlet-name>
+        <url-pattern>/CreateImage</url-pattern>
+    </servlet-mapping>    
+    <servlet-mapping>
+        <servlet-name>SearchAutocomplete</servlet-name>
+        <url-pattern>/viewer/SearchAutocomplete.do</url-pattern>
     </servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>CreateImageServlet</servlet-name>
-		<url-pattern>/CreateImage</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>SearchAutocomplete</servlet-name>
-		<url-pattern>/viewer/SearchAutocomplete.do</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
+    <servlet-mapping>
         <servlet-name>PrintServlet</servlet-name>
         <url-pattern>/services/PrintServlet</url-pattern>
-    </servlet-mapping>
-	<servlet-mapping>
+    </servlet-mapping>    
+    <servlet-mapping>
         <servlet-name>DownloadServlet</servlet-name>
         <url-pattern>/services/DownloadServlet</url-pattern>
     </servlet-mapping>    
@@ -322,22 +303,22 @@
         <servlet-name>UserLayerSld</servlet-name>
         <url-pattern>/services/createUserSld</url-pattern>
     </servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>UploadedPointsWmsServlet</servlet-name>
-		<url-pattern>/UploadedPointsWmsServlet</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>GetBlobServlet</servlet-name>
-		<url-pattern>/services/getBlobServlet</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadedPointsWmsServlet</servlet-name>
+        <url-pattern>/UploadedPointsWmsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetBlobServlet</servlet-name>
+        <url-pattern>/services/getBlobServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>DocFetcher</servlet-name>
         <url-pattern>/services/DocFetcher/*</url-pattern>
     </servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Data2PDF</servlet-name>
-		<url-pattern>/services/Data2PDF</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Data2PDF</servlet-name>
+        <url-pattern>/services/Data2PDF</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
 		<servlet-name>ReportServlet</servlet-name>
 		<url-pattern>/services/ReportServlet</url-pattern>
@@ -346,30 +327,29 @@
         <servlet-name>CreateSLD</servlet-name>
         <url-pattern>/services/CreateSLD/*</url-pattern>
     </servlet-mapping>
-
+    
     <session-config>
         <session-timeout>
-            30
+            480
         </session-timeout>
     </session-config>
-
     <welcome-file-list>
         <welcome-file>index.do</welcome-file>
     </welcome-file-list>
     <error-page>
-		<error-code>403</error-code>
-		<location>/loginError.do</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/http_404.do</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/http_500.do</location>
-	</error-page>
-	<error-page>
-		<error-code>503</error-code>
-		<location>/http_503.do</location>
-	</error-page>
+        <error-code>403</error-code>
+        <location>/loginError.do</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/http_404.do</location>
+    </error-page>    
+    <error-page>
+        <error-code>500</error-code>
+        <location>/http_500.do</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/http_503.do</location>
+    </error-page>
 </web-app>

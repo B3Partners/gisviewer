@@ -14,7 +14,7 @@
         <fmc:ToolGroup id="toolGroup" tool="identify" listento="map1" width="500" height="65" left="5" top="5">
             <fmc:ToolZoomin id="toolZoomin" skin="f2" />
             <fmc:ToolZoomout id="toolZoomout" left="30" skin="f2"/>
-            <fmc:ToolPan id="toolPan" left="60" skin="f2" skin="f2"/>
+            <fmc:ToolPan id="toolPan" left="60" skin="f2" />
             <fmc:ToolMeasure id="toolMeasure" left="90" skin="f2" decimals="2" />
 
             <fmc:ToolIdentify id="identify" left="120" skin="f2" />
@@ -68,16 +68,16 @@
     </fmc:Container>
     
     
-    <fmc:Container id="containerLeft" backgroundcolor="#D2E0EB" left="0" top="5%" height="95%" width="20%">
+    <!--fmc:Container id="containerLeft" backgroundcolor="#D2E0EB" left="0" top="5%" height="95%" width="20%">
 	<fmc:Map id="map_overview" left="12%" top="60" height="140" width="80%" extent="77848,434453,85379,440843" fullextent="77848,434453,85379,440843">
 		<fmc:LayerOverview listento="map1" color="#FFFFFF" followfactor="10000" />
 		<fmc:LayerImage imageurl="../flamingo/fmc/vlaardingen.swf" extent="77848,434453,85379,440843"  listento="map1"/>
 	</fmc:Map>
     
         <fmc:ZoomerV id="zoomerv" left="0%" top="60" height="150" listento="map1"></fmc:ZoomerV>  
-    </fmc:Container>
+    </fmc:Container-->
     
-    <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="20%" top="5%" height="95%" width="80%">
+    <fmc:Container id="containerMain" borderwidth="1" bordercolor="#606060" left="0" top="5%" height="95%" width="100%">
         <fmc:BorderNavigation listento="map1" top="0%" width="100%" height="100%" skin="f1"/>
 
         <!-- het 'canvas' waar op getekend kan worden-->
@@ -95,5 +95,6 @@
         movesteps="20" movetime="100">
             <fmc:LayerIdentifyIcon  id="identifyicon"/>
         </fmc:Map>
+        <fmc:ZoomerV id="zoomerv" left="0%" top="60" height="150" listento="map1"></fmc:ZoomerV>  
     </fmc:Container>
 </FLAMINGO>

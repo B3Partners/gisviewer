@@ -10,10 +10,16 @@
     <xsl:variable name="map-width-px" select="'1461'"/>
     <xsl:variable name="map-height-px" select="'2349'"/>
 
+    <!-- edit when using three column legend layout -->
+    <xsl:variable name="legend-column-w" select="59.4 div 3" />
+    <xsl:variable name="pageHeightCm" select="84.1" />
+    <xsl:variable name="bottom-marge" select="2.0" /> 
+
     <!-- includes -->
     <xsl:include href="pdf-calc.xsl"/>
     <xsl:include href="pdf-styles.xsl"/>
     <xsl:include href="pdf-commons.xsl"/>
+    <xsl:include href="pdf-legend.xsl"/>
 
     <!-- root -->
     <xsl:template match="info">
@@ -29,9 +35,6 @@
 					
                     <fo:block-container width="6.6cm" height="77.1cm" top="1.6cm" left="52cm" xsl:use-attribute-sets="column-block">
                         <xsl:call-template name="info-block"/>
-                        <xsl:call-template name="legend-block">
-                            <xsl:with-param name="block-height" select="'77.1cm'"/>
-                        </xsl:call-template>
                     </fo:block-container>
 
                     <fo:block-container width="51.8cm" height="83.3cm" top="0cm" left="0cm" xsl:use-attribute-sets="column-block-border">
@@ -53,6 +56,8 @@
                         
                         <xsl:call-template name="logo-block"/>
                     </fo:block-container>
+                    
+                    <xsl:call-template name="legend-three-columns"/>
     
                 </fo:flow>
             </fo:page-sequence>

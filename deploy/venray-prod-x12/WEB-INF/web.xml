@@ -241,6 +241,23 @@
 			<param-value>/WEB-INF/xsl/data2pdf.xsl</param-value>
 		</init-param>
 	</servlet>
+	<servlet>
+        <servlet-name>ReportServlet</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.ReportServlet</servlet-class>
+        <init-param>
+            <param-name>xsl_report</param-name>
+            <param-value>/WEB-INF/xsl/report_a.xsl</param-value>
+        </init-param>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>CreateSLD</servlet-name>
+        <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
+        <init-param>
+            <param-name>defaultSld</param-name>
+            <param-value>/WEB-INF/defaultSld.xml</param-value>
+        </init-param>
+    </servlet>
 	<servlet-mapping>
 		<servlet-name>GetThemesServlet</servlet-name>
 		<url-pattern>/GetThemes</url-pattern>
@@ -293,6 +310,10 @@
 		<servlet-name>Data2PDF</servlet-name>
 		<url-pattern>/services/Data2PDF</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>ReportServlet</servlet-name>
+        <url-pattern>/services/ReportServlet</url-pattern>
+    </servlet-mapping>
 	<session-config>
 		<session-timeout>
             480

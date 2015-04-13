@@ -973,7 +973,7 @@ B3PGissuite.defineComponent('Admindata', {
             "width": kolomBreedte + "px"
         });
 
-        if (waarde.type == 'TYPE_DATA') {
+        if (waarde.type == 'TYPE_DATA' || waarde.type == 'TYPE_DATUM') {
             if (!waarde.value) {
                 td.html("-");
             } else {
@@ -1025,7 +1025,7 @@ B3PGissuite.defineComponent('Admindata', {
                 }
             }
         }
-
+        
         if (waarde.type == 'TYPE_URL') {
             if (!waarde.value) {
                 td.html("-");

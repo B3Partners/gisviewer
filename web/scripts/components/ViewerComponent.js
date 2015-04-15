@@ -820,6 +820,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
         B3PGissuite.vars.webMapController.createPanel("toolGroup");
 
         B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading", Tool.LOADING_BAR));
+        
+        B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("b_showXY", Tool.SHOW_X_Y));
 
         /* Zoom tool */
         var zoomBox = B3PGissuite.vars.webMapController.createTool("toolZoomin", Tool.ZOOM_BOX, {
@@ -982,7 +984,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         var scalebar = B3PGissuite.vars.webMapController.createTool("scalebar", Tool.SCALEBAR);
         B3PGissuite.vars.webMapController.addTool(scalebar);
-
+       
 
         var zoombar = B3PGissuite.vars.webMapController.createTool("zoombar", Tool.ZOOM_BAR);
         B3PGissuite.vars.webMapController.addTool(zoombar);
@@ -1078,6 +1080,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
         } else {
             B3PGissuite.vars.webMapController.getTool("b_gps").setVisible(false);
         }
+        
+        if (B3PGissuite.config.showXYTool) {
+            var b_showXY = B3PGissuite.vars.webMapController.createTool("b_showXY", Tool.SHOW_X_Y);
+            B3PGissuite.vars.webMapController.addTool(b_showXY);
+        } 
     },
     /**
      * Hides the I-tool icon. (Flamingo only)

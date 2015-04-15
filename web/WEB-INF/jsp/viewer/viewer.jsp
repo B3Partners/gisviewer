@@ -168,6 +168,7 @@
         'showPrintTool': defaultFalse(${configMap["showPrintTool"]}),
         'showLayerSelectionTool': defaultFalse(${configMap["showLayerSelectionTool"]}),
         'showGPSTool': defaultFalse(${configMap["showGPSTool"]}),
+        'showXYTool': defaultFalse(${configMap["showXYTool"]}),
         'showEditTool': defaultFalse(${configMap["showEditTool"]}),
         'gpsBuffer': checkValidity(${configMap["gpsBuffer"]}) ? getValue(${configMap["gpsBuffer"]}) : 1000,
         'layerGrouping': checkValidity("${configMap["layerGrouping"]}") ? "${configMap["layerGrouping"]}" : "lg_forebackground",

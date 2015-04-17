@@ -160,6 +160,12 @@ B3PGissuite.defineComponent('Edit', {
 
         div.appendChild(form);
         B3PGissuite.commons.dialogPopUp($j(div), "Bewerk feature", 400, 400,null);
+        
+        $j(div).find('.datepicker-field').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeMonth: true,
+            changeYear: true
+        });
 
         return table;
     },
@@ -268,6 +274,14 @@ B3PGissuite.defineComponent('Edit', {
             if(attribute.value){
                 input.setAttribute("checked",attribute.value);
             }
+        }else if(attribute.hasOwnProperty('datatype') && attribute.datatype === "datum"){
+            input = document.createElement("input");
+            input.setAttribute("type","text");
+            if(attribute.value){
+                input.setAttribute("value",attribute.value);
+            }
+            input.style.width = "150px";
+            input.className = 'datepicker-field';
         }else{
             input = document.createElement("input");
 

@@ -39,7 +39,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://localhost:8080/kaartenbalie/services/</param-value>
+            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
         </init-param>
         <!--
         <init-param>
@@ -174,10 +174,10 @@
         <init-param>
             <param-name>dispatcherSleepTime</param-name>
             <param-value>10000</param-value>
-        </init-param>        
+        </init-param>
         <load-on-startup>5</load-on-startup>
     </servlet>
-    
+
     <servlet>
         <servlet-name>DownloadServlet</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.DownloadServlet</servlet-class>
@@ -248,7 +248,7 @@
             <param-value>/WEB-INF/xsl/report_a.xsl</param-value>
         </init-param>
     </servlet>
-    
+
     <servlet>
         <servlet-name>CreateSLD</servlet-name>
         <servlet-class>nl.b3p.gis.viewer.services.SldServlet</servlet-class>
@@ -260,8 +260,8 @@
     <servlet-mapping>
         <servlet-name>CreateSLD</servlet-name>
         <url-pattern>/services/CreateSLD/*</url-pattern>
-    </servlet-mapping> 
-    
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>GetThemesServlet</servlet-name>
         <url-pattern>/GetThemes</url-pattern>
@@ -324,7 +324,7 @@
             30
         </session-timeout>
     </session-config>
-    
+
     <welcome-file-list>
         <welcome-file>index.do</welcome-file>
     </welcome-file-list>

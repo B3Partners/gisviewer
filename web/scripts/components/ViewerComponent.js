@@ -994,6 +994,20 @@ B3PGissuite.defineComponent('ViewerComponent', {
         if (B3PGissuite.config.viewerTemplate === "embedded") {
             this.displayEmbeddedMenuIcons();
         }
+
+        if (B3PGissuite.config.useOwnCyclomedia && this.mapviewer ===  "openlayers") {
+            var ownCyclomedia = B3PGissuite.vars.webMapController.createTool("b_ownCyclomedia", Tool.CLICK,{
+                click:function(event){
+
+                    var opx = this.map.getLonLatFromPixel(event.xy)
+                    var url = B3PGissuite.config.ownCyclomediaUrl +"?address="+opx.lon + " " + opx.lat;
+                    B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",800,800,false);
+                }
+                
+            });
+            B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
+        }
+
     },
     displayEmbeddedMenuIcons: function() {
         var embeddedIcons = $j("#embedded_icons");

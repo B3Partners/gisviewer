@@ -195,7 +195,9 @@
         'contactUrl': checkValidity('${configMap["contactUrl"]}') ? '${configMap["contactUrl"]}' : null,
         'tekenKaartlaagId': checkValidity('${configMap["tekenKaartlaagId"]}') ? '${configMap["tekenKaartlaagId"]}' : null,
         'tekenFilterColumn': checkValidity('${configMap["tekenFilterColumn"]}') ? '${configMap["tekenFilterColumn"]}' : null,
-        'zoekenAutoIdentify': defaultTrue(${configMap["zoekenAutoIdentify"]})
+        'zoekenAutoIdentify': defaultTrue(${configMap["zoekenAutoIdentify"]}),
+        'useOwnCyclomedia' : defaultFalse(${configMap["useOwnCyclomedia"]}),
+        'ownCyclomediaUrl' :checkValidity(${configMap["ownCyclomediaUrl"]})
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */

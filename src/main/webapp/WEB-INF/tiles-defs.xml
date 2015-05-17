@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+"http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+    <definition name="template" path="/WEB-INF/jsp/templates/template.jsp">
+        <put name="menu" value="/WEB-INF/jsp/commons/topmenu.jsp"/>
+        <put name="footer" value="/WEB-INF/jsp/commons/footer.jsp"/>
+     </definition>
+     
+    <definition name="templateViewer" path="/WEB-INF/jsp/templates/templateViewer.jsp" />
+    <definition name="templateSimpleViewer" path="/WEB-INF/jsp/templates/templateSimpleViewer.jsp" />
+    <definition name="templatePrint" path="/WEB-INF/jsp/templates/templatePrint.jsp"/>
+    <definition name="templateA11y" path="/WEB-INF/jsp/templates/templateA11y.jsp">
+        <put name="menu" value="/WEB-INF/jsp/commons/a11yMenu.jsp"/>
+        <put name="footer" value="/WEB-INF/jsp/commons/footer.jsp"/>
+     </definition>
+    <!-- algemeen -->
+    <definition name="actionMessages" path="/WEB-INF/jsp/commons/actionMessages.jsp"/>
+    <definition name="specialMessages" path="/WEB-INF/jsp/commons/specialMessages.jsp"/>
+
+    <definition name="login" extends="template">
+        <put name="title" value="Inlogscherm" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/login.jsp"/>
+    </definition>
+    <definition name="reset" extends="template">
+        <put name="title" value="Reset" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/reset.jsp"/>
+    </definition>
+    <definition name="loginError" extends="template">
+        <put name="title" value="Fout bij inloggen" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/loginError.jsp"/>
+    </definition>
+    <definition name="help" extends="template">
+        <put name="title" value="Help" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/help.jsp"/>
+    </definition>
+    
+    <definition name="home" path="/WEB-INF/jsp/algemeen/home.jsp" />
+    
+    <definition name="cms" extends="template">
+        <put name="title" value="CMS" type="string"/>
+        <put name="menu" value="/WEB-INF/jsp/commons/cmsmenu.jsp"/>
+        <put name="content" value="/WEB-INF/jsp/algemeen/cms.jsp"/>
+    </definition>
+    
+    <definition name="cmsstyle" path="/WEB-INF/jsp/algemeen/cmsstyle.jsp" />
+    
+    <!-- A11y defs -->
+    <definition name="finderslist" extends="templateA11y">
+        <put name="title" value="Lijst met zoekers" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/a11y/a11y.jsp"/>
+    </definition>
+   <definition name="findersform" extends="templateA11y">
+        <put name="title" value="Zoekerformulier" type="string"/>
+         <put name="content" value="/WEB-INF/jsp/a11y/a11ySearch.jsp"/>
+    </definition>
+  <definition name="findersresults" extends="templateA11y">
+        <put name="title" value="Resultaten" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/a11y/a11yResults.jsp"/>
+    </definition>
+  <definition name="startlocation" extends="templateA11y">
+        <put name="title" value="Startlocatie" type="string"/>
+         <put name="content" value="/WEB-INF/jsp/a11y/a11yStartLocation.jsp"/>
+    </definition>
+    
+    <!-- viewer -->
+    <definition name="viewer" extends="templateViewer">
+        <put name="title" value="Viewer" type="string"/>
+        <put name="infobalk" value="/WEB-INF/jsp/viewer/infobalk.jsp"/>
+        <put name="menu" value="/WEB-INF/jsp/commons/topmenuViewer.jsp"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp" />
+    </definition>
+    <definition name="simpleviewer" extends="templateSimpleViewer">
+        <put name="title" value="CMSViewer" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewer.jsp" />
+    </definition>
+    
+    <!-- viewer databody-->
+    <definition name="databody" path="/WEB-INF/jsp/templates/templateDatabody.jsp"/>
+    <definition name="viewermetadata" extends="databody">
+        <put name="title" value="Metadata" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewermetadata.jsp"/>
+    </definition>
+    <definition name="viewerwelkom" extends="databody">
+        <put name="title" value="Welkom" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerwelkom.jsp"/>
+    </definition>
+    <definition name="tab" path="/WEB-INF/jsp/templates/templateTab.jsp"/>
+    <!-- viewer tab-->
+    <definition name="viewerobjectdata" extends="tab">
+        <put name="title" value="Viewerobjectdata" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerobjectdata.jsp"/>
+    </definition>
+    <definition name="vieweranalysedata" extends="tab">
+        <put name="title" value="Viewer analyse data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweranalysedata.jsp"/>
+    </definition>
+    <definition name="viewermeldingen" extends="tab">
+        <put name="title" value="Viewer Meldingen" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewermeldingen.jsp"/>
+    </definition>
+    <definition name="viewerredlining" extends="tab">
+        <put name="title" value="Viewer Redlining" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerredlining.jsp"/>
+    </definition>
+    <definition name="viewerbag" extends="tab">
+        <put name="title" value="BAG" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerbag.jsp"/>
+    </definition>
+    <definition name="viewerwkt" extends="tab">
+        <put name="title" value="WKT" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerwkt.jsp"/>
+    </definition>
+    <definition name="viewertransparantie" extends="tab">
+        <put name="title" value="WKT" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewertransparantie.jsp"/>
+    </definition>
+    <definition name="viewerteken" extends="tab">
+        <put name="title" value="Tekenen" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/viewerteken.jsp"/>
+    </definition>
+    
+    <definition name="uploadtemppoints" extends="tab">
+        <put name="title" value="Upload tijdelijke punten" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/uploadtemppoints.jsp"/>
+    </definition>
+    
+    <definition name="viewerhighlight" path="/WEB-INF/jsp/viewer/viewerhighlightkeuze.jsp"/>
+
+    <!-- viewer popup -->
+    <definition name="popup" path="/WEB-INF/jsp/templates/templatePopup.jsp"/>
+    <definition name="vieweradmindata" extends="popup">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindata.jsp" />
+    </definition>
+    <definition name="vieweradmindatabusy" extends="popup">
+        <put name="title" value="Administratieve data" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweradmindatabusy.jsp" />
+    </definition>
+    <definition name="vieweraanvullendeinfo" extends="popup">
+        <put name="title" value="Aanvullende informatie" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vieweraanvullendeinfo.jsp"/>
+    </definition>
+    <definition name="createmappdf" extends="templatePrint">
+        <put name="content" value="/WEB-INF/jsp/viewer/createmappdf.jsp"/>
+    </definition>
+
+    <definition name="globespotter" extends="popup">
+        <put name="title" value="Globespotter" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/globespotter.jsp"/>
+    </definition>
+
+    <definition name="voorzieningzoeker" extends="tab">
+        <put name="title" value="Voorziening Zoeken" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/voorzieningzoeker.jsp"/>
+    </definition>
+
+    <definition name="vergunningzoeker" extends="tab">
+        <put name="title" value="Vergunning Zoeken" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/vergunningzoeker.jsp"/>
+    </definition>
+
+    <definition name="kaartselectie" extends="popup">
+        <put name="title" value="Kaartselectie" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/kaartselectie.jsp" />
+    </definition>
+
+    <definition name="download" extends="popup">
+        <put name="title" value="Download Shape of GML" type="string"/>
+        <put name="content" value="/WEB-INF/jsp/viewer/download.jsp" />
+    </definition>
+
+    <!-- tiles met herbruikbare onderdelen die in de content pagina's kunnen worden ge-insert  -->
+    <definition name="loginblock" path="/WEB-INF/jsp/commons/userAndLogout.jsp"/>
+    <definition name="googleAnalytics" path="/WEB-INF/jsp/commons/googleAnalytics.jsp"/>
+    
+</tiles-definitions>

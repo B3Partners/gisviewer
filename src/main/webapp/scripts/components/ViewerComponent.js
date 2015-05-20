@@ -1001,7 +1001,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
                     var opx = this.map.getLonLatFromPixel(event.xy)
                     var url = B3PGissuite.config.ownCyclomediaUrl +"?address="+opx.lon + " " + opx.lat;
-                    B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",800,800,false);
+                    B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",800,1024,false);
                 }
                 
             });

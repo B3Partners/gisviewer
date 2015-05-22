@@ -5,4 +5,4 @@ dan is er geen aanpassing van de persistence.xml nodig.
 - Web.xml goed configureren (kb url)
 
 Voor samenwerking met KB:
-- in security-config de key etc. perfect zetten (moet het zelfde zijn als kaartenbalie)
+- in security-config de key etc. correct zetten (moet het zelfde zijn als kaartenbalie)

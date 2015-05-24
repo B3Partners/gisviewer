@@ -27,7 +27,7 @@
 <div class="downloadBody">
     <c:choose>
         <c:when test="${emailScheduled}">
-            <fmt:message key="download.confirm" escapeXml="false"/>
+            <fmt:message key="download.confirm"/>
         </c:when>
         <c:otherwise>
             <div class="messages">

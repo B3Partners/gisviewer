@@ -39,7 +39,7 @@
         <servlet-class>nl.b3p.gis.viewer.services.HibernateUtil</servlet-class>
         <init-param>
             <param-name>kburl</param-name>
-            <param-value>http://localhost:8084/kaartenbalie/services/</param-value>
+            <param-value>http://localhost:8080/kaartenbalie/services/</param-value>
         </init-param>
         <!--
         <init-param>
@@ -53,7 +53,7 @@
         </init-param>
         <init-param>
             <param-name>cacheOnDisk</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
         <init-param>
             <param-name>cacheOnDiskPath</param-name>
@@ -153,9 +153,10 @@
         <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
         <init-param>
             <param-name>debug</param-name>
-            <param-value>false</param-value>
+            <param-value>true</param-value>
         </init-param>
         <init-param>
+            <!-- upgrade naar versie 3 of HttpOnly in tomcat uit zetten -->
             <param-name>crossDomainSessionSecurity</param-name>
             <param-value>false</param-value>
         </init-param>

@@ -423,6 +423,13 @@ OpenLayersController.prototype.createTool = function(id, type, options) {
             options = new Object();
         }
         options["numDigits"] = 2;
+        options["deactivate"] = function() {
+            //coordinaten worden normaal uitgezet met deactivate
+            //dit willen we niet omdat tools eerst allemaal worden uitgezet
+            //en daarna wordt een enkele tool weer aangezet.
+            //dit is override die niets doet.
+        };
+
         return new OpenLayersTool(id, new OpenLayers.Control.MousePosition(options), type);
     } else {
         throw ("Type >" + type + "< not recognized. Please use existing type.");

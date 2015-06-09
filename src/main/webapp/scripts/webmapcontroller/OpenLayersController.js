@@ -1453,6 +1453,9 @@ OpenLayersVectorLayer.prototype.getType = function() {
 
 OpenLayersVectorLayer.prototype.removeAllFeatures = function() {
     this.getFrameworkLayer().removeAllFeatures();
+    if(this.modifyControl){
+        this.modifyControl.deactivate();
+    }
 };
 
 OpenLayersVectorLayer.prototype.getActiveFeature = function(index) {

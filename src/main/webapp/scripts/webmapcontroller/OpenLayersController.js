@@ -1455,6 +1455,8 @@ OpenLayersVectorLayer.prototype.removeAllFeatures = function() {
     this.getFrameworkLayer().removeAllFeatures();
     if(this.modifyControl){
         this.modifyControl.deactivate();
+        this.modifyControl.feature = null;
+        var a = 0;
     }
 };
 

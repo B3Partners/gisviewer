@@ -1178,6 +1178,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         var tol = B3PGissuite.config.tolerance;
+        var appCode = B3PGissuite.config.bookmarkAppcode;
 
         /* indien meerdere analyse themas dan popup voor keuze. 
          * Niet elke keer lijst aanvullen bij popup, want dan krijg je dubbele */
@@ -1214,7 +1215,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         if (this.highLightedLayerid > 0) {
-            EditUtil.getHighlightWktForThema(this.highLightedLayerid, geom, scale, tol, this.currentHighlightWkt, function(wkt) {
+            EditUtil.getHighlightWktForThema(this.highLightedLayerid, geom, scale, tol, this.currentHighlightWkt, appCode, function(wkt) {
                 me.returnHighlight(wkt);
             });
         }
@@ -1258,8 +1259,9 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         var tol = B3PGissuite.config.tolerance;
+        var appCode = B3PGissuite.config.bookmarkAppcode;
 
-        EditUtil.getIdAndWktForRedliningObject(geom, B3PGissuite.vars.redLineGegevensbronId, scale, tol, function(jsonString) {
+        EditUtil.getIdAndWktForRedliningObject(geom, B3PGissuite.vars.redLineGegevensbronId, scale, tol, appCode, function(jsonString) {
             me.returnRedlineObject(jsonString);
         });
     },

@@ -1604,25 +1604,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         if (B3PGissuite.vars.btn_highLightSelected) {
-            /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
-             * de flamingo config een breinaald
-             * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
-             * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
-             * de gisviewer aan.*/
-            if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
-                B3PGissuite.vars.webMapController.activateTool("breinaald");
-            } else {
-                B3PGissuite.vars.webMapController.activateTool("identify");
-            }
-
-            this.hideIdentifyIcon();
             this.highLightThemaObject(geom);
         } else {
-            B3PGissuite.vars.btn_highLightSelected = false;
-
-            B3PGissuite.vars.webMapController.activateTool("identify");
-
-            this.showIdentifyIcon();
             this.handleGetAdminData(geom, null, false);
         }
 
@@ -2005,28 +1988,23 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
     /* er is net op de highlight knop gedrukt */
     onHighlight: function(id, params) {
-
-        /* For OpenLayers turn on or off because otherwise you cannot turn off
-         * highlighting in OpenLayers */
-        if (webMapController instanceof FlamingoController) {
-            B3PGissuite.vars.btn_highLightSelected = true;
-        } else if (webMapController instanceof OpenLayersController) {
-            if (B3PGissuite.vars.btn_highLightSelected === true) {
-                B3PGissuite.vars.btn_highLightSelected = false;
-            } else {
-                B3PGissuite.vars.btn_highLightSelected = true;
-            }
-        }
-
-        /* TODO: Vervangen voor generiek iets. Dit is nu nodig omdat
-         * de flamingo config een breinaald
-         * Mogelijke fix: nieuw soort tool maken (de highlight tool). Deze voeg je in OL niet aan
-         * de panel toe, maar wel aan de tools array. Deze tool roep de highlightfunctionaliteit in
-         * de gisviewer aan.*/
-        if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
-            B3PGissuite.vars.webMapController.activateTool("breinaald");
-        } else {
+        if (B3PGissuite.vars.btn_highLightSelected === true) {
+            B3PGissuite.vars.btn_highLightSelected = false;
             B3PGissuite.vars.webMapController.activateTool("identify");
+            if (!(B3PGissuite.vars.webMapController instanceof FlamingoController)) {
+                $j(".olControlb_highlightItemActive").addClass('olControlb_highlightItemInactive');
+                $j(".olControlb_highlightItemActive").removeClass('olControlb_highlightItemActive');
+                B3PGissuite.vars.webMapController.activateTool("identify");
+            }
+        } else {
+            B3PGissuite.vars.btn_highLightSelected = true;
+            if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+                B3PGissuite.vars.webMapController.activateTool("breinaald");
+            } else {
+                $j(".olControlb_highlightItemInactive").addClass('olControlb_highlightItemActive');
+                $j(".olControlb_highlightItemInactive").removeClass('olControlb_highlightItemInactive');
+                B3PGissuite.vars.webMapController.activateTool("identify");
+            }
         }
     },
 

@@ -77,37 +77,60 @@ B3PGissuite.defineComponent('Layout', {
      * to that DIV so we can read those with JS. We combine these values with the tabWidth configured in
      * the Gisviewerconfig using the same calculation used in SCSS. We append this styling to the head.
      */
-    configureTabWidth: function() {
-        var extramargin = parseInt($j('#css_props').css('margin-left'), 10),
-                defaultmargin = parseInt($j('#css_props').css('margin-right'), 10),
-                csscontent = '';
+    configurePanelSizes: function() {
+        var extramargin = parseInt($j('#css_props').css('margin-left'), 10);
+        var defaultmargin = parseInt($j('#css_props').css('margin-right'), 10);
+        var csscontent = [];
         if (B3PGissuite.config.tabWidth) {
             // get margins configured in CSS
-            var tabwidth = parseInt(B3PGissuite.config.tabWidth, 10),
-                    tabwidth_margin = tabwidth + extramargin + (2 * defaultmargin);
+            var tabwidth = parseInt(B3PGissuite.config.tabWidth, 10);
             // CSS creation, same logic as in SCC stylesheet
-            csscontent = '#content_viewer.tabrechts_open #tab_container, #content_viewer.tabrechts_open #tabjes, #content_viewer.tabrechts_open #nav {' +
-                    'width: ' + tabwidth + 'px !important;' +
-                    '}' +
-                    '#content_viewer.tabrechts_open #mapcontent {' +
-                    'right: ' + tabwidth_margin + 'px !important;' +
-                    '}';
+            csscontent.push(this.toCss('#content_viewer.tabrechts_open #tab_container, #content_viewer.tabrechts_open #tabjes, #content_viewer.tabrechts_open #nav', {
+                'width': tabwidth + 'px !important'
+            }));
+            csscontent.push(this.toCss('#content_viewer.tabrechts_open #mapcontent', {
+                'right': (tabwidth + extramargin + (2 * defaultmargin)) + 'px !important'
+            }));
         }
         if (B3PGissuite.config.tabWidthLeft) {
             // get margins configured in CSS
-            var tabwidthLeft = parseInt(B3PGissuite.config.tabWidthLeft, 10),
-                    tabwidthleft_margin = tabwidthLeft + extramargin + (2 * defaultmargin);
+            var tabwidthLeft = parseInt(B3PGissuite.config.tabWidthLeft, 10);
             // CSS creation, same logic as in SCC stylesheet
-            csscontent += '#content_viewer.tablinks_open #leftcontent, #content_viewer.tablinks_open #leftcontenttabjes, #content_viewer.tablinks_open #leftcontentnav {' +
-                    'width: ' + tabwidthLeft + 'px !important;' +
-                    '}' +
-                    '#content_viewer.tablinks_open #mapcontent {' +
-                    'left: ' + tabwidthleft_margin + 'px !important;' +
-                    '}';
+            csscontent.push(this.toCss('#content_viewer.tablinks_open #leftcontent, #content_viewer.tablinks_open #leftcontenttabjes, #content_viewer.tablinks_open #leftcontentnav', {
+                'width': tabwidthLeft + 'px !important'
+            }));
+            csscontent.push(this.toCss('#content_viewer.tablinks_open #mapcontent', {
+                'left': (tabwidthLeft + extramargin + (2 * defaultmargin)) + 'px !important'
+            }));
         }
-        if (csscontent !== '') {
-            $j("head").append("<style>" + csscontent + "</style>");
+        if (B3PGissuite.config.dataframehoogte) {
+            // get margins configured in CSS
+            var dataframehoogte = parseInt(B3PGissuite.config.dataframehoogte, 10);
+            // CSS creation, same logic as in SCC stylesheet
+            csscontent.push(this.toCss('#content_viewer.dataframe_open #dataframediv', {
+                'height': dataframehoogte + 'px !important'
+            }));
+            csscontent.push(this.toCss('#content_viewer.dataframe_open #informatiebalk', {
+                'bottom': (dataframehoogte + defaultmargin) + 'px !important'
+            }));
+            csscontent.push(this.toCss('#content_viewer.dataframe_open #mapcontent, #content_viewer.dataframe_open #tab_container, #content_viewer.dataframe_open #leftcontent', {
+                'bottom': (dataframehoogte + (3 * defaultmargin) + 20) + 'px !important'
+            }));
+            csscontent.push(this.toCss('#content_viewer.dataframe_open #onderbalkControl', {
+                'bottom': (dataframehoogte + 5) + 'px !important'
+            }));
         }
+        if (csscontent.length !== 0) {
+            $j("head").append("<style>" + csscontent.join('') + "</style>");
+        }
+    },
+    
+    toCss: function(selector, rules) {
+        var rulescontent = [];
+        for(var prop in rules) if(rules.hasOwnProperty(prop)) {
+            rulescontent.push([prop, ':', rules[prop], ';'].join(''));
+        }
+        return selector + '{' + rulescontent.join('') + '}';
     },
 
     switchTab: function(id) {

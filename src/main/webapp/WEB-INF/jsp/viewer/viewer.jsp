@@ -186,6 +186,7 @@
         'cfgActiveTabLeft': checkValidity('${configMap["activeTabLeft"]}') ? '${configMap["activeTabLeft"]}' : null,
         'tabWidth': checkValidity('${configMap["tabWidth"]}') ? '${configMap["tabWidth"]}' : "288",
         'tabWidthLeft': checkValidity('${configMap["tabWidthLeft"]}') ? '${configMap["tabWidthLeft"]}' : "288",
+        'dataframehoogte': checkValidity('${configMap["defaultdataframehoogte"]}') ? ${configMap["defaultdataframehoogte"]} : "150",
         'showInfoTab': checkValidity('${configMap["showInfoTab"]}') ? '${configMap["showInfoTab"]}' : null,
         'cmsPageId': checkValidity('${cmsPageId}') ? '${cmsPageId}' : '',
         'theme': checkValidity('${theme}') ? '${theme}' : '',
@@ -342,7 +343,7 @@
     (function() {
     <c:if test="${not empty param.debug}">B3PGissuite.commons.setDebug(true);</c:if>
             // Init CSS properties for configured tab width
-            B3PGissuite.get('Layout').configureTabWidth();
+            B3PGissuite.get('Layout').configurePanelSizes();
             B3PGissuite.get('Layout').prepareTabs();
             // Init tab controllers
             var rightTabComponent = B3PGissuite.createComponent('TabComponent', {

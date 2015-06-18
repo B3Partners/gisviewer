@@ -257,9 +257,6 @@ B3PGissuite.defineComponent('LegendTabComponent', {
         div.onclick = function() {
             me.selectLayer(this);
         };
-        if (item.hide_legend) {
-            div.style.display = "none";
-        } // end
 
         if (item.legendurl !== undefined) {
             myImage.src = item.legendurl;
@@ -329,7 +326,7 @@ B3PGissuite.defineComponent('LegendTabComponent', {
                     //$j(orderLayerBox).insertBefore($j(layerDiv),beforeChild);
                 }
             }
-            $j(layerDiv).css("display", "block");
+            $j(layerDiv).css("display", theItem.hide_legend ? "none" : "block");
             return;
         }
 

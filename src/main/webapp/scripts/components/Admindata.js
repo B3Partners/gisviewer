@@ -442,6 +442,7 @@ B3PGissuite.defineComponent('Admindata', {
 
         this.removeWaiting();
 
+        var bronContainerOrder = {};
         if (gegevensbron.records) {
             if ($j('#' + htmlId).find("#tabHeader").length != 1) {
                 var tabHeader = $j('<div></div>').attr({

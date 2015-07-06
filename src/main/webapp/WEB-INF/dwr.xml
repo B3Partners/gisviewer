@@ -1,0 +1,55 @@
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr//dwr20.dtd">
+<dwr>
+    <allow>
+        <create creator="new" javascript="JMapData">
+            <param name="class" value="nl.b3p.gis.viewer.GetLocationData"/>
+        </create>
+        <convert converter="bean" match="nl.b3p.gis.viewer.MapCoordsBean"/>        
+        <create creator="new" javascript="EditUtil">
+            <param name="class" value="nl.b3p.gis.utils.EditUtil"/>
+        </create>
+        <create creator="new" javascript="EditBoomUtil">
+            <param name="class" value="nl.b3p.gis.utils.EditBoomUtil"/>
+        </create>
+        <create creator="new" javascript="JZoeker">
+            <param name="class" value="nl.b3p.zoeker.services.Zoeker"/>
+            <include method="zoek"/>
+        </create>
+        <create creator="new" javascript="JCollectAdmindata">
+            <param name="class" value="nl.b3p.gis.viewer.admindata.CollectAdmindata"/>
+        </create>
+        <create creator="new" javascript="JZoekconfiguratieThemaUtil">
+            <param name="class" value="nl.b3p.gis.utils.ZoekconfiguratieThemaUtil"/>
+        </create>
+        <create creator="new" javascript="JEditFeature">
+            <param name="class" value="nl.b3p.gis.viewer.services.EditFeature"/>
+        </create>
+        
+        <create creator="new" javascript="JMaatregelService">
+            <param name="class" value="nl.b3p.gis.viewer.services.MaatregelService"/>
+        </create>
+        
+        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaat"/>
+        <convert converter="bean" match="nl.b3p.zoeker.services.ZoekResultaatAttribuut"/>  
+        
+        
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekConfiguratie"/>     
+                              
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ResultaatAttribuut"/>   
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.ZoekAttribuut"/>
+                
+        <convert converter="bean" match="nl.b3p.zoeker.configuratie.Bron">
+            <param name="exclude" value="gebruikersnaam, wachtwoord"/>
+        </convert>
+        
+        <convert converter="bean" match="nl.b3p.gis.viewer.admindata.GegevensBronBean"/>
+        <convert converter="bean" match="nl.b3p.gis.viewer.admindata.LabelBean"/>
+        <convert converter="bean" match="nl.b3p.gis.viewer.admindata.RecordBean"/>
+        <convert converter="bean" match="nl.b3p.gis.viewer.admindata.RecordValueBean"/>
+        <convert converter="bean" match="nl.b3p.gis.viewer.admindata.RecordChildBean"/>
+                
+        <convert match="java.lang.Exception" converter="exception">
+            <param name='include' value='message,lineNumber'/>
+        </convert>
+    </allow>
+</dwr>

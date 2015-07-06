@@ -1,0 +1,14 @@
+@import url('../b3p/style.css');
+
+.olControlOverviewMapElement{
+    background-color: #CFCFCF !important;
+}
+
+.olControlLayerSwitcher{
+    width: 150px !important;
+}
+
+.olControlLayerSwitcher .layersDiv {
+    background-color: #CFCFCF !important;
+    color: #000000 !important;
+}

@@ -258,6 +258,9 @@
         "tekenen": {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewerteken.do'}},
         "uploadpoints": {"id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/uploadtemppoints.do'}},
         "layerinfo": {"id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': {}}
+				// digitree
+        // "edit": { id: "edit", contentid: "editboomvakViewer", name: "Edit boom" },
+        // "ziekte": { id: "ziekte", contentid: "editziektevakViewer", name: "Edit Digidis" }
     };
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";
@@ -336,7 +339,69 @@
 </script>
 
 <div id="tabjes"><ul id="nav" class="tabsul"></ul></div>
-<div id="tab_container"></div>
+<!-- digitree
+<div id="tabjes">
+    <ul id="nav">
+        <script type="text/javascript">
+            var createdTabs = new Array();
+            
+            var noOfTabs = 0;
+            for(i in enabledtabs) {
+                var tabid = enabledtabs[i];
+                if(showLeftPanel == null || tabid != showLeftPanel) {
+                    noOfTabs++;
+                }
+            }
+            if(noOfTabs > 5) noOfTabs = 5;
+            var tabswidth = Math.floor((tabWidth - (noOfTabs-1)) / noOfTabs);
+            var cloneTabContentId = null;
+            for(i in enabledtabs) {
+                var tabid = enabledtabs[i];
+                var showTab = true;
+                if(tabid == "ziekte" && !digidis){
+                    showTab = false; 
+                }
+                if(tabid == "edit" && !digitree){
+                    showTab = false;
+                }
+                if(showTab){
+                    var tabobj = eval("tabbladen."+tabid);
+                    if(showLeftPanel != null && tabid == showLeftPanel) {
+                        cloneTabContentId = tabobj.contentid;
+                    } else {
+
+                        if (useMouseOverTabs)
+                            document.write('<li id="' + tabid + '" onmouseover="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
+                        else
+                            document.write('<li id="' + tabid + '" onclick="switchTab(this);"><a href="#" id="' + tabid + 'link" style="width: ' + tabswidth + 'px;">' + tabobj.name + '</a></li>');
+
+                        createdTabs[i] = enabledtabs[i];
+                        if(i == 4) break;
+                    }
+                }
+            }
+
+            for(i in tabbladen) {             
+                var tabid = tabbladen[i].id;
+                checkResizableContent(tabid, tabbladen[i].contentid); 
+                var tabIsEnabled = false;
+                for(j in createdTabs) {
+                    var tabide = createdTabs[j];
+                    if(tabid == tabide) tabIsEnabled = true;
+                }
+                if(!tabIsEnabled) {
+                    document.write('<li id="' + tabid + '"><a href="#" id="' + tabid + 'link" style="display: none;">' + tabbladen[i].name + '</a></li>');
+                }
+            }
+        </script>
+    </ul>
+</div>
+-->
+
+<div id="tab_container">
+//    <div id="editboomvakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="editboomframeViewer" name="editboomframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+//    <div id="editziektevakViewer" style="display: none;" class="tabvak_with_iframe"><iframe id="editziekteframeViewer" name="editziekteframeViewer" frameborder="0" src="empty_iframe.jsp"></iframe></div>
+</div>
 <div id="css_props"></div>
 
 <script type="text/javascript">

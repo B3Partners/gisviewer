@@ -275,7 +275,7 @@
             <forward name="login" path="login"/>
             <forward name="list" path="index"/>
         </action>
-        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataDigitreeAction" name="viewerForm" scope="request" validate="false">
+        <action path="/viewerdata" type="nl.b3p.gis.viewer.GetViewerDataAction" name="viewerForm" scope="request" validate="false">
             <forward name="failure" path="viewerdata"/>
             <forward name="admindata" path="vieweradmindata"/>
             <forward name="metadata" path="viewermetadata"/>

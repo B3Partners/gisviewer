@@ -1,7 +1,6 @@
-package nl.b3p.gis.viewer;
+package nl.b3p.digitree.viewer;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,10 +9,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
-import nl.b3p.gis.viewer.services.ConfigServlet;
+import nl.b3p.gis.viewer.BaseGisAction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForward;
@@ -22,11 +24,6 @@ import org.apache.struts.validator.DynaValidatorForm;
 
 public class ViewerLogAction extends BaseGisAction {
     private static final Log log = LogFactory.getLog(ViewerLogAction.class);
-
-    private static String JDBC_URL = "";
-    private static String DB_USER = "";
-    private static String DB_PASSW = "";
-    private static String TABLE = "";
 
     protected static final String LOGINFO = "loginfo";
     public static final List column_names = Arrays.asList(new String[] {
@@ -54,11 +51,6 @@ public class ViewerLogAction extends BaseGisAction {
     public ActionForward loginfo(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        JDBC_URL = ConfigServlet.getJdbcUrlGisdata();
-        DB_USER = ConfigServlet.getDatabaseUserName();
-        DB_PASSW = ConfigServlet.getDatabasePassword();
-        TABLE = ConfigServlet.getDatabaseLabelTable();
-
         request.setAttribute("column_names", column_names);
 
         String id = (String) request.getParameter("id");
@@ -82,8 +74,11 @@ public class ViewerLogAction extends BaseGisAction {
         List results=new ArrayList();
 
         Connection conn = null;
+        
         try {
-            conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSW);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query);
 
@@ -108,7 +103,8 @@ public class ViewerLogAction extends BaseGisAction {
 
         } catch (SQLException ex) {
             log.error("", ex);
-
+        } catch (NamingException ex) {
+            log.error("", ex);
         } finally {
 
             try {

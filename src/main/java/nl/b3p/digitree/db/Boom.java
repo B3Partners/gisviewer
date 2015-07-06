@@ -1,4 +1,4 @@
-package nl.b3p.gis.viewer.db;
+package nl.b3p.digitree.db;
 
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.opengis.feature.simple.SimpleFeature;

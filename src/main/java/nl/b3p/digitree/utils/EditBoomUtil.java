@@ -1,9 +1,8 @@
-package nl.b3p.gis.utils;
+package nl.b3p.digitree.utils;
 
 import com.vividsolutions.jts.geom.Geometry;
 import java.security.Principal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,11 +11,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import nl.b3p.gis.geotools.DataStoreUtil;
 import nl.b3p.gis.geotools.FilterBuilder;
+import nl.b3p.gis.utils.ConfigKeeper;
+import nl.b3p.gis.utils.EditUtil;
 import nl.b3p.gis.viewer.db.Gegevensbron;
-import nl.b3p.gis.viewer.services.ConfigServlet;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
 import nl.b3p.gis.viewer.services.SpatialUtil;
@@ -39,34 +42,38 @@ import org.opengis.filter.Filter;
  *
  * @author Boy de Wit
  */
-public class EditBoomUtil extends EditUtil{
+public class EditBoomUtil extends EditUtil {
 
     private static final Log log = LogFactory.getLog(EditBoomUtil.class);
 
     /**
      * Constructor
-     **/
+     *
+     */
     public EditBoomUtil() throws Exception {
     }
-    
+
     // maakt een JSONArray met voor elk resultaat een label (omschrijving) en value (boomsoort)
-    public String getAutoSuggestBoomSoorten(String search) throws JSONException{
-        String url = ConfigServlet.getJdbcUrlGisdata();
-        String user = ConfigServlet.getDatabaseUserName();
-        String password = ConfigServlet.getDatabasePassword();
+    public String getAutoSuggestBoomSoorten(String search) throws JSONException {
+
         String output = "";
-        
-        if(search == null || search.equals("") || search.isEmpty()){
+        if (search == null || search.equals("") || search.isEmpty()) {
             return output;
         }
         
+
         search.replaceAll("'", "\'");
-        String query = "select boomsoort, omschrijving from digitree_boomsoorten where UPPER(omschrijving) like UPPER('%"+search+"%') order by omschrijving asc";
+        String query = "select boomsoort, omschrijving from digitree_boomsoorten where UPPER(omschrijving) like UPPER('%" + search + "%') order by omschrijving asc";
 
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(url, user, password);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            if (ds == null) {
+                return output;
+            }
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             JSONObject json = new JSONObject();
@@ -76,20 +83,22 @@ public class EditBoomUtil extends EditUtil{
                 while (rs.next()) {
                     String boomsoort = rs.getString(1);
                     String omschrijving = rs.getString(2);
-                    
+
                     JSONObject soort = new JSONObject()
                             .put("label", omschrijving)
                             .put("value", boomsoort);
                     soorten.put(soort);
                 }
-                
+
                 output = soorten.toString();
-                
+
             } finally {
                 statement.close();
             }
 
         } catch (SQLException ex) {
+            log.error("", ex);
+        } catch (NamingException ex) {
             log.error("", ex);
         } finally {
             try {
@@ -100,14 +109,14 @@ public class EditBoomUtil extends EditUtil{
         }
         return output;
     }
-    
-    private String[] ListToArray(List<String> values){
+
+    private String[] ListToArray(List<String> values) {
         int size = values.size();
         String[] stringvalues = new String[size];
-        
+
         int i = 0;
-        for(Iterator it = values.iterator(); it.hasNext();){
-            String value = (String)it.next();
+        for (Iterator it = values.iterator(); it.hasNext();) {
+            String value = (String) it.next();
             stringvalues[i] = value;
             i++;
         }
@@ -115,7 +124,7 @@ public class EditBoomUtil extends EditUtil{
     }
 
     public String getIdAndWktForBoomObject(String wkt, Integer boomGegevensbronId,
-            String schaal, String tol) throws Exception {
+            String schaal, String tol, String appCode) throws Exception {
 
         /* Als er geen redlining gegevensbron bekend is dan HP */
         if (boomGegevensbronId == null || boomGegevensbronId < 0) {
@@ -133,16 +142,16 @@ public class EditBoomUtil extends EditUtil{
             geom = geom.buffer(distance);
         }
 
-        ArrayList<Feature> features = doQueryRedliningObject(geom, boomGegevensbronId);
+        ArrayList<Feature> features = doQueryRedliningObject(geom, boomGegevensbronId, appCode);
 
-        if ( (features != null) && (features.size() > 0) ) {
+        if ((features != null) && (features.size() > 0)) {
             Feature f = features.get(0);
-            
+
             if (features.size() > 1) {
                 Property p = f.getProperty("status");
                 String status = p.getValue().toString();
 
-                if(status.contains("actueel")){
+                if (status.contains("actueel")) {
                     f = features.get(1);
                 }
 
@@ -165,10 +174,10 @@ public class EditBoomUtil extends EditUtil{
 
         if (f != null || f.getDefaultGeometryProperty() != null) {
             wkt = DataStoreUtil.selecteerKaartObjectWkt(f);
-            if(wkt.startsWith("ST_MULTI")){
+            if (wkt.startsWith("ST_MULTI")) {
                 int begin = wkt.lastIndexOf("(");
                 int end = wkt.indexOf(")");
-                wkt = "ST_POINT("+wkt.substring(begin+1, end) +")";
+                wkt = "ST_POINT(" + wkt.substring(begin + 1, end) + ")";
             }
         }
 
@@ -192,7 +201,7 @@ public class EditBoomUtil extends EditUtil{
 
         String aktie = getFeatureString(f, "aktie");
         String boomsoort = getBoomSoortlabel(getFeatureString(f, "boomsrt"));
-        Integer plantjaar = (Integer)f.getProperty("plantjaar").getValue();
+        Integer plantjaar = (Integer) f.getProperty("plantjaar").getValue();
         String boomhoogte = getFeatureString(f, "boomhoogte");
         String eindbeeld = getFeatureString(f, "eindbeeld");
         String scheefstand = getFeatureCheckbox(f, "scheefstand");
@@ -240,7 +249,7 @@ public class EditBoomUtil extends EditUtil{
         String extra8 = getFeatureString(f, "extra8");
         String extra9 = getFeatureString(f, "extra9");
         String extra10 = getFeatureString(f, "extra10");
-        
+
         JSONObject json = new JSONObject()
                 .put("id", id)
                 .put("project", project)
@@ -304,18 +313,18 @@ public class EditBoomUtil extends EditUtil{
         return json;
     }
 
-    private String getFeatureString(Feature f, String kolom){
+    private String getFeatureString(Feature f, String kolom) {
         String value = "";
 
         Object newValue = f.getProperty(kolom).getValue();
-        if(newValue != null){
+        if (newValue != null) {
             value = newValue.toString().trim();
         }
 
         return value;
     }
 
-    private String getFeatureCheckbox(Feature f, String kolom){
+    private String getFeatureCheckbox(Feature f, String kolom) {
         String value = "";
         String newValue = null;
 
@@ -327,27 +336,29 @@ public class EditBoomUtil extends EditUtil{
             newValue = f.getProperty(kolom).getValue().toString();
         }
 
-        if(newValue != null && newValue.equals("1")){
+        if (newValue != null && newValue.equals("1")) {
             value = "true";
         }
 
         return value;
     }
-    
-    private String getBoomSoortlabel(String boomsoort){
-        String url = ConfigServlet.getJdbcUrlGisdata();
-        String user = ConfigServlet.getDatabaseUserName();
-        String password = ConfigServlet.getDatabasePassword();
+
+    private String getBoomSoortlabel(String boomsoort) {
         String output = "";
-        
-        String query = "select omschrijving from digitree_boomsoorten where boomsoort = '"+boomsoort+"'";
+
+        String query = "select omschrijving from digitree_boomsoorten where boomsoort = '" + boomsoort + "'";
 
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(url, user, password);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            if (ds == null) {
+                return output;
+            }
+            conn = ds.getConnection();
 
-            PreparedStatement statement = conn.prepareStatement(query.toString());
+            PreparedStatement statement = conn.prepareStatement(query);
             try {
                 ResultSet rs = statement.executeQuery();
                 while (rs.next()) {
@@ -358,6 +369,8 @@ public class EditBoomUtil extends EditUtil{
             }
 
         } catch (SQLException ex) {
+            log.error("", ex);
+        } catch (NamingException ex) {
             log.error("", ex);
         } finally {
             try {
@@ -370,7 +383,7 @@ public class EditBoomUtil extends EditUtil{
     }
 
     @Override
-    protected ArrayList<Feature> doQueryRedliningObject(Geometry geom, Integer gbId) throws Exception {
+    protected ArrayList<Feature> doQueryRedliningObject(Geometry geom, Integer gbId, String appCode) throws Exception {
         Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
 
         Transaction tx = null;
@@ -381,25 +394,25 @@ public class EditBoomUtil extends EditUtil{
             tx = sess.beginTransaction();
 
             Gegevensbron gb = (Gegevensbron) sess.get(Gegevensbron.class, gbId);
-            
+
             if (gb == null) {
                 return new ArrayList();
             }
-            
+
             WebContext ctx = WebContextFactory.get();
             HttpServletRequest request = ctx.getHttpServletRequest();
 
             Bron b = gb.getBron(request);
-            
+
             if (b == null || b.getType().equals(Bron.TYPE_WFS)) {
                 return new ArrayList();
             }
-            
+
             ds = b.toDatastore();
 
             List thema_items = SpatialUtil.getThemaData(gb, false);
             List<String> propnames = DataStoreUtil.themaData2PropertyNames(thema_items);
-            
+
             /* ophalen ingelogd projectid */
             Principal user = request.getUserPrincipal();
             GisPrincipal gp = (GisPrincipal) user;
@@ -413,7 +426,8 @@ public class EditBoomUtil extends EditUtil{
 
             Filter f = FilterBuilder.getFactory().and(status, project);
 
-            features = DataStoreUtil.getFeatures(b, gb, geom, f, propnames, null, true);
+            Integer maximum = ConfigKeeper.getMaxNumberOfFeatures(appCode);
+            features = DataStoreUtil.getFeatures(b, gb, geom, f, propnames, maximum, true);
 
             tx.commit();
 

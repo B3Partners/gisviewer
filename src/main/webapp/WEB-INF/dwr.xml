@@ -6,11 +6,14 @@
         </create>
         <convert converter="bean" match="nl.b3p.gis.viewer.MapCoordsBean"/>        
         <create creator="new" javascript="EditUtil">
-            <param name="class" value="nl.b3p.gis.utils.EditUtil"/>
+            <param name="class" value="nl.b3p.GIS.utils.EditUtil"/>
         </create>
+        
+        <!-- digitree -->
         <create creator="new" javascript="EditBoomUtil">
-            <param name="class" value="nl.b3p.gis.utils.EditBoomUtil"/>
+            <param name="class" value="nl.b3p.digitree.utils.EditBoomUtil"/>
         </create>
+        
         <create creator="new" javascript="JZoeker">
             <param name="class" value="nl.b3p.zoeker.services.Zoeker"/>
             <include method="zoek"/>

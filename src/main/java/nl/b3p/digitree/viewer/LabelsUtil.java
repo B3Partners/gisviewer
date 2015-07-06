@@ -1,4 +1,4 @@
-package nl.b3p.gis.viewer.services;
+package nl.b3p.digitree.viewer;
 
 import java.security.Principal;
 import java.sql.Connection;
@@ -8,8 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
-import nl.b3p.gis.viewer.GetViewerDataDigitreeAction;
+import javax.sql.DataSource;
+import nl.b3p.gis.viewer.services.GisPrincipal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -19,20 +24,10 @@ import org.apache.commons.logging.LogFactory;
  * @author Boy de Wit
 **/
 public class LabelsUtil {
-    private static final Log log = LogFactory.getLog(GetViewerDataDigitreeAction.class);
-
-    /* Instellen in web.xml */
-    private static String JDBC_URL = null;;
-    private static String DB_USER = null;
-    private static String DB_PASSW = null;
-    private static String TABLE = null;
+    private static final Log log = LogFactory.getLog(LabelsUtil.class);
+    public static final String TABLE = "digitree_labels";
 
     static public void getExtraLabels(HttpServletRequest request) {
-        
-        JDBC_URL = ConfigServlet.getJdbcUrlGisdata();
-        DB_USER = ConfigServlet.getDatabaseUserName();
-        DB_PASSW = ConfigServlet.getDatabasePassword();
-        TABLE = ConfigServlet.getDatabaseLabelTable();
         
         /* ophalen ingelogd projectid */
         Principal user = request.getUserPrincipal();
@@ -57,7 +52,9 @@ public class LabelsUtil {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSW);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
 
@@ -86,6 +83,8 @@ public class LabelsUtil {
             }
 
         } catch (SQLException ex) {
+            log.error("", ex);
+        } catch (NamingException ex) {
             log.error("", ex);
         } finally {
             try {

@@ -1,9 +1,8 @@
-package nl.b3p.gis.viewer;
+package nl.b3p.digitree.viewer;
 
 import com.vividsolutions.jts.geom.Geometry;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,19 +15,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import nl.b3p.commons.services.FormUtils;
 import nl.b3p.commons.struts.ExtendedMethodProperties;
 import nl.b3p.gis.geotools.DataStoreUtil;
 import nl.b3p.gis.utils.ConfigKeeper;
-import nl.b3p.gis.viewer.db.Boom;
+import nl.b3p.gis.viewer.ViewerCrudAction;
+import nl.b3p.digitree.db.Boom;
 import nl.b3p.gis.viewer.db.Configuratie;
 import nl.b3p.gis.viewer.db.Gegevensbron;
-import nl.b3p.gis.viewer.services.ConfigServlet;
 import nl.b3p.gis.viewer.services.GisPrincipal;
 import nl.b3p.gis.viewer.services.HibernateUtil;
-import nl.b3p.gis.viewer.services.LabelsUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForward;
@@ -102,12 +105,6 @@ public class EditBoomAction extends ViewerCrudAction {
         "geen verhoogd risico", "mogelijk verhoogd risico", "tijdelijk verhoogd risico", "attentieboom", "risicoboom"};
     private static final String[] WEGTYPE = {"A", "B1", "B2", "C1", "C2", "D", "E", "F1", "F2", "KR", "RO", "FP", "VP"};
        
-    /* Instellen in web.xml */
-    private static String JDBC_URL = null;
-    private static String JDBC_URL_KAARTENBALIE = null;
-    private static String DB_USER = null;
-    private static String DB_PASSW = null;
-
     @Override
     protected Map getActionMethodPropertiesMap() {
         Map map = super.getActionMethodPropertiesMap();
@@ -133,10 +130,6 @@ public class EditBoomAction extends ViewerCrudAction {
 
     @Override
     public ActionForward unspecified(ActionMapping mapping, DynaValidatorForm dynaForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        JDBC_URL = ConfigServlet.getJdbcUrlGisdata();
-        JDBC_URL_KAARTENBALIE = ConfigServlet.getJdbcUrlKaartenbalie();
-        DB_USER = ConfigServlet.getDatabaseUserName();
-        DB_PASSW = ConfigServlet.getDatabasePassword();
         
         makeLists(dynaForm, request);
 
@@ -607,7 +600,9 @@ public class EditBoomAction extends ViewerCrudAction {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSW);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             try {
@@ -620,6 +615,8 @@ public class EditBoomAction extends ViewerCrudAction {
             }
 
         } catch (SQLException ex) {
+            logger.error("", ex);
+        } catch (NamingException ex) {
             logger.error("", ex);
         } finally {
             try {
@@ -636,11 +633,7 @@ public class EditBoomAction extends ViewerCrudAction {
         }
     }
 
-    private String getBoomSoort(String boomlabel){
-        String url = ConfigServlet.getJdbcUrlGisdata();
-        String user = ConfigServlet.getDatabaseUserName();
-        String password = ConfigServlet.getDatabasePassword();
-        
+    private String getBoomSoort(String boomlabel) {
         String[] labels = boomlabel.split("'");
         
         String output = "";
@@ -664,7 +657,9 @@ public class EditBoomAction extends ViewerCrudAction {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(url, user, password);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             try {
@@ -677,6 +672,8 @@ public class EditBoomAction extends ViewerCrudAction {
             }
 
         } catch (SQLException ex) {
+            logger.error("", ex);
+        } catch (NamingException ex) {
             logger.error("", ex);
         } finally {
             try {
@@ -695,7 +692,9 @@ public class EditBoomAction extends ViewerCrudAction {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSW);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             try {
@@ -712,6 +711,8 @@ public class EditBoomAction extends ViewerCrudAction {
 
         } catch (SQLException ex) {
             logger.error("", ex);
+        } catch (NamingException ex) {
+            logger.error("", ex);
         } finally {
             try {
                 conn.close();
@@ -722,7 +723,7 @@ public class EditBoomAction extends ViewerCrudAction {
         return bomen;
     }
 
-    private String getUserFullname(String usernaam){
+    private String getUserFullname(String usernaam) {
         String fullname = "";
         String query = "select first_name, surname from users"
                 + " where username ='"+usernaam+"'";
@@ -730,7 +731,9 @@ public class EditBoomAction extends ViewerCrudAction {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(JDBC_URL_KAARTENBALIE, DB_USER, DB_PASSW);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/kaartenbalie");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             try {
@@ -743,6 +746,8 @@ public class EditBoomAction extends ViewerCrudAction {
             }
 
         } catch (SQLException ex) {
+            logger.error("", ex);
+        } catch (NamingException ex) {
             logger.error("", ex);
         } finally {
             try {
@@ -774,7 +779,9 @@ public class EditBoomAction extends ViewerCrudAction {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSW);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             try {
@@ -787,6 +794,8 @@ public class EditBoomAction extends ViewerCrudAction {
             }
 
         } catch (SQLException ex) {
+            logger.error("", ex);
+        } catch (NamingException ex) {
             logger.error("", ex);
         } finally {
             try {
@@ -811,7 +820,9 @@ public class EditBoomAction extends ViewerCrudAction {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSW);
+            InitialContext cxt = new InitialContext();
+            DataSource ds = (DataSource) cxt.lookup("java:/comp/env/jdbc/gisdata");
+            conn = ds.getConnection();
 
             PreparedStatement statement = conn.prepareStatement(query.toString());
             try {
@@ -827,6 +838,8 @@ public class EditBoomAction extends ViewerCrudAction {
             }
 
         } catch (SQLException ex) {
+            logger.error("", ex);
+        } catch (NamingException ex) {
             logger.error("", ex);
         } finally {
             try {
@@ -889,7 +902,7 @@ public class EditBoomAction extends ViewerCrudAction {
 
         if (user == null) {
             //TODO waarom komt dit soms voor?
-            return configKeeper.getConfigMap("default");
+            return configKeeper.getConfigMap(null, true);
         }
 
         Set roles = user.getRoles();
@@ -927,9 +940,9 @@ public class EditBoomAction extends ViewerCrudAction {
             }
         }
 
-        Map map = configKeeper.getConfigMap(echteRol);
+        Map map = configKeeper.getConfigMap(echteRol, false);
         if ((map == null) || (map.isEmpty())) {
-            map = configKeeper.getConfigMap("default");
+            map = configKeeper.getConfigMap(null, true);
         }
         
         return map;

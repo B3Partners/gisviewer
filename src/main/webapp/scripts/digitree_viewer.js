@@ -137,9 +137,9 @@ function returnBoomObject(jsonString) {
     var iframe;
     var tab = "";
     for (var i=0; i < enabledtabs.length; i++) {
-        if (enabledtabs[i] == "edit"){
+        if (enabledtabs[i] == "boom"){
             iframe = document.getElementById('editboomframeViewer');
-            tab = "edit";
+            tab = "boom";
         }
         if (enabledtabs[i] == "ziekte"){
             iframe = document.getElementById('editziekteframeViewer');
@@ -438,7 +438,7 @@ $j(document).ready(function() {
     var wktTabOn = false;
     var transparantieTabOn = false;
     var tekenTabOn = false;
-    var editTabOn = false;
+    var boomTabOn = false;
     var ziekteTabOn = false;
 
     for (var i=0; i < enabledtabs.length; i++) {
@@ -469,8 +469,8 @@ $j(document).ready(function() {
         if (enabledtabs[i] == "tekenen")
             tekenTabOn = true;
         
-        if (enabledtabs[i] == "edit")
-            editTabOn = true;
+        if (enabledtabs[i] == "boom")
+            boomTabOn = true;
         
         if (enabledtabs[i] == "ziekte")
             ziekteTabOn = true;
@@ -518,7 +518,7 @@ $j(document).ready(function() {
         }
     }
     
-    if (editTabOn) {
+    if (boomTabOn) {
         if(document.getElementById('editboomframeViewer')) {
             document.getElementById('editboomframeViewer').src='/digitree/viewereditboom.do';
         }

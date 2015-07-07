@@ -259,7 +259,7 @@
         "uploadpoints": {"id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/uploadtemppoints.do'}},
         "layerinfo": {"id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': {}}
 				// digitree
-        // "edit": { id: "edit", contentid: "editboomvakViewer", name: "Edit boom" },
+        // "boom": { id: "edit", contentid: "editboomvakViewer", name: "Edit boom" },
         // "ziekte": { id: "ziekte", contentid: "editziektevakViewer", name: "Edit Digidis" }
     };
 
@@ -361,7 +361,7 @@
                 if(tabid == "ziekte" && !digidis){
                     showTab = false; 
                 }
-                if(tabid == "edit" && !digitree){
+                if(tabid == "boom" && !digitree){
                     showTab = false;
                 }
                 if(showTab){

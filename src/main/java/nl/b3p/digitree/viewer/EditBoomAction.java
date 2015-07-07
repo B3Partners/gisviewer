@@ -257,7 +257,7 @@ public class EditBoomAction extends ViewerCrudAction {
     private void makeLists(DynaValidatorForm dynaForm, HttpServletRequest request) throws Exception {
         Map instellingen = getInstellingenMap(request);
 
-        Integer gbId = (Integer) instellingen.get("editGegevensbron");
+        Integer gbId = (Integer) instellingen.get("boomGegevensbron");
         dynaForm.set("gegevensbron", gbId);
 
         //List boomsoort = getBoomSoorten();

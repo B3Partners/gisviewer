@@ -1051,13 +1051,13 @@ B3PGissuite.defineComponent('Admindata', {
                     fLink = $j('<a href="#" id="' + this.uniqueId('jsFunction_') + '">' + funcarray[0] + '</a>');
                 }
                 fLink.click(function() {
-                    me.admindataEval(funcarray[1]);
+                    me.admindataEval(funcarray[1], this);
                 });
                 td.html(fLink);
             } else {
                 var icon3 = $j('<img src="' + this.options.flagicon + '" alt="Voer functie uit" title="Voer functie uit" />')
                         .click(function() {
-                    me.admindataEval(waarde.value);
+                    me.admindataEval(waarde.value, this);
                 });
                 td.html(icon3);
             }
@@ -1185,8 +1185,16 @@ B3PGissuite.defineComponent('Admindata', {
      * moeten ze ook in die context worden uitgevoerd. Vandaar de B3PGissuite.get('Admindata').
      * prefix voor de eval commando's
      */
-    admindataEval: function(evalFn) {
-        eval("B3PGissuite.get('Admindata')." + evalFn);
+    admindataEval: function(evalFn, deze) {
+        if( typeof deze !== 'undefined' ) {
+            /* TODO  lelijke hack, wie weet een betere manier? 
+             * Na ombouw naar componenten is this deze klasse en niet langer het element
+             * waar voorheen de eval werd aangeroepen. */
+            var levalFn = evalFn.replace("(this, ","(deze, ");
+            eval("B3PGissuite.get('Admindata')." + levalFn);
+        } else {
+            eval("B3PGissuite.get('Admindata')." + evalFn);
+        }
     },
 
     /*

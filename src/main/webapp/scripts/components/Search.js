@@ -232,45 +232,50 @@ B3PGissuite.defineComponent('Search', {
         for (var i = 0; i < zoekVelden.length; i++) {
             var veld = $j("#" + zoekVelden[i].attribuutnaam).val();
 
-            if (veld === undefined || veld === '') {
+            if (zoekVelden[i].type == 80) { // XY coord
+
+                var x = $j("#" + zoekVelden[i].id + '_x').val();
+                var y = $j("#" + zoekVelden[i].id + '_y').val();
+
+                if (x === undefined || y === undefined || x === "" || y === "") {
+                    B3PGissuite.commons.messagePopup("Zoeken", "Ongeldige coordinaten opgegeven.", "error");
+
+                    return;
+                }
+
+                x = x.replace(",", ".");
+                y = y.replace(",", ".");
+
+                waarde[i] = x + ',' + y;
+
+            } else if (zoekVelden[i].type == 90) { // Schaal zoekveld
+                var invoer = $j("#" + zoekVelden[i].id + '_schaal').val();
+
+                if (invoer === undefined || invoer === "" || invoer <= 0) {
+                    B3PGissuite.commons.messagePopup("Zoeken", "Ongeldige schaal opgegeven.", "error");
+                    return;
+                }
+
+                /* reken ingevoerde schaal om naar resolutie */
+                var screenWidthPx = $j("#mapcontent").width();
+
+                var newMapWidth = invoer * (screenWidthPx * 0.00028);
+                var res = newMapWidth / screenWidthPx;
+
+                B3PGissuite.vars.webMapController.getMap().zoomToScale(res);
+
+            } else if (veld === undefined || veld === '') {
+
                 waarde[i] = "";
+
             } else {
+
                 if (zoekVelden[i].type === 0) {
                     waarde[i] = searchOp + veld.replace(/^\s*/, "").replace(/\s*$/, "") + searchOp;
-                } else if (zoekVelden[i].type == 80) { // XY coord
-
-                    var x = $j("#" + zoekVelden[i].id + '_x').val();
-                    var y = $j("#" + zoekVelden[i].id + '_y').val();
-
-                    if (x === undefined || y === undefined || x === "" || y === "") {
-                        B3PGissuite.commons.messagePopup("Zoeken", "Ongeldige coordinaten opgegeven.", "error");
-
-                        return;
-                    }
-
-                    x = x.replace(",", ".");
-                    y = y.replace(",", ".");
-
-                    waarde[i] = x + ',' + y;
-
-                } else if (zoekVelden[i].type == 90) { // Schaal zoekveld
-                    var invoer = $j("#" + zoekVelden[i].id + '_schaal').val();
-
-                    if (invoer === undefined || invoer === "" || invoer <= 0) {
-                        B3PGissuite.commons.messagePopup("Zoeken", "Ongeldige schaal opgegeven.", "error");
-                        return;
-                    }
-
-                    /* reken ingevoerde schaal om naar resolutie */
-                    var screenWidthPx = $j("#mapcontent").width();
-
-                    var newMapWidth = invoer * (screenWidthPx * 0.00028);
-                    var res = newMapWidth / screenWidthPx;
-
-                    B3PGissuite.vars.webMapController.getMap().zoomToScale(res);
                 } else {
                     waarde[i] = veld;
                 }
+
             }
         }
 

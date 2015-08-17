@@ -1017,8 +1017,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
             var ownCyclomedia = B3PGissuite.vars.webMapController.createTool("b_ownCyclomedia", Tool.CLICK,{
                 click:function(event){
 
-                    var opx = this.map.getLonLatFromPixel(event.xy)
-                    var url = B3PGissuite.config.ownCyclomediaUrl +"?address="+opx.lon + " " + opx.lat;
+                    var opx = this.map.getLonLatFromPixel(event.xy);
+                    // format ownCyclomediaUrl = http://www.server.nl?address=[RDX] [RDY]
+                    var url = B3PGissuite.config.ownCyclomediaUrl;
+                    url = url.replace("[RDX]", opx.lon);
+                    url = url.replace("[RDY]", opx.lat);
                     B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",800,1024,false);
                 }
                 

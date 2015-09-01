@@ -212,7 +212,6 @@
         <action path="/admindatabusy" forward="vieweradmindatabusy"/>
 
         <action path="/viewerwelkom" forward="viewerwelkom"/>
-        <action path="/vieweranalysedata" forward="vieweranalysedata"/>
 
         <action path="/viewermeldingen" type="nl.b3p.gis.viewer.MeldingAction" name="meldingForm" scope="request" validate="false">
             <forward name="success" path="viewermeldingen"/>

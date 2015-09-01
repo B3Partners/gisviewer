@@ -94,10 +94,6 @@
         <put name="title" value="Viewerobjectdata" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewerobjectdata.jsp"/>
     </definition>
-    <definition name="vieweranalysedata" extends="tab">
-        <put name="title" value="Viewer analyse data" type="string"/>
-        <put name="content" value="/WEB-INF/jsp/viewer/vieweranalysedata.jsp"/>
-    </definition>
     <definition name="viewermeldingen" extends="tab">
         <put name="title" value="Viewer Meldingen" type="string"/>
         <put name="content" value="/WEB-INF/jsp/viewer/viewermeldingen.jsp"/>

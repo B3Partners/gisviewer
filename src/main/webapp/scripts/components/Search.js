@@ -691,7 +691,7 @@ B3PGissuite.defineComponent('Search', {
             if (arr !== null && arr.length > 1) {
                 container.append($j('<input type="button" />').attr("value", " Reset").addClass("knop").click(function() {
                     B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
-                    me.searchConfigurationsSelectChanged(this.inputSearchDropdown);
+                    me.searchConfigurationsSelectChanged(me.inputSearchDropdown);
                 }));
             }
 

@@ -299,6 +299,7 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/viewer-min.js"/>"></script>
     </c:otherwise>
 </c:choose>
+<jsp:include page="/WEB-INF/jsp/viewer/viewerscripts.jsp" />
 
 <div style="display: none;">
     <html:form action="/viewerdata?code=${kbcode}&cmsPageId=${cmsPageId}">

@@ -29,7 +29,8 @@ B3PGissuite.defineComponent('Admindata', {
         infoexporticon: '',
         googleIcon: '',
         noResultsHeader: '',
-        noResultsTekst: ''
+        noResultsTekst: '',
+        hideEmptyResults: true
     },
 
     constructor: function Admindata(options) {
@@ -118,6 +119,7 @@ B3PGissuite.defineComponent('Admindata', {
         tableData += "</tr>";
         tableData += "</table>";
         document.getElementById('content_style').innerHTML = tableData;
+        document.getElementById('content_style').style.display = 'block';
     },
 
     addGegevensbron: function(opts) {
@@ -150,8 +152,6 @@ B3PGissuite.defineComponent('Admindata', {
             return;
         }
         //minstens 1 gegevensbron was gevuld, nooit writeNoResults schrijven
-        this.loop = 0;
-
         var layout = gegevensbron.layout;
         if (layout == "admindata2") {
             this.handleGetGegevensBronSimpleHorizontal(gegevensbron);
@@ -166,6 +166,14 @@ B3PGissuite.defineComponent('Admindata', {
         }
 
         $j("#adminDataWrapper > .bronContainer").addClass("rootBronContainer");
+        
+        if (this.loop <= 0) {
+            var visibleBronContainers = $j("#adminDataWrapper > .bronContainer:visible");
+            if(visibleBronContainers.length === 0) {
+                this.writeNoResultsHtml();
+            }
+        }
+        
         if (B3PGissuite.commons.getIEVersion() <= 7 && B3PGissuite.commons.getIEVersion() !== -1) {
             this.resizeWidthIE();
         }
@@ -301,14 +309,11 @@ B3PGissuite.defineComponent('Admindata', {
                 bronContainer.append(bronContent);
             });
         } else {
-            // Create empty row
-            var bronContent = $j('<div></div>').attr({
-                "id": "bronContent" + htmlId + gegevensbron.id + "_11",
-                "class": "bronContent"
-            });
-            // Append all to DOM tree
-            bronContent.append($j('<table></table>').append($j('<tbody></tbody>').append('<tr><td colspan="2">Geen data gevonden</td></tr>')));
-            bronContainer.append(bronContent);
+            if(this.options.hideEmptyResults) {
+                bronContainer.hide();
+            } else {
+                bronContainer.append(this.createEmptyBronContent(htmlId, gegevensbron.id));
+            }
         }
 
         this.removeWaiting();
@@ -371,14 +376,11 @@ B3PGissuite.defineComponent('Admindata', {
                 bronContainer.append(bronContent);
             });
         } else {
-            // Create empty row
-            var bronContent = $j('<div></div>').attr({
-                "id": "bronContent" + htmlId + gegevensbron.id + "_11",
-                "class": "bronContent"
-            });
-            // Append all to DOM tree
-            bronContent.append($j('<table></table>').append($j('<tbody></tbody>').append('<tr><td colspan="2">Geen data gevonden</td></tr>')));
-            bronContainer.append(bronContent);
+            if(this.options.hideEmptyResults) {
+                bronContainer.hide();
+            } else {
+                bronContainer.append(this.createEmptyBronContent(htmlId, gegevensbron.id));
+            }
         }
 
         this.removeWaiting();
@@ -530,12 +532,16 @@ B3PGissuite.defineComponent('Admindata', {
 
         // Create table content
         if (!gegevensbron.records) {
-            var size = 1;
-            if (gegevensbron.labels) {
-                size = gegevensbron.labels.length;
+            if(this.options.hideEmptyResults) {
+                bronContainer.hide();
+            } else {
+                var size = 1;
+                if (gegevensbron.labels) {
+                    size = gegevensbron.labels.length;
+                }
+                var tr = this.createEmptyRow(size);
+                bronTableBody.append(tr);
             }
-            var tr = this.createEmptyRow(size);
-            bronTableBody.append(tr);
         } else {
             $j.each(gegevensbron.records, function(index, record) {
                 var tr = $j('<tr></tr>');
@@ -621,12 +627,16 @@ B3PGissuite.defineComponent('Admindata', {
 
         // Create table content
         if (!gegevensbron.records) {
-            var size = 1;
-            if (gegevensbron.labels) {
-                size = gegevensbron.labels.length;
+            if(this.options.hideEmptyResults) {
+                bronContainer.hide();
+            } else {
+                var size = 1;
+                if (gegevensbron.labels) {
+                    size = gegevensbron.labels.length;
+                }
+                var tr = this.createEmptyRow(size);
+                bronTableBody.append(tr);
             }
-            var tr = this.createEmptyRow(size);
-            bronTableBody.append(tr);
         } else {
             $j.each(gegevensbron.records, function(index, record) {
                 var tr = $j('<tr></tr>');
@@ -1176,6 +1186,17 @@ B3PGissuite.defineComponent('Admindata', {
         tr.append(td);
 
         return tr;
+    },
+    
+    createEmptyBronContent: function(htmlId, gegevensbronId) {
+        // Create empty row
+        var bronContent = $j('<div></div>').attr({
+            "id": "bronContent" + htmlId + gegevensbronId + "_11",
+            "class": "bronContent"
+        });
+        // Append all to DOM tree
+        bronContent.append($j('<table></table>').append($j('<tbody></tbody>').append('<tr><td colspan="2">Geen data gevonden</td></tr>')));
+        return bronContent;
     },
       
     /**

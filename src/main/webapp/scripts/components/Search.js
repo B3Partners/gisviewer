@@ -224,10 +224,13 @@ B3PGissuite.defineComponent('Search', {
         }
 
         var zoekVelden = zoekConfig.zoekVelden;
-        var bron = zoekConfig.bron.url;
         var searchOp = "%";
-        if (bron.indexOf("http") != -1)
-            searchOp = "*";
+        if (zoekConfig.bron) {
+            var bron = zoekConfig.bron.url;
+            if (bron.indexOf("http") != -1) {
+                searchOp = "*";
+            }
+        }
         var waarde = [];
         for (var i = 0; i < zoekVelden.length; i++) {
             var veld = $j("#" + zoekVelden[i].attribuutnaam).val();
@@ -247,7 +250,7 @@ B3PGissuite.defineComponent('Search', {
                 y = y.replace(",", ".");
 
                 waarde[i] = x + ',' + y;
-
+                
             } else if (zoekVelden[i].type == 90) { // Schaal zoekveld
                 var invoer = $j("#" + zoekVelden[i].id + '_schaal').val();
 

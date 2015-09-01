@@ -69,6 +69,10 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
     }
 };
 
+B3PGissuite.extendComponent = function(className, extension) {
+    jQuery.extend(B3PGissuite.component[className].prototype, extension);
+};
+
 /* Helper function to get access to a component (for example var tree = B3PGissuite.get('TreeTabComponent'); ) */
 B3PGissuite.get = function(className, id) {
     // Default instanceid is zero (the first instance)

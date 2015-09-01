@@ -15,6 +15,9 @@ B3PGissuite.defineComponent('IframeTabComponent', {
         if(B3PGissuite.config.cmsPageId) {
             src = this.addToQueryString(src, 'cmsPageId', B3PGissuite.config.cmsPageId);
         }
+        if(B3PGissuite.config.bookmarkAppcode) {
+            src = this.addToQueryString(src, 'appCode', B3PGissuite.config.bookmarkAppcode);
+        }
         if(B3PGissuite.commons.getDebug()) {
             src = this.addToQueryString(src, 'debug', 'true');
         }

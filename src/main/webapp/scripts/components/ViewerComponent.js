@@ -1522,11 +1522,30 @@ B3PGissuite.defineComponent('ViewerComponent', {
         B3PGissuite.vars.editingRedlining = true;
         B3PGissuite.vars.redLineGegevensbronId = id;
 
-        if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
-            B3PGissuite.vars.webMapController.activateTool("breinaald");
-        } else {
+        if (B3PGissuite.vars.btn_highLightSelected === true) {
+            B3PGissuite.vars.btn_highLightSelected = false;
             B3PGissuite.vars.webMapController.activateTool("identify");
+            if (!(B3PGissuite.vars.webMapController instanceof FlamingoController)) {
+                $j(".olControlb_highlightItemActive").addClass('olControlb_highlightItemInactive');
+                $j(".olControlb_highlightItemActive").removeClass('olControlb_highlightItemActive');
+                B3PGissuite.vars.webMapController.activateTool("identify");
+            }
+        } else {
+            B3PGissuite.vars.btn_highLightSelected = true;
+            if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+                B3PGissuite.vars.webMapController.activateTool("breinaald");
+            } else {
+                $j(".olControlb_highlightItemInactive").addClass('olControlb_highlightItemActive');
+                $j(".olControlb_highlightItemInactive").removeClass('olControlb_highlightItemInactive');
+                B3PGissuite.vars.webMapController.activateTool("identify");
+            }
         }
+
+//        if (B3PGissuite.vars.webMapController instanceof FlamingoController) {
+//            B3PGissuite.vars.webMapController.activateTool("breinaald");
+//        } else {
+//            B3PGissuite.vars.webMapController.activateTool("identify");
+//        }
     },
 
     /* WebmapController Event handlers */

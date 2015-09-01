@@ -243,7 +243,7 @@
         "themas": {"id": "themas", "contentid": "treevak", "name": "Kaarten", "class": "TreeTabComponent", 'options': {'tree': B3PGissuite.config.themaTree, 'servicestrees': B3PGissuite.config.serviceTrees, 'expandAll': B3PGissuite.config.expandAll}},
         "zoeken": {"id": "zoeken", "contentid": "infovak", "name": "Zoeken", "class": "SearchTabComponent", "options": {"hasSearch": (B3PGissuite.config.search !== ''), "hasA11yStartWkt": ${!empty a11yStartWkt}}},
         "gebieden": {"id": "gebieden", "contentid": "objectframeViewer", "name": "Gebieden", "class": "IframeTabComponent", 'options': {'src': 'empty_iframe.jsp'}},
-        "analyse": {"id": "analyse", "contentid": "analyseframeViewer", "name": "Analyse", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/vieweranalysedata.do'}},
+        "analyse": {"id": "analyse", "contentid": "analyseframeViewer", "name": "Analyse", "class": "AnalyseTabComponent" },
         "legenda": {"id": "legenda", "contentid": "volgordevak", "name": "Legenda", "class": "LegendTabComponent", 'options': {'useSortableFunction': B3PGissuite.config.useSortableFunction, 'layerDelay': B3PGissuite.config.layerDelay}},
         //"informatie": { "id": "informatie", "contentid": "beschrijvingVakViewer", "name": "Informatie", "class": "IframeTabComponent", 'options': { 'src': 'empty_iframe.jsp' } },
         "planselectie": {"id": "planselectie", "contentid": "plannenzoeker", "name": "Planselectie", "class": "PlanSelectionTabComponent"},
@@ -293,6 +293,7 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/SearchTabComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/CMSTabComponent.js"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LayerInfoTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/AnalyseTabComponent.js"/>"></script>
     </c:when>
     <c:otherwise>
         <!-- Total (minified) viewer JS -->

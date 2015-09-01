@@ -133,6 +133,7 @@
                                 <param>${viewerhtml.path}/components/tabcomponents/SearchTabComponent.js</param>
                                 <param>${viewerhtml.path}/components/tabcomponents/CMSTabComponent.js</param>
                                 <param>${viewerhtml.path}/components/tabcomponents/LayerInfoTabComponent.js</param>
+                                <param>${viewerhtml.path}/components/tabcomponents/AnalyseTabComponent.js</param>
                             </sourceFiles>
                         </compilation>
 

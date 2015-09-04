@@ -168,7 +168,7 @@ B3PGissuite.defineComponent('Admindata', {
         $j("#adminDataWrapper > .bronContainer").addClass("rootBronContainer");
         
         if (this.loop <= 0) {
-            var visibleBronContainers = $j("#adminDataWrapper > .bronContainer:visible");
+            var visibleBronContainers = $j("#adminDataWrapper > .bronContainer:visible, #adminDataWrapper > #tabContainer > .bronContainer:visible");
             if(visibleBronContainers.length === 0) {
                 this.writeNoResultsHtml();
             }

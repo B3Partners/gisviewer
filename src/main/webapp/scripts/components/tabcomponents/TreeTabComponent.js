@@ -72,9 +72,28 @@ B3PGissuite.defineComponent('TreeTabComponent', {
             "saveExpandedState": true,
             "saveScrollState": true,
             "expandAll": this.options.expandAll,
-            "scope": this
+            "scope": this,
+            "sortChildren": this.childSorting
         });
     },
+    
+    childSorting: function(a, b) {
+        var sortProperty = 'tree_order';
+        if(B3PGissuite.config.treeOrder === 'alphabet') {
+            sortProperty = 'title';
+        }
+        if(!a.hasOwnProperty(sortProperty) || !b.hasOwnProperty(sortProperty)) {
+            return 0;
+        }
+        if (a[sortProperty] < b[sortProperty]) {
+            return -1;
+        }
+        if (a[sortProperty] > b[sortProperty]) {
+            return 1;
+        }
+        return 0;
+    },
+    
     /**
      * Sort the layersAan variable
      */

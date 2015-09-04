@@ -78,6 +78,9 @@ function treeview_create(options) {
 		var children = options.root.children;
 		if(children) {
 			var html = "";
+                        if(options.hasOwnProperty('sortChildren')) {
+                            children.sort(options.sortChildren);
+                        }
 			for(var i = 0; i < children.length; i++) {
 				if(haveInnerHTML && options.itemHtmlLabelCreatorFunction) {
 					html += treeview_createItemHtml(options, children[i]);
@@ -247,6 +250,9 @@ function treeview_createItemHtml(options, treeItem) {
 	html += treeview_createContentHtml(options, id, treeItem);
 
 	if(treeItem.children) {
+                if(options.hasOwnProperty('sortChildren')) {
+                    treeItem.children.sort(options.sortChildren);
+                }
 		html += treeview_createChildrenHtml(id, options);
 		for(var i = 0; i < treeItem.children.length; i++) {
 			html += treeview_createItemHtml(options, treeItem.children[i]);
@@ -314,8 +320,10 @@ function treeview_createItemNode(options, treeItem) {
 	itemNode.appendChild(contentNode);
 
 	if(treeItem.children) {
+                if(options.hasOwnProperty('sortChildren')) {
+                    treeItem.children.sort(options.sortChildren);
+                }
 		var childrenNode = treeview_createChildrenNode(id, options);
-
 		for(var i = 0; i < treeItem.children.length; i++) {
 			childrenNode.appendChild(treeview_createItemNode(options, treeItem.children[i]));
 		}

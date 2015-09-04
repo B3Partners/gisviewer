@@ -72,6 +72,7 @@
         'kbcode': "${kbcode}",
         'themaTree': ltree,
         'serviceTrees': checkValidity(${servicesTrees}) ? ${servicesTrees} : [],
+        'treeOrder': checkValidity("${configMap["treeOrder"]}") ? "${configMap["treeOrder"]}" : "",
         'organizationcode': "${organizationcode}",
         'fullbbox': '${fullExtent}',
         'bbox': '${extent}',

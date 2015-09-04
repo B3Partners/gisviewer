@@ -287,14 +287,18 @@ B3PGissuite.defineComponent('Search', {
 
         B3PGissuite.vars.webMapController.getMap().removeMarker("searchResultMarker");
 
-        JZoeker.zoek(B3PGissuite.config.zoekconfiguraties[this.currentSearchSelectId].id, waarde, B3PGissuite.config.maxResults, function(values) {
+        var zcID = B3PGissuite.config.zoekconfiguraties[this.currentSearchSelectId].id;
+        JZoeker.zoek(zcID, waarde, B3PGissuite.config.maxResults, function(values) {
             me.searchCallBack(values);
+        });
+        JZoekconfiguratieThemaUtil.getThemas(zcID, function(themaIds) {
+            me.zoekconfiguratieThemasCallBack(themaIds);
+            me.switchLayersOn();
         });
     },
 
     handleZoekResultaat: function(searchResultId) {
         var searchResult = this.foundValues[searchResultId];
-
         // Zet alle lagen aan die geconfigureerd staan bij deze zoekingang.
         this.switchLayersOn();
 

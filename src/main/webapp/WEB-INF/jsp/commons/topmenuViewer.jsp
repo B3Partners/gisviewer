@@ -30,6 +30,7 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <c:set var="appCode" value="${param['appCode']}"/>
     <c:set var="cmsPageId" value="${param['cmsPageId']}"/>
 
+    <c:set var="homeUrl" value="${configMap['homeUrl']}"/>
     <c:set var="helpUrl" value="${configMap['helpUrl']}"/>
     <c:set var="showGoogleMapsIcon" value="${configMap['showGoogleMapsIcon']}"/>
     <c:set var="showBookmarkIcon" value="${configMap['showBookmarkIcon']}"/>
@@ -82,16 +83,34 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     </c:if>
 
     <c:if test="${! empty helpUrl}">        
-        <html:link page="${helpUrl}" target="_blank" styleClass="${stijlklasse}" module="">
-            <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
-        </html:link>
+        <c:choose>
+            <c:when test="${fn:startsWith(helpUrl, 'http') or fn:startsWith(helpUrl, 'www')}">
+                <a href="${helpUrl}" target="_blank" class="menulink">
+                    <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
+                </a>
+            </c:when>
+            <c:otherwise>
+                <html:link page="${helpUrl}" target="_blank" styleClass="${stijlklasse}" module="">
+                    <img src="<html:rewrite page="/images/help.png"/>" alt="Help" title="Help" border="0" />
+                </html:link>
+            </c:otherwise>
+        </c:choose>
     </c:if>
 
-    <c:set var="stijlklasse" value="menulink" />
-    <c:if test="${requestJSP eq 'index.do' or requestJSP eq 'indexlist.do' or requestJSP eq ''}">
-        <c:set var="stijlklasse" value="activemenulink" />
-    </c:if>
-    <html:link page="/cms/${cmsPageId}/home.htm" styleClass="${stijlklasse}" module=""><fmt:message key="commons.topmenu.home"/></html:link>
+    <c:choose>
+        <c:when test="${! empty homeUrl}">
+            <c:choose>
+                <c:when test="${fn:startsWith(homeUrl, 'http') or fn:startsWith(homeUrl, 'www')}">
+                    <a href="${homeUrl}" class="menulink"><fmt:message key="commons.topmenu.home"/></a>
+                </c:when>
+                <c:otherwise>
+                    <html:link page="${homeUrl}" styleClass="menulink" module=""><fmt:message key="commons.topmenu.home"/></html:link>
+                </c:otherwise>
+            </c:choose>
+        </c:when>
+        <c:otherwise>
+            <html:link page="/cms/${cmsPageId}/home.htm" styleClass="menulink" module=""><fmt:message key="commons.topmenu.home"/></html:link>
+        </c:otherwise>
+    </c:choose>
+
 </div>
-
-

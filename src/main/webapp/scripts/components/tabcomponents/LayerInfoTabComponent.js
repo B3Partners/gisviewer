@@ -36,23 +36,22 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
         });
     },
     afterRender: function() {
-        var me = this;
         this.tabComponent = this.getTabComponent();
         this.tabPanel = this.getTabPanel();
         this.tabContainer = jQuery('<div></div>');
-        if(me.tabComponent.isOnlyTab(me.options.tabid)) {
+        if(this.tabComponent.isOnlyTab(this.options.tabid)) {
+            this.tabComponent.setActive(this.options.tabid);
             this.tabPanel.append(jQuery('<div></div>').html('<a class="closeInfo" href="#">[x]</a>').css({ 'padding': '0 2px 5px 0' }).click(function() {
-                if(!me.tabComponent.isHidden() && me.tabComponent.isOnlyTab(me.options.tabid)) {
-                    me.tabComponent.toggleTab();
+                for(var itemid in this.visibleItems) if(this.visibleItems.hasOwnProperty(itemid)) {
+                    this.hideLayerInfo({ id: itemid });
                 }
-            }));
+            }.bind(this)));
         }
         this.tabPanel.append(this.tabContainer);
-        var me = this;
         if(!this.tabComponent.isHidden() && this.tabComponent.isOnlyTab(this.options.tabid)) {
             this.addListener('ViewerComponent', 'initMapComplete', function() {
-                me.tabComponent.toggleTab();
-            });
+                this.tabComponent.toggleTab();
+            }.bind(this));
         }
     },
     // Make the text container and

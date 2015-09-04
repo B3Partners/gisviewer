@@ -386,10 +386,6 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                 } else {
                     this.disableLayer(child.id);
                 }
-
-                if (B3PGissuite.config.showInfoTab === 'auto' || B3PGissuite.config.showInfoTab === 'click') {
-                    this.fireLayerInfoEvent(child, element.checked);
-                }
             }
         }
         /*if its a radio and checked,then disable the other radio's*/
@@ -418,6 +414,10 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                     $j("#layermaindiv_item_" + element.id + "_children input").attr('disabled', true);
                 }
             }
+        }
+        
+        if (B3PGissuite.config.showInfoTab === 'auto') {
+            this.fireLayerInfoEventForCluster(element, element.checked);
         }
 
         if (!dontRefresh) {
@@ -546,6 +546,11 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                     container.appendChild(document.createTextNode('  '));
                     container.appendChild(this.createTreeLegendIcon());
                 }
+            }
+            
+            if (this.getChildrenWithInfo(item).length > 0 && B3PGissuite.config.showInfoTab === 'click' && B3PGissuite.viewercommons.isTabConfigured('layerinfo')) {
+                container.appendChild(document.createTextNode('  '));
+                container.appendChild(this.createInfotabIcon(item));
             }
         }
         if (!item.hide_tree || item.callable) {
@@ -970,7 +975,11 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         legendicon.height = "13";
         legendicon.className = 'treeInfotabIcon imagenoborder';
         $j(legendicon).click(function() {
-            me.fireLayerInfoEvent(obj, true);
+            if(obj.cluster) {
+                me.fireLayerInfoEventForCluster(obj, true);
+            } else {
+                me.fireLayerInfoEvent(obj, true);
+            }
         });
         return legendicon;
     },
@@ -1506,6 +1515,35 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         } else {
             this.fireEvent('hideLayerInfo', item);
         }
+    },
+    
+    fireLayerInfoEventForCluster: function(obj, checked) {
+        if ((B3PGissuite.config.showInfoTab !== 'auto' && B3PGissuite.config.showInfoTab !== 'click') || !B3PGissuite.vars.frameWorkInitialized) {
+            return;
+        }
+        if (obj.theItem) {
+            obj = obj.theItem;
+        }
+        var infoChildren = this.getChildrenWithInfo(obj);
+        for(var i = 0; i < infoChildren.length; i++) {
+            this.fireLayerInfoEvent(infoChildren[i], checked);
+        }
+    },
+    
+    getChildrenWithInfo: function(item) {
+        var childsWithInfo = [];
+        function recursiveChildren(children) {
+            for(var i = 0; i < children.length; i++) {
+                if(children[i].hasOwnProperty('info_tekst') && children[i].info_tekst) {
+                    childsWithInfo.push(children[i]);
+                }
+                if(children[i].hasOwnProperty('children') && children[i].children) {
+                    recursiveChildren(children[i].children);
+                }
+            }
+        }
+        recursiveChildren(item.children);
+        return childsWithInfo;
     },
 
     /*Check scale for all layers*/

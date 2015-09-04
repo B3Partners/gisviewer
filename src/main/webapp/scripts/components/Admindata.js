@@ -417,7 +417,7 @@ B3PGissuite.defineComponent('Admindata', {
             $j.each(gegevensbron.records, function(index, record) {
                 // Create caption
                 var bronCaption = me.createBronCaption(gegevensbron, true, index + 1);
-                bronCaption.append(tab);
+                // bronCaption.append(tab);
                 // Create content table
                 var bronContent = $j('<div></div>').attr({
                     "id": me.uniqueId("bronContent" + htmlId + gegevensbron.id + "_" + record.id),

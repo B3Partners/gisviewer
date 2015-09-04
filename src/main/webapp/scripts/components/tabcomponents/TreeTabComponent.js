@@ -75,6 +75,21 @@ B3PGissuite.defineComponent('TreeTabComponent', {
             "scope": this,
             "sortChildren": this.childSorting
         });
+        
+        if (B3PGissuite.config.showInfoTab === 'auto') {
+            this.addListener('ViewerComponent', 'frameWorkInitialized', function() {
+                for(var i = 0; i < this.layersAan.length; i++) {
+                    if(this.layersAan[i].checked) {
+                        this.fireLayerInfoEvent(this.layersAan[i], true);
+                    }
+                }
+                for(i = 0; i < this.clustersAan.length; i++) {
+                    if(this.clustersAan[i].checked) {
+                        this.fireLayerInfoEventForCluster(this.clustersAan[i], true);
+                    }
+                }
+            }.bind(this));
+        }
     },
     
     childSorting: function(a, b) {
@@ -454,7 +469,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
             this.createClusterLabel(container, item);
         } else if (!item.hide_tree) {
             if (item.wmslayers) {
-                checkboxChecked = false;
+                var checkboxChecked = false;
                 var layerPos = this.getLayerPosition(item);
                 if (layerPos !== 0) {
                     checkboxChecked = true;
@@ -515,8 +530,8 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         return false;
     },
     createClusterLabel: function(container, item) {
+        var checkboxChecked = false;
         if (item.callable) {
-            var checkboxChecked = false;
             var clusterPos = this.getClusterPosition(item);
             if (clusterPos !== 0) {
                 checkboxChecked = true;
@@ -754,7 +769,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
             'checked': checked,
             'value': item.id
         })
-                .click(function() {
+        .click(function() {
             me.checkboxClick(this, false);
         })[0];
     },

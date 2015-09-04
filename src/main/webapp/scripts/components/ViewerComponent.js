@@ -1414,6 +1414,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
             }, 0);
         }
 
+        this.fireEvent('frameWorkInitialized');
+
         /* Tiling resoluties zetten zodat Flamingo navigatie de juiste zoomniveaus
          * overneemt. Indien geen resoluties opgegeven kun je in Flamingo gewoon
          * oneindig ver blijven inzoomen Let op: Bij OpenLayers gebeurt dit

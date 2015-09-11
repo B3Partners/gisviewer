@@ -179,4 +179,4 @@
     </html:form>
 
 </div>
-<script type="text/javascript" src="scripts/createmappdf.js"></script>
+<script type="text/javascript" src="scripts/createmappdf.js?v=${JS_VERSION}"></script>

@@ -96,4 +96,4 @@
     </div>
 </div>
 
-<script type="text/javascript" src="<html:rewrite page="/scripts/redlining.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/redlining.js?v=${JS_VERSION}"/>"></script>

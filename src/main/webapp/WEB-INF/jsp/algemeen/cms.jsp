@@ -53,7 +53,7 @@
 <div style="clear: both;"></div>
 
 <c:if test="${showPlainAndMapButton == 'true'}">
-    <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script> 
+    <script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js?v=${JS_VERSION}' module=''/>"></script> 
 </c:if>
 
-<script type="text/javascript" src="<html:rewrite page='/scripts/viewerAddCmsId.js' module=''/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/viewerAddCmsId.js?v=${JS_VERSION}' module=''/>"></script>

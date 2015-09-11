@@ -16,10 +16,9 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
             return;
         }
         // Get current scale
-        var currentscale = webMapController.getMap().getScaleHint(),
-            me = this;
+        var me = this;
         // Check if the layer is in scale and has a number for id
-        if(!B3PGissuite.viewercommons.isItemInScale(item, currentscale) || isNaN(item.id)) return;
+        if(isNaN(item.id)) return;
         // Text is in layerInfo object so show panel immediately
         if(this.layerInfo.hasOwnProperty(item.id)) {
             return this.showTabPanel(item);

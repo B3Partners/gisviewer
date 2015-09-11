@@ -7,9 +7,9 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type="text/javascript" src='dwr/engine.js'></script>
-<script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
-<script type='text/javascript' src='dwr/util.js'></script>
+<script type="text/javascript" src='dwr/engine.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/interface/JZoeker.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/util.js?v=${JS_VERSION}'></script>
 
 <div style="padding: 5px;">
     <div>
@@ -31,7 +31,7 @@
         <div class="searchResultsClass" id="vergunningResults"></div>
     </div>
 </div>
-<script type="text/javascript" src="scripts/vergunningzoeker.js"></script>
+<script type="text/javascript" src="scripts/vergunningzoeker.js?v=${JS_VERSION}"></script>
 <script type="text/javascript">
     $j(document).ready(function() {
         createSearchConfigurations();

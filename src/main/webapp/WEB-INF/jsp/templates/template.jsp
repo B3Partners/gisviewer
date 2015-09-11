@@ -55,11 +55,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-ui-1.8.10.custom.min.js' module=''/>"></script>
         <c:choose>
             <c:when test="${not empty param.debug}">
-                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js' module=''/>"></script>
-                <script type="text/javascript" src="<html:rewrite page='/scripts/components/Component.js'/>"></script>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js?v=${JS_VERSION}' module=''/>"></script>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/components/Component.js?v=${JS_VERSION}'/>"></script>
             </c:when>
             <c:otherwise>
-                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions-min.js' module=''/>"></script>
+                <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions-min.js?v=${JS_VERSION}' module=''/>"></script>
             </c:otherwise>
         </c:choose>
         

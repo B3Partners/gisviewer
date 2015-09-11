@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 
-<script type="text/javascript" src="<html:rewrite page='/scripts/kaartselectie.js'/>"></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/kaartselectie.js?v=${JS_VERSION}'/>"></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js?v=${JS_VERSION}"/>"></script>
 
 <!-- Indien niet goed opgeslagen dan wel messages tonen -->
 <c:if test="${empty appCodeSaved}">

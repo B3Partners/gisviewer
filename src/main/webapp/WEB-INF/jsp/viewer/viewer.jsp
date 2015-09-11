@@ -5,14 +5,14 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type="text/javascript" src='dwr/engine.js'></script>
-<script type='text/javascript' src='dwr/interface/EditUtil.js'></script>
-<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
-<script type='text/javascript' src='dwr/interface/JZoeker.js'></script>
-<script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js'></script>
-<script type='text/javascript' src='dwr/interface/JEditFeature.js'></script>
-<script type='text/javascript' src='dwr/interface/JMaatregelService.js'></script>
-<script type='text/javascript' src='dwr/util.js'></script>
+<script type="text/javascript" src='dwr/engine.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/interface/EditUtil.js?v=${JS_VERSION}'></script>
+<script type="text/javascript" src='dwr/interface/JMapData.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/interface/JZoeker.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/interface/JEditFeature.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/interface/JMaatregelService.js?v=${JS_VERSION}'></script>
+<script type='text/javascript' src='dwr/util.js?v=${JS_VERSION}'></script>
 
 <script type="text/javascript">
 
@@ -267,38 +267,38 @@
 <c:choose>
     <c:when test="${not empty param.debug}">
         <!-- common -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/lib/swfobject.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/lib/proj4js-compressed.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/MaatregelComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/lib/swfobject.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/simple_treeview.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/lib/proj4js-compressed.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/viewer.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/MaatregelComponent.js?v=${JS_VERSION}"/>"></script>
         <!-- openlayers -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/openlayers/lib/OpenLayers.js?v=${JS_VERSION}"/>"></script>
         <!-- webmapcontrollers -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/Controller.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/FlamingoController.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/webmapcontroller/OpenLayersController.js?v=${JS_VERSION}"/>"></script>
         <!-- components -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/BaseComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/ViewerComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Search.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Layout.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Balloon.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Edit.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/GPS.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/IframeTabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TreeTabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LegendTabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/PlanSelectionTabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/SearchTabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/CMSTabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LayerInfoTabComponent.js"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/AnalyseTabComponent.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/BaseComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/ViewerComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Search.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Layout.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Balloon.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/Edit.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/GPS.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/IframeTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TreeTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LegendTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/PlanSelectionTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/SearchTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/CMSTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LayerInfoTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/AnalyseTabComponent.js?v=${JS_VERSION}"/>"></script>
     </c:when>
     <c:otherwise>
         <!-- Total (minified) viewer JS -->
-        <script type="text/javascript" src="<html:rewrite page="/scripts/viewer-min.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/viewer-min.js?v=${JS_VERSION}"/>"></script>
     </c:otherwise>
 </c:choose>
 <jsp:include page="/WEB-INF/jsp/viewer/viewerscripts.jsp" />

@@ -1,10 +1,10 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type="text/javascript" src='dwr/engine.js'></script>
-<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
+<script type="text/javascript" src='dwr/engine.js?v=${JS_VERSION}'></script>
+<script type="text/javascript" src='dwr/interface/JMapData.js?v=${JS_VERSION}'></script>
 
-<script type="text/javascript" src="<html:rewrite page='/scripts/components/Admindata.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/components/Admindata.js?v=${JS_VERSION}'/>"></script>
 <script type="text/javascript">
 
     function catchEmpty(defval){

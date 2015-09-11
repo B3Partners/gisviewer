@@ -1,11 +1,11 @@
 <%@include file="/WEB-INF/jsp/taglibs.jsp" %>
 <%@ page isELIgnored="false"%>
 
-<script type="text/javascript" src='dwr/engine.js'></script>
-<script type="text/javascript" src='dwr/interface/JMapData.js'></script>
-<script type="text/javascript" src='dwr/interface/JCollectAdmindata.js'></script>
+<script type="text/javascript" src='dwr/engine.js?v=${JS_VERSION}'></script>
+<script type="text/javascript" src='dwr/interface/JMapData.js?v=${JS_VERSION}'></script>
+<script type="text/javascript" src='dwr/interface/JCollectAdmindata.js?v=${JS_VERSION}'></script>
 
-<script type="text/javascript" src="<html:rewrite page='/scripts/components/Admindata.js'/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/components/Admindata.js?v=${JS_VERSION}'/>"></script>
 <script type="text/javascript">
 
     var myparent = B3PGissuite.commons.getParent({ parentOnly: true });

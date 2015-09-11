@@ -66,8 +66,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
     <div id="multipleResults" style="width: 100%;"/>
 
 </div>
-<script type='text/javascript' src='dwr/interface/JEditFeature.js'></script>
-<script type="text/javascript" src="<html:rewrite page="/scripts/components/Teken.js"/>"></script>
+<script type='text/javascript' src='dwr/interface/JEditFeature.js?v=${JS_VERSION}'></script>
+<script type="text/javascript" src="<html:rewrite page="/scripts/components/Teken.js?v=${JS_VERSION}"/>"></script>
 <script>
     B3PGissuite.createComponent('Teken', {
         title: "${tekenTitel}",

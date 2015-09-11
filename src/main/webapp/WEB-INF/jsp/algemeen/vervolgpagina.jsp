@@ -35,4 +35,4 @@
 </div>
 
 <div style="clear: both;"></div>
-<script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js' module=''/>"></script>
+<script type="text/javascript" src="<html:rewrite page='/scripts/viewerswitch.js?v=${JS_VERSION}' module=''/>"></script>

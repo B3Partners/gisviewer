@@ -20,7 +20,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>b3p-gisviewer</artifactId>
-            <version>${project.version}</version>
+            <version>4.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.directwebremoting</groupId>
@@ -51,11 +51,29 @@
     </dependencies>
 
     <repositories>
+       <repository>
+            <id>repo.b3p.nl</id>
+            <name>B3P file Repository</name>
+            <url>http://repo.b3p.nl/nexus/content/repositories/releases/</url>
+        </repository>
         <repository>
             <id>JBoss repository</id>
             <url>http://repository.jboss.org/nexus/content/groups/public/</url>
         </repository>
     </repositories>
+    <scm>
+        <connection>scm:git:git@github.com:B3Partners/gisviewer.git</connection>
+        <developerConnection>scm:git:git@github.com:B3Partners/gisviewer.git</developerConnection>
+        <url>https://github.com/B3Partners/gisviewer</url>
+      <tag>gisviewer-4.2.1</tag>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>repo.b3p.nl</id>
+            <name>B3P file Repository</name>
+            <url>http://repo.b3p.nl/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
     <!-- plugin repo for complosure -->
     <pluginRepositories>
         <pluginRepository>
@@ -154,6 +172,14 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                 <configuration>
+                    <skip>true</skip>
+                </configuration>               
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
@@ -184,6 +210,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+           <plugin>                
+                <groupId>org.apache.maven.plugins</groupId>                
+                <artifactId>maven-release-plugin</artifactId>                
+                <version>2.5.2</version>                
+                <configuration>                    
+                    <pushChanges>true</pushChanges>                
+                </configuration>            
             </plugin>
         </plugins>
     </build>

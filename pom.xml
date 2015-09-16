@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>nl.b3p</groupId>
     <artifactId>gisviewer</artifactId>
-    <version>4.2.1-SNAPSHOT</version>
+    <version>4.2.1</version>
     <packaging>war</packaging>
 
     <name>gisviewer</name>
@@ -120,7 +119,7 @@
                                 <prettyPrint>false</prettyPrint>
                             </compilerOptions>
                             <outputFile>${minify.outputdir}/viewer-min.js</outputFile>
-                            <externFiles/>
+                            <externFiles />
                             <sourceFiles>
                                 <param>${viewerhtml.path}/lib/proj4js-compressed.js</param>
                                 <param>${viewerhtml.path}/lib/swfobject.js</param>
@@ -161,7 +160,7 @@
                                 <prettyPrint>false</prettyPrint>
                             </compilerOptions>
                             <outputFile>${minify.outputdir}/commonfunctions-min.js</outputFile>
-                            <externFiles/>
+                            <externFiles />
                             <sourceFiles>
                                 <param>${viewerhtml.path}/commonfunctions.js</param>
                                 <param>${viewerhtml.path}/components/Component.js</param>

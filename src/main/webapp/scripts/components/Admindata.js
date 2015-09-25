@@ -1056,18 +1056,18 @@ B3PGissuite.defineComponent('Admindata', {
                 var funcarray = waarde.value.split('###');
                 var fLink = null;
                 if (funcarray[0] == "null") {
-                    fLink = $j('<img src="' + this.options.flagicon + '" alt="Voer functie uit" title="Voer functie uit" />');
+                    fLink = $j('<img id="' + this.uniqueId('jsFunction_') + '" src="' + this.options.flagicon + '" alt="Voer functie uit" title="Voer functie uit" />');
                 } else {
                     fLink = $j('<a href="#" id="' + this.uniqueId('jsFunction_') + '">' + funcarray[0] + '</a>');
                 }
                 fLink.click(function() {
-                    me.admindataEval(funcarray[1], this);
+                    me.executeFunction(funcarray[1], this);
                 });
                 td.html(fLink);
             } else {
-                var icon3 = $j('<img src="' + this.options.flagicon + '" alt="Voer functie uit" title="Voer functie uit" />')
+                var icon3 = $j('<img id="' + this.uniqueId('jsFunction_') + '" src="' + this.options.flagicon + '" alt="Voer functie uit" title="Voer functie uit" />')
                         .click(function() {
-                    me.admindataEval(waarde.value, this);
+                    me.executeFunction(waarde.value, this);
                 });
                 td.html(icon3);
             }
@@ -1201,21 +1201,27 @@ B3PGissuite.defineComponent('Admindata', {
       
     /**
      * In the Gisviewerconfig is het mogelijk om javascript commando's te gebruiken die worden
-     * uitgevoerd. Omdat deze als string binnenkomen moeten we voor nu eval() gebruiken. Omdat
-     * de functies die worden uitgevoerd via eval() staan gedefinieerd in de Admindata klasse,
-     * moeten ze ook in die context worden uitgevoerd. Vandaar de B3PGissuite.get('Admindata').
-     * prefix voor de eval commando's
+     * uitgevoerd.
      */
-    admindataEval: function(evalFn, deze) {
-        if( typeof deze !== 'undefined' ) {
-            /* TODO  lelijke hack, wie weet een betere manier? 
-             * Na ombouw naar componenten is this deze klasse en niet langer het element
-             * waar voorheen de eval werd aangeroepen. */
-            var levalFn = evalFn.replace("(this, ","(deze, ");
-            eval("B3PGissuite.get('Admindata')." + levalFn);
-        } else {
-            eval("B3PGissuite.get('Admindata')." + evalFn);
+    executeFunction: function(functionString, element) {
+        var functionName = functionString.substring(0, functionString.indexOf('('));
+        if(typeof this[functionName] !== 'function') {
+            return;
         }
+        var functionArguments = functionString.substring(functionString.indexOf('(') + 1, functionString.length - 1).split(",");
+        // First arguments should be element (this is passed from the server but context is different)
+        functionArguments[0] = element;
+        // Excecute function with arguments
+        this[functionName].apply(this, functionArguments.map(function(arg) {
+            if(typeof arg !== 'string') {
+                return arg;
+            }
+            arg = arg.trim().replace(/\'/g, '');
+            if(arg === 'null') {
+                return null;
+            }
+            return arg;
+        }));
     },
 
     /*
@@ -1381,7 +1387,15 @@ B3PGissuite.defineComponent('Admindata', {
         if (str[0] === null || str[0] === "") {
             B3PGissuite.commons.messagePopup("Fout", message, "error");
         } else {
-            document.getElementById(str[0]).innerHTML = str[1];
+            var element = document.getElementById(str[0]);
+            if(element && element.tagName.toLowerCase() === 'img') {
+                element.style.display = 'none';
+                var spanElement = document.createElement('span');
+                spanElement.innerHTML = str[1];
+                element.parentNode.appendChild(spanElement);
+                return;
+            }
+            element.innerHTML = str[1];
         }
     },
 
@@ -1417,7 +1431,7 @@ B3PGissuite.defineComponent('Admindata', {
         return str.replace(new RegExp("[" + chars + "]+$", "g"), "");
     },
 
-    showMaatregel: function(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
+    showMaatregel: function(element, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
         if (waardeingevuldekolom == "null") {
             waardeingevuldekolom = null;
         }
@@ -1425,7 +1439,7 @@ B3PGissuite.defineComponent('Admindata', {
 
     },
 
-    highlightFeature: function(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
+    highlightFeature: function(element, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
         if (naamingevuldekolom == null || waardeingevuldekolom == null) {
             naamingevuldekolom = naampk;
             waardeingevuldekolom = waardepk;

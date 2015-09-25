@@ -23,7 +23,7 @@ B3PGissuite.defineComponent('AnalyseTabComponent', {
         buttoncontainer.append(button);
         inner.append('<p>Kies de redlining-tool en teken een vlak op de kaart. De objecten van de actieve kaartlagen worden geanalyseerd nadat u op de analyse knop hebt geklikt.</p>');
         inner.append(buttoncontainer);
-        inner.append();
+        inner.append(this.resultcontainer);
         container.append(inner);
         this.component = container;
     },
@@ -41,7 +41,7 @@ B3PGissuite.defineComponent('AnalyseTabComponent', {
         }
         if (wkt && themaIds.length>0){
             this.resultcontainer.html("<p>Informatie ophalen, een ogenblik aub ...</p>");
-            JMapData.getAnalyseData(wkt, themaIds, null, this.handleAnalyseMap.bind(this));
+            JMapData.getAnalyseData(wkt, themaIds, null, B3PGissuite.config.bookmarkAppcode, this.handleAnalyseMap.bind(this));
         }else{
             this.resultcontainer.html(
                 "<p>Er kan geen informatie opgehaald worden, omdat er \n"+
@@ -50,6 +50,7 @@ B3PGissuite.defineComponent('AnalyseTabComponent', {
             );
         }
     },
+    
     handleAnalyseMap: function(map) {
         if (!map) {
             this.resultcontainer.html("Geen resultaten gevonden");
@@ -66,4 +67,6 @@ B3PGissuite.defineComponent('AnalyseTabComponent', {
         }
         this.resultcontainer.html(result);
     }
+    
 });
+    

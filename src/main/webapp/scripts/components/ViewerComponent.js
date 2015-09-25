@@ -1764,7 +1764,9 @@ B3PGissuite.defineComponent('ViewerComponent', {
             document.forms[0].B3PGissuite.config.searchClusterId.value = B3PGissuite.config.searchClusterId;
         }
 
-        document.forms[0].geom.value = geom;
+        if(geom !== null) {
+            document.forms[0].geom.value = geom;
+        }
 
         var schaal;
         if (B3PGissuite.config.tilingResolutions && B3PGissuite.config.tilingResolutions !== "") {
@@ -1812,9 +1814,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
                 B3PGissuite.viewercommons.loadBusyJSP(B3PGissuite.vars.dataframepopupHandle, 'window');
             }
 
-            /* display marker in middle of click point */
-            point = this.getPointFromGeom(geom);
-            B3PGissuite.get('Search').placeSearchResultMarker(point.x, point.y);
+            if(geom !== null) {
+                /* display marker in middle of click point */
+                point = this.getPointFromGeom(geom);
+                B3PGissuite.get('Search').placeSearchResultMarker(point.x, point.y);
+            }
 
         } else if (B3PGissuite.config.useBalloonPopup) {
             if (!B3PGissuite.vars.balloon) {

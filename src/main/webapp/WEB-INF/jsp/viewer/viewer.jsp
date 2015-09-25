@@ -66,7 +66,7 @@
             'gebruiker': <c:out value="${f:isUserInRole(pageContext.request, 'gebruiker')}"/>,
             'demogebruiker': <c:out value="${f:isUserInRole(pageContext.request, 'demogebruiker')}"/>
         },
-        'userRoles': checkValidity(${userRoles}) ? ${userRoles} : [],
+        'userRoles': checkValidity(${userRoles}) ? getValue(${userRoles}) : [],
         'sldServletUrl': window.location.protocol + "//" + window.location.host + "<html:rewrite page='/CreateSLD'/>",
         'zoekconfiguraties': zzcs,
         'kburl': "${kburl}",

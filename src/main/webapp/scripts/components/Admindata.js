@@ -134,7 +134,7 @@ B3PGissuite.defineComponent('Admindata', {
 
     addGebiedenbron: function(opts) {
         var me = this;
-        JCollectAdmindata.fillGegevensBronBean(opts.bean.id, opts.bean.themaId, opts.bean.wkt, opts.bean.cql, false, opts.htmlId, opts.appCode, function(gegevensbron) {
+        JCollectAdmindata.fillGegevensBronBean(opts.bean.id, opts.bean.themaId, opts.bean.wkt, opts.bean.cql, false, opts.htmlId, this.options.bookmarkAppcode, function(gegevensbron) {
             me.handleGebiedenBron(gegevensbron);
         });
     },

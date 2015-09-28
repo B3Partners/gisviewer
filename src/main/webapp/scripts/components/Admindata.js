@@ -840,39 +840,12 @@ B3PGissuite.defineComponent('Admindata', {
         bronCaption.append(collapseImg);
         bronCaption.append(' ' + title);
 
-        //CSV export knop
-        var csv_export_url = "services/Data2CSV";
-
-        var csvFrmId = this.uniqueId("bronCaption" + htmlId + gegevensbron.id + index + "CSVfrm");
-        var frm = $j('<form></form>').attr({
-            method: 'post',
-            action: csv_export_url,
-            target: 'csvIframe',
-            id: csvFrmId,
-            style: 'float: left;'
-        });
-        frm.append('<input type="hidden" name="themaId" value="' + gegevensbron.id + '" />');
-        frm.append('<input type="hidden" name="objectIds" value="' + gegevensbron.csvPks + '" />');
-        bronCaption.append(frm);
-
         var icon = $j('<img src="' + this.options.csvexporticon + '"/>').attr({
             "alt": "Exporteer naar CSV bestand",
             "title": "Exporteer naar CSV bestand"
         }).click(function() {
-            // popUp(csv_export_url, 'csv_export', 600, 500);
-            $j("#" + csvFrmId).submit();
+             me.getParent().B3PGissuite.viewercommons.exportObjectData2CSV(htmlId, gegevensbron, index, me.idcounter++);
         });
-
-        bronCaption.append(" ");
-
-        if (gegevensbron.records) {
-            bronCaption.append(icon);
-        }
-
-        //Info export knop
-        var info_export_url = "viewerdata.do?aanvullendeinfo=t&themaid=" + gegevensbron.id + "&primaryKeys=" + gegevensbron.csvPks + "&addKaart=j";
-
-        //bronCaption.append(frm);
 
         var iconPdf = $j('<img src="' + this.options.pdficon + '"/>').attr({
             "alt": "Exporteer records met kaartuitsnede naar PDF",
@@ -881,36 +854,19 @@ B3PGissuite.defineComponent('Admindata', {
             me.getParent().B3PGissuite.viewercommons.exportObjectData2PDF(htmlId, gegevensbron, index, me.idcounter++);
         });
 
-        var infoFrmId = this.uniqueId("bronCaption" + htmlId + gegevensbron.id + index + "INFOfrm");
-        frm = $j('<form></form>').attr({
-            method: 'post',
-            action: info_export_url,
-            target: 'info_export',
-            id: infoFrmId,
-            style: 'float: left;'
-        });
-
-        frm.append('<input type="hidden" name="themaId" value="' + gegevensbron.id + '" />');
-        frm.append('<input type="hidden" name="primaryKeys" value="' + gegevensbron.csvPks + '" />');
-        frm.append('<input type="hidden" name="addKaart" value="j" />');
-
-        bronCaption.append(frm);
-
         var icona = $j('<img src="' + this.options.infoexporticon + '" alt="Info Export" alt="Info Export"/>').attr({
             "alt": "Toon info van alle objecten in de kaartlaag",
             "title": "Toon info van alle objecten in de kaartlaag"
         }).click(function() {
-            me.popUp(info_export_url, 'info_export', 600, 500);
-            $j("#" + infoFrmId).submit();
+            me.getParent().B3PGissuite.viewercommons.exportObjectData2HTML(htmlId, gegevensbron, index, me.idcounter++);
         });
 
         bronCaption.append(" ");
-
         if (gegevensbron.records) {
-            bronCaption.append(icona);
-
+            bronCaption.append(icon);
             bronCaption.append(" ");
-
+            bronCaption.append(icona);
+            bronCaption.append(" ");
             bronCaption.append(iconPdf);
         }
 

@@ -509,16 +509,6 @@ B3PGissuite.viewercommons = {
     },
     exportObjectData2PDF: function(htmlId, gegevensbron, index, idcounter) {
         var pdf_export_url = "services/Data2PDF";
-
-        /* var pdfFormId = "bronCaption" + htmlId + gegevensbron.id + index + "PDFfrm" + idcounter;
-         var submitForm = $j('<form></form>').attr({
-         method: 'post',
-         action: pdf_export_url,
-         target: 'pdfIframe',
-         id: pdfFormId,
-         style: 'float: left;'
-         }); */
-
         var submitForm = document.createElement("FORM");
         document.body.appendChild(submitForm);
         submitForm.method = "POST";
@@ -578,8 +568,130 @@ B3PGissuite.viewercommons = {
         jsonSettingsInput.name = 'jsonSettings';
         jsonSettingsInput.type = 'hidden';
         jsonSettingsInput.value = JSON.stringify(jsonSettings);
-
         submitForm.appendChild(jsonSettingsInput);
+        
+        var appCodeInput = document.createElement('input');
+        appCodeInput.id = 'appCode';
+        appCodeInput.name = 'appCode';
+        appCodeInput.type = 'hidden';
+        appCodeInput.value = B3PGissuite.config.bookmarkAppcode;
+        submitForm.appendChild(appCodeInput);
+
+        submitForm.submit();
+
+        return;
+    },
+    exportObjectData2HTML: function(htmlId, gegevensbron, index, idcounter) {
+        var html_export_url = "viewerdata.do";
+        var submitForm = document.createElement("FORM");
+        document.body.appendChild(submitForm);
+        submitForm.method = "POST";
+
+        var aiInput = document.createElement('input');
+        aiInput.id = 'aanvullendeinfo';
+        aiInput.name = 'aanvullendeinfo';
+        aiInput.type = 'hidden';
+        aiInput.value = 't';
+        submitForm.appendChild(aiInput);
+        
+        var gbInput = document.createElement('input');
+        gbInput.id = 'themaid';
+        gbInput.name = 'themaid';
+        gbInput.type = 'hidden';
+        gbInput.value = gegevensbron.id;
+        submitForm.appendChild(gbInput);
+
+        var settingsInput = document.createElement('input');
+        settingsInput.id = 'primaryKeys';
+        settingsInput.name = 'primaryKeys';
+        settingsInput.type = 'hidden';
+        settingsInput.value = gegevensbron.csvPks;
+        submitForm.appendChild(settingsInput);
+
+        var orInput = document.createElement('input');
+        orInput.id = 'addKaart';
+        orInput.name = 'addKaart';
+        orInput.type = 'hidden';
+        orInput.value = 'j';
+        submitForm.appendChild(orInput);
+
+        var wmsRequests = this.getWMSRequests();
+        var tilingRequests = this.getTilingRequests();
+
+        /* als eerst tiling url's daarna gewone wms meegeven */
+        for (var i = 0; i < wmsRequests.length; i++) {
+            tilingRequests.push(wmsRequests[i]);
+        }
+
+        var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
+        var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
+
+        var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
+        var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
+        var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
+        var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
+
+        var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
+
+        submitForm.target = "info_export";
+        submitForm.action = html_export_url;
+
+        var jsonSettings = {
+            requests: tilingRequests,
+            geometries: [],
+            bbox: mapBbox,
+            width: mapWidth,
+            height: mapHeight
+        };
+
+        var jsonSettingsInput = document.createElement('input');
+        jsonSettingsInput.id = 'jsonSettings';
+        jsonSettingsInput.name = 'jsonSettings';
+        jsonSettingsInput.type = 'hidden';
+        jsonSettingsInput.value = JSON.stringify(jsonSettings);
+        submitForm.appendChild(jsonSettingsInput);
+        
+        var appCodeInput = document.createElement('input');
+        appCodeInput.id = 'appCode';
+        appCodeInput.name = 'appCode';
+        appCodeInput.type = 'hidden';
+        appCodeInput.value = B3PGissuite.config.bookmarkAppcode;
+        submitForm.appendChild(appCodeInput);
+
+        submitForm.submit();
+
+        return;
+    },
+    exportObjectData2CSV: function(htmlId, gegevensbron, index, idcounter) {
+        var csv_export_url = "services/Data2CSV";
+        var submitForm = document.createElement("FORM");
+        document.body.appendChild(submitForm);
+        submitForm.method = "POST";
+        
+        var gbInput = document.createElement('input');
+        gbInput.id = 'themaId';
+        gbInput.name = 'themaId';
+        gbInput.type = 'hidden';
+        gbInput.value = gegevensbron.id;
+        submitForm.appendChild(gbInput);
+
+        var settingsInput = document.createElement('input');
+        settingsInput.id = 'objectIds';
+        settingsInput.name = 'objectIds';
+        settingsInput.type = 'hidden';
+        settingsInput.value = gegevensbron.csvPks;
+        submitForm.appendChild(settingsInput);
+        
+        var appCodeInput = document.createElement('input');
+        appCodeInput.id = 'appCode';
+        appCodeInput.name = 'appCode';
+        appCodeInput.type = 'hidden';
+        appCodeInput.value = B3PGissuite.config.bookmarkAppcode;
+        submitForm.appendChild(appCodeInput);
+
+        submitForm.target = "csv_export";
+        submitForm.action = csv_export_url;
+        
         submitForm.submit();
 
         return;

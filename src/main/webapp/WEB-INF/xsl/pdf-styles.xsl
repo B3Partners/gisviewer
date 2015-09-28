@@ -65,9 +65,9 @@
                         zero-digit="0" digit="#" pattern-separator=";" />
                     
     <!-- EDIT: logo source, size and positions-->    
-    <xsl:variable name="logo-src" select="'logo_lelystad_small.gif'"/>
-    <xsl:variable name="logo-width" select="'123px'"/>
-    <xsl:variable name="logo-height" select="'50px'"/>    
+    <xsl:variable name="logo-src" select="'b3p_logo.png'"/>
+    <xsl:variable name="logo-width" select="'185px'"/>
+    <xsl:variable name="logo-height" select="'46px'"/>    
     <xsl:variable name="logo-block-width" select="'7.6cm'"/>
     <xsl:variable name="logo-block-height" select="'2.3cm'"/>
     

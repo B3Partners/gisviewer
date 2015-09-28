@@ -19,7 +19,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>b3p-gisviewer</artifactId>
-            <version>4.2.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.directwebremoting</groupId>
@@ -64,7 +64,7 @@
         <connection>scm:git:git@github.com:B3Partners/gisviewer.git</connection>
         <developerConnection>scm:git:git@github.com:B3Partners/gisviewer.git</developerConnection>
         <url>https://github.com/B3Partners/gisviewer</url>
-      <tag>gisviewer-4.2.1</tag>
+      <tag>gisviewer-${project.version}</tag>
     </scm>
     <distributionManagement>
         <repository>

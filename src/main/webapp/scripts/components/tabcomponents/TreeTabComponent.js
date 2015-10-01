@@ -216,31 +216,6 @@ B3PGissuite.defineComponent('TreeTabComponent', {
 
         return this.activeAnalyseThemaId;
     },
-    addItemAsLayer: function(theItem) {
-        this.addLayerToEnabledLayerItems(theItem);
-        this.syncLayerCookieAndForm();
-
-        //If there is a orgainization code key then add this to the service url.
-        if (theItem.wmslayers) {
-            var organizationCodeKey = theItem.organizationcodekey;
-            if (B3PGissuite.config.organizationcode != undefined && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != '' && organizationCodeKey != undefined && organizationCodeKey != '') {
-                if (B3PGissuite.vars.layerUrl.indexOf(organizationCodeKey) <= 0) {
-                    if (B3PGissuite.vars.layerUrl.indexOf('?') > 0) {
-                        B3PGissuite.vars.layerUrl += '&';
-                    } else {
-                        B3PGissuite.vars.layerUrl += '?';
-                    }
-                    B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + organizationCodeKey + "=" + B3PGissuite.config.organizationcode;
-                }
-            }
-        }
-    },
-    removeItemAsLayer: function(theItem) {
-        if (this.removeLayerFromEnabledLayerItems(theItem.id) !== null) {
-            this.syncLayerCookieAndForm();
-            return;
-        }
-    },
     refreshLayerWithDelay: function() {
         B3PGissuite.commons.showLoading();
         if (B3PGissuite.vars.refresh_timeout_handle) {
@@ -271,14 +246,14 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         var me = this;
         var item = obj.theItem;
         if (obj.checked) {
-            me.addItemAsLayer(item);
+            B3PGissuite.get('ViewerComponent').addItemAsLayer(item);
             if (B3PGissuite.config.useInheritCheckbox) {
                 //zet bovenliggende cluster vinkjes aan
                 var object = document.getElementById(item.id);
                 me.enableParentClusters(object);
             }
         } else {
-            me.removeItemAsLayer(item);
+            B3PGissuite.get('ViewerComponent').removeItemAsLayer(item);
         }
 
         if (obj.type == 'radio') {
@@ -374,7 +349,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                     var child = cluster.children[k - 1];
 
                     if (!child.cluster) {
-                        me.addItemAsLayer(child);
+                        B3PGissuite.get('ViewerComponent').addItemAsLayer(child);
                         if (!cluster.hide_tree) {
                             document.getElementById(child.id).checked = true;
                         }
@@ -391,7 +366,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                 for (var d = 0; d < cluster.children.length; d++) {
                     var child1 = cluster.children[d];
                     if (!child1.cluster) {
-                        me.removeItemAsLayer(child1);
+                        B3PGissuite.get('ViewerComponent').removeItemAsLayer(child1);
                         if (!cluster.hide_tree) {
                             document.getElementById(child1.id).checked = false;
                         }
@@ -522,7 +497,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
             divje.theItem = item;
             container.appendChild(divje);
             if (item.visible == "on" && item.wmslayers) {
-                this.addItemAsLayer(item);
+                B3PGissuite.get('ViewerComponent').addItemAsLayer(item);
             }
             return true;
         }
@@ -734,15 +709,12 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         layers[0] = item;
 
         /* laag toevoegen aan viewer */
-        var treeComponent = B3PGissuite.get('TreeTabComponent');
-        if (treeComponent !== null) {
-            if (checked) {
-                treeComponent.addItemAsLayer(item);
-                treeComponent.refreshLayerWithDelay();
-            } else {
-                treeComponent.removeItemAsLayer(item);
-                treeComponent.doRefreshLayer();
-            }
+        if (checked) {
+            B3PGissuite.get('ViewerComponent').addItemAsLayer(item);
+            this.refreshLayerWithDelay();
+        } else {
+            B3PGissuite.get('ViewerComponent').removeItemAsLayer(item);
+            this.doRefreshLayer();
         }
     },
     /**
@@ -1506,29 +1478,6 @@ B3PGissuite.defineComponent('TreeTabComponent', {
 
         this.enableParentClusters(parentDiv);
     },
-    /* als order niet aangepast mag worden dan moet hier een sort komen */
-    addLayerToEnabledLayerItems: function(theItem) {
-        var foundLayerItem = null;
-        for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
-            if (B3PGissuite.vars.enabledLayerItems[i].id == theItem.id) {
-                foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
-                break;
-            }
-        }
-        if (foundLayerItem == null) {
-            B3PGissuite.vars.enabledLayerItems.push(theItem);
-        }
-    },
-    removeLayerFromEnabledLayerItems: function(itemId) {
-        for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
-            if (B3PGissuite.vars.enabledLayerItems[i].id == itemId) {
-                var foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
-                B3PGissuite.vars.enabledLayerItems.splice(i, 1);
-                return foundLayerItem;
-            }
-        }
-        return null;
-    },
     // Info tab handling
     fireLayerInfoEvent: function(obj, checked) {
         if ((B3PGissuite.config.showInfoTab !== 'auto' && B3PGissuite.config.showInfoTab !== 'click') || !B3PGissuite.vars.frameWorkInitialized) {
@@ -1651,20 +1600,6 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         $item.removeClass("layerdisabled");
         //$item.find("input").removeAttr("disabled");
         $item.find(".treeLegendIcon").removeClass("disabledLegendIcon");
-    },
-
-    syncLayerCookieAndForm: function() {
-        var layerString = B3PGissuite.viewercommons.getLayerIdsAsString();
-        if (layerString == "") {
-            layerString = 'ALL';
-        }
-        if (B3PGissuite.config.useCookies) {
-            B3PGissuite.commons.eraseCookie('checkedLayers');
-            if (layerString != null) {
-                B3PGissuite.commons.createCookie('checkedLayers', layerString, '7');
-            }
-        }
-        document.forms[0].lagen.value = layerString;
     },
 
     addClusterIdToCookie: function(id) {

@@ -1353,6 +1353,81 @@ B3PGissuite.defineComponent('ViewerComponent', {
         });
     },
 
+    enableDefaultLayers: function(items) {
+        for(var i = 0; i < items.length; i++) {
+            if(items[i].cluster) {
+                this.enableDefaultLayers(items[i].children);
+            } else if(items[i].visible === 'on') {
+                this.addLayerToEnabledLayerItems(items[i]);
+            }
+        }
+    },
+
+    /* als order niet aangepast mag worden dan moet hier een sort komen */
+    addLayerToEnabledLayerItems: function(theItem) {
+        var foundLayerItem = null;
+        for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
+            if (B3PGissuite.vars.enabledLayerItems[i].id == theItem.id) {
+                foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
+                break;
+            }
+        }
+        if (foundLayerItem == null) {
+            B3PGissuite.vars.enabledLayerItems.push(theItem);
+        }
+    },
+
+    removeLayerFromEnabledLayerItems: function(itemId) {
+        for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
+            if (B3PGissuite.vars.enabledLayerItems[i].id == itemId) {
+                var foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];
+                B3PGissuite.vars.enabledLayerItems.splice(i, 1);
+                return foundLayerItem;
+            }
+        }
+        return null;
+    },
+
+    addItemAsLayer: function(theItem) {
+        this.addLayerToEnabledLayerItems(theItem);
+        this.syncLayerCookieAndForm();
+
+        //If there is a orgainization code key then add this to the service url.
+        if (theItem.wmslayers) {
+            var organizationCodeKey = theItem.organizationcodekey;
+            if (B3PGissuite.config.organizationcode != undefined && B3PGissuite.config.organizationcode != null && B3PGissuite.config.organizationcode != '' && organizationCodeKey != undefined && organizationCodeKey != '') {
+                if (B3PGissuite.vars.layerUrl.indexOf(organizationCodeKey) <= 0) {
+                    if (B3PGissuite.vars.layerUrl.indexOf('?') > 0) {
+                        B3PGissuite.vars.layerUrl += '&';
+                    } else {
+                        B3PGissuite.vars.layerUrl += '?';
+                    }
+                    B3PGissuite.vars.layerUrl = B3PGissuite.vars.layerUrl + organizationCodeKey + "=" + B3PGissuite.config.organizationcode;
+                }
+            }
+        }
+    },
+
+    removeItemAsLayer: function(theItem) {
+        if (this.removeLayerFromEnabledLayerItems(theItem.id) !== null) {
+            this.syncLayerCookieAndForm();
+        }
+    },
+
+    syncLayerCookieAndForm: function() {
+        var layerString = B3PGissuite.viewercommons.getLayerIdsAsString();
+        if (layerString == "") {
+            layerString = 'ALL';
+        }
+        if (B3PGissuite.config.useCookies) {
+            B3PGissuite.commons.eraseCookie('checkedLayers');
+            if (layerString != null) {
+                B3PGissuite.commons.createCookie('checkedLayers', layerString, '7');
+            }
+        }
+        document.forms[0].lagen.value = layerString;
+    },
+
     removeAllFeatures: function() {
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
     },
@@ -1389,6 +1464,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
                 treeComponent.clickClusters();
                 treeComponent.sortLayersAan();
                 treeComponent.clickLayers();
+            } else {
+                this.enableDefaultLayers(B3PGissuite.config.themaTree.children);
             }
 
             B3PGissuite.viewerComponent.initFullExtent();
@@ -1396,6 +1473,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
             if (treeComponent !== null) {
                 treeComponent.doRefreshLayer();
+            } else {
+                this.refreshLayer();
             }
         }
 

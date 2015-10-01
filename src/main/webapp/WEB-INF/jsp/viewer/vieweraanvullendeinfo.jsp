@@ -4,54 +4,29 @@
 <script type="text/javascript" src='dwr/engine.js?v=${JS_VERSION}'></script>
 <script type="text/javascript" src='dwr/interface/JMapData.js?v=${JS_VERSION}'></script>
 
+<c:set var="psettings" value='${sessionScope[imageId]}'/>
+<c:set var="mapRequest" value="${psettings.urls[0]}"/>
+
 <script type="text/javascript" src="<html:rewrite page='/scripts/components/Admindata.js?v=${JS_VERSION}'/>"></script>
 <script type="text/javascript">
-
-    function catchEmpty(defval){
-        return defval
-    }
-    
-    var mapRequest = null;
-    if (window.opener){
-        if (window.opener.lastGetMapRequest){
-            mapRequest=window.opener.lastGetMapRequest;
-        }else if(window.opener.opener && window.opener.opener.lastGetMapRequest){
-            mapRequest=window.opener.opener.lastGetMapRequest;
-        }else if(window.opener.parent && window.opener.parent.lastGetMapRequest){
-            mapRequest=window.opener.parent.lastGetMapRequest;
+    function getMapRequest() {
+        var mapRequest = "${mapRequest}";
+        mapRequest=removeParam(mapRequest,"bbox");
+        mapRequest=removeParam(mapRequest,"width");
+        mapRequest=removeParam(mapRequest,"height");
+        if (mapRequest.lastIndexOf("?")!=mapRequest.length-1 && mapRequest.lastIndexOf("&")!=mapRequest.length-1){
+            if (mapRequest.indexOf("?")>0){
+                mapRequest+="&";
+            }else{
+                mapRequest+="?";
+            }
         }
-
-    }else{
-        mapRequest=window.parent.lastGetMapRequest;
+        return mapRequest;
     }
-    mapRequest=removeParam(mapRequest,"bbox");
-    mapRequest=removeParam(mapRequest,"width");
-    mapRequest=removeParam(mapRequest,"height");
-
-    if (typeof mapRequest === 'undefined' || !url) {
-        mapRequest = "";
-    }
-
-    if (mapRequest.lastIndexOf("?")!=mapRequest.length-1 && mapRequest.lastIndexOf("&")!=mapRequest.length-1){
-        if (mapRequest.indexOf("?")>0){
-            mapRequest+="&";
-        }else{
-            mapRequest+="?";
-        }
-    }
-    //max map image height
-    var maxMapImageWidth=300;
-    //max map image width
-    var maxMapImageHeight=300;
-    //De ruimte om het object heen dat ook moet worden getoond in het kaartje.
-    var mapSpaceAround=10;
-
     function removeParam(url,param){
-
-        if (typeof url === 'undefined' || !url) {
-            return;
+        if (url === "") {
+            return url;
         }
-        
         var newUrl;
         var paramBeginIndex=url.toLowerCase().indexOf(param+"=", 0);
         if (paramBeginIndex == -1)
@@ -64,36 +39,60 @@
         newUrl+=url.substring(paramEndIndex);
         return newUrl;
     }
+    function writeImageTag(minx, miny, maxx, maxy) {
+        //max map image height
+        var maxMapImageWidth=300;
+        //max map image width
+        var maxMapImageHeight=300;
+        //De ruimte om het object heen dat ook moet worden getoond in het kaartje.
+        var mapSpaceAround=10;
+        // Baseurl
+        var mapRequest = getMapRequest();
 
+        minx=Number(minx)-mapSpaceAround;
+        miny=Number(miny)-mapSpaceAround;
+        maxx=Number(maxx)+mapSpaceAround;
+        maxy=Number(maxy)+mapSpaceAround;
+
+        var ax=maxx-minx;
+        var ay=maxy-miny;
+        var xfactor=ax/maxMapImageWidth;
+        var yfactor=ay/maxMapImageHeight;
+        var width;
+        var height;
+        if (xfactor > yfactor){
+            width=Math.floor(ax/xfactor);
+            height=Math.floor(ay/xfactor);
+        }else{
+            width=Math.floor(ax/yfactor);
+            height=Math.floor(ay/yfactor);
+        }
+        var newMapRequest=""+mapRequest;
+        newMapRequest+="bbox="+minx+","+miny+","+maxx+","+maxy+"&";
+        newMapRequest+="height="+height+"&";
+        newMapRequest+="width="+width+"&";
+
+        var imagetag="<img src='"+newMapRequest+"'";
+        if (xfactor > yfactor){
+            imagetag+=" width='"+width;
+        }else{
+            imagetag+=" height='"+height;
+        }
+        imagetag+="' alt='"+newMapRequest+"'/>";
+
+        if (mapRequest!="") {
+            document.write(imagetag);
+        }
+    }
     // Create the admindata component
     B3PGissuite.createComponent('Admindata');
-    // Added some proxy functions to support JS functions from JSTL below
-    function setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
-        B3PGissuite.get('Admindata').setAttributeValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
-    }
-    function setAttributeStringValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
-        B3PGissuite.get('Admindata').setAttributeStringValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
-    }
-    function setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
-        B3PGissuite.get('Admindata').setStatusValue(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
-    }
-    function setStatusValueDigitree(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
-        B3PGissuite.get('Admindata').setStatusValueDigitree(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
-    }
-    function setAttributeText(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
-        B3PGissuite.get('Admindata').setAttributeText(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
-    }
-    function doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
-        B3PGissuite.get('Admindata').doDummy(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
-    }
-    function berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid) {
-        B3PGissuite.get('Admindata').berekenOppervlakte(element, themaid, keyName, keyValue, attributeName, attributeValue, eenheid);
-    }
-    function showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
-        B3PGissuite.get('Admindata').showMaatregel(deze, gegevensbronId, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom);
-    }
-    function highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom) {
-        B3PGissuite.get('Admindata').highlightFeature(deze, themaid, naampk, waardepk, naamingevuldekolom, waardeingevuldekolom, waardevaneenheidkolom);
+    // Hide loader
+    if (opener) {
+        opener.B3PGissuite.commons.hideLoading();
+    } else if (parent) {
+        parent.B3PGissuite.commons.hideLoading();
+    } else {
+        B3PGissuite.commons.messagePopup("Fout", "Er is een fout opgetreden bij het sluiten van de laadbalk.", "error");
     }
 </script>
 
@@ -153,15 +152,15 @@
                                                         <c:when test="${fn:startsWith(funct,'setAttributeText')}">
                                                             <c:choose>
                                                                 <c:when test="${fn:length(valar) > 1}">
-                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="return ${valar[1]}">${valar[0]}</a>
+                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="return B3PGissuite.get('Admindata').${valar[1]}">${valar[0]}</a>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="return ${valar[0]}"><em>leeg</em></a>
+                                                                    <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="return B3PGissuite.get('Admindata').${valar[0]}"><em>leeg</em></a>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:when>
                                                         <c:when test="${fn:length(valar) > 1}">
-                                                            <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="${valar[1]}">${valar[0]}</a>
+                                                            <a class="datalink" id="href${counter.count}${kolom.count-1}" href="#" onclick="B3PGissuite.get('Admindata').${valar[1]}">${valar[0]}</a>
                                                         </c:when>
                                                     </c:choose>
                                                 </c:when>
@@ -179,44 +178,12 @@
                             <c:if test="${envelops[0].minX!=null and not empty envelops[0].minX}">
                                 <div class="aanvullendeInfoKaartContainer">
                                     <script>
-                                        var minx,maxx,miny,maxy,ax,ay;
-                                        minx=<c:out value="${envelops[regelCounter.count-1].minX}"/>;
-                                        miny=<c:out value="${envelops[regelCounter.count-1].minY}"/>;
-                                        maxx=<c:out value="${envelops[regelCounter.count-1].maxX}"/>;
-                                        maxy=<c:out value="${envelops[regelCounter.count-1].maxY}"/>;
-
-                                        minx=Number(minx)-mapSpaceAround;
-                                        miny=Number(miny)-mapSpaceAround;
-                                        maxx=Number(maxx)+mapSpaceAround;
-                                        maxy=Number(maxy)+mapSpaceAround;
-                                        var ax=maxx-minx;
-                                        var ay=maxy-miny;
-
-                                        var xfactor=ax/maxMapImageWidth;
-                                        var yfactor=ay/maxMapImageHeight;
-                                        var width;
-                                        var height;
-                                        if (xfactor > yfactor){
-                                            width=Math.floor(ax/xfactor);
-                                            height=Math.floor(ay/xfactor);
-                                        }else{
-                                            width=Math.floor(ax/yfactor);
-                                            height=Math.floor(ay/yfactor);
-                                        }
-                                        var newMapRequest=""+mapRequest;
-                                        newMapRequest+="bbox="+minx+","+miny+","+maxx+","+maxy+"&";
-                                        newMapRequest+="height="+height+"&";
-                                        newMapRequest+="width="+width+"&";
-                                        var imagetag="<img src='"+newMapRequest+"'";
-                                        if (xfactor > yfactor){
-                                            imagetag+=" width='"+width;
-                                        }else{
-                                            imagetag+=" height='"+height;
-                                        }
-                                        imagetag+="' alt='"+newMapRequest+"'/>";
-                                        if (mapRequest!="") {
-                                            document.write(imagetag);
-                                        }
+                                        writeImageTag(
+                                            <c:out value="${envelops[regelCounter.count-1].minX}"/>,
+                                            <c:out value="${envelops[regelCounter.count-1].minY}"/>,
+                                            <c:out value="${envelops[regelCounter.count-1].maxX}"/>,
+                                            <c:out value="${envelops[regelCounter.count-1].maxY}"/>
+                                        );
                                     </script>
                                 </div>
                             </c:if>
@@ -235,16 +202,3 @@
         Er is geen admin data gevonden!
     </c:otherwise>
 </c:choose>
-        
-<script type="text/javascript">
-     if (opener) {
-        opener.B3PGissuite.commons.hideLoading();
-    } else if (parent) {
-        parent.B3PGissuite.commons.hideLoading();
-    } else {
-        B3PGissuite.commons.messagePopup("Fout", "Er is een fout opgetreden bij het sluiten van de laadbalk.", "error");
-    }
-
-</script>
-
-

@@ -507,313 +507,85 @@ B3PGissuite.viewercommons = {
 
         return urlString;
     },
-    exportObjectData2PDF: function(htmlId, gegevensbron, index, idcounter) {
-        var pdf_export_url = "services/Data2PDF";
+    exportObjectData: function(URL, target) {
         var submitForm = document.createElement("FORM");
         document.body.appendChild(submitForm);
         submitForm.method = "POST";
-
-        var gbInput = document.createElement('input');
-        gbInput.id = 'gbId';
-        gbInput.name = 'gbId';
-        gbInput.type = 'hidden';
-        gbInput.value = gegevensbron.id;
-        submitForm.appendChild(gbInput);
-
-        var settingsInput = document.createElement('input');
-        settingsInput.id = 'objectIds';
-        settingsInput.name = 'objectIds';
-        settingsInput.type = 'hidden';
-        settingsInput.value = gegevensbron.csvPks;
-        submitForm.appendChild(settingsInput);
-
-        var orInput = document.createElement('input');
-        orInput.id = 'orientation';
-        orInput.name = 'orientation';
-        orInput.type = 'hidden';
-        orInput.value = 'staand';
-        submitForm.appendChild(orInput);
-
+        submitForm.target = target;
+        submitForm.action = URL;
+        return submitForm;
+    },
+    createExportInput: function(name, value) {
+        var input = document.createElement('input');
+        input.id = name;
+        input.name = name;
+        input.type = 'hidden';
+        input.value = value;
+        return input;
+    },
+    getMapJsonSettings: function(geometries) {
         var wmsRequests = this.getWMSRequests();
         var tilingRequests = this.getTilingRequests();
-
         /* als eerst tiling url's daarna gewone wms meegeven */
         for (var i = 0; i < wmsRequests.length; i++) {
             tilingRequests.push(wmsRequests[i]);
         }
-
         var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
         var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
-
         var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
         var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
         var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
         var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
-
         var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
 
-        submitForm.target = "pdfIframe";
-        submitForm.action = pdf_export_url;
-
-        var jsonSettings = {
+        return JSON.stringify({
             requests: tilingRequests,
-            geometries: [],
+            geometries: geometries,
             bbox: mapBbox,
             width: mapWidth,
             height: mapHeight
-        };
-
-        var jsonSettingsInput = document.createElement('input');
-        jsonSettingsInput.id = 'jsonSettings';
-        jsonSettingsInput.name = 'jsonSettings';
-        jsonSettingsInput.type = 'hidden';
-        jsonSettingsInput.value = JSON.stringify(jsonSettings);
-        submitForm.appendChild(jsonSettingsInput);
-        
-        var appCodeInput = document.createElement('input');
-        appCodeInput.id = 'appCode';
-        appCodeInput.name = 'appCode';
-        appCodeInput.type = 'hidden';
-        appCodeInput.value = B3PGissuite.config.bookmarkAppcode;
-        submitForm.appendChild(appCodeInput);
-
+        });
+    },
+    exportObjectData2PDF: function(htmlId, gegevensbron, index, idcounter) {
+        var submitForm = this.exportObjectData("services/Data2PDF", "pdfIframe");
+        submitForm.appendChild(this.createExportInput('gbId', gegevensbron.id));
+        submitForm.appendChild(this.createExportInput('objectIds', gegevensbron.csvPks));
+        submitForm.appendChild(this.createExportInput('orientation', 'staand'));
+        submitForm.appendChild(this.createExportInput('jsonSettings', this.getMapJsonSettings([])));
+        submitForm.appendChild(this.createExportInput('appCode', B3PGissuite.config.bookmarkAppcode));
         submitForm.submit();
-
-        return;
     },
     exportObjectData2HTML: function(htmlId, gegevensbron, index, idcounter) {
-        var html_export_url = "viewerdata.do";
-        var submitForm = document.createElement("FORM");
-        document.body.appendChild(submitForm);
-        submitForm.method = "POST";
-
-        var aiInput = document.createElement('input');
-        aiInput.id = 'aanvullendeinfo';
-        aiInput.name = 'aanvullendeinfo';
-        aiInput.type = 'hidden';
-        aiInput.value = 't';
-        submitForm.appendChild(aiInput);
-        
-        var gbInput = document.createElement('input');
-        gbInput.id = 'themaid';
-        gbInput.name = 'themaid';
-        gbInput.type = 'hidden';
-        gbInput.value = gegevensbron.id;
-        submitForm.appendChild(gbInput);
-
-        var settingsInput = document.createElement('input');
-        settingsInput.id = 'primaryKeys';
-        settingsInput.name = 'primaryKeys';
-        settingsInput.type = 'hidden';
-        settingsInput.value = gegevensbron.csvPks;
-        submitForm.appendChild(settingsInput);
-
-        var orInput = document.createElement('input');
-        orInput.id = 'addKaart';
-        orInput.name = 'addKaart';
-        orInput.type = 'hidden';
-        orInput.value = 'j';
-        submitForm.appendChild(orInput);
-
-        var wmsRequests = this.getWMSRequests();
-        var tilingRequests = this.getTilingRequests();
-
-        /* als eerst tiling url's daarna gewone wms meegeven */
-        for (var i = 0; i < wmsRequests.length; i++) {
-            tilingRequests.push(wmsRequests[i]);
-        }
-
-        var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
-        var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
-
-        var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
-        var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
-        var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
-        var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
-
-        var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
-
-        submitForm.target = "info_export";
-        submitForm.action = html_export_url;
-
-        var jsonSettings = {
-            requests: tilingRequests,
-            geometries: [],
-            bbox: mapBbox,
-            width: mapWidth,
-            height: mapHeight
-        };
-
-        var jsonSettingsInput = document.createElement('input');
-        jsonSettingsInput.id = 'jsonSettings';
-        jsonSettingsInput.name = 'jsonSettings';
-        jsonSettingsInput.type = 'hidden';
-        jsonSettingsInput.value = JSON.stringify(jsonSettings);
-        submitForm.appendChild(jsonSettingsInput);
-        
-        var appCodeInput = document.createElement('input');
-        appCodeInput.id = 'appCode';
-        appCodeInput.name = 'appCode';
-        appCodeInput.type = 'hidden';
-        appCodeInput.value = B3PGissuite.config.bookmarkAppcode;
-        submitForm.appendChild(appCodeInput);
-
+        var submitForm = this.exportObjectData("viewerdata.do", "info_export");
+        submitForm.appendChild(this.createExportInput('aanvullendeinfo', 't'));
+        submitForm.appendChild(this.createExportInput('themaid', gegevensbron.id));
+        submitForm.appendChild(this.createExportInput('primaryKeys', gegevensbron.csvPks));
+        submitForm.appendChild(this.createExportInput('addKaart', 'j'));
+        submitForm.appendChild(this.createExportInput('jsonSettings', this.getMapJsonSettings([])));
+        submitForm.appendChild(this.createExportInput('appCode', B3PGissuite.config.bookmarkAppcode));
         submitForm.submit();
-
-        return;
     },
     exportObjectData2CSV: function(htmlId, gegevensbron, index, idcounter) {
-        var csv_export_url = "services/Data2CSV";
-        var submitForm = document.createElement("FORM");
-        document.body.appendChild(submitForm);
-        submitForm.method = "POST";
-        
-        var gbInput = document.createElement('input');
-        gbInput.id = 'themaId';
-        gbInput.name = 'themaId';
-        gbInput.type = 'hidden';
-        gbInput.value = gegevensbron.id;
-        submitForm.appendChild(gbInput);
-
-        var settingsInput = document.createElement('input');
-        settingsInput.id = 'objectIds';
-        settingsInput.name = 'objectIds';
-        settingsInput.type = 'hidden';
-        settingsInput.value = gegevensbron.csvPks;
-        submitForm.appendChild(settingsInput);
-        
-        var appCodeInput = document.createElement('input');
-        appCodeInput.id = 'appCode';
-        appCodeInput.name = 'appCode';
-        appCodeInput.type = 'hidden';
-        appCodeInput.value = B3PGissuite.config.bookmarkAppcode;
-        submitForm.appendChild(appCodeInput);
-
-        submitForm.target = "csv_export";
-        submitForm.action = csv_export_url;
-        
+        var submitForm = this.exportObjectData("services/Data2CSV", "csv_export");
+        submitForm.appendChild(this.createExportInput('themaId', gegevensbron.id));
+        submitForm.appendChild(this.createExportInput('objectIds', gegevensbron.csvPks));
+        submitForm.appendChild(this.createExportInput('appCode', B3PGissuite.config.bookmarkAppcode));
         submitForm.submit();
-
-        return;
     },
     exportObjectdata2Report: function(recordId, commando, gegevensbron) {
-        var submitForm = document.createElement("FORM");
-        document.body.appendChild(submitForm);
-
-        submitForm.method = "POST";
-        submitForm.target = "pdfIframe";
-        submitForm.action = commando;
-
-        var gbInput = document.createElement('input');
-        gbInput.id = 'gbId';
-        gbInput.name = 'gbId';
-        gbInput.type = 'hidden';
-        gbInput.value = gegevensbron.id;
-        submitForm.appendChild(gbInput);
-
-        var settingsInput = document.createElement('input');
-        settingsInput.id = 'recordId';
-        settingsInput.name = 'recordId';
-        settingsInput.type = 'hidden';
-        settingsInput.value = recordId;
-        submitForm.appendChild(settingsInput);
-
-        var wmsRequests = this.getWMSRequests();
-        var tilingRequests = this.getTilingRequests();
-
-        /* als eerst tiling url's daarna gewone wms meegeven */
-        for (var i = 0; i < wmsRequests.length; i++) {
-            tilingRequests.push(wmsRequests[i]);
-        }
-
-        var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
-        var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
-
-        var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
-        var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
-        var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
-        var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
-
-        var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
-
-        var jsonSettings = {
-            requests: tilingRequests,
-            geometries: [],
-            bbox: mapBbox,
-            width: mapWidth,
-            height: mapHeight
-        };
-
-        var settingsInput = document.createElement('input');
-        settingsInput.id = 'jsonSettings';
-        settingsInput.name = 'jsonSettings';
-        settingsInput.type = 'hidden';
-        settingsInput.value = JSON.stringify(jsonSettings);
-
-        submitForm.appendChild(settingsInput);
+        var submitForm = this.exportObjectData(commando, "pdfIframe");
+        submitForm.appendChild(this.createExportInput('gbId', gegevensbron.id));
+        submitForm.appendChild(this.createExportInput('recordId', recordId));
+        submitForm.appendChild(this.createExportInput('jsonSettings', this.getMapJsonSettings([])));
         submitForm.submit();
-
-        return;
     },
     exportMap: function() {
-        var submitForm = document.createElement("FORM");
-        document.body.appendChild(submitForm);
-        submitForm.method = "POST";
-
-        /* Legend urls */
-        var legendUrlsString = this.getLegendUrls();
-
-        var legendUrlInput = document.createElement('input');
-        legendUrlInput.id = 'legendUrls';
-        legendUrlInput.name = 'legendUrls';
-        legendUrlInput.type = 'hidden';
-        legendUrlInput.value = legendUrlsString;
-        submitForm.appendChild(legendUrlInput);
-
-        var wmsRequests = this.getWMSRequests();
-        var tilingRequests = this.getTilingRequests();
-
-        /* als eerst tiling url's daarna gewone wms meegeven */
-        for (var i = 0; i < wmsRequests.length; i++) {
-            tilingRequests.push(wmsRequests[i]);
-        }
-
+        var submitForm = this.exportObjectData("printmap.do", "exportMapWindowNaam");
+        submitForm.appendChild(this.createExportInput('legendUrls', this.getLegendUrls()));
         /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
          * wms url in de print zit waar dit uit gehaald kan worden */
-
-        var mapWidth = B3PGissuite.vars.webMapController.getMap("map1").getScreenWidth();
-        var mapHeight = B3PGissuite.vars.webMapController.getMap("map1").getScreenHeight();
-
-        var minX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().minx;
-        var minY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().miny;
-        var maxX = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxx;
-        var maxY = B3PGissuite.vars.webMapController.getMap("map1").getExtent().maxy;
-
-        var mapBbox = minX + "," + minY + "," + maxX + "," + maxY;
-        submitForm.target = "exportMapWindowNaam";
-        submitForm.action = "printmap.do";
-
-        var wktString = this.getWktStringForPrint();
-
-        var jsonSettings = {
-            requests: tilingRequests,
-            geometries: wktString,
-            bbox: mapBbox,
-            width: mapWidth,
-            height: mapHeight
-        };
-
-        var jsonSettingsInput = document.createElement('input');
-        jsonSettingsInput.id = 'jsonSettings';
-        jsonSettingsInput.name = 'jsonSettings';
-        jsonSettingsInput.type = 'hidden';
-
-        var jsonString = JSON.stringify(jsonSettings);
-        jsonSettingsInput.value = jsonString;
-        submitForm.appendChild(jsonSettingsInput);
-
+        submitForm.appendChild(this.createExportInput('jsonSettings', this.getMapJsonSettings(this.getWktStringForPrint())));
         submitForm.submit();
-
         if (B3PGissuite.vars.exportMapWindow === undefined || B3PGissuite.vars.exportMapWindow === null || B3PGissuite.vars.exportMapWindow.closed) {
             B3PGissuite.vars.exportMapWindow = window.open("", "exportMapWindowNaam");
             B3PGissuite.vars.exportMapWindow.focus();

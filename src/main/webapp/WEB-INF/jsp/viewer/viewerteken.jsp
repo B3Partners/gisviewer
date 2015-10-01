@@ -49,19 +49,19 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <input type="button" value="Nieuw" id="teken_add_new" />
         <input type="button" value="Selecteer" id="teken_select_feature" />
     </p>
-    
-    <h3>Filter objecten op '${tekenFilterColumn}'</h3>
-    
-    <table>
-        <tr>
-            <td><input type="text" id="teken_filter_value" size="35" /> </td>
-        </tr>
-    </table>
-    
-    <p>
-        <input type="button" value="Filter" id="teken_filter_features" />
-        <input type="button" value="Reset" id="teken_filter_all_features" />
-    </p>
+
+    <c:if test="${not empty tekenFilterColumn}">
+        <h3>Filter objecten op '${tekenFilterColumn}'</h3>
+        <table>
+            <tr>
+                <td><input type="text" id="teken_filter_value" size="35" /> </td>
+            </tr>
+        </table>
+        <p>
+            <input type="button" value="Filter" id="teken_filter_features" />
+            <input type="button" value="Reset" id="teken_filter_all_features" />
+        </p>
+    </c:if>
 
     <div id="multipleResults" style="width: 100%;"/>
 

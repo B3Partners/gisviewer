@@ -346,6 +346,14 @@
 <script type="text/javascript">
     (function() {
     <c:if test="${not empty param.debug}">B3PGissuite.commons.setDebug(true);</c:if>
+            /**
+             * Start off with initMapComponent()
+             */
+            B3PGissuite.viewerComponent = B3PGissuite.createComponent('ViewerComponent', {viewerType: B3PGissuite.config.viewerType});
+            B3PGissuite.viewerComponent.initMapComponent();
+            B3PGissuite.commons.attachTransitionListener($j("#mapcontent")[0], function() {
+                B3PGissuite.viewerComponent.updateSizeOL();
+            });
             // Init CSS properties for configured tab width
             B3PGissuite.get('Layout').configurePanelSizes();
             B3PGissuite.get('Layout').prepareTabs();
@@ -373,14 +381,6 @@
             // Build the layout (admindatadiv, panelcontrols etc)
             // Argument is the html-element which is used to add after
             B3PGissuite.get('Layout').createLayout($j('#css_props'));
-            /**
-             * Start off with initMapComponent()
-             */
-            B3PGissuite.viewerComponent = B3PGissuite.createComponent('ViewerComponent', {viewerType: B3PGissuite.config.viewerType});
-            B3PGissuite.viewerComponent.initMapComponent();
-            B3PGissuite.commons.attachTransitionListener($j("#mapcontent")[0], function() {
-                B3PGissuite.viewerComponent.updateSizeOL();
-            });
             // Hide loading screen
             B3PGissuite.get('Layout').initHideLoadingScreen();
 

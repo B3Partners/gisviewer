@@ -1020,7 +1020,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
                     var url = B3PGissuite.config.ownCyclomediaUrl;
                     url = url.replace("[RDX]", opx.lon);
                     url = url.replace("[RDY]", opx.lat);
-                    B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",800,1024,false);
+                    B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",1029,847,false);
                 }
                 
             });

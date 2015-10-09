@@ -145,7 +145,9 @@
                             <fo:table-cell>                                            
                                 <xsl:variable name="url" select="$myRecord/value/imageUrl"/>                        
                                 <fo:block width="18.5cm">
+                                	<xsl:if test="$url">
                                     <fo:external-graphic border-style="solid" border-width="medium" src="url('data:image/jpeg;base64,{$url}')" content-height="scale-to-fit" content-width="scale-to-fit" scaling="uniform" width="500" height="375"/>
+                                  </xsl:if>  
                                 </fo:block>                            
                             </fo:table-cell>
                             

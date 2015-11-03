@@ -415,6 +415,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
             }
         }
 
+        /*
+         * Layers should not be re-ordered by order after initial load
+         * The order in which layers are enabled/disabled is the order in which
+         * to show the layers
+         * 
         // De layers staan op volgorde van aanzetten: B3PGissuite.vars.enabledLayerItems
         // Dus nog opnieuw ordenen
         if (backgroundLayerItems.length > 1) {
@@ -427,6 +432,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
                         return b.order - a.order;
             });
         }
+        */
 
         var orderedLayerItems = [];
         orderedLayerItems = orderedLayerItems.concat(backgroundLayerItems);

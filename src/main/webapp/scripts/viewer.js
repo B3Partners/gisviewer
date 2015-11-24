@@ -795,10 +795,13 @@ B3PGissuite.viewercommons = {
             me.openGoogleMaps(values);
         });
     },
-    /* Uses classic Google Maps parameters ll and spn */
+    /* Uses classic Google Maps parameters ll and spn 
+     * https://moz.com/ugc/everything-you-never-wanted-to-know-about-google-maps-parameters
+     * values[] = lat, lon, span Lat, span lon.
+     * */
     openGoogleMaps: function(values) {
-        var ll = "&ll=" + values[1] + "," + values[0];
-        var spn = "&spn=" + values[3] + "," + values[3];
+        var ll = "&ll=" + values[0] + "," + values[1];
+        var spn = "&spn=" + values[2] + "," + values[3];
         var options = "&hl=nl&om=0";
         var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
         window.open(url);

@@ -40,17 +40,17 @@
                 <param name="allowScriptAccess" value="always" />
                 <param name="allowFullScreen" value="true" />
 
-                <!-- Test API: https://www.globespotter.nl/api/test/viewer_bapi.swf -->
-                <!-- 2.1 API: https://www.globespotter.nl/v2/api/bapi/viewer_bapi.swf -->
+                <!-- Test API: https://globespotter.cyclomedia.com/api/test/viewer_bapi.swf -->
+                <!-- 2.1 werkt niet meer -->
                 <!-- 2.6 API: https://globespotter.cyclomedia.com/v26/api/viewer_api.swf -->
 
-                <embed src="https://www.globespotter.nl/v2/api/bapi/viewer_bapi.swf"
+                <embed src="https://globespotter.cyclomedia.com/v26/api/viewer_api.swf"
                        quality="high" bgcolor="#888888"
                        width="800" height="400"
                        type="application/x-shockwave-flash"
                        allowScriptAccess="always"
                        allowfullscreen="true"
-                       FlashVars="&APIKey=${apiKey}&imageid=${imageId}&MapSRSName=EPSG:28992&TID=${tid}">
+                       FlashVars="&apiKey=${apiKey}&imageID=${imageId}&srsNameMap=EPSG:28992&SRSNameViewer=EPSG:28992&SRSNameAddress=EPSG:28992&AddressLanguageCode=nl&tid=${tid}">
                 </embed>
             </object>
         </div>

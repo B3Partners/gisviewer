@@ -48,9 +48,7 @@ B3PGissuite.defineComponent('LayerInfoTabComponent', {
         }
         this.tabPanel.append(this.tabContainer);
         if(!this.tabComponent.isHidden() && this.tabComponent.isOnlyTab(this.options.tabid)) {
-            this.addListener('ViewerComponent', 'initMapComplete', function() {
-                this.tabComponent.toggleTab();
-            }.bind(this));
+            this.tabComponent.toggleTab();
         }
     },
     // Make the text container and

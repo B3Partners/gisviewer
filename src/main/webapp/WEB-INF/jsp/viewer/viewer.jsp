@@ -261,7 +261,7 @@
         "uploadpoints": {"id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/uploadtemppoints.do'}},
         "layerinfo": {"id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': {}},
         "externeinformatie":  {id: "externeinformatie", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "VerkeersmonitorComponent", 'options': {'src': '/visweb?id=123'}},
-        "verkeersmonitor1":  {id: "verkeersmonitor1", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}},
+        "verkeersmonitor1":  {id: "verkeersmonitor1", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "VerkeersmonitorTabComponent", 'options': {'src': 'http://nu.nl'}},
         "verkeersmonitor2":  {id: "verkeersmonitor2", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}},
         "verkeersmonitor3":  {id: "verkeersmonitor3", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}}
     };
@@ -300,6 +300,7 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/CMSTabComponent.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LayerInfoTabComponent.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/AnalyseTabComponent.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/VerkeersmonitorTabComponent.js?v=${JS_VERSION}"/>"></script>
     </c:when>
     <c:otherwise>
         <!-- Total (minified) viewer JS -->

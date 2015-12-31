@@ -259,7 +259,11 @@
         "transparantie": {id: "transparantie", contentid: "transparantieframeViewer", name: "Transparantie", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewertransparantie.do'}},
         "tekenen": {id: "tekenen", contentid: "tekenenframeViewer", name: "Tekenen", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/viewerteken.do'}},
         "uploadpoints": {"id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/uploadtemppoints.do'}},
-        "layerinfo": {"id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': {}}
+        "layerinfo": {"id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': {}},
+        "externeinformatie":  {id: "externeinformatie", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "VerkeersmonitorComponent", 'options': {'src': '/visweb?id=123'}},
+        "verkeersmonitor1":  {id: "verkeersmonitor1", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}},
+        "verkeersmonitor2":  {id: "verkeersmonitor2", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}},
+        "verkeersmonitor3":  {id: "verkeersmonitor3", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}}
     };
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";

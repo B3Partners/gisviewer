@@ -12,6 +12,7 @@
 <script type='text/javascript' src='dwr/interface/JZoekconfiguratieThemaUtil.js?v=${JS_VERSION}'></script>
 <script type='text/javascript' src='dwr/interface/JEditFeature.js?v=${JS_VERSION}'></script>
 <script type='text/javascript' src='dwr/interface/JMaatregelService.js?v=${JS_VERSION}'></script>
+<script type="text/javascript" src='dwr/interface/JCollectAdmindata.js?v=${JS_VERSION}'></script>
 <script type='text/javascript' src='dwr/util.js?v=${JS_VERSION}'></script>
 
 <script type="text/javascript">
@@ -200,7 +201,9 @@
         'tekenFilterColumn': checkValidity('${configMap["tekenFilterColumn"]}') ? '${configMap["tekenFilterColumn"]}' : null,
         'zoekenAutoIdentify': defaultTrue(${configMap["zoekenAutoIdentify"]}),
         'useOwnCyclomedia' : defaultFalse(${configMap["useOwnCyclomedia"]}),
-        'ownCyclomediaUrl' :checkValidity('${configMap["ownCyclomediaUrl"]}') ?'${configMap["ownCyclomediaUrl"]}' :null
+        'ownCyclomediaUrl' :checkValidity('${configMap["ownCyclomediaUrl"]}') ?'${configMap["ownCyclomediaUrl"]}' :null,
+        'externelaagid' :checkValidity('${configMap["externelaagid"]}') ?'${configMap["externelaagid"]}' :null,
+        'externeWegvakidAttr' :checkValidity('${configMap["externeWegvakidAttr"]}') ?'${configMap["externeWegvakidAttr"]}' :null
     };
 
     /* If B3PGissuite.config.viewerType == flamingo, check for Flash -> If no Flash installed choose OpenLayers */
@@ -261,9 +264,9 @@
         "uploadpoints": {"id": "uploadpoints", "contentid": "uploadtemppointsframeViewer", "name": "Upload Points", "class": "IframeTabComponent", 'options': {'src': '/gisviewer/uploadtemppoints.do'}},
         "layerinfo": {"id": "layerinfo", "name": "Laag informatie", "class": "LayerInfoTabComponent", 'options': {}},
         "externeinformatie":  {id: "externeinformatie", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "VerkeersmonitorComponent", 'options': {'src': '/visweb?id=123'}},
-        "verkeersmonitor1":  {id: "verkeersmonitor1", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "VerkeersmonitorTabComponent", 'options': {'src': 'http://nu.nl'}},
-        "verkeersmonitor2":  {id: "verkeersmonitor2", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}},
-        "verkeersmonitor3":  {id: "verkeersmonitor3", contentid: "verkeersmonitorframeViewer", name: "Verkeersmonitor", "class": "IframeTabComponent", 'options': {'src': '/visweb?id=123'}}
+        "verkeersmonitor1":  {id: "verkeersmonitor1", contentid: "verkeersmonitorframeViewer1", name: "Wegvakinfo", "class": "VerkeersmonitorTabComponent", 'options': {'src': 'http://portal.prvlimburg.nl/visweb/tab1.do?id='}},
+        "verkeersmonitor2":  {id: "verkeersmonitor2", contentid: "verkeersmonitorframeViewer2", name: "Meetgegevens", "class": "VerkeersmonitorTabComponent", 'options': {'src': 'http://portal.prvlimburg.nl/visweb/tab2.do?id='}},
+        "verkeersmonitor3":  {id: "verkeersmonitor3", contentid: "verkeersmonitorframeViewer3", name: "Overzichten", "class": "VerkeersmonitorTabComponent", 'options': {'src': 'http://portal.prvlimburg.nl/visweb/tab3.do?id='}}
     };
 
     var imageBaseUrl = "<html:rewrite page="/images/"/>";

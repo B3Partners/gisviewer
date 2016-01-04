@@ -83,3 +83,23 @@ B3PGissuite.get = function(className, id) {
     }
     return B3PGissuite.instances[instanceId];
 };
+
+/* Helper function to get access to a component (for example var tree = B3PGissuite.get('TreeTabComponent'); ) */
+B3PGissuite.getAllByClassName = function(className) {
+    var id = 0;
+    var components = [];
+    var classPrefix = (className.charAt(0).toLowerCase() + className.slice(1));
+
+    while(true){
+        var instanceId = classPrefix + id;
+        var instance = B3PGissuite.instances[instanceId];
+
+        if(typeof instance === 'undefined') {
+            break;
+        }else{
+            components.push(instance);
+            id++;
+        }
+    }
+    return components;
+};

@@ -1032,6 +1032,9 @@ B3PGissuite.defineComponent('ViewerComponent', {
             B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
         }
 
+        if(true){//B3PGissuite.config.useVerkeersmonitor TODO add configuration option useVerkeersmonitor
+            B3PGissuite.vars.verkeersmonitor = B3PGissuite.createComponent('VerkeersmonitorComponent');
+        }
     },
     displayEmbeddedMenuIcons: function() {
         var embeddedIcons = $j("#embedded_icons");
@@ -1729,7 +1732,9 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         if (B3PGissuite.vars.btn_highLightSelected) {
             this.highLightThemaObject(geom);
-        } else {
+        } else if(B3PGissuite.vars.verkeersmonitor !== null){
+            B3PGissuite.vars.verkeersmonitor.onIdentify(geom);
+        }else{
             this.handleGetAdminData(geom, null, false);
         }
 

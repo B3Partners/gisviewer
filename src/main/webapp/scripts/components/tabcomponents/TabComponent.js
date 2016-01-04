@@ -48,7 +48,6 @@ B3PGissuite.defineComponent('TabComponent', {
         me.cookiename = me.options.tabContainer + '_activetab';
         var index =options.enabledTabs.indexOf("externeinformatie");
         if(index !== -1){
-            //var vm = B3PGissuite.config.tabbladen["verkeersmonitor"];
             options.enabledTabs.splice(index,1);
             options.enabledTabs.push("verkeersmonitor1");
             options.enabledTabs.push("verkeersmonitor2");

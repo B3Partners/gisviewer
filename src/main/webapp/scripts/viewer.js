@@ -34,6 +34,7 @@ B3PGissuite.vars = {
     searchExtent: null,
     multiPolygonBufferWkt: null,
     editComponent: null,
+    verkeersmonitor:null,
     prevRadioButton: null,
     originalLayerUrl: "" + B3PGissuite.config.kburl,
     refresh_timeout_handle: 0,

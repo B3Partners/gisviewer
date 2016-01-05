@@ -1,26 +1,41 @@
 B3PGissuite.defineComponent('VerkeersmonitorComponent', {
     extend: 'BaseComponent',
     tabs:[],
+    layer:null,
     constructor: function VerkeersmonitorComponent(options){
-        options.kolom = "gm_code";
+        options.kolom = B3PGissuite.config.externeWegvakidAttr;
         this.callParent(options);
-        this.init();
+
+        this.addListener('ViewerComponent', 'frameWorkInitialized', this.init);
+
     },
-    init: function(){
+    init: function () {
         this.tabs = B3PGissuite.getAllByClassName("VerkeersmonitorTabComponent");
+        var layers = B3PGissuite.vars.enabledLayerItems;
+        var wmsLayers = B3PGissuite.vars.webMapController.getMap().getAllWMSLayers();
+        for (var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
+            if (layer.id === parseInt(B3PGissuite.config.externelaagid)) {
+                for (var j = 0; j < wmsLayers.length; j++) {
+                    var wmsLayer = wmsLayers[j];
+                    if (wmsLayer.getOption('layers') === layer.wmslayers) {
+                        this.layer = wmsLayer;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
     },
     onIdentify: function(geom){
         var me = this;
 
-        var themaid = -1;//B3PGissuite.viewercommons.getLayerIdsAsString(true); // vervangen door wegvakenlaagids
+        var themaid = B3PGissuite.config.externelaagid;//B3PGissuite.viewercommons.getLayerIdsAsString(true); // vervangen door wegvakenlaagids
         // optellen aantal gegevensbronnen
         this.loop++;
-        var gegevensbronId = 2;
-        var cql = "{}";
-        var htmlId= "1";
         var bookmarkAppcode = B3PGissuite.config.bookmarkAppcode;
         // haal gegevens op van gegevensbron
-        JCollectAdmindata.fillGegevensBronBean(gegevensbronId, themaid, geom, cql, false, htmlId, bookmarkAppcode, function(response){
+        JCollectAdmindata.fillGegevensBronBean(-1, themaid, geom, "{}", false, -1, bookmarkAppcode, function(response){
             me.handleData(response);
         });
     },
@@ -30,7 +45,18 @@ B3PGissuite.defineComponent('VerkeersmonitorComponent', {
             var index = this.getIndex(response);
             var id = record.values[index].value;
             this.changeUrls(id);
+            this.highlightRoad(id);
         }
+    },
+    highlightRoad: function(id){
+        //http://localhost:8084/gisviewer/services/CreateSLD?visibleValue=513&themaId=2&appcode=86967bd47399b0664c4a83d3e30eab25
+
+        //http://localhost/CreateSLD.xml
+        /*
+         * Haal laag op
+         * Maak filter
+         * voeg sld toe
+         */
     },
     changeUrls: function(id){
         for(var i = 0 ; i < this.tabs.length; i++){
@@ -64,7 +90,7 @@ B3PGissuite.defineComponent('VerkeersmonitorTabComponent', {
         this.src = options.src;
         this.id = options.id;
         this.init();
-        
+
     },
     init: function() {
         var src = this.src;

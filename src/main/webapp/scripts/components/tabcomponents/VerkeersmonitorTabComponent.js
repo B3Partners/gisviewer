@@ -7,7 +7,6 @@ B3PGissuite.defineComponent('VerkeersmonitorComponent', {
         this.callParent(options);
 
         this.addListener('ViewerComponent', 'frameWorkInitialized', this.init);
-
     },
     init: function () {
         this.tabs = B3PGissuite.getAllByClassName("VerkeersmonitorTabComponent");
@@ -30,9 +29,7 @@ B3PGissuite.defineComponent('VerkeersmonitorComponent', {
     onIdentify: function(geom){
         var me = this;
 
-        var themaid = B3PGissuite.config.externelaagid;//B3PGissuite.viewercommons.getLayerIdsAsString(true); // vervangen door wegvakenlaagids
-        // optellen aantal gegevensbronnen
-        this.loop++;
+        var themaid = B3PGissuite.config.externelaagid;
         var bookmarkAppcode = B3PGissuite.config.bookmarkAppcode;
         // haal gegevens op van gegevensbron
         JCollectAdmindata.fillGegevensBronBean(-1, themaid, geom, "{}", false, -1, bookmarkAppcode, function(response){
@@ -49,15 +46,8 @@ B3PGissuite.defineComponent('VerkeersmonitorComponent', {
         }
     },
     highlightRoad: function(id){
-        //http://localhost:8084/gisviewer/services/CreateSLD?visibleValue=513&themaId=2&appcode=86967bd47399b0664c4a83d3e30eab25
-
-        //http://localhost/CreateSLD.xml
-        /*
-         * Haal laag op
-         * Maak filter
-         * voeg sld toe
-         */
-        this.layer.setOGCParams({"sld":'http://localhost/CreateSLD.xml' });
+        var sldUrl = B3PGissuite.config.sldServletUrl + "?visibleValue=" + id + "&themaId=" +B3PGissuite.config.externelaagid + "&appcode=" +B3PGissuite.config.bookmarkAppcode;
+        this.layer.setOGCParams({"sld": sldUrl});
     },
     changeUrls: function(id){
         for(var i = 0 ; i < this.tabs.length; i++){

@@ -57,6 +57,7 @@ B3PGissuite.defineComponent('VerkeersmonitorComponent', {
          * Maak filter
          * voeg sld toe
          */
+        this.layer.setOGCParams({"sld":'http://localhost/CreateSLD.xml' });
     },
     changeUrls: function(id){
         for(var i = 0 ; i < this.tabs.length; i++){

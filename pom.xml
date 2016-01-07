@@ -167,6 +167,7 @@
                                 <param>${viewerhtml.path}/components/tabcomponents/CMSTabComponent.js</param>
                                 <param>${viewerhtml.path}/components/tabcomponents/LayerInfoTabComponent.js</param>
                                 <param>${viewerhtml.path}/components/tabcomponents/AnalyseTabComponent.js</param>
+                                <param>${viewerhtml.path}/components/tabcomponents/VerkeersmonitorTabComponent.js</param>
                             </sourceFiles>
                         </compilation>
 

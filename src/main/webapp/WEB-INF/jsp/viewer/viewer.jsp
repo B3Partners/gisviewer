@@ -299,7 +299,6 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/CMSTabComponent.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/LayerInfoTabComponent.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/AnalyseTabComponent.js?v=${JS_VERSION}"/>"></script>
-        <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/VerkeersmonitorTabComponent.js?v=${JS_VERSION}"/>"></script>
     </c:when>
     <c:otherwise>
         <!-- Total (minified) viewer JS -->

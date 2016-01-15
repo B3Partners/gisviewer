@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 B3Partners B.V.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,10 @@
 
 /**
  * Tabcomponent for Gisviewer
- * 
+ *
  * @requires jQuery (> 1.3.2)
  * @requires commonfunctions.js
- * 
+ *
  * @param object options
  * @returns {TabComponent}
  */
@@ -46,13 +46,6 @@ B3PGissuite.defineComponent('TabComponent', {
         me.activeTab = null;
         me.lteie8 = jQuery('html').hasClass('lt-ie9');
         me.cookiename = me.options.tabContainer + '_activetab';
-        var index =options.enabledTabs.indexOf("externeinformatie");
-        if(index !== -1){
-            options.enabledTabs.splice(index,1);
-            options.enabledTabs.push("verkeersmonitor1");
-            options.enabledTabs.push("verkeersmonitor2");
-            options.enabledTabs.push("verkeersmonitor3");
-        }
         me.setupEnabledTabs();
         me.initTabComponent();
         var resizeTimer = null;
@@ -93,7 +86,7 @@ B3PGissuite.defineComponent('TabComponent', {
                 comp.renderTab(tabComponent);
             // Else create a tab from existing content
             } else {
-                // Set taboptions            
+                // Set taboptions
                 options = {
                     'contentid': tabobj.contentid,
                     'checkResize': true

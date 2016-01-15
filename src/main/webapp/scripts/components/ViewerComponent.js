@@ -63,7 +63,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         Proj4js.defs["EPSG:28992"] = "+title=Amersfoort / RD New +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs";
         var opt = {
             projection: new OpenLayers.Projection("EPSG:28992"),
-            // set nl as max extent. Always show layers.            
+            // set nl as max extent. Always show layers.
             maxExtent: B3PGissuite.viewercommons.getNLMaxBounds(),
             resolutions: olRes,
             // numZoomLevels: olRes.length-1,
@@ -152,7 +152,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
             B3PGissuite.vars.webMapController.getMap().addLayer(tileLayer);
 
         } else {
-            //wms layer    
+            //wms layer
             var capLayerUrl = layerUrl;
 
             var validId = this.getValidLayerId(lname);
@@ -188,9 +188,9 @@ B3PGissuite.defineComponent('ViewerComponent', {
              * dan hoeven er geen styles meegegeven te worden */
             var onlyDefaultStyles = this.layersOnlyHaveDefaultStyles(layerItems);
 
-            /* 
+            /*
              * TODO: Sld parts opbouwen via sld servlet. Servlet aan layerUrl plakken
-             * Als er een hele sld in de layerUrl is meegegeven dan geen style gebruiken 
+             * Als er een hele sld in de layerUrl is meegegeven dan geen style gebruiken
              */
             if (layerUrl.indexOf("&sld=") != -1) {
                 onlyDefaultStyles = true;
@@ -260,9 +260,9 @@ B3PGissuite.defineComponent('ViewerComponent', {
                     }
                     theLayers += item.wmslayers;
 
-                    /* 
+                    /*
                      * Achtergrond optie toevoegen voor gebruik bij Print. Anders
-                     * komt de laatst aangevinkte laag bovenop ook als dit een 
+                     * komt de laatst aangevinkte laag bovenop ook als dit een
                      * achtergrond laag is.
                      */
                     if (item.background) {
@@ -337,11 +337,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
                 var sldUrl = "sld=" + baseUrl + "/services/createUserSld?layerids=" + sldIds;
 
                 /* add ampersand at end otherwise adding 'sld=' does not work */
-                var hasAmpersand = layerUrl.indexOf("&", layerUrl.length - "&".length) !== -1;              
+                var hasAmpersand = layerUrl.indexOf("&", layerUrl.length - "&".length) !== -1;
                 if (!hasAmpersand) {
                     layerUrl += "&";
                 }
-                
+
                 layerUrl += sldUrl;
             }
 
@@ -418,7 +418,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
          * Layers should not be re-ordered by order after initial load
          * The order in which layers are enabled/disabled is the order in which
          * to show the layers
-         * 
+         *
         // De layers staan op volgorde van aanzetten: B3PGissuite.vars.enabledLayerItems
         // Dus nog opnieuw ordenen
         if (backgroundLayerItems.length > 1) {
@@ -528,7 +528,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
                         layers[0] = layerGroup[k];
 
                         /* Sld url aan service url toevoegen
-                         var sldUrl = layerGroup[k].service_sld;                    
+                         var sldUrl = layerGroup[k].service_sld;
                          if (sldUrl != undefined && sldUrl != "" && sldUrl.length > 0) {
                          lUrl += "&sld=" + sldUrl;
                          } */
@@ -632,7 +632,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         return maxBounds;
     },
-    /* Methode herberekend ingevulde tiling resoluties o.b.v. max eetent. 
+    /* Methode herberekend ingevulde tiling resoluties o.b.v. max eetent.
      * Geeft een array of string terug. */
     getTilingResolutions: function(maxBounds, returnArray) {
         var newMapWidth = maxBounds.right - maxBounds.left;
@@ -1005,7 +1005,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         var scalebar = B3PGissuite.vars.webMapController.createTool("scalebar", Tool.SCALEBAR);
         B3PGissuite.vars.webMapController.addTool(scalebar);
-       
+
 
         var zoombar = B3PGissuite.vars.webMapController.createTool("zoombar", Tool.ZOOM_BAR);
         B3PGissuite.vars.webMapController.addTool(zoombar);
@@ -1027,7 +1027,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
                     url = url.replace("[RDY]", opx.lat);
                     B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",1200,847,false);
                 }
-                
+
             });
             B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
         }
@@ -1204,7 +1204,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         var tol = B3PGissuite.config.tolerance;
         var appCode = B3PGissuite.config.bookmarkAppcode;
 
-        /* indien meerdere analyse themas dan popup voor keuze. 
+        /* indien meerdere analyse themas dan popup voor keuze.
          * Niet elke keer lijst aanvullen bij popup, want dan krijg je dubbele */
         if(this.highlightLayers.length < 1){
             for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
@@ -1244,11 +1244,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
             });
         }
     },
-    
+
     getHighlightLayers: function() {
         return this.highlightLayers;
     },
-    
+
     /* backend heeft wkt teruggegeven */
     returnHighlight: function(wkt) {
         /* Fout in back-end of wkt is een POINT */
@@ -1584,7 +1584,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         if (!B3PGissuite.config.usePopup && !B3PGissuite.config.usePanel && !B3PGissuite.config.useBalloonPopup) {
             return;
         }
-        
+
         if(!B3PGissuite.config.zoekenAutoIdentify) {
             return;
         }
@@ -1729,9 +1729,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         if (B3PGissuite.vars.btn_highLightSelected) {
             this.highLightThemaObject(geom);
-        } else if(B3PGissuite.vars.verkeersmonitor !== null){
-            B3PGissuite.vars.verkeersmonitor.onIdentify(geom); // ToDo: make better: create hook for custom handlers
-        }else{
+        } else{
             this.handleGetAdminData(geom, null, false);
         }
 
@@ -1801,7 +1799,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
      * @param selectionWithinObject Boolean indicates if it should retrieve objectdata
      * for all objects within the current selection (polygon). When false it retrives only
      * data directly under the (buffered) click location.
-     * @param themaIds the thema ids where this request must be done. If ommited the 
+     * @param themaIds the thema ids where this request must be done. If ommited the
      * selected thema's are used. It doesn't change the checkboxes.
      * @param extraCriteria JavaScript object with CQL criteria that is used as filter for getting the features.
      */

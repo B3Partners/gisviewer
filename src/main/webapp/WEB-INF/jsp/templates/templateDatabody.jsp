@@ -38,11 +38,11 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         <c:choose>
             <c:when test="${empty theme}">
                 <%-- Fallback to B3P style --%>
-                <link href="<html:rewrite page='/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+                <link href="<html:rewrite page='/styles/gisviewer_base.css?v=${JS_VERSION}' module=''/>" rel="stylesheet" type="text/css">
             </c:when>
             <c:otherwise>
                 <%-- Select theme style --%>
-                <link href="<html:rewrite page='/themes/${theme}/styles/gisviewer_base.css' module=''/>" rel="stylesheet" type="text/css">
+                <link href="<html:rewrite page='/themes/${theme}/styles/gisviewer_base.css?v=${JS_VERSION}' module=''/>" rel="stylesheet" type="text/css">
             </c:otherwise>
         </c:choose>
         <script type="text/javascript" src="scripts/lib/jquery-1.3.2.min.js"></script>

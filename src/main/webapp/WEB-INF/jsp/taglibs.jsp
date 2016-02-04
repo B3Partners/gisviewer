@@ -31,4 +31,4 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
 <%@taglib uri="http://commons.b3p.nl/jstl-functions" prefix="f" %>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-<c:set var="JS_VERSION" value="4.2.2.1" />
+<c:set var="JS_VERSION" value="4.2.2.2" />

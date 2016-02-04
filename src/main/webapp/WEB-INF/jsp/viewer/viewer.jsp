@@ -333,7 +333,7 @@
 <div id="leftcontenttabjes"><ul id="leftcontentnav" class="tabsul"></ul></div>
 <div id="leftcontent"></div>
 
-<div id="mapcontent"><div id="flashmelding"></div></div>
+<div id="mapcontent"><div id="toolbar" class="olControlPanel"></div><div id="flashmelding"></div></div>
 <script type="text/javascript">
     if (B3PGissuite.config.viewerType === 'flamingo') {
         setTimeout(function() {

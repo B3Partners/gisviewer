@@ -78,7 +78,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
             ]
         };
         OpenLayers.ImgPath = 'styles/openlayers_img/';
-        $j("#mapcontent").html(" ");
+        $j("#mapcontent #flashmelding").remove();
         var olmap = B3PGissuite.vars.webMapController.createMap('mapcontent', opt);
         $j("#mapcontent").css("border", "1px solid black");
         B3PGissuite.vars.webMapController.addMap(olmap);
@@ -840,7 +840,9 @@ B3PGissuite.defineComponent('ViewerComponent', {
             }
         } */
 
-        B3PGissuite.vars.webMapController.createPanel("toolGroup");
+        B3PGissuite.vars.webMapController.createPanel("toolGroup", {
+            div: document.getElementById('toolbar')
+        });
 
         B3PGissuite.vars.webMapController.addTool(B3PGissuite.vars.webMapController.createTool("loading", Tool.LOADING_BAR));
 
@@ -1026,8 +1028,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
                     url = url.replace("[RDX]", opx.lon);
                     url = url.replace("[RDY]", opx.lat);
                     B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",1200,847,false);
-                }
-
+                },
+                title: "cyclomedia"
             });
             B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
         }

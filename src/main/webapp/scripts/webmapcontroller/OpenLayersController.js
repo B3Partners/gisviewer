@@ -41,8 +41,8 @@ OpenLayersController.prototype.getPanel = function() {
     return this.panel;
 };
 
-OpenLayersController.prototype.createPanel = function(id) {
-    var paneel = new OpenLayers.Control.Panel();
+OpenLayersController.prototype.createPanel = function(id, options) {
+    var paneel = new OpenLayers.Control.Panel(options || {});
     this.panel = paneel;
     this.maps[0].getFrameworkMap().addControl(this.panel);
 };

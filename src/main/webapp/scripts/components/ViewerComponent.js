@@ -1046,7 +1046,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
             'right': '0px',
             'top': '0px',
             'padding': '0 16px 0 0',
-            'z-index': '2000',
+            'z-index': '10002',
             'background-color': '#eeeeee'
         };
         if (B3PGissuite.vars.webMapController instanceof OpenLayersController) {

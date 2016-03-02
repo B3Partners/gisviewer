@@ -742,7 +742,6 @@ B3PGissuite.defineComponent('Search', {
              * met lange waardes niet rechts buiten het scherm vallen */
             for (var j = 0; j < list.length; j++) {
                 var waarde = list[j].label;
-                list[j].id = waarde;    // Stupid workaround, so by using the addOptions function on line 751 properly adds the value to the option element, so it get's submitted (instead of a "null" value)
                 if (waarde.length > 45) {
                     list[j].label = waarde.substring(0, 45) + '...';
                 }

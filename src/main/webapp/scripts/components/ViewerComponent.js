@@ -1027,7 +1027,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
                     var url = B3PGissuite.config.ownCyclomediaUrl;
                     url = url.replace("[RDX]", opx.lon);
                     url = url.replace("[RDY]", opx.lat);
-                    B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",1200,847,false);
+                    if (B3PGissuite.vars.webMapController.getMap().markers) {
+                        B3PGissuite.vars.webMapController.getMap().removeMarker("cycloMediaMarker")
+                    }
+                    B3PGissuite.viewercommons.popUp(url, "Rondkijkfoto", 1200, 847, false);
+                    B3PGissuite.vars.webMapController.getMap().setMarker("cycloMediaMarker", opx.lon, opx.lat);
                 },
                 title: "cyclomedia"
             });

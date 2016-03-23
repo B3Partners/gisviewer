@@ -556,11 +556,11 @@ B3PGissuite.viewercommons = {
         submitForm.submit();
     },
     exportObjectData2HTML: function(htmlId, gegevensbron, index, idcounter) {
-        var submitForm = this.exportObjectData("viewerdata.do", "info_export");
-        submitForm.appendChild(this.createExportInput('aanvullendeinfo', 't'));
-        submitForm.appendChild(this.createExportInput('themaid', gegevensbron.id));
-        submitForm.appendChild(this.createExportInput('primaryKeys', gegevensbron.csvPks));
-        submitForm.appendChild(this.createExportInput('addKaart', 'j'));
+        var submitForm = this.exportObjectData("services/Data2PDF", "info_export");
+        submitForm.appendChild(this.createExportInput('gbId', gegevensbron.id));
+        submitForm.appendChild(this.createExportInput('objectIds', gegevensbron.csvPks));
+        submitForm.appendChild(this.createExportInput('orientation', 'staand'));
+        submitForm.appendChild(this.createExportInput('format', 'html'));
         submitForm.appendChild(this.createExportInput('jsonSettings', this.getMapJsonSettings([])));
         submitForm.appendChild(this.createExportInput('appCode', B3PGissuite.config.bookmarkAppcode));
         submitForm.submit();

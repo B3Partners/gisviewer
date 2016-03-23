@@ -240,6 +240,10 @@
             <param-name>xsl_data2pdf</param-name>
             <param-value>/WEB-INF/xsl/data2pdf.xsl</param-value>
         </init-param>
+        <init-param>
+            <param-name>xsl_data2html</param-name>
+            <param-value>/WEB-INF/xsl/data2html.xsl</param-value>
+        </init-param>
     </servlet>
     <servlet>
         <servlet-name>ReportServlet</servlet-name>

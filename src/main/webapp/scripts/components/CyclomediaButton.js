@@ -39,15 +39,13 @@ B3PGissuite.defineComponent('Cyclomedia', {
     },
     startClicking: function () {
 
-        console.log('yo');
         this.ownCyclomedia.getFrameworkTool().activate();
 
 
 
     },
     stopClicking: function () {
-        console.log('stopping yo');
-//        this.ownCyclomedia.getFrameworkTool().deactivate();
+        this.ownCyclomedia.getFrameworkTool().deactivate();
 
         if (B3PGissuite.vars.webMapController.getMap().markers) {
             B3PGissuite.vars.webMapController.getMap().removeMarker("cycloMediaMarker");

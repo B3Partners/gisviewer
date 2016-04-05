@@ -290,6 +290,7 @@
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/Balloon.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/Edit.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/GPS.js?v=${JS_VERSION}"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/scripts/components/CyclomediaButton.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TabComponent.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/IframeTabComponent.js?v=${JS_VERSION}"/>"></script>
         <script type="text/javascript" src="<html:rewrite page="/scripts/components/tabcomponents/TreeTabComponent.js?v=${JS_VERSION}"/>"></script>

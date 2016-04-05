@@ -157,6 +157,7 @@
                                 <param>${viewerhtml.path}/components/Balloon.js</param>
                                 <param>${viewerhtml.path}/components/Edit.js</param>
                                 <param>${viewerhtml.path}/components/GPS.js</param>
+                                <param>${viewerhtml.path}/components/CyclomediaButton.js</param>
 
                                 <param>${viewerhtml.path}/components/tabcomponents/TabComponent.js</param>
                                 <param>${viewerhtml.path}/components/tabcomponents/IframeTabComponent.js</param>

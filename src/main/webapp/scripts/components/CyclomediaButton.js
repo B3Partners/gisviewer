@@ -16,8 +16,31 @@
  */
 
 B3PGissuite.defineComponent('Cyclomedia', {
+    /**
+     * A wrapper for the old cyclomedia clicker tool
+     * 
+     * @param {type} options
+     * @returns {Cyclomedia}
+     */
+    
     constructor: function Cyclomedia(options) {
+        
         var me = this;
+        
+        // create the cyclomedia tool
+        var ownCyclomedia = B3PGissuite.vars.webMapController.createTool("b_ownCyclomedia", Tool.CYCLOMEDIA, {title: 'Cyclomedia'});
+        
+        // register events for up and down
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, ownCyclomedia, function () {
+            me.startClicking();
+        });
+
+        B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, ownCyclomedia, function () {
+            me.stopClicking();
+        });
+
+        
+        // create the tool to handle the clicks for cyclomedia
         this.ownCyclomedia = B3PGissuite.vars.webMapController.createTool("ownCyclomediaClicker", Tool.CLICK, {
             click: function (event) {
 
@@ -26,6 +49,8 @@ B3PGissuite.defineComponent('Cyclomedia', {
                 var url = B3PGissuite.config.ownCyclomediaUrl;
                 url = url.replace("[RDX]", opx.lon);
                 url = url.replace("[RDY]", opx.lat);
+                
+                // if old marker present, remove
                 if (B3PGissuite.vars.webMapController.getMap().markers) {
                     B3PGissuite.vars.webMapController.getMap().removeMarker("cycloMediaMarker");
                 }
@@ -34,7 +59,11 @@ B3PGissuite.defineComponent('Cyclomedia', {
             },
             title: "cyclomedia"
         });
+        
+        // add both the tool and the wrapper to the webmapcontroller
+        B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
         B3PGissuite.vars.webMapController.addTool(me.ownCyclomedia);
+        
 
     },
     startClicking: function () {
@@ -45,8 +74,10 @@ B3PGissuite.defineComponent('Cyclomedia', {
 
     },
     stopClicking: function () {
-        this.ownCyclomedia.getFrameworkTool().deactivate();
 
+        this.ownCyclomedia.getFrameworkTool().deactivate();
+        
+        // remove the cyclomedia markers
         if (B3PGissuite.vars.webMapController.getMap().markers) {
             B3PGissuite.vars.webMapController.getMap().removeMarker("cycloMediaMarker");
         }

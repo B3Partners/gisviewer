@@ -1020,55 +1020,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         if (B3PGissuite.config.useOwnCyclomedia && this.mapviewer === "openlayers") {
             var cyclomediaComponent = B3PGissuite.createComponent('Cyclomedia');
-            var ownCyclomedia = B3PGissuite.vars.webMapController.createTool("b_ownCyclomedia", Tool.TOGGLE, {title: 'Cyclomedia'});
-            B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_DOWN, ownCyclomedia, function () {
-                cyclomediaComponent.startClicking();
-            });
-            
-            B3PGissuite.vars.webMapController.registerEvent(Event.ON_EVENT_UP, ownCyclomedia, function () {
-                cyclomediaComponent.stopClicking();
-            });
-            
-            
 
-            B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
-            
-            
-            //          
-            //          
-//          
-//          
-//              
-//            var ownCyclomedia = B3PGissuite.vars.webMapController.createTool("b_ownCyclomedia", Tool.CLICK,{
-//                click:function(event){
-//
-//                    var opx = this.map.getLonLatFromPixel(event.xy);
-//                    // format ownCyclomediaUrl = http://www.server.nl?address=[RDX] [RDY]
-//                    var url = B3PGissuite.config.ownCyclomediaUrl;
-//                    url = url.replace("[RDX]", opx.lon);
-//                    url = url.replace("[RDY]", opx.lat);
-//                    if (B3PGissuite.vars.webMapController.getMap().markers) {
-//                        B3PGissuite.vars.webMapController.getMap().removeMarker("cycloMediaMarker");
-//                    }
-//                    B3PGissuite.viewercommons.popUp(url, "Rondkijkfoto", 1200, 847, false);
-//                    B3PGissuite.vars.webMapController.getMap().setMarker("cycloMediaMarker", opx.lon, opx.lat);
-//                },
-//                title: "cyclomedia"
-//            });
-//            B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
-          /*  ownCyclomedia.frameworkTool.button.events.register("deactivate", ownCyclomedia.frameworkTool.button, function(){
-                                    if (B3PGissuite.vars.webMapController.getMap().markers) {
-                        B3PGissuite.vars.webMapController.getMap().removeMarker("cycloMediaMarker");
-                    }
-            });*/
-           /*   ownCyclomedia.frameworkTool.button.events.register("activate",this, function(){
-                    var a = 0;
-                    alert(1);
-              });*/
-          
-            
         }
-
     },
     displayEmbeddedMenuIcons: function() {
         var embeddedIcons = $j("#embedded_icons");

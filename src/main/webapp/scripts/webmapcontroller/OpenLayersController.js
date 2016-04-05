@@ -305,6 +305,12 @@ OpenLayersController.prototype.createTool = function(id, type, options) {
         }
         options["displayClass"] = "olControl" + id;
         return new OpenLayersTool(id, new OpenLayers.Control.Click(options), type);
+    } else if (type == Tool.CYCLOMEDIA) {
+        if (!options) {
+            options = new Object();
+        }
+        options["displayClass"] = "olControl" + id;
+        return new OpenLayersTool(id, new OpenLayers.Control.Click(options), type);
     } else if (type == Tool.LOADING_BAR) {
         return new OpenLayersTool(id, new OpenLayers.Control.LoadingPanel(options), type);
     } else if (type == Tool.GET_FEATURE_INFO) {

@@ -76,6 +76,8 @@ Tool.MEASURED_POLYGON = 17;
 
 Tool.SHOW_X_Y = 18;
 
+Tool.CYCLOMEDIA = 19;
+
 Layer.VECTOR_TYPE = "vector";
 Layer.RASTER_TYPE = "raster";
 

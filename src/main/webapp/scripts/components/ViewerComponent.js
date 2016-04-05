@@ -1018,22 +1018,10 @@ B3PGissuite.defineComponent('ViewerComponent', {
             this.displayEmbeddedMenuIcons();
         }
 
-        if (B3PGissuite.config.useOwnCyclomedia && this.mapviewer ===  "openlayers") {
-            var ownCyclomedia = B3PGissuite.vars.webMapController.createTool("b_ownCyclomedia", Tool.CLICK,{
-                click:function(event){
+        if (B3PGissuite.config.useOwnCyclomedia && this.mapviewer === "openlayers") {
+            var cyclomediaComponent = B3PGissuite.createComponent('Cyclomedia');
 
-                    var opx = this.map.getLonLatFromPixel(event.xy);
-                    // format ownCyclomediaUrl = http://www.server.nl?address=[RDX] [RDY]
-                    var url = B3PGissuite.config.ownCyclomediaUrl;
-                    url = url.replace("[RDX]", opx.lon);
-                    url = url.replace("[RDY]", opx.lat);
-                    B3PGissuite.viewercommons.popUp(url,"Rondkijkfoto",1200,847,false);
-                },
-                title: "cyclomedia"
-            });
-            B3PGissuite.vars.webMapController.addTool(ownCyclomedia);
         }
-
     },
     displayEmbeddedMenuIcons: function() {
         var embeddedIcons = $j("#embedded_icons");

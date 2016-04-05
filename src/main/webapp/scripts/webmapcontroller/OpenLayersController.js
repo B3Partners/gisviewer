@@ -305,6 +305,12 @@ OpenLayersController.prototype.createTool = function(id, type, options) {
         }
         options["displayClass"] = "olControl" + id;
         return new OpenLayersTool(id, new OpenLayers.Control.Click(options), type);
+    } else if (type == Tool.CYCLOMEDIA) {
+        if (!options) {
+            options = new Object();
+        }
+        options["displayClass"] = "olControl" + id;
+        return new OpenLayersTool(id, new OpenLayers.Control.Click(options), type);
     } else if (type == Tool.LOADING_BAR) {
         return new OpenLayersTool(id, new OpenLayers.Control.LoadingPanel(options), type);
     } else if (type == Tool.GET_FEATURE_INFO) {
@@ -1583,7 +1589,6 @@ function OpenLayersImageLayer(olLayerObject, id) {
 
 OpenLayersImageLayer.prototype = new OpenLayersLayer();
 OpenLayersImageLayer.prototype.constructor = OpenLayersImageLayer;
-
 function OpenLayersTool(id, olControlObject, type, addToPanel) {
     this.controls = new Array();
     this.onActiveHandler = new Object();
@@ -1711,9 +1716,9 @@ OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
             displayClass: this.displayClass + "Button",
             type: OpenLayers.Control.TYPE_TOOL
         };
-        this.button = new OpenLayers.Control(buttonOptions);
+      /*  this.button = new OpenLayers.Control(buttonOptions);
         this.button.events.register("activate", this, this.activate);
-        this.button.events.register("deactivate", this, this.deactivate);
+        this.button.events.register("deactivate", this, this.deactivate);*/
     },
     onClick: function(evt) {
     },

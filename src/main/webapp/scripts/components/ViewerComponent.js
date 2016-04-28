@@ -502,6 +502,12 @@ B3PGissuite.defineComponent('ViewerComponent', {
                     }
                 }
             }
+            for(var j = 0 ; j <  B3PGissuite.vars.unremovableLayers.length; j++){
+                if( B3PGissuite.vars.unremovableLayers[j].getId() === lid){
+                    found = true;
+                    break;
+                }
+            }
             if (!found) {
                 removedLayers.push(lid);
             }

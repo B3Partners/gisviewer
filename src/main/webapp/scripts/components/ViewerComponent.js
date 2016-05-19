@@ -1784,6 +1784,10 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         document.forms[0].geom.value = geom;
 
+        if(B3PGissuite.commons.getDebug() && document.forms[0].action.indexOf("&debug") === -1) {
+            document.forms[0].action += "&debug=true";
+        }
+
         document.forms[0].submit();
     },
 
@@ -1931,6 +1935,10 @@ B3PGissuite.defineComponent('ViewerComponent', {
         } else {
             document.forms[0].target = 'dataframe';
             B3PGissuite.viewercommons.loadBusyJSP('dataframe', 'panel');
+        }
+
+        if(B3PGissuite.commons.getDebug() && document.forms[0].action.indexOf("&debug") === -1) {
+            document.forms[0].action += "&debug=true";
         }
 
         document.forms[0].submit();

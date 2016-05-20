@@ -7,6 +7,12 @@ B3PGissuite.vars = {
      */
     enabledLayerItems: [],
     dataframepopupHandle: null,
+
+    /**
+     *
+     * Array with layers who shouldn't be removed when updating the layers after a click in the tree.
+     */
+    unremovableLayers: [],
     /**
      * String that forms the request to the service. It contains the normal wms request
      * parameters appened with the kaartenbalie url and if available also PROJECT

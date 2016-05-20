@@ -502,6 +502,12 @@ B3PGissuite.defineComponent('ViewerComponent', {
                     }
                 }
             }
+            for(var j = 0 ; j <  B3PGissuite.vars.unremovableLayers.length; j++){
+                if( B3PGissuite.vars.unremovableLayers[j].getId() === lid){
+                    found = true;
+                    break;
+                }
+            }
             if (!found) {
                 removedLayers.push(lid);
             }
@@ -1778,6 +1784,10 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         document.forms[0].geom.value = geom;
 
+        if(B3PGissuite.commons.getDebug() && document.forms[0].action.indexOf("&debug") === -1) {
+            document.forms[0].action += "&debug=true";
+        }
+
         document.forms[0].submit();
     },
 
@@ -1925,6 +1935,10 @@ B3PGissuite.defineComponent('ViewerComponent', {
         } else {
             document.forms[0].target = 'dataframe';
             B3PGissuite.viewercommons.loadBusyJSP('dataframe', 'panel');
+        }
+
+        if(B3PGissuite.commons.getDebug() && document.forms[0].action.indexOf("&debug") === -1) {
+            document.forms[0].action += "&debug=true";
         }
 
         document.forms[0].submit();

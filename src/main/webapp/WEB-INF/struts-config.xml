@@ -32,7 +32,6 @@
             <form-property name="legendItems" type="java.lang.String[]"/>
             <form-property name="scale" type="java.lang.Integer"/>
             <form-property name="ppi" type="java.lang.Integer"/>
-            <form-property name="ppi" type="java.lang.String" initial="72"/>
         </form-bean>
         <form-bean name="meldingForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="action" type="java.lang.String"/>

@@ -415,6 +415,19 @@ B3PGissuite.defineComponent('ViewerComponent', {
             }
         }
 
+        // De layers staan op volgorde van aanzetten: B3PGissuite.vars.enabledLayerItems
+        // Dus nog opnieuw ordenen
+        if (backgroundLayerItems.length > 1) {
+            backgroundLayerItems.sort(function(a, b) {
+                        return b.order - a.order;
+            });
+        }
+        if (topLayerItems.length > 1) {
+            topLayerItems.sort(function(a, b) {
+                        return b.order - a.order;
+            });
+        }
+
         var orderedLayerItems = [];
         orderedLayerItems = orderedLayerItems.concat(backgroundLayerItems);
         orderedLayerItems = orderedLayerItems.concat(topLayerItems);
@@ -499,6 +512,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
             if (B3PGissuite.vars.webMapController.getMap().getLayer(layerId) == null) {
                 layerGroup.splice(0, 1); // verwijder eerste element
+                var groupAdded = false;
 
                 for (k = 0; k < layerGroup.length; k++) {
                     /* eigen wms layer */
@@ -517,7 +531,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
                         this.addLayerToViewer(lName, lUrl, layers);
                         layerId = this.getValidLayerId(lName);
                     } else {
-                        this.addLayerToViewer(layerId, B3PGissuite.vars.layerUrl, layerGroup);
+                        // In addLayerToViewer wordt groep toegevoegd, dus maar 1 keer nodig
+                        if (!groupAdded) {
+                            this.addLayerToViewer(layerId, B3PGissuite.vars.layerUrl, layerGroup);
+                            groupAdded = true;
+                        }
                     }
                 }
             }

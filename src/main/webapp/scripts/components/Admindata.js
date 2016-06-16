@@ -935,10 +935,13 @@ B3PGissuite.defineComponent('Admindata', {
     createTableTd: function(waarde, gegevensbron, record) {
         var kolomBreedte = (waarde.kolomBreedte == 0) ? 150 : waarde.kolomBreedte;
         var me = this;
-        var td = $j('<td></td>')
-                .css({
-            "width": kolomBreedte + "px"
-        });
+        var td = $j('<td></td>');
+
+        if(gegevensbron.layout !== "admindata3") {
+            td.css({
+                "width": kolomBreedte + "px"
+            });
+        }
 
         if (waarde.type == 'TYPE_DATA' || waarde.type == 'TYPE_DATUM') {
             if (!waarde.value) {

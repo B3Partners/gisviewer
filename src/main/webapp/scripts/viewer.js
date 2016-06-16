@@ -58,6 +58,9 @@ B3PGissuite.vars = {
     redLineGegevensbronId: -1,
     popupCreated: false
 };
+B3PGissuite.labels = {
+    searchintro: "Kies uit de lijst de objecten waar u op wilt zoeken en vul daarna de zoekvelden in."
+};
 B3PGissuite.viewercommons = {
     configuredTabString: null,
     init: function() {

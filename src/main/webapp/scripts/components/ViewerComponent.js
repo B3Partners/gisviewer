@@ -1328,6 +1328,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
     handlePopupValue: function(value) {
         var me = this;
         this.highLightedLayerid = value;
+        var appCode = B3PGissuite.config.bookmarkAppcode;
 
         var object = document.getElementById(value);
         var treeComponent = B3PGissuite.get('TreeTabComponent');
@@ -1349,7 +1350,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         var tol = B3PGissuite.config.tolerance;
-        EditUtil.getHighlightWktForThema(value, B3PGissuite.vars.highLightGeom, scale, tol, null, function(wkt) {
+        EditUtil.getHighlightWktForThema(value, B3PGissuite.vars.highLightGeom, scale, tol, null, appCode, function(wkt) {
             me.returnHighlight(wkt);
         });
     },

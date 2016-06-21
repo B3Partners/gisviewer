@@ -1199,7 +1199,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         var tol = B3PGissuite.config.tolerance;
         var appCode = B3PGissuite.config.bookmarkAppcode;
-
+        this.highlightLayers = [];
+        this.highLightedLayerid = 0;
         /* indien meerdere analyse themas dan popup voor keuze.
          * Niet elke keer lijst aanvullen bij popup, want dan krijg je dubbele */
         if(this.highlightLayers.length < 1){
@@ -2019,7 +2020,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
     onIdentifyData: function(id, data) {
         B3PGissuite.vars.teller = 0;
-        me.updateGetFeatureInfo(data);
+        this.updateGetFeatureInfo(data);
     },
 
     onGetfeatures: function(id, event) {

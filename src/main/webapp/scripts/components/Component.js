@@ -1,16 +1,23 @@
 /* Helper function to create a Component */
-B3PGissuite.createComponent = function(className, options) {
+B3PGissuite.createComponent = function(className, options, addToInstancesArray) {
+    var shouldAdd = addToInstancesArray || addToInstancesArray === undefined;
     if(typeof B3PGissuite.component[className] === 'undefined') {
         throw('The class ' + className + ' is not defined. Maybe you forgot to include the source file?');
     }
-    if(typeof B3PGissuite.idregistry[className] === 'undefined') {
+    if(shouldAdd && typeof B3PGissuite.idregistry[className] === 'undefined') {
         B3PGissuite.idregistry[className] = 0;
     }
-    var nextid = B3PGissuite.idregistry[className]++;
+    var nextid = "";
+    if(shouldAdd){
+        nextid = B3PGissuite.idregistry[className]++;
+    }
     // Component id is lowercased className + incremental number
     var instanceId = (className.charAt(0).toLowerCase() + className.slice(1)) + nextid;
-    B3PGissuite.instances[instanceId] = new B3PGissuite.component[className](options || {});
-    return B3PGissuite.instances[instanceId];
+    var instance = new B3PGissuite.component[className](options || {});
+    if(shouldAdd){
+        B3PGissuite.instances[instanceId] = instance;
+    }
+    return instance;
 };
 
 /* Helper function to define a Component */
@@ -22,7 +29,7 @@ B3PGissuite.defineComponent = function(className, classDefinition) {
     // If the extend option is set, extend other component
     if(classDefinition.extend) {
         // Set the prototype of the component to the parents prototype, so all non-overridden functions from the parent are accessible
-        B3PGissuite.component[className].prototype = jQuery.extend(B3PGissuite.createComponent(classDefinition.extend), B3PGissuite.component[className].prototype);
+        B3PGissuite.component[className].prototype = jQuery.extend(B3PGissuite.createComponent(classDefinition.extend, undefined,false), B3PGissuite.component[className].prototype);
         // Set the contructor the the new component
         B3PGissuite.component[className].prototype.constructor = B3PGissuite.component[className];
         // Add the callParent function to be able to set the options on the parent object

@@ -1199,7 +1199,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         var tol = B3PGissuite.config.tolerance;
         var appCode = B3PGissuite.config.bookmarkAppcode;
-
+        this.highlightLayers = [];
+        this.highLightedLayerid = 0;
         /* indien meerdere analyse themas dan popup voor keuze.
          * Niet elke keer lijst aanvullen bij popup, want dan krijg je dubbele */
         if(this.highlightLayers.length < 1){
@@ -1328,6 +1329,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
     handlePopupValue: function(value) {
         var me = this;
         this.highLightedLayerid = value;
+        var appCode = B3PGissuite.config.bookmarkAppcode;
 
         var object = document.getElementById(value);
         var treeComponent = B3PGissuite.get('TreeTabComponent');
@@ -1349,7 +1351,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
         }
 
         var tol = B3PGissuite.config.tolerance;
-        EditUtil.getHighlightWktForThema(value, B3PGissuite.vars.highLightGeom, scale, tol, null, function(wkt) {
+        EditUtil.getHighlightWktForThema(value, B3PGissuite.vars.highLightGeom, scale, tol, null, appCode, function(wkt) {
             me.returnHighlight(wkt);
         });
     },
@@ -2018,7 +2020,7 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
     onIdentifyData: function(id, data) {
         B3PGissuite.vars.teller = 0;
-        me.updateGetFeatureInfo(data);
+        this.updateGetFeatureInfo(data);
     },
 
     onGetfeatures: function(id, event) {

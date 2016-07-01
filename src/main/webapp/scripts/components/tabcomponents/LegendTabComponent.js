@@ -21,6 +21,8 @@ B3PGissuite.defineComponent('LegendTabComponent', {
     legendImageLoadingSpace: 1,
     selectedLayer: null,
 
+    scalableLegendImages: [],
+
     constructor: function LegendTabComponent(options) {
         this.callParent(options);
         this.init();
@@ -215,6 +217,18 @@ B3PGissuite.defineComponent('LegendTabComponent', {
             B3PGissuite.vars.enabledLayerItems = B3PGissuite.vars.enabledLayerItems.concat(visibleLayerItems);
         }
 
+        for(i = (this.scalableLegendImages.length - 1); i >= 0; i--) {
+            var itemEnabled = false;
+            for (k = 0; k < B3PGissuite.vars.enabledLayerItems.length; k++) {
+                if(this.scalableLegendImages[i].legend.id === B3PGissuite.vars.enabledLayerItems[k].id) {
+                    itemEnabled = true;
+                }
+            }
+            if(!itemEnabled) {
+                this.scalableLegendImages.splice(i, 1);
+            }
+        }
+
         this.resetLegendImageQueue();
 
         for (var j = 0; j < B3PGissuite.vars.enabledLayerItems.length; j++) {
@@ -259,7 +273,15 @@ B3PGissuite.defineComponent('LegendTabComponent', {
         };
 
         if (item.legendurl !== undefined) {
-            myImage.src = item.legendurl;
+            var legendurl = item.legendurl;
+            if(item.legendscaling && B3PGissuite.vars.webMapController instanceof OpenLayersController) {
+                legendurl = this.addScaleToUrl(legendurl);
+                this.scalableLegendImages.push({
+                    legend: item,
+                    container: div
+                });
+            }
+            myImage.src = legendurl;
             this.loadingLegendImages[id] = myImage;
         } else {
             myImage.onerror();
@@ -305,6 +327,15 @@ B3PGissuite.defineComponent('LegendTabComponent', {
             this.loadNextInLegendImageQueue();
         }
     },
+    
+    addScaleToUrl: function(legendurl) {
+        var map = B3PGissuite.vars.webMapController.getMap();
+        var scale = OpenLayers.Util.getScaleFromResolution(map.getResolution(), "m");
+        if (legendurl.search(/SCALE/i) === -1){
+            return B3PGissuite.viewercommons.addToQueryString(legendurl, "SCALE", scale);
+        }
+        return legendurl.replace(/SCALE=[0-9.,]*/i, "SCALE=" + scale);
+    },
 
     //adds a layer to the legenda
     //if atBottomOfType is set to true the layer will be added at the bottom of its type (background or top type)
@@ -327,6 +358,19 @@ B3PGissuite.defineComponent('LegendTabComponent', {
                 }
             }
             $j(layerDiv).css("display", theItem.hide_legend ? "none" : "block");
+
+            var img;
+            if(this.scalableLegendImages.length > 0) {
+                for(var i = 0; i < this.scalableLegendImages.length; i++) {
+                    if(this.scalableLegendImages[i].legend.id === theItem.id) {
+                        img = this.scalableLegendImages[i].container.querySelector("img");
+                        if(img) {
+                            img.src = this.addScaleToUrl(theItem.legendurl);
+                        }
+                    }
+                }
+            }
+
             return;
         }
 

@@ -193,7 +193,7 @@ B3PGissuite.defineComponent('Admindata', {
         $j.each(opts.record.values, function(index2, waarde) {
             if(!cellOnly) {
                 var tr = $j('<tr></tr>');
-                tr.append(me.createTableTh(opts.gegevensbron.labels[index2]));
+                tr.append(me.createTableTh(opts.gegevensbron.labels[index2], opts.gegevensbron));
                 var td = me.createTableTd(waarde, opts.gegevensbron, opts.record);
                 if(seperateRows) {
                     opts.parent.append(tr);
@@ -889,19 +889,21 @@ B3PGissuite.defineComponent('Admindata', {
             trHead.append(volgnr);
         }
         $j.each(labels, function(index, label) {
-            var th = me.createTableTh(label);
+            var th = me.createTableTh(label, null);
             trHead.append(th);
         });
         return trHead;
     },
 
-    createTableTh: function(label) {
+    createTableTh: function(label, gegevensbron) {
         var kolomBreedte = (label.kolomBreedte == 0) ? 150 : label.kolomBreedte;
-        var th = $j('<th></th>')
-                .css({
-            "width": kolomBreedte + "px"
-        })
-                .html(label.label);
+        var th = $j('<th></th>');
+        if(gegevensbron !== null && gegevensbron.layout !== "admindata3") {
+            th.css({
+                "width": kolomBreedte + "px"
+            });
+        };
+        th.html(label.label);
         return th;
     },
 

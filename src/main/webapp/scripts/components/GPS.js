@@ -18,7 +18,7 @@
 B3PGissuite.defineComponent('GPS', {
 
     gps_timeoutId: null,
-    gps_interval: 15000,
+    gps_interval: 5000,
     gps_buffer: null,
     gps_lat: null,
     gps_lon: null,

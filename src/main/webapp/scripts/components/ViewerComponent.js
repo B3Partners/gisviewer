@@ -1199,8 +1199,11 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
         var tol = B3PGissuite.config.tolerance;
         var appCode = B3PGissuite.config.bookmarkAppcode;
-        this.highlightLayers = [];
-        this.highLightedLayerid = 0;
+        
+        
+          
+//        this.highlightLayers = [];
+//        this.highLightedLayerid = 0; 
         /* indien meerdere analyse themas dan popup voor keuze.
          * Niet elke keer lijst aanvullen bij popup, want dan krijg je dubbele */
         if(this.highlightLayers.length < 1){
@@ -1368,6 +1371,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
 
     /* als order niet aangepast mag worden dan moet hier een sort komen */
     addLayerToEnabledLayerItems: function(theItem) {
+        this.highlightLayers = [];
+        this.highLightedLayerid = 0; 
         var foundLayerItem = null;
         for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
             if (B3PGissuite.vars.enabledLayerItems[i].id == theItem.id) {
@@ -1381,6 +1386,8 @@ B3PGissuite.defineComponent('ViewerComponent', {
     },
 
     removeLayerFromEnabledLayerItems: function(itemId) {
+        this.highlightLayers = [];
+        this.highLightedLayerid = 0; 
         for (var i = 0; i < B3PGissuite.vars.enabledLayerItems.length; i++) {
             if (B3PGissuite.vars.enabledLayerItems[i].id == itemId) {
                 var foundLayerItem = B3PGissuite.vars.enabledLayerItems[i];

@@ -832,8 +832,8 @@ B3PGissuite.viewercommons = {
         /* Check of er een gps locatie is gezet. */
         var gps = B3PGissuite.get('GPS');
         if (gps !== null && gps.getGpsLat() !== null && gps.getGpsLon() !== null) {
-            values[1] = gps.getGpsLat();
-            values[0] = gps.getGpsLon();
+            values[0] = gps.getGpsLat();
+            values[1] = gps.getGpsLon();
         }
 
         if (values[0] === "" || values[1] === "") {
@@ -841,8 +841,8 @@ B3PGissuite.viewercommons = {
             return;
         }
 
-        var saddr = "?saddr=" + values[1] + "," + values[0];
-        var daddr = "&daddr=" + values[3] + "," + values[2];
+        var saddr = "?saddr=" + values[0] + "," + values[1];
+        var daddr = "&daddr=" + values[2] + "," + values[3];
 
         var url = "https://maps.google.com/maps" + saddr + daddr;
 

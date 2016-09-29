@@ -955,6 +955,9 @@ B3PGissuite.defineComponent('Admindata', {
                 var html = "";
                 var type;
                 var imgHtml;
+
+                waarde.value = this.escapeValue(waarde.value);
+
                 if (waarde.value.indexOf(".htm") != -1 || waarde.value.indexOf(".htm") != -1 ||
                         waarde.value.indexOf(".pdf") != -1 || waarde.value.indexOf(".txt") != -1) {
 
@@ -990,7 +993,7 @@ B3PGissuite.defineComponent('Admindata', {
                     }
                 } else {
                     if (waarde.eenheid) {
-                        td.html(waarde.value + ' ' + waarde.eenheid);
+                        td.html(waarde.value + ' ' + this.escapeValue(waarde.eenheid));
                     } else {
                         td.html(waarde.value);
                     }
@@ -1132,6 +1135,16 @@ B3PGissuite.defineComponent('Admindata', {
         }
 
         return td;
+    },
+
+    escapeValue: function(str) {
+        // Escape &, <, >, ", ' to prevent XSS
+        return (str || "")
+            .replace(/&/ig, "&amp;")
+            .replace(/</ig, "&lt;")
+            .replace(/>/ig, "&gt;")
+            .replace(/"/ig, "&quot;")
+            .replace(/'/ig, "&apos;");
     },
 
     createEmptyRow: function(size, isChild) {

@@ -71,7 +71,8 @@ reguliere admindata of GetFeatureInfo --%>
             infoexporticon: '<html:rewrite href="./images/icons/page_white_info.png" />',
             googleIcon: '<html:rewrite href="./images/icons/google-maps.png" />',
             noResultsHeader: '<fmt:message key="admindata.geeninfo.header"/>',
-            noResultsTekst: '<fmt:message key="admindata.geeninfo.tekst"/>'
+            noResultsTekst: '<fmt:message key="admindata.geeninfo.tekst"/>',
+            hideEmptyResults: false
         });
         <c:choose>
             <c:when test="${not empty beans}">

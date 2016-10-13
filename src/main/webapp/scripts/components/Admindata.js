@@ -3,7 +3,7 @@ B3PGissuite.defineComponent('Admindata', {
     /* vars */
     rootBronContainer: true,
     idcounter: 1,
-    timeout: 3000,
+    timeout: 30000,
     loop: 0,
     currentThemaid: null,
     currentKeyName: null,
@@ -634,7 +634,7 @@ B3PGissuite.defineComponent('Admindata', {
                 if (gegevensbron.labels) {
                     size = gegevensbron.labels.length;
                 }
-                var tr = this.createEmptyRow(size);
+                var tr = this.createEmptyRow(size, htmlId !== "adminDataWrapper");
                 bronTableBody.append(tr);
             }
         } else {
@@ -955,6 +955,9 @@ B3PGissuite.defineComponent('Admindata', {
                 var html = "";
                 var type;
                 var imgHtml;
+
+                waarde.value = this.escapeValue(waarde.value);
+
                 if (waarde.value.indexOf(".htm") != -1 || waarde.value.indexOf(".htm") != -1 ||
                         waarde.value.indexOf(".pdf") != -1 || waarde.value.indexOf(".txt") != -1) {
 
@@ -990,7 +993,7 @@ B3PGissuite.defineComponent('Admindata', {
                     }
                 } else {
                     if (waarde.eenheid) {
-                        td.html(waarde.value + ' ' + waarde.eenheid);
+                        td.html(waarde.value + ' ' + this.escapeValue(waarde.eenheid));
                     } else {
                         td.html(waarde.value);
                     }
@@ -1134,13 +1137,23 @@ B3PGissuite.defineComponent('Admindata', {
         return td;
     },
 
-    createEmptyRow: function(size) {
+    escapeValue: function(str) {
+        // Escape &, <, >, ", ' to prevent XSS
+        return (str || "")
+            .replace(/&/ig, "&amp;")
+            .replace(/</ig, "&lt;")
+            .replace(/>/ig, "&gt;")
+            .replace(/"/ig, "&quot;")
+            .replace(/'/ig, "&apos;");
+    },
+
+    createEmptyRow: function(size, isChild) {
         var tr = $j('<tr></tr>');
         var td = $j('<td></td>').attr({
             "colSpan": size
         })
                 .html("Er zijn geen gegevens gevonden.")
-                .css("font-size", "1.2em")
+                .css("font-size", isChild ? "1em" : "1.2em")
                 .css("font-weight", "bold")
                 .css("color", "#808080");
 

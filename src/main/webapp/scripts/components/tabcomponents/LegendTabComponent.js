@@ -275,7 +275,7 @@ B3PGissuite.defineComponent('LegendTabComponent', {
         if (item.legendurl !== undefined) {
             var legendurl = item.legendurl;
             if(item.legendscaling && B3PGissuite.vars.webMapController instanceof OpenLayersController) {
-                legendurl = this.addScaleToUrl(legendurl);
+                legendurl = B3PGissuite.viewerComponent.addScaleToUrl(legendurl);
                 this.scalableLegendImages.push({
                     legend: item,
                     container: div
@@ -306,6 +306,7 @@ B3PGissuite.defineComponent('LegendTabComponent', {
         this.loadNextInLegendImageQueue();
     },
     imageOnload: function(img) {
+        var me = this;
         //if not is a loading image then don't add to the DOM
         if (this.loadingLegendImages[img.id] !== undefined) {
             if(parseInt(img.height, 10) > 5) {
@@ -315,6 +316,15 @@ B3PGissuite.defineComponent('LegendTabComponent', {
                 legendimg.className = "imagenoborder";
                 legendimg.alt = img.name;
                 legendimg.title = img.name;
+                legendimg.onerror = function() {
+                    me.imageOnerror(this);
+                };
+                legendimg.onload = function() {
+                    this.style.height = 'auto';
+                    this.style.width = 'auto';
+                    this.removeAttribute("height");
+                    this.removeAttribute("width");
+                };
                 var legendImage = document.getElementById(img.id);
                 if (legendImage) {
                     legendImage.appendChild(legendimg);
@@ -326,15 +336,6 @@ B3PGissuite.defineComponent('LegendTabComponent', {
             this.legendImageLoadingSpace++;
             this.loadNextInLegendImageQueue();
         }
-    },
-    
-    addScaleToUrl: function(legendurl) {
-        var map = B3PGissuite.vars.webMapController.getMap();
-        var scale = OpenLayers.Util.getScaleFromResolution(map.getResolution(), "m");
-        if (legendurl.search(/SCALE/i) === -1){
-            return B3PGissuite.viewercommons.addToQueryString(legendurl, "SCALE", scale);
-        }
-        return legendurl.replace(/SCALE=[0-9.,]*/i, "SCALE=" + scale);
     },
 
     //adds a layer to the legenda

@@ -22,6 +22,10 @@ B3PGissuite.defineComponent('TreeTabComponent', {
      */
     activeAnalyseThemaId: '',
     activeClusterId: '',
+    /**
+     * Lijst met legenda items die scaling ondersteunen
+     */
+    scalableLegendImages: [],
     constructor: function TreeTabComponent(options) {
         this.callParent(options);
         this.init();
@@ -1010,6 +1014,8 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         }
 
         var foundlegend = $divobj.find("img.treeLegendImage");
+        var legendUrl;
+        var isOpenLayers = B3PGissuite.vars.webMapController instanceof OpenLayersController;
         if (foundlegend.length == 0) {
             if (item.cluster) {
                 var addedImages = 0;
@@ -1020,6 +1026,14 @@ B3PGissuite.defineComponent('TreeTabComponent', {
                             divobj.appendChild(document.createElement("br"));
                         var legendimg = this.createTreeLegendImage(child);
                         divobj.appendChild(legendimg);
+                        legendUrl = child.legendurl;
+                        if(child.legendscaling && isOpenLayers) {
+                            legendUrl = B3PGissuite.viewerComponent.addScaleToUrl(legendUrl);
+                            this.scalableLegendImages.push({
+                                legend: child,
+                                image: legendimg
+                            });
+                        }
                         legendimg.src = child.legendurl;
                         addedImages++;
                     }
@@ -1027,10 +1041,26 @@ B3PGissuite.defineComponent('TreeTabComponent', {
             } else {
                 legendimg = this.createTreeLegendImage(item);
                 divobj.appendChild(legendimg);
-                legendimg.src = item.legendurl;
+                legendUrl = item.legendurl;
+                if(item.legendscaling && isOpenLayers) {
+                    legendUrl = B3PGissuite.viewerComponent.addScaleToUrl(legendUrl);
+                    this.scalableLegendImages.push({
+                        legend: item,
+                        image: legendimg
+                    });
+                }
+                legendimg.src = legendUrl;
             }
         }
         jQuery(divobj).toggle();
+    },
+    updateScalableLegendImages: function() {
+        var item;
+        for(var i = 0; i < this.scalableLegendImages.length; i++) if(this.scalableLegendImages[i].image) {
+            item = this.scalableLegendImages[i];
+            jQuery(item.image).parent().find(".legendLoading").show();
+            item.image.src = B3PGissuite.viewerComponent.addScaleToUrl(item.legend.legendurl);
+        }
     },
     /**
      * Creates the image element for the legend
@@ -1047,18 +1077,23 @@ B3PGissuite.defineComponent('TreeTabComponent', {
          */
         legendimg.onerror = function() {
             var divobj = jQuery(this).parent();
-            divobj.find("img.legendLoading").hide();
-            divobj.html('<span style="color: Black;">Legenda kan niet worden opgehaald</span>');
+            divobj.find("img").hide();
+            var message = divobj.find("span");
+            if(message.length === 0) {
+                divobj.append('<span style="color: Black;">Legenda kan niet worden opgehaald</span>');
+            } else {
+                message.show();
+            }
         };
 
         /**
          * Hides the legend loading message when the legend image is loaded.
          */
         legendimg.onload = function() {
-            // TODO: Hoogte check wegehaald, ging niet altijd goed in IE7 waardoor laadicoontje niet werd weggehaald
-            // if (parseInt(this.height) > 5){
-            jQuery(this).parent().find("img.legendLoading").hide();
-            // }
+            var parent = jQuery(this).parent();
+            parent.find("img.legendLoading").hide();
+            parent.find("span").hide();
+            jQuery(this).show();
         };
         legendimg.className = 'treeLegendImage';
         // Set src after the img element is appended to make sure onload gets called, even when image is in cache
@@ -1539,6 +1574,7 @@ B3PGissuite.defineComponent('TreeTabComponent', {
         }
 
         this.setScaleForTree(B3PGissuite.config.themaTree, currentscale);
+        this.updateScalableLegendImages();
     },
 
     /**

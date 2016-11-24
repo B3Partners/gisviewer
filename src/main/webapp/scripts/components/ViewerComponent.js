@@ -2158,5 +2158,15 @@ B3PGissuite.defineComponent('ViewerComponent', {
         if(legendComponent !== null) {
             legendComponent.refreshLegendBox();
         }
+    },
+
+    addScaleToUrl: function(legendurl) {
+        var map = B3PGissuite.vars.webMapController.getMap();
+        var scale = OpenLayers.Util.getScaleFromResolution(map.getResolution(), "m");
+        if (legendurl.search(/SCALE/i) === -1){
+            return B3PGissuite.viewercommons.addToQueryString(legendurl, "SCALE", scale);
+        }
+        return legendurl.replace(/SCALE=[0-9.,]*/i, "SCALE=" + scale);
     }
+
 });

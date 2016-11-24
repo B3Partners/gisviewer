@@ -366,7 +366,7 @@ B3PGissuite.defineComponent('LegendTabComponent', {
                     if(this.scalableLegendImages[i].legend.id === theItem.id) {
                         img = this.scalableLegendImages[i].container.querySelector("img");
                         if(img) {
-                            img.src = this.addScaleToUrl(theItem.legendurl);
+                            img.src = B3PGissuite.viewerComponent.addScaleToUrl(theItem.legendurl);
                         }
                     }
                 }

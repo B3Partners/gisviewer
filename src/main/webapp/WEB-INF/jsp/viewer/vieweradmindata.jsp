@@ -54,6 +54,11 @@ reguliere admindata of GetFeatureInfo --%>
     false als childs altijd moeten worden getoond als het een child is. 
      */    
     (function() {
+        var hideEmptyResults = false;
+        var myparent = B3PGissuite.commons.getParent({ parentOnly: true });
+        if(myparent && myparent.B3PGissuite.config && myparent.B3PGissuite.config.hideEmptyAdmindataResults) {
+            hideEmptyResults = myparent.B3PGissuite.config.hideEmptyAdmindataResults;
+        }
         var adminData = B3PGissuite.createComponent('Admindata', {
             onlyFeaturesInGeom: ${onlyFeaturesInGeom},
             bookmarkAppcode: "${bookmarkAppcode}",
@@ -72,7 +77,7 @@ reguliere admindata of GetFeatureInfo --%>
             googleIcon: '<html:rewrite href="./images/icons/google-maps.png" />',
             noResultsHeader: '<fmt:message key="admindata.geeninfo.header"/>',
             noResultsTekst: '<fmt:message key="admindata.geeninfo.tekst"/>',
-            hideEmptyResults: false
+            hideEmptyResults: hideEmptyResults
         });
         <c:choose>
             <c:when test="${not empty beans}">

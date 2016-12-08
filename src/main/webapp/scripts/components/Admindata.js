@@ -627,7 +627,7 @@ B3PGissuite.defineComponent('Admindata', {
 
         // Create table content
         if (!gegevensbron.records) {
-            if(this.options.hideEmptyResults) {
+            if(this.options.hideEmptyResults && htmlId === "adminDataWrapper") {
                 bronContainer.hide();
             } else {
                 var size = 1;

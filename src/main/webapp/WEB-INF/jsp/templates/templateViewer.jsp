@@ -1,3 +1,4 @@
+<%@ taglib prefix="s" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <%--
 B3P Gisviewer is an extension to Flamingo MapComponents making
@@ -49,7 +50,8 @@ along with B3P Gisviewer.  If not, see <http://www.gnu.org/licenses/>.
         
         <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-1.3.2.min.js' />"></script>
         <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery-ui-1.8.10.custom.min.js' />"></script>
-        <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery.blockUI.js' />"></script>        
+        <script type="text/javascript" src="<html:rewrite page='/scripts/lib/jquery.blockUI.js' />"></script>
+        <script type="text/javascript" src="<s:url value="http://files.b3p.nl/gissuite/googlemaps_variable_order.js" /> "></script>
         <c:choose>
             <c:when test="${not empty param.debug}">
                 <script type="text/javascript" src="<html:rewrite page='/scripts/commonfunctions.js?v=${JS_VERSION}' module=''/>"></script>

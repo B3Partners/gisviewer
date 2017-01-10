@@ -809,8 +809,9 @@ B3PGissuite.viewercommons = {
      * values[] = lat, lon, span Lat, span lon.
      * */
     openGoogleMaps: function(values) {
-        var ll = "&ll=" + values[0] + "," + values[1];
-        var spn = "&spn=" + values[2] + "," + values[3];
+        var myVariableOrder = googlemapsVariableOrder();
+        var ll = "&ll=" + values[myVariableOrder.first] + "," + values[myVariableOrder.second];
+        var spn = "&spn=" + values[myVariableOrder.third] + "," + values[myVariableOrder.fourth];
         var options = "&hl=nl&om=0";
         var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
         window.open(url);

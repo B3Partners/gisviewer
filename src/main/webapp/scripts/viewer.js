@@ -809,7 +809,13 @@ B3PGissuite.viewercommons = {
      * values[] = lat, lon, span Lat, span lon.
      * */
     openGoogleMaps: function(values) {
-        var myVariableOrder = googlemapsVariableOrder();
+        var myVariableOrder = {first: 0, second: 1, third: 2, fourth: 3};
+        try{
+            myVariableOrder = googlemapsVariableOrder();
+        } catch (err) {
+            // just ignore, keep original values
+        }
+
         var ll = "&ll=" + values[myVariableOrder.first] + "," + values[myVariableOrder.second];
         var spn = "&spn=" + values[myVariableOrder.third] + "," + values[myVariableOrder.fourth];
         var options = "&hl=nl&om=0";

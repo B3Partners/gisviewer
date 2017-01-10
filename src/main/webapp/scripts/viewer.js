@@ -63,12 +63,12 @@ B3PGissuite.labels = {
 };
 B3PGissuite.viewercommons = {
     configuredTabString: null,
-    init: function() {
+    init: function () {
         var me = this;
-        jQuery('.getBookmark').bind('click', function() {
+        jQuery('.getBookmark').bind('click', function () {
             me.getBookMark();
         });
-        jQuery('.getLatLonForGoogleMaps').bind('click', function() {
+        jQuery('.getLatLonForGoogleMaps').bind('click', function () {
             me.getLatLonForGoogleMaps();
         });
 
@@ -85,7 +85,7 @@ B3PGissuite.viewercommons = {
             } else if (arr !== null && arr.length === 1 && arr[0] !== '') {
                 //var zc = B3PGissuite.config.zoekconfiguraties[0];
                 var zc = searchComponent.setZoekconfiguratieWithId(Number(arr[0]));
-                JZoekconfiguratieThemaUtil.getThemas(zc.id, function(themaIds) {
+                JZoekconfiguratieThemaUtil.getThemas(zc.id, function (themaIds) {
                     searchComponent.zoekconfiguratieThemasCallBack(themaIds);
                 });
                 var zoekVelden = zc.zoekVelden;
@@ -103,7 +103,8 @@ B3PGissuite.viewercommons = {
             if (!pwCreated && parent && parent.document && parent.document.getElementById('popupWindow')) {
                 pwCreated = true;
             }
-        } catch(e) {}
+        } catch (e) {
+        }
         if (!pwCreated) {
             this.buildPopup();
         }
@@ -129,8 +130,8 @@ B3PGissuite.viewercommons = {
      * @param string tab
      * @returns boolean
      */
-    isTabConfigured: function(tab) {
-        if(this.configuredTabString === null) {
+    isTabConfigured: function (tab) {
+        if (this.configuredTabString === null) {
             this.configuredTabString = B3PGissuite.config.enabledtabs.toString() + ',' + B3PGissuite.config.enabledtabsLeft.toString();
         }
         return this.configuredTabString.indexOf(tab) !== -1;
@@ -143,7 +144,7 @@ B3PGissuite.viewercommons = {
      * @param scale de scale waarvoor gekeken moet worden of de layer daar zichtbaar is.
      * @return boolean wel of niet zichtbaar in scale.
      */
-    isItemInScale: function(item, scale) {
+    isItemInScale: function (item, scale) {
         if (scale == 'NaN' || scale < 0 || !item) {
             return false;
         }
@@ -224,7 +225,7 @@ B3PGissuite.viewercommons = {
 
         return itemVisible;
     },
-    convertStringToArray: function(waarde) {
+    convertStringToArray: function (waarde) {
         var lijst = [];
         var arr = [];
 
@@ -246,16 +247,16 @@ B3PGissuite.viewercommons = {
 
         return arr;
     },
-    getNLExtent: function() {
+    getNLExtent: function () {
         return "12000,304000,280000,620000";
     },
-    getNLMaxBounds: function() {
+    getNLMaxBounds: function () {
         return Utils.createBounds(new Extent(this.getNLExtent()));
     },
-    getNLTilingRes: function() {
+    getNLTilingRes: function () {
         return "512,256,128,64,32,16,8,4,2,1,0.5,0.125";
     },
-    getBaseUrl: function() {
+    getBaseUrl: function () {
         var protocol = window.location.protocol + "//";
         var host = window.location.host;
 
@@ -267,7 +268,7 @@ B3PGissuite.viewercommons = {
      * @param feature The feature.
      * @return Returns the feature with adjusted bbox.
      */
-    getBboxMinSize2: function(feature) {
+    getBboxMinSize2: function (feature) {
         if ((Number(feature.maxx - feature.minx) < B3PGissuite.config.minBboxZoeken)) {
             var addX = Number((B3PGissuite.config.minBboxZoeken - (feature.maxx - feature.minx)) / 2);
             var addY = Number((B3PGissuite.config.minBboxZoeken - (feature.maxy - feature.miny)) / 2);
@@ -284,7 +285,7 @@ B3PGissuite.viewercommons = {
      * @param handle Handle to the window to display page content in.
      * @param type Type of display used (div, panel or window).
      */
-    loadBusyJSP: function(handle, type) {
+    loadBusyJSP: function (handle, type) {
         var $iframebody = null;
         if (type == 'div')
             $iframebody = $j(handle).contents().find("body");
@@ -296,27 +297,27 @@ B3PGissuite.viewercommons = {
         // "Gewoon" popup window (dus geen DIV) geeft nog niet helemaal het gewenste resultaat
         if ($iframebody !== null) {
             $iframebody.html('<div id="content_style">' +
-                    '<table class="kolomtabel">' +
-                    '<tr>' +
-                    '<td valign="top">' +
-                    '<div class="loadingMessage">' +
-                    '<table>' +
-                    '<tr>' +
-                    '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>' +
-                    '<td>' +
-                    '<h2>Bezig met laden ...</h2>' +
-                    '<p>Bezig met zoeken naar administratieve gegevens.</p>' +
-                    '</td>' +
-                    '</tr>' +
-                    '</table>' +
-                    '</div>' +
-                    '</td>' +
-                    '</tr>' +
-                    '</table>' +
-                    '</div>');
+                '<table class="kolomtabel">' +
+                '<tr>' +
+                '<td valign="top">' +
+                '<div class="loadingMessage">' +
+                '<table>' +
+                '<tr>' +
+                '<td style="width:20px;"><img style="border: 0px;" src="/gisviewer/images/waiting.gif" alt="Bezig met laden..." /></td>' +
+                '<td>' +
+                '<h2>Bezig met laden ...</h2>' +
+                '<p>Bezig met zoeken naar administratieve gegevens.</p>' +
+                '</td>' +
+                '</tr>' +
+                '</table>' +
+                '</div>' +
+                '</td>' +
+                '</tr>' +
+                '</table>' +
+                '</div>');
         }
     },
-    isStringEmpty: function(str) {
+    isStringEmpty: function (str) {
         return (!str || 0 === str.length);
     },
     /*
@@ -324,7 +325,7 @@ B3PGissuite.viewercommons = {
      * current mapwidth in pixels. Average ppi value assumed. The 0.00028
      * could be made into a config setting in gisviewerconfig.
      */
-    calcScaleForCurrentExtent: function() {
+    calcScaleForCurrentExtent: function () {
         var extent = B3PGissuite.vars.webMapController.getMap().getExtent();
         var newMapWidth = extent.maxx - extent.minx;
 
@@ -335,7 +336,7 @@ B3PGissuite.viewercommons = {
     },
     /* Kan gebruikt worden om wat debug info onderin de kaartboom weer te geven zoals
      * specifieke timings of huidig omgerekende schaal */
-    setDebugContent: function() {
+    setDebugContent: function () {
         var scale = calcScaleForCurrentExtent();
         var html = "<p><b>Schaal 1 : " + scale + "</b></p>";
 
@@ -345,7 +346,7 @@ B3PGissuite.viewercommons = {
      * Get alle enabled layer items
      * @param onlyWithinScale Only get the visible, within currentScale items.
      */
-    getLayerIdsAsString: function(onlyWithinScale) {
+    getLayerIdsAsString: function (onlyWithinScale) {
         var ret = "";
         var firstTime = true;
         var treeComponent = B3PGissuite.get('TreeTabComponent');
@@ -382,7 +383,7 @@ B3PGissuite.viewercommons = {
 
         return ret;
     },
-    getWMSRequests: function() {
+    getWMSRequests: function () {
         var requests = [];
         var background;
 
@@ -409,10 +410,10 @@ B3PGissuite.viewercommons = {
         for (var j = 0; j < bgLayers.length; j++) {
             if (bgLayers[j].getURL() !== null) {
                 request =
-                        {
-                            protocol: "WMS",
-                            url: bgLayers[j].getURL()
-                        };
+                    {
+                        protocol: "WMS",
+                        url: bgLayers[j].getURL()
+                    };
                 if (bgLayers[j].getAlpha && bgLayers[j].getAlpha() !== null) {
                     request.alpha = bgLayers[j].getAlpha();
                 }
@@ -458,7 +459,7 @@ B3PGissuite.viewercommons = {
 
         return requests;
     },
-    getItemFromWmsLayer: function(layer) {
+    getItemFromWmsLayer: function (layer) {
         var item;
         if (layer.options) {
             item = this.getItemByLayer(B3PGissuite.config.themaTree, layer.options.layers);
@@ -468,7 +469,7 @@ B3PGissuite.viewercommons = {
 
         return item;
     },
-    getWktStringForPrint: function() {
+    getWktStringForPrint: function () {
         var geoms = [];
         var vectorLayers = B3PGissuite.vars.webMapController.getMap().getAllVectorLayers();
 
@@ -489,7 +490,7 @@ B3PGissuite.viewercommons = {
 
         return geoms;
     },
-    getLegendUrls: function() {
+    getLegendUrls: function () {
         var layerItems = [];
         var urlString = "";
         var firstURL = true;
@@ -516,7 +517,7 @@ B3PGissuite.viewercommons = {
 
         return urlString;
     },
-    exportObjectData: function(URL, target) {
+    exportObjectData: function (URL, target) {
         var submitForm = document.createElement("FORM");
         document.body.appendChild(submitForm);
         submitForm.method = "POST";
@@ -524,7 +525,7 @@ B3PGissuite.viewercommons = {
         submitForm.action = URL;
         return submitForm;
     },
-    createExportInput: function(name, value) {
+    createExportInput: function (name, value) {
         var input = document.createElement('input');
         input.id = name;
         input.name = name;
@@ -532,7 +533,7 @@ B3PGissuite.viewercommons = {
         input.value = value;
         return input;
     },
-    getMapJsonSettings: function(geometries) {
+    getMapJsonSettings: function (geometries) {
         var wmsRequests = this.getWMSRequests();
         var tilingRequests = this.getTilingRequests();
         /* als eerst tiling url's daarna gewone wms meegeven */
@@ -555,7 +556,7 @@ B3PGissuite.viewercommons = {
             height: mapHeight
         });
     },
-    exportObjectData2PDF: function(htmlId, gegevensbron, index, idcounter) {
+    exportObjectData2PDF: function (htmlId, gegevensbron, index, idcounter) {
         var submitForm = this.exportObjectData("services/Data2PDF", "pdfIframe");
         submitForm.appendChild(this.createExportInput('gbId', gegevensbron.id));
         submitForm.appendChild(this.createExportInput('objectIds', gegevensbron.csvPks));
@@ -564,7 +565,7 @@ B3PGissuite.viewercommons = {
         submitForm.appendChild(this.createExportInput('appCode', B3PGissuite.config.bookmarkAppcode));
         submitForm.submit();
     },
-    exportObjectData2HTML: function(htmlId, gegevensbron, index, idcounter) {
+    exportObjectData2HTML: function (htmlId, gegevensbron, index, idcounter) {
         var submitForm = this.exportObjectData("services/Data2PDF", "info_export");
         submitForm.appendChild(this.createExportInput('gbId', gegevensbron.id));
         submitForm.appendChild(this.createExportInput('objectIds', gegevensbron.csvPks));
@@ -574,21 +575,21 @@ B3PGissuite.viewercommons = {
         submitForm.appendChild(this.createExportInput('appCode', B3PGissuite.config.bookmarkAppcode));
         submitForm.submit();
     },
-    exportObjectData2CSV: function(htmlId, gegevensbron, index, idcounter) {
+    exportObjectData2CSV: function (htmlId, gegevensbron, index, idcounter) {
         var submitForm = this.exportObjectData("services/Data2CSV", "csv_export");
         submitForm.appendChild(this.createExportInput('themaId', gegevensbron.id));
         submitForm.appendChild(this.createExportInput('objectIds', gegevensbron.csvPks));
         submitForm.appendChild(this.createExportInput('appCode', B3PGissuite.config.bookmarkAppcode));
         submitForm.submit();
     },
-    exportObjectdata2Report: function(recordId, commando, gegevensbron) {
+    exportObjectdata2Report: function (recordId, commando, gegevensbron) {
         var submitForm = this.exportObjectData(commando, "pdfIframe");
         submitForm.appendChild(this.createExportInput('gbId', gegevensbron.id));
         submitForm.appendChild(this.createExportInput('recordId', recordId));
         submitForm.appendChild(this.createExportInput('jsonSettings', this.getMapJsonSettings([])));
         submitForm.submit();
     },
-    exportMap: function() {
+    exportMap: function () {
         var submitForm = this.exportObjectData("printmap.do", "exportMapWindowNaam");
         submitForm.appendChild(this.createExportInput('legendUrls', this.getLegendUrls()));
         /* TODO: Width en height meegeven voor tiling berekeningen als er geen gewone
@@ -600,7 +601,7 @@ B3PGissuite.viewercommons = {
             B3PGissuite.vars.exportMapWindow.focus();
         }
     },
-    getTilingRequests: function() {
+    getTilingRequests: function () {
         var tilingRequests = [];
         var layers = B3PGissuite.vars.webMapController.getMap("map1").getAllTilingLayers();
 
@@ -649,7 +650,7 @@ B3PGissuite.viewercommons = {
 
         return tilingRequests;
     },
-    checkParam: function(url, name) {
+    checkParam: function (url, name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 
         var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -662,7 +663,7 @@ B3PGissuite.viewercommons = {
 
         return true;
     },
-    buildTilingServiceUrl: function(tilingLayer) {
+    buildTilingServiceUrl: function (tilingLayer) {
         var serviceUrl = tilingLayer.getOption("url");
 
         if (!this.checkParam(serviceUrl, "service") && !this.checkParam(serviceUrl, "SERVICE")) {
@@ -694,7 +695,7 @@ B3PGissuite.viewercommons = {
      * van getActiveFeature alleen de laatste feature (een Point) terug. In
      * this.getFrameworkLayer().features[0] zit het hele polygon.
      */
-    getWktActiveFeature: function(index) {
+    getWktActiveFeature: function (index) {
         var object;
         object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(index);
 
@@ -706,15 +707,14 @@ B3PGissuite.viewercommons = {
             }
         }
 
-        if (object === null || object === undefined)
-        {
+        if (object === null || object === undefined) {
             B3PGissuite.commons.messagePopup("Melding", "Er is nog geen tekenobject op het scherm.", "pencil");
             return null;
         }
 
         return object.getWkt();
     },
-    getWktForDownload: function() {
+    getWktForDownload: function () {
         var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature();
 
         if (object === null || object === undefined) {
@@ -723,7 +723,7 @@ B3PGissuite.viewercommons = {
 
         return object.getWkt();
     },
-    getWkt: function() {
+    getWkt: function () {
         var object = B3PGissuite.vars.webMapController.getMap().getLayer("editMap").getActiveFeature(-1);
 
         if (object === null || object === undefined) {
@@ -736,34 +736,34 @@ B3PGissuite.viewercommons = {
 
         return object.wktgeom;
     },
-    drawFeature: function(ggbId, attrName, attrVal) {
+    drawFeature: function (ggbId, attrName, attrVal) {
         var me = this;
-        JMapData.getWkt(ggbId, attrName, attrVal, function(wkt) {
+        JMapData.getWkt(ggbId, attrName, attrVal, function (wkt) {
             me.drawWkt(wkt);
         });
     },
-    returnBuffer: function(wkt) {
+    returnBuffer: function (wkt) {
         this.drawWkt(wkt);
     },
-    drawWkt: function(wkt) {
+    drawWkt: function (wkt) {
         if (wkt.length > 0) {
             var polyObject = new Feature(61502, wkt);
             this.drawObject(polyObject);
         }
     },
-    drawObject: function(feature) {
+    drawObject: function (feature) {
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").removeAllFeatures();
         B3PGissuite.vars.webMapController.getMap().getLayer("editMap").addFeature(feature);
     },
-    getBookMark: function() {
+    getBookMark: function () {
         this.addToFavorites(this.createPermaLink());
     },
-    getFullExtent: function() {
+    getFullExtent: function () {
         var fullExtent = B3PGissuite.vars.webMapController.getMap().getExtent();
 
         return fullExtent;
     },
-    getCenterWkt: function() {
+    getCenterWkt: function () {
         var fullExtent = this.getFullExtent();
 
         var minx = Math.round(Number(fullExtent.minx) + 1);
@@ -776,7 +776,7 @@ B3PGissuite.viewercommons = {
 
         return "POINT(" + x + " " + y + ");";
     },
-    getMinWkt: function() {
+    getMinWkt: function () {
         var fullExtent = this.getFullExtent();
 
         var minx = Math.round(Number(fullExtent.minx) + 1);
@@ -784,7 +784,7 @@ B3PGissuite.viewercommons = {
 
         return "POINT(" + minx + " " + miny + ");";
     },
-    getMaxWkt: function() {
+    getMaxWkt: function () {
         var fullExtent = this.getFullExtent();
 
         var maxx = Math.round(Number(fullExtent.maxx) - 1);
@@ -794,13 +794,13 @@ B3PGissuite.viewercommons = {
     },
     /* Berekenen lattitude en longitude waardes voor gebruik in Google
      * maps aanroep */
-    getLatLonForGoogleMaps: function() {
+    getLatLonForGoogleMaps: function () {
         var me = this;
         var centerWkt = this.getCenterWkt();
         var minWkt = this.getMinWkt();
         var maxWkt = this.getMaxWkt();
 
-        JMapData.getLatLonForRDPoint(centerWkt, minWkt, maxWkt, function(values) {
+        JMapData.getLatLonForRDPoint(centerWkt, minWkt, maxWkt, function (values) {
             me.openGoogleMaps(values);
         });
     },
@@ -808,26 +808,28 @@ B3PGissuite.viewercommons = {
      * https://moz.com/ugc/everything-you-never-wanted-to-know-about-google-maps-parameters
      * values[] = lat, lon, span Lat, span lon.
      * */
-    openGoogleMaps: function(values) {
-        var ll = "&ll=" + values[0] + "," + values[1];
-        var spn = "&spn=" + values[2] + "," + values[3];
+    openGoogleMaps: function (values) {
+        var myVariableOrder = googlemapsVariableOrder();
+
+        var ll = "&ll=" + values[myVariableOrder.first] + "," + values[myVariableOrder.second];
+        var spn = "&spn=" + values[myVariableOrder.third] + "," + values[myVariableOrder.fourth];
         var options = "&hl=nl&om=0";
         var url = "https://maps.google.com/maps?ie=UTF8" + ll + spn + options;
         window.open(url);
     },
-    getDestinationWkt: function(gbId, pk, val) {
+    getDestinationWkt: function (gbId, pk, val) {
         var me = this;
-        JMapData.getWkt(gbId, pk, val, function(destWkt) {
+        JMapData.getWkt(gbId, pk, val, function (destWkt) {
             me.getLatLonForGoogleMapDirections(destWkt);
         });
     },
-    getLatLonForGoogleMapDirections: function(destWkt) {
+    getLatLonForGoogleMapDirections: function (destWkt) {
         var me = this;
-        JMapData.getLatLonForGoogleDirections(destWkt, function(values) {
+        JMapData.getLatLonForGoogleDirections(destWkt, function (values) {
             me.openGoogleMapsDirections(values);
         });
     },
-    openGoogleMapsDirections: function(values) {
+    openGoogleMapsDirections: function (values) {
 
         /* Check of er een gps locatie is gezet. */
         var gps = B3PGissuite.get('GPS');
@@ -848,7 +850,7 @@ B3PGissuite.viewercommons = {
 
         window.open(url);
     },
-    createPermaLink: function() {
+    createPermaLink: function () {
         var protocol = window.location.protocol + "//";
         var host = window.location.host;
 
@@ -915,7 +917,7 @@ B3PGissuite.viewercommons = {
 
         return url;
     },
-    addToFavorites: function(url) {
+    addToFavorites: function (url) {
         var title = "B3P Gisviewer bookmark";
 
         if (Boolean(window.chrome)) { // chrome
@@ -933,12 +935,12 @@ B3PGissuite.viewercommons = {
 
         return null;
     },
-    chromeBookMarkPopup: function(url, title) {
+    chromeBookMarkPopup: function (url, title) {
         var chromePopup = window.open(url, title, "height=300, width=850,toolbar=no,scrollbars=no,menubar=no");
         var html = "<p>Voeg deze link toe aan uw favorieten:</p>" + url;
         chromePopup.document.write(html);
     },
-    popUp: function(URL, naam, width, height, useDiv) {
+    popUp: function (URL, naam, width, height, useDiv) {
 
         var screenwidth = 600;
         var screenheight = 500;
@@ -979,22 +981,22 @@ B3PGissuite.viewercommons = {
         } else {
 
             properties = "toolbar = 0, " +
-                    "scrollbars = 1, " +
-                    "location = 0, " +
-                    "statusbar = 1, " +
-                    "menubar = 0, " +
-                    "resizable = 1, " +
-                    "width = " + screenwidth + ", " +
-                    "height = " + screenheight + ", " +
-                    "top = " + popuptop + ", " +
-                    "left = " + popupleft;
+                "scrollbars = 1, " +
+                "location = 0, " +
+                "statusbar = 1, " +
+                "menubar = 0, " +
+                "resizable = 1, " +
+                "width = " + screenwidth + ", " +
+                "height = " + screenheight + ", " +
+                "top = " + popuptop + ", " +
+                "left = " + popupleft;
 
             return window.open(URL, naam, properties);
         }
 
         return null;
     },
-    popUpData: function(naam, width, height, useDiv) {
+    popUpData: function (naam, width, height, useDiv) {
         var screenwidth = 600;
         var screenheight = 500;
         var useDivPopup = false;
@@ -1030,20 +1032,20 @@ B3PGissuite.viewercommons = {
         } else {
 
             properties = "toolbar = 0, " +
-                    "scrollbars = 1, " +
-                    "location = 0, " +
-                    "statusbar = 1, " +
-                    "menubar = 0, " +
-                    "resizable = 1, " +
-                    "width = " + screenwidth + ", " +
-                    "height = " + screenheight + ", " +
-                    "top = " + popuptop + ", " +
-                    "left = " + popupleft;
+                "scrollbars = 1, " +
+                "location = 0, " +
+                "statusbar = 1, " +
+                "menubar = 0, " +
+                "resizable = 1, " +
+                "width = " + screenwidth + ", " +
+                "height = " + screenheight + ", " +
+                "top = " + popuptop + ", " +
+                "left = " + popupleft;
 
             return window.open('admindatabusy.do?theme=' + B3PGissuite.config.theme, naam, properties);
         }
     },
-    buildPopup: function() {
+    buildPopup: function () {
         var popupDiv = document.createElement('div');
         popupDiv.styleClass = 'popup_Window';
         popupDiv.id = 'popupWindow';
@@ -1106,44 +1108,44 @@ B3PGissuite.viewercommons = {
             iframeFix: true,
             zIndex: 200,
             containment: 'document',
-            start: function(event, ui) {
+            start: function (event, ui) {
                 B3PGissuite.commons.startDrag();
             },
-            stop: function(event, ui) {
+            stop: function (event, ui) {
                 B3PGissuite.commons.stopDrag();
             }
         }).resizable({
             handles: 'se',
-            start: function(event, ui) {
+            start: function (event, ui) {
                 B3PGissuite.commons.startResize();
             },
-            stop: function(event, ui) {
+            stop: function (event, ui) {
                 B3PGissuite.commons.stopResize();
             }
         });
 
-        $j('#popupWindow_Close').click(function() {
+        $j('#popupWindow_Close').click(function () {
             if (B3PGissuite.vars.dataframepopupHandle)
                 B3PGissuite.vars.dataframepopupHandle.closed = true;
 
             $j("#popupWindow").hide();
         });
         // Resizing popup
-        (function() {
+        (function () {
             var resized = false,
-                    defaultCss = {
-                "height": B3PGissuite.config.popupHeight,
-                "width": B3PGissuite.config.popupWidth,
-                "left": B3PGissuite.config.popupLeft,
-                "top": B3PGissuite.config.popupTop
-            },
-            resizeCss = {
-                "height": '70%',
-                "width": '70%',
-                "left": "15%",
-                "top": "15%"
-            };
-            $j('#popupWindow_Resize').click(function() {
+                defaultCss = {
+                    "height": B3PGissuite.config.popupHeight,
+                    "width": B3PGissuite.config.popupWidth,
+                    "left": B3PGissuite.config.popupLeft,
+                    "top": B3PGissuite.config.popupTop
+                },
+                resizeCss = {
+                    "height": '70%',
+                    "width": '70%',
+                    "left": "15%",
+                    "top": "15%"
+                };
+            $j('#popupWindow_Resize').click(function () {
                 $j("#popupWindow").css(resized ? defaultCss : resizeCss);
                 $j('#popupWindow_Resize').text(resized ? '[ + ]' : ' [ - ]');
                 resized = !resized;
@@ -1158,7 +1160,7 @@ B3PGissuite.viewercommons = {
      * @param layers the layers string of a layer object
      * @return the item
      */
-    getItemByLayer: function(item, layers) {
+    getItemByLayer: function (item, layers) {
         if (item.children) {
             for (var i = 0; i < item.children.length; i++) {
                 var child = item.children[i];
@@ -1192,7 +1194,7 @@ B3PGissuite.viewercommons = {
      * @param {string} value
      * @returns {string}
      */
-    addToQueryString: function(url, key, value) {
+    addToQueryString: function (url, key, value) {
         var query = url.indexOf('?');
         if (query === url.length - 1) {
             // Strip any ? on the end of the URL
@@ -1207,6 +1209,6 @@ B3PGissuite.viewercommons = {
 
 };
 
-$j(document).ready(function() {
+$j(document).ready(function () {
     B3PGissuite.viewercommons.init();
 });

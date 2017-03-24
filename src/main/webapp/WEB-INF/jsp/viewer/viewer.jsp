@@ -43,6 +43,16 @@
         return configValue;
     }
 
+    function wrapHttps(configValue) {
+        if (window.location.protocol !== 'https:') {
+            return configValue;
+        }
+        if(configValue.indexOf("http://") === -1) {
+            return configValue;
+        }
+        return configValue.replace("http://", "https://");
+    }
+
     <%-- om dubbel ophalen te voorkomen voor check 
      checkValidity(zcs) ? zcs :
     --%>
@@ -70,7 +80,7 @@
         'userRoles': checkValidity(${userRoles}) ? getValue(${userRoles}) : [],
         'sldServletUrl': window.location.protocol + "//" + window.location.host + "<html:rewrite page='/services/CreateSLD'/>",
         'zoekconfiguraties': zzcs,
-        'kburl': "${kburl}",
+        'kburl': wrapHttps("${kburl}"),
         'kbcode': "${kbcode}",
         'themaTree': ltree,
         'serviceTrees': checkValidity(${servicesTrees}) ? ${servicesTrees} : [],

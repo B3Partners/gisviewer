@@ -3,7 +3,7 @@
 
     <groupId>nl.b3p</groupId>
     <artifactId>gisviewer</artifactId>
-    <version>4.2.13-SNAPSHOT</version>
+    <version>4.2.13</version>
     <packaging>war</packaging>
 
     <name>gisviewer</name>
@@ -80,7 +80,7 @@
         <connection>scm:git:git@github.com:B3Partners/gisviewer.git</connection>
         <developerConnection>scm:git:git@github.com:B3Partners/gisviewer.git</developerConnection>
         <url>https://github.com/B3Partners/gisviewer</url>
-      <tag>gisviewer-${project.version}</tag>
+      <tag>gisviewer-4.2.13</tag>
     </scm>
     <distributionManagement>
         <repository>

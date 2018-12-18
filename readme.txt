@@ -1,3 +1,15 @@
+Archived
+========
+This application is no longer used, the repository is unmaintained and therefore archived. 
+**Note** that it may use some vulnerable components which could pose a security risk.
+
+
+
+
+
+
+
+
 - Database van de gisviewer configuratie aanmaken (schema export in b3p-gisviewer)
 - Script van de b3p-zoeker uitvoeren (schema export in b3p-zoeker). Als dit in de zelfde database kan als de gisviewer configuratie
 dan is er geen aanpassing van de persistence.xml nodig.
